@@ -18,11 +18,18 @@
    - 既存テストの flaky / 偽陽性 / 偽陰性 → `t-wada-tdd-test-quality`
 3. 上記 skill 発動前に方針 (種別 + 委譲先) をユーザーに明示する
 
+## プラン実行完了判定
+
+- プランファイル実行時は、テスト成功だけで完了扱いしない。完了報告前にプランに明記されたファイル・型・インターフェース要件と実装状態を照合する
+- プランが typed DTO / typed domain model を要求している場合、nested 構造を `Map<String, dynamic>` や JSON wrapper で代替してはならない。代替が必要な場合は「完了」ではなく「未達 / 逸脱」として報告する
+- 最終報告には必ず `実装済み Phase` / `未実装 Phase` / `成功基準 pass-fail` / `意図的逸脱` / `残リスク` を含める
+- 本リポジトリの detail domain (`lib/domain/drug/drug_nested.dart` / `lib/domain/disease/disease_nested.dart`) に `Map<String, dynamic>` / `dynamic>` を残してはならない
+
 ## ローカル品質ゲート
 
 `.pre-commit-config.yaml` で以下を強制:
 - pre-commit: `build_runner` (annotation 変更時のみ) + `dart format` + `dart analyze` (差分ファイルのみ)
-- pre-push: `build_runner` 全件 + `dart format` 全件 + `flutter analyze` + `flutter test`
+- pre-push: `build_runner` 全件 + `dart format` 全件 + `flutter analyze` + `flutter test` + plan completion guard
 
 CI 未投入期間中はこのフックがサイレントフォールバック検出の主装置。clone 直後に必ず以下を実行:
 ```

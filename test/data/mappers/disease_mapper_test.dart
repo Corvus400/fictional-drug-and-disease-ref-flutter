@@ -93,8 +93,11 @@ void main() {
     expect(disease.id, dto.id);
     expect(disease.name, dto.name);
     expect(disease.symptoms, isA<SymptomInfo>());
+    expect(disease.symptoms.mainSymptoms, ['症状']);
     expect(disease.diagnosticCriteria, isA<DiagnosticCriteriaInfo>());
+    expect(disease.diagnosticCriteria.required, ['基準']);
     expect(disease.treatments, isA<TreatmentInfo>());
+    expect(disease.treatments.pharmacological, isEmpty);
     expect(disease.relatedDrugIds, dto.relatedDrugIds);
     expect(disease.disclaimer, dto.disclaimer);
   });
