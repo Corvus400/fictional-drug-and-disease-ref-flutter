@@ -24,6 +24,35 @@ class AppLocalizationsJa extends AppLocalizations {
   String get tabCalc => '計算ツール';
 
   @override
+  String get searchPlaceholder => '検索画面（プレースホルダー）';
+
+  @override
+  String get bookmarksPlaceholder => 'ブックマーク画面（プレースホルダー）';
+
+  @override
+  String get historyPlaceholder => '閲覧履歴画面（プレースホルダー）';
+
+  @override
+  String get calcPlaceholder => '計算ツール画面（プレースホルダー）';
+
+  @override
+  String get drugDetailTitle => '医薬品詳細';
+
+  @override
+  String get diseaseDetailTitle => '疾患詳細';
+
+  @override
+  String detailId(String id) {
+    return 'ID: $id';
+  }
+
+  @override
+  String get openDrugDetail => '医薬品詳細を開く';
+
+  @override
+  String get openDiseaseDetail => '疾患詳細を開く';
+
+  @override
   String get errorNetwork => 'ネットワークエラーが発生しました';
 
   @override

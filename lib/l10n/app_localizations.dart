@@ -124,6 +124,60 @@ abstract class AppLocalizations {
   /// **'計算ツール'**
   String get tabCalc;
 
+  /// No description provided for @searchPlaceholder.
+  ///
+  /// In ja, this message translates to:
+  /// **'検索画面（プレースホルダー）'**
+  String get searchPlaceholder;
+
+  /// No description provided for @bookmarksPlaceholder.
+  ///
+  /// In ja, this message translates to:
+  /// **'ブックマーク画面（プレースホルダー）'**
+  String get bookmarksPlaceholder;
+
+  /// No description provided for @historyPlaceholder.
+  ///
+  /// In ja, this message translates to:
+  /// **'閲覧履歴画面（プレースホルダー）'**
+  String get historyPlaceholder;
+
+  /// No description provided for @calcPlaceholder.
+  ///
+  /// In ja, this message translates to:
+  /// **'計算ツール画面（プレースホルダー）'**
+  String get calcPlaceholder;
+
+  /// No description provided for @drugDetailTitle.
+  ///
+  /// In ja, this message translates to:
+  /// **'医薬品詳細'**
+  String get drugDetailTitle;
+
+  /// No description provided for @diseaseDetailTitle.
+  ///
+  /// In ja, this message translates to:
+  /// **'疾患詳細'**
+  String get diseaseDetailTitle;
+
+  /// No description provided for @detailId.
+  ///
+  /// In ja, this message translates to:
+  /// **'ID: {id}'**
+  String detailId(String id);
+
+  /// No description provided for @openDrugDetail.
+  ///
+  /// In ja, this message translates to:
+  /// **'医薬品詳細を開く'**
+  String get openDrugDetail;
+
+  /// No description provided for @openDiseaseDetail.
+  ///
+  /// In ja, this message translates to:
+  /// **'疾患詳細を開く'**
+  String get openDiseaseDetail;
+
   /// No description provided for @errorNetwork.
   ///
   /// In ja, this message translates to:

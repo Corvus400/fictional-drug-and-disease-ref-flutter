@@ -10,9 +10,9 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   testWidgets('App renders bootstrap smoke text', (tester) async {
-    await tester.pumpWidget(const App());
+    await tester.pumpWidget(App());
     await tester.pumpAndSettle();
 
-    expect(find.text('bootstrap'), findsOneWidget);
+    expect(find.text('検索画面（プレースホルダー）'), findsOneWidget);
   });
 }

@@ -8,6 +8,22 @@
   "tabBookmarks": "ブックマーク",
   "tabHistory": "閲覧履歴",
   "tabCalc": "計算ツール",
+  "searchPlaceholder": "検索画面（プレースホルダー）",
+  "bookmarksPlaceholder": "ブックマーク画面（プレースホルダー）",
+  "historyPlaceholder": "閲覧履歴画面（プレースホルダー）",
+  "calcPlaceholder": "計算ツール画面（プレースホルダー）",
+  "drugDetailTitle": "医薬品詳細",
+  "diseaseDetailTitle": "疾患詳細",
+  "detailId": "ID: {id}",
+  "@detailId": {
+    "placeholders": {
+      "id": {
+        "type": "String"
+      }
+    }
+  },
+  "openDrugDetail": "医薬品詳細を開く",
+  "openDiseaseDetail": "疾患詳細を開く",
   "errorNetwork": "ネットワークエラーが発生しました",
   "errorUnknown": "不明なエラーが発生しました"
 }

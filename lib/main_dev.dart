@@ -12,5 +12,5 @@ void main() {
   ApiConfig.initialize(
     const FlavorConfig(flavor: Flavor.dev, apiBaseUrl: baseUrl),
   );
-  bootstrap(() => const App());
+  bootstrap(App.new);
 }
