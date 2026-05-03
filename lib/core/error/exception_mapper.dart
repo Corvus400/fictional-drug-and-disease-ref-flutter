@@ -101,7 +101,7 @@ ApiException _toApiException(
 
 StorageErrorKind _storageKindFor(SqliteException error) {
   return switch (error.extendedResultCode) {
-    2067 => StorageErrorKind.uniqueConstraint,
+    1555 || 2067 => StorageErrorKind.uniqueConstraint,
     275 => StorageErrorKind.checkConstraint,
     1299 => StorageErrorKind.notNull,
     _ => StorageErrorKind.unknown,

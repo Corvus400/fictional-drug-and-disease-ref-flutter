@@ -153,6 +153,15 @@ void main() {
     },
   );
 
+  test(
+    'SqliteException(1555) maps to StorageException(uniqueConstraint)',
+    () {
+      final mapped = toAppException(_sqliteException(1555)) as StorageException;
+
+      expect(mapped.kind, StorageErrorKind.uniqueConstraint);
+    },
+  );
+
   test('SqliteException(275) maps to StorageException(checkConstraint)', () {
     final mapped = toAppException(_sqliteException(275)) as StorageException;
 
