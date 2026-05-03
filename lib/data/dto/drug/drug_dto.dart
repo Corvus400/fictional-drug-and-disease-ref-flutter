@@ -1,6 +1,10 @@
 // OpenAPI DTO fields intentionally mirror the wire schema one-to-one.
 // ignore_for_file: public_member_api_docs
 
+import 'package:fictional_drug_and_disease_ref/data/dto/drug/drug_nested_dto.dart';
+
+export 'package:fictional_drug_and_disease_ref/data/dto/drug/drug_nested_dto.dart';
+
 /// Drug detail DTO returned by `/v1/drugs/{id}`.
 final class DrugDto {
   /// Creates a drug detail DTO.
@@ -59,36 +63,82 @@ final class DrugDto {
       regulatoryClass: _stringList(json['regulatory_class']),
       dosageForm: json['dosage_form'] as String,
       routeOfAdministration: json['route_of_administration'] as String,
-      composition: _nullableMap(json['composition'])!,
-      warning: _mapList(json['warning']),
-      contraindications: _mapList(json['contraindications']),
-      indications: _mapList(json['indications']),
+      composition: CompositionInfoDto.fromJson(
+        json['composition'] as Map<String, dynamic>,
+      ),
+      warning: _mapList(json['warning'], NumberedParagraphDto.fromJson),
+      contraindications: _mapList(
+        json['contraindications'],
+        NumberedParagraphDto.fromJson,
+      ),
+      indications: _mapList(json['indications'], IndicationItemDto.fromJson),
       indicationsRelatedPrecautions: _mapList(
         json['indications_related_precautions'],
+        NumberedParagraphDto.fromJson,
       ),
-      dosage: _nullableMap(json['dosage'])!,
-      dosageRelatedPrecautions: _mapList(json['dosage_related_precautions']),
-      importantPrecautions: _mapList(json['important_precautions']),
+      dosage: DosageInfoDto.fromJson(json['dosage'] as Map<String, dynamic>),
+      dosageRelatedPrecautions: _mapList(
+        json['dosage_related_precautions'],
+        NumberedParagraphDto.fromJson,
+      ),
+      importantPrecautions: _mapList(
+        json['important_precautions'],
+        NumberedParagraphDto.fromJson,
+      ),
       precautionsForSpecificPopulations: _mapList(
         json['precautions_for_specific_populations'],
+        PrecautionPopulationDto.fromJson,
       ),
-      interactions: _nullableMap(json['interactions']),
-      adverseReactions: _nullableMap(json['adverse_reactions'])!,
-      effectsOnLabTests: _mapList(json['effects_on_lab_tests']),
-      overdose: _nullableMap(json['overdose']),
-      administrationPrecautions: _mapList(json['administration_precautions']),
-      otherPrecautions: _mapList(json['other_precautions']),
-      pharmacokinetics: _nullableMap(json['pharmacokinetics']),
-      clinicalResults: _mapList(json['clinical_results']),
-      pharmacology: _nullableMap(json['pharmacology']),
+      interactions: _nullableMap(
+        json['interactions'],
+        InteractionInfoDto.fromJson,
+      ),
+      adverseReactions: AdverseReactionInfoDto.fromJson(
+        json['adverse_reactions'] as Map<String, dynamic>,
+      ),
+      effectsOnLabTests: _mapList(
+        json['effects_on_lab_tests'],
+        NumberedParagraphDto.fromJson,
+      ),
+      overdose: _nullableMap(json['overdose'], OverdoseInfoDto.fromJson),
+      administrationPrecautions: _mapList(
+        json['administration_precautions'],
+        NumberedParagraphDto.fromJson,
+      ),
+      otherPrecautions: _mapList(
+        json['other_precautions'],
+        NumberedParagraphDto.fromJson,
+      ),
+      pharmacokinetics: _nullableMap(
+        json['pharmacokinetics'],
+        PharmacokineticsInfoDto.fromJson,
+      ),
+      clinicalResults: _mapList(
+        json['clinical_results'],
+        ClinicalResultSectionDto.fromJson,
+      ),
+      pharmacology: _nullableMap(
+        json['pharmacology'],
+        PharmacologyInfoDto.fromJson,
+      ),
       physicochemicalProperties: _nullableMap(
         json['physicochemical_properties'],
+        PhysicochemicalInfoDto.fromJson,
       ),
-      handlingPrecautions: _mapList(json['handling_precautions']),
-      approvalConditions: _mapList(json['approval_conditions']),
-      packages: _mapList(json['packages']),
-      references: _mapList(json['references']),
-      insuranceNotes: _mapList(json['insurance_notes']),
+      handlingPrecautions: _mapList(
+        json['handling_precautions'],
+        NumberedParagraphDto.fromJson,
+      ),
+      approvalConditions: _mapList(
+        json['approval_conditions'],
+        NumberedParagraphDto.fromJson,
+      ),
+      packages: _mapList(json['packages'], PackageInfoDto.fromJson),
+      references: _mapList(json['references'], ReferenceDto.fromJson),
+      insuranceNotes: _mapList(
+        json['insurance_notes'],
+        NumberedParagraphDto.fromJson,
+      ),
       manufacturer: json['manufacturer'] as String,
       revisedAt: json['revised_at'] as String,
       relatedDiseaseIds: _stringList(json['related_disease_ids']),
@@ -107,30 +157,30 @@ final class DrugDto {
   final List<String> regulatoryClass;
   final String dosageForm;
   final String routeOfAdministration;
-  final Map<String, dynamic> composition;
-  final List<Map<String, dynamic>> warning;
-  final List<Map<String, dynamic>> contraindications;
-  final List<Map<String, dynamic>> indications;
-  final List<Map<String, dynamic>> indicationsRelatedPrecautions;
-  final Map<String, dynamic> dosage;
-  final List<Map<String, dynamic>> dosageRelatedPrecautions;
-  final List<Map<String, dynamic>> importantPrecautions;
-  final List<Map<String, dynamic>> precautionsForSpecificPopulations;
-  final Map<String, dynamic>? interactions;
-  final Map<String, dynamic> adverseReactions;
-  final List<Map<String, dynamic>> effectsOnLabTests;
-  final Map<String, dynamic>? overdose;
-  final List<Map<String, dynamic>> administrationPrecautions;
-  final List<Map<String, dynamic>> otherPrecautions;
-  final Map<String, dynamic>? pharmacokinetics;
-  final List<Map<String, dynamic>> clinicalResults;
-  final Map<String, dynamic>? pharmacology;
-  final Map<String, dynamic>? physicochemicalProperties;
-  final List<Map<String, dynamic>> handlingPrecautions;
-  final List<Map<String, dynamic>> approvalConditions;
-  final List<Map<String, dynamic>> packages;
-  final List<Map<String, dynamic>> references;
-  final List<Map<String, dynamic>> insuranceNotes;
+  final CompositionInfoDto composition;
+  final List<NumberedParagraphDto> warning;
+  final List<NumberedParagraphDto> contraindications;
+  final List<IndicationItemDto> indications;
+  final List<NumberedParagraphDto> indicationsRelatedPrecautions;
+  final DosageInfoDto dosage;
+  final List<NumberedParagraphDto> dosageRelatedPrecautions;
+  final List<NumberedParagraphDto> importantPrecautions;
+  final List<PrecautionPopulationDto> precautionsForSpecificPopulations;
+  final InteractionInfoDto? interactions;
+  final AdverseReactionInfoDto adverseReactions;
+  final List<NumberedParagraphDto> effectsOnLabTests;
+  final OverdoseInfoDto? overdose;
+  final List<NumberedParagraphDto> administrationPrecautions;
+  final List<NumberedParagraphDto> otherPrecautions;
+  final PharmacokineticsInfoDto? pharmacokinetics;
+  final List<ClinicalResultSectionDto> clinicalResults;
+  final PharmacologyInfoDto? pharmacology;
+  final PhysicochemicalInfoDto? physicochemicalProperties;
+  final List<NumberedParagraphDto> handlingPrecautions;
+  final List<NumberedParagraphDto> approvalConditions;
+  final List<PackageInfoDto> packages;
+  final List<ReferenceDto> references;
+  final List<NumberedParagraphDto> insuranceNotes;
   final String manufacturer;
   final String revisedAt;
   final List<String> relatedDiseaseIds;
@@ -150,30 +200,50 @@ final class DrugDto {
       'regulatory_class': regulatoryClass,
       'dosage_form': dosageForm,
       'route_of_administration': routeOfAdministration,
-      'composition': composition,
-      'warning': warning,
-      'contraindications': contraindications,
-      'indications': indications,
-      'indications_related_precautions': indicationsRelatedPrecautions,
-      'dosage': dosage,
-      'dosage_related_precautions': dosageRelatedPrecautions,
-      'important_precautions': importantPrecautions,
-      'precautions_for_specific_populations': precautionsForSpecificPopulations,
-      'interactions': interactions,
-      'adverse_reactions': adverseReactions,
-      'effects_on_lab_tests': effectsOnLabTests,
-      'overdose': overdose,
-      'administration_precautions': administrationPrecautions,
-      'other_precautions': otherPrecautions,
-      'pharmacokinetics': pharmacokinetics,
-      'clinical_results': clinicalResults,
-      'pharmacology': pharmacology,
-      'physicochemical_properties': physicochemicalProperties,
-      'handling_precautions': handlingPrecautions,
-      'approval_conditions': approvalConditions,
-      'packages': packages,
-      'references': references,
-      'insurance_notes': insuranceNotes,
+      'composition': composition.toJson(),
+      'warning': warning.map((item) => item.toJson()).toList(),
+      'contraindications': contraindications
+          .map((item) => item.toJson())
+          .toList(),
+      'indications': indications.map((item) => item.toJson()).toList(),
+      'indications_related_precautions': indicationsRelatedPrecautions
+          .map((item) => item.toJson())
+          .toList(),
+      'dosage': dosage.toJson(),
+      'dosage_related_precautions': dosageRelatedPrecautions
+          .map((item) => item.toJson())
+          .toList(),
+      'important_precautions': importantPrecautions
+          .map((item) => item.toJson())
+          .toList(),
+      'precautions_for_specific_populations': precautionsForSpecificPopulations
+          .map((item) => item.toJson())
+          .toList(),
+      'interactions': interactions?.toJson(),
+      'adverse_reactions': adverseReactions.toJson(),
+      'effects_on_lab_tests': effectsOnLabTests
+          .map((item) => item.toJson())
+          .toList(),
+      'overdose': overdose?.toJson(),
+      'administration_precautions': administrationPrecautions
+          .map((item) => item.toJson())
+          .toList(),
+      'other_precautions': otherPrecautions
+          .map((item) => item.toJson())
+          .toList(),
+      'pharmacokinetics': pharmacokinetics?.toJson(),
+      'clinical_results': clinicalResults.map((item) => item.toJson()).toList(),
+      'pharmacology': pharmacology?.toJson(),
+      'physicochemical_properties': physicochemicalProperties?.toJson(),
+      'handling_precautions': handlingPrecautions
+          .map((item) => item.toJson())
+          .toList(),
+      'approval_conditions': approvalConditions
+          .map((item) => item.toJson())
+          .toList(),
+      'packages': packages.map((item) => item.toJson()).toList(),
+      'references': references.map((item) => item.toJson()).toList(),
+      'insurance_notes': insuranceNotes.map((item) => item.toJson()).toList(),
       'manufacturer': manufacturer,
       'revised_at': revisedAt,
       'related_disease_ids': relatedDiseaseIds,
@@ -190,13 +260,15 @@ List<String> _stringList(Object? value) {
   return (value as List<dynamic>).cast<String>();
 }
 
-List<Map<String, dynamic>> _mapList(Object? value) {
+List<T> _mapList<T>(Object? value, T Function(Map<String, dynamic>) fromJson) {
   if (value == null) {
     throw const FormatException('Expected a JSON list.');
   }
-  return (value as List<dynamic>).cast<Map<String, dynamic>>();
+  return (value as List<dynamic>)
+      .map((item) => fromJson(item as Map<String, dynamic>))
+      .toList(growable: false);
 }
 
-Map<String, dynamic>? _nullableMap(Object? value) {
-  return value == null ? null : value as Map<String, dynamic>;
+T? _nullableMap<T>(Object? value, T Function(Map<String, dynamic>) fromJson) {
+  return value == null ? null : fromJson(value as Map<String, dynamic>);
 }

@@ -18,4 +18,20 @@ void main() {
     expect(dto.pharmacokinetics, isNotNull);
     expect(dto.toJson(), json);
   });
+
+  test('DrugDto parses nested detail objects as typed DTOs', () {
+    final fixture = File(
+      'test/fixtures/swagger/get_v1_drugs__id_.json',
+    ).readAsStringSync();
+    final json = jsonDecode(fixture) as Map<String, dynamic>;
+
+    final dto = DrugDto.fromJson(json);
+
+    expect(dto.composition, isA<CompositionInfoDto>());
+    expect(dto.warning, everyElement(isA<NumberedParagraphDto>()));
+    expect(dto.indications, everyElement(isA<IndicationItemDto>()));
+    expect(dto.dosage, isA<DosageInfoDto>());
+    expect(dto.adverseReactions, isA<AdverseReactionInfoDto>());
+    expect(dto.packages, everyElement(isA<PackageInfoDto>()));
+  });
 }

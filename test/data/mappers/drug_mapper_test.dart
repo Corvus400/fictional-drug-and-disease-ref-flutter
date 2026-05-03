@@ -2,6 +2,7 @@ import 'package:fictional_drug_and_disease_ref/data/dto/drug/drug_dto.dart';
 import 'package:fictional_drug_and_disease_ref/data/dto/drug/drug_list_response_dto.dart';
 import 'package:fictional_drug_and_disease_ref/data/dto/drug/drug_summary_dto.dart';
 import 'package:fictional_drug_and_disease_ref/data/mappers/drug_mapper.dart';
+import 'package:fictional_drug_and_disease_ref/domain/drug/drug.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -78,20 +79,36 @@ void main() {
       regulatoryClass: ['ordinary'],
       dosageForm: 'tablet',
       routeOfAdministration: 'oral',
-      composition: {'active_ingredient': '一般名'},
+      composition: CompositionInfoDto(
+        activeIngredient: '一般名',
+        activeIngredientAmount: DoseDto(amount: 1, unit: 'mg', per: null),
+        inactiveIngredients: [],
+        appearance: '白色',
+        identificationCode: null,
+      ),
       warning: [],
       contraindications: [],
       indications: [],
       indicationsRelatedPrecautions: [],
-      dosage: {'standard_dosage': '用量'},
+      dosage: DosageInfoDto(
+        standardDosage: '用量',
+        ageSpecificDosage: [],
+        renalAdjustment: [],
+        hepaticAdjustment: [],
+      ),
       dosageRelatedPrecautions: [],
       importantPrecautions: [],
       precautionsForSpecificPopulations: [],
       interactions: null,
-      adverseReactions: {
-        'serious': <Object>[],
-        'other': <String, Object?>{},
-      },
+      adverseReactions: AdverseReactionInfoDto(
+        serious: [],
+        other: AdverseReactionByFrequencyDto(
+          over5Percent: [],
+          between1And5Percent: [],
+          under1Percent: [],
+          frequencyUnknown: [],
+        ),
+      ),
       effectsOnLabTests: [],
       overdose: null,
       administrationPrecautions: [],
@@ -118,6 +135,9 @@ void main() {
     expect(drug.genericName, dto.genericName);
     expect(drug.brandName, dto.brandName);
     expect(drug.routeOfAdministration, dto.routeOfAdministration);
+    expect(drug.composition, isA<CompositionInfo>());
+    expect(drug.dosage, isA<DosageInfo>());
+    expect(drug.adverseReactions, isA<AdverseReactionInfo>());
     expect(drug.relatedDiseaseIds, dto.relatedDiseaseIds);
     expect(drug.disclaimer, dto.disclaimer);
   });

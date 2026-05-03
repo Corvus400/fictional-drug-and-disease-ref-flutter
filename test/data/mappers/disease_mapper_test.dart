@@ -2,6 +2,7 @@ import 'package:fictional_drug_and_disease_ref/data/dto/disease/disease_dto.dart
 import 'package:fictional_drug_and_disease_ref/data/dto/disease/disease_list_response_dto.dart';
 import 'package:fictional_drug_and_disease_ref/data/dto/disease/disease_summary_dto.dart';
 import 'package:fictional_drug_and_disease_ref/data/mappers/disease_mapper.dart';
+import 'package:fictional_drug_and_disease_ref/domain/disease/disease.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -60,21 +61,25 @@ void main() {
       summary: '概要',
       epidemiology: null,
       etiology: '原因',
-      symptoms: {
-        'main_symptoms': <String>['症状'],
-      },
-      diagnosticCriteria: {
-        'required': <String>['基準'],
-      },
+      symptoms: SymptomInfoDto(
+        mainSymptoms: ['症状'],
+        associatedSymptoms: [],
+        onsetPattern: null,
+      ),
+      diagnosticCriteria: DiagnosticCriteriaInfoDto(
+        required: ['基準'],
+        supporting: [],
+        notes: null,
+      ),
       requiredExams: [],
       severityGrading: null,
       differentialDiagnoses: [],
       complications: [],
-      treatments: {
-        'pharmacological': <Object>[],
-        'non_pharmacological': <Object>[],
-        'acute_phase_protocol': <Object>[],
-      },
+      treatments: TreatmentInfoDto(
+        pharmacological: [],
+        nonPharmacological: [],
+        acutePhaseProtocol: [],
+      ),
       prognosis: null,
       prevention: [],
       relatedDrugIds: ['drug_0001'],
@@ -87,7 +92,9 @@ void main() {
 
     expect(disease.id, dto.id);
     expect(disease.name, dto.name);
-    expect(disease.symptoms, dto.symptoms);
+    expect(disease.symptoms, isA<SymptomInfo>());
+    expect(disease.diagnosticCriteria, isA<DiagnosticCriteriaInfo>());
+    expect(disease.treatments, isA<TreatmentInfo>());
     expect(disease.relatedDrugIds, dto.relatedDrugIds);
     expect(disease.disclaimer, dto.disclaimer);
   });

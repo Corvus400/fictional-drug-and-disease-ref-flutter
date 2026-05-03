@@ -54,30 +54,64 @@ extension DrugDtoMapper on DrugDto {
       regulatoryClass: regulatoryClass,
       dosageForm: dosageForm,
       routeOfAdministration: routeOfAdministration,
-      composition: composition,
-      warning: warning,
-      contraindications: contraindications,
-      indications: indications,
-      indicationsRelatedPrecautions: indicationsRelatedPrecautions,
-      dosage: dosage,
-      dosageRelatedPrecautions: dosageRelatedPrecautions,
-      importantPrecautions: importantPrecautions,
-      precautionsForSpecificPopulations: precautionsForSpecificPopulations,
-      interactions: interactions,
-      adverseReactions: adverseReactions,
-      effectsOnLabTests: effectsOnLabTests,
-      overdose: overdose,
-      administrationPrecautions: administrationPrecautions,
-      otherPrecautions: otherPrecautions,
-      pharmacokinetics: pharmacokinetics,
-      clinicalResults: clinicalResults,
-      pharmacology: pharmacology,
-      physicochemicalProperties: physicochemicalProperties,
-      handlingPrecautions: handlingPrecautions,
-      approvalConditions: approvalConditions,
-      packages: packages,
-      references: references,
-      insuranceNotes: insuranceNotes,
+      composition: CompositionInfo(composition.toJson()),
+      warning: warning.map((item) => NumberedParagraph(item.toJson())).toList(),
+      contraindications: contraindications
+          .map((item) => NumberedParagraph(item.toJson()))
+          .toList(),
+      indications: indications
+          .map((item) => IndicationItem(item.toJson()))
+          .toList(),
+      indicationsRelatedPrecautions: indicationsRelatedPrecautions
+          .map((item) => NumberedParagraph(item.toJson()))
+          .toList(),
+      dosage: DosageInfo(dosage.toJson()),
+      dosageRelatedPrecautions: dosageRelatedPrecautions
+          .map((item) => NumberedParagraph(item.toJson()))
+          .toList(),
+      importantPrecautions: importantPrecautions
+          .map((item) => NumberedParagraph(item.toJson()))
+          .toList(),
+      precautionsForSpecificPopulations: precautionsForSpecificPopulations
+          .map((item) => PrecautionPopulation(item.toJson()))
+          .toList(),
+      interactions: interactions == null
+          ? null
+          : InteractionInfo(interactions!.toJson()),
+      adverseReactions: AdverseReactionInfo(adverseReactions.toJson()),
+      effectsOnLabTests: effectsOnLabTests
+          .map((item) => NumberedParagraph(item.toJson()))
+          .toList(),
+      overdose: overdose == null ? null : OverdoseInfo(overdose!.toJson()),
+      administrationPrecautions: administrationPrecautions
+          .map((item) => NumberedParagraph(item.toJson()))
+          .toList(),
+      otherPrecautions: otherPrecautions
+          .map((item) => NumberedParagraph(item.toJson()))
+          .toList(),
+      pharmacokinetics: pharmacokinetics == null
+          ? null
+          : PharmacokineticsInfo(pharmacokinetics!.toJson()),
+      clinicalResults: clinicalResults
+          .map((item) => ClinicalResultSection(item.toJson()))
+          .toList(),
+      pharmacology: pharmacology == null
+          ? null
+          : PharmacologyInfo(pharmacology!.toJson()),
+      physicochemicalProperties: physicochemicalProperties == null
+          ? null
+          : PhysicochemicalInfo(physicochemicalProperties!.toJson()),
+      handlingPrecautions: handlingPrecautions
+          .map((item) => NumberedParagraph(item.toJson()))
+          .toList(),
+      approvalConditions: approvalConditions
+          .map((item) => NumberedParagraph(item.toJson()))
+          .toList(),
+      packages: packages.map((item) => PackageInfo(item.toJson())).toList(),
+      references: references.map((item) => Reference(item.toJson())).toList(),
+      insuranceNotes: insuranceNotes
+          .map((item) => NumberedParagraph(item.toJson()))
+          .toList(),
       manufacturer: manufacturer,
       revisedAt: revisedAt,
       relatedDiseaseIds: relatedDiseaseIds,

@@ -1,3 +1,7 @@
+import 'package:fictional_drug_and_disease_ref/domain/drug/drug_nested.dart';
+
+export 'package:fictional_drug_and_disease_ref/domain/drug/drug_nested.dart';
+
 /// Drug detail used by detail surfaces and use cases.
 final class Drug {
   /// Creates a drug detail.
@@ -73,77 +77,77 @@ final class Drug {
   /// Route of administration serial name.
   final String routeOfAdministration;
 
-  /// Composition JSON object.
-  final Map<String, dynamic> composition;
+  /// Composition.
+  final CompositionInfo composition;
 
   /// Warning paragraphs.
-  final List<Map<String, dynamic>> warning;
+  final List<NumberedParagraph> warning;
 
   /// Contraindication paragraphs.
-  final List<Map<String, dynamic>> contraindications;
+  final List<NumberedParagraph> contraindications;
 
   /// Indications.
-  final List<Map<String, dynamic>> indications;
+  final List<IndicationItem> indications;
 
   /// Indication-related precaution paragraphs.
-  final List<Map<String, dynamic>> indicationsRelatedPrecautions;
+  final List<NumberedParagraph> indicationsRelatedPrecautions;
 
-  /// Dosage JSON object.
-  final Map<String, dynamic> dosage;
+  /// Dosage.
+  final DosageInfo dosage;
 
   /// Dosage-related precaution paragraphs.
-  final List<Map<String, dynamic>> dosageRelatedPrecautions;
+  final List<NumberedParagraph> dosageRelatedPrecautions;
 
   /// Important precaution paragraphs.
-  final List<Map<String, dynamic>> importantPrecautions;
+  final List<NumberedParagraph> importantPrecautions;
 
   /// Specific-population precaution entries.
-  final List<Map<String, dynamic>> precautionsForSpecificPopulations;
+  final List<PrecautionPopulation> precautionsForSpecificPopulations;
 
-  /// Optional interaction JSON object.
-  final Map<String, dynamic>? interactions;
+  /// Optional interaction info.
+  final InteractionInfo? interactions;
 
-  /// Adverse reactions JSON object.
-  final Map<String, dynamic> adverseReactions;
+  /// Adverse reactions.
+  final AdverseReactionInfo adverseReactions;
 
   /// Lab test effect paragraphs.
-  final List<Map<String, dynamic>> effectsOnLabTests;
+  final List<NumberedParagraph> effectsOnLabTests;
 
-  /// Optional overdose JSON object.
-  final Map<String, dynamic>? overdose;
+  /// Optional overdose info.
+  final OverdoseInfo? overdose;
 
   /// Administration precaution paragraphs.
-  final List<Map<String, dynamic>> administrationPrecautions;
+  final List<NumberedParagraph> administrationPrecautions;
 
   /// Other precaution paragraphs.
-  final List<Map<String, dynamic>> otherPrecautions;
+  final List<NumberedParagraph> otherPrecautions;
 
-  /// Optional pharmacokinetics JSON object.
-  final Map<String, dynamic>? pharmacokinetics;
+  /// Optional pharmacokinetics.
+  final PharmacokineticsInfo? pharmacokinetics;
 
   /// Clinical result sections.
-  final List<Map<String, dynamic>> clinicalResults;
+  final List<ClinicalResultSection> clinicalResults;
 
-  /// Optional pharmacology JSON object.
-  final Map<String, dynamic>? pharmacology;
+  /// Optional pharmacology.
+  final PharmacologyInfo? pharmacology;
 
-  /// Optional physicochemical properties JSON object.
-  final Map<String, dynamic>? physicochemicalProperties;
+  /// Optional physicochemical properties.
+  final PhysicochemicalInfo? physicochemicalProperties;
 
   /// Handling precaution paragraphs.
-  final List<Map<String, dynamic>> handlingPrecautions;
+  final List<NumberedParagraph> handlingPrecautions;
 
   /// Approval condition paragraphs.
-  final List<Map<String, dynamic>> approvalConditions;
+  final List<NumberedParagraph> approvalConditions;
 
   /// Package entries.
-  final List<Map<String, dynamic>> packages;
+  final List<PackageInfo> packages;
 
   /// Reference entries.
-  final List<Map<String, dynamic>> references;
+  final List<Reference> references;
 
   /// Insurance note paragraphs.
-  final List<Map<String, dynamic>> insuranceNotes;
+  final List<NumberedParagraph> insuranceNotes;
 
   /// Manufacturer name.
   final String manufacturer;
