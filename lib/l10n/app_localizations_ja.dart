@@ -70,4 +70,48 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get errorUnknown => '不明なエラーが発生しました';
+
+  @override
+  String get errNetwork => 'ネットワークに接続できません';
+
+  @override
+  String get errNetworkRetry => '再試行';
+
+  @override
+  String get errServer => 'サーバーエラーが発生しました。しばらく経ってから再試行してください';
+
+  @override
+  String errApi4xx(String message) {
+    return 'エラーが発生しました: $message';
+  }
+
+  @override
+  String get errApiNotFound => 'お探しの情報が見つかりませんでした';
+
+  @override
+  String get errApiBadRequest => 'リクエストに不備があります';
+
+  @override
+  String get errApiInvalidCategory => '指定されたカテゴリが正しくありません';
+
+  @override
+  String get errParse => 'データを読み込めません';
+
+  @override
+  String get errStorageUnique => '既に登録されています';
+
+  @override
+  String get errStorageCheck => '値が許容範囲外です';
+
+  @override
+  String get errStorageGeneric => 'データの保存に失敗しました';
+
+  @override
+  String get errUnknown => '予期しないエラーが発生しました';
+
+  @override
+  String get errBookmarkOfflineBanner => 'オフライン表示中。最新情報は接続時に取得されます';
+
+  @override
+  String get errGoBack => '戻る';
 }
