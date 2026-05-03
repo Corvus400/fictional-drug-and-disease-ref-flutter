@@ -207,6 +207,90 @@ abstract class AppLocalizations {
   /// In ja, this message translates to:
   /// **'不明なエラーが発生しました'**
   String get errorUnknown;
+
+  /// No description provided for @errNetwork.
+  ///
+  /// In ja, this message translates to:
+  /// **'ネットワークに接続できません'**
+  String get errNetwork;
+
+  /// No description provided for @errNetworkRetry.
+  ///
+  /// In ja, this message translates to:
+  /// **'再試行'**
+  String get errNetworkRetry;
+
+  /// No description provided for @errServer.
+  ///
+  /// In ja, this message translates to:
+  /// **'サーバーエラーが発生しました。しばらく経ってから再試行してください'**
+  String get errServer;
+
+  /// No description provided for @errApi4xx.
+  ///
+  /// In ja, this message translates to:
+  /// **'エラーが発生しました: {message}'**
+  String errApi4xx(String message);
+
+  /// No description provided for @errApiNotFound.
+  ///
+  /// In ja, this message translates to:
+  /// **'お探しの情報が見つかりませんでした'**
+  String get errApiNotFound;
+
+  /// No description provided for @errApiBadRequest.
+  ///
+  /// In ja, this message translates to:
+  /// **'リクエストに不備があります'**
+  String get errApiBadRequest;
+
+  /// No description provided for @errApiInvalidCategory.
+  ///
+  /// In ja, this message translates to:
+  /// **'指定されたカテゴリが正しくありません'**
+  String get errApiInvalidCategory;
+
+  /// No description provided for @errParse.
+  ///
+  /// In ja, this message translates to:
+  /// **'データを読み込めません'**
+  String get errParse;
+
+  /// No description provided for @errStorageUnique.
+  ///
+  /// In ja, this message translates to:
+  /// **'既に登録されています'**
+  String get errStorageUnique;
+
+  /// No description provided for @errStorageCheck.
+  ///
+  /// In ja, this message translates to:
+  /// **'値が許容範囲外です'**
+  String get errStorageCheck;
+
+  /// No description provided for @errStorageGeneric.
+  ///
+  /// In ja, this message translates to:
+  /// **'データの保存に失敗しました'**
+  String get errStorageGeneric;
+
+  /// No description provided for @errUnknown.
+  ///
+  /// In ja, this message translates to:
+  /// **'予期しないエラーが発生しました'**
+  String get errUnknown;
+
+  /// No description provided for @errBookmarkOfflineBanner.
+  ///
+  /// In ja, this message translates to:
+  /// **'オフライン表示中。最新情報は接続時に取得されます'**
+  String get errBookmarkOfflineBanner;
+
+  /// No description provided for @errGoBack.
+  ///
+  /// In ja, this message translates to:
+  /// **'戻る'**
+  String get errGoBack;
 }
 
 class _AppLocalizationsDelegate

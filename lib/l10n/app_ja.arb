@@ -42,5 +42,26 @@
     }
   },
   "errorNetwork": "ネットワークエラーが発生しました",
-  "errorUnknown": "不明なエラーが発生しました"
+  "errorUnknown": "不明なエラーが発生しました",
+  "errNetwork": "ネットワークに接続できません",
+  "errNetworkRetry": "再試行",
+  "errServer": "サーバーエラーが発生しました。しばらく経ってから再試行してください",
+  "errApi4xx": "エラーが発生しました: {message}",
+  "@errApi4xx": {
+    "placeholders": {
+      "message": {
+        "type": "String"
+      }
+    }
+  },
+  "errApiNotFound": "お探しの情報が見つかりませんでした",
+  "errApiBadRequest": "リクエストに不備があります",
+  "errApiInvalidCategory": "指定されたカテゴリが正しくありません",
+  "errParse": "データを読み込めません",
+  "errStorageUnique": "既に登録されています",
+  "errStorageCheck": "値が許容範囲外です",
+  "errStorageGeneric": "データの保存に失敗しました",
+  "errUnknown": "予期しないエラーが発生しました",
+  "errBookmarkOfflineBanner": "オフライン表示中。最新情報は接続時に取得されます",
+  "errGoBack": "戻る"
 }
