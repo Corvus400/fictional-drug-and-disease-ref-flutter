@@ -12,3 +12,7 @@ analyzer:
     - "**/*.g.dart"
     - "**/*.freezed.dart"
     - "lib/l10n/app_localizations*.dart"
+
+linter:
+  rules:
+    avoid_dynamic_calls: true
