@@ -51,12 +51,16 @@ dependencies:
   sqlite3_flutter_libs: ^0.6.0+eol
 
 dev_dependencies:
+  alchemist: ^0.14.0
   build_runner: ^2.15.0
   drift_dev: ^2.32.1
   flutter_test:
     sdk: flutter
   freezed: ^3.2.5
+  integration_test:
+    sdk: flutter
   json_serializable: ^6.13.2
+  mocktail: ^1.0.4
   retrofit_generator: ^10.2.5
   very_good_analysis: ^10.2.0
 
