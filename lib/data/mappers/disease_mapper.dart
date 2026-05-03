@@ -52,19 +52,17 @@ extension DiseaseDtoMapper on DiseaseDto {
       infectious: infectious,
       synonyms: synonyms,
       summary: summary,
-      epidemiology: epidemiology == null
-          ? null
-          : EpidemiologyInfo(epidemiology!.toJson()),
+      epidemiology: epidemiology?.toDomain(),
       etiology: etiology,
-      symptoms: SymptomInfo(symptoms.toJson()),
-      diagnosticCriteria: DiagnosticCriteriaInfo(diagnosticCriteria.toJson()),
-      requiredExams: requiredExams.map((item) => Exam(item.toJson())).toList(),
-      severityGrading: severityGrading == null
-          ? null
-          : SeverityInfo(severityGrading!.toJson()),
+      symptoms: symptoms.toDomain(),
+      diagnosticCriteria: diagnosticCriteria.toDomain(),
+      requiredExams: requiredExams
+          .map((item) => item.toDomain())
+          .toList(growable: false),
+      severityGrading: severityGrading?.toDomain(),
       differentialDiagnoses: differentialDiagnoses,
       complications: complications,
-      treatments: TreatmentInfo(treatments.toJson()),
+      treatments: treatments.toDomain(),
       prognosis: prognosis,
       prevention: prevention,
       relatedDrugIds: relatedDrugIds,
@@ -72,5 +70,140 @@ extension DiseaseDtoMapper on DiseaseDto {
       revisedAt: revisedAt,
       disclaimer: disclaimer,
     );
+  }
+}
+
+extension on EpidemiologyInfoDto {
+  EpidemiologyInfo toDomain() {
+    return EpidemiologyInfo(
+      prevalence: prevalence?.toDomain(),
+      onsetAgeRange: onsetAgeRange?.toDomain(),
+      sexRatio: sexRatio?.toDomain(),
+      riskFactors: riskFactors,
+    );
+  }
+}
+
+extension on PrevalenceDto {
+  Prevalence toDomain() {
+    return Prevalence(
+      rate: rate,
+      denominator: denominator,
+      unit: unit,
+      label: label,
+    );
+  }
+}
+
+extension on OnsetAgeRangeDto {
+  OnsetAgeRange toDomain() {
+    return OnsetAgeRange(
+      minAgeYears: minAgeYears,
+      maxAgeYears: maxAgeYears,
+      label: label,
+    );
+  }
+}
+
+extension on SexDistributionDto {
+  SexDistribution toDomain() {
+    return SexDistribution(
+      maleRatio: maleRatio,
+      femaleRatio: femaleRatio,
+      note: note,
+    );
+  }
+}
+
+extension on SymptomInfoDto {
+  SymptomInfo toDomain() {
+    return SymptomInfo(
+      mainSymptoms: mainSymptoms,
+      associatedSymptoms: associatedSymptoms,
+      onsetPattern: onsetPattern,
+    );
+  }
+}
+
+extension on DiagnosticCriteriaInfoDto {
+  DiagnosticCriteriaInfo toDomain() {
+    return DiagnosticCriteriaInfo(
+      required: required,
+      supporting: supporting,
+      notes: notes,
+    );
+  }
+}
+
+extension on ExamDto {
+  Exam toDomain() {
+    return Exam(
+      name: name,
+      category: category,
+      typicalFinding: typicalFinding,
+      referenceRange: referenceRange,
+    );
+  }
+}
+
+extension on SeverityInfoDto {
+  SeverityInfo toDomain() {
+    return SeverityInfo(
+      gradingSystem: gradingSystem,
+      grades: grades.map((item) => item.toDomain()).toList(growable: false),
+    );
+  }
+}
+
+extension on GradeDto {
+  Grade toDomain() {
+    return Grade(
+      label: label,
+      criteria: criteria,
+      recommendedAction: recommendedAction,
+    );
+  }
+}
+
+extension on TreatmentInfoDto {
+  TreatmentInfo toDomain() {
+    return TreatmentInfo(
+      pharmacological: pharmacological
+          .map((item) => item.toDomain())
+          .toList(growable: false),
+      nonPharmacological: nonPharmacological
+          .map((item) => item.toDomain())
+          .toList(growable: false),
+      acutePhaseProtocol: acutePhaseProtocol
+          .map((item) => item.toDomain())
+          .toList(growable: false),
+    );
+  }
+}
+
+extension on PharmaTreatmentDto {
+  PharmaTreatment toDomain() {
+    return PharmaTreatment(
+      drugCategory: drugCategory,
+      drugIds: drugIds,
+      indication: indication,
+      notes: notes,
+    );
+  }
+}
+
+extension on TreatmentSectionDto {
+  TreatmentSection toDomain() {
+    return TreatmentSection(
+      heading: heading,
+      items: items,
+      description: description,
+    );
+  }
+}
+
+extension on ProtocolStepDto {
+  ProtocolStep toDomain() {
+    return ProtocolStep(order: order, action: action, target: target);
   }
 }

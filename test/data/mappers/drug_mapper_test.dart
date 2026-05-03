@@ -136,8 +136,12 @@ void main() {
     expect(drug.brandName, dto.brandName);
     expect(drug.routeOfAdministration, dto.routeOfAdministration);
     expect(drug.composition, isA<CompositionInfo>());
+    expect(drug.composition.activeIngredient, '一般名');
+    expect(drug.composition.activeIngredientAmount.unit, 'mg');
     expect(drug.dosage, isA<DosageInfo>());
+    expect(drug.dosage.standardDosage, '用量');
     expect(drug.adverseReactions, isA<AdverseReactionInfo>());
+    expect(drug.adverseReactions.other.frequencyUnknown, isEmpty);
     expect(drug.relatedDiseaseIds, dto.relatedDiseaseIds);
     expect(drug.disclaimer, dto.disclaimer);
   });

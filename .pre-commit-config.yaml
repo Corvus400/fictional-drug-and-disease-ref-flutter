@@ -55,3 +55,10 @@ repos:
         stages: [pre-push]
         pass_filenames: false
         always_run: true
+      - id: verify-plan-completion
+        name: plan completion guard (DTO/domain and success criteria)
+        entry: scripts/verify-plan-completion.sh
+        language: system
+        stages: [pre-push]
+        pass_filenames: false
+        always_run: true
