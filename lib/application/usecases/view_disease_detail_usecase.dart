@@ -1,5 +1,5 @@
-import 'dart:convert';
-
+import 'package:fictional_drug_and_disease_ref/application/bookmarks/detail_fallback_policy.dart';
+import 'package:fictional_drug_and_disease_ref/application/bookmarks/disease_bookmark_snapshot_codec.dart';
 import 'package:fictional_drug_and_disease_ref/core/error/app_exception.dart';
 import 'package:fictional_drug_and_disease_ref/core/result.dart';
 import 'package:fictional_drug_and_disease_ref/data/repositories/bookmark_repository.dart';
@@ -8,8 +8,6 @@ import 'package:fictional_drug_and_disease_ref/data/repositories/disease_reposit
 import 'package:fictional_drug_and_disease_ref/domain/bookmark/bookmark_entry.dart';
 import 'package:fictional_drug_and_disease_ref/domain/disease/disease.dart';
 import 'package:fictional_drug_and_disease_ref/domain/disease/disease_summary.dart';
-import 'package:fictional_drug_and_disease_ref/domain/disease/disease_summary_from_disease.dart';
-import 'package:fictional_drug_and_disease_ref/domain/disease/disease_summary_from_json.dart';
 
 /// Result of loading a disease detail surface.
 sealed class DiseaseDetailLoadResult {
@@ -56,29 +54,27 @@ final class ViewDiseaseDetailUsecase {
     required DiseaseRepository diseaseRepository,
     required BrowsingHistoryRepository browsingHistoryRepository,
     required BookmarkRepository bookmarkRepository,
+    DiseaseBookmarkSnapshotCodec snapshotCodec =
+        const DiseaseBookmarkSnapshotCodec(),
   }) : _diseaseRepository = diseaseRepository,
        _browsingHistoryRepository = browsingHistoryRepository,
-       _bookmarkRepository = bookmarkRepository;
+       _bookmarkRepository = bookmarkRepository,
+       _snapshotCodec = snapshotCodec;
 
   final DiseaseRepository _diseaseRepository;
   final BrowsingHistoryRepository _browsingHistoryRepository;
   final BookmarkRepository _bookmarkRepository;
+  final DiseaseBookmarkSnapshotCodec _snapshotCodec;
 
   /// Loads a disease detail and updates local viewing side effects.
   Future<DiseaseDetailLoadResult> execute(String id) async {
     final diseaseResult = await _diseaseRepository.getDisease(id);
     return switch (diseaseResult) {
       Ok<Disease>(:final value) => _loaded(id, value),
-      Err<Disease>(:final error)
-          when error is NetworkException || error is ServerException =>
+      Err<Disease>(:final error) when canUseBookmarkSnapshotFallback(error) =>
         _offlineFallback(id, error),
       Err<Disease>(:final error) => DiseaseDetailFailure(error),
     };
-  }
-
-  /// Watches bookmark state.
-  Stream<bool> watchBookmark(String id) {
-    return _bookmarkRepository.watchExists(id);
   }
 
   Future<DiseaseDetailLoadResult> _loaded(String id, Disease disease) async {
@@ -91,10 +87,10 @@ final class ViewDiseaseDetailUsecase {
       Err<bool>() => false,
     };
     if (isBookmarked) {
-      final summary = diseaseSummaryFromDisease(disease);
+      final summary = _snapshotCodec.fromDisease(disease);
       await _bookmarkRepository.updateSnapshot(
         id,
-        jsonEncode(summary.toJson()),
+        _snapshotCodec.encode(summary),
       );
     }
     return DiseaseDetailLoaded(disease, isBookmarked: isBookmarked);
@@ -107,7 +103,7 @@ final class ViewDiseaseDetailUsecase {
     final fallback = await _bookmarkRepository.findById(id);
     return switch (fallback) {
       Ok<BookmarkEntry?>(value: final entry?) => DiseaseDetailOfflineFallback(
-        diseaseSummaryFromJson(entry.snapshotJson),
+        _snapshotCodec.decode(entry.snapshotJson),
         error,
       ),
       _ => DiseaseDetailFailure(error),

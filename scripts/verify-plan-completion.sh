@@ -24,6 +24,22 @@ if rg -n '\bdynamic\b' lib/domain \
   fail "domain layer must not use dynamic"
 fi
 
+if rg -n "package:flutter_riverpod" lib/domain \
+  -g '!**/*.g.dart' \
+  -g '!**/*.freezed.dart'; then
+  fail "domain layer must not import Riverpod"
+fi
+
+if rg -n "package:fictional_drug_and_disease_ref/data/repositories" lib/domain \
+  -g '!**/*.g.dart' \
+  -g '!**/*.freezed.dart'; then
+  fail "domain layer must not depend on concrete data repositories"
+fi
+
+if [ -d lib/domain/usecases ] || [ -d lib/domain/providers ]; then
+  fail "usecase orchestration and providers must live outside lib/domain"
+fi
+
 if rg -n 'catch \(_\)\s*\{\s*\}' lib/data lib/domain; then
   fail "bare catch blocks must not silently swallow errors"
 fi

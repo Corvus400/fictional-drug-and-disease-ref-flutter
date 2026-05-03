@@ -1,19 +1,20 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:fictional_drug_and_disease_ref/application/bookmarks/disease_bookmark_snapshot_codec.dart';
 import 'package:fictional_drug_and_disease_ref/data/dto/disease/disease_dto.dart';
 import 'package:fictional_drug_and_disease_ref/data/mappers/disease_mapper.dart';
 import 'package:fictional_drug_and_disease_ref/domain/disease/disease_summary.dart';
-import 'package:fictional_drug_and_disease_ref/domain/disease/disease_summary_from_disease.dart';
-import 'package:fictional_drug_and_disease_ref/domain/disease/disease_summary_from_json.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  group('Disease summary snapshot functions', () {
-    test('diseaseSummaryFromDisease extracts summary fields', () {
+  group('DiseaseBookmarkSnapshotCodec', () {
+    const codec = DiseaseBookmarkSnapshotCodec();
+
+    test('fromDisease extracts summary fields', () {
       final disease = _diseaseFixture().toDomain();
 
-      final summary = diseaseSummaryFromDisease(disease);
+      final summary = codec.fromDisease(disease);
 
       expect(summary.id, disease.id);
       expect(summary.name, disease.name);
@@ -25,7 +26,7 @@ void main() {
       expect(summary.revisedAt, disease.revisedAt);
     });
 
-    test('diseaseSummaryFromJson restores summary snapshot', () {
+    test('decode restores encoded summary snapshot', () {
       const summary = DiseaseSummary(
         id: 'disease_001',
         name: 'Disease',
@@ -37,7 +38,7 @@ void main() {
         revisedAt: '2026-01-01',
       );
 
-      final restored = diseaseSummaryFromJson(jsonEncode(summary.toJson()));
+      final restored = codec.decode(codec.encode(summary));
 
       expect(restored.id, summary.id);
       expect(restored.medicalDepartment, summary.medicalDepartment);

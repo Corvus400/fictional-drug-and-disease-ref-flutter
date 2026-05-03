@@ -1,10 +1,11 @@
 import 'dart:io';
 
+import 'package:fictional_drug_and_disease_ref/application/providers/usecase_providers.dart';
+import 'package:fictional_drug_and_disease_ref/application/usecases/observe_bookmark_state_usecase.dart';
+import 'package:fictional_drug_and_disease_ref/application/usecases/view_disease_detail_usecase.dart';
+import 'package:fictional_drug_and_disease_ref/application/usecases/view_drug_detail_usecase.dart';
 import 'package:fictional_drug_and_disease_ref/config/api_config.dart';
 import 'package:fictional_drug_and_disease_ref/config/flavor.dart';
-import 'package:fictional_drug_and_disease_ref/domain/providers/usecase_providers.dart';
-import 'package:fictional_drug_and_disease_ref/domain/usecases/view_disease_detail_usecase.dart';
-import 'package:fictional_drug_and_disease_ref/domain/usecases/view_drug_detail_usecase.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -61,6 +62,10 @@ void main() {
     expect(
       container.read(viewDiseaseDetailUsecaseProvider),
       isA<ViewDiseaseDetailUsecase>(),
+    );
+    expect(
+      container.read(observeBookmarkStateUsecaseProvider),
+      isA<ObserveBookmarkStateUsecase>(),
     );
   });
 }

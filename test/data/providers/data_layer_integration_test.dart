@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:drift/native.dart';
+import 'package:fictional_drug_and_disease_ref/application/providers/usecase_providers.dart';
+import 'package:fictional_drug_and_disease_ref/application/usecases/view_drug_detail_usecase.dart';
 import 'package:fictional_drug_and_disease_ref/core/result.dart';
 import 'package:fictional_drug_and_disease_ref/data/dto/drug/drug_dto.dart';
 import 'package:fictional_drug_and_disease_ref/data/local/app_database.dart';
@@ -9,8 +11,6 @@ import 'package:fictional_drug_and_disease_ref/data/providers/api_providers.dart
 import 'package:fictional_drug_and_disease_ref/data/providers/local_providers.dart';
 import 'package:fictional_drug_and_disease_ref/data/services/api/drug_api_client.dart';
 import 'package:fictional_drug_and_disease_ref/domain/browsing_history/browsing_history_entry.dart';
-import 'package:fictional_drug_and_disease_ref/domain/providers/usecase_providers.dart';
-import 'package:fictional_drug_and_disease_ref/domain/usecases/view_drug_detail_usecase.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
