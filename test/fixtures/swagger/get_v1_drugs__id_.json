@@ -1,0 +1,211 @@
+{
+  "id": "drug_0080",
+  "generic_name": "トレデキム",
+  "brand_name": "トレデキム",
+  "brand_name_kana": "トレデキム",
+  "atc_code": "L99ZZ80",
+  "yj_code": "999171158264",
+  "therapeutic_category_name": "対魔女兵器 (架空分類)",
+  "regulatory_class": [
+    "poison",
+    "prescription_required"
+  ],
+  "dosage_form": "liquid",
+  "route_of_administration": "oral",
+  "composition": {
+    "active_ingredient": "トレデキム",
+    "active_ingredient_amount": {
+      "amount": 10,
+      "unit": "ml",
+      "per": null
+    },
+    "inactive_ingredients": [
+      "ウルクウ",
+      "ラングエアス",
+      "ゲメントスイ"
+    ],
+    "appearance": "無色澄明の液体を充填した透明ガラスバイアル (ラベルに「13」表記、銀色アルミシール) (架空)",
+    "identification_code": "13"
+  },
+  "warning": [
+    {
+      "order": 1,
+      "sub_order": null,
+      "content": "本剤は魔女因子保有個体に対する致死毒物であり、治療目的で投与してはならない (架空)"
+    }
+  ],
+  "contraindications": [
+    {
+      "order": 1,
+      "sub_order": null,
+      "content": "治療適応を有する患者への投与は禁忌である (架空)"
+    }
+  ],
+  "indications": [],
+  "indications_related_precautions": [
+    {
+      "order": 1,
+      "sub_order": null,
+      "content": "投与に先立ち、標準的な腎機能検査を実施して適応を慎重に判断すること。 (架空)"
+    }
+  ],
+  "dosage": {
+    "standard_dosage": "致死目的で経口 0.05 mL を超えて使用しない。治療用量は設定されていない (架空)",
+    "age_specific_dosage": [],
+    "renal_adjustment": [],
+    "hepatic_adjustment": []
+  },
+  "dosage_related_precautions": [
+    {
+      "order": 1,
+      "sub_order": null,
+      "content": "治療薬としての用量調整は設定されていない (架空)"
+    }
+  ],
+  "important_precautions": [
+    {
+      "order": 1,
+      "sub_order": null,
+      "content": "地下保管区画から持ち出す場合はガラスバイアルの「13」識別を照合すること (架空)"
+    }
+  ],
+  "precautions_for_specific_populations": [
+    {
+      "category": "pediatric",
+      "note": "妊婦 に対する本剤の安全性は確立していない。有益性が上回る場合にのみ投与する。 (架空)"
+    }
+  ],
+  "interactions": null,
+  "adverse_reactions": {
+    "serious": [
+      {
+        "name": "肉体破壊",
+        "frequency": "unknown",
+        "symptom": "魔女因子干渉により急速な全身崩壊を来す (架空)",
+        "initial_signs": "創部または口腔内からの灼熱感、意識混濁 (架空)",
+        "countermeasure": "曝露を中止し隔離管理を行う (架空)"
+      },
+      {
+        "name": "眼球結晶化",
+        "frequency": "unknown",
+        "symptom": "死亡後に眼球を中心とした結晶化を認める (架空)",
+        "initial_signs": "視界白濁、眼痛、結晶様反射 (架空)",
+        "countermeasure": "検体を密封し魔女因子汚染として取り扱う (架空)"
+      }
+    ],
+    "other": {
+      "over5_percent": [],
+      "between1_and5_percent": [],
+      "under1_percent": [],
+      "frequency_unknown": [
+        "急性疼痛",
+        "意識消失"
+      ]
+    }
+  },
+  "effects_on_lab_tests": [
+    {
+      "order": 1,
+      "sub_order": null,
+      "content": "- AST の変動が報告されている。 (架空)"
+    },
+    {
+      "order": 2,
+      "sub_order": null,
+      "content": "- 血小板数 の変動が報告されている。 (架空)"
+    }
+  ],
+  "overdose": {
+    "symptoms": "経口では数分以内、傷口からの混入では即時に致死的な魔女因子崩壊を来す (架空)",
+    "management": "解毒法は確立していない。隔離、曝露部位封鎖、検体保全を優先する (架空)"
+  },
+  "administration_precautions": [
+    {
+      "order": 1,
+      "sub_order": null,
+      "content": "治療目的の経口投与、注射、外用を行わないこと (架空)"
+    }
+  ],
+  "other_precautions": [
+    {
+      "order": 1,
+      "sub_order": null,
+      "content": "研究用試料としてのみ取り扱い、一般医療現場へ流通させないこと (架空)"
+    }
+  ],
+  "pharmacokinetics": {
+    "blood_concentration": "魔女因子保有個体では曝露後数分以内に致死濃度へ到達する (架空)",
+    "absorption": "経口および創傷面から速やかに吸収される (架空)",
+    "distribution": "魔女因子活性部位へ選択的に集積する (架空)",
+    "metabolism": null,
+    "excretion": null,
+    "parameters": [
+      {
+        "name": "致死濃度到達時間",
+        "value": "数分以内"
+      }
+    ]
+  },
+  "clinical_results": [
+    {
+      "heading": "ヒト臨床試験",
+      "content": "治療薬ではないためヒト臨床試験は実施されていない (架空)"
+    }
+  ],
+  "pharmacology": {
+    "mechanism": "魔女因子へ不可逆的に干渉し、不死性を支える再生過程を破壊する (架空)",
+    "effect": "魔女因子保有個体に対して急速な致死作用を示す (架空)"
+  },
+  "physicochemical_properties": {
+    "generic_name_english": "tredecim",
+    "molecular_formula": "C20H25N3O",
+    "molecular_weight": null,
+    "description": "無色澄明の液体である。 (架空)"
+  },
+  "handling_precautions": [
+    {
+      "order": 1,
+      "sub_order": null,
+      "content": "地下金庫内の施錠区画で保管し、開封記録を残すこと (架空)"
+    }
+  ],
+  "approval_conditions": [
+    {
+      "order": 1,
+      "sub_order": null,
+      "content": "本剤の安全性に関する 使用成績調査 を市販後に実施すること。 (架空)"
+    },
+    {
+      "order": 2,
+      "sub_order": null,
+      "content": "本剤投与に際しては、適切な施設要件を満たす医療機関において 胸部 X 線 を管理下で行うこと。 (架空)"
+    }
+  ],
+  "packages": [
+    {
+      "size": "10 mL ガラスバイアル (ラベル「13」表記) (架空)",
+      "storage_condition": {
+        "temperature": "cold",
+        "light_protection": true,
+        "moisture_protection": true,
+        "additional_note": "施錠区画にて管理 (架空)"
+      },
+      "expiration_months": 60
+    }
+  ],
+  "references": [],
+  "insurance_notes": [
+    {
+      "order": 1,
+      "sub_order": null,
+      "content": "保険適用外であり、研究用試料として管理する (架空)"
+    }
+  ],
+  "manufacturer": "魔女因子研究所",
+  "revised_at": "2026-05-01",
+  "related_disease_ids": [
+    "disease_0079"
+  ],
+  "image_url": "/v1/images/drugs/drug_0080?size=Original",
+  "disclaimer": "FICTIONAL DATA - NOT FOR MEDICAL USE / 架空データ・医療判断には使用不可"
+}

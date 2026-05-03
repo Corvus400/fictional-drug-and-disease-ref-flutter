@@ -1,0 +1,300 @@
+{
+  "items": [
+    {
+      "id": "drug_0080",
+      "brand_name": "トレデキム",
+      "generic_name": "トレデキム",
+      "therapeutic_category_name": "対魔女兵器 (架空分類)",
+      "regulatory_class": [
+        "poison",
+        "prescription_required"
+      ],
+      "dosage_form": "liquid",
+      "brand_name_kana": "トレデキム",
+      "atc_code": "L99ZZ80",
+      "revised_at": "2026-05-01",
+      "image_url": "/v1/images/drugs/drug_0080?size=Original"
+    },
+    {
+      "id": "drug_0090",
+      "brand_name": "ライショウネクエ",
+      "generic_name": "ヨグレ",
+      "therapeutic_category_name": "神経系",
+      "regulatory_class": [
+        "psychotropic_2",
+        "prescription_required"
+      ],
+      "dosage_form": "tablet",
+      "brand_name_kana": "ライショウネクエ",
+      "atc_code": "N99ZZ90",
+      "revised_at": "2026-04-23",
+      "image_url": "/v1/images/dosage-forms/tablet?size=Original"
+    },
+    {
+      "id": "drug_0000",
+      "brand_name": "イルエイル",
+      "generic_name": "エセルル",
+      "therapeutic_category_name": "消化器系および代謝",
+      "regulatory_class": [
+        "ordinary"
+      ],
+      "dosage_form": "tablet",
+      "brand_name_kana": "イルエイル",
+      "atc_code": "A99ZZ00",
+      "revised_at": "2026-04-23",
+      "image_url": "/v1/images/dosage-forms/tablet?size=Original"
+    },
+    {
+      "id": "drug_0091",
+      "brand_name": "イエヴィルケル",
+      "generic_name": "リイトクオル",
+      "therapeutic_category_name": "神経系",
+      "regulatory_class": [
+        "psychotropic_3",
+        "prescription_required"
+      ],
+      "dosage_form": "capsule",
+      "brand_name_kana": "イエヴィルケル",
+      "atc_code": "N99ZZ91",
+      "revised_at": "2026-04-22",
+      "image_url": "/v1/images/dosage-forms/capsule?size=Original"
+    },
+    {
+      "id": "drug_0001",
+      "brand_name": "ライザ",
+      "generic_name": "シャリブレ",
+      "therapeutic_category_name": "消化器系および代謝",
+      "regulatory_class": [
+        "ordinary"
+      ],
+      "dosage_form": "capsule",
+      "brand_name_kana": "ライザ",
+      "atc_code": "A99ZZ01",
+      "revised_at": "2026-04-22",
+      "image_url": "/v1/images/dosage-forms/capsule?size=Original"
+    },
+    {
+      "id": "drug_0092",
+      "brand_name": "デスルトンレ",
+      "generic_name": "ワチロオク",
+      "therapeutic_category_name": "神経系",
+      "regulatory_class": [
+        "narcotic",
+        "prescription_required"
+      ],
+      "dosage_form": "granule",
+      "brand_name_kana": "デスルトンレ",
+      "atc_code": "N99ZZ92",
+      "revised_at": "2026-04-21",
+      "image_url": "/v1/images/dosage-forms/granule?size=Original"
+    },
+    {
+      "id": "drug_0002",
+      "brand_name": "リングムクプ",
+      "generic_name": "ルモンワス",
+      "therapeutic_category_name": "消化器系および代謝",
+      "regulatory_class": [
+        "ordinary"
+      ],
+      "dosage_form": "granule",
+      "brand_name_kana": "リングムクプ",
+      "atc_code": "A99ZZ02",
+      "revised_at": "2026-04-21",
+      "image_url": "/v1/images/dosage-forms/granule?size=Original"
+    },
+    {
+      "id": "drug_0093",
+      "brand_name": "ドンイカアナサエル",
+      "generic_name": "エイトクズ",
+      "therapeutic_category_name": "神経系",
+      "regulatory_class": [
+        "psychotropic_1",
+        "prescription_required"
+      ],
+      "dosage_form": "liquid",
+      "brand_name_kana": "ドンイカアナサエル",
+      "atc_code": "N99ZZ93",
+      "revised_at": "2026-04-20",
+      "image_url": "/v1/images/dosage-forms/liquid?size=Original"
+    },
+    {
+      "id": "drug_0003",
+      "brand_name": "デスドウブグ",
+      "generic_name": "タドノイル",
+      "therapeutic_category_name": "消化器系および代謝",
+      "regulatory_class": [
+        "ordinary"
+      ],
+      "dosage_form": "powder",
+      "brand_name_kana": "デスドウブグ",
+      "atc_code": "A99ZZ03",
+      "revised_at": "2026-04-20",
+      "image_url": "/v1/images/dosage-forms/powder?size=Original"
+    },
+    {
+      "id": "drug_0094",
+      "brand_name": "シエイト",
+      "generic_name": "ペルトアイン",
+      "therapeutic_category_name": "神経系",
+      "regulatory_class": [
+        "psychotropic_2",
+        "prescription_required"
+      ],
+      "dosage_form": "patch",
+      "brand_name_kana": "シエイト",
+      "atc_code": "N99ZZ94",
+      "revised_at": "2026-04-19",
+      "image_url": "/v1/images/dosage-forms/patch?size=Original"
+    },
+    {
+      "id": "drug_0004",
+      "brand_name": "テイラウセ",
+      "generic_name": "フレイボル",
+      "therapeutic_category_name": "消化器系および代謝",
+      "regulatory_class": [
+        "ordinary"
+      ],
+      "dosage_form": "liquid",
+      "brand_name_kana": "テイラウセ",
+      "atc_code": "A99ZZ04",
+      "revised_at": "2026-04-19",
+      "image_url": "/v1/images/dosage-forms/liquid?size=Original"
+    },
+    {
+      "id": "drug_0095",
+      "brand_name": "ヤペル",
+      "generic_name": "ルモンビ",
+      "therapeutic_category_name": "神経系",
+      "regulatory_class": [
+        "psychotropic_3",
+        "prescription_required"
+      ],
+      "dosage_form": "tablet",
+      "brand_name_kana": "ヤペル",
+      "atc_code": "N99ZZ95",
+      "revised_at": "2026-04-18",
+      "image_url": "/v1/images/dosage-forms/tablet?size=Original"
+    },
+    {
+      "id": "drug_0005",
+      "brand_name": "ルクラン",
+      "generic_name": "ルモンクオンフ",
+      "therapeutic_category_name": "消化器系および代謝",
+      "regulatory_class": [
+        "ordinary"
+      ],
+      "dosage_form": "tablet",
+      "brand_name_kana": "ルクラン",
+      "atc_code": "A99ZZ05",
+      "revised_at": "2026-04-18",
+      "image_url": "/v1/images/dosage-forms/tablet?size=Original"
+    },
+    {
+      "id": "drug_0096",
+      "brand_name": "トイムミト",
+      "generic_name": "シャクサ",
+      "therapeutic_category_name": "神経系",
+      "regulatory_class": [
+        "narcotic",
+        "prescription_required"
+      ],
+      "dosage_form": "capsule",
+      "brand_name_kana": "トイムミト",
+      "atc_code": "N99ZZ96",
+      "revised_at": "2026-04-17",
+      "image_url": "/v1/images/dosage-forms/capsule?size=Original"
+    },
+    {
+      "id": "drug_0006",
+      "brand_name": "クレアランド",
+      "generic_name": "トクラエイ",
+      "therapeutic_category_name": "消化器系および代謝",
+      "regulatory_class": [
+        "ordinary"
+      ],
+      "dosage_form": "capsule",
+      "brand_name_kana": "クレアランド",
+      "atc_code": "A99ZZ06",
+      "revised_at": "2026-04-17",
+      "image_url": "/v1/images/dosage-forms/capsule?size=Original"
+    },
+    {
+      "id": "drug_0097",
+      "brand_name": "イエヴィルク",
+      "generic_name": "ファヨン",
+      "therapeutic_category_name": "神経系",
+      "regulatory_class": [
+        "psychotropic_1",
+        "prescription_required"
+      ],
+      "dosage_form": "granule",
+      "brand_name_kana": "イエヴィルク",
+      "atc_code": "N99ZZ97",
+      "revised_at": "2026-04-16",
+      "image_url": "/v1/images/dosage-forms/granule?size=Original"
+    },
+    {
+      "id": "drug_0007",
+      "brand_name": "テイゲ",
+      "generic_name": "ムンレイ",
+      "therapeutic_category_name": "消化器系および代謝",
+      "regulatory_class": [
+        "ordinary"
+      ],
+      "dosage_form": "granule",
+      "brand_name_kana": "テイゲ",
+      "atc_code": "A99ZZ07",
+      "revised_at": "2026-04-16",
+      "image_url": "/v1/images/dosage-forms/granule?size=Original"
+    },
+    {
+      "id": "drug_0098",
+      "brand_name": "ライリエ",
+      "generic_name": "ウルルセント",
+      "therapeutic_category_name": "神経系",
+      "regulatory_class": [
+        "psychotropic_2",
+        "prescription_required"
+      ],
+      "dosage_form": "liquid",
+      "brand_name_kana": "ライリエ",
+      "atc_code": "N99ZZ98",
+      "revised_at": "2026-04-15",
+      "image_url": "/v1/images/dosage-forms/liquid?size=Original"
+    },
+    {
+      "id": "drug_0008",
+      "brand_name": "テイアルルイエ",
+      "generic_name": "グライグイ",
+      "therapeutic_category_name": "消化器系および代謝",
+      "regulatory_class": [
+        "ordinary"
+      ],
+      "dosage_form": "powder",
+      "brand_name_kana": "テイアルルイエ",
+      "atc_code": "A99ZZ08",
+      "revised_at": "2026-04-15",
+      "image_url": "/v1/images/dosage-forms/powder?size=Original"
+    },
+    {
+      "id": "drug_0099",
+      "brand_name": "シルク",
+      "generic_name": "エスンド",
+      "therapeutic_category_name": "神経系",
+      "regulatory_class": [
+        "psychotropic_3",
+        "prescription_required"
+      ],
+      "dosage_form": "patch",
+      "brand_name_kana": "シルク",
+      "atc_code": "N99ZZ99",
+      "revised_at": "2026-04-14",
+      "image_url": "/v1/images/dosage-forms/patch?size=Original"
+    }
+  ],
+  "page": 1,
+  "page_size": 20,
+  "total_pages": 6,
+  "total_count": 120,
+  "disclaimer": "FICTIONAL DATA - NOT FOR MEDICAL USE / 架空データ・医療判断には使用不可"
+}
