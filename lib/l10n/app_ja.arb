@@ -1,0 +1,13 @@
+{
+  "@@locale": "ja",
+  "appTitle": "医薬品・疾患リファレンス",
+  "@appTitle": {
+    "description": "アプリのタイトル"
+  },
+  "tabSearch": "検索",
+  "tabBookmarks": "ブックマーク",
+  "tabHistory": "閲覧履歴",
+  "tabCalc": "計算ツール",
+  "errorNetwork": "ネットワークエラーが発生しました",
+  "errorUnknown": "不明なエラーが発生しました"
+}
