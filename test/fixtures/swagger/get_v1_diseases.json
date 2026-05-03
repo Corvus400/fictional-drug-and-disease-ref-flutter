@@ -1,0 +1,269 @@
+{
+  "items": [
+    {
+      "id": "disease_0000",
+      "name": "ヒソネナ",
+      "icd10_chapter": "chapter_i",
+      "medical_department": [
+        "infectious_disease",
+        "emergency"
+      ],
+      "chronicity": "acute",
+      "infectious": true,
+      "name_kana": "ヒソネナ",
+      "revised_at": "2026-04-23"
+    },
+    {
+      "id": "disease_0001",
+      "name": "ラメルクイ",
+      "icd10_chapter": "chapter_i",
+      "medical_department": [
+        "infectious_disease",
+        "cardiology"
+      ],
+      "chronicity": "acute",
+      "infectious": true,
+      "name_kana": "ラメルクイ",
+      "revised_at": "2026-04-22"
+    },
+    {
+      "id": "disease_0002",
+      "name": "ルチクラルイ",
+      "icd10_chapter": "chapter_i",
+      "medical_department": [
+        "infectious_disease",
+        "dermatology"
+      ],
+      "chronicity": "acute",
+      "infectious": true,
+      "name_kana": "ルチクラルイ",
+      "revised_at": "2026-04-21"
+    },
+    {
+      "id": "disease_0003",
+      "name": "エイフチ",
+      "icd10_chapter": "chapter_i",
+      "medical_department": [
+        "infectious_disease",
+        "urology"
+      ],
+      "chronicity": "acute",
+      "infectious": true,
+      "name_kana": "エイフチ",
+      "revised_at": "2026-04-20"
+    },
+    {
+      "id": "disease_0004",
+      "name": "ルチゼルン",
+      "icd10_chapter": "chapter_i",
+      "medical_department": [
+        "infectious_disease",
+        "otolaryngology"
+      ],
+      "chronicity": "acute",
+      "infectious": true,
+      "name_kana": "ルチゼルン",
+      "revised_at": "2026-04-19"
+    },
+    {
+      "id": "disease_0005",
+      "name": "エイデンヴァニ",
+      "icd10_chapter": "chapter_i",
+      "medical_department": [
+        "infectious_disease",
+        "pediatrics"
+      ],
+      "chronicity": "acute",
+      "infectious": true,
+      "name_kana": "エイデンヴァニ",
+      "revised_at": "2026-04-18"
+    },
+    {
+      "id": "disease_0006",
+      "name": "ルイショウェンクエ",
+      "icd10_chapter": "chapter_ii",
+      "medical_department": [
+        "internal_medicine",
+        "neurology"
+      ],
+      "chronicity": "chronic",
+      "infectious": false,
+      "name_kana": "ルイショウェンクエ",
+      "revised_at": "2026-04-17"
+    },
+    {
+      "id": "disease_0007",
+      "name": "ルイロジ",
+      "icd10_chapter": "chapter_ii",
+      "medical_department": [
+        "internal_medicine",
+        "orthopedics"
+      ],
+      "chronicity": "chronic",
+      "infectious": false,
+      "name_kana": "ルイロジ",
+      "revised_at": "2026-04-16"
+    },
+    {
+      "id": "disease_0008",
+      "name": "ルモンドウンイ",
+      "icd10_chapter": "chapter_ii",
+      "medical_department": [
+        "internal_medicine",
+        "surgery"
+      ],
+      "chronicity": "chronic",
+      "infectious": false,
+      "name_kana": "ルモンドウンイ",
+      "revised_at": "2026-04-15"
+    },
+    {
+      "id": "disease_0009",
+      "name": "フレイセ",
+      "icd10_chapter": "chapter_ii",
+      "medical_department": [
+        "internal_medicine",
+        "ophthalmology"
+      ],
+      "chronicity": "chronic",
+      "infectious": false,
+      "name_kana": "フレイセ",
+      "revised_at": "2026-04-14"
+    },
+    {
+      "id": "disease_0010",
+      "name": "フレイブ",
+      "icd10_chapter": "chapter_ii",
+      "medical_department": [
+        "internal_medicine",
+        "orthopedics"
+      ],
+      "chronicity": "chronic",
+      "infectious": false,
+      "name_kana": "フレイブ",
+      "revised_at": "2026-04-13"
+    },
+    {
+      "id": "disease_0011",
+      "name": "タリパド",
+      "icd10_chapter": "chapter_ii",
+      "medical_department": [
+        "internal_medicine",
+        "neurology"
+      ],
+      "chronicity": "chronic",
+      "infectious": false,
+      "name_kana": "タリパド",
+      "revised_at": "2026-04-12"
+    },
+    {
+      "id": "disease_0012",
+      "name": "フレイクオ",
+      "icd10_chapter": "chapter_iii",
+      "medical_department": [
+        "internal_medicine",
+        "pediatrics"
+      ],
+      "chronicity": "subacute",
+      "infectious": false,
+      "name_kana": "フレイクオ",
+      "revised_at": "2026-04-11"
+    },
+    {
+      "id": "disease_0013",
+      "name": "ラトレンチャ",
+      "icd10_chapter": "chapter_iii",
+      "medical_department": [
+        "internal_medicine",
+        "otolaryngology"
+      ],
+      "chronicity": "subacute",
+      "infectious": false,
+      "name_kana": "ラトレンチャ",
+      "revised_at": "2026-04-10"
+    },
+    {
+      "id": "disease_0014",
+      "name": "クトゥル",
+      "icd10_chapter": "chapter_iii",
+      "medical_department": [
+        "internal_medicine",
+        "urology"
+      ],
+      "chronicity": "subacute",
+      "infectious": false,
+      "name_kana": "クトゥル",
+      "revised_at": "2026-04-09"
+    },
+    {
+      "id": "disease_0015",
+      "name": "ルモンラン",
+      "icd10_chapter": "chapter_iv",
+      "medical_department": [
+        "endocrinology",
+        "dermatology"
+      ],
+      "chronicity": "chronic",
+      "infectious": false,
+      "name_kana": "ルモンラン",
+      "revised_at": "2026-04-08"
+    },
+    {
+      "id": "disease_0016",
+      "name": "テラットオ",
+      "icd10_chapter": "chapter_iv",
+      "medical_department": [
+        "endocrinology",
+        "cardiology"
+      ],
+      "chronicity": "chronic",
+      "infectious": false,
+      "name_kana": "テラットオ",
+      "revised_at": "2026-04-07"
+    },
+    {
+      "id": "disease_0017",
+      "name": "ヒソンスアク",
+      "icd10_chapter": "chapter_iv",
+      "medical_department": [
+        "endocrinology",
+        "emergency"
+      ],
+      "chronicity": "chronic",
+      "infectious": false,
+      "name_kana": "ヒソンスアク",
+      "revised_at": "2026-04-06"
+    },
+    {
+      "id": "disease_0018",
+      "name": "シャユ",
+      "icd10_chapter": "chapter_iv",
+      "medical_department": [
+        "endocrinology",
+        "infectious_disease"
+      ],
+      "chronicity": "chronic",
+      "infectious": false,
+      "name_kana": "シャユ",
+      "revised_at": "2026-04-05"
+    },
+    {
+      "id": "disease_0019",
+      "name": "モンクエル",
+      "icd10_chapter": "chapter_iv",
+      "medical_department": [
+        "endocrinology",
+        "gynecology"
+      ],
+      "chronicity": "chronic",
+      "infectious": false,
+      "name_kana": "モンクエル",
+      "revised_at": "2026-04-04"
+    }
+  ],
+  "page": 1,
+  "page_size": 20,
+  "total_pages": 4,
+  "total_count": 80,
+  "disclaimer": "FICTIONAL DATA - NOT FOR MEDICAL USE / 架空データ・医療判断には使用不可"
+}

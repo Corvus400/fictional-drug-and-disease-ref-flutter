@@ -1,0 +1,177 @@
+{
+  "id": "disease_0079",
+  "name": "魔女因子症候群",
+  "name_kana": "マジョインシショウコウグン",
+  "name_english": "Witch Factor Syndrome (fictional)",
+  "icd10_chapter": "chapter_xxii",
+  "medical_department": [
+    "psychiatry",
+    "dermatology"
+  ],
+  "chronicity": "chronic",
+  "infectious": false,
+  "synonyms": [
+    "魔女化症",
+    "ウィッチファクター症候群"
+  ],
+  "summary": "魔女因子の活性化により精神変容、肉体異形化、不死性獲得を経てなれはて化に至る進行性呪性疾患 (架空)",
+  "epidemiology": {
+    "prevalence": {
+      "rate": null,
+      "denominator": null,
+      "unit": "per_population",
+      "label": "少女人口の極小比率に魔女因子高値を検出 (架空)"
+    },
+    "onset_age_range": {
+      "min_age_years": 15,
+      "max_age_years": null,
+      "label": "15 歳以降に急性魔女化リスクが急増 (架空)"
+    },
+    "sex_ratio": {
+      "male_ratio": 0,
+      "female_ratio": 1,
+      "note": "患者は全員少女 (架空)"
+    },
+    "risk_factors": [
+      "強いストレス (架空)",
+      "精神衰弱 (架空)",
+      "トラウマ刺激 (架空)",
+      "悪意・不信感 (架空)",
+      "処刑等の急性苦痛 (架空)"
+    ]
+  },
+  "etiology": "大魔女が自らの存在・魂を変換して放った魔女因子が少女に潜伏し、強いストレス・トラウマ刺激・悪意の影響で活性化して魔女化が進行する (架空)",
+  "symptoms": {
+    "main_symptoms": [
+      "殺人衝動・凶暴化 (架空)",
+      "爪の異常伸長 (架空)",
+      "顔面皮膚亀裂と身体異形化 (架空)",
+      "全身の激痛 (架空)",
+      "不死性・再生性の獲得 (架空)"
+    ],
+    "associated_symptoms": [
+      "妄想・排他性 (架空)",
+      "魔法能力の暴走的増幅 (架空)",
+      "獣性化した発声 (架空)",
+      "なれはて化 (架空)"
+    ],
+    "onset_pattern": "subacute"
+  },
+  "diagnostic_criteria": {
+    "required": [
+      "全国検査で魔女因子高値陽性 (架空)",
+      "精神変容 (殺人衝動・妄想・凶暴化) を認める (架空)"
+    ],
+    "supporting": [
+      "爪の異常伸長を認める (架空)",
+      "皮膚亀裂・身体異形化を認める (架空)",
+      "トレデキム曝露に対する特異的脆弱性を認める (架空)"
+    ],
+    "notes": "現実の診断基準ではなく架空 fixture の分類である (架空)"
+  },
+  "required_exams": [
+    {
+      "name": "魔女因子問診",
+      "category": "interview",
+      "typical_finding": "ストレス曝露歴・精神症状・身体異形所見の経過を聴取する (架空)",
+      "reference_range": null
+    },
+    {
+      "name": "魔女因子血中反応",
+      "category": "blood_test",
+      "typical_finding": "魔女因子活性シグナル陽性 (架空)",
+      "reference_range": "陰性 (架空)"
+    },
+    {
+      "name": "身体魔女化所見観察",
+      "category": "imaging",
+      "typical_finding": "爪の異常伸長と顔面皮膚亀裂を認める (架空)",
+      "reference_range": null
+    }
+  ],
+  "severity_grading": {
+    "grading_system": "魔女因子病態進行段階 (作中分類, 架空)",
+    "grades": [
+      {
+        "label": "潜伏・保因",
+        "criteria": "魔女因子を保有し全国検査で高値検出されるが、完全な魔女化には至らない (架空)",
+        "recommended_action": "全国検査による経過観察 (架空)"
+      },
+      {
+        "label": "活性化",
+        "criteria": "強いストレス・精神衰弱・トラウマ刺激で殺人衝動、妄想、凶暴化が進む (架空)",
+        "recommended_action": "精神安定環境への移行とトラウマ刺激の遮断 (架空)"
+      },
+      {
+        "label": "魔女化進行",
+        "criteria": "精神が魔女化し爪伸長、皮膚亀裂、身体異形化、激痛、魔法増幅を認める (架空)",
+        "recommended_action": "封じ込め管理と外部刺激制限 (架空)"
+      },
+      {
+        "label": "完全魔女化",
+        "criteria": "不死性・再生性・魔力増大が発現し、魔女因子由来の脆弱性を伴う (架空)",
+        "recommended_action": "魔女殺し魔法による処置または冷凍封じ込め (架空)"
+      },
+      {
+        "label": "なれはて",
+        "criteria": "魔女因子が魂を食い尽くし、自我・魂を失った抜け殻となる (架空)",
+        "recommended_action": "冷凍保存による管理 (架空)"
+      }
+    ]
+  },
+  "differential_diagnoses": [
+    "原初の魔女 (作中別種族, 不老不死だが因子由来でない) (架空)",
+    "なれはて (進行終末像、自我喪失で人間魔女と段階的に区別) (架空)"
+  ],
+  "complications": [
+    "完全魔女化 (不死性・再生性) (架空)",
+    "なれはて化 (自我・魂喪失) (架空)",
+    "魔法能力の暴走的増幅 (架空)",
+    "外傷治癒の異常促進 (架空)"
+  ],
+  "treatments": {
+    "pharmacological": [],
+    "non_pharmacological": [
+      {
+        "heading": "ストレス軽減・精神安定",
+        "items": [
+          "強いストレスの遮断 (架空)",
+          "楽しく過ごせる環境調整 (架空)",
+          "悪意・不信感の低減 (架空)"
+        ],
+        "description": "精神負荷による魔女因子活性化を抑えることを目的とする (架空)"
+      },
+      {
+        "heading": "魔女因子除去仮説",
+        "items": [
+          "残留魔女因子の除去仮説 (架空)",
+          "大魔女顕現による因子還元の観察 (架空)"
+        ],
+        "description": "確立治療ではなく、因子喪失で進行中の魔女化が解除される可能性に基づく (架空)"
+      },
+      {
+        "heading": "封じ込め管理",
+        "items": [
+          "外部刺激の制限 (架空)",
+          "冷凍封じ込め (架空)",
+          "魔女殺し魔法による処置検討 (架空)"
+        ],
+        "description": "安全確保を優先し、治療ではなく封じ込めを目的とする (架空)"
+      }
+    ],
+    "acute_phase_protocol": []
+  },
+  "prognosis": "魔女化進行は不可逆性が強く、完全魔女化後はなれはてへ移行する。ただし大魔女顕現による魔女因子喪失で進行中の魔女化が解除される可能性が示唆され、トレデキム曝露に対する致死的脆弱性を伴う (架空)",
+  "prevention": [
+    "強いストレス・トラウマ刺激の回避 (架空)",
+    "悪意・不信感の拡散抑制 (架空)",
+    "全国検査による魔女因子高値の早期発見 (架空)",
+    "15 歳以前の精神安定環境の維持 (架空)"
+  ],
+  "related_drug_ids": [
+    "drug_0080"
+  ],
+  "related_disease_ids": [],
+  "revised_at": "2026-02-03",
+  "disclaimer": "FICTIONAL DATA - NOT FOR MEDICAL USE / 架空データ・医療判断には使用不可"
+}
