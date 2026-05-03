@@ -18,6 +18,12 @@ if rg -n 'Map<String, dynamic>|dynamic>' \
   fail "detail domain nested models must not use dynamic JSON maps"
 fi
 
+if rg -n '\bdynamic\b' lib/domain \
+  -g '!**/*.g.dart' \
+  -g '!**/*.freezed.dart'; then
+  fail "domain layer must not use dynamic"
+fi
+
 if rg -n 'catch \(_\)\s*\{\s*\}' lib/data lib/domain; then
   fail "bare catch blocks must not silently swallow errors"
 fi
