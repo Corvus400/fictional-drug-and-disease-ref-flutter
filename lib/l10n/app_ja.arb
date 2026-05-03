@@ -24,6 +24,23 @@
   },
   "openDrugDetail": "医薬品詳細を開く",
   "openDiseaseDetail": "疾患詳細を開く",
+  "healthLoading": "ヘルスチェック中",
+  "healthValue": "Health: {status}",
+  "@healthValue": {
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "healthError": "ERROR: {message}",
+  "@healthError": {
+    "placeholders": {
+      "message": {
+        "type": "String"
+      }
+    }
+  },
   "errorNetwork": "ネットワークエラーが発生しました",
   "errorUnknown": "不明なエラーが発生しました"
 }

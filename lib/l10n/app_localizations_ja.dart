@@ -53,6 +53,19 @@ class AppLocalizationsJa extends AppLocalizations {
   String get openDiseaseDetail => '疾患詳細を開く';
 
   @override
+  String get healthLoading => 'ヘルスチェック中';
+
+  @override
+  String healthValue(String status) {
+    return 'Health: $status';
+  }
+
+  @override
+  String healthError(String message) {
+    return 'ERROR: $message';
+  }
+
+  @override
   String get errorNetwork => 'ネットワークエラーが発生しました';
 
   @override

@@ -4,6 +4,12 @@ import 'package:fictional_drug_and_disease_ref/config/flavor.dart';
 class ApiConfig {
   const ApiConfig._();
 
+  /// HTTP connection timeout.
+  static const connectTimeout = Duration(seconds: 10);
+
+  /// HTTP receive timeout.
+  static const receiveTimeout = Duration(seconds: 15);
+
   static FlavorConfig? _current;
 
   /// Current flavor configuration.

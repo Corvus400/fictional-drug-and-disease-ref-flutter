@@ -178,6 +178,24 @@ abstract class AppLocalizations {
   /// **'疾患詳細を開く'**
   String get openDiseaseDetail;
 
+  /// No description provided for @healthLoading.
+  ///
+  /// In ja, this message translates to:
+  /// **'ヘルスチェック中'**
+  String get healthLoading;
+
+  /// No description provided for @healthValue.
+  ///
+  /// In ja, this message translates to:
+  /// **'Health: {status}'**
+  String healthValue(String status);
+
+  /// No description provided for @healthError.
+  ///
+  /// In ja, this message translates to:
+  /// **'ERROR: {message}'**
+  String healthError(String message);
+
   /// No description provided for @errorNetwork.
   ///
   /// In ja, this message translates to:
