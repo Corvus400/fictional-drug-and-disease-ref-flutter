@@ -1,0 +1,286 @@
+{
+  "atc": [
+    {
+      "code": "A",
+      "label": "消化器系および代謝"
+    },
+    {
+      "code": "B",
+      "label": "血液および造血器"
+    },
+    {
+      "code": "C",
+      "label": "循環器系"
+    },
+    {
+      "code": "D",
+      "label": "皮膚科用"
+    },
+    {
+      "code": "G",
+      "label": "泌尿生殖器系およびホルモン製剤"
+    },
+    {
+      "code": "H",
+      "label": "全身性ホルモン製剤"
+    },
+    {
+      "code": "J",
+      "label": "感染症治療薬"
+    },
+    {
+      "code": "L",
+      "label": "抗腫瘍剤および免疫調節剤"
+    },
+    {
+      "code": "M",
+      "label": "筋骨格系"
+    },
+    {
+      "code": "N",
+      "label": "神経系"
+    },
+    {
+      "code": "P",
+      "label": "抗寄生虫剤"
+    },
+    {
+      "code": "R",
+      "label": "呼吸器系"
+    },
+    {
+      "code": "S",
+      "label": "感覚器"
+    },
+    {
+      "code": "V",
+      "label": "その他"
+    }
+  ],
+  "therapeutic_categories": [
+    {
+      "id": "alimentary_metabolism",
+      "label": "消化器系および代謝"
+    },
+    {
+      "id": "blood",
+      "label": "血液および造血器"
+    },
+    {
+      "id": "cardiovascular",
+      "label": "循環器系"
+    },
+    {
+      "id": "dermatologicals",
+      "label": "皮膚科用"
+    },
+    {
+      "id": "genito_urinary_hormones",
+      "label": "泌尿生殖器系およびホルモン製剤"
+    },
+    {
+      "id": "systemic_hormones",
+      "label": "全身性ホルモン製剤"
+    },
+    {
+      "id": "antiinfectives",
+      "label": "感染症治療薬"
+    },
+    {
+      "id": "antineoplastic_immunomodulators",
+      "label": "抗腫瘍剤および免疫調節剤"
+    },
+    {
+      "id": "musculo_skeletal",
+      "label": "筋骨格系"
+    },
+    {
+      "id": "nervous",
+      "label": "神経系"
+    },
+    {
+      "id": "antiparasitic",
+      "label": "抗寄生虫剤"
+    },
+    {
+      "id": "respiratory",
+      "label": "呼吸器系"
+    },
+    {
+      "id": "sensory",
+      "label": "感覚器"
+    },
+    {
+      "id": "various",
+      "label": "その他"
+    }
+  ],
+  "route_of_administration": [
+    "oral",
+    "topical",
+    "injection_route",
+    "inhalation",
+    "rectal",
+    "ophthalmic",
+    "nasal",
+    "transdermal"
+  ],
+  "dosage_form": [
+    "tablet",
+    "capsule",
+    "powder",
+    "granule",
+    "liquid",
+    "injection_form",
+    "ointment",
+    "cream",
+    "patch",
+    "eye_drops",
+    "suppository",
+    "inhaler",
+    "nasal_spray"
+  ],
+  "regulatory_class": [
+    "poison",
+    "potent",
+    "ordinary",
+    "psychotropic_1",
+    "psychotropic_2",
+    "psychotropic_3",
+    "narcotic",
+    "stimulant_precursor",
+    "biological",
+    "specified_biological",
+    "prescription_required"
+  ],
+  "icd10_chapters": [
+    {
+      "roman": "I",
+      "code": "A00-B99",
+      "label": "感染症および寄生虫症"
+    },
+    {
+      "roman": "II",
+      "code": "C00-D48",
+      "label": "新生物"
+    },
+    {
+      "roman": "III",
+      "code": "D50-D89",
+      "label": "血液および造血器の疾患ならびに免疫機構の障害"
+    },
+    {
+      "roman": "IV",
+      "code": "E00-E90",
+      "label": "内分泌、栄養および代謝疾患"
+    },
+    {
+      "roman": "V",
+      "code": "F00-F99",
+      "label": "精神および行動の障害"
+    },
+    {
+      "roman": "VI",
+      "code": "G00-G99",
+      "label": "神経系の疾患"
+    },
+    {
+      "roman": "VII",
+      "code": "H00-H59",
+      "label": "眼および付属器の疾患"
+    },
+    {
+      "roman": "VIII",
+      "code": "H60-H95",
+      "label": "耳および乳様突起の疾患"
+    },
+    {
+      "roman": "IX",
+      "code": "I00-I99",
+      "label": "循環器系の疾患"
+    },
+    {
+      "roman": "X",
+      "code": "J00-J99",
+      "label": "呼吸器系の疾患"
+    },
+    {
+      "roman": "XI",
+      "code": "K00-K93",
+      "label": "消化器系の疾患"
+    },
+    {
+      "roman": "XII",
+      "code": "L00-L99",
+      "label": "皮膚および皮下組織の疾患"
+    },
+    {
+      "roman": "XIII",
+      "code": "M00-M99",
+      "label": "筋骨格系および結合組織の疾患"
+    },
+    {
+      "roman": "XIV",
+      "code": "N00-N99",
+      "label": "腎尿路生殖器系の疾患"
+    },
+    {
+      "roman": "XV",
+      "code": "O00-O99",
+      "label": "妊娠、分娩および産褥"
+    },
+    {
+      "roman": "XVI",
+      "code": "P00-P96",
+      "label": "周産期に発生した病態"
+    },
+    {
+      "roman": "XVII",
+      "code": "Q00-Q99",
+      "label": "先天奇形、変形および染色体異常"
+    },
+    {
+      "roman": "XVIII",
+      "code": "R00-R99",
+      "label": "症状、徴候および異常臨床所見・異常検査所見で他に分類されないもの"
+    },
+    {
+      "roman": "XIX",
+      "code": "S00-T98",
+      "label": "損傷、中毒およびその他の外因の影響"
+    },
+    {
+      "roman": "XX",
+      "code": "V01-Y98",
+      "label": "傷病および死亡の外因"
+    },
+    {
+      "roman": "XXI",
+      "code": "Z00-Z99",
+      "label": "健康状態に影響を及ぼす要因および保健サービスの利用"
+    },
+    {
+      "roman": "XXII",
+      "code": "U00-U85",
+      "label": "特殊目的用コード"
+    }
+  ],
+  "medical_departments": [
+    "internal_medicine",
+    "cardiology",
+    "gastroenterology",
+    "endocrinology",
+    "neurology",
+    "psychiatry",
+    "surgery",
+    "orthopedics",
+    "dermatology",
+    "ophthalmology",
+    "otolaryngology",
+    "urology",
+    "gynecology",
+    "pediatrics",
+    "emergency",
+    "infectious_disease"
+  ]
+}
