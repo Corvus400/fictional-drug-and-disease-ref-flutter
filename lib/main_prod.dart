@@ -1,4 +1,4 @@
-import 'package:fictional_drug_and_disease_ref/app.dart';
+import 'package:fictional_drug_and_disease_ref/app_root.dart';
 import 'package:fictional_drug_and_disease_ref/bootstrap.dart';
 import 'package:fictional_drug_and_disease_ref/config/api_config.dart';
 import 'package:fictional_drug_and_disease_ref/config/flavor.dart';
@@ -12,5 +12,5 @@ void main() {
   ApiConfig.initialize(
     const FlavorConfig(flavor: Flavor.prod, apiBaseUrl: baseUrl),
   );
-  bootstrap(App.new);
+  bootstrap(buildRootApp);
 }
