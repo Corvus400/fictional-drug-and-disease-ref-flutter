@@ -4,7 +4,9 @@ void main() {
   runApp(const MyApp());
 }
 
+/// Root widget for the generated counter app.
 class MyApp extends StatelessWidget {
+  /// Creates the root widget.
   const MyApp({super.key});
 
   // This widget is the root of your application.
@@ -35,8 +37,10 @@ class MyApp extends StatelessWidget {
   }
 }
 
+/// Home page for the generated counter sample.
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+  /// Creates the home page.
+  const MyHomePage({required this.title, super.key});
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -47,6 +51,7 @@ class MyHomePage extends StatefulWidget {
   // used by the build method of the State. Fields in a Widget subclass are
   // always marked "final".
 
+  /// Title displayed in the app bar.
   final String title;
 
   @override
