@@ -1,0 +1,57 @@
+# CI 未投入期間のローカル品質ゲート。
+# stages 分離:
+#   pre-commit = build_runner (annotation 変更時のみ) → dart format → dart analyze (差分のみ)
+#   pre-push   = build_runner 全件 → dart format 全件 → flutter analyze → flutter test
+# integration_test は emulator/simulator 必須のため push フック対象外。手動実行で運用。
+repos:
+  - repo: local
+    hooks:
+      - id: build-runner-staged
+        name: build_runner build (annotation-aware, staged files)
+        entry: scripts/pre-commit-build-runner.sh
+        language: system
+        stages: [pre-commit]
+        pass_filenames: false
+        always_run: true
+      - id: dart-format-staged
+        name: dart format (staged files)
+        entry: scripts/pre-commit-dart-format.sh
+        language: system
+        stages: [pre-commit]
+        pass_filenames: false
+        always_run: true
+      - id: dart-analyze-staged
+        name: dart analyze (staged files)
+        entry: scripts/pre-commit-dart-analyze.sh
+        language: system
+        stages: [pre-commit]
+        pass_filenames: false
+        always_run: true
+      - id: build-runner
+        name: build_runner build (push gate, generators must run before analyze/test)
+        entry: scripts/pre-push-build-runner.sh
+        language: system
+        stages: [pre-push]
+        pass_filenames: false
+        always_run: true
+      - id: dart-format-all
+        name: dart format (all files, push gate)
+        entry: scripts/pre-push-dart-format-all.sh
+        language: system
+        stages: [pre-push]
+        pass_filenames: false
+        always_run: true
+      - id: flutter-analyze
+        name: flutter analyze (push gate)
+        entry: scripts/pre-push-flutter-analyze.sh
+        language: system
+        stages: [pre-push]
+        pass_filenames: false
+        always_run: true
+      - id: flutter-test
+        name: flutter test (push gate)
+        entry: scripts/pre-push-flutter-test.sh
+        language: system
+        stages: [pre-push]
+        pass_filenames: false
+        always_run: true
