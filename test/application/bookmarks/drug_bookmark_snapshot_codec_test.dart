@@ -1,19 +1,20 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:fictional_drug_and_disease_ref/application/bookmarks/drug_bookmark_snapshot_codec.dart';
 import 'package:fictional_drug_and_disease_ref/data/dto/drug/drug_dto.dart';
 import 'package:fictional_drug_and_disease_ref/data/mappers/drug_mapper.dart';
 import 'package:fictional_drug_and_disease_ref/domain/drug/drug_summary.dart';
-import 'package:fictional_drug_and_disease_ref/domain/drug/drug_summary_from_drug.dart';
-import 'package:fictional_drug_and_disease_ref/domain/drug/drug_summary_from_json.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  group('Drug summary snapshot functions', () {
-    test('drugSummaryFromDrug extracts summary fields', () {
+  group('DrugBookmarkSnapshotCodec', () {
+    const codec = DrugBookmarkSnapshotCodec();
+
+    test('fromDrug extracts summary fields', () {
       final drug = _drugFixture().toDomain();
 
-      final summary = drugSummaryFromDrug(drug);
+      final summary = codec.fromDrug(drug);
 
       expect(summary.id, drug.id);
       expect(summary.brandName, drug.brandName);
@@ -27,7 +28,7 @@ void main() {
       expect(summary.imageUrl, drug.imageUrl);
     });
 
-    test('drugSummaryFromJson restores summary snapshot', () {
+    test('decode restores encoded summary snapshot', () {
       const summary = DrugSummary(
         id: 'drug_001',
         brandName: 'Brand',
@@ -41,7 +42,7 @@ void main() {
         imageUrl: '/v1/images/drugs/drug_001',
       );
 
-      final restored = drugSummaryFromJson(jsonEncode(summary.toJson()));
+      final restored = codec.decode(codec.encode(summary));
 
       expect(restored.id, summary.id);
       expect(restored.regulatoryClass, summary.regulatoryClass);

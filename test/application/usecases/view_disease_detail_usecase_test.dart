@@ -3,6 +3,8 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:drift/native.dart';
+import 'package:fictional_drug_and_disease_ref/application/bookmarks/disease_bookmark_snapshot_codec.dart';
+import 'package:fictional_drug_and_disease_ref/application/usecases/view_disease_detail_usecase.dart';
 import 'package:fictional_drug_and_disease_ref/core/error/app_exception.dart';
 import 'package:fictional_drug_and_disease_ref/core/result.dart';
 import 'package:fictional_drug_and_disease_ref/data/dto/disease/disease_dto.dart';
@@ -13,9 +15,6 @@ import 'package:fictional_drug_and_disease_ref/data/repositories/browsing_histor
 import 'package:fictional_drug_and_disease_ref/data/repositories/disease_repository.dart';
 import 'package:fictional_drug_and_disease_ref/data/services/api/disease_api_client.dart';
 import 'package:fictional_drug_and_disease_ref/domain/bookmark/bookmark_entry.dart';
-import 'package:fictional_drug_and_disease_ref/domain/disease/disease_summary_from_disease.dart';
-import 'package:fictional_drug_and_disease_ref/domain/disease/disease_summary_from_json.dart';
-import 'package:fictional_drug_and_disease_ref/domain/usecases/view_disease_detail_usecase.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
@@ -27,6 +26,7 @@ void main() {
     late BookmarkRepository bookmarkRepository;
     late BrowsingHistoryRepository browsingHistoryRepository;
     late ViewDiseaseDetailUsecase usecase;
+    const snapshotCodec = DiseaseBookmarkSnapshotCodec();
 
     setUp(() {
       db = AppDatabase(NativeDatabase.memory());
@@ -67,7 +67,9 @@ void main() {
       when(() => apiClient.getDisease(dto.id)).thenAnswer((_) async => dto);
       await bookmarkRepository.insert(
         id: dto.id,
-        snapshotJson: jsonEncode(diseaseSummaryFromDisease(disease).toJson()),
+        snapshotJson: snapshotCodec.encode(
+          snapshotCodec.fromDisease(disease),
+        ),
         bookmarkedAt: DateTime.utc(2026, 5, 4),
       );
 
@@ -76,7 +78,7 @@ void main() {
       expect(result, isA<DiseaseDetailLoaded>());
       expect((result as DiseaseDetailLoaded).isBookmarked, isTrue);
       final bookmark = await bookmarkRepository.findById(dto.id);
-      final snapshot = diseaseSummaryFromJson(
+      final snapshot = snapshotCodec.decode(
         (bookmark as Ok<BookmarkEntry?>).value!.snapshotJson,
       );
       expect(snapshot.name, disease.name);
@@ -86,11 +88,11 @@ void main() {
       'network failure with bookmark snapshot returns offline fallback',
       () async {
         final dto = _diseaseFixture();
-        final snapshot = diseaseSummaryFromDisease(dto.toDomain());
+        final snapshot = snapshotCodec.fromDisease(dto.toDomain());
         when(() => apiClient.getDisease(dto.id)).thenThrow(_connectionError());
         await bookmarkRepository.insert(
           id: dto.id,
-          snapshotJson: jsonEncode(snapshot.toJson()),
+          snapshotJson: snapshotCodec.encode(snapshot),
           bookmarkedAt: DateTime.utc(2026, 5, 4),
         );
 
