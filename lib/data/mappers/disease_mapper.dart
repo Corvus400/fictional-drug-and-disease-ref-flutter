@@ -52,15 +52,19 @@ extension DiseaseDtoMapper on DiseaseDto {
       infectious: infectious,
       synonyms: synonyms,
       summary: summary,
-      epidemiology: epidemiology,
+      epidemiology: epidemiology == null
+          ? null
+          : EpidemiologyInfo(epidemiology!.toJson()),
       etiology: etiology,
-      symptoms: symptoms,
-      diagnosticCriteria: diagnosticCriteria,
-      requiredExams: requiredExams,
-      severityGrading: severityGrading,
+      symptoms: SymptomInfo(symptoms.toJson()),
+      diagnosticCriteria: DiagnosticCriteriaInfo(diagnosticCriteria.toJson()),
+      requiredExams: requiredExams.map((item) => Exam(item.toJson())).toList(),
+      severityGrading: severityGrading == null
+          ? null
+          : SeverityInfo(severityGrading!.toJson()),
       differentialDiagnoses: differentialDiagnoses,
       complications: complications,
-      treatments: treatments,
+      treatments: TreatmentInfo(treatments.toJson()),
       prognosis: prognosis,
       prevention: prevention,
       relatedDrugIds: relatedDrugIds,

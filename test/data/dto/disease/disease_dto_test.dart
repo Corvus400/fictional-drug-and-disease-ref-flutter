@@ -18,4 +18,20 @@ void main() {
     expect(dto.severityGrading, isNotNull);
     expect(dto.toJson(), json);
   });
+
+  test('DiseaseDto parses nested detail objects as typed DTOs', () {
+    final fixture = File(
+      'test/fixtures/swagger/get_v1_diseases__id_.json',
+    ).readAsStringSync();
+    final json = jsonDecode(fixture) as Map<String, dynamic>;
+
+    final dto = DiseaseDto.fromJson(json);
+
+    expect(dto.epidemiology, isA<EpidemiologyInfoDto>());
+    expect(dto.symptoms, isA<SymptomInfoDto>());
+    expect(dto.diagnosticCriteria, isA<DiagnosticCriteriaInfoDto>());
+    expect(dto.requiredExams, everyElement(isA<ExamDto>()));
+    expect(dto.severityGrading, isA<SeverityInfoDto>());
+    expect(dto.treatments, isA<TreatmentInfoDto>());
+  });
 }

@@ -1,3 +1,7 @@
+import 'package:fictional_drug_and_disease_ref/domain/disease/disease_nested.dart';
+
+export 'package:fictional_drug_and_disease_ref/domain/disease/disease_nested.dart';
+
 /// Disease detail used by detail surfaces and use cases.
 final class Disease {
   /// Creates a disease detail.
@@ -59,23 +63,23 @@ final class Disease {
   /// Summary markdown.
   final String summary;
 
-  /// Optional epidemiology JSON object.
-  final Map<String, dynamic>? epidemiology;
+  /// Optional epidemiology info.
+  final EpidemiologyInfo? epidemiology;
 
   /// Etiology markdown.
   final String etiology;
 
-  /// Symptoms JSON object.
-  final Map<String, dynamic> symptoms;
+  /// Symptoms.
+  final SymptomInfo symptoms;
 
-  /// Diagnostic criteria JSON object.
-  final Map<String, dynamic> diagnosticCriteria;
+  /// Diagnostic criteria.
+  final DiagnosticCriteriaInfo diagnosticCriteria;
 
   /// Required exam entries.
-  final List<Map<String, dynamic>> requiredExams;
+  final List<Exam> requiredExams;
 
-  /// Optional severity grading JSON object.
-  final Map<String, dynamic>? severityGrading;
+  /// Optional severity grading.
+  final SeverityInfo? severityGrading;
 
   /// Differential diagnoses.
   final List<String> differentialDiagnoses;
@@ -83,8 +87,8 @@ final class Disease {
   /// Complications.
   final List<String> complications;
 
-  /// Treatments JSON object.
-  final Map<String, dynamic> treatments;
+  /// Treatments.
+  final TreatmentInfo treatments;
 
   /// Optional prognosis markdown.
   final String? prognosis;
