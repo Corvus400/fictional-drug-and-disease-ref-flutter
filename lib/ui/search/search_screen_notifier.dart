@@ -178,26 +178,26 @@ final class SearchScreenNotifier extends Notifier<SearchScreenState> {
     String? adverseReactionKeyword,
     List<String>? precautionCategory,
   }) async {
+    final nextParams = _drugParamsWithAppliedFilters(
+      state.drugParams,
+      categoryAtc: _emptyToNull(categoryAtc),
+      therapeuticCategory: _emptyToNull(therapeuticCategory),
+      regulatoryClass: _emptyListToNull(regulatoryClass),
+      dosageForm: _emptyListToNull(dosageForm),
+      route: _emptyListToNull(route),
+      adverseReactionKeyword: _emptyToNull(adverseReactionKeyword),
+      precautionCategory: _emptyListToNull(precautionCategory),
+    );
     state = state.copyWith(
-      drugParams: _copyDrugParams(
-        state.drugParams,
-        page: 1,
-        categoryAtc: categoryAtc,
-        therapeuticCategory: therapeuticCategory,
-        regulatoryClass: regulatoryClass,
-        dosageForm: dosageForm,
-        route: route,
-        adverseReactionKeyword: adverseReactionKeyword,
-        precautionCategory: precautionCategory,
-      ),
+      drugParams: nextParams,
       appliedChips: _drugChips(
-        categoryAtc: categoryAtc,
-        therapeuticCategory: therapeuticCategory,
-        regulatoryClass: regulatoryClass,
-        dosageForm: dosageForm,
-        route: route,
-        adverseReactionKeyword: adverseReactionKeyword,
-        precautionCategory: precautionCategory,
+        categoryAtc: nextParams.categoryAtc,
+        therapeuticCategory: nextParams.therapeuticCategory,
+        regulatoryClass: nextParams.regulatoryClass,
+        dosageForm: nextParams.dosageForm,
+        route: nextParams.route,
+        adverseReactionKeyword: nextParams.adverseReactionKeyword,
+        precautionCategory: nextParams.precautionCategory,
       ),
     );
     await performSearch();
@@ -215,30 +215,30 @@ final class SearchScreenNotifier extends Notifier<SearchScreenState> {
     bool? hasPharmacologicalTreatment,
     bool? hasSeverityGrading,
   }) async {
+    final nextParams = _diseaseParamsWithAppliedFilters(
+      state.diseaseParams,
+      icd10Chapter: _emptyListToNull(icd10Chapter),
+      department: _emptyListToNull(department),
+      chronicity: _emptyListToNull(chronicity),
+      infectious: infectious,
+      symptomKeyword: _emptyToNull(symptomKeyword),
+      onsetPattern: _emptyListToNull(onsetPattern),
+      examCategory: _emptyListToNull(examCategory),
+      hasPharmacologicalTreatment: hasPharmacologicalTreatment,
+      hasSeverityGrading: hasSeverityGrading,
+    );
     state = state.copyWith(
-      diseaseParams: _copyDiseaseParams(
-        state.diseaseParams,
-        page: 1,
-        icd10Chapter: icd10Chapter,
-        department: department,
-        chronicity: chronicity,
-        infectious: infectious,
-        symptomKeyword: symptomKeyword,
-        onsetPattern: onsetPattern,
-        examCategory: examCategory,
-        hasPharmacologicalTreatment: hasPharmacologicalTreatment,
-        hasSeverityGrading: hasSeverityGrading,
-      ),
+      diseaseParams: nextParams,
       appliedChips: _diseaseChips(
-        icd10Chapter: icd10Chapter,
-        department: department,
-        chronicity: chronicity,
-        infectious: infectious,
-        symptomKeyword: symptomKeyword,
-        onsetPattern: onsetPattern,
-        examCategory: examCategory,
-        hasPharmacologicalTreatment: hasPharmacologicalTreatment,
-        hasSeverityGrading: hasSeverityGrading,
+        icd10Chapter: nextParams.icd10Chapter,
+        department: nextParams.department,
+        chronicity: nextParams.chronicity,
+        infectious: nextParams.infectious,
+        symptomKeyword: nextParams.symptomKeyword,
+        onsetPattern: nextParams.onsetPattern,
+        examCategory: nextParams.examCategory,
+        hasPharmacologicalTreatment: nextParams.hasPharmacologicalTreatment,
+        hasSeverityGrading: nextParams.hasSeverityGrading,
       ),
     );
     await performSearch();
@@ -659,4 +659,77 @@ DiseaseSearchParams _copyDiseaseParams(
     hasSeverityGrading: hasSeverityGrading ?? params.hasSeverityGrading,
     sort: sort ?? params.sort,
   );
+}
+
+DrugSearchParams _drugParamsWithAppliedFilters(
+  DrugSearchParams params, {
+  required String? categoryAtc,
+  required String? therapeuticCategory,
+  required List<String>? regulatoryClass,
+  required List<String>? dosageForm,
+  required List<String>? route,
+  required String? adverseReactionKeyword,
+  required List<String>? precautionCategory,
+}) {
+  return DrugSearchParams(
+    page: 1,
+    pageSize: params.pageSize,
+    categoryAtc: categoryAtc,
+    therapeuticCategory: therapeuticCategory,
+    regulatoryClass: regulatoryClass,
+    dosageForm: dosageForm,
+    route: route,
+    keyword: params.keyword,
+    keywordMatch: params.keywordMatch,
+    keywordTarget: params.keywordTarget,
+    adverseReactionKeyword: adverseReactionKeyword,
+    precautionCategory: precautionCategory,
+    sort: params.sort,
+  );
+}
+
+DiseaseSearchParams _diseaseParamsWithAppliedFilters(
+  DiseaseSearchParams params, {
+  required List<String>? icd10Chapter,
+  required List<String>? department,
+  required List<String>? chronicity,
+  required bool? infectious,
+  required String? symptomKeyword,
+  required List<String>? onsetPattern,
+  required List<String>? examCategory,
+  required bool? hasPharmacologicalTreatment,
+  required bool? hasSeverityGrading,
+}) {
+  return DiseaseSearchParams(
+    page: 1,
+    pageSize: params.pageSize,
+    icd10Chapter: icd10Chapter,
+    department: department,
+    chronicity: chronicity,
+    infectious: infectious,
+    keyword: params.keyword,
+    keywordMatch: params.keywordMatch,
+    keywordTarget: params.keywordTarget,
+    symptomKeyword: symptomKeyword,
+    onsetPattern: onsetPattern,
+    examCategory: examCategory,
+    hasPharmacologicalTreatment: hasPharmacologicalTreatment,
+    hasSeverityGrading: hasSeverityGrading,
+    sort: params.sort,
+  );
+}
+
+List<String>? _emptyListToNull(List<String>? values) {
+  if (values == null || values.isEmpty) {
+    return null;
+  }
+  return values;
+}
+
+String? _emptyToNull(String? value) {
+  final trimmed = value?.trim();
+  if (trimmed == null || trimmed.isEmpty) {
+    return null;
+  }
+  return trimmed;
 }

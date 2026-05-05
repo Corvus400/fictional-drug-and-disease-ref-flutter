@@ -46,6 +46,16 @@ class _DrugFilterSheetState extends ConsumerState<_DrugFilterSheet> {
   int? _previewCount;
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        unawaited(_loadPreviewCount());
+      }
+    });
+  }
+
+  @override
   void dispose() {
     _previewDebounce?.cancel();
     _adverseReactionKeywordController.dispose();
@@ -275,16 +285,16 @@ class _DrugFilterSheetState extends ConsumerState<_DrugFilterSheet> {
       pageSize: 1,
       categoryAtc: _singleValue(_categoryAtc),
       therapeuticCategory: _singleValue(_therapeuticCategory),
-      regulatoryClass: _regulatoryClass.toList(),
-      dosageForm: _dosageForm.toList(),
-      route: _route.toList(),
-      keyword: widget.state.drugParams.keyword,
+      regulatoryClass: _emptyListToNull(_regulatoryClass.toList()),
+      dosageForm: _emptyListToNull(_dosageForm.toList()),
+      route: _emptyListToNull(_route.toList()),
+      keyword: widget.state.queryText,
       keywordMatch: widget.state.drugParams.keywordMatch,
       keywordTarget: widget.state.drugParams.keywordTarget,
       adverseReactionKeyword: _emptyToNull(
         _adverseReactionKeywordController.text.trim(),
       ),
-      precautionCategory: _precautionCategory.toList(),
+      precautionCategory: _emptyListToNull(_precautionCategory.toList()),
       sort: widget.state.drugParams.sort,
     );
   }

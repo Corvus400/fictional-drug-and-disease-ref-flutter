@@ -257,6 +257,13 @@ String _boolSummary(AppLocalizations l10n, bool? value) {
 
 String? _emptyToNull(String value) => value.isEmpty ? null : value;
 
+List<String>? _emptyListToNull(List<String> values) {
+  if (values.isEmpty) {
+    return null;
+  }
+  return values;
+}
+
 int _resultCount(SearchPhase phase) {
   return switch (phase) {
     SearchPhaseResults(:final view) => view.totalCount,
