@@ -6,12 +6,14 @@ class _SearchResultToolbar extends StatelessWidget {
     required this.totalCount,
     required this.onRemoveChipAt,
     required this.onChangeDrugSort,
+    required this.onChangeDiseaseSort,
   });
 
   final SearchScreenState state;
   final int totalCount;
   final Future<void> Function(int index) onRemoveChipAt;
   final Future<void> Function(DrugSort sort) onChangeDrugSort;
+  final Future<void> Function(DiseaseSort sort) onChangeDiseaseSort;
 
   @override
   Widget build(BuildContext context) {
@@ -131,8 +133,9 @@ class _SearchResultToolbar extends StatelessWidget {
                     ),
                     onPressed: () => _showSortSheet(
                       context,
-                      state.tab,
+                      state,
                       onChangeDrugSort: onChangeDrugSort,
+                      onChangeDiseaseSort: onChangeDiseaseSort,
                     ),
                     child: Text(
                       _sortToolbarLabel(l10n, state),

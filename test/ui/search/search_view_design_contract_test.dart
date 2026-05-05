@@ -205,6 +205,48 @@ void main() {
     },
   );
 
+  testWidgets('SearchView sort sheet marks selected drug option with check', (
+    tester,
+  ) async {
+    await tester.binding.setSurfaceSize(const Size(390, 844));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+
+    final drugApiClient = _MockDrugApiClient();
+    _stubDrugSearch(drugApiClient);
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          appDatabaseProvider.overrideWithValue(db),
+          drugApiClientProvider.overrideWithValue(drugApiClient),
+        ],
+        child: MaterialApp(
+          theme: AppTheme.light(),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: const SearchView(),
+        ),
+      ),
+    );
+
+    await tester.enterText(
+      find.byKey(const ValueKey('search-field')),
+      'アムロ',
+    );
+    await tester.tap(find.byType(FilledButton).first);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('並び替え： 更新日(新しい順) ↓ ▾'));
+    await tester.pumpAndSettle();
+
+    expect(
+      find.byKey(const ValueKey('search-sort-check-drug-revised')),
+      findsOneWidget,
+    );
+    final selectedTitle = tester.widget<Text>(find.text('更新日(新しい順)').last);
+    expect(selectedTitle.style?.fontWeight, FontWeight.w700);
+    expect(selectedTitle.style?.color, SearchPalette.light.primary);
+  });
+
   // Design source:
   // Round5/Search - Round 5.html TASK 4 keyboard drag-to-dismiss.
   testWidgets('SearchView result list dismisses keyboard on drag', (

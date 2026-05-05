@@ -9,6 +9,7 @@ class _SearchPhaseSection extends StatelessWidget {
     required this.onRemoveChipAt,
     required this.onChangeMatchToPartial,
     required this.onChangeDrugSort,
+    required this.onChangeDiseaseSort,
     required this.onLoadMore,
   });
 
@@ -19,6 +20,7 @@ class _SearchPhaseSection extends StatelessWidget {
   final Future<void> Function(int index) onRemoveChipAt;
   final Future<void> Function() onChangeMatchToPartial;
   final Future<void> Function(DrugSort sort) onChangeDrugSort;
+  final Future<void> Function(DiseaseSort sort) onChangeDiseaseSort;
   final Future<void> Function() onLoadMore;
 
   @override
@@ -77,6 +79,7 @@ class _SearchPhaseSection extends StatelessWidget {
             totalCount: 0,
             onRemoveChipAt: onRemoveChipAt,
             onChangeDrugSort: onChangeDrugSort,
+            onChangeDiseaseSort: onChangeDiseaseSort,
           ),
           Expanded(
             child: Center(
@@ -251,6 +254,7 @@ class _SearchPhaseSection extends StatelessWidget {
             totalCount: view.totalCount,
             onRemoveChipAt: onRemoveChipAt,
             onChangeDrugSort: onChangeDrugSort,
+            onChangeDiseaseSort: onChangeDiseaseSort,
           ),
           switch (view) {
             DrugSearchResultsView(:final items) => Column(
