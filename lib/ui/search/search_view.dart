@@ -29,7 +29,7 @@ part 'widgets/search_history_dropdown.dart';
 part 'widgets/filter/drug_filter_sheet.dart';
 part 'widgets/filter/disease_filter_sheet.dart';
 part 'widgets/filter/round6_filter_sheet_scaffold.dart';
-part 'format/regulatory_badge_colors.dart';
+part 'format/drug_card_image_url.dart';
 part 'format/search_label_formatters.dart';
 part 'format/search_sort_sheet.dart';
 
