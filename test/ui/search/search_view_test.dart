@@ -1052,6 +1052,7 @@ void main() {
 
     final router = GoRouter(
       initialLocation: AppRoutes.search,
+      observers: [appRouteObserver],
       routes: [
         GoRoute(
           path: AppRoutes.search,
@@ -1102,6 +1103,96 @@ void main() {
       router.routerDelegate.currentConfiguration.last.matchedLocation,
       AppRoutes.drugDetail(item.id),
     );
+  });
+
+  testWidgets('scroll_position_preserved_across_detail_navigation_(T13)', (
+    tester,
+  ) async {
+    final drugApiClient = _MockDrugApiClient();
+    final firstPage = _scrollRestorationFixture(page: 1);
+    final secondPage = _scrollRestorationFixture(page: 2);
+    when(
+      () => drugApiClient.getDrugs(
+        page: any(named: 'page'),
+        pageSize: any(named: 'pageSize'),
+        keyword: any(named: 'keyword'),
+      ),
+    ).thenAnswer((invocation) async {
+      final page = invocation.namedArguments[#page] as int;
+      return page == 1 ? firstPage : secondPage;
+    });
+
+    final router = GoRouter(
+      initialLocation: AppRoutes.search,
+      routes: [
+        GoRoute(
+          path: AppRoutes.search,
+          builder: (context, state) => const SearchView(),
+          routes: [
+            GoRoute(
+              path: 'drug/:id',
+              builder: (context, state) =>
+                  Text('drug-detail-${state.pathParameters['id']}'),
+            ),
+          ],
+        ),
+      ],
+    );
+    final container = ProviderContainer(
+      overrides: [
+        appDatabaseProvider.overrideWithValue(db),
+        drugApiClientProvider.overrideWithValue(drugApiClient),
+      ],
+    );
+    addTearDown(container.dispose);
+
+    await tester.pumpWidget(
+      UncontrolledProviderScope(
+        container: container,
+        child: MaterialApp.router(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          routerConfig: router,
+        ),
+      ),
+    );
+
+    await tester.enterText(
+      find.byKey(const ValueKey('search-field')),
+      'scroll restoration keyword',
+    );
+    await tester.tap(find.byType(FilledButton).first);
+    await tester.pumpAndSettle();
+
+    final listFinder = find.byKey(
+      const PageStorageKey<String>('drugSearchResults'),
+    );
+    final scrollableFinder = find.descendant(
+      of: listFinder,
+      matching: find.byType(Scrollable),
+    );
+    await tester.drag(listFinder, const Offset(0, -900));
+    await tester.pumpAndSettle();
+    final beforePush = tester
+        .state<ScrollableState>(scrollableFinder)
+        .position
+        .pixels;
+    expect(beforePush, greaterThan(0));
+
+    await tester.tap(find.byKey(const ValueKey('drug-card-scroll_drug_1_10')));
+    await tester.pumpAndSettle();
+    expect(find.text('drug-detail-scroll_drug_1_10'), findsOneWidget);
+
+    await container.read(searchScreenProvider.notifier).loadMore();
+    await tester.pumpAndSettle();
+    router.pop();
+    await tester.pumpAndSettle();
+
+    final afterPop = tester
+        .state<ScrollableState>(scrollableFinder)
+        .position
+        .pixels;
+    expect(afterPop, closeTo(beforePush, 1));
   });
 
   testWidgets('result card tap navigates to disease detail with correct id', (
@@ -2575,6 +2666,25 @@ DrugListResponseDto _drugListFixture() {
   ).readAsStringSync();
   final json = jsonDecode(fixture) as Map<String, dynamic>;
   return DrugListResponseDto.fromJson(json);
+}
+
+DrugListResponseDto _scrollRestorationFixture({required int page}) {
+  final fixture = _drugListFixture();
+  final base = fixture.items.first;
+  return fixture.copyWith(
+    items: [
+      for (var index = 0; index < 20; index++)
+        base.copyWith(
+          id: 'scroll_drug_${page}_$index',
+          brandName: 'Scroll Drug $page-$index',
+          genericName: 'Scroll Generic $page-$index',
+        ),
+    ],
+    page: page,
+    pageSize: 20,
+    totalPages: 3,
+    totalCount: 60,
+  );
 }
 
 DiseaseListResponseDto _diseaseListFixture() {
