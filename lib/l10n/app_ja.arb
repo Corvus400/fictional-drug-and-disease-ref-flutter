@@ -209,7 +209,7 @@
       }
     }
   },
-  "searchFilterDrugRegulatoryClass": "薬事分類",
+  "searchFilterDrugRegulatoryClass": "規制区分",
   "searchFilterDrugDosageForm": "剤形",
   "searchFilterDrugRoute": "投与経路",
   "searchFilterDrugAtc": "ATC 第 1 階層",

@@ -770,7 +770,7 @@ void main() {
     expect(handle.width, 40);
     expect(handle.height, 4);
 
-    expect(find.text('薬事分類'), findsOneWidget);
+    expect(find.text('規制区分'), findsOneWidget);
     expect(find.text('剤形'), findsOneWidget);
     expect(find.text('投与経路'), findsOneWidget);
     expect(find.text('ATC 第 1 階層'), findsOneWidget);
@@ -851,6 +851,49 @@ void main() {
       expect(find.byType(FilterChip), findsNothing);
     },
   );
+
+  testWidgets('drug_regulatory_axis_title_is_kisei_kubun_(T15)', (
+    tester,
+  ) async {
+    final categoryApiClient = _MockCategoryApiClient();
+    final drugApiClient = _MockDrugApiClient();
+    _stubDrugSearch(drugApiClient);
+    when(
+      categoryApiClient.getCategories,
+    ).thenAnswer((_) async => _categoriesFixture());
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          appDatabaseProvider.overrideWithValue(db),
+          drugApiClientProvider.overrideWithValue(drugApiClient),
+          categoryApiClientProvider.overrideWithValue(categoryApiClient),
+        ],
+        child: MaterialApp(
+          theme: AppTheme.light(),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: const SearchView(),
+        ),
+      ),
+    );
+
+    await tester.tap(find.byType(FloatingActionButton));
+    await tester.pumpAndSettle();
+
+    expect(find.text('規制区分'), findsOneWidget);
+    expect(find.text('薬事分類'), findsNothing);
+    expect(
+      find.byWidgetPredicate(
+        (widget) =>
+            widget.key is ValueKey<String> &&
+            (widget.key! as ValueKey<String>).value.startsWith(
+              'search-filter-pill-chip-unselected-',
+            ),
+      ),
+      findsNWidgets(11),
+    );
+  });
 
   testWidgets('SearchView drug filter footer count updates after chip toggle', (
     tester,

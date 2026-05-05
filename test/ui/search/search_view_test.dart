@@ -2015,7 +2015,7 @@ void main() {
     await tester.tap(find.byType(FloatingActionButton));
     await tester.pumpAndSettle();
 
-    expect(find.text('薬事分類'), findsOneWidget);
+    expect(find.text('規制区分'), findsOneWidget);
     expect(find.text('剤形'), findsOneWidget);
     expect(find.text('投与経路'), findsOneWidget);
     expect(find.text('ATC 第 1 階層'), findsOneWidget);
@@ -2307,7 +2307,7 @@ void main() {
     expect(find.text('薬物治療あり'), findsOneWidget);
     expect(find.text('重症度評価あり'), findsOneWidget);
     expect(find.text('IX 循環器系の疾患'), findsOneWidget);
-    expect(find.text('薬事分類'), findsNothing);
+    expect(find.text('規制区分'), findsNothing);
 
     await _tapVisible(tester, find.text('IX 循環器系の疾患'));
     await _tapVisible(tester, find.text('診療科'));
