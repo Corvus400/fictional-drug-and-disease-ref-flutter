@@ -1457,10 +1457,7 @@ void main() {
     expect(decoration.shape, BoxShape.circle);
     expect(warningIcon.size, 32);
     expect(warningIcon.color, SearchPalette.light.danger);
-    expect(
-      find.text('サーバーに接続できませんでした。\n通信環境を確認してから再試行してください。'),
-      findsOneWidget,
-    );
+    expect(find.text('もう一度試してください。'), findsOneWidget);
     expect(find.text('再試行'), findsOneWidget);
     expect(find.widgetWithText(FilledButton, '再試行'), findsOneWidget);
     expect(find.text('Type: NetworkException'), findsOneWidget);
@@ -1515,7 +1512,7 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.byIcon(Icons.warning_amber_rounded), findsOneWidget);
-      expect(find.text('通信エラー — もう一度'), findsOneWidget);
+      expect(find.text('予期しないエラー'), findsOneWidget);
       expect(find.text('Type: ApiException'), findsOneWidget);
       expect(find.text('Status: 422'), findsOneWidget);
       expect(find.text('Code: INVALID'), findsOneWidget);
@@ -1523,6 +1520,57 @@ void main() {
       expect(find.text('Details: keyword must be shorter'), findsOneWidget);
     },
   );
+
+  testWidgets('business_error_shows_business_text_(T05)', (tester) async {
+    final drugApiClient = _MockDrugApiClient();
+    when(
+      () => drugApiClient.getDrugs(
+        page: any(named: 'page'),
+        pageSize: any(named: 'pageSize'),
+        keyword: any(named: 'keyword'),
+      ),
+    ).thenThrow(
+      DioException(
+        requestOptions: RequestOptions(path: '/v1/drugs'),
+        response: Response<Map<String, dynamic>>(
+          requestOptions: RequestOptions(path: '/v1/drugs'),
+          statusCode: 400,
+          data: const {
+            'code': 'INVALID_ONSET_PATTERN',
+            'message': 'invalid onset pattern',
+          },
+        ),
+        type: DioExceptionType.badResponse,
+      ),
+    );
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          appDatabaseProvider.overrideWithValue(db),
+          drugApiClientProvider.overrideWithValue(drugApiClient),
+        ],
+        child: const MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: SearchView(),
+        ),
+      ),
+    );
+
+    await tester.enterText(
+      find.byKey(const ValueKey('search-field')),
+      'business error keyword',
+    );
+    await tester.tap(find.byType(FilledButton));
+    await tester.pumpAndSettle();
+
+    expect(find.text('条件に問題があります'), findsOneWidget);
+    expect(find.text('通信エラー — もう一度'), findsNothing);
+    expect(find.text('指定された条件をご確認ください。'), findsOneWidget);
+    expect(find.text('Type: ApiException'), findsOneWidget);
+    expect(find.text('Code: INVALID_ONSET_PATTERN'), findsOneWidget);
+  });
 
   testWidgets('SearchView retry runs search again after failure', (
     tester,

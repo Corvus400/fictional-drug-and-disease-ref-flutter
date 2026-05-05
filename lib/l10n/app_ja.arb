@@ -80,6 +80,40 @@
   "searchEmptyRemoveOneFilter": "絞り込みを 1 つずつ外す",
   "searchErrorTitle": "通信エラー — もう一度",
   "searchErrorBody": "サーバーに接続できませんでした。\n通信環境を確認してから再試行してください。",
+  "searchErrorTitleNetwork": "通信エラー — もう一度",
+  "searchErrorBodyNetwork": "もう一度試してください。",
+  "searchErrorTitleServer": "サーバーエラー",
+  "searchErrorBodyServer": "しばらく経ってから再試行してください。",
+  "searchErrorTitleBusiness": "条件に問題があります",
+  "searchErrorBodyBusiness": "指定された条件をご確認ください。",
+  "searchErrorTitleParse": "データを読み込めません",
+  "searchErrorBodyParse": "{message}",
+  "@searchErrorBodyParse": {
+    "placeholders": {
+      "message": {}
+    }
+  },
+  "searchErrorTitleStorage": "保存に失敗しました",
+  "searchErrorBodyStorage": "{message}",
+  "@searchErrorBodyStorage": {
+    "placeholders": {
+      "message": {}
+    }
+  },
+  "searchErrorTitleAuth": "権限がありません",
+  "searchErrorBodyAuth": "{message}",
+  "@searchErrorBodyAuth": {
+    "placeholders": {
+      "message": {}
+    }
+  },
+  "searchErrorTitleUnknown": "予期しないエラー",
+  "searchErrorBodyUnknown": "{message}",
+  "@searchErrorBodyUnknown": {
+    "placeholders": {
+      "message": {}
+    }
+  },
   "searchErrorRetry": "再試行",
   "searchErrorDiagnosticsType": "Type: {type}",
   "@searchErrorDiagnosticsType": {

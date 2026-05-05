@@ -50,6 +50,22 @@ void main() {
     );
   });
 
+  test(
+    'ApiException INVALID_ONSET_PATTERN maps to business error key (T05)',
+    () {
+      expect(
+        errorKeyFor(
+          const ApiException(
+            statusCode: 400,
+            code: 'INVALID_ONSET_PATTERN',
+            message: '',
+          ),
+        ),
+        'errApiInvalidCategory',
+      );
+    },
+  );
+
   test('ApiException other code maps to errApi4xx', () {
     expect(
       errorKeyFor(
