@@ -126,34 +126,49 @@ class _SearchHistoryRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
-    return ListTile(
-      key: ValueKey('history-row-${entry.id}'),
-      onTap: () => unawaited(onSelect(entry)),
-      dense: true,
-      leading: const Icon(Icons.history, size: 16),
-      title: Text(
-        entry.queryText,
-        overflow: TextOverflow.ellipsis,
-        style: theme.textTheme.bodyMedium?.copyWith(
-          fontWeight: FontWeight.w600,
+    return Dismissible(
+      key: ValueKey('history-row-dismiss-${entry.id}'),
+      direction: DismissDirection.endToStart,
+      onDismissed: (_) => unawaited(onDelete(entry.id)),
+      background: ColoredBox(
+        color: palette.danger.withValues(alpha: 0.16),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Align(
+            alignment: Alignment.centerRight,
+            child: Icon(Icons.delete_outline, color: palette.danger),
+          ),
         ),
       ),
-      subtitle: Wrap(
-        spacing: 8,
-        crossAxisAlignment: WrapCrossAlignment.center,
-        children: [
-          Text(l10n.searchToolbarTotal(entry.totalCount)),
-          if (entry.filterCount > 0)
-            Text(
-              l10n.searchHistoryFilterCount(entry.filterCount),
-              style: TextStyle(color: palette.drugInk),
-            ),
-        ],
-      ),
-      trailing: IconButton(
-        key: ValueKey('delete-history-${entry.id}'),
-        onPressed: () => unawaited(onDelete(entry.id)),
-        icon: const Icon(Icons.close),
+      child: ListTile(
+        key: ValueKey('history-row-${entry.id}'),
+        onTap: () => unawaited(onSelect(entry)),
+        dense: true,
+        leading: const Icon(Icons.history, size: 16),
+        title: Text(
+          entry.queryText,
+          overflow: TextOverflow.ellipsis,
+          style: theme.textTheme.bodyMedium?.copyWith(
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        subtitle: Wrap(
+          spacing: 8,
+          crossAxisAlignment: WrapCrossAlignment.center,
+          children: [
+            Text(l10n.searchToolbarTotal(entry.totalCount)),
+            if (entry.filterCount > 0)
+              Text(
+                l10n.searchHistoryFilterCount(entry.filterCount),
+                style: TextStyle(color: palette.drugInk),
+              ),
+          ],
+        ),
+        trailing: IconButton(
+          key: ValueKey('delete-history-${entry.id}'),
+          onPressed: () => unawaited(onDelete(entry.id)),
+          icon: const Icon(Icons.close),
+        ),
       ),
     );
   }
