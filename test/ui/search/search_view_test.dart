@@ -154,6 +154,29 @@ void main() {
     expect(find.text('医薬品名・YJ・ATC コード'), findsOneWidget);
   });
 
+  testWidgets('clear_button_retains_focus_(T02)', (tester) async {
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [appDatabaseProvider.overrideWithValue(db)],
+        child: const MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: SearchView(),
+        ),
+      ),
+    );
+
+    await tester.tap(find.byKey(const ValueKey('search-field')));
+    await tester.enterText(find.byKey(const ValueKey('search-field')), 'アムロ');
+    await tester.pump();
+
+    await tester.tap(find.byKey(const ValueKey('search-query-clear-button')));
+    await tester.pump();
+
+    final editableText = tester.widget<EditableText>(find.byType(EditableText));
+    expect(editableText.focusNode.hasFocus, isTrue);
+  });
+
   testWidgets('SearchView returns cancel action to search on outside tap', (
     tester,
   ) async {
