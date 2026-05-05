@@ -224,7 +224,25 @@ final class SearchPalette extends ThemeExtension<SearchPalette> {
         'false' => const Color(0xFF4B5563),
         _ => diseaseInk,
       },
-      DiseaseBadgeCategory.department => diseaseInk,
+      DiseaseBadgeCategory.department => switch (value) {
+        'internal_medicine' => const Color(0xFF1D4ED8),
+        'cardiology' => const Color(0xFFB91C1C),
+        'gastroenterology' => const Color(0xFF15803D),
+        'endocrinology' => const Color(0xFFEA580C),
+        'neurology' => const Color(0xFF6D28D9),
+        'psychiatry' => diseaseInk,
+        'surgery' => const Color(0xFF0E7490),
+        'orthopedics' => const Color(0xFFA16207),
+        'dermatology' => const Color(0xFFBE185D),
+        'ophthalmology' => const Color(0xFF0891B2),
+        'otolaryngology' => const Color(0xFF4D7C0F),
+        'urology' => const Color(0xFF3730A3),
+        'gynecology' => const Color(0xFF9F1239),
+        'pediatrics' => const Color(0xFFCA8A04),
+        'emergency' => const Color(0xFF7F1D1D),
+        'infectious_disease' => const Color(0xFF9A3412),
+        _ => diseaseInk,
+      },
     };
     return (background: base.withValues(alpha: 0.12), foreground: base);
   }
