@@ -488,7 +488,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get searchDiseaseDepartmentEmergency => '救急科';
 
   @override
-  String get searchDiseaseDepartmentInfectiousDisease => '感染症内科';
+  String get searchDiseaseDepartmentInfectiousDisease => '感染症科';
 
   @override
   String get searchDiseaseChronicityAcute => '急性';
@@ -500,7 +500,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get searchDiseaseChronicityChronic => '慢性';
 
   @override
-  String get searchDiseaseChronicityRecurrent => '再発性';
+  String get searchDiseaseChronicityRelapsing => '再発性';
 
   @override
   String get searchDiseaseInfectiousTrue => '感染性';
@@ -509,22 +509,22 @@ class AppLocalizationsJa extends AppLocalizations {
   String get searchDiseaseInfectiousFalse => '非感染性';
 
   @override
-  String get searchDiseaseOnsetPatternSudden => '突然発症';
+  String get searchDiseaseOnsetPatternAcute => '急性発症';
 
   @override
-  String get searchDiseaseOnsetPatternGradual => '緩徐発症';
+  String get searchDiseaseOnsetPatternSubacute => '亜急性発症';
 
   @override
-  String get searchDiseaseOnsetPatternEpisodic => '発作性';
+  String get searchDiseaseOnsetPatternChronic => '慢性経過';
 
   @override
-  String get searchDiseaseOnsetPatternProgressive => '進行性';
+  String get searchDiseaseOnsetPatternIntermittent => '間欠性';
 
   @override
-  String get searchDiseaseOnsetPatternCongenital => '先天性';
+  String get searchDiseaseOnsetPatternRelapsing => '再発性';
 
   @override
-  String get searchDiseaseExamCategoryBlood => '血液検査';
+  String get searchDiseaseExamCategoryBloodTest => '血液検査';
 
   @override
   String get searchDiseaseExamCategoryImaging => '画像検査';
@@ -533,10 +533,10 @@ class AppLocalizationsJa extends AppLocalizations {
   String get searchDiseaseExamCategoryPhysiological => '生理検査';
 
   @override
-  String get searchDiseaseExamCategoryPathological => '病理検査';
+  String get searchDiseaseExamCategoryPathology => '病理検査';
 
   @override
-  String get searchDiseaseExamCategoryGenetic => '遺伝子検査';
+  String get searchDiseaseExamCategoryInterview => '問診';
 
   @override
   String get searchDiseaseBoolTrue => 'あり';

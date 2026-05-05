@@ -412,7 +412,7 @@ void main() {
       final notifier = container.read(searchScreenProvider.notifier);
 
       await notifier.changeTab(SearchTab.diseases);
-      await notifier.applyDiseaseFilter(examCategory: ['blood']);
+      await notifier.applyDiseaseFilter(examCategory: ['blood_test']);
       await notifier.removeChipAt(0);
 
       expect(

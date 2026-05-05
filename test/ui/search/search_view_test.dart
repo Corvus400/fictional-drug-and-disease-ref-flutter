@@ -23,6 +23,7 @@ import 'package:fictional_drug_and_disease_ref/router/app_router.dart';
 import 'package:fictional_drug_and_disease_ref/theme/app_theme.dart';
 import 'package:fictional_drug_and_disease_ref/ui/search/constants/search_palette.dart';
 import 'package:fictional_drug_and_disease_ref/ui/search/search_screen_notifier.dart';
+import 'package:fictional_drug_and_disease_ref/ui/search/search_screen_state.dart';
 import 'package:fictional_drug_and_disease_ref/ui/search/search_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -1817,6 +1818,82 @@ void main() {
 
     expect(find.descendant(of: bar, matching: find.text('毒薬')), findsNothing);
     expect(find.descendant(of: bar, matching: find.text('錠剤')), findsOneWidget);
+  });
+
+  testWidgets('disease applied chip labels match mock-server enum kDoc', (
+    tester,
+  ) async {
+    final diseaseApiClient = _MockDiseaseApiClient();
+    when(
+      () => diseaseApiClient.getDiseases(
+        page: any(named: 'page'),
+        pageSize: any(named: 'pageSize'),
+        department: any(named: 'department'),
+        chronicity: any(named: 'chronicity'),
+        keyword: any(named: 'keyword'),
+        onsetPattern: any(named: 'onsetPattern'),
+        examCategory: any(named: 'examCategory'),
+      ),
+    ).thenAnswer((_) async => _diseaseListFixture());
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          appDatabaseProvider.overrideWithValue(db),
+          diseaseApiClientProvider.overrideWithValue(diseaseApiClient),
+        ],
+        child: const MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: SearchView(),
+        ),
+      ),
+    );
+
+    final context = tester.element(find.byType(SearchView));
+    final container = ProviderScope.containerOf(context);
+    await container
+        .read(searchScreenProvider.notifier)
+        .changeTab(SearchTab.diseases);
+    await container
+        .read(searchScreenProvider.notifier)
+        .applyDiseaseFilter(
+          department: ['infectious_disease'],
+          chronicity: ['relapsing'],
+          onsetPattern: ['intermittent'],
+          examCategory: ['blood_test'],
+        );
+    await tester.pumpAndSettle();
+
+    final bar = find.byKey(const ValueKey('search-applied-filter-bar'));
+    expect(
+      find.descendant(of: bar, matching: find.text('感染症科')),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(of: bar, matching: find.text('再発性')),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(of: bar, matching: find.text('間欠性')),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(of: bar, matching: find.text('血液検査')),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(of: bar, matching: find.text('relapsing')),
+      findsNothing,
+    );
+    expect(
+      find.descendant(of: bar, matching: find.text('intermittent')),
+      findsNothing,
+    );
+    expect(
+      find.descendant(of: bar, matching: find.text('blood_test')),
+      findsNothing,
+    );
   });
 
   testWidgets('SearchView applies disease filters from category master sheet', (

@@ -985,7 +985,7 @@ abstract class AppLocalizations {
   /// No description provided for @searchDiseaseDepartmentInfectiousDisease.
   ///
   /// In ja, this message translates to:
-  /// **'感染症内科'**
+  /// **'感染症科'**
   String get searchDiseaseDepartmentInfectiousDisease;
 
   /// No description provided for @searchDiseaseChronicityAcute.
@@ -1006,11 +1006,11 @@ abstract class AppLocalizations {
   /// **'慢性'**
   String get searchDiseaseChronicityChronic;
 
-  /// No description provided for @searchDiseaseChronicityRecurrent.
+  /// No description provided for @searchDiseaseChronicityRelapsing.
   ///
   /// In ja, this message translates to:
   /// **'再発性'**
-  String get searchDiseaseChronicityRecurrent;
+  String get searchDiseaseChronicityRelapsing;
 
   /// No description provided for @searchDiseaseInfectiousTrue.
   ///
@@ -1024,41 +1024,41 @@ abstract class AppLocalizations {
   /// **'非感染性'**
   String get searchDiseaseInfectiousFalse;
 
-  /// No description provided for @searchDiseaseOnsetPatternSudden.
+  /// No description provided for @searchDiseaseOnsetPatternAcute.
   ///
   /// In ja, this message translates to:
-  /// **'突然発症'**
-  String get searchDiseaseOnsetPatternSudden;
+  /// **'急性発症'**
+  String get searchDiseaseOnsetPatternAcute;
 
-  /// No description provided for @searchDiseaseOnsetPatternGradual.
+  /// No description provided for @searchDiseaseOnsetPatternSubacute.
   ///
   /// In ja, this message translates to:
-  /// **'緩徐発症'**
-  String get searchDiseaseOnsetPatternGradual;
+  /// **'亜急性発症'**
+  String get searchDiseaseOnsetPatternSubacute;
 
-  /// No description provided for @searchDiseaseOnsetPatternEpisodic.
+  /// No description provided for @searchDiseaseOnsetPatternChronic.
   ///
   /// In ja, this message translates to:
-  /// **'発作性'**
-  String get searchDiseaseOnsetPatternEpisodic;
+  /// **'慢性経過'**
+  String get searchDiseaseOnsetPatternChronic;
 
-  /// No description provided for @searchDiseaseOnsetPatternProgressive.
+  /// No description provided for @searchDiseaseOnsetPatternIntermittent.
   ///
   /// In ja, this message translates to:
-  /// **'進行性'**
-  String get searchDiseaseOnsetPatternProgressive;
+  /// **'間欠性'**
+  String get searchDiseaseOnsetPatternIntermittent;
 
-  /// No description provided for @searchDiseaseOnsetPatternCongenital.
+  /// No description provided for @searchDiseaseOnsetPatternRelapsing.
   ///
   /// In ja, this message translates to:
-  /// **'先天性'**
-  String get searchDiseaseOnsetPatternCongenital;
+  /// **'再発性'**
+  String get searchDiseaseOnsetPatternRelapsing;
 
-  /// No description provided for @searchDiseaseExamCategoryBlood.
+  /// No description provided for @searchDiseaseExamCategoryBloodTest.
   ///
   /// In ja, this message translates to:
   /// **'血液検査'**
-  String get searchDiseaseExamCategoryBlood;
+  String get searchDiseaseExamCategoryBloodTest;
 
   /// No description provided for @searchDiseaseExamCategoryImaging.
   ///
@@ -1072,17 +1072,17 @@ abstract class AppLocalizations {
   /// **'生理検査'**
   String get searchDiseaseExamCategoryPhysiological;
 
-  /// No description provided for @searchDiseaseExamCategoryPathological.
+  /// No description provided for @searchDiseaseExamCategoryPathology.
   ///
   /// In ja, this message translates to:
   /// **'病理検査'**
-  String get searchDiseaseExamCategoryPathological;
+  String get searchDiseaseExamCategoryPathology;
 
-  /// No description provided for @searchDiseaseExamCategoryGenetic.
+  /// No description provided for @searchDiseaseExamCategoryInterview.
   ///
   /// In ja, this message translates to:
-  /// **'遺伝子検査'**
-  String get searchDiseaseExamCategoryGenetic;
+  /// **'問診'**
+  String get searchDiseaseExamCategoryInterview;
 
   /// No description provided for @searchDiseaseBoolTrue.
   ///
