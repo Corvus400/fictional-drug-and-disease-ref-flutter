@@ -316,6 +316,12 @@ abstract class AppLocalizations {
   /// **'該当する結果がありません'**
   String get searchEmptyResultTitle;
 
+  /// No description provided for @searchEmptyResultSubtitle.
+  ///
+  /// In ja, this message translates to:
+  /// **'検索キーワードや絞り込みを見直してください。'**
+  String get searchEmptyResultSubtitle;
+
   /// No description provided for @searchEmptyResetFilter.
   ///
   /// In ja, this message translates to:
@@ -325,14 +331,8 @@ abstract class AppLocalizations {
   /// No description provided for @searchEmptyRemoveOneFilter.
   ///
   /// In ja, this message translates to:
-  /// **'条件を1つ外す'**
+  /// **'絞り込みを 1 つずつ外す'**
   String get searchEmptyRemoveOneFilter;
-
-  /// No description provided for @searchEmptyChangeMatchToPartial.
-  ///
-  /// In ja, this message translates to:
-  /// **'部分一致に変更'**
-  String get searchEmptyChangeMatchToPartial;
 
   /// No description provided for @searchErrorTitle.
   ///

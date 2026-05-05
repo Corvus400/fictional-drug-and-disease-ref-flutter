@@ -131,13 +131,13 @@ class AppLocalizationsJa extends AppLocalizations {
   String get searchEmptyResultTitle => '該当する結果がありません';
 
   @override
+  String get searchEmptyResultSubtitle => '検索キーワードや絞り込みを見直してください。';
+
+  @override
   String get searchEmptyResetFilter => '条件をリセット';
 
   @override
   String get searchEmptyRemoveOneFilter => '絞り込みを 1 つずつ外す';
-
-  @override
-  String get searchEmptyChangeMatchToPartial => '部分一致に変更';
 
   @override
   String get searchErrorTitle => '通信エラー — もう一度';

@@ -7,7 +7,6 @@ class _SearchPhaseSection extends StatelessWidget {
     required this.onResetFilter,
     required this.onRemoveOneChip,
     required this.onRemoveChipAt,
-    required this.onChangeMatchToPartial,
     required this.onChangeDrugSort,
     required this.onChangeDiseaseSort,
     required this.onLoadMore,
@@ -18,7 +17,6 @@ class _SearchPhaseSection extends StatelessWidget {
   final Future<void> Function() onResetFilter;
   final Future<void> Function() onRemoveOneChip;
   final Future<void> Function(int index) onRemoveChipAt;
-  final Future<void> Function() onChangeMatchToPartial;
   final Future<void> Function(DrugSort sort) onChangeDrugSort;
   final Future<void> Function(DiseaseSort sort) onChangeDiseaseSort;
   final Future<void> Function() onLoadMore;
@@ -72,6 +70,12 @@ class _SearchPhaseSection extends StatelessWidget {
       );
     }
     if (phase is SearchPhaseEmpty) {
+      final theme = Theme.of(context);
+      final palette =
+          theme.extension<SearchPalette>() ??
+          (theme.brightness == Brightness.dark
+              ? SearchPalette.dark
+              : SearchPalette.light);
       return Column(
         children: [
           _SearchResultToolbar(
@@ -91,16 +95,39 @@ class _SearchPhaseSection extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      Icon(
-                        Icons.manage_search,
-                        size: 48,
-                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      Center(
+                        child: Semantics(
+                          label: l10n.searchEmptyResultTitle,
+                          child: Container(
+                            key: const ValueKey('search-empty-icon'),
+                            width: 64,
+                            height: 64,
+                            decoration: BoxDecoration(
+                              color: palette.surface3,
+                              shape: BoxShape.circle,
+                            ),
+                            child: Icon(
+                              Icons.search_off,
+                              size: 28,
+                              color: palette.muted,
+                            ),
+                          ),
+                        ),
                       ),
                       const SizedBox(height: 16),
                       Text(
                         l10n.searchEmptyResultTitle,
                         textAlign: TextAlign.center,
-                        style: Theme.of(context).textTheme.titleMedium,
+                        style: theme.textTheme.titleMedium,
+                      ),
+                      const SizedBox(height: 6),
+                      Text(
+                        l10n.searchEmptyResultSubtitle,
+                        textAlign: TextAlign.center,
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: palette.muted,
+                          height: 1.6,
+                        ),
                       ),
                       const SizedBox(height: 16),
                       FilledButton(
