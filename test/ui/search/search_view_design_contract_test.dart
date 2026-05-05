@@ -911,6 +911,46 @@ void main() {
     ).called(1);
   });
 
+  testWidgets('drug_card_image_is_vertically_centered_(T08)', (
+    tester,
+  ) async {
+    await tester.binding.setSurfaceSize(const Size(390, 844));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+
+    final drugApiClient = _MockDrugApiClient();
+    _stubDrugSearch(drugApiClient);
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          appDatabaseProvider.overrideWithValue(db),
+          drugApiClientProvider.overrideWithValue(drugApiClient),
+        ],
+        child: MaterialApp(
+          theme: AppTheme.light(),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: const SearchView(),
+        ),
+      ),
+    );
+
+    await tester.enterText(
+      find.byKey(const ValueKey('search-field')),
+      'center image',
+    );
+    await tester.tap(find.byType(FilledButton).first);
+    await tester.pumpAndSettle();
+
+    final item = _drugListFixture().items.first;
+    final card = find.byKey(ValueKey('drug-card-${item.id}'));
+    final row = tester.widget<Row>(
+      find.descendant(of: card, matching: find.byType(Row)).first,
+    );
+
+    expect(row.crossAxisAlignment, CrossAxisAlignment.center);
+  });
+
   // Design source:
   // Round6/round6-screens.jsx TabletFrame and TopChrome gutter=28.
   testWidgets('SearchView tablet chrome follows Round6 gutters', (
