@@ -275,14 +275,13 @@ class _SearchPhaseSection extends StatelessWidget {
     }
     return NotificationListener<ScrollNotification>(
       onNotification: (notification) {
-        if (notification is! ScrollUpdateNotification ||
-            notification.dragDetails == null) {
+        if (notification is! ScrollUpdateNotification) {
           return false;
         }
         final metrics = notification.metrics;
         final nearEnd =
             metrics.maxScrollExtent > 0 &&
-            metrics.pixels >= metrics.maxScrollExtent - 200;
+            metrics.pixels >= metrics.maxScrollExtent - 80;
         if (view.canLoadMore && nearEnd) {
           unawaited(onLoadMore());
         }
