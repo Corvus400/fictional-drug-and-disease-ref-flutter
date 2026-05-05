@@ -70,4 +70,15 @@ void main() {
       }
     },
   );
+
+  test('drug_card_image_uses_cache_(T14)', () {
+    final source = File(
+      'lib/ui/search/widgets/drug_result_card.dart',
+    ).readAsStringSync();
+    final pubspec = File('pubspec.yaml').readAsStringSync();
+
+    expect(source, contains('CachedNetworkImage'));
+    expect(source, isNot(contains('Image.network(')));
+    expect(pubspec, contains('cached_network_image:'));
+  });
 }

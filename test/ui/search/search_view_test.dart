@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:ui';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
 import 'package:fictional_drug_and_disease_ref/application/providers/usecase_providers.dart';
 import 'package:fictional_drug_and_disease_ref/config/api_config.dart';
@@ -1306,16 +1307,15 @@ void main() {
       await tester.pumpAndSettle();
 
       final item = fixture.items.first;
-      final image = tester.widget<Image>(
+      final image = tester.widget<CachedNetworkImage>(
         find.byKey(ValueKey('drug-image-${item.id}')),
       );
-      final provider = image.image as NetworkImage;
 
       expect(
-        provider.url,
+        image.imageUrl,
         'https://api.example.test/v1/images/drugs/${item.id}?size=M',
       );
-      expect(provider.url, isNot(contains('size=S')));
+      expect(image.imageUrl, isNot(contains('size=S')));
     },
   );
 
