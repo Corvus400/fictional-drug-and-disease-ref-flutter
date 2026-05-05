@@ -6,6 +6,7 @@ class _SearchPhaseSection extends StatelessWidget {
     required this.onRetry,
     required this.onResetFilter,
     required this.onRemoveOneChip,
+    required this.onRemoveChipAt,
     required this.onChangeMatchToPartial,
     required this.onChangeDrugSort,
     required this.onLoadMore,
@@ -15,6 +16,7 @@ class _SearchPhaseSection extends StatelessWidget {
   final Future<void> Function() onRetry;
   final Future<void> Function() onResetFilter;
   final Future<void> Function() onRemoveOneChip;
+  final Future<void> Function(int index) onRemoveChipAt;
   final Future<void> Function() onChangeMatchToPartial;
   final Future<void> Function(DrugSort sort) onChangeDrugSort;
   final Future<void> Function() onLoadMore;
@@ -40,6 +42,7 @@ class _SearchPhaseSection extends StatelessWidget {
           _SearchResultToolbar(
             state: state,
             totalCount: 0,
+            onRemoveChipAt: onRemoveChipAt,
             onChangeDrugSort: onChangeDrugSort,
           ),
           Expanded(
@@ -139,6 +142,7 @@ class _SearchPhaseSection extends StatelessWidget {
           _SearchResultToolbar(
             state: state,
             totalCount: view.totalCount,
+            onRemoveChipAt: onRemoveChipAt,
             onChangeDrugSort: onChangeDrugSort,
           ),
           switch (view) {

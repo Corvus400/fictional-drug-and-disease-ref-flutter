@@ -1391,6 +1391,61 @@ void main() {
     expect(find.text('検索履歴'), findsNothing);
   });
 
+  testWidgets('applied chip tap removes only that chip', (tester) async {
+    final db = AppDatabase(NativeDatabase.memory());
+    final drugApiClient = _MockDrugApiClient();
+    final categoryApiClient = _MockCategoryApiClient();
+    addTearDown(db.close);
+    when(
+      categoryApiClient.getCategories,
+    ).thenAnswer((_) async => _categoriesFixture());
+    when(
+      () => drugApiClient.getDrugs(
+        page: any(named: 'page'),
+        pageSize: any(named: 'pageSize'),
+        regulatoryClass: any(named: 'regulatoryClass'),
+        dosageForm: any(named: 'dosageForm'),
+        keyword: any(named: 'keyword'),
+      ),
+    ).thenAnswer((_) async => _drugListFixture());
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          appDatabaseProvider.overrideWithValue(db),
+          drugApiClientProvider.overrideWithValue(drugApiClient),
+          categoryApiClientProvider.overrideWithValue(categoryApiClient),
+        ],
+        child: const MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: SearchView(),
+        ),
+      ),
+    );
+
+    final context = tester.element(find.byType(SearchView));
+    final container = ProviderScope.containerOf(context);
+    await container
+        .read(searchScreenProvider.notifier)
+        .applyDrugFilter(regulatoryClass: ['poison'], dosageForm: ['tablet']);
+    await tester.pumpAndSettle();
+    final bar = find.byKey(const ValueKey('search-applied-filter-bar'));
+    expect(find.descendant(of: bar, matching: find.text('毒薬')), findsOneWidget);
+    expect(find.descendant(of: bar, matching: find.text('錠剤')), findsOneWidget);
+
+    final poisonChipTapTarget = find
+        .ancestor(
+          of: find.descendant(of: bar, matching: find.text('毒薬')),
+          matching: find.byType(InkWell),
+        )
+        .first;
+    await tester.tap(poisonChipTapTarget);
+    await tester.pumpAndSettle();
+
+    expect(find.descendant(of: bar, matching: find.text('毒薬')), findsNothing);
+    expect(find.descendant(of: bar, matching: find.text('錠剤')), findsOneWidget);
+  });
+
   testWidgets('SearchView applies disease filters from category master sheet', (
     tester,
   ) async {

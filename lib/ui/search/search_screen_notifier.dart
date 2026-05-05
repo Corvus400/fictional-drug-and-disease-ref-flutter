@@ -267,6 +267,28 @@ final class SearchScreenNotifier extends Notifier<SearchScreenState> {
     await performSearch();
   }
 
+  /// Removes one applied chip by index and searches.
+  Future<void> removeChipAt(int index) async {
+    final items = state.appliedChips.items;
+    if (index < 0 || index >= items.length) {
+      return;
+    }
+    final chip = items[index];
+    final next = [...items]..removeAt(index);
+    if (state.tab == SearchTab.drugs) {
+      state = state.copyWith(
+        drugParams: _drugParamsWithoutChip(state.drugParams, chip),
+        appliedChips: AppliedFilterChips(next),
+      );
+    } else {
+      state = state.copyWith(
+        diseaseParams: _diseaseParamsWithoutChip(state.diseaseParams, chip),
+        appliedChips: AppliedFilterChips(next),
+      );
+    }
+    await performSearch();
+  }
+
   /// Switches keyword match to partial and searches.
   Future<void> changeMatchToPartial() async {
     state = state.copyWith(
@@ -449,6 +471,86 @@ AppliedFilterChips _diseaseChips({
       ),
   ];
   return AppliedFilterChips(chips);
+}
+
+DrugSearchParams _drugParamsWithoutChip(
+  DrugSearchParams params,
+  AppliedChip chip,
+) {
+  return DrugSearchParams(
+    page: 1,
+    pageSize: params.pageSize,
+    categoryAtc: chip.axis == 'categoryAtc' ? null : params.categoryAtc,
+    therapeuticCategory: chip.axis == 'therapeuticCategory'
+        ? null
+        : params.therapeuticCategory,
+    regulatoryClass: chip.axis == 'regulatoryClass'
+        ? _filteredOrNull(params.regulatoryClass, chip.label)
+        : params.regulatoryClass,
+    dosageForm: chip.axis == 'dosageForm'
+        ? _filteredOrNull(params.dosageForm, chip.label)
+        : params.dosageForm,
+    route: chip.axis == 'route'
+        ? _filteredOrNull(params.route, chip.label)
+        : params.route,
+    keyword: params.keyword,
+    keywordMatch: params.keywordMatch,
+    keywordTarget: params.keywordTarget,
+    adverseReactionKeyword: chip.axis == 'adverseReactionKeyword'
+        ? null
+        : params.adverseReactionKeyword,
+    precautionCategory: chip.axis == 'precautionCategory'
+        ? _filteredOrNull(params.precautionCategory, chip.label)
+        : params.precautionCategory,
+    sort: params.sort,
+  );
+}
+
+DiseaseSearchParams _diseaseParamsWithoutChip(
+  DiseaseSearchParams params,
+  AppliedChip chip,
+) {
+  return DiseaseSearchParams(
+    page: 1,
+    pageSize: params.pageSize,
+    icd10Chapter: chip.axis == 'icd10Chapter'
+        ? _filteredOrNull(params.icd10Chapter, chip.label)
+        : params.icd10Chapter,
+    department: chip.axis == 'department'
+        ? _filteredOrNull(params.department, chip.label)
+        : params.department,
+    chronicity: chip.axis == 'chronicity'
+        ? _filteredOrNull(params.chronicity, chip.label)
+        : params.chronicity,
+    infectious: chip.axis == 'infectious' ? null : params.infectious,
+    keyword: params.keyword,
+    keywordMatch: params.keywordMatch,
+    keywordTarget: params.keywordTarget,
+    symptomKeyword: chip.axis == 'symptomKeyword'
+        ? null
+        : params.symptomKeyword,
+    onsetPattern: chip.axis == 'onsetPattern'
+        ? _filteredOrNull(params.onsetPattern, chip.label)
+        : params.onsetPattern,
+    examCategory: chip.axis == 'examCategory'
+        ? _filteredOrNull(params.examCategory, chip.label)
+        : params.examCategory,
+    hasPharmacologicalTreatment: chip.axis == 'hasPharmacologicalTreatment'
+        ? null
+        : params.hasPharmacologicalTreatment,
+    hasSeverityGrading: chip.axis == 'hasSeverityGrading'
+        ? null
+        : params.hasSeverityGrading,
+    sort: params.sort,
+  );
+}
+
+List<String>? _filteredOrNull(List<String>? values, String value) {
+  if (values == null) {
+    return null;
+  }
+  final next = values.where((item) => item != value).toList();
+  return next.isEmpty ? null : next;
 }
 
 DrugSearchParams _copyDrugParams(
