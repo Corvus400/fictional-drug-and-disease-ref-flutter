@@ -10,6 +10,7 @@ import 'package:fictional_drug_and_disease_ref/l10n/app_localizations.dart';
 import 'package:fictional_drug_and_disease_ref/router/app_router.dart';
 import 'package:fictional_drug_and_disease_ref/ui/search/constants/search_constants.dart';
 import 'package:fictional_drug_and_disease_ref/ui/search/constants/search_palette.dart';
+import 'package:fictional_drug_and_disease_ref/ui/search/format/relative_time_formatter.dart';
 import 'package:fictional_drug_and_disease_ref/ui/search/search_screen_notifier.dart';
 import 'package:fictional_drug_and_disease_ref/ui/search/search_screen_state.dart';
 import 'package:flutter/material.dart';
@@ -33,11 +34,15 @@ part 'format/search_sort_sheet.dart';
 /// Search tab view.
 class SearchView extends ConsumerWidget {
   /// Creates a search view.
-  const SearchView({super.key, this.healthCheck});
+  const SearchView({super.key, this.healthCheck, this.currentTime});
 
   /// Deprecated compatibility parameter. Search UI no longer performs health
   /// checks from the view layer.
   final Future<String>? healthCheck;
+
+  /// Current time override used to render deterministic history labels in
+  /// tests. Production callers leave this null.
+  final DateTime? currentTime;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -114,6 +119,7 @@ class SearchView extends ConsumerWidget {
                   _SearchHistoryDropdown(
                     tapRegionGroupId: historyTapRegionGroupId,
                     entries: state.historyForTab,
+                    currentTime: currentTime ?? DateTime.now(),
                     onSelect: notifier.selectHistory,
                     onDelete: notifier.deleteHistory,
                     onClearAll: notifier.clearAllHistory,

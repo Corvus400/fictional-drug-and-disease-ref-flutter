@@ -4,6 +4,7 @@ class _SearchHistoryDropdown extends StatelessWidget {
   const _SearchHistoryDropdown({
     required this.tapRegionGroupId,
     required this.entries,
+    required this.currentTime,
     required this.onSelect,
     required this.onDelete,
     required this.onClearAll,
@@ -11,6 +12,7 @@ class _SearchHistoryDropdown extends StatelessWidget {
 
   final Object tapRegionGroupId;
   final List<SearchHistoryEnvelope> entries;
+  final DateTime currentTime;
   final Future<void> Function(SearchHistoryEnvelope entry) onSelect;
   final Future<void> Function(String id) onDelete;
   final Future<void> Function() onClearAll;
@@ -61,6 +63,7 @@ class _SearchHistoryDropdown extends StatelessWidget {
               _SearchHistoryRow(
                 entry: entry,
                 palette: palette,
+                currentTime: currentTime,
                 onSelect: onSelect,
                 onDelete: onDelete,
               ),
@@ -113,12 +116,14 @@ class _SearchHistoryRow extends StatelessWidget {
   const _SearchHistoryRow({
     required this.entry,
     required this.palette,
+    required this.currentTime,
     required this.onSelect,
     required this.onDelete,
   });
 
   final SearchHistoryEnvelope entry;
   final SearchPalette palette;
+  final DateTime currentTime;
   final Future<void> Function(SearchHistoryEnvelope entry) onSelect;
   final Future<void> Function(String id) onDelete;
 
@@ -183,10 +188,23 @@ class _SearchHistoryRow extends StatelessWidget {
           crossAxisAlignment: WrapCrossAlignment.center,
           children: [
             Text(l10n.searchToolbarTotal(entry.totalCount)),
+            Text(formatRelativeTime(currentTime, entry.searchedAt, l10n)),
             if (entry.filterCount > 0)
-              Text(
-                l10n.searchHistoryFilterCount(entry.filterCount),
-                style: TextStyle(color: palette.drugInk),
+              Container(
+                padding: const EdgeInsets.fromLTRB(7, 2, 8, 2),
+                decoration: BoxDecoration(
+                  color: palette.primarySoft,
+                  border: Border.all(color: palette.primaryRing, width: 0.5),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Text(
+                  l10n.searchHistoryFilterCount(entry.filterCount),
+                  style: TextStyle(
+                    color: palette.drugInk,
+                    fontSize: 10.5,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
               ),
           ],
         ),

@@ -510,6 +510,63 @@ void main() {
     expect(decoration.color, SearchPalette.light.drugTint);
   });
 
+  testWidgets('history row subtitle includes relative time and filter pill', (
+    tester,
+  ) async {
+    final now = DateTime.utc(2026, 5, 5, 12);
+    final db = AppDatabase(NativeDatabase.memory());
+    addTearDown(db.close);
+    final container = ProviderContainer(
+      overrides: [appDatabaseProvider.overrideWithValue(db)],
+    );
+    addTearDown(container.dispose);
+    await container
+        .read(searchHistoryRepositoryProvider)
+        .insertWithDedup(
+          id: 'history_subtitle_pill',
+          target: 'drug',
+          queryJson: container
+              .read(searchQueryCodecProvider)
+              .encode(
+                const DrugSearchParams(
+                  keyword: '字幕履歴',
+                  categoryAtc: 'C',
+                  dosageForm: ['tablet'],
+                ),
+              ),
+          searchedAt: now.subtract(const Duration(minutes: 5)),
+          totalCount: 5,
+        );
+
+    await tester.pumpWidget(
+      UncontrolledProviderScope(
+        container: container,
+        child: MaterialApp(
+          theme: AppTheme.light(),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: SearchView(currentTime: now),
+        ),
+      ),
+    );
+    await tester.pump();
+    await tester.tap(find.byKey(const ValueKey('search-field')));
+    await tester.pump();
+
+    expect(find.text('合計 5 件'), findsOneWidget);
+    expect(find.text('5分前'), findsOneWidget);
+    expect(find.text('絞り込み +2'), findsOneWidget);
+
+    final containerWidget = tester.widget<Container>(
+      find
+          .ancestor(of: find.text('絞り込み +2'), matching: find.byType(Container))
+          .first,
+    );
+    final decoration = containerWidget.decoration! as BoxDecoration;
+    expect(decoration.color, SearchPalette.light.primarySoft);
+    expect(decoration.border?.top.color, SearchPalette.light.primaryRing);
+  });
+
   testWidgets('SearchView deletes a persisted history row from dropdown', (
     tester,
   ) async {

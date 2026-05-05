@@ -323,7 +323,7 @@ void _searchGolden({
             theme: theme,
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
-            home: const SearchView(),
+            home: SearchView(currentTime: DateTime.utc(2026, 5, 5, 9)),
           ),
         );
       },
