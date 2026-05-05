@@ -154,6 +154,86 @@ void main() {
       ).called(2);
     });
 
+    test(
+      'removeOneChip removes the oldest applied chip and clears its axis on '
+      'drugParams',
+      () async {
+        _stubDrugSearch(drugApiClient);
+        final notifier = container.read(searchScreenProvider.notifier);
+
+        await notifier.applyDrugFilter(
+          regulatoryClass: ['poison'],
+          dosageForm: ['tablet'],
+        );
+        await notifier.removeOneChip();
+
+        final state = container.read(searchScreenProvider);
+        expect(state.drugParams.regulatoryClass, isNull);
+        expect(state.drugParams.dosageForm, ['tablet']);
+        expect(state.appliedChips.items, hasLength(1));
+        expect(state.appliedChips.items.single.axis, 'dosageForm');
+      },
+    );
+
+    test('removeOneChip is no-op when appliedChips is empty', () async {
+      _stubDrugSearch(drugApiClient);
+      final notifier = container.read(searchScreenProvider.notifier);
+      final before = container.read(searchScreenProvider);
+
+      await notifier.removeOneChip();
+
+      final after = container.read(searchScreenProvider);
+      expect(after.appliedChips.items, isEmpty);
+      expect(after.drugParams, same(before.drugParams));
+      expect(after.diseaseParams, same(before.diseaseParams));
+      verifyNever(
+        () => drugApiClient.getDrugs(
+          page: any(named: 'page'),
+          pageSize: any(named: 'pageSize'),
+          categoryAtc: any(named: 'categoryAtc'),
+          therapeuticCategory: any(named: 'therapeuticCategory'),
+          regulatoryClass: any(named: 'regulatoryClass'),
+          dosageForm: any(named: 'dosageForm'),
+          route: any(named: 'route'),
+          keyword: any(named: 'keyword'),
+          adverseReactionKeyword: any(named: 'adverseReactionKeyword'),
+          precautionCategory: any(named: 'precautionCategory'),
+        ),
+      );
+    });
+
+    test(
+      'removeOneChip on disease tab clears the oldest disease axis',
+      () async {
+        _stubDiseaseSearch(diseaseApiClient);
+        final notifier = container.read(searchScreenProvider.notifier);
+
+        await notifier.changeTab(SearchTab.diseases);
+        await notifier.applyDiseaseFilter(chronicity: ['chronic']);
+        await notifier.removeOneChip();
+
+        final state = container.read(searchScreenProvider);
+        expect(state.diseaseParams.chronicity, isNull);
+        expect(state.appliedChips.items, isEmpty);
+      },
+    );
+
+    test('removeOneChip preserves params for non-removed axes', () async {
+      _stubDrugSearch(drugApiClient);
+      final notifier = container.read(searchScreenProvider.notifier);
+
+      await notifier.applyDrugFilter(
+        regulatoryClass: ['poison'],
+        dosageForm: ['tablet'],
+      );
+      await notifier.removeOneChip();
+
+      final state = container.read(searchScreenProvider);
+      expect(state.drugParams.regulatoryClass, isNull);
+      expect(state.drugParams.dosageForm, ['tablet']);
+      expect(state.appliedChips.items.single.label, 'tablet');
+    });
+
     test('removeChipAt clears therapeuticCategory drug axis', () async {
       _stubDrugSearch(drugApiClient);
       final notifier = container.read(searchScreenProvider.notifier);
