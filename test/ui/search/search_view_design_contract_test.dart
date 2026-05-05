@@ -895,6 +895,71 @@ void main() {
     );
   });
 
+  testWidgets('filter_cta_uses_primary_palette_in_both_modes_(T16)', (
+    tester,
+  ) async {
+    Future<void> pumpFilter(Brightness brightness) async {
+      final categoryApiClient = _MockCategoryApiClient();
+      final drugApiClient = _MockDrugApiClient();
+      _stubDrugSearch(drugApiClient);
+      when(
+        categoryApiClient.getCategories,
+      ).thenAnswer((_) async => _categoriesFixture());
+
+      final theme = brightness == Brightness.dark
+          ? AppTheme.dark()
+          : AppTheme.light();
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            appDatabaseProvider.overrideWithValue(db),
+            drugApiClientProvider.overrideWithValue(drugApiClient),
+            categoryApiClientProvider.overrideWithValue(categoryApiClient),
+          ],
+          child: MaterialApp(
+            theme: brightness == Brightness.dark ? AppTheme.light() : theme,
+            darkTheme: brightness == Brightness.dark ? theme : null,
+            themeMode: brightness == Brightness.dark
+                ? ThemeMode.dark
+                : ThemeMode.light,
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: const SearchView(),
+          ),
+        ),
+      );
+
+      await tester.tap(find.byType(FloatingActionButton));
+      await tester.pumpAndSettle();
+    }
+
+    Future<void> verifyCta(Brightness brightness) async {
+      final palette = brightness == Brightness.dark
+          ? SearchPalette.dark
+          : SearchPalette.light;
+      final cta = tester.widget<FilledButton>(
+        find.byKey(const ValueKey('filterApplyCta')),
+      );
+      expect(
+        cta.style?.backgroundColor?.resolve(<WidgetState>{}),
+        palette.primary,
+      );
+      expect(
+        cta.style?.foregroundColor?.resolve(<WidgetState>{}),
+        palette.onPrimary,
+      );
+    }
+
+    await pumpFilter(Brightness.light);
+    await verifyCta(Brightness.light);
+
+    await tester.pumpWidget(const SizedBox.shrink());
+    await clearTestAppDatabase(db);
+
+    await pumpFilter(Brightness.dark);
+    await verifyCta(Brightness.dark);
+  });
+
   testWidgets('SearchView drug filter footer count updates after chip toggle', (
     tester,
   ) async {

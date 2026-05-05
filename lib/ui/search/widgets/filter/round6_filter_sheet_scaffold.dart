@@ -178,8 +178,11 @@ class _Round6FilterSheetScaffold extends StatelessWidget {
                       height: 50,
                       width: double.infinity,
                       child: FilledButton(
+                        key: const ValueKey('filterApplyCta'),
                         onPressed: onApply,
                         style: FilledButton.styleFrom(
+                          backgroundColor: palette.primary,
+                          foregroundColor: palette.onPrimary,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
