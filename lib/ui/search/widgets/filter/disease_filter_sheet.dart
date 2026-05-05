@@ -53,6 +53,16 @@ class _DiseaseFilterSheetState extends ConsumerState<_DiseaseFilterSheet> {
   int? _previewCount;
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        unawaited(_loadPreviewCount());
+      }
+    });
+  }
+
+  @override
   void dispose() {
     _previewDebounce?.cancel();
     _symptomKeywordController.dispose();
@@ -306,16 +316,16 @@ class _DiseaseFilterSheetState extends ConsumerState<_DiseaseFilterSheet> {
     return DiseaseSearchParams(
       page: 1,
       pageSize: 1,
-      icd10Chapter: _icd10Chapter.toList(),
-      department: _department.toList(),
-      chronicity: _chronicity.toList(),
+      icd10Chapter: _emptyListToNull(_icd10Chapter.toList()),
+      department: _emptyListToNull(_department.toList()),
+      chronicity: _emptyListToNull(_chronicity.toList()),
       infectious: _infectious,
-      keyword: widget.state.diseaseParams.keyword,
+      keyword: widget.state.queryText,
       keywordMatch: widget.state.diseaseParams.keywordMatch,
       keywordTarget: widget.state.diseaseParams.keywordTarget,
       symptomKeyword: _emptyToNull(_symptomKeywordController.text.trim()),
-      onsetPattern: _onsetPattern.toList(),
-      examCategory: _examCategory.toList(),
+      onsetPattern: _emptyListToNull(_onsetPattern.toList()),
+      examCategory: _emptyListToNull(_examCategory.toList()),
       hasPharmacologicalTreatment: _hasPharmacologicalTreatment,
       hasSeverityGrading: _hasSeverityGrading,
       sort: widget.state.diseaseParams.sort,

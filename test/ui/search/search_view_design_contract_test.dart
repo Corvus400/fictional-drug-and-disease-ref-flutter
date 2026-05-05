@@ -617,6 +617,8 @@ void main() {
     addTearDown(() => tester.binding.setSurfaceSize(null));
 
     final categoryApiClient = _MockCategoryApiClient();
+    final drugApiClient = _MockDrugApiClient();
+    _stubDrugSearch(drugApiClient);
     when(
       categoryApiClient.getCategories,
     ).thenAnswer((_) async => _categoriesFixture());
@@ -625,6 +627,7 @@ void main() {
       ProviderScope(
         overrides: [
           appDatabaseProvider.overrideWithValue(db),
+          drugApiClientProvider.overrideWithValue(drugApiClient),
           categoryApiClientProvider.overrideWithValue(categoryApiClient),
         ],
         child: MaterialApp(
@@ -666,6 +669,8 @@ void main() {
     addTearDown(() => tester.binding.setSurfaceSize(null));
 
     final categoryApiClient = _MockCategoryApiClient();
+    final drugApiClient = _MockDrugApiClient();
+    _stubDrugSearch(drugApiClient);
     when(
       categoryApiClient.getCategories,
     ).thenAnswer((_) async => _categoriesFixture());
@@ -674,6 +679,7 @@ void main() {
       ProviderScope(
         overrides: [
           appDatabaseProvider.overrideWithValue(db),
+          drugApiClientProvider.overrideWithValue(drugApiClient),
           categoryApiClientProvider.overrideWithValue(categoryApiClient),
         ],
         child: MaterialApp(
@@ -719,6 +725,8 @@ void main() {
       addTearDown(() => tester.binding.setSurfaceSize(null));
 
       final categoryApiClient = _MockCategoryApiClient();
+      final drugApiClient = _MockDrugApiClient();
+      _stubDrugSearch(drugApiClient);
       when(
         categoryApiClient.getCategories,
       ).thenAnswer((_) async => _categoriesFixture());
@@ -727,6 +735,7 @@ void main() {
         ProviderScope(
           overrides: [
             appDatabaseProvider.overrideWithValue(db),
+            drugApiClientProvider.overrideWithValue(drugApiClient),
             categoryApiClientProvider.overrideWithValue(categoryApiClient),
           ],
           child: MaterialApp(
@@ -825,13 +834,81 @@ void main() {
 
     await tester.tap(find.byType(FloatingActionButton));
     await tester.pumpAndSettle();
-    expect(find.text('結果を見る (0 件)'), findsOneWidget);
+    expect(find.text('結果を見る (17 件)'), findsOneWidget);
 
     await tester.tap(find.text('毒薬'));
     await tester.pump(const Duration(milliseconds: 250));
     await tester.pump();
 
     expect(find.text('結果を見る (17 件)'), findsOneWidget);
+  });
+
+  testWidgets('filter_sheet_loads_preview_count_on_open_(T06)', (
+    tester,
+  ) async {
+    await tester.binding.setSurfaceSize(const Size(390, 844));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+
+    final drugApiClient = _MockDrugApiClient();
+    final categoryApiClient = _MockCategoryApiClient();
+    when(
+      () => drugApiClient.getDrugs(
+        page: any(named: 'page'),
+        pageSize: any(named: 'pageSize'),
+        categoryAtc: any(named: 'categoryAtc'),
+        therapeuticCategory: any(named: 'therapeuticCategory'),
+        regulatoryClass: any(named: 'regulatoryClass'),
+        dosageForm: any(named: 'dosageForm'),
+        route: any(named: 'route'),
+        keyword: any(named: 'keyword'),
+        keywordMatch: any(named: 'keywordMatch'),
+        keywordTarget: any(named: 'keywordTarget'),
+        adverseReactionKeyword: any(named: 'adverseReactionKeyword'),
+        precautionCategory: any(named: 'precautionCategory'),
+        sort: any(named: 'sort'),
+      ),
+    ).thenAnswer((_) async => _drugListFixture().copyWith(totalCount: 17));
+    when(
+      categoryApiClient.getCategories,
+    ).thenAnswer((_) async => _categoriesFixture());
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          appDatabaseProvider.overrideWithValue(db),
+          drugApiClientProvider.overrideWithValue(drugApiClient),
+          categoryApiClientProvider.overrideWithValue(categoryApiClient),
+        ],
+        child: MaterialApp(
+          theme: AppTheme.light(),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: const SearchView(),
+        ),
+      ),
+    );
+
+    await tester.tap(find.byType(FloatingActionButton));
+    await tester.pumpAndSettle();
+
+    expect(find.text('結果を見る (17 件)'), findsOneWidget);
+    verify(
+      () => drugApiClient.getDrugs(
+        page: 1,
+        pageSize: 1,
+        categoryAtc: any(named: 'categoryAtc'),
+        therapeuticCategory: any(named: 'therapeuticCategory'),
+        regulatoryClass: any(named: 'regulatoryClass'),
+        dosageForm: any(named: 'dosageForm'),
+        route: any(named: 'route'),
+        keyword: any(named: 'keyword'),
+        keywordMatch: any(named: 'keywordMatch'),
+        keywordTarget: any(named: 'keywordTarget'),
+        adverseReactionKeyword: any(named: 'adverseReactionKeyword'),
+        precautionCategory: any(named: 'precautionCategory'),
+        sort: any(named: 'sort'),
+      ),
+    ).called(1);
   });
 
   // Design source:

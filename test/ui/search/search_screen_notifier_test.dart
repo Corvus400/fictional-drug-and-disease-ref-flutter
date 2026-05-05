@@ -221,6 +221,36 @@ void main() {
       },
     );
 
+    test(
+      'applyDiseaseFilter_with_empty_set_passes_null_to_repository_(T06)',
+      () async {
+        _stubDiseaseSearch(diseaseApiClient);
+        final notifier = container.read(searchScreenProvider.notifier);
+
+        await notifier.changeTab(SearchTab.diseases);
+        await notifier.applyDiseaseFilter(icd10Chapter: const []);
+
+        verify(
+          () => diseaseApiClient.getDiseases(
+            page: 1,
+            pageSize: 20,
+            icd10Chapter: null,
+            department: any(named: 'department'),
+            chronicity: any(named: 'chronicity'),
+            infectious: any(named: 'infectious'),
+            keyword: any(named: 'keyword'),
+            symptomKeyword: any(named: 'symptomKeyword'),
+            onsetPattern: any(named: 'onsetPattern'),
+            examCategory: any(named: 'examCategory'),
+            hasPharmacologicalTreatment: any(
+              named: 'hasPharmacologicalTreatment',
+            ),
+            hasSeverityGrading: any(named: 'hasSeverityGrading'),
+          ),
+        ).called(1);
+      },
+    );
+
     test('removeOneChip preserves params for non-removed axes', () async {
       _stubDrugSearch(drugApiClient);
       final notifier = container.read(searchScreenProvider.notifier);

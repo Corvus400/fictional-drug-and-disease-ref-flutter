@@ -273,7 +273,17 @@ void main() {
       () => drugApiClient.getDrugs(
         page: any(named: 'page'),
         pageSize: any(named: 'pageSize'),
+        categoryAtc: any(named: 'categoryAtc'),
+        therapeuticCategory: any(named: 'therapeuticCategory'),
+        regulatoryClass: any(named: 'regulatoryClass'),
+        dosageForm: any(named: 'dosageForm'),
+        route: any(named: 'route'),
         keyword: any(named: 'keyword'),
+        keywordMatch: any(named: 'keywordMatch'),
+        keywordTarget: any(named: 'keywordTarget'),
+        adverseReactionKeyword: any(named: 'adverseReactionKeyword'),
+        precautionCategory: any(named: 'precautionCategory'),
+        sort: any(named: 'sort'),
       ),
     ).thenAnswer((_) async => _drugListFixture());
     final container = ProviderContainer(
@@ -862,7 +872,17 @@ void main() {
       () => drugApiClient.getDrugs(
         page: any(named: 'page'),
         pageSize: any(named: 'pageSize'),
+        categoryAtc: any(named: 'categoryAtc'),
+        therapeuticCategory: any(named: 'therapeuticCategory'),
+        regulatoryClass: any(named: 'regulatoryClass'),
+        dosageForm: any(named: 'dosageForm'),
+        route: any(named: 'route'),
         keyword: any(named: 'keyword'),
+        keywordMatch: any(named: 'keywordMatch'),
+        keywordTarget: any(named: 'keywordTarget'),
+        adverseReactionKeyword: any(named: 'adverseReactionKeyword'),
+        precautionCategory: any(named: 'precautionCategory'),
+        sort: any(named: 'sort'),
       ),
     ).thenAnswer((_) async => _drugListFixture());
 
@@ -1637,7 +1657,17 @@ void main() {
       () => drugApiClient.getDrugs(
         page: any(named: 'page'),
         pageSize: any(named: 'pageSize'),
+        categoryAtc: any(named: 'categoryAtc'),
+        therapeuticCategory: any(named: 'therapeuticCategory'),
+        regulatoryClass: any(named: 'regulatoryClass'),
+        dosageForm: any(named: 'dosageForm'),
+        route: any(named: 'route'),
         keyword: any(named: 'keyword'),
+        keywordMatch: any(named: 'keywordMatch'),
+        keywordTarget: any(named: 'keywordTarget'),
+        adverseReactionKeyword: any(named: 'adverseReactionKeyword'),
+        precautionCategory: any(named: 'precautionCategory'),
+        sort: any(named: 'sort'),
       ),
     ).thenAnswer((_) async => _drugListFixture());
     await tester.pumpWidget(
@@ -2023,12 +2053,12 @@ void main() {
         pageSize: SearchConstants.searchPageSize,
         icd10Chapter: ['chapter_ix'],
         department: ['cardiology'],
-        chronicity: <String>[],
+        chronicity: null,
         infectious: any(named: 'infectious'),
         keyword: any(named: 'keyword'),
         symptomKeyword: any(named: 'symptomKeyword'),
-        onsetPattern: <String>[],
-        examCategory: <String>[],
+        onsetPattern: null,
+        examCategory: null,
         hasPharmacologicalTreatment: any(
           named: 'hasPharmacologicalTreatment',
         ),
