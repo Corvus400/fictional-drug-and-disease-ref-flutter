@@ -122,20 +122,94 @@ class _SearchPhaseSection extends StatelessWidget {
       );
     }
     if (phase is SearchPhaseError) {
+      final theme = Theme.of(context);
+      final palette =
+          theme.extension<SearchPalette>() ??
+          (theme.brightness == Brightness.dark
+              ? SearchPalette.dark
+              : SearchPalette.light);
       return Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              l10n.searchErrorTitle,
-              style: Theme.of(context).textTheme.titleMedium,
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(vertical: 50, horizontal: 24),
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 360),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Center(
+                  child: Container(
+                    width: 72,
+                    height: 72,
+                    decoration: BoxDecoration(
+                      color: palette.danger.withValues(alpha: 0.16),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      Icons.warning_amber_rounded,
+                      color: palette.danger,
+                      size: 36,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 18),
+                Text(
+                  l10n.searchErrorTitle,
+                  textAlign: TextAlign.center,
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontSize: 17,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  l10n.searchErrorBody,
+                  textAlign: TextAlign.center,
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant,
+                    height: 1.6,
+                    fontSize: 12.5,
+                  ),
+                ),
+                const SizedBox(height: 22),
+                SizedBox(
+                  height: 48,
+                  child: FilledButton.icon(
+                    onPressed: () => unawaited(onRetry()),
+                    icon: const Icon(Icons.refresh, size: 16),
+                    label: Text(l10n.searchErrorRetry),
+                  ),
+                ),
+                const SizedBox(height: 18),
+                DecoratedBox(
+                  key: const ValueKey('search-error-diagnostics-box'),
+                  decoration: BoxDecoration(
+                    color: theme.colorScheme.surface,
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(color: palette.hairline, width: 0.5),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(12),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        for (final line in _diagnosticLines(l10n, phase.error))
+                          Text(
+                            line,
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: theme.colorScheme.onSurfaceVariant,
+                              fontFamily: 'monospace',
+                              fontSize: 11,
+                              height: 1.65,
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(height: 12),
-            FilledButton(
-              onPressed: () => unawaited(onRetry()),
-              child: Text(l10n.searchErrorRetry),
-            ),
-          ],
+          ),
         ),
       );
     }
@@ -201,6 +275,41 @@ class _SearchPhaseSection extends StatelessWidget {
       ),
     );
   }
+}
+
+List<String> _diagnosticLines(AppLocalizations l10n, AppException error) {
+  return switch (error) {
+    NetworkException() => [
+      l10n.searchErrorDiagnosticsType('NetworkException'),
+    ],
+    ServerException(:final statusCode) => [
+      l10n.searchErrorDiagnosticsType('ServerException'),
+      l10n.searchErrorDiagnosticsStatus(statusCode),
+    ],
+    ApiException(
+      :final statusCode,
+      :final code,
+      :final message,
+      :final details,
+    ) =>
+      [
+        l10n.searchErrorDiagnosticsType('ApiException'),
+        l10n.searchErrorDiagnosticsStatus(statusCode),
+        l10n.searchErrorDiagnosticsCode(code),
+        l10n.searchErrorDiagnosticsMessage(message),
+        if (details != null) l10n.searchErrorDiagnosticsDetails(details),
+      ],
+    ParseException() => [
+      l10n.searchErrorDiagnosticsType('ParseException'),
+    ],
+    StorageException(:final kind) => [
+      l10n.searchErrorDiagnosticsType('StorageException'),
+      l10n.searchErrorDiagnosticsStorageKind(kind.name),
+    ],
+    UnknownException() => [
+      l10n.searchErrorDiagnosticsType('UnknownException'),
+    ],
+  };
 }
 
 class _NoSearchHistoryState extends StatelessWidget {

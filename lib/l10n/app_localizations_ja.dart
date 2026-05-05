@@ -143,7 +143,40 @@ class AppLocalizationsJa extends AppLocalizations {
   String get searchErrorTitle => '通信エラー — もう一度';
 
   @override
+  String get searchErrorBody => 'サーバーに接続できませんでした。\n通信環境を確認してから再試行してください。';
+
+  @override
   String get searchErrorRetry => '再試行';
+
+  @override
+  String searchErrorDiagnosticsType(Object type) {
+    return 'Type: $type';
+  }
+
+  @override
+  String searchErrorDiagnosticsStatus(int statusCode) {
+    return 'Status: $statusCode';
+  }
+
+  @override
+  String searchErrorDiagnosticsCode(Object code) {
+    return 'Code: $code';
+  }
+
+  @override
+  String searchErrorDiagnosticsMessage(Object message) {
+    return 'Message: $message';
+  }
+
+  @override
+  String searchErrorDiagnosticsDetails(Object details) {
+    return 'Details: $details';
+  }
+
+  @override
+  String searchErrorDiagnosticsStorageKind(Object kind) {
+    return 'Storage kind: $kind';
+  }
 
   @override
   String get searchFilterTitle => '絞り込み';

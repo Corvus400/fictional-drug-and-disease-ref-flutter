@@ -1358,8 +1358,74 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('通信エラー — もう一度'), findsOneWidget);
+    expect(find.byIcon(Icons.warning_amber_rounded), findsOneWidget);
+    expect(
+      find.text('サーバーに接続できませんでした。\n通信環境を確認してから再試行してください。'),
+      findsOneWidget,
+    );
     expect(find.text('再試行'), findsOneWidget);
+    expect(find.text('Type: NetworkException'), findsOneWidget);
+    expect(find.textContaining('Status:'), findsNothing);
   });
+
+  testWidgets(
+    'SearchView renders error diagnostics for api response failure',
+    (tester) async {
+      final db = AppDatabase(NativeDatabase.memory());
+      final drugApiClient = _MockDrugApiClient();
+      addTearDown(db.close);
+      when(
+        () => drugApiClient.getDrugs(
+          page: any(named: 'page'),
+          pageSize: any(named: 'pageSize'),
+          keyword: any(named: 'keyword'),
+        ),
+      ).thenThrow(
+        DioException(
+          requestOptions: RequestOptions(path: '/v1/drugs'),
+          response: Response<Map<String, dynamic>>(
+            requestOptions: RequestOptions(path: '/v1/drugs'),
+            statusCode: 422,
+            data: const {
+              'code': 'INVALID',
+              'message': 'invalid keyword',
+              'details': 'keyword must be shorter',
+            },
+          ),
+          type: DioExceptionType.badResponse,
+        ),
+      );
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            appDatabaseProvider.overrideWithValue(db),
+            drugApiClientProvider.overrideWithValue(drugApiClient),
+          ],
+          child: const MaterialApp(
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: SearchView(),
+          ),
+        ),
+      );
+
+      await tester.enterText(
+        find.byKey(const ValueKey('search-field')),
+        'invalid keyword',
+      );
+      await tester.tap(find.byType(FilledButton));
+      await tester.pumpAndSettle();
+
+      expect(find.byIcon(Icons.warning_amber_rounded), findsOneWidget);
+      expect(find.text('通信エラー — もう一度'), findsOneWidget);
+      expect(find.text('Type: ApiException'), findsOneWidget);
+      expect(find.text('Status: 422'), findsOneWidget);
+      expect(find.text('Code: INVALID'), findsOneWidget);
+      expect(find.text('Message: invalid keyword'), findsOneWidget);
+      expect(find.text('Details: keyword must be shorter'), findsOneWidget);
+    },
+  );
 
   testWidgets('SearchView retry runs search again after failure', (
     tester,
