@@ -126,6 +126,7 @@ class SearchView extends ConsumerWidget {
                       onRetry: notifier.performSearch,
                       onResetFilter: notifier.resetFilter,
                       onRemoveOneChip: notifier.removeOneChip,
+                      onRemoveChipAt: notifier.removeChipAt,
                       onChangeMatchToPartial: notifier.changeMatchToPartial,
                       onChangeDrugSort: notifier.changeDrugSort,
                       onLoadMore: notifier.loadMore,

@@ -4,11 +4,13 @@ class _SearchResultToolbar extends StatelessWidget {
   const _SearchResultToolbar({
     required this.state,
     required this.totalCount,
+    required this.onRemoveChipAt,
     required this.onChangeDrugSort,
   });
 
   final SearchScreenState state;
   final int totalCount;
+  final Future<void> Function(int index) onRemoveChipAt;
   final Future<void> Function(DrugSort sort) onChangeDrugSort;
 
   @override
@@ -49,10 +51,18 @@ class _SearchResultToolbar extends StatelessWidget {
                             ),
                           ),
                           const SizedBox(width: 8),
-                          for (final chip in state.appliedChips.items) ...[
+                          for (
+                            var i = 0;
+                            i < state.appliedChips.items.length;
+                            i++
+                          ) ...[
                             _AppliedFilterChip(
-                              label: _appliedChipLabel(l10n, chip),
+                              label: _appliedChipLabel(
+                                l10n,
+                                state.appliedChips.items[i],
+                              ),
                               palette: palette,
+                              onTap: () => onRemoveChipAt(i),
                             ),
                             const SizedBox(width: 6),
                           ],
@@ -125,34 +135,43 @@ class _SearchResultToolbar extends StatelessWidget {
 }
 
 class _AppliedFilterChip extends StatelessWidget {
-  const _AppliedFilterChip({required this.label, required this.palette});
+  const _AppliedFilterChip({
+    required this.label,
+    required this.palette,
+    required this.onTap,
+  });
 
   final String label;
   final SearchPalette palette;
+  final Future<void> Function() onTap;
 
   @override
   Widget build(BuildContext context) {
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: palette.primarySoft,
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: palette.primaryRing, width: 0.5),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(10, 5, 8, 5),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              label,
-              style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                color: palette.drugInk,
-                fontWeight: FontWeight.w600,
+    return InkWell(
+      onTap: () => unawaited(onTap()),
+      borderRadius: BorderRadius.circular(14),
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          color: palette.primarySoft,
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: palette.primaryRing, width: 0.5),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(10, 5, 8, 5),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                label,
+                style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                  color: palette.drugInk,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
-            ),
-            const SizedBox(width: 5),
-            Icon(Icons.close, size: 12, color: palette.drugInk),
-          ],
+              const SizedBox(width: 5),
+              Icon(Icons.close, size: 12, color: palette.drugInk),
+            ],
+          ),
         ),
       ),
     );
