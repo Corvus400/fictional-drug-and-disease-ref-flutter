@@ -960,6 +960,59 @@ void main() {
     await verifyCta(Brightness.dark);
   });
 
+  testWidgets('axis_summary_and_hint_share_single_row_(T17)', (
+    tester,
+  ) async {
+    final categoryApiClient = _MockCategoryApiClient();
+    final drugApiClient = _MockDrugApiClient();
+    _stubDrugSearch(drugApiClient);
+    when(
+      categoryApiClient.getCategories,
+    ).thenAnswer((_) async => _categoriesFixture());
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          appDatabaseProvider.overrideWithValue(db),
+          drugApiClientProvider.overrideWithValue(drugApiClient),
+          categoryApiClientProvider.overrideWithValue(categoryApiClient),
+        ],
+        child: MaterialApp(
+          theme: AppTheme.light(),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: const SearchView(),
+        ),
+      ),
+    );
+
+    await tester.tap(find.byType(FloatingActionButton));
+    await tester.pumpAndSettle();
+
+    final summaryFinder = find.byKey(
+      const ValueKey('axisSummary_regulatoryClass'),
+    );
+    final hintFinder = find.byKey(
+      const ValueKey('axisHint_regulatoryClass'),
+    );
+    expect(summaryFinder, findsOneWidget);
+    expect(hintFinder, findsOneWidget);
+
+    final summaryRows = find
+        .ancestor(of: summaryFinder, matching: find.byType(Row))
+        .evaluate()
+        .toSet();
+    final hintRows = find
+        .ancestor(of: hintFinder, matching: find.byType(Row))
+        .evaluate()
+        .toSet();
+    expect(summaryRows.intersection(hintRows), isNotEmpty);
+
+    final summaryRect = tester.getRect(summaryFinder);
+    final hintRect = tester.getRect(hintFinder);
+    expect(summaryRect.right, lessThanOrEqualTo(hintRect.left));
+  });
+
   testWidgets('SearchView drug filter footer count updates after chip toggle', (
     tester,
   ) async {
