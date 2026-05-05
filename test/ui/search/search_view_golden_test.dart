@@ -397,7 +397,7 @@ Future<Future<void> Function()?> _triggerLoadingMore(
 ) async {
   await _performSearch(tester);
   await tester.drag(
-    find.byKey(const ValueKey('search-results-list')),
+    find.byKey(const PageStorageKey<String>('drugSearchResults')),
     const Offset(0, -820),
   );
   await tester.pump();
@@ -422,7 +422,7 @@ Future<Future<void> Function()?> _openDiseaseFilter(WidgetTester tester) async {
 
 Future<Future<void> Function()?> _openSort(WidgetTester tester) async {
   await _performSearch(tester);
-  await tester.tap(find.text('並び替え'));
+  await tester.tap(find.textContaining('並び替え').first);
   await tester.pumpAndSettle();
   return null;
 }
