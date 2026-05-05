@@ -32,7 +32,7 @@ void main() {
           'lib/ui/search/widgets/filter/round6_filter_sheet_scaffold.dart',
         ).readAsStringSync(),
         File(
-          'lib/ui/search/format/regulatory_badge_colors.dart',
+          'lib/ui/search/constants/search_palette.dart',
         ).readAsStringSync(),
         File(
           'lib/ui/search/format/search_label_formatters.dart',
