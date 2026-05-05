@@ -4,6 +4,7 @@ import 'package:fictional_drug_and_disease_ref/application/search/search_history
 import 'package:fictional_drug_and_disease_ref/config/api_config.dart';
 import 'package:fictional_drug_and_disease_ref/core/error/app_exception.dart';
 import 'package:fictional_drug_and_disease_ref/domain/category/categories.dart';
+import 'package:fictional_drug_and_disease_ref/domain/disease/disease_search_params.dart';
 import 'package:fictional_drug_and_disease_ref/domain/disease/disease_summary.dart';
 import 'package:fictional_drug_and_disease_ref/domain/drug/drug_search_params.dart';
 import 'package:fictional_drug_and_disease_ref/domain/drug/drug_summary.dart';

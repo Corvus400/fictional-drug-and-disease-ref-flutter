@@ -1,6 +1,6 @@
 part of '../../search_view.dart';
 
-class _DrugFilterSheet extends StatefulWidget {
+class _DrugFilterSheet extends ConsumerStatefulWidget {
   const _DrugFilterSheet({
     required this.state,
     required this.onApply,
@@ -19,10 +19,10 @@ class _DrugFilterSheet extends StatefulWidget {
   onApply;
 
   @override
-  State<_DrugFilterSheet> createState() => _DrugFilterSheetState();
+  ConsumerState<_DrugFilterSheet> createState() => _DrugFilterSheetState();
 }
 
-class _DrugFilterSheetState extends State<_DrugFilterSheet> {
+class _DrugFilterSheetState extends ConsumerState<_DrugFilterSheet> {
   late final Set<String> _categoryAtc = {
     ?widget.state.drugParams.categoryAtc,
   };
@@ -42,9 +42,12 @@ class _DrugFilterSheetState extends State<_DrugFilterSheet> {
         text: widget.state.drugParams.adverseReactionKeyword,
       );
   String _expandedAxis = 'regulatory_class';
+  Timer? _previewDebounce;
+  int? _previewCount;
 
   @override
   void dispose() {
+    _previewDebounce?.cancel();
     _adverseReactionKeywordController.dispose();
     super.dispose();
   }
@@ -72,8 +75,10 @@ class _DrugFilterSheetState extends State<_DrugFilterSheet> {
                 values: categories.regulatoryClass,
                 selected: _regulatoryClass,
                 labelFor: (value) => _regulatoryClassLabel(l10n, value),
-                onToggle: (value) =>
-                    setState(() => _toggle(_regulatoryClass, value)),
+                onToggle: (value) => setState(() {
+                  _toggle(_regulatoryClass, value);
+                  _schedulePreview();
+                }),
               ),
             ),
             _FilterAxis(
@@ -92,8 +97,10 @@ class _DrugFilterSheetState extends State<_DrugFilterSheet> {
                 values: categories.dosageForm,
                 selected: _dosageForm,
                 labelFor: (value) => _dosageFormLabel(l10n, value),
-                onToggle: (value) =>
-                    setState(() => _toggle(_dosageForm, value)),
+                onToggle: (value) => setState(() {
+                  _toggle(_dosageForm, value);
+                  _schedulePreview();
+                }),
               ),
             ),
             _FilterAxis(
@@ -112,7 +119,10 @@ class _DrugFilterSheetState extends State<_DrugFilterSheet> {
                 values: categories.routeOfAdministration,
                 selected: _route,
                 labelFor: (value) => _routeLabel(l10n, value),
-                onToggle: (value) => setState(() => _toggle(_route, value)),
+                onToggle: (value) => setState(() {
+                  _toggle(_route, value);
+                  _schedulePreview();
+                }),
               ),
             ),
             _FilterAxis(
@@ -129,8 +139,10 @@ class _DrugFilterSheetState extends State<_DrugFilterSheet> {
                 values: categories.atc.map((entry) => entry.code).toList(),
                 selected: _categoryAtc,
                 labelFor: (value) => _atcLabel(categories, value),
-                onToggle: (value) =>
-                    setState(() => _toggleSingle(_categoryAtc, value)),
+                onToggle: (value) => setState(() {
+                  _toggleSingle(_categoryAtc, value);
+                  _schedulePreview();
+                }),
               ),
             ),
             _FilterAxis(
@@ -150,8 +162,10 @@ class _DrugFilterSheetState extends State<_DrugFilterSheet> {
                 selected: _therapeuticCategory,
                 labelFor: (value) =>
                     _therapeuticCategoryLabel(categories, value),
-                onToggle: (value) =>
-                    setState(() => _toggleSingle(_therapeuticCategory, value)),
+                onToggle: (value) => setState(() {
+                  _toggleSingle(_therapeuticCategory, value);
+                  _schedulePreview();
+                }),
               ),
             ),
             _FilterAxis(
@@ -172,7 +186,7 @@ class _DrugFilterSheetState extends State<_DrugFilterSheet> {
               content: TextField(
                 key: const ValueKey('drug-filter-adverse-reaction'),
                 controller: _adverseReactionKeywordController,
-                onChanged: (_) => setState(() {}),
+                onChanged: (_) => setState(_schedulePreview),
                 decoration: InputDecoration(
                   labelText: l10n.searchFilterDrugAdverseReactionKeyword,
                 ),
@@ -196,8 +210,10 @@ class _DrugFilterSheetState extends State<_DrugFilterSheet> {
                     .toList(),
                 selected: _precautionCategory,
                 labelFor: (value) => _precautionCategoryLabel(l10n, value),
-                onToggle: (value) =>
-                    setState(() => _toggle(_precautionCategory, value)),
+                onToggle: (value) => setState(() {
+                  _toggle(_precautionCategory, value);
+                  _schedulePreview();
+                }),
               ),
             ),
           ];
@@ -217,6 +233,7 @@ class _DrugFilterSheetState extends State<_DrugFilterSheet> {
         _route.clear();
         _precautionCategory.clear();
         _adverseReactionKeywordController.clear();
+        _schedulePreview();
       }),
       onApply: () => unawaited(
         widget.onApply(
@@ -231,7 +248,44 @@ class _DrugFilterSheetState extends State<_DrugFilterSheet> {
           precautionCategory: _precautionCategory.toList(),
         ),
       ),
-      resultCount: _resultCount(widget.state.phase),
+      resultCount: _previewCount ?? _resultCount(widget.state.phase),
+    );
+  }
+
+  void _schedulePreview() {
+    _previewDebounce?.cancel();
+    _previewDebounce = Timer(const Duration(milliseconds: 200), () {
+      unawaited(_loadPreviewCount());
+    });
+  }
+
+  Future<void> _loadPreviewCount() async {
+    final count = await ref
+        .read(searchScreenProvider.notifier)
+        .previewDrugCount(_previewParams());
+    if (!mounted || count == null) {
+      return;
+    }
+    setState(() => _previewCount = count);
+  }
+
+  DrugSearchParams _previewParams() {
+    return DrugSearchParams(
+      page: 1,
+      pageSize: 1,
+      categoryAtc: _singleValue(_categoryAtc),
+      therapeuticCategory: _singleValue(_therapeuticCategory),
+      regulatoryClass: _regulatoryClass.toList(),
+      dosageForm: _dosageForm.toList(),
+      route: _route.toList(),
+      keyword: widget.state.drugParams.keyword,
+      keywordMatch: widget.state.drugParams.keywordMatch,
+      keywordTarget: widget.state.drugParams.keywordTarget,
+      adverseReactionKeyword: _emptyToNull(
+        _adverseReactionKeywordController.text.trim(),
+      ),
+      precautionCategory: _precautionCategory.toList(),
+      sort: widget.state.drugParams.sort,
     );
   }
 
