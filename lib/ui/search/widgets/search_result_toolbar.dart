@@ -46,8 +46,9 @@ class _SearchResultToolbar extends StatelessWidget {
                           Text(
                             l10n.searchToolbarApplied,
                             style: theme.textTheme.labelSmall?.copyWith(
-                              color: theme.colorScheme.onSurfaceVariant,
+                              color: palette.muted,
                               fontWeight: FontWeight.w700,
+                              letterSpacing: 0.5,
                             ),
                           ),
                           const SizedBox(width: 8),
@@ -148,10 +149,14 @@ class _AppliedFilterChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final closeColor = Theme.of(context).brightness == Brightness.dark
+        ? const Color(0x389ECAFF)
+        : const Color(0x2E007AFF);
     return InkWell(
       onTap: () => unawaited(onTap()),
       borderRadius: BorderRadius.circular(14),
       child: DecoratedBox(
+        key: ValueKey('search-applied-filter-chip-$label'),
         decoration: BoxDecoration(
           color: palette.primarySoft,
           borderRadius: BorderRadius.circular(14),
@@ -165,12 +170,23 @@ class _AppliedFilterChip extends StatelessWidget {
               Text(
                 label,
                 style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                  color: palette.drugInk,
+                  color: palette.rxInk,
                   fontWeight: FontWeight.w600,
                 ),
               ),
               const SizedBox(width: 5),
-              Icon(Icons.close, size: 12, color: palette.drugInk),
+              DecoratedBox(
+                key: ValueKey('search-applied-filter-close-$label'),
+                decoration: BoxDecoration(
+                  color: closeColor,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: SizedBox(
+                  width: 16,
+                  height: 16,
+                  child: Icon(Icons.close, size: 10, color: palette.rxInk),
+                ),
+              ),
             ],
           ),
         ),
