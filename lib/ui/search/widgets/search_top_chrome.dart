@@ -149,11 +149,13 @@ class _SearchField extends StatefulWidget {
 
 class _SearchFieldState extends State<_SearchField> {
   late final TextEditingController _controller;
+  late final FocusNode _focusNode;
 
   @override
   void initState() {
     super.initState();
     _controller = TextEditingController(text: widget.queryText);
+    _focusNode = FocusNode();
   }
 
   @override
@@ -170,6 +172,7 @@ class _SearchFieldState extends State<_SearchField> {
   @override
   void dispose() {
     _controller.dispose();
+    _focusNode.dispose();
     super.dispose();
   }
 
@@ -178,6 +181,7 @@ class _SearchFieldState extends State<_SearchField> {
     return TextField(
       key: const ValueKey('search-field'),
       controller: _controller,
+      focusNode: _focusNode,
       groupId: widget.tapRegionGroupId,
       onTap: widget.onTap,
       onTapOutside: (_) {
@@ -194,7 +198,10 @@ class _SearchFieldState extends State<_SearchField> {
             ? null
             : IconButton(
                 key: const ValueKey('search-query-clear-button'),
-                onPressed: widget.onClear,
+                onPressed: () {
+                  widget.onClear();
+                  _focusNode.requestFocus();
+                },
                 icon: const Icon(Icons.cancel),
               ),
         filled: true,
