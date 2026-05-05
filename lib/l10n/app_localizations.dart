@@ -268,6 +268,18 @@ abstract class AppLocalizations {
   /// **'絞り込み +{count}'**
   String searchHistoryFilterCount(int count);
 
+  /// No description provided for @searchHistoryRxBadge.
+  ///
+  /// In ja, this message translates to:
+  /// **'Rx'**
+  String get searchHistoryRxBadge;
+
+  /// No description provided for @searchHistoryDxBadge.
+  ///
+  /// In ja, this message translates to:
+  /// **'Dx'**
+  String get searchHistoryDxBadge;
+
   /// No description provided for @searchHistoryClearConfirmTitle.
   ///
   /// In ja, this message translates to:

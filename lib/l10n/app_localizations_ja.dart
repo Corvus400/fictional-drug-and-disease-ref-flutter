@@ -105,6 +105,12 @@ class AppLocalizationsJa extends AppLocalizations {
   }
 
   @override
+  String get searchHistoryRxBadge => 'Rx';
+
+  @override
+  String get searchHistoryDxBadge => 'Dx';
+
+  @override
   String get searchHistoryClearConfirmTitle => '検索履歴を削除しますか？';
 
   @override
