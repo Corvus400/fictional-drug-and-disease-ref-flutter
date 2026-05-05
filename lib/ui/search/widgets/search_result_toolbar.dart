@@ -59,6 +59,7 @@ class _SearchResultToolbar extends StatelessWidget {
                             _AppliedFilterChip(
                               label: _appliedChipLabel(
                                 l10n,
+                                state.categories,
                                 state.appliedChips.items[i],
                               ),
                               palette: palette,

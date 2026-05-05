@@ -195,8 +195,18 @@ String _examCategoryLabel(AppLocalizations l10n, String value) {
   };
 }
 
-String _appliedChipLabel(AppLocalizations l10n, AppliedChip chip) {
+String _appliedChipLabel(
+  AppLocalizations l10n,
+  Categories? categories,
+  AppliedChip chip,
+) {
   return switch (chip.axis) {
+    'categoryAtc' =>
+      categories == null ? chip.label : _atcLabel(categories, chip.label),
+    'therapeuticCategory' =>
+      categories == null
+          ? chip.label
+          : _therapeuticCategoryLabel(categories, chip.label),
     'regulatoryClass' => _regulatoryClassLabel(l10n, chip.label),
     'dosageForm' => _dosageFormLabel(l10n, chip.label),
     'route' => _routeLabel(l10n, chip.label),

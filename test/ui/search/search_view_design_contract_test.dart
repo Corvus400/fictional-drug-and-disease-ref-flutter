@@ -292,6 +292,133 @@ void main() {
     expect(chevron.right, rail.right - 4);
   });
 
+  testWidgets(
+    'SearchView applied chip rail labels ATC chips with category text',
+    (
+      tester,
+    ) async {
+      await tester.binding.setSurfaceSize(const Size(390, 844));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+
+      final drugApiClient = _MockDrugApiClient();
+      final categoryApiClient = _MockCategoryApiClient();
+      _stubDrugSearch(drugApiClient);
+      when(
+        categoryApiClient.getCategories,
+      ).thenAnswer((_) async => _categoriesFixture());
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            appDatabaseProvider.overrideWithValue(db),
+            drugApiClientProvider.overrideWithValue(drugApiClient),
+            categoryApiClientProvider.overrideWithValue(categoryApiClient),
+          ],
+          child: MaterialApp(
+            theme: AppTheme.light(),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: const SearchView(),
+          ),
+        ),
+      );
+
+      await tester.tap(find.byType(FloatingActionButton));
+      await tester.pumpAndSettle();
+      await tester.scrollUntilVisible(
+        find.text('ATC 第 1 階層'),
+        120,
+        scrollable: find
+            .descendant(
+              of: find.byType(BottomSheet),
+              matching: find.byType(Scrollable),
+            )
+            .first,
+      );
+      await tester.tap(find.text('ATC 第 1 階層'));
+      await tester.pumpAndSettle();
+      await tester.scrollUntilVisible(
+        find.text('A 消化器系および代謝'),
+        80,
+        scrollable: find
+            .descendant(
+              of: find.byType(BottomSheet),
+              matching: find.byType(Scrollable),
+            )
+            .first,
+      );
+      await tester.tap(find.text('A 消化器系および代謝'));
+      await tester.tap(find.textContaining('結果を見る'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('A 消化器系および代謝'), findsOneWidget);
+      expect(find.text('A'), findsNothing);
+    },
+  );
+
+  testWidgets(
+    'SearchView applied chip rail labels therapeutic category chips with '
+    'category text',
+    (tester) async {
+      await tester.binding.setSurfaceSize(const Size(390, 844));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+
+      final drugApiClient = _MockDrugApiClient();
+      final categoryApiClient = _MockCategoryApiClient();
+      _stubDrugSearch(drugApiClient);
+      when(
+        categoryApiClient.getCategories,
+      ).thenAnswer((_) async => _categoriesFixture());
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            appDatabaseProvider.overrideWithValue(db),
+            drugApiClientProvider.overrideWithValue(drugApiClient),
+            categoryApiClientProvider.overrideWithValue(categoryApiClient),
+          ],
+          child: MaterialApp(
+            theme: AppTheme.light(),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: const SearchView(),
+          ),
+        ),
+      );
+
+      await tester.tap(find.byType(FloatingActionButton));
+      await tester.pumpAndSettle();
+      await tester.scrollUntilVisible(
+        find.text('薬効分類'),
+        120,
+        scrollable: find
+            .descendant(
+              of: find.byType(BottomSheet),
+              matching: find.byType(Scrollable),
+            )
+            .first,
+      );
+      await tester.tap(find.text('薬効分類'));
+      await tester.pumpAndSettle();
+      await tester.scrollUntilVisible(
+        find.text('消化器系および代謝').last,
+        80,
+        scrollable: find
+            .descendant(
+              of: find.byType(BottomSheet),
+              matching: find.byType(Scrollable),
+            )
+            .first,
+      );
+      await tester.tap(find.text('消化器系および代謝').last);
+      await tester.tap(find.textContaining('結果を見る'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('消化器系および代謝'), findsWidgets);
+      expect(find.text('alimentary_metabolism'), findsNothing);
+    },
+  );
+
   // Design source:
   // Round6/round6-screens.jsx FilterSheet phone top=100, radius=20.
   testWidgets('SearchView filter sheet follows Round6 phone geometry', (
@@ -434,6 +561,26 @@ void main() {
 final class _MockDrugApiClient extends Mock implements DrugApiClient {}
 
 final class _MockCategoryApiClient extends Mock implements CategoryApiClient {}
+
+void _stubDrugSearch(_MockDrugApiClient drugApiClient) {
+  when(
+    () => drugApiClient.getDrugs(
+      page: any(named: 'page'),
+      pageSize: any(named: 'pageSize'),
+      categoryAtc: any(named: 'categoryAtc'),
+      therapeuticCategory: any(named: 'therapeuticCategory'),
+      regulatoryClass: any(named: 'regulatoryClass'),
+      dosageForm: any(named: 'dosageForm'),
+      route: any(named: 'route'),
+      keyword: any(named: 'keyword'),
+      keywordMatch: any(named: 'keywordMatch'),
+      keywordTarget: any(named: 'keywordTarget'),
+      adverseReactionKeyword: any(named: 'adverseReactionKeyword'),
+      precautionCategory: any(named: 'precautionCategory'),
+      sort: any(named: 'sort'),
+    ),
+  ).thenAnswer((_) async => _drugListFixture());
+}
 
 DrugListResponseDto _drugListFixture() {
   final fixture = File(
