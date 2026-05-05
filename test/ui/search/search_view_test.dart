@@ -1323,6 +1323,69 @@ void main() {
     ).called(greaterThanOrEqualTo(1));
   });
 
+  testWidgets('inertial_scroll_triggers_load_more_(T12)', (tester) async {
+    final drugApiClient = _MockDrugApiClient();
+    final fixture = _drugListFixture();
+    final scrollableFixture = fixture.copyWith(
+      items: List.filled(20, fixture.items.first),
+    );
+    when(
+      () => drugApiClient.getDrugs(
+        page: any(named: 'page'),
+        pageSize: any(named: 'pageSize'),
+        keyword: any(named: 'keyword'),
+      ),
+    ).thenAnswer((_) async => scrollableFixture);
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          appDatabaseProvider.overrideWithValue(db),
+          drugApiClientProvider.overrideWithValue(drugApiClient),
+        ],
+        child: const MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: SearchView(),
+        ),
+      ),
+    );
+    await tester.enterText(
+      find.byKey(const ValueKey('search-field')),
+      'inertial load more keyword',
+    );
+    await tester.tap(find.byType(FilledButton).first);
+    await tester.pumpAndSettle();
+
+    ScrollUpdateNotification(
+      metrics: FixedScrollMetrics(
+        minScrollExtent: 0,
+        maxScrollExtent: 1000,
+        pixels: 950,
+        viewportDimension: 600,
+        axisDirection: AxisDirection.down,
+        devicePixelRatio: 1,
+      ),
+      context: tester.element(
+        find.byKey(const PageStorageKey<String>('drugSearchResults')),
+      ),
+      scrollDelta: 40,
+    ).dispatch(
+      tester.element(
+        find.byKey(const PageStorageKey<String>('drugSearchResults')),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    verify(
+      () => drugApiClient.getDrugs(
+        page: 2,
+        pageSize: 20,
+        keyword: 'inertial load more keyword',
+      ),
+    ).called(greaterThanOrEqualTo(1));
+  });
+
   testWidgets('SearchView renders empty state for empty drug results', (
     tester,
   ) async {
