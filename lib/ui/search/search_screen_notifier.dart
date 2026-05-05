@@ -306,6 +306,18 @@ final class SearchScreenNotifier extends Notifier<SearchScreenState> {
     await performSearch();
   }
 
+  /// Changes disease sort and searches.
+  Future<void> changeDiseaseSort(DiseaseSort sort) async {
+    state = state.copyWith(
+      diseaseParams: _copyDiseaseParams(
+        state.diseaseParams,
+        page: 1,
+        sort: sort,
+      ),
+    );
+    await performSearch();
+  }
+
   /// Selects a history row, restores params, and searches immediately.
   Future<void> selectHistory(SearchHistoryEnvelope history) async {
     switch (history) {
@@ -595,6 +607,7 @@ DiseaseSearchParams _copyDiseaseParams(
   List<String>? examCategory,
   bool? hasPharmacologicalTreatment,
   bool? hasSeverityGrading,
+  DiseaseSort? sort,
 }) {
   return DiseaseSearchParams(
     page: page ?? params.page,
@@ -612,6 +625,6 @@ DiseaseSearchParams _copyDiseaseParams(
     hasPharmacologicalTreatment:
         hasPharmacologicalTreatment ?? params.hasPharmacologicalTreatment,
     hasSeverityGrading: hasSeverityGrading ?? params.hasSeverityGrading,
-    sort: params.sort,
+    sort: sort ?? params.sort,
   );
 }
