@@ -1217,6 +1217,7 @@ void main() {
 
     expect(find.text('条件をリセット'), findsOneWidget);
     expect(find.text('絞り込みを 1 つずつ外す'), findsOneWidget);
+    expect(find.text('検索キーワードや絞り込みを見直してください。'), findsOneWidget);
     expect(find.text('部分一致に変更'), findsNothing);
     expect(find.widgetWithText(FilledButton, '条件をリセット'), findsOneWidget);
     expect(
@@ -1224,6 +1225,62 @@ void main() {
       findsOneWidget,
     );
     expect(find.widgetWithText(TextButton, '部分一致に変更'), findsNothing);
+  });
+
+  testWidgets('empty state shows 64x64 surface3 circle with magnifier icon', (
+    tester,
+  ) async {
+    final drugApiClient = _MockDrugApiClient();
+    when(
+      () => drugApiClient.getDrugs(
+        page: any(named: 'page'),
+        pageSize: any(named: 'pageSize'),
+        keyword: any(named: 'keyword'),
+      ),
+    ).thenAnswer(
+      (_) async => _drugListFixture().copyWith(items: [], totalCount: 0),
+    );
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          appDatabaseProvider.overrideWithValue(db),
+          drugApiClientProvider.overrideWithValue(drugApiClient),
+        ],
+        child: const MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: SearchView(),
+        ),
+      ),
+    );
+
+    await tester.enterText(
+      find.byKey(const ValueKey('search-field')),
+      'empty icon keyword',
+    );
+    await tester.tap(find.byType(FilledButton));
+    await tester.pumpAndSettle();
+
+    final iconContainer = tester.widget<Container>(
+      find.byKey(const ValueKey('search-empty-icon')),
+    );
+    final constraints = iconContainer.constraints!;
+    final decoration = iconContainer.decoration! as BoxDecoration;
+
+    expect(constraints.minWidth, 64);
+    expect(constraints.maxWidth, 64);
+    expect(constraints.minHeight, 64);
+    expect(constraints.maxHeight, 64);
+    expect(decoration.color, SearchPalette.light.surface3);
+    expect(decoration.shape, BoxShape.circle);
+    expect(
+      find.descendant(
+        of: find.byKey(const ValueKey('search-empty-icon')),
+        matching: find.byIcon(Icons.search_off),
+      ),
+      findsOneWidget,
+    );
   });
 
   testWidgets('SearchView empty results keep history out of result space', (

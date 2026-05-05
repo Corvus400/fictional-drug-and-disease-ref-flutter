@@ -289,21 +289,6 @@ final class SearchScreenNotifier extends Notifier<SearchScreenState> {
     await performSearch();
   }
 
-  /// Switches keyword match to partial and searches.
-  Future<void> changeMatchToPartial() async {
-    state = state.copyWith(
-      drugParams: _copyDrugParams(
-        state.drugParams,
-        keywordMatch: KeywordMatch.partial,
-      ),
-      diseaseParams: _copyDiseaseParams(
-        state.diseaseParams,
-        keywordMatch: KeywordMatch.partial,
-      ),
-    );
-    await performSearch();
-  }
-
   /// Changes sort and searches.
   Future<void> changeDrugSort(DrugSort sort) async {
     state = state.copyWith(
