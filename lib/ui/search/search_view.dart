@@ -161,13 +161,16 @@ class _SearchViewState extends ConsumerState<SearchView> with RouteAware {
                   onCancel: notifier.closeHistoryDropdown,
                 ),
                 if (state.historyDropdownOpen)
-                  _SearchHistoryDropdown(
-                    tapRegionGroupId: historyTapRegionGroupId,
-                    entries: state.historyForTab,
-                    currentTime: widget.currentTime ?? DateTime.now(),
-                    onSelect: notifier.selectHistory,
-                    onDelete: notifier.deleteHistory,
-                    onClearAll: notifier.clearAllHistory,
+                  Flexible(
+                    fit: FlexFit.loose,
+                    child: _SearchHistoryDropdown(
+                      tapRegionGroupId: historyTapRegionGroupId,
+                      entries: state.historyForTab,
+                      currentTime: widget.currentTime ?? DateTime.now(),
+                      onSelect: notifier.selectHistory,
+                      onDelete: notifier.deleteHistory,
+                      onClearAll: notifier.clearAllHistory,
+                    ),
                   ),
                 Expanded(
                   child: Padding(

@@ -17,6 +17,8 @@ class _SearchHistoryDropdown extends StatelessWidget {
   final Future<void> Function(String id) onDelete;
   final Future<void> Function() onClearAll;
 
+  static const _maxHistoryRowExtent = 64.0;
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
@@ -31,6 +33,7 @@ class _SearchHistoryDropdown extends StatelessWidget {
       child: Material(
         color: theme.colorScheme.surface,
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Padding(
@@ -59,14 +62,28 @@ class _SearchHistoryDropdown extends StatelessWidget {
                 ],
               ),
             ),
-            for (final entry in entries)
-              _SearchHistoryRow(
-                entry: entry,
-                palette: palette,
-                currentTime: currentTime,
-                onSelect: onSelect,
-                onDelete: onDelete,
+            Flexible(
+              fit: FlexFit.loose,
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxHeight: entries.length * _maxHistoryRowExtent,
+                ),
+                child: ListView(
+                  padding: EdgeInsets.zero,
+                  shrinkWrap: true,
+                  children: [
+                    for (final entry in entries)
+                      _SearchHistoryRow(
+                        entry: entry,
+                        palette: palette,
+                        currentTime: currentTime,
+                        onSelect: onSelect,
+                        onDelete: onDelete,
+                      ),
+                  ],
+                ),
               ),
+            ),
             Padding(
               padding: const EdgeInsets.fromLTRB(
                 SearchConstants.searchPhoneGutter,

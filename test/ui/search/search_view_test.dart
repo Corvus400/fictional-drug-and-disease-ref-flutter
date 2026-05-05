@@ -769,6 +769,55 @@ void main() {
     expect(find.text('スワイプ削除'), findsNothing);
   });
 
+  testWidgets(
+    'history_dropdown_does_not_overflow_when_keyboard_is_visible_(T04)',
+    (tester) async {
+      await tester.binding.setSurfaceSize(const Size(390, 844));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+
+      final container = ProviderContainer(
+        overrides: [appDatabaseProvider.overrideWithValue(db)],
+      );
+      addTearDown(container.dispose);
+      final codec = container.read(searchQueryCodecProvider);
+      final repository = container.read(searchHistoryRepositoryProvider);
+      for (var index = 0; index < 5; index += 1) {
+        await repository.insertWithDedup(
+          id: 'keyboard_history_$index',
+          target: 'drug',
+          queryJson: codec.encode(
+            DrugSearchParams(keyword: 'キーボード履歴$index'),
+          ),
+          searchedAt: DateTime.utc(2026, 5, 5, 9, index),
+          totalCount: index + 1,
+        );
+      }
+
+      await tester.pumpWidget(
+        UncontrolledProviderScope(
+          container: container,
+          child: const MaterialApp(
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: MediaQuery(
+              data: MediaQueryData(
+                size: Size(390, 844),
+                viewInsets: EdgeInsets.only(bottom: 300),
+              ),
+              child: SearchView(),
+            ),
+          ),
+        ),
+      );
+
+      await tester.tap(find.byKey(const ValueKey('search-field')));
+      await tester.pump();
+
+      expect(tester.takeException(), isNull);
+      expect(find.text('キーボード履歴4'), findsOneWidget);
+    },
+  );
+
   testWidgets('SearchView clears persisted history after confirmation', (
     tester,
   ) async {
