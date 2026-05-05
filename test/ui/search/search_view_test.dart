@@ -202,6 +202,43 @@ void main() {
     expect(find.text('検索'), findsWidgets);
   });
 
+  testWidgets('search_view_unfocuses_on_didPopNext_(T03)', (tester) async {
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [appDatabaseProvider.overrideWithValue(db)],
+        child: MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          navigatorObservers: [appRouteObserver],
+          home: const SearchView(),
+        ),
+      ),
+    );
+
+    await tester.tap(find.byKey(const ValueKey('search-field')));
+    await tester.pump();
+    expect(
+      tester.widget<EditableText>(find.byType(EditableText)).focusNode.hasFocus,
+      isTrue,
+    );
+
+    final searchContext = tester.element(find.byType(SearchView));
+    unawaited(
+      Navigator.of(searchContext).push<void>(
+        MaterialPageRoute<void>(
+          builder: (_) => const Scaffold(body: Text('Detail')),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    Navigator.of(searchContext).pop();
+    await tester.pumpAndSettle();
+
+    final editableText = tester.widget<EditableText>(find.byType(EditableText));
+    expect(editableText.focusNode.hasFocus, isFalse);
+  });
+
   testWidgets('SearchView uses Round6 custom top chrome instead of AppBar', (
     tester,
   ) async {
