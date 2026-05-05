@@ -559,7 +559,7 @@ abstract class AppLocalizations {
   /// No description provided for @searchFilterDrugRegulatoryClass.
   ///
   /// In ja, this message translates to:
-  /// **'薬事分類'**
+  /// **'規制区分'**
   String get searchFilterDrugRegulatoryClass;
 
   /// No description provided for @searchFilterDrugDosageForm.

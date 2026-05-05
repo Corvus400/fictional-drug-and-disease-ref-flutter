@@ -283,7 +283,7 @@ class AppLocalizationsJa extends AppLocalizations {
   }
 
   @override
-  String get searchFilterDrugRegulatoryClass => '薬事分類';
+  String get searchFilterDrugRegulatoryClass => '規制区分';
 
   @override
   String get searchFilterDrugDosageForm => '剤形';
