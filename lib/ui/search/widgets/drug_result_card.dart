@@ -1,9 +1,10 @@
 part of '../search_view.dart';
 
 class _DrugResultCard extends StatelessWidget {
-  const _DrugResultCard({required this.item});
+  const _DrugResultCard({required this.item, this.cacheManager});
 
   final DrugSummary item;
+  final BaseCacheManager? cacheManager;
 
   @override
   Widget build(BuildContext context) {
@@ -19,6 +20,8 @@ class _DrugResultCard extends StatelessWidget {
             SearchConstants.searchTabletBreakpoint
         ? SearchConstants.searchTabletDrugImageSize
         : SearchConstants.searchPhoneDrugImageSize;
+    final imageCacheSize = (imageSize * MediaQuery.devicePixelRatioOf(context))
+        .round();
     return Card(
       key: ValueKey('drug-card-${item.id}'),
       margin: const EdgeInsets.only(top: 8),
@@ -38,16 +41,18 @@ class _DrugResultCard extends StatelessWidget {
                 borderRadius: BorderRadius.circular(8),
                 child: SizedBox.square(
                   dimension: imageSize,
-                  child: Image.network(
-                    _drugCardImageUrl(item.imageUrl),
+                  child: CachedNetworkImage(
                     key: ValueKey('drug-image-${item.id}'),
+                    imageUrl: _drugCardImageUrl(item.imageUrl),
+                    cacheManager: cacheManager,
                     fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) => DecoratedBox(
-                      decoration: BoxDecoration(
-                        color: palette.surfaceSubtle,
-                        border: Border.all(color: palette.hairline),
-                      ),
-                      child: const Icon(Icons.medication_outlined),
+                    memCacheWidth: imageCacheSize,
+                    memCacheHeight: imageCacheSize,
+                    placeholder: (context, url) => _DrugImageFallback(
+                      palette: palette,
+                    ),
+                    errorWidget: (context, url, error) => _DrugImageFallback(
+                      palette: palette,
                     ),
                   ),
                 ),
@@ -110,6 +115,23 @@ class _DrugResultCard extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class _DrugImageFallback extends StatelessWidget {
+  const _DrugImageFallback({required this.palette});
+
+  final SearchPalette palette;
+
+  @override
+  Widget build(BuildContext context) {
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: palette.surfaceSubtle,
+        border: Border.all(color: palette.hairline),
+      ),
+      child: const Icon(Icons.medication_outlined),
     );
   }
 }

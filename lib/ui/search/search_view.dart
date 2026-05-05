@@ -16,7 +16,9 @@ import 'package:fictional_drug_and_disease_ref/ui/search/constants/search_palett
 import 'package:fictional_drug_and_disease_ref/ui/search/format/relative_time_formatter.dart';
 import 'package:fictional_drug_and_disease_ref/ui/search/search_screen_notifier.dart';
 import 'package:fictional_drug_and_disease_ref/ui/search/search_screen_state.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -33,6 +35,11 @@ part 'widgets/filter/round6_filter_sheet_scaffold.dart';
 part 'format/drug_card_image_url.dart';
 part 'format/search_label_formatters.dart';
 part 'format/search_sort_sheet.dart';
+
+/// Optional cache manager override for deterministic search UI tests.
+final drugCardImageCacheManagerProvider = Provider<BaseCacheManager?>(
+  (ref) => null,
+);
 
 /// Search tab view.
 class SearchView extends ConsumerStatefulWidget {
@@ -97,6 +104,9 @@ class _SearchViewState extends ConsumerState<SearchView> with RouteAware {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(searchScreenProvider);
+    final drugCardImageCacheManager = ref.watch(
+      drugCardImageCacheManagerProvider,
+    );
     final notifier = ref.read(searchScreenProvider.notifier);
     final theme = Theme.of(context);
     final palette =
@@ -181,6 +191,7 @@ class _SearchViewState extends ConsumerState<SearchView> with RouteAware {
                   child: _SearchPhaseSection(
                     state: state,
                     gutter: gutter,
+                    drugCardImageCacheManager: drugCardImageCacheManager,
                     onRetry: notifier.performSearch,
                     onResetFilter: notifier.resetFilter,
                     onRemoveOneChip: notifier.removeOneChip,

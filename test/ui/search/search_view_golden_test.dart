@@ -21,6 +21,7 @@ import 'package:fictional_drug_and_disease_ref/l10n/app_localizations.dart';
 import 'package:fictional_drug_and_disease_ref/theme/app_theme.dart';
 import 'package:fictional_drug_and_disease_ref/ui/search/search_view.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
@@ -351,12 +352,24 @@ void _searchGolden({
             return Future.value(response ?? _drugListFixture());
           });
         }
+        final imageCacheManager = _MockBaseCacheManager();
+        when(
+          () => imageCacheManager.getFileStream(
+            any(),
+            key: any(named: 'key'),
+            headers: any(named: 'headers'),
+            withProgress: any<bool>(named: 'withProgress'),
+          ),
+        ).thenAnswer((_) => const Stream<FileResponse>.empty());
         return ProviderScope(
           overrides: [
             appDatabaseProvider.overrideWithValue(_db),
             drugApiClientProvider.overrideWithValue(drugApiClient),
             diseaseApiClientProvider.overrideWithValue(diseaseApiClient),
             categoryApiClientProvider.overrideWithValue(categoryApiClient),
+            drugCardImageCacheManagerProvider.overrideWithValue(
+              imageCacheManager,
+            ),
           ],
           child: MaterialApp(
             theme: theme,
@@ -457,6 +470,8 @@ final class _MockDrugApiClient extends Mock implements DrugApiClient {}
 final class _MockDiseaseApiClient extends Mock implements DiseaseApiClient {}
 
 final class _MockCategoryApiClient extends Mock implements CategoryApiClient {}
+
+final class _MockBaseCacheManager extends Mock implements BaseCacheManager {}
 
 DrugListResponseDto _drugListFixture() {
   final fixture = File(

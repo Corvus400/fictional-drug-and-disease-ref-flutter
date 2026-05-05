@@ -4,6 +4,7 @@ class _SearchPhaseSection extends StatelessWidget {
   const _SearchPhaseSection({
     required this.state,
     required this.gutter,
+    required this.drugCardImageCacheManager,
     required this.onRetry,
     required this.onResetFilter,
     required this.onRemoveOneChip,
@@ -15,6 +16,7 @@ class _SearchPhaseSection extends StatelessWidget {
 
   final SearchScreenState state;
   final double gutter;
+  final BaseCacheManager? drugCardImageCacheManager;
   final Future<void> Function() onRetry;
   final Future<void> Function() onResetFilter;
   final Future<void> Function() onRemoveOneChip;
@@ -307,7 +309,11 @@ class _SearchPhaseSection extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  for (final item in items) _DrugResultCard(item: item),
+                  for (final item in items)
+                    _DrugResultCard(
+                      item: item,
+                      cacheManager: drugCardImageCacheManager,
+                    ),
                 ],
               ),
             ),
