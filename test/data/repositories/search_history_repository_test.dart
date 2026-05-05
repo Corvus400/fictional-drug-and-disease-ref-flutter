@@ -121,6 +121,30 @@ void main() {
       final result = await repository.findByTarget('drug');
       expect((result as Ok<List<SearchHistoryEntry>>).value, isEmpty);
     });
+
+    test('clearByTarget removes only rows for the requested target', () async {
+      await _insertSearch(repository, 'search_001', 'drug', '{"keyword":"a"}');
+      await _insertSearch(repository, 'search_002', 'drug', '{"keyword":"b"}');
+      await _insertSearch(
+        repository,
+        'search_003',
+        'disease',
+        '{"keyword":"c"}',
+      );
+
+      final clearResult = await repository.clearByTarget('drug');
+
+      expect(clearResult, isA<Ok<void>>());
+      final drugResult = await repository.findByTarget('drug');
+      final diseaseResult = await repository.findByTarget('disease');
+      expect((drugResult as Ok<List<SearchHistoryEntry>>).value, isEmpty);
+      expect(
+        (diseaseResult as Ok<List<SearchHistoryEntry>>).value.map(
+          (entry) => entry.id,
+        ),
+        ['search_003'],
+      );
+    });
   });
 }
 

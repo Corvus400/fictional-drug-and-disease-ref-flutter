@@ -56,6 +56,16 @@ final class SearchHistoryRepository {
       return Result.error(toAppException(error));
     }
   }
+
+  /// Deletes all search history rows for a target.
+  Future<Result<void>> clearByTarget(String target) async {
+    try {
+      await _dao.clearByTarget(target);
+      return const Result.ok(null);
+    } on Object catch (error) {
+      return Result.error(toAppException(error));
+    }
+  }
 }
 
 SearchHistoryEntry _toDomain(SearchHistoriesTableData row) {

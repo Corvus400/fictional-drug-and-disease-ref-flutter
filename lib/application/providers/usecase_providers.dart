@@ -1,4 +1,10 @@
+import 'package:fictional_drug_and_disease_ref/application/search/search_query_codec.dart';
+import 'package:fictional_drug_and_disease_ref/application/usecases/clear_search_history_usecase.dart';
+import 'package:fictional_drug_and_disease_ref/application/usecases/delete_search_history_usecase.dart';
+import 'package:fictional_drug_and_disease_ref/application/usecases/list_search_history_usecase.dart';
 import 'package:fictional_drug_and_disease_ref/application/usecases/observe_bookmark_state_usecase.dart';
+import 'package:fictional_drug_and_disease_ref/application/usecases/search_diseases_usecase.dart';
+import 'package:fictional_drug_and_disease_ref/application/usecases/search_drugs_usecase.dart';
 import 'package:fictional_drug_and_disease_ref/application/usecases/view_disease_detail_usecase.dart';
 import 'package:fictional_drug_and_disease_ref/application/usecases/view_drug_detail_usecase.dart';
 import 'package:fictional_drug_and_disease_ref/data/providers/api_providers.dart';
@@ -30,3 +36,48 @@ final observeBookmarkStateUsecaseProvider =
         bookmarkRepository: ref.watch(bookmarkRepositoryProvider),
       ),
     );
+
+/// Search query codec provider.
+final searchQueryCodecProvider = Provider<SearchQueryCodec>(
+  (ref) => const SearchQueryCodec(),
+);
+
+/// Search-drugs use case provider.
+final searchDrugsUsecaseProvider = Provider<SearchDrugsUsecase>(
+  (ref) => SearchDrugsUsecase(
+    drugRepository: ref.watch(drugRepositoryProvider),
+    searchHistoryRepository: ref.watch(searchHistoryRepositoryProvider),
+    codec: ref.watch(searchQueryCodecProvider),
+  ),
+);
+
+/// Search-diseases use case provider.
+final searchDiseasesUsecaseProvider = Provider<SearchDiseasesUsecase>(
+  (ref) => SearchDiseasesUsecase(
+    diseaseRepository: ref.watch(diseaseRepositoryProvider),
+    searchHistoryRepository: ref.watch(searchHistoryRepositoryProvider),
+    codec: ref.watch(searchQueryCodecProvider),
+  ),
+);
+
+/// List-search-history use case provider.
+final listSearchHistoryUsecaseProvider = Provider<ListSearchHistoryUsecase>(
+  (ref) => ListSearchHistoryUsecase(
+    searchHistoryRepository: ref.watch(searchHistoryRepositoryProvider),
+    codec: ref.watch(searchQueryCodecProvider),
+  ),
+);
+
+/// Delete-search-history use case provider.
+final deleteSearchHistoryUsecaseProvider = Provider<DeleteSearchHistoryUsecase>(
+  (ref) => DeleteSearchHistoryUsecase(
+    searchHistoryRepository: ref.watch(searchHistoryRepositoryProvider),
+  ),
+);
+
+/// Clear-search-history use case provider.
+final clearSearchHistoryUsecaseProvider = Provider<ClearSearchHistoryUsecase>(
+  (ref) => ClearSearchHistoryUsecase(
+    searchHistoryRepository: ref.watch(searchHistoryRepositoryProvider),
+  ),
+);
