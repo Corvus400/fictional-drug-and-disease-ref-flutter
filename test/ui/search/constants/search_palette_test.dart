@@ -45,5 +45,31 @@ void main() {
         expect(colors.background, colors.foreground.withValues(alpha: 0.12));
       }
     });
+
+    test(
+      'disease badge infectious true uses danger; false uses neutral gray',
+      () {
+        final trueColors = SearchPalette.light.diseaseBadgeColors(
+          DiseaseBadgeCategory.infectious,
+          'true',
+        );
+        final falseColors = SearchPalette.light.diseaseBadgeColors(
+          DiseaseBadgeCategory.infectious,
+          'false',
+        );
+        final darkTrueColors = SearchPalette.dark.diseaseBadgeColors(
+          DiseaseBadgeCategory.infectious,
+          'true',
+        );
+
+        expect(trueColors.foreground, SearchPalette.light.danger);
+        expect(
+          trueColors.background,
+          SearchPalette.light.danger.withValues(alpha: 0.12),
+        );
+        expect(falseColors.foreground, const Color(0xFF4B5563));
+        expect(darkTrueColors.foreground, SearchPalette.dark.danger);
+      },
+    );
   });
 }

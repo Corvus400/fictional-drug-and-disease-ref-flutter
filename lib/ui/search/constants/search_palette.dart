@@ -219,7 +219,11 @@ final class SearchPalette extends ThemeExtension<SearchPalette> {
         'relapsing' => const Color(0xFF0F766E),
         _ => diseaseInk,
       },
-      DiseaseBadgeCategory.infectious => diseaseInk,
+      DiseaseBadgeCategory.infectious => switch (value) {
+        'true' => danger,
+        'false' => const Color(0xFF4B5563),
+        _ => diseaseInk,
+      },
       DiseaseBadgeCategory.department => diseaseInk,
     };
     return (background: base.withValues(alpha: 0.12), foreground: base);
