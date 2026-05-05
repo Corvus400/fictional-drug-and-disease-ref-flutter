@@ -293,6 +293,67 @@ void main() {
     expect(chevron.right, rail.right - 4);
   });
 
+  testWidgets('SearchView applied chip rail uses Round6 chip visuals', (
+    tester,
+  ) async {
+    await tester.binding.setSurfaceSize(const Size(390, 844));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+
+    final drugApiClient = _MockDrugApiClient();
+    final categoryApiClient = _MockCategoryApiClient();
+    _stubDrugSearch(drugApiClient);
+    when(
+      categoryApiClient.getCategories,
+    ).thenAnswer((_) async => _categoriesFixture());
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          appDatabaseProvider.overrideWithValue(db),
+          drugApiClientProvider.overrideWithValue(drugApiClient),
+          categoryApiClientProvider.overrideWithValue(categoryApiClient),
+        ],
+        child: MaterialApp(
+          theme: AppTheme.light(),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: const SearchView(),
+        ),
+      ),
+    );
+
+    await tester.tap(find.byType(FloatingActionButton));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('毒薬'));
+    await tester.tap(find.textContaining('結果を見る'));
+    await tester.pumpAndSettle();
+
+    final label = tester.widget<Text>(find.text('適用中'));
+    expect(label.style?.fontWeight, FontWeight.w700);
+    expect(label.style?.letterSpacing, 0.5);
+    expect(label.style?.color, SearchPalette.light.muted);
+
+    final chipFinder = find.byKey(
+      const ValueKey('search-applied-filter-chip-毒薬'),
+    );
+    expect(chipFinder, findsOneWidget);
+    final chip = tester.widget<DecoratedBox>(chipFinder);
+    final decoration = chip.decoration as BoxDecoration;
+    expect(decoration.color, SearchPalette.light.primarySoft);
+    expect(decoration.border?.top.color, SearchPalette.light.primaryRing);
+    expect(decoration.border?.top.width, 0.5);
+    expect(decoration.borderRadius, BorderRadius.circular(14));
+
+    final closeFinder = find.byKey(
+      const ValueKey('search-applied-filter-close-毒薬'),
+    );
+    expect(closeFinder, findsOneWidget);
+    final close = tester.widget<DecoratedBox>(closeFinder);
+    final closeDecoration = close.decoration as BoxDecoration;
+    expect(closeDecoration.color, const Color(0x2E007AFF));
+    expect(closeDecoration.borderRadius, BorderRadius.circular(8));
+  });
+
   testWidgets(
     'SearchView applied chip rail labels ATC chips with category text',
     (
