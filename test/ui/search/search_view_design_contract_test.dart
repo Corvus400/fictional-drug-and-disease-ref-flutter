@@ -4,11 +4,13 @@ import 'dart:io';
 import 'package:fictional_drug_and_disease_ref/config/api_config.dart';
 import 'package:fictional_drug_and_disease_ref/config/flavor.dart';
 import 'package:fictional_drug_and_disease_ref/data/dto/categories/categories_response_dto.dart';
+import 'package:fictional_drug_and_disease_ref/data/dto/disease/disease_list_response_dto.dart';
 import 'package:fictional_drug_and_disease_ref/data/dto/drug/drug_list_response_dto.dart';
 import 'package:fictional_drug_and_disease_ref/data/local/app_database.dart';
 import 'package:fictional_drug_and_disease_ref/data/providers/api_providers.dart';
 import 'package:fictional_drug_and_disease_ref/data/providers/local_providers.dart';
 import 'package:fictional_drug_and_disease_ref/data/services/api/category_api_client.dart';
+import 'package:fictional_drug_and_disease_ref/data/services/api/disease_api_client.dart';
 import 'package:fictional_drug_and_disease_ref/data/services/api/drug_api_client.dart';
 import 'package:fictional_drug_and_disease_ref/l10n/app_localizations.dart';
 import 'package:fictional_drug_and_disease_ref/theme/app_theme.dart';
@@ -974,6 +976,69 @@ void main() {
     ).called(1);
   });
 
+  testWidgets('axis_summary_uses_ellipsis_overflow_(T10)', (
+    tester,
+  ) async {
+    await tester.binding.setSurfaceSize(const Size(390, 844));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+
+    final diseaseApiClient = _MockDiseaseApiClient();
+    final categoryApiClient = _MockCategoryApiClient();
+    when(
+      () => diseaseApiClient.getDiseases(
+        page: any(named: 'page'),
+        pageSize: any(named: 'pageSize'),
+        icd10Chapter: any(named: 'icd10Chapter'),
+        department: any(named: 'department'),
+        chronicity: any(named: 'chronicity'),
+        infectious: any(named: 'infectious'),
+        keyword: any(named: 'keyword'),
+        keywordMatch: any(named: 'keywordMatch'),
+        keywordTarget: any(named: 'keywordTarget'),
+        symptomKeyword: any(named: 'symptomKeyword'),
+        onsetPattern: any(named: 'onsetPattern'),
+        examCategory: any(named: 'examCategory'),
+        hasPharmacologicalTreatment: any(
+          named: 'hasPharmacologicalTreatment',
+        ),
+        hasSeverityGrading: any(named: 'hasSeverityGrading'),
+        sort: any(named: 'sort'),
+      ),
+    ).thenAnswer((_) async => _diseaseListFixture().copyWith(totalCount: 9));
+    when(
+      categoryApiClient.getCategories,
+    ).thenAnswer((_) async => _categoriesFixture());
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          appDatabaseProvider.overrideWithValue(db),
+          diseaseApiClientProvider.overrideWithValue(diseaseApiClient),
+          categoryApiClientProvider.overrideWithValue(categoryApiClient),
+        ],
+        child: MaterialApp(
+          theme: AppTheme.light(),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: const SearchView(),
+        ),
+      ),
+    );
+
+    await tester.tap(find.text('疾患'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byType(FloatingActionButton));
+    await tester.pumpAndSettle();
+    await _tapVisible(tester, find.text('I 感染症および寄生虫症'));
+    await _tapVisible(tester, find.text('II 新生物'));
+
+    final summary = tester.widget<Text>(
+      find.text('I 感染症および寄生虫症, II 新生物'),
+    );
+    expect(summary.maxLines, 1);
+    expect(summary.overflow, TextOverflow.ellipsis);
+  });
+
   testWidgets('drug_card_image_is_vertically_centered_(T08)', (
     tester,
   ) async {
@@ -1055,6 +1120,8 @@ void main() {
 
 final class _MockDrugApiClient extends Mock implements DrugApiClient {}
 
+final class _MockDiseaseApiClient extends Mock implements DiseaseApiClient {}
+
 final class _MockCategoryApiClient extends Mock implements CategoryApiClient {}
 
 void _stubDrugSearch(_MockDrugApiClient drugApiClient) {
@@ -1083,6 +1150,14 @@ DrugListResponseDto _drugListFixture() {
   ).readAsStringSync();
   final json = jsonDecode(fixture) as Map<String, dynamic>;
   return DrugListResponseDto.fromJson(json);
+}
+
+DiseaseListResponseDto _diseaseListFixture() {
+  final fixture = File(
+    'test/fixtures/swagger/get_v1_diseases.json',
+  ).readAsStringSync();
+  final json = jsonDecode(fixture) as Map<String, dynamic>;
+  return DiseaseListResponseDto.fromJson(json);
 }
 
 CategoriesResponseDto _categoriesFixture() {

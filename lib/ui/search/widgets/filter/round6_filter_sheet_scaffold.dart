@@ -257,6 +257,8 @@ class _FilterAxisRow extends StatelessWidget {
                         const SizedBox(height: 3),
                         Text(
                           axis.summary,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                           style: theme.textTheme.labelSmall?.copyWith(
                             color: theme.colorScheme.onSurfaceVariant,
                           ),
@@ -345,7 +347,11 @@ class _FilterChipGroup extends StatelessWidget {
         for (final value in values)
           _FilterPillChip(
             value: value,
-            label: Text(labelFor(value)),
+            label: Text(
+              labelFor(value),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
             selected: selected.contains(value),
             onTap: () => onToggle(value),
           ),
@@ -416,7 +422,9 @@ class _FilterPillChip extends StatelessWidget {
                 ),
                 const SizedBox(width: 4),
               ],
-              DefaultTextStyle.merge(style: textStyle, child: label),
+              Flexible(
+                child: DefaultTextStyle.merge(style: textStyle, child: label),
+              ),
             ],
           ),
         ),
@@ -444,14 +452,22 @@ class _BoolChipGroup extends StatelessWidget {
       children: [
         _FilterPillChip(
           value: 'true',
-          label: Text(trueLabel),
+          label: Text(
+            trueLabel,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
           selected: value == true,
           onTap: () => onChanged(value == true ? null : true),
         ),
         const SizedBox(width: 6),
         _FilterPillChip(
           value: 'false',
-          label: Text(falseLabel),
+          label: Text(
+            falseLabel,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
           selected: value == false,
           onTap: () => onChanged(value == false ? null : false),
         ),
