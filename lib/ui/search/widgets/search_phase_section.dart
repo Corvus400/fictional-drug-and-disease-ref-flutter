@@ -27,6 +27,11 @@ class _SearchPhaseSection extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
     if (phase is SearchPhaseLoading) {
       final theme = Theme.of(context);
+      final palette =
+          theme.extension<SearchPalette>() ??
+          (theme.brightness == Brightness.dark
+              ? SearchPalette.dark
+              : SearchPalette.light);
       return Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -57,6 +62,10 @@ class _SearchPhaseSection extends StatelessWidget {
           ),
           Expanded(
             child: Skeletonizer(
+              effect: ShimmerEffect(
+                baseColor: palette.surface2,
+                highlightColor: palette.surface3,
+              ),
               child: ListView.builder(
                 itemCount: SearchConstants.searchShimmerSkeletonCount,
                 itemBuilder: (context, index) => const Card(

@@ -2140,6 +2140,15 @@ void main() {
         find.byWidgetPredicate((widget) => widget is Skeletonizer),
         findsOneWidget,
       );
+      final skeletonizer = tester.widget<Skeletonizer>(
+        find.byWidgetPredicate((widget) => widget is Skeletonizer),
+      );
+      final effect = skeletonizer.effect! as ShimmerEffect;
+      expect(effect.colors, [
+        SearchPalette.light.surface2,
+        SearchPalette.light.surface3,
+        SearchPalette.light.surface2,
+      ]);
       expect(find.text('合計 — 件'), findsOneWidget);
       expect(find.text('検索中…'), findsOneWidget);
       expect(
