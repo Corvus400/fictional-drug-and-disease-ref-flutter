@@ -21,6 +21,7 @@ import 'package:fictional_drug_and_disease_ref/domain/drug/drug_search_params.da
 import 'package:fictional_drug_and_disease_ref/l10n/app_localizations.dart';
 import 'package:fictional_drug_and_disease_ref/router/app_router.dart';
 import 'package:fictional_drug_and_disease_ref/theme/app_theme.dart';
+import 'package:fictional_drug_and_disease_ref/ui/search/constants/search_constants.dart';
 import 'package:fictional_drug_and_disease_ref/ui/search/constants/search_palette.dart';
 import 'package:fictional_drug_and_disease_ref/ui/search/search_screen_notifier.dart';
 import 'package:fictional_drug_and_disease_ref/ui/search/search_screen_state.dart';
@@ -1709,7 +1710,7 @@ void main() {
     verify(
       () => drugApiClient.getDrugs(
         page: 1,
-        pageSize: any(named: 'pageSize'),
+        pageSize: SearchConstants.searchPageSize,
         regulatoryClass: ['poison'],
         dosageForm: ['tablet'],
         route: ['oral'],
@@ -1971,7 +1972,7 @@ void main() {
     verify(
       () => diseaseApiClient.getDiseases(
         page: 1,
-        pageSize: any(named: 'pageSize'),
+        pageSize: SearchConstants.searchPageSize,
         icd10Chapter: ['chapter_ix'],
         department: ['cardiology'],
         chronicity: <String>[],
@@ -2188,10 +2189,10 @@ void main() {
     await tester.tap(find.byType(FilledButton).first);
     await tester.pumpAndSettle();
 
-    await tester.tap(find.text('並び替え'));
+    await tester.tap(find.textContaining('並び替え').first);
     await tester.pumpAndSettle();
 
-    expect(find.text('更新日 (新しい順)'), findsOneWidget);
+    expect(find.text('更新日(新しい順)'), findsOneWidget);
     expect(find.text('ブランド名カナ'), findsOneWidget);
     expect(find.text('ATC コード'), findsOneWidget);
     expect(find.text('薬効分類名'), findsOneWidget);
@@ -2229,7 +2230,7 @@ void main() {
     await tester.tap(find.byType(FilledButton).first);
     await tester.pumpAndSettle();
 
-    await tester.tap(find.text('並び替え'));
+    await tester.tap(find.textContaining('並び替え').first);
     await tester.pumpAndSettle();
     await tester.tap(find.text('ATC コード'));
     await tester.pumpAndSettle();
