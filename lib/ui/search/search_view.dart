@@ -75,6 +75,7 @@ class SearchView extends ConsumerWidget {
             final gutter = isTablet
                 ? SearchConstants.searchTabletGutter
                 : SearchConstants.searchPhoneGutter;
+            final historyTapRegionGroupId = Object();
             return Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
@@ -83,6 +84,7 @@ class SearchView extends ConsumerWidget {
                   palette: palette,
                   gutter: gutter,
                   isTablet: isTablet,
+                  historyTapRegionGroupId: historyTapRegionGroupId,
                   onChangeTab: notifier.changeTab,
                   onOpenHistory: () {
                     notifier.openHistoryDropdown();
@@ -95,6 +97,7 @@ class SearchView extends ConsumerWidget {
                 ),
                 if (state.historyDropdownOpen)
                   _SearchHistoryDropdown(
+                    tapRegionGroupId: historyTapRegionGroupId,
                     entries: state.historyForTab,
                     onDelete: notifier.deleteHistory,
                     onClearAll: notifier.clearAllHistory,
@@ -1168,6 +1171,7 @@ class _SearchTopChrome extends StatelessWidget {
     required this.palette,
     required this.gutter,
     required this.isTablet,
+    required this.historyTapRegionGroupId,
     required this.onChangeTab,
     required this.onOpenHistory,
     required this.onChangeQuery,
@@ -1180,6 +1184,7 @@ class _SearchTopChrome extends StatelessWidget {
   final SearchPalette palette;
   final double gutter;
   final bool isTablet;
+  final Object historyTapRegionGroupId;
   final Future<void> Function(SearchTab tab) onChangeTab;
   final VoidCallback onOpenHistory;
   final ValueChanged<String> onChangeQuery;
@@ -1240,6 +1245,7 @@ class _SearchTopChrome extends StatelessWidget {
                             ? l10n.searchHintDrugs
                             : l10n.searchHintDiseases,
                         palette: palette,
+                        tapRegionGroupId: historyTapRegionGroupId,
                         onTap: onOpenHistory,
                         onChanged: onChangeQuery,
                         onClear: onClearQuery,
@@ -1284,6 +1290,7 @@ class _SearchField extends StatefulWidget {
     required this.queryText,
     required this.hintText,
     required this.palette,
+    required this.tapRegionGroupId,
     required this.onTap,
     required this.onChanged,
     required this.onClear,
@@ -1294,6 +1301,7 @@ class _SearchField extends StatefulWidget {
   final String queryText;
   final String hintText;
   final SearchPalette palette;
+  final Object tapRegionGroupId;
   final VoidCallback onTap;
   final ValueChanged<String> onChanged;
   final VoidCallback onClear;
@@ -1335,6 +1343,7 @@ class _SearchFieldState extends State<_SearchField> {
     return TextField(
       key: const ValueKey('search-field'),
       controller: _controller,
+      groupId: widget.tapRegionGroupId,
       onTap: widget.onTap,
       onTapOutside: (_) {
         FocusScope.of(context).unfocus();
@@ -2442,11 +2451,13 @@ void _showSortSheet(
 
 class _SearchHistoryDropdown extends StatelessWidget {
   const _SearchHistoryDropdown({
+    required this.tapRegionGroupId,
     required this.entries,
     required this.onDelete,
     required this.onClearAll,
   });
 
+  final Object tapRegionGroupId;
   final List<SearchHistoryEnvelope> entries;
   final Future<void> Function(String id) onDelete;
   final Future<void> Function() onClearAll;
@@ -2460,59 +2471,62 @@ class _SearchHistoryDropdown extends StatelessWidget {
         (theme.brightness == Brightness.dark
             ? SearchPalette.dark
             : SearchPalette.light);
-    return Material(
-      color: theme.colorScheme.surface,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(
-              SearchConstants.searchPhoneGutter,
-              10,
-              SearchConstants.searchPhoneGutter,
-              6,
-            ),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    l10n.searchHistoryTitle,
-                    style: theme.textTheme.labelMedium?.copyWith(
-                      color: theme.colorScheme.onSurfaceVariant,
-                      fontWeight: FontWeight.w700,
+    return TapRegion(
+      groupId: tapRegionGroupId,
+      child: Material(
+        color: theme.colorScheme.surface,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(
+                SearchConstants.searchPhoneGutter,
+                10,
+                SearchConstants.searchPhoneGutter,
+                6,
+              ),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      l10n.searchHistoryTitle,
+                      style: theme.textTheme.labelMedium?.copyWith(
+                        color: theme.colorScheme.onSurfaceVariant,
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
                   ),
-                ),
-                TextButton(
-                  key: const ValueKey('clear-history-button'),
-                  onPressed: () => unawaited(_confirmClearHistory(context)),
-                  child: Text(l10n.searchHistoryClear),
-                ),
-              ],
-            ),
-          ),
-          for (final entry in entries)
-            _SearchHistoryRow(
-              entry: entry,
-              palette: palette,
-              onDelete: onDelete,
-            ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(
-              SearchConstants.searchPhoneGutter,
-              8,
-              SearchConstants.searchPhoneGutter,
-              10,
-            ),
-            child: Text(
-              l10n.searchHistoryPrivacyNote,
-              textAlign: TextAlign.center,
-              style: theme.textTheme.labelSmall?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
+                  TextButton(
+                    key: const ValueKey('clear-history-button'),
+                    onPressed: () => unawaited(_confirmClearHistory(context)),
+                    child: Text(l10n.searchHistoryClear),
+                  ),
+                ],
               ),
             ),
-          ),
-        ],
+            for (final entry in entries)
+              _SearchHistoryRow(
+                entry: entry,
+                palette: palette,
+                onDelete: onDelete,
+              ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(
+                SearchConstants.searchPhoneGutter,
+                8,
+                SearchConstants.searchPhoneGutter,
+                10,
+              ),
+              child: Text(
+                l10n.searchHistoryPrivacyNote,
+                textAlign: TextAlign.center,
+                style: theme.textTheme.labelSmall?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
