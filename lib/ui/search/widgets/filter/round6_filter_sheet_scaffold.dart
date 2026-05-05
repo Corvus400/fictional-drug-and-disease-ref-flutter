@@ -224,6 +224,7 @@ class _FilterAxisRow extends StatelessWidget {
         (theme.brightness == Brightness.dark
             ? SearchPalette.dark
             : SearchPalette.light);
+    final keySuffix = _axisWidgetKeySuffix(axis.id);
     return DecoratedBox(
       decoration: BoxDecoration(
         color: expanded ? palette.surfaceSubtle : theme.colorScheme.surface,
@@ -258,21 +259,29 @@ class _FilterAxisRow extends StatelessWidget {
                           ],
                         ),
                         const SizedBox(height: 3),
-                        Text(
-                          axis.summary,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: theme.textTheme.labelSmall?.copyWith(
-                            color: theme.colorScheme.onSurfaceVariant,
-                          ),
-                        ),
-                        const SizedBox(height: 2),
-                        Text(
-                          axis.hint,
-                          style: theme.textTheme.labelSmall?.copyWith(
-                            fontSize: 10,
-                            color: theme.colorScheme.onSurfaceVariant,
-                          ),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                axis.summary,
+                                key: ValueKey('axisSummary_$keySuffix'),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: theme.textTheme.labelSmall?.copyWith(
+                                  color: theme.colorScheme.onSurfaceVariant,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            Text(
+                              axis.hint,
+                              key: ValueKey('axisHint_$keySuffix'),
+                              style: theme.textTheme.labelSmall?.copyWith(
+                                fontSize: 10,
+                                color: theme.colorScheme.onSurfaceVariant,
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
@@ -298,6 +307,13 @@ class _FilterAxisRow extends StatelessWidget {
       ),
     );
   }
+}
+
+String _axisWidgetKeySuffix(String id) {
+  return id.replaceAllMapped(
+    RegExp('_([a-z])'),
+    (match) => match.group(1)!.toUpperCase(),
+  );
 }
 
 class _FilterCountPill extends StatelessWidget {
