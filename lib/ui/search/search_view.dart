@@ -86,7 +86,12 @@ class _SearchViewState extends ConsumerState<SearchView> with RouteAware {
 
   void _clearReturnFocus() {
     FocusManager.instance.primaryFocus?.unfocus();
-    ref.read(searchScreenProvider.notifier).closeHistoryDropdown();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) {
+        return;
+      }
+      ref.read(searchScreenProvider.notifier).closeHistoryDropdown();
+    });
   }
 
   @override
