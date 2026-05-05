@@ -495,6 +495,54 @@ void main() {
         expect(container.read(searchScreenProvider).diseaseParams.sort, sort);
       }
     });
+
+    test(
+      'empty phase preserves the current applied chips for the chip rail',
+      () async {
+        _stubEmptyDrugSearch(drugApiClient);
+        final notifier = container.read(searchScreenProvider.notifier);
+
+        await notifier.applyDrugFilter(regulatoryClass: ['poison']);
+
+        final state = container.read(searchScreenProvider);
+        final phase = state.phase;
+        expect(phase, isA<SearchPhaseEmpty>());
+        expect((phase as SearchPhaseEmpty).chips.items, hasLength(1));
+        expect(phase.chips.items.single.axis, 'regulatoryClass');
+        expect(phase.chips.items.single.label, 'poison');
+      },
+    );
+
+    test('empty phase has no chips when no filters are applied', () async {
+      _stubEmptyDrugSearch(drugApiClient);
+      final notifier = container.read(searchScreenProvider.notifier);
+
+      await notifier.performSearch();
+
+      final phase = container.read(searchScreenProvider).phase;
+      expect(phase, isA<SearchPhaseEmpty>());
+      expect((phase as SearchPhaseEmpty).chips.items, isEmpty);
+    });
+
+    test(
+      'empty phase preserves chips after removing one applied chip',
+      () async {
+        _stubEmptyDrugSearch(drugApiClient);
+        final notifier = container.read(searchScreenProvider.notifier);
+
+        await notifier.applyDrugFilter(
+          regulatoryClass: ['poison'],
+          dosageForm: ['tablet'],
+        );
+        await notifier.removeOneChip();
+
+        final phase = container.read(searchScreenProvider).phase;
+        expect(phase, isA<SearchPhaseEmpty>());
+        expect((phase as SearchPhaseEmpty).chips.items, hasLength(1));
+        expect(phase.chips.items.single.axis, 'dosageForm');
+        expect(phase.chips.items.single.label, 'tablet');
+      },
+    );
   });
 }
 
@@ -517,6 +565,23 @@ void _stubDrugSearch(_MockDrugApiClient drugApiClient) {
       precautionCategory: any(named: 'precautionCategory'),
     ),
   ).thenAnswer((_) async => _drugListFixture());
+}
+
+void _stubEmptyDrugSearch(_MockDrugApiClient drugApiClient) {
+  when(
+    () => drugApiClient.getDrugs(
+      page: any(named: 'page'),
+      pageSize: any(named: 'pageSize'),
+      categoryAtc: any(named: 'categoryAtc'),
+      therapeuticCategory: any(named: 'therapeuticCategory'),
+      regulatoryClass: any(named: 'regulatoryClass'),
+      dosageForm: any(named: 'dosageForm'),
+      route: any(named: 'route'),
+      keyword: any(named: 'keyword'),
+      adverseReactionKeyword: any(named: 'adverseReactionKeyword'),
+      precautionCategory: any(named: 'precautionCategory'),
+    ),
+  ).thenAnswer((_) async => _emptyDrugListFixture());
 }
 
 void _stubDiseaseSearch(_MockDiseaseApiClient diseaseApiClient) {
@@ -546,6 +611,17 @@ DrugListResponseDto _drugListFixture() {
   ).readAsStringSync();
   final json = jsonDecode(fixture) as Map<String, dynamic>;
   return DrugListResponseDto.fromJson(json);
+}
+
+DrugListResponseDto _emptyDrugListFixture() {
+  return const DrugListResponseDto(
+    items: [],
+    page: 1,
+    pageSize: 20,
+    totalPages: 0,
+    totalCount: 0,
+    disclaimer: 'fictional test data',
+  );
 }
 
 DiseaseListResponseDto _diseaseListFixture() {
