@@ -70,6 +70,35 @@ void main() {
       expect(entries.single.searchedAt, DateTime.utc(2026, 5, 5, 12));
       expect(entries.single.queryJson, contains('"keyword":"アムロ"'));
     });
+
+    test(
+      'execute allows blank keyword search without recording history',
+      () async {
+        final dto = _drugListFixture();
+        when(
+          () => apiClient.getDrugs(
+            page: any(named: 'page'),
+            pageSize: any(named: 'pageSize'),
+            keyword: any(named: 'keyword'),
+            regulatoryClass: any(named: 'regulatoryClass'),
+          ),
+        ).thenAnswer((_) async => dto);
+
+        final result = await usecase.execute(
+          const DrugSearchParams(
+            page: 1,
+            pageSize: 20,
+            keyword: '   ',
+            regulatoryClass: ['poison'],
+          ),
+        );
+
+        expect(result, isA<Ok<DrugListPage>>());
+        final histories = await historyRepository.findByTarget('drug');
+        final entries = (histories as Ok<List<SearchHistoryEntry>>).value;
+        expect(entries, isEmpty);
+      },
+    );
   });
 }
 

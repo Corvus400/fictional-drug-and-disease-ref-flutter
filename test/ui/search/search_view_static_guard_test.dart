@@ -15,9 +15,16 @@ void main() {
         '2025/03/14',
         "regulatoryClass: ['",
         "dosageForm: ['",
+        "'毒薬'",
         "'劇薬'",
         "'処方箋医薬品'",
         "'錠剤'",
+        "'ATC: ",
+        "'改訂 ",
+        "'Rx'",
+        "'Dx'",
+        "'絞り込み +",
+        "'size': 'S'",
       ];
 
       for (final fragment in forbiddenFragments) {

@@ -2,6 +2,7 @@ import 'package:fictional_drug_and_disease_ref/application/search/search_query_c
 import 'package:fictional_drug_and_disease_ref/application/usecases/clear_search_history_usecase.dart';
 import 'package:fictional_drug_and_disease_ref/application/usecases/delete_search_history_usecase.dart';
 import 'package:fictional_drug_and_disease_ref/application/usecases/list_search_history_usecase.dart';
+import 'package:fictional_drug_and_disease_ref/application/usecases/load_categories_usecase.dart';
 import 'package:fictional_drug_and_disease_ref/application/usecases/observe_bookmark_state_usecase.dart';
 import 'package:fictional_drug_and_disease_ref/application/usecases/search_diseases_usecase.dart';
 import 'package:fictional_drug_and_disease_ref/application/usecases/search_drugs_usecase.dart';
@@ -40,6 +41,11 @@ final observeBookmarkStateUsecaseProvider =
 /// Search query codec provider.
 final searchQueryCodecProvider = Provider<SearchQueryCodec>(
   (ref) => const SearchQueryCodec(),
+);
+
+/// Load-categories use case provider.
+final loadCategoriesUsecaseProvider = Provider<LoadCategoriesUsecase>(
+  (ref) => LoadCategoriesUsecase(ref.watch(categoriesRepositoryProvider)),
 );
 
 /// Search-drugs use case provider.

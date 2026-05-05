@@ -48,7 +48,18 @@
   "searchActionSearch": "検索",
   "searchActionCancel": "キャンセル",
   "searchHistoryTitle": "検索履歴",
-  "searchHistoryClear": "すべて削除",
+  "searchHistoryEmptyTitle": "検索履歴はまだありません",
+  "searchHistoryEmptyDescription": "検索すると履歴が最大 5 件まで残ります。\n履歴は端末内にのみ保存されます。",
+  "searchHistoryClear": "すべて消す",
+  "searchHistoryPrivacyNote": "最新 5 件まで表示。履歴は端末内にのみ保存されます",
+  "searchHistoryFilterCount": "絞り込み +{count}",
+  "@searchHistoryFilterCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "searchHistoryClearConfirmTitle": "検索履歴を削除しますか？",
   "searchHistoryClearConfirmDelete": "削除",
   "searchToolbarTotal": "合計 {count} 件",
@@ -59,6 +70,7 @@
       }
     }
   },
+  "searchToolbarApplied": "適用中",
   "searchToolbarLoadMore": "さらに読み込む",
   "searchEmptyResultTitle": "該当する結果がありません",
   "searchEmptyResetFilter": "条件をリセット",
@@ -67,12 +79,214 @@
   "searchErrorTitle": "通信エラー — もう一度",
   "searchErrorRetry": "再試行",
   "searchFilterTitle": "絞り込み",
+  "searchFilterTitleForTarget": "絞り込み（{target}）",
+  "@searchFilterTitleForTarget": {
+    "placeholders": {
+      "target": {
+        "type": "String"
+      }
+    }
+  },
   "searchFilterApply": "結果を見る",
+  "searchFilterApplyWithCount": "結果を見る ({count} 件)",
+  "@searchFilterApplyWithCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "searchFilterReset": "リセット",
+  "searchFilterAxisPolicy": "{count} 軸 · 軸内 OR / 軸間 AND",
+  "@searchFilterAxisPolicy": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "searchFilterSummaryAll": "すべて",
+  "searchFilterSummaryUnspecified": "未指定",
+  "searchFilterHintMultiValue": "{count} 値・複数選択 OR",
+  "@searchFilterHintMultiValue": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "searchFilterHintSingleValue": "{count} 値・単一選択",
+  "@searchFilterHintSingleValue": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "searchFilterHintBool": "bool",
+  "searchFilterHintPartialMatch": "部分一致",
+  "searchFilterHintHierarchy": "階層選択",
+  "searchFilterHintDrillIn": "{count} 章・ドリルイン",
+  "@searchFilterHintDrillIn": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "searchFilterDrugRegulatoryClass": "薬事分類",
+  "searchFilterDrugDosageForm": "剤形",
+  "searchFilterDrugRoute": "投与経路",
+  "searchFilterDrugAtc": "ATC 第 1 階層",
+  "searchFilterDrugTherapeuticCategory": "薬効分類",
+  "searchFilterDrugAdverseReactionKeyword": "副作用キーワード",
+  "searchFilterDrugPrecautionCategory": "患者背景",
+  "searchFilterDiseaseIcd10Chapter": "ICD-10 章",
+  "searchFilterDiseaseDepartment": "診療科",
+  "searchFilterDiseaseChronicity": "慢性度",
+  "searchFilterDiseaseInfectious": "感染性",
+  "searchFilterDiseaseSymptomKeyword": "症状キーワード",
+  "searchFilterDiseaseOnsetPattern": "発症パターン",
+  "searchFilterDiseaseExamCategory": "検査区分",
+  "searchFilterDiseaseHasPharmacologicalTreatment": "薬物治療あり",
+  "searchFilterDiseaseHasSeverityGrading": "重症度評価あり",
+  "searchDiseasePharmacologicalTreatmentTrue": "薬物治療あり",
+  "searchDiseasePharmacologicalTreatmentFalse": "薬物治療なし",
+  "searchDiseaseSeverityGradingTrue": "重症度評価あり",
+  "searchDiseaseSeverityGradingFalse": "重症度評価なし",
   "searchSortTitle": "並び替え",
   "searchSortByRevised": "更新日 (新しい順)",
   "searchSortByBrandKana": "ブランド名カナ",
   "searchSortByAtcCode": "ATC コード",
   "searchSortByTherapeuticCategory": "薬効分類名",
+  "searchDrugRegulatoryPoison": "毒薬",
+  "searchDrugRegulatoryPotent": "劇薬",
+  "searchDrugRegulatoryPrescriptionRequired": "処方箋医薬品",
+  "searchDrugRegulatoryOrdinary": "普通薬",
+  "searchDrugRegulatoryPsychotropic1": "向精神薬第1種",
+  "searchDrugRegulatoryPsychotropic2": "向精神薬第2種",
+  "searchDrugRegulatoryPsychotropic3": "向精神薬第3種",
+  "searchDrugRegulatoryNarcotic": "麻薬",
+  "searchDrugRegulatoryStimulantPrecursor": "覚醒剤原料",
+  "searchDrugRegulatoryBiological": "生物由来製品",
+  "searchDrugRegulatorySpecifiedBiological": "特定生物由来製品",
+  "searchDrugDosageFormTablet": "錠剤",
+  "searchDrugDosageFormCapsule": "カプセル",
+  "searchDrugDosageFormPowder": "散剤",
+  "searchDrugDosageFormGranule": "顆粒剤",
+  "searchDrugDosageFormLiquid": "液剤",
+  "searchDrugDosageFormInjection": "注射剤",
+  "searchDrugDosageFormOintment": "軟膏",
+  "searchDrugDosageFormCream": "クリーム",
+  "searchDrugDosageFormPatch": "貼付剤",
+  "searchDrugDosageFormEyeDrops": "点眼剤",
+  "searchDrugDosageFormSuppository": "坐剤",
+  "searchDrugDosageFormInhaler": "吸入剤",
+  "searchDrugDosageFormNasalSpray": "点鼻剤",
+  "searchDrugRouteOral": "経口",
+  "searchDrugRouteTopical": "外用",
+  "searchDrugRouteInjection": "注射",
+  "searchDrugRouteInhalation": "吸入",
+  "searchDrugRouteRectal": "直腸",
+  "searchDrugRouteOphthalmic": "眼科",
+  "searchDrugRouteNasal": "鼻腔",
+  "searchDrugRouteTransdermal": "経皮",
+  "searchDrugPrecautionComorbidity": "合併症",
+  "searchDrugPrecautionRenalImpairment": "腎機能障害",
+  "searchDrugPrecautionHepaticImpairment": "肝機能障害",
+  "searchDrugPrecautionReproductivePotential": "生殖能を有する患者",
+  "searchDrugPrecautionPregnant": "妊婦",
+  "searchDrugPrecautionLactating": "授乳婦",
+  "searchDrugPrecautionPediatric": "小児等",
+  "searchDrugPrecautionGeriatric": "高齢者",
+  "searchDiseaseDepartmentInternalMedicine": "内科",
+  "searchDiseaseDepartmentCardiology": "循環器内科",
+  "searchDiseaseDepartmentGastroenterology": "消化器内科",
+  "searchDiseaseDepartmentEndocrinology": "内分泌内科",
+  "searchDiseaseDepartmentNeurology": "神経内科",
+  "searchDiseaseDepartmentPsychiatry": "精神科",
+  "searchDiseaseDepartmentSurgery": "外科",
+  "searchDiseaseDepartmentOrthopedics": "整形外科",
+  "searchDiseaseDepartmentDermatology": "皮膚科",
+  "searchDiseaseDepartmentOphthalmology": "眼科",
+  "searchDiseaseDepartmentOtolaryngology": "耳鼻咽喉科",
+  "searchDiseaseDepartmentUrology": "泌尿器科",
+  "searchDiseaseDepartmentGynecology": "婦人科",
+  "searchDiseaseDepartmentPediatrics": "小児科",
+  "searchDiseaseDepartmentEmergency": "救急科",
+  "searchDiseaseDepartmentInfectiousDisease": "感染症内科",
+  "searchDiseaseChronicityAcute": "急性",
+  "searchDiseaseChronicitySubacute": "亜急性",
+  "searchDiseaseChronicityChronic": "慢性",
+  "searchDiseaseChronicityRecurrent": "再発性",
+  "searchDiseaseInfectiousTrue": "感染性",
+  "searchDiseaseInfectiousFalse": "非感染性",
+  "searchDiseaseOnsetPatternSudden": "突然発症",
+  "searchDiseaseOnsetPatternGradual": "緩徐発症",
+  "searchDiseaseOnsetPatternEpisodic": "発作性",
+  "searchDiseaseOnsetPatternProgressive": "進行性",
+  "searchDiseaseOnsetPatternCongenital": "先天性",
+  "searchDiseaseExamCategoryBlood": "血液検査",
+  "searchDiseaseExamCategoryImaging": "画像検査",
+  "searchDiseaseExamCategoryPhysiological": "生理検査",
+  "searchDiseaseExamCategoryPathological": "病理検査",
+  "searchDiseaseExamCategoryGenetic": "遺伝子検査",
+  "searchDiseaseBoolTrue": "あり",
+  "searchDiseaseBoolFalse": "なし",
+  "searchDiseaseIcd10ChapterI": "I 感染症および寄生虫症",
+  "searchDiseaseIcd10ChapterII": "II 新生物",
+  "searchDiseaseIcd10ChapterIII": "III 血液および造血器の疾患ならびに免疫機構の障害",
+  "searchDiseaseIcd10ChapterIV": "IV 内分泌、栄養および代謝疾患",
+  "searchDiseaseIcd10ChapterV": "V 精神および行動の障害",
+  "searchDiseaseIcd10ChapterVI": "VI 神経系の疾患",
+  "searchDiseaseIcd10ChapterVII": "VII 眼および付属器の疾患",
+  "searchDiseaseIcd10ChapterVIII": "VIII 耳および乳様突起の疾患",
+  "searchDiseaseIcd10ChapterIX": "IX 循環器系の疾患",
+  "searchDiseaseIcd10ChapterX": "X 呼吸器系の疾患",
+  "searchDiseaseIcd10ChapterXI": "XI 消化器系の疾患",
+  "searchDiseaseIcd10ChapterXII": "XII 皮膚および皮下組織の疾患",
+  "searchDiseaseIcd10ChapterXIII": "XIII 筋骨格系および結合組織の疾患",
+  "searchDiseaseIcd10ChapterXIV": "XIV 腎尿路生殖器系の疾患",
+  "searchDiseaseIcd10ChapterXV": "XV 妊娠、分娩および産褥",
+  "searchDiseaseIcd10ChapterXVI": "XVI 周産期に発生した病態",
+  "searchDiseaseIcd10ChapterXVII": "XVII 先天奇形、変形および染色体異常",
+  "searchDiseaseIcd10ChapterXVIII": "XVIII 症状、徴候および異常臨床所見・異常検査所見で他に分類されないもの",
+  "searchDiseaseIcd10ChapterXIX": "XIX 損傷、中毒およびその他の外因の影響",
+  "searchDiseaseIcd10ChapterXX": "XX 傷病および死亡の外因",
+  "searchDiseaseIcd10ChapterXXI": "XXI 健康状態に影響を及ぼす要因および保健サービスの利用",
+  "searchDiseaseIcd10ChapterXXII": "XXII 特殊目的用コード",
+  "searchDiseaseMetaIcd10": "ICD-10: {chapter}",
+  "@searchDiseaseMetaIcd10": {
+    "placeholders": {
+      "chapter": {
+        "type": "String"
+      }
+    }
+  },
+  "searchDiseaseMetaRevised": "改訂 {date}",
+  "@searchDiseaseMetaRevised": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "searchDrugMetaAtc": "ATC: {code}",
+  "@searchDrugMetaAtc": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      }
+    }
+  },
+  "searchDrugMetaRevised": "改訂 {date}",
+  "@searchDrugMetaRevised": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
   "errorNetwork": "ネットワークエラーが発生しました",
   "errorUnknown": "不明なエラーが発生しました",
   "errNetwork": "ネットワークに接続できません",

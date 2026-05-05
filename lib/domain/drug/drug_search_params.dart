@@ -31,6 +31,39 @@ enum DrugKeywordTarget {
   final String serialName;
 }
 
+/// Specific-population precaution category values for drug search.
+enum DrugPrecautionCategory {
+  /// Comorbidity.
+  comorbidity('COMORBIDITY'),
+
+  /// Renal impairment.
+  renalImpairment('RENAL_IMPAIRMENT'),
+
+  /// Hepatic impairment.
+  hepaticImpairment('HEPATIC_IMPAIRMENT'),
+
+  /// Reproductive potential.
+  reproductivePotential('REPRODUCTIVE_POTENTIAL'),
+
+  /// Pregnant.
+  pregnant('PREGNANT'),
+
+  /// Lactating.
+  lactating('LACTATING'),
+
+  /// Pediatric.
+  pediatric('PEDIATRIC'),
+
+  /// Geriatric.
+  geriatric('GERIATRIC')
+  ;
+
+  const DrugPrecautionCategory(this.wireValue);
+
+  /// Query value.
+  final String wireValue;
+}
+
 /// Drug sort key.
 enum DrugSort {
   /// Revised date descending.

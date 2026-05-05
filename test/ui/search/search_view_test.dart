@@ -5,10 +5,16 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:drift/native.dart';
 import 'package:fictional_drug_and_disease_ref/application/providers/usecase_providers.dart';
+import 'package:fictional_drug_and_disease_ref/config/api_config.dart';
+import 'package:fictional_drug_and_disease_ref/config/flavor.dart';
+import 'package:fictional_drug_and_disease_ref/data/dto/categories/categories_response_dto.dart';
+import 'package:fictional_drug_and_disease_ref/data/dto/disease/disease_list_response_dto.dart';
 import 'package:fictional_drug_and_disease_ref/data/dto/drug/drug_list_response_dto.dart';
 import 'package:fictional_drug_and_disease_ref/data/local/app_database.dart';
 import 'package:fictional_drug_and_disease_ref/data/providers/api_providers.dart';
 import 'package:fictional_drug_and_disease_ref/data/providers/local_providers.dart';
+import 'package:fictional_drug_and_disease_ref/data/services/api/category_api_client.dart';
+import 'package:fictional_drug_and_disease_ref/data/services/api/disease_api_client.dart';
 import 'package:fictional_drug_and_disease_ref/data/services/api/drug_api_client.dart';
 import 'package:fictional_drug_and_disease_ref/domain/drug/drug_search_params.dart';
 import 'package:fictional_drug_and_disease_ref/l10n/app_localizations.dart';
@@ -23,6 +29,13 @@ import 'package:mocktail/mocktail.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 void main() {
+  ApiConfig.initialize(
+    const FlavorConfig(
+      flavor: Flavor.dev,
+      apiBaseUrl: 'https://api.example.test',
+    ),
+  );
+
   testWidgets('SearchView renders Round6 search chrome without placeholder', (
     tester,
   ) async {
@@ -42,6 +55,138 @@ void main() {
     expect(find.text('医薬品名・YJ・ATC コード'), findsOneWidget);
     expect(find.text('検索画面（プレースホルダー）'), findsNothing);
     expect(find.textContaining('Health:'), findsNothing);
+  });
+
+  testWidgets('SearchView renders Round6 no-history empty state on idle', (
+    tester,
+  ) async {
+    final db = AppDatabase(NativeDatabase.memory());
+    addTearDown(db.close);
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [appDatabaseProvider.overrideWithValue(db)],
+        child: const MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: SearchView(),
+        ),
+      ),
+    );
+    await tester.pump();
+
+    expect(find.text('検索履歴はまだありません'), findsOneWidget);
+    expect(
+      find.text('検索すると履歴が最大 5 件まで残ります。\n履歴は端末内にのみ保存されます。'),
+      findsOneWidget,
+    );
+  });
+
+  testWidgets(
+    'SearchView renders no-history empty state after disease tab switch',
+    (
+      tester,
+    ) async {
+      final db = AppDatabase(NativeDatabase.memory());
+      addTearDown(db.close);
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [appDatabaseProvider.overrideWithValue(db)],
+          child: const MaterialApp(
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: SearchView(),
+          ),
+        ),
+      );
+      await tester.pump();
+
+      await tester.tap(find.text('疾患'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('検索履歴はまだありません'), findsOneWidget);
+      expect(
+        find.text('検索すると履歴が最大 5 件まで残ります。\n履歴は端末内にのみ保存されます。'),
+        findsOneWidget,
+      );
+    },
+  );
+
+  testWidgets('SearchView clear button clears the visible search text', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      const ProviderScope(
+        child: MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: SearchView(),
+        ),
+      ),
+    );
+
+    await tester.enterText(find.byKey(const ValueKey('search-field')), 'アムロ');
+    await tester.pump();
+    expect(find.text('アムロ'), findsOneWidget);
+
+    await tester.tap(find.byKey(const ValueKey('search-query-clear-button')));
+    await tester.pump();
+
+    expect(find.text('アムロ'), findsNothing);
+    expect(find.text('医薬品名・YJ・ATC コード'), findsOneWidget);
+  });
+
+  testWidgets('SearchView returns cancel action to search on outside tap', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      const ProviderScope(
+        child: MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: SearchView(),
+        ),
+      ),
+    );
+
+    await tester.tap(find.byKey(const ValueKey('search-field')));
+    await tester.pump();
+    expect(find.text('キャンセル'), findsOneWidget);
+
+    await tester.tapAt(const Offset(20, 500));
+    await tester.pump();
+
+    expect(find.text('キャンセル'), findsNothing);
+    expect(find.text('検索'), findsWidgets);
+  });
+
+  testWidgets('SearchView uses Round6 custom top chrome instead of AppBar', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      const ProviderScope(
+        child: MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: SearchView(),
+        ),
+      ),
+    );
+
+    expect(find.byType(AppBar), findsNothing);
+    expect(
+      find.byKey(const ValueKey('search-round6-top-chrome')),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const ValueKey('search-round6-segmented')),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const ValueKey('search-round6-input-row')),
+      findsOneWidget,
+    );
   });
 
   testWidgets('SearchView uses SearchPalette from theme', (tester) async {
@@ -100,6 +245,77 @@ void main() {
     expect(find.text('検索履歴'), findsOneWidget);
     expect(find.text('履歴由来キーワード'), findsOneWidget);
     expect(find.text('合計 7 件'), findsOneWidget);
+  });
+
+  testWidgets('SearchView hides idle no-history panel while focused', (
+    tester,
+  ) async {
+    final db = AppDatabase(NativeDatabase.memory());
+    addTearDown(db.close);
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [appDatabaseProvider.overrideWithValue(db)],
+        child: const MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: SearchView(),
+        ),
+      ),
+    );
+    await tester.pump();
+    expect(find.text('検索履歴はまだありません'), findsOneWidget);
+
+    await tester.tap(find.byKey(const ValueKey('search-field')));
+    await tester.pump();
+
+    expect(find.text('検索履歴'), findsOneWidget);
+    expect(find.text('検索履歴はまだありません'), findsNothing);
+  });
+
+  testWidgets('SearchView renders Round6 history row metadata and note', (
+    tester,
+  ) async {
+    final db = AppDatabase(NativeDatabase.memory());
+    addTearDown(db.close);
+    final container = ProviderContainer(
+      overrides: [appDatabaseProvider.overrideWithValue(db)],
+    );
+    addTearDown(container.dispose);
+    await container
+        .read(searchHistoryRepositoryProvider)
+        .insertWithDedup(
+          id: 'search_round6_history',
+          target: 'drug',
+          queryJson: container
+              .read(searchQueryCodecProvider)
+              .encode(const DrugSearchParams(keyword: '履歴メタデータ')),
+          searchedAt: DateTime.utc(2026, 5, 5),
+          totalCount: 5,
+        );
+
+    await tester.pumpWidget(
+      UncontrolledProviderScope(
+        container: container,
+        child: const MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: SearchView(),
+        ),
+      ),
+    );
+    await tester.pump();
+    await tester.tap(find.byKey(const ValueKey('search-field')));
+    await tester.pump();
+
+    expect(find.text('Rx'), findsNothing);
+    expect(find.text('Dx'), findsNothing);
+    expect(find.text('履歴メタデータ'), findsOneWidget);
+    expect(find.text('すべて消す'), findsOneWidget);
+    expect(
+      find.text('最新 5 件まで表示。履歴は端末内にのみ保存されます'),
+      findsOneWidget,
+    );
   });
 
   testWidgets('SearchView deletes a persisted history row from dropdown', (
@@ -201,7 +417,11 @@ void main() {
   ) async {
     final db = AppDatabase(NativeDatabase.memory());
     final drugApiClient = _MockDrugApiClient();
+    final categoryApiClient = _MockCategoryApiClient();
     addTearDown(db.close);
+    when(
+      categoryApiClient.getCategories,
+    ).thenAnswer((_) async => _categoriesFixture());
     when(
       () => drugApiClient.getDrugs(
         page: any(named: 'page'),
@@ -215,6 +435,7 @@ void main() {
         overrides: [
           appDatabaseProvider.overrideWithValue(db),
           drugApiClientProvider.overrideWithValue(drugApiClient),
+          categoryApiClientProvider.overrideWithValue(categoryApiClient),
         ],
         child: const MaterialApp(
           localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -237,6 +458,109 @@ void main() {
     expect(find.text(item.brandName), findsOneWidget);
     expect(find.text(item.genericName), findsOneWidget);
     expect(find.text('合計 ${_drugListFixture().totalCount} 件'), findsOneWidget);
+  });
+
+  testWidgets(
+    'SearchView renders drug card image from imageUrl normalized to size S',
+    (tester) async {
+      ApiConfig.initialize(
+        const FlavorConfig(
+          flavor: Flavor.dev,
+          apiBaseUrl: 'https://api.example.test',
+        ),
+      );
+      final db = AppDatabase(NativeDatabase.memory());
+      final drugApiClient = _MockDrugApiClient();
+      final fixture = _drugListFixture();
+      addTearDown(db.close);
+      when(
+        () => drugApiClient.getDrugs(
+          page: any(named: 'page'),
+          pageSize: any(named: 'pageSize'),
+          keyword: any(named: 'keyword'),
+        ),
+      ).thenAnswer((_) async => fixture);
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            appDatabaseProvider.overrideWithValue(db),
+            drugApiClientProvider.overrideWithValue(drugApiClient),
+          ],
+          child: const MaterialApp(
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: SearchView(),
+          ),
+        ),
+      );
+
+      await tester.enterText(
+        find.byKey(const ValueKey('search-field')),
+        'image keyword',
+      );
+      await tester.tap(find.byType(FilledButton).first);
+      await tester.pumpAndSettle();
+
+      final item = fixture.items.first;
+      final image = tester.widget<Image>(
+        find.byKey(ValueKey('drug-image-${item.id}')),
+      );
+      final provider = image.image as NetworkImage;
+
+      expect(
+        provider.url,
+        'https://api.example.test/v1/images/drugs/${item.id}?size=S',
+      );
+    },
+  );
+
+  testWidgets('SearchView renders Round6 drug card badges and metadata', (
+    tester,
+  ) async {
+    ApiConfig.initialize(
+      const FlavorConfig(
+        flavor: Flavor.dev,
+        apiBaseUrl: 'https://api.example.test',
+      ),
+    );
+    final db = AppDatabase(NativeDatabase.memory());
+    final drugApiClient = _MockDrugApiClient();
+    final fixture = _drugListFixture();
+    addTearDown(db.close);
+    when(
+      () => drugApiClient.getDrugs(
+        page: any(named: 'page'),
+        pageSize: any(named: 'pageSize'),
+        keyword: any(named: 'keyword'),
+      ),
+    ).thenAnswer((_) async => fixture);
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          appDatabaseProvider.overrideWithValue(db),
+          drugApiClientProvider.overrideWithValue(drugApiClient),
+        ],
+        child: const MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: SearchView(),
+        ),
+      ),
+    );
+    await tester.enterText(
+      find.byKey(const ValueKey('search-field')),
+      'card metadata keyword',
+    );
+    await tester.tap(find.byType(FilledButton).first);
+    await tester.pumpAndSettle();
+
+    final item = fixture.items.first;
+    expect(find.text('毒薬'), findsAtLeastNWidgets(1));
+    expect(find.text('処方箋医薬品'), findsAtLeastNWidgets(1));
+    expect(find.text('ATC: ${item.atcCode}'), findsOneWidget);
+    expect(find.text('改訂 2026/05/01'), findsOneWidget);
   });
 
   testWidgets('SearchView loads next page near list end', (tester) async {
@@ -295,7 +619,11 @@ void main() {
   ) async {
     final db = AppDatabase(NativeDatabase.memory());
     final drugApiClient = _MockDrugApiClient();
+    final categoryApiClient = _MockCategoryApiClient();
     addTearDown(db.close);
+    when(
+      categoryApiClient.getCategories,
+    ).thenAnswer((_) async => _categoriesFixture());
     when(
       () => drugApiClient.getDrugs(
         page: any(named: 'page'),
@@ -311,6 +639,7 @@ void main() {
         overrides: [
           appDatabaseProvider.overrideWithValue(db),
           drugApiClientProvider.overrideWithValue(drugApiClient),
+          categoryApiClientProvider.overrideWithValue(categoryApiClient),
         ],
         child: const MaterialApp(
           localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -370,6 +699,74 @@ void main() {
     expect(find.text('条件をリセット'), findsOneWidget);
     expect(find.text('条件を1つ外す'), findsOneWidget);
     expect(find.text('部分一致に変更'), findsOneWidget);
+  });
+
+  testWidgets('SearchView empty results keep history out of result space', (
+    tester,
+  ) async {
+    final db = AppDatabase(NativeDatabase.memory());
+    final drugApiClient = _MockDrugApiClient();
+    final categoryApiClient = _MockCategoryApiClient();
+    addTearDown(db.close);
+    when(
+      categoryApiClient.getCategories,
+    ).thenAnswer((_) async => _categoriesFixture());
+    when(
+      () => drugApiClient.getDrugs(
+        page: any(named: 'page'),
+        pageSize: any(named: 'pageSize'),
+        regulatoryClass: any(named: 'regulatoryClass'),
+        dosageForm: any(named: 'dosageForm'),
+        keyword: any(named: 'keyword'),
+      ),
+    ).thenAnswer(
+      (_) async => _drugListFixture().copyWith(items: [], totalCount: 0),
+    );
+    final container = ProviderContainer(
+      overrides: [
+        appDatabaseProvider.overrideWithValue(db),
+        drugApiClientProvider.overrideWithValue(drugApiClient),
+        categoryApiClientProvider.overrideWithValue(categoryApiClient),
+      ],
+    );
+    addTearDown(container.dispose);
+    await container
+        .read(searchHistoryRepositoryProvider)
+        .insertWithDedup(
+          id: 'overflow_history',
+          target: 'drug',
+          queryJson: container
+              .read(searchQueryCodecProvider)
+              .encode(const DrugSearchParams(keyword: '履歴')),
+          searchedAt: DateTime.utc(2026, 5, 5),
+          totalCount: 1,
+        );
+
+    await tester.pumpWidget(
+      UncontrolledProviderScope(
+        container: container,
+        child: const MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: SearchView(),
+        ),
+      ),
+    );
+
+    final context = tester.element(find.byType(SearchView));
+    await ProviderScope.containerOf(context)
+        .read(searchScreenProvider.notifier)
+        .applyDrugFilter(regulatoryClass: ['poison'], dosageForm: ['tablet']);
+    await tester.pumpAndSettle();
+
+    expect(find.text('検索履歴'), findsNothing);
+    expect(
+      find.byKey(const ValueKey('search-applied-filter-bar')),
+      findsOneWidget,
+    );
+    expect(find.text('合計 0 件'), findsOneWidget);
+    expect(find.text('該当する結果がありません'), findsOneWidget);
+    expect(tester.takeException(), isNull);
   });
 
   testWidgets('SearchView renders error state for search failure', (
@@ -476,7 +873,11 @@ void main() {
   ) async {
     final db = AppDatabase(NativeDatabase.memory());
     final drugApiClient = _MockDrugApiClient();
+    final categoryApiClient = _MockCategoryApiClient();
     addTearDown(db.close);
+    when(
+      categoryApiClient.getCategories,
+    ).thenAnswer((_) async => _categoriesFixture());
     when(
       () => drugApiClient.getDrugs(
         page: any(named: 'page'),
@@ -489,6 +890,7 @@ void main() {
         overrides: [
           appDatabaseProvider.overrideWithValue(db),
           drugApiClientProvider.overrideWithValue(drugApiClient),
+          categoryApiClientProvider.overrideWithValue(categoryApiClient),
         ],
         child: const MaterialApp(
           localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -510,10 +912,428 @@ void main() {
     expect(find.text('+2'), findsOneWidget);
 
     await tester.tap(find.byType(FloatingActionButton));
-    await tester.pump();
+    await tester.pumpAndSettle();
 
-    expect(find.text('絞り込み'), findsOneWidget);
-    expect(find.text('結果を見る'), findsOneWidget);
+    expect(find.text('絞り込み（医薬品）'), findsOneWidget);
+    expect(find.textContaining('結果を見る'), findsOneWidget);
+  });
+
+  testWidgets('SearchView applies drug filters from category master sheet', (
+    tester,
+  ) async {
+    final db = AppDatabase(NativeDatabase.memory());
+    final drugApiClient = _MockDrugApiClient();
+    final categoryApiClient = _MockCategoryApiClient();
+    addTearDown(db.close);
+    when(
+      categoryApiClient.getCategories,
+    ).thenAnswer((_) async => _categoriesFixture());
+    when(
+      () => drugApiClient.getDrugs(
+        page: any(named: 'page'),
+        pageSize: any(named: 'pageSize'),
+        categoryAtc: any(named: 'categoryAtc'),
+        therapeuticCategory: any(named: 'therapeuticCategory'),
+        regulatoryClass: any(named: 'regulatoryClass'),
+        dosageForm: any(named: 'dosageForm'),
+        route: any(named: 'route'),
+        keyword: any(named: 'keyword'),
+        keywordMatch: any(named: 'keywordMatch'),
+        keywordTarget: any(named: 'keywordTarget'),
+        adverseReactionKeyword: any(named: 'adverseReactionKeyword'),
+        precautionCategory: any(named: 'precautionCategory'),
+        sort: any(named: 'sort'),
+      ),
+    ).thenAnswer((_) async => _drugListFixture());
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          appDatabaseProvider.overrideWithValue(db),
+          drugApiClientProvider.overrideWithValue(drugApiClient),
+          categoryApiClientProvider.overrideWithValue(categoryApiClient),
+        ],
+        child: const MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: SearchView(),
+        ),
+      ),
+    );
+
+    await tester.tap(find.byType(FloatingActionButton));
+    await tester.pumpAndSettle();
+
+    expect(find.text('薬事分類'), findsOneWidget);
+    expect(find.text('剤形'), findsOneWidget);
+    expect(find.text('投与経路'), findsOneWidget);
+    expect(find.text('ATC 第 1 階層'), findsOneWidget);
+    expect(find.text('薬効分類'), findsOneWidget);
+    expect(find.text('副作用キーワード'), findsOneWidget);
+    expect(find.text('患者背景'), findsOneWidget);
+    expect(find.text('毒薬'), findsOneWidget);
+
+    await _tapVisible(tester, find.text('毒薬'));
+    await _tapVisible(tester, find.text('剤形'));
+    await tester.pumpAndSettle();
+    expect(find.text('錠剤'), findsOneWidget);
+    await _tapVisible(tester, find.text('錠剤'));
+    await _tapVisible(tester, find.text('投与経路'));
+    await tester.pumpAndSettle();
+    expect(find.text('経口'), findsOneWidget);
+    await _tapVisible(tester, find.text('経口'));
+    await _tapVisible(tester, find.text('ATC 第 1 階層'));
+    await tester.pumpAndSettle();
+    expect(find.text('C 循環器系'), findsOneWidget);
+    await _tapVisible(tester, find.text('C 循環器系'));
+    await _tapVisible(tester, find.text('薬効分類'));
+    await tester.pumpAndSettle();
+    expect(find.text('循環器系'), findsOneWidget);
+    await _tapVisible(tester, find.text('循環器系'));
+    await _tapVisible(tester, find.text('副作用キーワード'));
+    await tester.pumpAndSettle();
+    await tester.enterText(
+      find.byKey(const ValueKey('drug-filter-adverse-reaction')),
+      '浮腫',
+    );
+    await _tapVisible(tester, find.text('患者背景'));
+    await tester.pumpAndSettle();
+    expect(find.text('高齢者'), findsOneWidget);
+    await _tapVisible(tester, find.text('高齢者'));
+    await _tapVisible(tester, find.textContaining('結果を見る'));
+    await tester.pumpAndSettle();
+
+    verify(
+      () => drugApiClient.getDrugs(
+        page: 1,
+        pageSize: any(named: 'pageSize'),
+        regulatoryClass: ['poison'],
+        dosageForm: ['tablet'],
+        route: ['oral'],
+        categoryAtc: 'C',
+        therapeuticCategory: 'cardiovascular',
+        adverseReactionKeyword: '浮腫',
+        precautionCategory: ['GERIATRIC'],
+        keyword: any(named: 'keyword'),
+      ),
+    ).called(1);
+  });
+
+  testWidgets('SearchView shows applied filters and hides history on results', (
+    tester,
+  ) async {
+    final db = AppDatabase(NativeDatabase.memory());
+    final drugApiClient = _MockDrugApiClient();
+    final categoryApiClient = _MockCategoryApiClient();
+    addTearDown(db.close);
+    when(
+      categoryApiClient.getCategories,
+    ).thenAnswer((_) async => _categoriesFixture());
+    when(
+      () => drugApiClient.getDrugs(
+        page: any(named: 'page'),
+        pageSize: any(named: 'pageSize'),
+        regulatoryClass: any(named: 'regulatoryClass'),
+        dosageForm: any(named: 'dosageForm'),
+        keyword: any(named: 'keyword'),
+      ),
+    ).thenAnswer((_) async => _drugListFixture());
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          appDatabaseProvider.overrideWithValue(db),
+          drugApiClientProvider.overrideWithValue(drugApiClient),
+          categoryApiClientProvider.overrideWithValue(categoryApiClient),
+        ],
+        child: const MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: SearchView(),
+        ),
+      ),
+    );
+
+    final context = tester.element(find.byType(SearchView));
+    final container = ProviderScope.containerOf(context);
+    await container
+        .read(searchScreenProvider.notifier)
+        .applyDrugFilter(regulatoryClass: ['poison'], dosageForm: ['tablet']);
+    await tester.pumpAndSettle();
+
+    expect(
+      find.byKey(const ValueKey('search-applied-filter-bar')),
+      findsOneWidget,
+    );
+    expect(find.text('適用中'), findsOneWidget);
+    expect(find.text('毒薬'), findsWidgets);
+    expect(find.text('錠剤'), findsWidgets);
+    expect(find.text('検索履歴'), findsNothing);
+  });
+
+  testWidgets('SearchView applies disease filters from category master sheet', (
+    tester,
+  ) async {
+    final db = AppDatabase(NativeDatabase.memory());
+    final diseaseApiClient = _MockDiseaseApiClient();
+    final categoryApiClient = _MockCategoryApiClient();
+    addTearDown(db.close);
+    when(
+      categoryApiClient.getCategories,
+    ).thenAnswer((_) async => _categoriesFixture());
+    when(
+      () => diseaseApiClient.getDiseases(
+        page: any(named: 'page'),
+        pageSize: any(named: 'pageSize'),
+        icd10Chapter: any(named: 'icd10Chapter'),
+        department: any(named: 'department'),
+        chronicity: any(named: 'chronicity'),
+        infectious: any(named: 'infectious'),
+        keyword: any(named: 'keyword'),
+        keywordMatch: any(named: 'keywordMatch'),
+        keywordTarget: any(named: 'keywordTarget'),
+        symptomKeyword: any(named: 'symptomKeyword'),
+        onsetPattern: any(named: 'onsetPattern'),
+        examCategory: any(named: 'examCategory'),
+        hasPharmacologicalTreatment: any(
+          named: 'hasPharmacologicalTreatment',
+        ),
+        hasSeverityGrading: any(named: 'hasSeverityGrading'),
+        sort: any(named: 'sort'),
+      ),
+    ).thenAnswer((_) async => _diseaseListFixture());
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          appDatabaseProvider.overrideWithValue(db),
+          diseaseApiClientProvider.overrideWithValue(diseaseApiClient),
+          categoryApiClientProvider.overrideWithValue(categoryApiClient),
+        ],
+        child: const MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: SearchView(),
+        ),
+      ),
+    );
+
+    await tester.tap(find.text('疾患'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byType(FloatingActionButton));
+    await tester.pumpAndSettle();
+
+    expect(find.text('ICD-10 章'), findsOneWidget);
+    expect(find.text('診療科'), findsOneWidget);
+    expect(find.text('慢性度'), findsOneWidget);
+    expect(find.text('感染性'), findsOneWidget);
+    expect(find.text('症状キーワード'), findsOneWidget);
+    expect(find.text('発症パターン'), findsOneWidget);
+    expect(find.text('検査区分'), findsOneWidget);
+    expect(find.text('薬物治療あり'), findsOneWidget);
+    expect(find.text('重症度評価あり'), findsOneWidget);
+    expect(find.text('IX 循環器系の疾患'), findsOneWidget);
+    expect(find.text('薬事分類'), findsNothing);
+
+    await _tapVisible(tester, find.text('IX 循環器系の疾患'));
+    await _tapVisible(tester, find.text('診療科'));
+    await tester.pumpAndSettle();
+    expect(find.text('循環器内科'), findsOneWidget);
+    await _tapVisible(tester, find.text('循環器内科'));
+    await _tapVisible(tester, find.textContaining('結果を見る'));
+
+    verify(
+      () => diseaseApiClient.getDiseases(
+        page: 1,
+        pageSize: any(named: 'pageSize'),
+        icd10Chapter: ['chapter_ix'],
+        department: ['cardiology'],
+        chronicity: <String>[],
+        infectious: any(named: 'infectious'),
+        keyword: any(named: 'keyword'),
+        symptomKeyword: any(named: 'symptomKeyword'),
+        onsetPattern: <String>[],
+        examCategory: <String>[],
+        hasPharmacologicalTreatment: any(
+          named: 'hasPharmacologicalTreatment',
+        ),
+        hasSeverityGrading: any(named: 'hasSeverityGrading'),
+      ),
+    ).called(1);
+  });
+
+  testWidgets('SearchView renders disease summary fields in result cards', (
+    tester,
+  ) async {
+    final db = AppDatabase(NativeDatabase.memory());
+    final diseaseApiClient = _MockDiseaseApiClient();
+    addTearDown(db.close);
+    when(
+      () => diseaseApiClient.getDiseases(
+        page: any(named: 'page'),
+        pageSize: any(named: 'pageSize'),
+        keyword: any(named: 'keyword'),
+      ),
+    ).thenAnswer((_) async => _diseaseListFixture());
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          appDatabaseProvider.overrideWithValue(db),
+          diseaseApiClientProvider.overrideWithValue(diseaseApiClient),
+        ],
+        child: const MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: SearchView(),
+        ),
+      ),
+    );
+
+    await tester.tap(find.text('疾患'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byType(FilledButton).first);
+    await tester.pumpAndSettle();
+
+    expect(find.text('ICD-10: I 感染症および寄生虫症'), findsWidgets);
+    expect(find.text('感染症内科'), findsWidgets);
+    expect(find.text('救急科'), findsWidgets);
+    expect(find.text('急性'), findsWidgets);
+    expect(find.text('感染性'), findsWidgets);
+  });
+
+  testWidgets('SearchView labels all ICD-10 chapters in disease cards', (
+    tester,
+  ) async {
+    final db = AppDatabase(NativeDatabase.memory());
+    final diseaseApiClient = _MockDiseaseApiClient();
+    addTearDown(db.close);
+    when(
+      () => diseaseApiClient.getDiseases(
+        page: any(named: 'page'),
+        pageSize: any(named: 'pageSize'),
+        keyword: any(named: 'keyword'),
+      ),
+    ).thenAnswer((_) async => _diseaseListFixtureForChapter('chapter_ii'));
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          appDatabaseProvider.overrideWithValue(db),
+          diseaseApiClientProvider.overrideWithValue(diseaseApiClient),
+        ],
+        child: const MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: SearchView(),
+        ),
+      ),
+    );
+
+    await tester.tap(find.text('疾患'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byType(FilledButton).first);
+    await tester.pumpAndSettle();
+
+    expect(find.text('ICD-10: II 新生物'), findsOneWidget);
+    expect(find.textContaining('chapter_ii'), findsNothing);
+  });
+
+  testWidgets('SearchView stretches disease cards to the result width', (
+    tester,
+  ) async {
+    final db = AppDatabase(NativeDatabase.memory());
+    final diseaseApiClient = _MockDiseaseApiClient();
+    addTearDown(db.close);
+    when(
+      () => diseaseApiClient.getDiseases(
+        page: any(named: 'page'),
+        pageSize: any(named: 'pageSize'),
+        keyword: any(named: 'keyword'),
+      ),
+    ).thenAnswer((_) async => _diseaseListFixture());
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          appDatabaseProvider.overrideWithValue(db),
+          diseaseApiClientProvider.overrideWithValue(diseaseApiClient),
+        ],
+        child: const MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: SearchView(),
+        ),
+      ),
+    );
+
+    await tester.tap(find.text('疾患'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byType(FilledButton).first);
+    await tester.pumpAndSettle();
+
+    final listWidth = tester
+        .getSize(
+          find.byKey(const ValueKey('search-results-list')),
+        )
+        .width;
+    final cardWidth = tester
+        .getSize(
+          find.byKey(
+            ValueKey('disease-card-${_diseaseListFixture().items.first.id}'),
+          ),
+        )
+        .width;
+    expect(cardWidth, listWidth);
+  });
+
+  testWidgets('SearchView colors drug regulatory badges by classification', (
+    tester,
+  ) async {
+    final db = AppDatabase(NativeDatabase.memory());
+    final drugApiClient = _MockDrugApiClient();
+    addTearDown(db.close);
+    when(
+      () => drugApiClient.getDrugs(
+        page: any(named: 'page'),
+        pageSize: any(named: 'pageSize'),
+        keyword: any(named: 'keyword'),
+      ),
+    ).thenAnswer((_) async => _drugListFixture());
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          appDatabaseProvider.overrideWithValue(db),
+          drugApiClientProvider.overrideWithValue(drugApiClient),
+        ],
+        child: MaterialApp(
+          theme: AppTheme.light(),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: const SearchView(),
+        ),
+      ),
+    );
+
+    await tester.tap(find.byType(FilledButton).first);
+    await tester.pumpAndSettle();
+
+    final poison = tester.widget<DecoratedBox>(
+      find.byKey(const ValueKey('drug-regulatory-badge-poison')).first,
+    );
+    final prescription = tester.widget<DecoratedBox>(
+      find
+          .byKey(const ValueKey('drug-regulatory-badge-prescription_required'))
+          .first,
+    );
+    final psychotropic = tester.widget<DecoratedBox>(
+      find.byKey(const ValueKey('drug-regulatory-badge-psychotropic_2')).first,
+    );
+    final ordinary = tester.widget<DecoratedBox>(
+      find.byKey(const ValueKey('drug-regulatory-badge-ordinary')).first,
+    );
+
+    final colors = {
+      (poison.decoration as BoxDecoration).color,
+      (prescription.decoration as BoxDecoration).color,
+      (psychotropic.decoration as BoxDecoration).color,
+      (ordinary.decoration as BoxDecoration).color,
+    };
+    expect(colors, hasLength(4));
   });
 
   testWidgets('SearchView opens drug sort sheet from results toolbar', (
@@ -661,10 +1481,62 @@ void main() {
 
 final class _MockDrugApiClient extends Mock implements DrugApiClient {}
 
+final class _MockDiseaseApiClient extends Mock implements DiseaseApiClient {}
+
+final class _MockCategoryApiClient extends Mock implements CategoryApiClient {}
+
 DrugListResponseDto _drugListFixture() {
   final fixture = File(
     'test/fixtures/swagger/get_v1_drugs.json',
   ).readAsStringSync();
   final json = jsonDecode(fixture) as Map<String, dynamic>;
   return DrugListResponseDto.fromJson(json);
+}
+
+DiseaseListResponseDto _diseaseListFixture() {
+  final fixture = File(
+    'test/fixtures/swagger/get_v1_diseases.json',
+  ).readAsStringSync();
+  final json = jsonDecode(fixture) as Map<String, dynamic>;
+  return DiseaseListResponseDto.fromJson(json);
+}
+
+DiseaseListResponseDto _diseaseListFixtureForChapter(String chapter) {
+  return DiseaseListResponseDto.fromJson({
+    'items': [
+      {
+        'id': 'disease_chapter_contract',
+        'name': 'サンプル疾患',
+        'icd10_chapter': chapter,
+        'medical_department': ['internal_medicine'],
+        'chronicity': 'chronic',
+        'infectious': false,
+        'name_kana': 'サンプルシッカン',
+        'revised_at': '2026-04-17',
+      },
+    ],
+    'page': 1,
+    'page_size': 20,
+    'total_pages': 1,
+    'total_count': 1,
+    'disclaimer': 'FICTIONAL DATA - NOT FOR MEDICAL USE / 架空データ・医療判断には使用不可',
+  });
+}
+
+CategoriesResponseDto _categoriesFixture() {
+  final json =
+      jsonDecode(
+            File(
+              'test/fixtures/swagger/get_v1_categories.json',
+            ).readAsStringSync(),
+          )
+          as Map<String, dynamic>;
+  return CategoriesResponseDto.fromJson(json);
+}
+
+Future<void> _tapVisible(WidgetTester tester, Finder finder) async {
+  await tester.ensureVisible(finder);
+  await tester.pumpAndSettle();
+  await tester.tap(finder);
+  await tester.pumpAndSettle();
 }

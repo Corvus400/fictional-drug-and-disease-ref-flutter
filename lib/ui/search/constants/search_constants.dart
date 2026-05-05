@@ -15,6 +15,9 @@ abstract final class SearchConstants {
   /// Phone horizontal gutter.
   static const searchPhoneGutter = 16.0;
 
+  /// Round6 phone top chrome status-area padding.
+  static const searchPhoneTopChromeStatusPadding = 47.0;
+
   /// Tablet layout breakpoint.
   static const searchTabletBreakpoint = 600.0;
 
@@ -29,4 +32,52 @@ abstract final class SearchConstants {
 
   /// Tablet search field height.
   static const searchTabletFieldHeight = 44.0;
+
+  /// Round6 top chrome title font size on phone.
+  static const searchPhoneTitleFontSize = 22.0;
+
+  /// Round6 top chrome title font size on tablet.
+  static const searchTabletTitleFontSize = 26.0;
+
+  /// Round6 segmented control radius.
+  static const searchSegmentedRadius = 9.0;
+
+  /// Round6 selected segment radius.
+  static const searchSelectedSegmentRadius = 7.0;
+
+  /// Round6 search field radius.
+  static const searchFieldRadius = 12.0;
+
+  /// Round6 button radius.
+  static const searchButtonRadius = 10.0;
+
+  /// Round6 filter FAB radius.
+  static const searchFilterFabRadius = 18.0;
+
+  /// Round6 filter FAB right offset.
+  static const searchFilterFabRightOffset = 20.0;
+
+  /// Round6 filter FAB bottom offset.
+  static const searchFilterFabBottomOffset = 28.0;
+
+  /// Round6 filter sheet top offset.
+  static const searchFilterSheetTopOffset = 100.0;
+
+  /// Round6 filter sheet top corner radius.
+  static const searchFilterSheetTopRadius = 20.0;
+
+  /// Round6 result toolbar height.
+  static const searchResultToolbarHeight = 36.0;
+
+  /// Round6 result card radius.
+  static const searchCardRadius = 10.0;
+
+  /// Round6 drug image size on phone.
+  static const searchPhoneDrugImageSize = 56.0;
+
+  /// Round6 drug image size on tablet.
+  static const searchTabletDrugImageSize = 64.0;
+
+  /// Round6 list-card drug image API size.
+  static const searchDrugCardImageApiSize = 'S';
 }

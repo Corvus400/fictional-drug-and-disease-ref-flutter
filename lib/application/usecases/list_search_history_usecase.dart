@@ -1,9 +1,13 @@
 import 'package:fictional_drug_and_disease_ref/application/search/search_history_envelope.dart';
 import 'package:fictional_drug_and_disease_ref/application/search/search_query_codec.dart';
+import 'package:fictional_drug_and_disease_ref/application/usecases/search_drugs_usecase.dart';
 import 'package:fictional_drug_and_disease_ref/core/error/exception_mapper.dart';
 import 'package:fictional_drug_and_disease_ref/core/result.dart';
 import 'package:fictional_drug_and_disease_ref/data/repositories/search_history_repository.dart';
 import 'package:fictional_drug_and_disease_ref/domain/search_history/search_history_entry.dart';
+
+const _searchHistoryStorageLimit = 20;
+const _searchHistoryDisplayLimit = 5;
 
 /// Lists decoded search history rows for a target.
 final class ListSearchHistoryUsecase {
@@ -21,7 +25,7 @@ final class ListSearchHistoryUsecase {
   Future<Result<List<SearchHistoryEnvelope>>> execute(String target) async {
     final result = await _searchHistoryRepository.findByTarget(
       target,
-      limit: 5,
+      limit: _searchHistoryStorageLimit,
     );
     if (result case Err(:final error)) {
       return Result.error(error);
@@ -51,6 +55,8 @@ final class ListSearchHistoryUsecase {
               totalCount: entry.totalCount,
             );
           })
+          .where((entry) => hasSearchHistoryKeyword(entry.queryText))
+          .take(_searchHistoryDisplayLimit)
           .toList(growable: false);
       return Result.ok(entries);
     } on Object catch (error) {

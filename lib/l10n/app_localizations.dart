@@ -238,11 +238,35 @@ abstract class AppLocalizations {
   /// **'検索履歴'**
   String get searchHistoryTitle;
 
+  /// No description provided for @searchHistoryEmptyTitle.
+  ///
+  /// In ja, this message translates to:
+  /// **'検索履歴はまだありません'**
+  String get searchHistoryEmptyTitle;
+
+  /// No description provided for @searchHistoryEmptyDescription.
+  ///
+  /// In ja, this message translates to:
+  /// **'検索すると履歴が最大 5 件まで残ります。\n履歴は端末内にのみ保存されます。'**
+  String get searchHistoryEmptyDescription;
+
   /// No description provided for @searchHistoryClear.
   ///
   /// In ja, this message translates to:
-  /// **'すべて削除'**
+  /// **'すべて消す'**
   String get searchHistoryClear;
+
+  /// No description provided for @searchHistoryPrivacyNote.
+  ///
+  /// In ja, this message translates to:
+  /// **'最新 5 件まで表示。履歴は端末内にのみ保存されます'**
+  String get searchHistoryPrivacyNote;
+
+  /// No description provided for @searchHistoryFilterCount.
+  ///
+  /// In ja, this message translates to:
+  /// **'絞り込み +{count}'**
+  String searchHistoryFilterCount(int count);
 
   /// No description provided for @searchHistoryClearConfirmTitle.
   ///
@@ -261,6 +285,12 @@ abstract class AppLocalizations {
   /// In ja, this message translates to:
   /// **'合計 {count} 件'**
   String searchToolbarTotal(int count);
+
+  /// No description provided for @searchToolbarApplied.
+  ///
+  /// In ja, this message translates to:
+  /// **'適用中'**
+  String get searchToolbarApplied;
 
   /// No description provided for @searchToolbarLoadMore.
   ///
@@ -310,11 +340,203 @@ abstract class AppLocalizations {
   /// **'絞り込み'**
   String get searchFilterTitle;
 
+  /// No description provided for @searchFilterTitleForTarget.
+  ///
+  /// In ja, this message translates to:
+  /// **'絞り込み（{target}）'**
+  String searchFilterTitleForTarget(String target);
+
   /// No description provided for @searchFilterApply.
   ///
   /// In ja, this message translates to:
   /// **'結果を見る'**
   String get searchFilterApply;
+
+  /// No description provided for @searchFilterApplyWithCount.
+  ///
+  /// In ja, this message translates to:
+  /// **'結果を見る ({count} 件)'**
+  String searchFilterApplyWithCount(int count);
+
+  /// No description provided for @searchFilterReset.
+  ///
+  /// In ja, this message translates to:
+  /// **'リセット'**
+  String get searchFilterReset;
+
+  /// No description provided for @searchFilterAxisPolicy.
+  ///
+  /// In ja, this message translates to:
+  /// **'{count} 軸 · 軸内 OR / 軸間 AND'**
+  String searchFilterAxisPolicy(int count);
+
+  /// No description provided for @searchFilterSummaryAll.
+  ///
+  /// In ja, this message translates to:
+  /// **'すべて'**
+  String get searchFilterSummaryAll;
+
+  /// No description provided for @searchFilterSummaryUnspecified.
+  ///
+  /// In ja, this message translates to:
+  /// **'未指定'**
+  String get searchFilterSummaryUnspecified;
+
+  /// No description provided for @searchFilterHintMultiValue.
+  ///
+  /// In ja, this message translates to:
+  /// **'{count} 値・複数選択 OR'**
+  String searchFilterHintMultiValue(int count);
+
+  /// No description provided for @searchFilterHintSingleValue.
+  ///
+  /// In ja, this message translates to:
+  /// **'{count} 値・単一選択'**
+  String searchFilterHintSingleValue(int count);
+
+  /// No description provided for @searchFilterHintBool.
+  ///
+  /// In ja, this message translates to:
+  /// **'bool'**
+  String get searchFilterHintBool;
+
+  /// No description provided for @searchFilterHintPartialMatch.
+  ///
+  /// In ja, this message translates to:
+  /// **'部分一致'**
+  String get searchFilterHintPartialMatch;
+
+  /// No description provided for @searchFilterHintHierarchy.
+  ///
+  /// In ja, this message translates to:
+  /// **'階層選択'**
+  String get searchFilterHintHierarchy;
+
+  /// No description provided for @searchFilterHintDrillIn.
+  ///
+  /// In ja, this message translates to:
+  /// **'{count} 章・ドリルイン'**
+  String searchFilterHintDrillIn(int count);
+
+  /// No description provided for @searchFilterDrugRegulatoryClass.
+  ///
+  /// In ja, this message translates to:
+  /// **'薬事分類'**
+  String get searchFilterDrugRegulatoryClass;
+
+  /// No description provided for @searchFilterDrugDosageForm.
+  ///
+  /// In ja, this message translates to:
+  /// **'剤形'**
+  String get searchFilterDrugDosageForm;
+
+  /// No description provided for @searchFilterDrugRoute.
+  ///
+  /// In ja, this message translates to:
+  /// **'投与経路'**
+  String get searchFilterDrugRoute;
+
+  /// No description provided for @searchFilterDrugAtc.
+  ///
+  /// In ja, this message translates to:
+  /// **'ATC 第 1 階層'**
+  String get searchFilterDrugAtc;
+
+  /// No description provided for @searchFilterDrugTherapeuticCategory.
+  ///
+  /// In ja, this message translates to:
+  /// **'薬効分類'**
+  String get searchFilterDrugTherapeuticCategory;
+
+  /// No description provided for @searchFilterDrugAdverseReactionKeyword.
+  ///
+  /// In ja, this message translates to:
+  /// **'副作用キーワード'**
+  String get searchFilterDrugAdverseReactionKeyword;
+
+  /// No description provided for @searchFilterDrugPrecautionCategory.
+  ///
+  /// In ja, this message translates to:
+  /// **'患者背景'**
+  String get searchFilterDrugPrecautionCategory;
+
+  /// No description provided for @searchFilterDiseaseIcd10Chapter.
+  ///
+  /// In ja, this message translates to:
+  /// **'ICD-10 章'**
+  String get searchFilterDiseaseIcd10Chapter;
+
+  /// No description provided for @searchFilterDiseaseDepartment.
+  ///
+  /// In ja, this message translates to:
+  /// **'診療科'**
+  String get searchFilterDiseaseDepartment;
+
+  /// No description provided for @searchFilterDiseaseChronicity.
+  ///
+  /// In ja, this message translates to:
+  /// **'慢性度'**
+  String get searchFilterDiseaseChronicity;
+
+  /// No description provided for @searchFilterDiseaseInfectious.
+  ///
+  /// In ja, this message translates to:
+  /// **'感染性'**
+  String get searchFilterDiseaseInfectious;
+
+  /// No description provided for @searchFilterDiseaseSymptomKeyword.
+  ///
+  /// In ja, this message translates to:
+  /// **'症状キーワード'**
+  String get searchFilterDiseaseSymptomKeyword;
+
+  /// No description provided for @searchFilterDiseaseOnsetPattern.
+  ///
+  /// In ja, this message translates to:
+  /// **'発症パターン'**
+  String get searchFilterDiseaseOnsetPattern;
+
+  /// No description provided for @searchFilterDiseaseExamCategory.
+  ///
+  /// In ja, this message translates to:
+  /// **'検査区分'**
+  String get searchFilterDiseaseExamCategory;
+
+  /// No description provided for @searchFilterDiseaseHasPharmacologicalTreatment.
+  ///
+  /// In ja, this message translates to:
+  /// **'薬物治療あり'**
+  String get searchFilterDiseaseHasPharmacologicalTreatment;
+
+  /// No description provided for @searchFilterDiseaseHasSeverityGrading.
+  ///
+  /// In ja, this message translates to:
+  /// **'重症度評価あり'**
+  String get searchFilterDiseaseHasSeverityGrading;
+
+  /// No description provided for @searchDiseasePharmacologicalTreatmentTrue.
+  ///
+  /// In ja, this message translates to:
+  /// **'薬物治療あり'**
+  String get searchDiseasePharmacologicalTreatmentTrue;
+
+  /// No description provided for @searchDiseasePharmacologicalTreatmentFalse.
+  ///
+  /// In ja, this message translates to:
+  /// **'薬物治療なし'**
+  String get searchDiseasePharmacologicalTreatmentFalse;
+
+  /// No description provided for @searchDiseaseSeverityGradingTrue.
+  ///
+  /// In ja, this message translates to:
+  /// **'重症度評価あり'**
+  String get searchDiseaseSeverityGradingTrue;
+
+  /// No description provided for @searchDiseaseSeverityGradingFalse.
+  ///
+  /// In ja, this message translates to:
+  /// **'重症度評価なし'**
+  String get searchDiseaseSeverityGradingFalse;
 
   /// No description provided for @searchSortTitle.
   ///
@@ -345,6 +567,606 @@ abstract class AppLocalizations {
   /// In ja, this message translates to:
   /// **'薬効分類名'**
   String get searchSortByTherapeuticCategory;
+
+  /// No description provided for @searchDrugRegulatoryPoison.
+  ///
+  /// In ja, this message translates to:
+  /// **'毒薬'**
+  String get searchDrugRegulatoryPoison;
+
+  /// No description provided for @searchDrugRegulatoryPotent.
+  ///
+  /// In ja, this message translates to:
+  /// **'劇薬'**
+  String get searchDrugRegulatoryPotent;
+
+  /// No description provided for @searchDrugRegulatoryPrescriptionRequired.
+  ///
+  /// In ja, this message translates to:
+  /// **'処方箋医薬品'**
+  String get searchDrugRegulatoryPrescriptionRequired;
+
+  /// No description provided for @searchDrugRegulatoryOrdinary.
+  ///
+  /// In ja, this message translates to:
+  /// **'普通薬'**
+  String get searchDrugRegulatoryOrdinary;
+
+  /// No description provided for @searchDrugRegulatoryPsychotropic1.
+  ///
+  /// In ja, this message translates to:
+  /// **'向精神薬第1種'**
+  String get searchDrugRegulatoryPsychotropic1;
+
+  /// No description provided for @searchDrugRegulatoryPsychotropic2.
+  ///
+  /// In ja, this message translates to:
+  /// **'向精神薬第2種'**
+  String get searchDrugRegulatoryPsychotropic2;
+
+  /// No description provided for @searchDrugRegulatoryPsychotropic3.
+  ///
+  /// In ja, this message translates to:
+  /// **'向精神薬第3種'**
+  String get searchDrugRegulatoryPsychotropic3;
+
+  /// No description provided for @searchDrugRegulatoryNarcotic.
+  ///
+  /// In ja, this message translates to:
+  /// **'麻薬'**
+  String get searchDrugRegulatoryNarcotic;
+
+  /// No description provided for @searchDrugRegulatoryStimulantPrecursor.
+  ///
+  /// In ja, this message translates to:
+  /// **'覚醒剤原料'**
+  String get searchDrugRegulatoryStimulantPrecursor;
+
+  /// No description provided for @searchDrugRegulatoryBiological.
+  ///
+  /// In ja, this message translates to:
+  /// **'生物由来製品'**
+  String get searchDrugRegulatoryBiological;
+
+  /// No description provided for @searchDrugRegulatorySpecifiedBiological.
+  ///
+  /// In ja, this message translates to:
+  /// **'特定生物由来製品'**
+  String get searchDrugRegulatorySpecifiedBiological;
+
+  /// No description provided for @searchDrugDosageFormTablet.
+  ///
+  /// In ja, this message translates to:
+  /// **'錠剤'**
+  String get searchDrugDosageFormTablet;
+
+  /// No description provided for @searchDrugDosageFormCapsule.
+  ///
+  /// In ja, this message translates to:
+  /// **'カプセル'**
+  String get searchDrugDosageFormCapsule;
+
+  /// No description provided for @searchDrugDosageFormPowder.
+  ///
+  /// In ja, this message translates to:
+  /// **'散剤'**
+  String get searchDrugDosageFormPowder;
+
+  /// No description provided for @searchDrugDosageFormGranule.
+  ///
+  /// In ja, this message translates to:
+  /// **'顆粒剤'**
+  String get searchDrugDosageFormGranule;
+
+  /// No description provided for @searchDrugDosageFormLiquid.
+  ///
+  /// In ja, this message translates to:
+  /// **'液剤'**
+  String get searchDrugDosageFormLiquid;
+
+  /// No description provided for @searchDrugDosageFormInjection.
+  ///
+  /// In ja, this message translates to:
+  /// **'注射剤'**
+  String get searchDrugDosageFormInjection;
+
+  /// No description provided for @searchDrugDosageFormOintment.
+  ///
+  /// In ja, this message translates to:
+  /// **'軟膏'**
+  String get searchDrugDosageFormOintment;
+
+  /// No description provided for @searchDrugDosageFormCream.
+  ///
+  /// In ja, this message translates to:
+  /// **'クリーム'**
+  String get searchDrugDosageFormCream;
+
+  /// No description provided for @searchDrugDosageFormPatch.
+  ///
+  /// In ja, this message translates to:
+  /// **'貼付剤'**
+  String get searchDrugDosageFormPatch;
+
+  /// No description provided for @searchDrugDosageFormEyeDrops.
+  ///
+  /// In ja, this message translates to:
+  /// **'点眼剤'**
+  String get searchDrugDosageFormEyeDrops;
+
+  /// No description provided for @searchDrugDosageFormSuppository.
+  ///
+  /// In ja, this message translates to:
+  /// **'坐剤'**
+  String get searchDrugDosageFormSuppository;
+
+  /// No description provided for @searchDrugDosageFormInhaler.
+  ///
+  /// In ja, this message translates to:
+  /// **'吸入剤'**
+  String get searchDrugDosageFormInhaler;
+
+  /// No description provided for @searchDrugDosageFormNasalSpray.
+  ///
+  /// In ja, this message translates to:
+  /// **'点鼻剤'**
+  String get searchDrugDosageFormNasalSpray;
+
+  /// No description provided for @searchDrugRouteOral.
+  ///
+  /// In ja, this message translates to:
+  /// **'経口'**
+  String get searchDrugRouteOral;
+
+  /// No description provided for @searchDrugRouteTopical.
+  ///
+  /// In ja, this message translates to:
+  /// **'外用'**
+  String get searchDrugRouteTopical;
+
+  /// No description provided for @searchDrugRouteInjection.
+  ///
+  /// In ja, this message translates to:
+  /// **'注射'**
+  String get searchDrugRouteInjection;
+
+  /// No description provided for @searchDrugRouteInhalation.
+  ///
+  /// In ja, this message translates to:
+  /// **'吸入'**
+  String get searchDrugRouteInhalation;
+
+  /// No description provided for @searchDrugRouteRectal.
+  ///
+  /// In ja, this message translates to:
+  /// **'直腸'**
+  String get searchDrugRouteRectal;
+
+  /// No description provided for @searchDrugRouteOphthalmic.
+  ///
+  /// In ja, this message translates to:
+  /// **'眼科'**
+  String get searchDrugRouteOphthalmic;
+
+  /// No description provided for @searchDrugRouteNasal.
+  ///
+  /// In ja, this message translates to:
+  /// **'鼻腔'**
+  String get searchDrugRouteNasal;
+
+  /// No description provided for @searchDrugRouteTransdermal.
+  ///
+  /// In ja, this message translates to:
+  /// **'経皮'**
+  String get searchDrugRouteTransdermal;
+
+  /// No description provided for @searchDrugPrecautionComorbidity.
+  ///
+  /// In ja, this message translates to:
+  /// **'合併症'**
+  String get searchDrugPrecautionComorbidity;
+
+  /// No description provided for @searchDrugPrecautionRenalImpairment.
+  ///
+  /// In ja, this message translates to:
+  /// **'腎機能障害'**
+  String get searchDrugPrecautionRenalImpairment;
+
+  /// No description provided for @searchDrugPrecautionHepaticImpairment.
+  ///
+  /// In ja, this message translates to:
+  /// **'肝機能障害'**
+  String get searchDrugPrecautionHepaticImpairment;
+
+  /// No description provided for @searchDrugPrecautionReproductivePotential.
+  ///
+  /// In ja, this message translates to:
+  /// **'生殖能を有する患者'**
+  String get searchDrugPrecautionReproductivePotential;
+
+  /// No description provided for @searchDrugPrecautionPregnant.
+  ///
+  /// In ja, this message translates to:
+  /// **'妊婦'**
+  String get searchDrugPrecautionPregnant;
+
+  /// No description provided for @searchDrugPrecautionLactating.
+  ///
+  /// In ja, this message translates to:
+  /// **'授乳婦'**
+  String get searchDrugPrecautionLactating;
+
+  /// No description provided for @searchDrugPrecautionPediatric.
+  ///
+  /// In ja, this message translates to:
+  /// **'小児等'**
+  String get searchDrugPrecautionPediatric;
+
+  /// No description provided for @searchDrugPrecautionGeriatric.
+  ///
+  /// In ja, this message translates to:
+  /// **'高齢者'**
+  String get searchDrugPrecautionGeriatric;
+
+  /// No description provided for @searchDiseaseDepartmentInternalMedicine.
+  ///
+  /// In ja, this message translates to:
+  /// **'内科'**
+  String get searchDiseaseDepartmentInternalMedicine;
+
+  /// No description provided for @searchDiseaseDepartmentCardiology.
+  ///
+  /// In ja, this message translates to:
+  /// **'循環器内科'**
+  String get searchDiseaseDepartmentCardiology;
+
+  /// No description provided for @searchDiseaseDepartmentGastroenterology.
+  ///
+  /// In ja, this message translates to:
+  /// **'消化器内科'**
+  String get searchDiseaseDepartmentGastroenterology;
+
+  /// No description provided for @searchDiseaseDepartmentEndocrinology.
+  ///
+  /// In ja, this message translates to:
+  /// **'内分泌内科'**
+  String get searchDiseaseDepartmentEndocrinology;
+
+  /// No description provided for @searchDiseaseDepartmentNeurology.
+  ///
+  /// In ja, this message translates to:
+  /// **'神経内科'**
+  String get searchDiseaseDepartmentNeurology;
+
+  /// No description provided for @searchDiseaseDepartmentPsychiatry.
+  ///
+  /// In ja, this message translates to:
+  /// **'精神科'**
+  String get searchDiseaseDepartmentPsychiatry;
+
+  /// No description provided for @searchDiseaseDepartmentSurgery.
+  ///
+  /// In ja, this message translates to:
+  /// **'外科'**
+  String get searchDiseaseDepartmentSurgery;
+
+  /// No description provided for @searchDiseaseDepartmentOrthopedics.
+  ///
+  /// In ja, this message translates to:
+  /// **'整形外科'**
+  String get searchDiseaseDepartmentOrthopedics;
+
+  /// No description provided for @searchDiseaseDepartmentDermatology.
+  ///
+  /// In ja, this message translates to:
+  /// **'皮膚科'**
+  String get searchDiseaseDepartmentDermatology;
+
+  /// No description provided for @searchDiseaseDepartmentOphthalmology.
+  ///
+  /// In ja, this message translates to:
+  /// **'眼科'**
+  String get searchDiseaseDepartmentOphthalmology;
+
+  /// No description provided for @searchDiseaseDepartmentOtolaryngology.
+  ///
+  /// In ja, this message translates to:
+  /// **'耳鼻咽喉科'**
+  String get searchDiseaseDepartmentOtolaryngology;
+
+  /// No description provided for @searchDiseaseDepartmentUrology.
+  ///
+  /// In ja, this message translates to:
+  /// **'泌尿器科'**
+  String get searchDiseaseDepartmentUrology;
+
+  /// No description provided for @searchDiseaseDepartmentGynecology.
+  ///
+  /// In ja, this message translates to:
+  /// **'婦人科'**
+  String get searchDiseaseDepartmentGynecology;
+
+  /// No description provided for @searchDiseaseDepartmentPediatrics.
+  ///
+  /// In ja, this message translates to:
+  /// **'小児科'**
+  String get searchDiseaseDepartmentPediatrics;
+
+  /// No description provided for @searchDiseaseDepartmentEmergency.
+  ///
+  /// In ja, this message translates to:
+  /// **'救急科'**
+  String get searchDiseaseDepartmentEmergency;
+
+  /// No description provided for @searchDiseaseDepartmentInfectiousDisease.
+  ///
+  /// In ja, this message translates to:
+  /// **'感染症内科'**
+  String get searchDiseaseDepartmentInfectiousDisease;
+
+  /// No description provided for @searchDiseaseChronicityAcute.
+  ///
+  /// In ja, this message translates to:
+  /// **'急性'**
+  String get searchDiseaseChronicityAcute;
+
+  /// No description provided for @searchDiseaseChronicitySubacute.
+  ///
+  /// In ja, this message translates to:
+  /// **'亜急性'**
+  String get searchDiseaseChronicitySubacute;
+
+  /// No description provided for @searchDiseaseChronicityChronic.
+  ///
+  /// In ja, this message translates to:
+  /// **'慢性'**
+  String get searchDiseaseChronicityChronic;
+
+  /// No description provided for @searchDiseaseChronicityRecurrent.
+  ///
+  /// In ja, this message translates to:
+  /// **'再発性'**
+  String get searchDiseaseChronicityRecurrent;
+
+  /// No description provided for @searchDiseaseInfectiousTrue.
+  ///
+  /// In ja, this message translates to:
+  /// **'感染性'**
+  String get searchDiseaseInfectiousTrue;
+
+  /// No description provided for @searchDiseaseInfectiousFalse.
+  ///
+  /// In ja, this message translates to:
+  /// **'非感染性'**
+  String get searchDiseaseInfectiousFalse;
+
+  /// No description provided for @searchDiseaseOnsetPatternSudden.
+  ///
+  /// In ja, this message translates to:
+  /// **'突然発症'**
+  String get searchDiseaseOnsetPatternSudden;
+
+  /// No description provided for @searchDiseaseOnsetPatternGradual.
+  ///
+  /// In ja, this message translates to:
+  /// **'緩徐発症'**
+  String get searchDiseaseOnsetPatternGradual;
+
+  /// No description provided for @searchDiseaseOnsetPatternEpisodic.
+  ///
+  /// In ja, this message translates to:
+  /// **'発作性'**
+  String get searchDiseaseOnsetPatternEpisodic;
+
+  /// No description provided for @searchDiseaseOnsetPatternProgressive.
+  ///
+  /// In ja, this message translates to:
+  /// **'進行性'**
+  String get searchDiseaseOnsetPatternProgressive;
+
+  /// No description provided for @searchDiseaseOnsetPatternCongenital.
+  ///
+  /// In ja, this message translates to:
+  /// **'先天性'**
+  String get searchDiseaseOnsetPatternCongenital;
+
+  /// No description provided for @searchDiseaseExamCategoryBlood.
+  ///
+  /// In ja, this message translates to:
+  /// **'血液検査'**
+  String get searchDiseaseExamCategoryBlood;
+
+  /// No description provided for @searchDiseaseExamCategoryImaging.
+  ///
+  /// In ja, this message translates to:
+  /// **'画像検査'**
+  String get searchDiseaseExamCategoryImaging;
+
+  /// No description provided for @searchDiseaseExamCategoryPhysiological.
+  ///
+  /// In ja, this message translates to:
+  /// **'生理検査'**
+  String get searchDiseaseExamCategoryPhysiological;
+
+  /// No description provided for @searchDiseaseExamCategoryPathological.
+  ///
+  /// In ja, this message translates to:
+  /// **'病理検査'**
+  String get searchDiseaseExamCategoryPathological;
+
+  /// No description provided for @searchDiseaseExamCategoryGenetic.
+  ///
+  /// In ja, this message translates to:
+  /// **'遺伝子検査'**
+  String get searchDiseaseExamCategoryGenetic;
+
+  /// No description provided for @searchDiseaseBoolTrue.
+  ///
+  /// In ja, this message translates to:
+  /// **'あり'**
+  String get searchDiseaseBoolTrue;
+
+  /// No description provided for @searchDiseaseBoolFalse.
+  ///
+  /// In ja, this message translates to:
+  /// **'なし'**
+  String get searchDiseaseBoolFalse;
+
+  /// No description provided for @searchDiseaseIcd10ChapterI.
+  ///
+  /// In ja, this message translates to:
+  /// **'I 感染症および寄生虫症'**
+  String get searchDiseaseIcd10ChapterI;
+
+  /// No description provided for @searchDiseaseIcd10ChapterII.
+  ///
+  /// In ja, this message translates to:
+  /// **'II 新生物'**
+  String get searchDiseaseIcd10ChapterII;
+
+  /// No description provided for @searchDiseaseIcd10ChapterIII.
+  ///
+  /// In ja, this message translates to:
+  /// **'III 血液および造血器の疾患ならびに免疫機構の障害'**
+  String get searchDiseaseIcd10ChapterIII;
+
+  /// No description provided for @searchDiseaseIcd10ChapterIV.
+  ///
+  /// In ja, this message translates to:
+  /// **'IV 内分泌、栄養および代謝疾患'**
+  String get searchDiseaseIcd10ChapterIV;
+
+  /// No description provided for @searchDiseaseIcd10ChapterV.
+  ///
+  /// In ja, this message translates to:
+  /// **'V 精神および行動の障害'**
+  String get searchDiseaseIcd10ChapterV;
+
+  /// No description provided for @searchDiseaseIcd10ChapterVI.
+  ///
+  /// In ja, this message translates to:
+  /// **'VI 神経系の疾患'**
+  String get searchDiseaseIcd10ChapterVI;
+
+  /// No description provided for @searchDiseaseIcd10ChapterVII.
+  ///
+  /// In ja, this message translates to:
+  /// **'VII 眼および付属器の疾患'**
+  String get searchDiseaseIcd10ChapterVII;
+
+  /// No description provided for @searchDiseaseIcd10ChapterVIII.
+  ///
+  /// In ja, this message translates to:
+  /// **'VIII 耳および乳様突起の疾患'**
+  String get searchDiseaseIcd10ChapterVIII;
+
+  /// No description provided for @searchDiseaseIcd10ChapterIX.
+  ///
+  /// In ja, this message translates to:
+  /// **'IX 循環器系の疾患'**
+  String get searchDiseaseIcd10ChapterIX;
+
+  /// No description provided for @searchDiseaseIcd10ChapterX.
+  ///
+  /// In ja, this message translates to:
+  /// **'X 呼吸器系の疾患'**
+  String get searchDiseaseIcd10ChapterX;
+
+  /// No description provided for @searchDiseaseIcd10ChapterXI.
+  ///
+  /// In ja, this message translates to:
+  /// **'XI 消化器系の疾患'**
+  String get searchDiseaseIcd10ChapterXI;
+
+  /// No description provided for @searchDiseaseIcd10ChapterXII.
+  ///
+  /// In ja, this message translates to:
+  /// **'XII 皮膚および皮下組織の疾患'**
+  String get searchDiseaseIcd10ChapterXII;
+
+  /// No description provided for @searchDiseaseIcd10ChapterXIII.
+  ///
+  /// In ja, this message translates to:
+  /// **'XIII 筋骨格系および結合組織の疾患'**
+  String get searchDiseaseIcd10ChapterXIII;
+
+  /// No description provided for @searchDiseaseIcd10ChapterXIV.
+  ///
+  /// In ja, this message translates to:
+  /// **'XIV 腎尿路生殖器系の疾患'**
+  String get searchDiseaseIcd10ChapterXIV;
+
+  /// No description provided for @searchDiseaseIcd10ChapterXV.
+  ///
+  /// In ja, this message translates to:
+  /// **'XV 妊娠、分娩および産褥'**
+  String get searchDiseaseIcd10ChapterXV;
+
+  /// No description provided for @searchDiseaseIcd10ChapterXVI.
+  ///
+  /// In ja, this message translates to:
+  /// **'XVI 周産期に発生した病態'**
+  String get searchDiseaseIcd10ChapterXVI;
+
+  /// No description provided for @searchDiseaseIcd10ChapterXVII.
+  ///
+  /// In ja, this message translates to:
+  /// **'XVII 先天奇形、変形および染色体異常'**
+  String get searchDiseaseIcd10ChapterXVII;
+
+  /// No description provided for @searchDiseaseIcd10ChapterXVIII.
+  ///
+  /// In ja, this message translates to:
+  /// **'XVIII 症状、徴候および異常臨床所見・異常検査所見で他に分類されないもの'**
+  String get searchDiseaseIcd10ChapterXVIII;
+
+  /// No description provided for @searchDiseaseIcd10ChapterXIX.
+  ///
+  /// In ja, this message translates to:
+  /// **'XIX 損傷、中毒およびその他の外因の影響'**
+  String get searchDiseaseIcd10ChapterXIX;
+
+  /// No description provided for @searchDiseaseIcd10ChapterXX.
+  ///
+  /// In ja, this message translates to:
+  /// **'XX 傷病および死亡の外因'**
+  String get searchDiseaseIcd10ChapterXX;
+
+  /// No description provided for @searchDiseaseIcd10ChapterXXI.
+  ///
+  /// In ja, this message translates to:
+  /// **'XXI 健康状態に影響を及ぼす要因および保健サービスの利用'**
+  String get searchDiseaseIcd10ChapterXXI;
+
+  /// No description provided for @searchDiseaseIcd10ChapterXXII.
+  ///
+  /// In ja, this message translates to:
+  /// **'XXII 特殊目的用コード'**
+  String get searchDiseaseIcd10ChapterXXII;
+
+  /// No description provided for @searchDiseaseMetaIcd10.
+  ///
+  /// In ja, this message translates to:
+  /// **'ICD-10: {chapter}'**
+  String searchDiseaseMetaIcd10(String chapter);
+
+  /// No description provided for @searchDiseaseMetaRevised.
+  ///
+  /// In ja, this message translates to:
+  /// **'改訂 {date}'**
+  String searchDiseaseMetaRevised(String date);
+
+  /// No description provided for @searchDrugMetaAtc.
+  ///
+  /// In ja, this message translates to:
+  /// **'ATC: {code}'**
+  String searchDrugMetaAtc(String code);
+
+  /// No description provided for @searchDrugMetaRevised.
+  ///
+  /// In ja, this message translates to:
+  /// **'改訂 {date}'**
+  String searchDrugMetaRevised(String date);
 
   /// No description provided for @errorNetwork.
   ///
