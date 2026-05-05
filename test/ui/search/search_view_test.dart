@@ -2015,7 +2015,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('ICD-10: I 感染症および寄生虫症'), findsWidgets);
-    expect(find.text('感染症内科'), findsWidgets);
+    expect(find.text('感染症科'), findsWidgets);
     expect(find.text('救急科'), findsWidgets);
     expect(find.text('急性'), findsWidgets);
     expect(find.text('感染性'), findsWidgets);
