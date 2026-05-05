@@ -71,5 +71,60 @@ void main() {
         expect(darkTrueColors.foreground, SearchPalette.dark.danger);
       },
     );
+
+    test('disease badge department colors differ across all 16 values', () {
+      const values = [
+        'internal_medicine',
+        'cardiology',
+        'gastroenterology',
+        'endocrinology',
+        'neurology',
+        'psychiatry',
+        'surgery',
+        'orthopedics',
+        'dermatology',
+        'ophthalmology',
+        'otolaryngology',
+        'urology',
+        'gynecology',
+        'pediatrics',
+        'emergency',
+        'infectious_disease',
+      ];
+
+      final foregrounds = {
+        for (final value in values)
+          SearchPalette.light
+              .diseaseBadgeColors(DiseaseBadgeCategory.department, value)
+              .foreground,
+      };
+
+      expect(foregrounds.length, greaterThanOrEqualTo(12));
+      expect(
+        SearchPalette.light
+            .diseaseBadgeColors(
+              DiseaseBadgeCategory.department,
+              'psychiatry',
+            )
+            .foreground,
+        SearchPalette.light.diseaseInk,
+      );
+      expect(
+        SearchPalette.light
+            .diseaseBadgeColors(
+              DiseaseBadgeCategory.department,
+              'cardiology',
+            )
+            .foreground,
+        isNot(
+          SearchPalette.light
+              .diseaseBadgeColors(
+                DiseaseBadgeCategory.department,
+                'emergency',
+              )
+              .foreground,
+        ),
+      );
+    });
   });
 }
