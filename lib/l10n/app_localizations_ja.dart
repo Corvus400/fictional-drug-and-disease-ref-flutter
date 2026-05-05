@@ -302,7 +302,16 @@ class AppLocalizationsJa extends AppLocalizations {
   String get searchLoadingCaption => '検索中…';
 
   @override
-  String get searchSortByRevised => '更新日 (新しい順)';
+  String get searchSortByRevised => '更新日(新しい順)';
+
+  @override
+  String get searchSortDiseaseRevisedAt => '改訂日';
+
+  @override
+  String get searchSortDiseaseName => '名称';
+
+  @override
+  String get searchSortDiseaseIcd10 => 'ICD-10';
 
   @override
   String get searchSortByBrandKana => 'ブランド名カナ';

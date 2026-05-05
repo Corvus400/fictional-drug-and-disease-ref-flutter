@@ -119,14 +119,32 @@ class _SearchResultToolbar extends StatelessWidget {
           child: Row(
             children: [
               Text(l10n.searchToolbarTotal(totalCount)),
-              const Spacer(),
-              TextButton(
-                onPressed: () => _showSortSheet(
-                  context,
-                  state.tab,
-                  onChangeDrugSort: onChangeDrugSort,
+              const SizedBox(width: 8),
+              Expanded(
+                child: Align(
+                  alignment: Alignment.centerRight,
+                  child: TextButton(
+                    style: TextButton.styleFrom(
+                      padding: EdgeInsets.zero,
+                      minimumSize: Size.zero,
+                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    ),
+                    onPressed: () => _showSortSheet(
+                      context,
+                      state.tab,
+                      onChangeDrugSort: onChangeDrugSort,
+                    ),
+                    child: Text(
+                      _sortToolbarLabel(l10n, state),
+                      overflow: TextOverflow.ellipsis,
+                      style: theme.textTheme.labelSmall?.copyWith(
+                        color: palette.primary,
+                        fontSize: 12.5,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
                 ),
-                child: Text(l10n.searchSortTitle),
               ),
             ],
           ),
@@ -134,6 +152,61 @@ class _SearchResultToolbar extends StatelessWidget {
       ],
     );
   }
+}
+
+String _sortToolbarLabel(AppLocalizations l10n, SearchScreenState state) {
+  final axis = switch (state.tab) {
+    SearchTab.drugs => _drugSortLabel(
+      l10n,
+      state.drugParams.sort ?? DrugSort.revisedAtDesc,
+    ),
+    SearchTab.diseases => _diseaseSortLabel(
+      l10n,
+      state.diseaseParams.sort ?? DiseaseSort.revisedAtDesc,
+    ),
+  };
+  final direction = switch (state.tab) {
+    SearchTab.drugs => _drugSortDirection(
+      state.drugParams.sort ?? DrugSort.revisedAtDesc,
+    ),
+    SearchTab.diseases => _diseaseSortDirection(
+      state.diseaseParams.sort ?? DiseaseSort.revisedAtDesc,
+    ),
+  };
+  return '${l10n.searchSortTitle}： $axis $direction ▾';
+}
+
+String _drugSortLabel(AppLocalizations l10n, DrugSort sort) {
+  return switch (sort) {
+    DrugSort.revisedAtDesc => l10n.searchSortByRevised,
+    DrugSort.brandNameKana => l10n.searchSortByBrandKana,
+    DrugSort.atcCode => l10n.searchSortByAtcCode,
+    DrugSort.therapeuticCategoryName => l10n.searchSortByTherapeuticCategory,
+  };
+}
+
+String _diseaseSortLabel(AppLocalizations l10n, DiseaseSort sort) {
+  return switch (sort) {
+    DiseaseSort.revisedAtDesc => l10n.searchSortDiseaseRevisedAt,
+    DiseaseSort.nameKana => l10n.searchSortDiseaseName,
+    DiseaseSort.icd10Chapter => l10n.searchSortDiseaseIcd10,
+  };
+}
+
+String _drugSortDirection(DrugSort sort) {
+  return switch (sort) {
+    DrugSort.revisedAtDesc => '↓',
+    DrugSort.brandNameKana ||
+    DrugSort.atcCode ||
+    DrugSort.therapeuticCategoryName => '↑',
+  };
+}
+
+String _diseaseSortDirection(DiseaseSort sort) {
+  return switch (sort) {
+    DiseaseSort.revisedAtDesc => '↓',
+    DiseaseSort.nameKana || DiseaseSort.icd10Chapter => '↑',
+  };
 }
 
 class _AppliedFilterChip extends StatelessWidget {
