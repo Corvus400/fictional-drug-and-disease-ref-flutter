@@ -893,6 +893,10 @@ void main() {
     expect(find.text(item.brandName), findsOneWidget);
     expect(find.text(item.genericName), findsOneWidget);
     expect(find.text('合計 ${_drugListFixture().totalCount} 件'), findsOneWidget);
+    expect(
+      tester.widget<ListView>(find.byType(ListView)).key,
+      const PageStorageKey<String>('drugSearchResults'),
+    );
   });
 
   testWidgets('result card tap navigates to drug detail with correct id', (
@@ -1169,7 +1173,7 @@ void main() {
     await tester.pumpAndSettle();
 
     await tester.drag(
-      find.byKey(const ValueKey('search-results-list')),
+      find.byKey(const PageStorageKey<String>('drugSearchResults')),
       const Offset(0, -3000),
     );
     await tester.pumpAndSettle();
@@ -2087,7 +2091,7 @@ void main() {
 
     final listWidth = tester
         .getSize(
-          find.byKey(const ValueKey('search-results-list')),
+          find.byKey(const PageStorageKey<String>('diseaseSearchResults')),
         )
         .width;
     final cardWidth = tester

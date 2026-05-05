@@ -67,6 +67,7 @@ class _SearchPhaseSection extends StatelessWidget {
                 highlightColor: palette.surface3,
               ),
               child: ListView.builder(
+                key: const PageStorageKey<String>('searchResultsSkeleton'),
                 itemCount: SearchConstants.searchShimmerSkeletonCount,
                 itemBuilder: (context, index) => const Card(
                   key: ValueKey('search-loading-skeleton-card'),
@@ -279,7 +280,9 @@ class _SearchPhaseSection extends StatelessWidget {
         return false;
       },
       child: ListView(
-        key: const ValueKey('search-results-list'),
+        key: state.tab == SearchTab.drugs
+            ? const PageStorageKey<String>('drugSearchResults')
+            : const PageStorageKey<String>('diseaseSearchResults'),
         keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
         children: [
           _SearchResultToolbar(
