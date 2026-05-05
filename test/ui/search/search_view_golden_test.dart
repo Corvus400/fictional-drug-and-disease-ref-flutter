@@ -40,6 +40,14 @@ void main() {
   );
 
   _searchGolden(
+    description: 'S5 drug results dark',
+    fileName: 'search_s5_drug_results_dark',
+    theme: AppTheme.dark(),
+    response: _drugListFixture(),
+    whilePerforming: _performSearch,
+  );
+
+  _searchGolden(
     description: 'S6 empty light',
     fileName: 'search_s6_empty_light',
     theme: AppTheme.light(),
@@ -48,9 +56,28 @@ void main() {
   );
 
   _searchGolden(
+    description: 'S6 empty dark',
+    fileName: 'search_s6_empty_dark',
+    theme: AppTheme.dark(),
+    response: _drugListFixture().copyWith(items: [], totalCount: 0),
+    whilePerforming: _performSearch,
+  );
+
+  _searchGolden(
     description: 'S7 error light',
     fileName: 'search_s7_error_light',
     theme: AppTheme.light(),
+    error: DioException(
+      requestOptions: RequestOptions(path: '/v1/drugs'),
+      type: DioExceptionType.connectionError,
+    ),
+    whilePerforming: _performSearch,
+  );
+
+  _searchGolden(
+    description: 'S7 error dark',
+    fileName: 'search_s7_error_dark',
+    theme: AppTheme.dark(),
     error: DioException(
       requestOptions: RequestOptions(path: '/v1/drugs'),
       type: DioExceptionType.connectionError,
