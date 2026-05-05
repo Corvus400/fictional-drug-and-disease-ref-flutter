@@ -377,7 +377,7 @@ void main() {
     await tester.tap(find.byKey(const ValueKey('search-field')));
     await tester.pump();
 
-    expect(find.text('Rx'), findsNothing);
+    expect(find.text('Rx'), findsOneWidget);
     expect(find.text('Dx'), findsNothing);
     expect(find.text('履歴メタデータ'), findsOneWidget);
     expect(find.text('すべて消す'), findsOneWidget);
@@ -385,6 +385,129 @@ void main() {
       find.text('最新 5 件まで表示。履歴は端末内にのみ保存されます'),
       findsOneWidget,
     );
+  });
+
+  testWidgets('drug history row shows Rx pill', (tester) async {
+    final db = AppDatabase(NativeDatabase.memory());
+    addTearDown(db.close);
+    final container = ProviderContainer(
+      overrides: [appDatabaseProvider.overrideWithValue(db)],
+    );
+    addTearDown(container.dispose);
+    await container
+        .read(searchHistoryRepositoryProvider)
+        .insertWithDedup(
+          id: 'drug_history_target_pill',
+          target: 'drug',
+          queryJson: container
+              .read(searchQueryCodecProvider)
+              .encode(const DrugSearchParams(keyword: '医薬品履歴')),
+          searchedAt: DateTime.utc(2026, 5, 5),
+          totalCount: 4,
+        );
+
+    await tester.pumpWidget(
+      UncontrolledProviderScope(
+        container: container,
+        child: MaterialApp(
+          theme: AppTheme.light(),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: const SearchView(),
+        ),
+      ),
+    );
+    await tester.pump();
+    await tester.tap(find.byKey(const ValueKey('search-field')));
+    await tester.pump();
+
+    expect(find.text('Rx'), findsOneWidget);
+    expect(find.text('Dx'), findsNothing);
+  });
+
+  testWidgets('disease history row shows Dx pill', (tester) async {
+    final db = AppDatabase(NativeDatabase.memory());
+    addTearDown(db.close);
+    final container = ProviderContainer(
+      overrides: [appDatabaseProvider.overrideWithValue(db)],
+    );
+    addTearDown(container.dispose);
+    await container
+        .read(searchHistoryRepositoryProvider)
+        .insertWithDedup(
+          id: 'disease_history_target_pill',
+          target: 'disease',
+          queryJson: container
+              .read(searchQueryCodecProvider)
+              .encode(const DiseaseSearchParams(keyword: '疾患履歴')),
+          searchedAt: DateTime.utc(2026, 5, 5),
+          totalCount: 6,
+        );
+
+    await tester.pumpWidget(
+      UncontrolledProviderScope(
+        container: container,
+        child: MaterialApp(
+          theme: AppTheme.light(),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: const SearchView(),
+        ),
+      ),
+    );
+    await tester.pump();
+    await tester.tap(find.text('疾患'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const ValueKey('search-field')));
+    await tester.pump();
+
+    expect(find.text('Dx'), findsOneWidget);
+    expect(find.text('Rx'), findsNothing);
+  });
+
+  testWidgets('drug history Rx pill uses drug tint background', (
+    tester,
+  ) async {
+    final db = AppDatabase(NativeDatabase.memory());
+    addTearDown(db.close);
+    final container = ProviderContainer(
+      overrides: [appDatabaseProvider.overrideWithValue(db)],
+    );
+    addTearDown(container.dispose);
+    await container
+        .read(searchHistoryRepositoryProvider)
+        .insertWithDedup(
+          id: 'drug_history_target_pill_color',
+          target: 'drug',
+          queryJson: container
+              .read(searchQueryCodecProvider)
+              .encode(const DrugSearchParams(keyword: '色確認履歴')),
+          searchedAt: DateTime.utc(2026, 5, 5),
+          totalCount: 4,
+        );
+
+    await tester.pumpWidget(
+      UncontrolledProviderScope(
+        container: container,
+        child: MaterialApp(
+          theme: AppTheme.light(),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: const SearchView(),
+        ),
+      ),
+    );
+    await tester.pump();
+    await tester.tap(find.byKey(const ValueKey('search-field')));
+    await tester.pump();
+
+    final containerWidget = tester.widget<Container>(
+      find
+          .ancestor(of: find.text('Rx'), matching: find.byType(Container))
+          .first,
+    );
+    final decoration = containerWidget.decoration! as BoxDecoration;
+    expect(decoration.color, SearchPalette.light.drugTint);
   });
 
   testWidgets('SearchView deletes a persisted history row from dropdown', (

@@ -126,6 +126,7 @@ class _SearchHistoryRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
+    final isDrug = entry is DrugSearchHistoryEnvelope;
     return Dismissible(
       key: ValueKey('history-row-dismiss-${entry.id}'),
       direction: DismissDirection.endToStart,
@@ -145,12 +146,37 @@ class _SearchHistoryRow extends StatelessWidget {
         onTap: () => unawaited(onSelect(entry)),
         dense: true,
         leading: const Icon(Icons.history, size: 16),
-        title: Text(
-          entry.queryText,
-          overflow: TextOverflow.ellipsis,
-          style: theme.textTheme.bodyMedium?.copyWith(
-            fontWeight: FontWeight.w600,
-          ),
+        title: Row(
+          children: [
+            Container(
+              key: ValueKey('history-target-pill-${entry.id}'),
+              padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
+              decoration: BoxDecoration(
+                color: isDrug ? palette.drugTint : palette.diseaseTint,
+                borderRadius: BorderRadius.circular(3),
+              ),
+              child: Text(
+                isDrug ? l10n.searchHistoryRxBadge : l10n.searchHistoryDxBadge,
+                style: TextStyle(
+                  color: isDrug ? palette.drugInk : palette.diseaseInk,
+                  fontFeatures: const [FontFeature.tabularFigures()],
+                  fontSize: 9.5,
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: 0.4,
+                ),
+              ),
+            ),
+            const SizedBox(width: 6),
+            Expanded(
+              child: Text(
+                entry.queryText,
+                overflow: TextOverflow.ellipsis,
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+          ],
         ),
         subtitle: Wrap(
           spacing: 8,

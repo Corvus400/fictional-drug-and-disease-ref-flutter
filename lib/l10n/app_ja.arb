@@ -60,6 +60,8 @@
       }
     }
   },
+  "searchHistoryRxBadge": "Rx",
+  "searchHistoryDxBadge": "Dx",
   "searchHistoryClearConfirmTitle": "検索履歴を削除しますか？",
   "searchHistoryClearConfirmDelete": "削除",
   "searchToolbarTotal": "合計 {count} 件",
