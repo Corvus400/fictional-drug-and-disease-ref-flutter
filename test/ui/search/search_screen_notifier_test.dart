@@ -234,7 +234,6 @@ void main() {
           () => diseaseApiClient.getDiseases(
             page: 1,
             pageSize: 20,
-            icd10Chapter: null,
             department: any(named: 'department'),
             chronicity: any(named: 'chronicity'),
             infectious: any(named: 'infectious'),

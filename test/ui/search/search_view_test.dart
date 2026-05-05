@@ -2322,12 +2322,9 @@ void main() {
         pageSize: SearchConstants.searchPageSize,
         icd10Chapter: ['chapter_ix'],
         department: ['cardiology'],
-        chronicity: null,
         infectious: any(named: 'infectious'),
         keyword: any(named: 'keyword'),
         symptomKeyword: any(named: 'symptomKeyword'),
-        onsetPattern: null,
-        examCategory: null,
         hasPharmacologicalTreatment: any(
           named: 'hasPharmacologicalTreatment',
         ),
