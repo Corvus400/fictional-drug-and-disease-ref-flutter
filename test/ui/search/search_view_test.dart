@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:ui';
 
 import 'package:dio/dio.dart';
 import 'package:drift/native.dart';
@@ -16,6 +17,7 @@ import 'package:fictional_drug_and_disease_ref/data/providers/local_providers.da
 import 'package:fictional_drug_and_disease_ref/data/services/api/category_api_client.dart';
 import 'package:fictional_drug_and_disease_ref/data/services/api/disease_api_client.dart';
 import 'package:fictional_drug_and_disease_ref/data/services/api/drug_api_client.dart';
+import 'package:fictional_drug_and_disease_ref/domain/disease/disease_search_params.dart';
 import 'package:fictional_drug_and_disease_ref/domain/drug/drug_search_params.dart';
 import 'package:fictional_drug_and_disease_ref/l10n/app_localizations.dart';
 import 'package:fictional_drug_and_disease_ref/theme/app_theme.dart';
@@ -411,6 +413,115 @@ void main() {
 
     expect(find.text('全削除対象キーワード'), findsNothing);
   });
+
+  testWidgets(
+    'SearchView clears disease history from focused dropdown on iPhone width',
+    (tester) async {
+      await tester.binding.setSurfaceSize(const Size(430, 932));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+      final db = AppDatabase(NativeDatabase.memory());
+      addTearDown(db.close);
+      final container = ProviderContainer(
+        overrides: [appDatabaseProvider.overrideWithValue(db)],
+      );
+      addTearDown(container.dispose);
+      await container
+          .read(searchHistoryRepositoryProvider)
+          .insertWithDedup(
+            id: 'disease_clear_target',
+            target: 'disease',
+            queryJson: container
+                .read(searchQueryCodecProvider)
+                .encode(
+                  const DiseaseSearchParams(keyword: '疾患全削除対象'),
+                ),
+            searchedAt: DateTime.utc(2026, 5, 5),
+            totalCount: 7,
+          );
+
+      await tester.pumpWidget(
+        UncontrolledProviderScope(
+          container: container,
+          child: const MaterialApp(
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: SearchView(),
+          ),
+        ),
+      );
+      await tester.pump();
+      await tester.tap(find.text('疾患'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const ValueKey('search-field')));
+      await tester.pump();
+      expect(find.text('疾患全削除対象'), findsOneWidget);
+
+      await tester.tap(
+        find.byKey(const ValueKey('clear-history-button')),
+        kind: PointerDeviceKind.mouse,
+      );
+      await tester.pump();
+      expect(find.text('検索履歴を削除しますか？'), findsOneWidget);
+
+      await tester.tap(find.text('削除'));
+      await tester.pump();
+
+      expect(find.text('疾患全削除対象'), findsNothing);
+    },
+  );
+
+  testWidgets(
+    'SearchView deletes disease history row from focused dropdown '
+    'on iPad width',
+    (tester) async {
+      await tester.binding.setSurfaceSize(const Size(834, 1194));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+      final db = AppDatabase(NativeDatabase.memory());
+      addTearDown(db.close);
+      final container = ProviderContainer(
+        overrides: [appDatabaseProvider.overrideWithValue(db)],
+      );
+      addTearDown(container.dispose);
+      await container
+          .read(searchHistoryRepositoryProvider)
+          .insertWithDedup(
+            id: 'disease_delete_target',
+            target: 'disease',
+            queryJson: container
+                .read(searchQueryCodecProvider)
+                .encode(
+                  const DiseaseSearchParams(keyword: '疾患個別削除対象'),
+                ),
+            searchedAt: DateTime.utc(2026, 5, 5),
+            totalCount: 5,
+          );
+
+      await tester.pumpWidget(
+        UncontrolledProviderScope(
+          container: container,
+          child: const MaterialApp(
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: SearchView(),
+          ),
+        ),
+      );
+      await tester.pump();
+      await tester.tap(find.text('疾患'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const ValueKey('search-field')));
+      await tester.pump();
+      expect(find.text('疾患個別削除対象'), findsOneWidget);
+
+      await tester.tap(
+        find.byKey(const ValueKey('delete-history-disease_delete_target')),
+        kind: PointerDeviceKind.mouse,
+      );
+      await tester.pump();
+
+      expect(find.text('疾患個別削除対象'), findsNothing);
+    },
+  );
 
   testWidgets('SearchView renders drug results from repository state', (
     tester,
