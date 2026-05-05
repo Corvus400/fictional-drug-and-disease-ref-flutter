@@ -1,3 +1,4 @@
+import 'package:fictional_drug_and_disease_ref/core/result.dart';
 import 'package:fictional_drug_and_disease_ref/data/local/app_database.dart';
 import 'package:fictional_drug_and_disease_ref/data/repositories/bookmark_repository.dart';
 import 'package:fictional_drug_and_disease_ref/data/repositories/browsing_history_repository.dart';
@@ -5,6 +6,7 @@ import 'package:fictional_drug_and_disease_ref/data/repositories/calculation_his
 import 'package:fictional_drug_and_disease_ref/data/repositories/search_history_repository.dart';
 import 'package:fictional_drug_and_disease_ref/data/repositories/theme_settings_repository.dart';
 import 'package:fictional_drug_and_disease_ref/data/services/local/theme_settings_service.dart';
+import 'package:fictional_drug_and_disease_ref/domain/theme/theme_mode_setting.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -67,3 +69,12 @@ final calculationHistoryRepositoryProvider =
 final themeSettingsRepositoryProvider = Provider<ThemeSettingsRepository>(
   (ref) => ThemeSettingsRepository(ref.watch(themeSettingsServiceProvider)),
 );
+
+/// Current theme-mode setting provider.
+final themeModeSettingProvider = FutureProvider<ThemeModeSetting>((ref) async {
+  final result = await ref.watch(themeSettingsRepositoryProvider).read();
+  return switch (result) {
+    Ok<ThemeModeSetting>(:final value) => value,
+    Err<ThemeModeSetting>() => ThemeModeSetting.system,
+  };
+});
