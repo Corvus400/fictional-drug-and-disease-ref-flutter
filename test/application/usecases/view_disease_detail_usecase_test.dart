@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:drift/native.dart';
 import 'package:fictional_drug_and_disease_ref/application/bookmarks/disease_bookmark_snapshot_codec.dart';
 import 'package:fictional_drug_and_disease_ref/application/usecases/view_disease_detail_usecase.dart';
 import 'package:fictional_drug_and_disease_ref/core/error/app_exception.dart';
@@ -18,6 +17,8 @@ import 'package:fictional_drug_and_disease_ref/domain/bookmark/bookmark_entry.da
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
+import '../../helpers/test_app_database.dart';
+
 void main() {
   group('ViewDiseaseDetailUsecase', () {
     late AppDatabase db;
@@ -28,8 +29,11 @@ void main() {
     late ViewDiseaseDetailUsecase usecase;
     const snapshotCodec = DiseaseBookmarkSnapshotCodec();
 
+    setUpAll(() {
+      db = createTestAppDatabase();
+    });
+
     setUp(() {
-      db = AppDatabase(NativeDatabase.memory());
       apiClient = _MockDiseaseApiClient();
       diseaseRepository = DiseaseRepository(apiClient);
       bookmarkRepository = BookmarkRepository(db.bookmarksDao);
@@ -44,6 +48,10 @@ void main() {
     });
 
     tearDown(() async {
+      await clearTestAppDatabase(db);
+    });
+
+    tearDownAll(() async {
       await db.close();
     });
 

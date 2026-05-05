@@ -1,4 +1,3 @@
-import 'package:drift/native.dart';
 import 'package:fictional_drug_and_disease_ref/application/search/search_history_envelope.dart';
 import 'package:fictional_drug_and_disease_ref/application/search/search_query_codec.dart';
 import 'package:fictional_drug_and_disease_ref/application/usecases/list_search_history_usecase.dart';
@@ -8,6 +7,8 @@ import 'package:fictional_drug_and_disease_ref/data/repositories/search_history_
 import 'package:fictional_drug_and_disease_ref/domain/drug/drug_search_params.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import '../../helpers/test_app_database.dart';
+
 void main() {
   group('ListSearchHistoryUsecase', () {
     late AppDatabase db;
@@ -15,8 +16,11 @@ void main() {
     late ListSearchHistoryUsecase usecase;
     const codec = SearchQueryCodec();
 
+    setUpAll(() {
+      db = createTestAppDatabase();
+    });
+
     setUp(() {
-      db = AppDatabase(NativeDatabase.memory());
       repository = SearchHistoryRepository(db.searchHistoriesDao);
       usecase = ListSearchHistoryUsecase(
         searchHistoryRepository: repository,
@@ -25,6 +29,10 @@ void main() {
     });
 
     tearDown(() async {
+      await clearTestAppDatabase(db);
+    });
+
+    tearDownAll(() async {
       await db.close();
     });
 

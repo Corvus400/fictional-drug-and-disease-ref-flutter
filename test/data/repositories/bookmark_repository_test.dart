@@ -1,4 +1,3 @@
-import 'package:drift/native.dart';
 import 'package:fictional_drug_and_disease_ref/core/error/app_exception.dart';
 import 'package:fictional_drug_and_disease_ref/core/result.dart';
 import 'package:fictional_drug_and_disease_ref/data/local/app_database.dart';
@@ -6,17 +5,26 @@ import 'package:fictional_drug_and_disease_ref/data/repositories/bookmark_reposi
 import 'package:fictional_drug_and_disease_ref/domain/bookmark/bookmark_entry.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import '../../helpers/test_app_database.dart';
+
 void main() {
   group('BookmarkRepository', () {
     late AppDatabase db;
     late BookmarkRepository repository;
 
+    setUpAll(() {
+      db = createTestAppDatabase();
+    });
+
     setUp(() {
-      db = AppDatabase(NativeDatabase.memory());
       repository = BookmarkRepository(db.bookmarksDao);
     });
 
     tearDown(() async {
+      await clearTestAppDatabase(db);
+    });
+
+    tearDownAll(() async {
       await db.close();
     });
 

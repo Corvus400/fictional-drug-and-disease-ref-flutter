@@ -4,7 +4,6 @@ import 'dart:io';
 
 import 'package:alchemist/alchemist.dart';
 import 'package:dio/dio.dart';
-import 'package:drift/native.dart';
 import 'package:fictional_drug_and_disease_ref/application/providers/usecase_providers.dart';
 import 'package:fictional_drug_and_disease_ref/config/api_config.dart';
 import 'package:fictional_drug_and_disease_ref/config/flavor.dart';
@@ -24,6 +23,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
+import '../../helpers/test_app_database.dart';
+
+late AppDatabase _db;
+
 void main() {
   ApiConfig.initialize(
     const FlavorConfig(
@@ -31,6 +34,18 @@ void main() {
       apiBaseUrl: 'https://api.example.test',
     ),
   );
+
+  setUpAll(() {
+    _db = createTestAppDatabase();
+  });
+
+  tearDown(() async {
+    await clearTestAppDatabase(_db);
+  });
+
+  tearDownAll(() async {
+    await _db.close();
+  });
 
   _searchGolden(
     description: 'S1 idle light',
@@ -261,7 +276,6 @@ void _searchGolden({
       fileName: fileName,
       constraints: constraints,
       builder: () {
-        final db = AppDatabase(NativeDatabase.memory());
         final drugApiClient = _MockDrugApiClient();
         final categoryApiClient = _MockCategoryApiClient();
         when(
@@ -315,7 +329,7 @@ void _searchGolden({
         }
         return ProviderScope(
           overrides: [
-            appDatabaseProvider.overrideWithValue(db),
+            appDatabaseProvider.overrideWithValue(_db),
             drugApiClientProvider.overrideWithValue(drugApiClient),
             categoryApiClientProvider.overrideWithValue(categoryApiClient),
           ],

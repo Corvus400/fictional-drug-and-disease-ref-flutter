@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:drift/native.dart';
 import 'package:fictional_drug_and_disease_ref/config/api_config.dart';
 import 'package:fictional_drug_and_disease_ref/config/flavor.dart';
 import 'package:fictional_drug_and_disease_ref/data/dto/categories/categories_response_dto.dart';
@@ -19,6 +18,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
+import '../../helpers/test_app_database.dart';
+
 void main() {
   ApiConfig.initialize(
     const FlavorConfig(
@@ -26,6 +27,20 @@ void main() {
       apiBaseUrl: 'https://api.example.test',
     ),
   );
+
+  late AppDatabase db;
+
+  setUpAll(() {
+    db = createTestAppDatabase();
+  });
+
+  tearDown(() async {
+    await clearTestAppDatabase(db);
+  });
+
+  tearDownAll(() async {
+    await db.close();
+  });
 
   // Design source:
   // Round6/round6-screens.jsx TopChrome phone metrics.
@@ -40,6 +55,7 @@ void main() {
 
       await tester.pumpWidget(
         ProviderScope(
+          overrides: [appDatabaseProvider.overrideWithValue(db)],
           child: MaterialApp(
             theme: AppTheme.light(),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -74,6 +90,7 @@ void main() {
 
     await tester.pumpWidget(
       ProviderScope(
+        overrides: [appDatabaseProvider.overrideWithValue(db)],
         child: MaterialApp(
           theme: AppTheme.light(),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -99,9 +116,7 @@ void main() {
     await tester.binding.setSurfaceSize(const Size(390, 844));
     addTearDown(() => tester.binding.setSurfaceSize(null));
 
-    final db = AppDatabase(NativeDatabase.memory());
     final drugApiClient = _MockDrugApiClient();
-    addTearDown(db.close);
     when(
       () => drugApiClient.getDrugs(
         page: any(named: 'page'),
@@ -156,9 +171,7 @@ void main() {
   testWidgets('SearchView result list dismisses keyboard on drag', (
     tester,
   ) async {
-    final db = AppDatabase(NativeDatabase.memory());
     final drugApiClient = _MockDrugApiClient();
-    addTearDown(db.close);
     when(
       () => drugApiClient.getDrugs(
         page: any(named: 'page'),
@@ -216,10 +229,8 @@ void main() {
     await tester.binding.setSurfaceSize(const Size(390, 844));
     addTearDown(() => tester.binding.setSurfaceSize(null));
 
-    final db = AppDatabase(NativeDatabase.memory());
     final drugApiClient = _MockDrugApiClient();
     final categoryApiClient = _MockCategoryApiClient();
-    addTearDown(db.close);
     when(
       () => drugApiClient.getDrugs(
         page: any(named: 'page'),
@@ -289,9 +300,7 @@ void main() {
     await tester.binding.setSurfaceSize(const Size(390, 844));
     addTearDown(() => tester.binding.setSurfaceSize(null));
 
-    final db = AppDatabase(NativeDatabase.memory());
     final categoryApiClient = _MockCategoryApiClient();
-    addTearDown(db.close);
     when(
       categoryApiClient.getCategories,
     ).thenAnswer((_) async => _categoriesFixture());
@@ -340,9 +349,7 @@ void main() {
     await tester.binding.setSurfaceSize(const Size(390, 844));
     addTearDown(() => tester.binding.setSurfaceSize(null));
 
-    final db = AppDatabase(NativeDatabase.memory());
     final categoryApiClient = _MockCategoryApiClient();
-    addTearDown(db.close);
     when(
       categoryApiClient.getCategories,
     ).thenAnswer((_) async => _categoriesFixture());
@@ -395,6 +402,7 @@ void main() {
 
     await tester.pumpWidget(
       ProviderScope(
+        overrides: [appDatabaseProvider.overrideWithValue(db)],
         child: MaterialApp(
           theme: AppTheme.light(),
           localizationsDelegates: AppLocalizations.localizationsDelegates,

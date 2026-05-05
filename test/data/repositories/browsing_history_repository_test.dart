@@ -1,21 +1,29 @@
-import 'package:drift/native.dart';
 import 'package:fictional_drug_and_disease_ref/core/result.dart';
 import 'package:fictional_drug_and_disease_ref/data/local/app_database.dart';
 import 'package:fictional_drug_and_disease_ref/data/repositories/browsing_history_repository.dart';
 import 'package:fictional_drug_and_disease_ref/domain/browsing_history/browsing_history_entry.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import '../../helpers/test_app_database.dart';
+
 void main() {
   group('BrowsingHistoryRepository', () {
     late AppDatabase db;
     late BrowsingHistoryRepository repository;
 
+    setUpAll(() {
+      db = createTestAppDatabase();
+    });
+
     setUp(() {
-      db = AppDatabase(NativeDatabase.memory());
       repository = BrowsingHistoryRepository(db.browsingHistoriesDao);
     });
 
     tearDown(() async {
+      await clearTestAppDatabase(db);
+    });
+
+    tearDownAll(() async {
       await db.close();
     });
 

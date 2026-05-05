@@ -4,7 +4,6 @@ import 'dart:io';
 import 'dart:ui';
 
 import 'package:dio/dio.dart';
-import 'package:drift/native.dart';
 import 'package:fictional_drug_and_disease_ref/application/providers/usecase_providers.dart';
 import 'package:fictional_drug_and_disease_ref/config/api_config.dart';
 import 'package:fictional_drug_and_disease_ref/config/flavor.dart';
@@ -32,6 +31,8 @@ import 'package:go_router/go_router.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
+import '../../helpers/test_app_database.dart';
+
 void main() {
   ApiConfig.initialize(
     const FlavorConfig(
@@ -40,12 +41,27 @@ void main() {
     ),
   );
 
+  late AppDatabase db;
+
+  setUpAll(() {
+    db = createTestAppDatabase();
+  });
+
+  tearDown(() async {
+    await clearTestAppDatabase(db);
+  });
+
+  tearDownAll(() async {
+    await db.close();
+  });
+
   testWidgets('SearchView renders Round6 search chrome without placeholder', (
     tester,
   ) async {
     await tester.pumpWidget(
-      const ProviderScope(
-        child: MaterialApp(
+      ProviderScope(
+        overrides: [appDatabaseProvider.overrideWithValue(db)],
+        child: const MaterialApp(
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: SearchView(),
@@ -64,9 +80,6 @@ void main() {
   testWidgets('SearchView renders Round6 no-history empty state on idle', (
     tester,
   ) async {
-    final db = AppDatabase(NativeDatabase.memory());
-    addTearDown(db.close);
-
     await tester.pumpWidget(
       ProviderScope(
         overrides: [appDatabaseProvider.overrideWithValue(db)],
@@ -91,9 +104,6 @@ void main() {
     (
       tester,
     ) async {
-      final db = AppDatabase(NativeDatabase.memory());
-      addTearDown(db.close);
-
       await tester.pumpWidget(
         ProviderScope(
           overrides: [appDatabaseProvider.overrideWithValue(db)],
@@ -121,8 +131,9 @@ void main() {
     tester,
   ) async {
     await tester.pumpWidget(
-      const ProviderScope(
-        child: MaterialApp(
+      ProviderScope(
+        overrides: [appDatabaseProvider.overrideWithValue(db)],
+        child: const MaterialApp(
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: SearchView(),
@@ -145,8 +156,9 @@ void main() {
     tester,
   ) async {
     await tester.pumpWidget(
-      const ProviderScope(
-        child: MaterialApp(
+      ProviderScope(
+        overrides: [appDatabaseProvider.overrideWithValue(db)],
+        child: const MaterialApp(
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: SearchView(),
@@ -169,8 +181,9 @@ void main() {
     tester,
   ) async {
     await tester.pumpWidget(
-      const ProviderScope(
-        child: MaterialApp(
+      ProviderScope(
+        overrides: [appDatabaseProvider.overrideWithValue(db)],
+        child: const MaterialApp(
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: SearchView(),
@@ -196,6 +209,7 @@ void main() {
   testWidgets('SearchView uses SearchPalette from theme', (tester) async {
     await tester.pumpWidget(
       ProviderScope(
+        overrides: [appDatabaseProvider.overrideWithValue(db)],
         child: MaterialApp(
           theme: AppTheme.light(),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -212,8 +226,6 @@ void main() {
   testWidgets('SearchView renders persisted search history when focused', (
     tester,
   ) async {
-    final db = AppDatabase(NativeDatabase.memory());
-    addTearDown(db.close);
     final container = ProviderContainer(
       overrides: [appDatabaseProvider.overrideWithValue(db)],
     );
@@ -254,9 +266,7 @@ void main() {
   testWidgets('history row tap restores params and triggers search', (
     tester,
   ) async {
-    final db = AppDatabase(NativeDatabase.memory());
     final drugApiClient = _MockDrugApiClient();
-    addTearDown(db.close);
     when(
       () => drugApiClient.getDrugs(
         page: any(named: 'page'),
@@ -319,9 +329,6 @@ void main() {
   testWidgets('SearchView hides idle no-history panel while focused', (
     tester,
   ) async {
-    final db = AppDatabase(NativeDatabase.memory());
-    addTearDown(db.close);
-
     await tester.pumpWidget(
       ProviderScope(
         overrides: [appDatabaseProvider.overrideWithValue(db)],
@@ -345,8 +352,6 @@ void main() {
   testWidgets('SearchView renders Round6 history row metadata and note', (
     tester,
   ) async {
-    final db = AppDatabase(NativeDatabase.memory());
-    addTearDown(db.close);
     final container = ProviderContainer(
       overrides: [appDatabaseProvider.overrideWithValue(db)],
     );
@@ -388,8 +393,6 @@ void main() {
   });
 
   testWidgets('drug history row shows Rx pill', (tester) async {
-    final db = AppDatabase(NativeDatabase.memory());
-    addTearDown(db.close);
     final container = ProviderContainer(
       overrides: [appDatabaseProvider.overrideWithValue(db)],
     );
@@ -426,8 +429,6 @@ void main() {
   });
 
   testWidgets('disease history row shows Dx pill', (tester) async {
-    final db = AppDatabase(NativeDatabase.memory());
-    addTearDown(db.close);
     final container = ProviderContainer(
       overrides: [appDatabaseProvider.overrideWithValue(db)],
     );
@@ -468,8 +469,6 @@ void main() {
   testWidgets('drug history Rx pill uses drug tint background', (
     tester,
   ) async {
-    final db = AppDatabase(NativeDatabase.memory());
-    addTearDown(db.close);
     final container = ProviderContainer(
       overrides: [appDatabaseProvider.overrideWithValue(db)],
     );
@@ -514,8 +513,6 @@ void main() {
     tester,
   ) async {
     final now = DateTime.utc(2026, 5, 5, 12);
-    final db = AppDatabase(NativeDatabase.memory());
-    addTearDown(db.close);
     final container = ProviderContainer(
       overrides: [appDatabaseProvider.overrideWithValue(db)],
     );
@@ -570,8 +567,6 @@ void main() {
   testWidgets('SearchView deletes a persisted history row from dropdown', (
     tester,
   ) async {
-    final db = AppDatabase(NativeDatabase.memory());
-    addTearDown(db.close);
     final container = ProviderContainer(
       overrides: [appDatabaseProvider.overrideWithValue(db)],
     );
@@ -614,8 +609,6 @@ void main() {
   });
 
   testWidgets('history row swipe dismisses the entry', (tester) async {
-    final db = AppDatabase(NativeDatabase.memory());
-    addTearDown(db.close);
     final container = ProviderContainer(
       overrides: [appDatabaseProvider.overrideWithValue(db)],
     );
@@ -662,8 +655,6 @@ void main() {
   testWidgets('SearchView clears persisted history after confirmation', (
     tester,
   ) async {
-    final db = AppDatabase(NativeDatabase.memory());
-    addTearDown(db.close);
     final container = ProviderContainer(
       overrides: [appDatabaseProvider.overrideWithValue(db)],
     );
@@ -712,8 +703,6 @@ void main() {
     (tester) async {
       await tester.binding.setSurfaceSize(const Size(430, 932));
       addTearDown(() => tester.binding.setSurfaceSize(null));
-      final db = AppDatabase(NativeDatabase.memory());
-      addTearDown(db.close);
       final container = ProviderContainer(
         overrides: [appDatabaseProvider.overrideWithValue(db)],
       );
@@ -769,8 +758,6 @@ void main() {
     (tester) async {
       await tester.binding.setSurfaceSize(const Size(834, 1194));
       addTearDown(() => tester.binding.setSurfaceSize(null));
-      final db = AppDatabase(NativeDatabase.memory());
-      addTearDown(db.close);
       final container = ProviderContainer(
         overrides: [appDatabaseProvider.overrideWithValue(db)],
       );
@@ -819,10 +806,8 @@ void main() {
   testWidgets('SearchView renders drug results from repository state', (
     tester,
   ) async {
-    final db = AppDatabase(NativeDatabase.memory());
     final drugApiClient = _MockDrugApiClient();
     final categoryApiClient = _MockCategoryApiClient();
-    addTearDown(db.close);
     when(
       categoryApiClient.getCategories,
     ).thenAnswer((_) async => _categoriesFixture());
@@ -867,13 +852,11 @@ void main() {
   testWidgets('result card tap navigates to drug detail with correct id', (
     tester,
   ) async {
-    final db = AppDatabase(NativeDatabase.memory());
     final drugApiClient = _MockDrugApiClient();
     final fixture = _drugListFixture();
     final item = fixture.items.firstWhere(
       (item) => item.brandName != item.genericName,
     );
-    addTearDown(db.close);
     when(
       () => drugApiClient.getDrugs(
         page: any(named: 'page'),
@@ -939,11 +922,9 @@ void main() {
   testWidgets('result card tap navigates to disease detail with correct id', (
     tester,
   ) async {
-    final db = AppDatabase(NativeDatabase.memory());
     final diseaseApiClient = _MockDiseaseApiClient();
     final fixture = _diseaseListFixture();
     final item = fixture.items.first;
-    addTearDown(db.close);
     when(
       () => diseaseApiClient.getDiseases(
         page: any(named: 'page'),
@@ -1017,10 +998,8 @@ void main() {
           apiBaseUrl: 'https://api.example.test',
         ),
       );
-      final db = AppDatabase(NativeDatabase.memory());
       final drugApiClient = _MockDrugApiClient();
       final fixture = _drugListFixture();
-      addTearDown(db.close);
       when(
         () => drugApiClient.getDrugs(
           page: any(named: 'page'),
@@ -1072,10 +1051,8 @@ void main() {
         apiBaseUrl: 'https://api.example.test',
       ),
     );
-    final db = AppDatabase(NativeDatabase.memory());
     final drugApiClient = _MockDrugApiClient();
     final fixture = _drugListFixture();
-    addTearDown(db.close);
     when(
       () => drugApiClient.getDrugs(
         page: any(named: 'page'),
@@ -1112,13 +1089,11 @@ void main() {
   });
 
   testWidgets('SearchView loads next page near list end', (tester) async {
-    final db = AppDatabase(NativeDatabase.memory());
     final drugApiClient = _MockDrugApiClient();
     final fixture = _drugListFixture();
     final scrollableFixture = fixture.copyWith(
       items: List.filled(20, fixture.items.first),
     );
-    addTearDown(db.close);
     when(
       () => drugApiClient.getDrugs(
         page: any(named: 'page'),
@@ -1165,10 +1140,8 @@ void main() {
   testWidgets('SearchView renders empty state for empty drug results', (
     tester,
   ) async {
-    final db = AppDatabase(NativeDatabase.memory());
     final drugApiClient = _MockDrugApiClient();
     final categoryApiClient = _MockCategoryApiClient();
-    addTearDown(db.close);
     when(
       categoryApiClient.getCategories,
     ).thenAnswer((_) async => _categoriesFixture());
@@ -1210,9 +1183,7 @@ void main() {
   testWidgets('SearchView renders empty state recovery CTAs', (
     tester,
   ) async {
-    final db = AppDatabase(NativeDatabase.memory());
     final drugApiClient = _MockDrugApiClient();
-    addTearDown(db.close);
     when(
       () => drugApiClient.getDrugs(
         page: any(named: 'page'),
@@ -1252,10 +1223,8 @@ void main() {
   testWidgets('SearchView empty results keep history out of result space', (
     tester,
   ) async {
-    final db = AppDatabase(NativeDatabase.memory());
     final drugApiClient = _MockDrugApiClient();
     final categoryApiClient = _MockCategoryApiClient();
-    addTearDown(db.close);
     when(
       categoryApiClient.getCategories,
     ).thenAnswer((_) async => _categoriesFixture());
@@ -1320,9 +1289,7 @@ void main() {
   testWidgets('SearchView renders error state for search failure', (
     tester,
   ) async {
-    final db = AppDatabase(NativeDatabase.memory());
     final drugApiClient = _MockDrugApiClient();
-    addTearDown(db.close);
     when(
       () => drugApiClient.getDrugs(
         page: any(named: 'page'),
@@ -1371,9 +1338,7 @@ void main() {
   testWidgets(
     'SearchView renders error diagnostics for api response failure',
     (tester) async {
-      final db = AppDatabase(NativeDatabase.memory());
       final drugApiClient = _MockDrugApiClient();
-      addTearDown(db.close);
       when(
         () => drugApiClient.getDrugs(
           page: any(named: 'page'),
@@ -1430,10 +1395,8 @@ void main() {
   testWidgets('SearchView retry runs search again after failure', (
     tester,
   ) async {
-    final db = AppDatabase(NativeDatabase.memory());
     final drugApiClient = _MockDrugApiClient();
     var callCount = 0;
-    addTearDown(db.close);
     when(
       () => drugApiClient.getDrugs(
         page: any(named: 'page'),
@@ -1485,10 +1448,8 @@ void main() {
   testWidgets('SearchView opens filter sheet from FAB with applied count', (
     tester,
   ) async {
-    final db = AppDatabase(NativeDatabase.memory());
     final drugApiClient = _MockDrugApiClient();
     final categoryApiClient = _MockCategoryApiClient();
-    addTearDown(db.close);
     when(
       categoryApiClient.getCategories,
     ).thenAnswer((_) async => _categoriesFixture());
@@ -1535,10 +1496,8 @@ void main() {
   testWidgets('SearchView applies drug filters from category master sheet', (
     tester,
   ) async {
-    final db = AppDatabase(NativeDatabase.memory());
     final drugApiClient = _MockDrugApiClient();
     final categoryApiClient = _MockCategoryApiClient();
-    addTearDown(db.close);
     when(
       categoryApiClient.getCategories,
     ).thenAnswer((_) async => _categoriesFixture());
@@ -1635,10 +1594,8 @@ void main() {
   testWidgets('SearchView shows applied filters and hides history on results', (
     tester,
   ) async {
-    final db = AppDatabase(NativeDatabase.memory());
     final drugApiClient = _MockDrugApiClient();
     final categoryApiClient = _MockCategoryApiClient();
-    addTearDown(db.close);
     when(
       categoryApiClient.getCategories,
     ).thenAnswer((_) async => _categoriesFixture());
@@ -1684,10 +1641,8 @@ void main() {
   });
 
   testWidgets('applied chip tap removes only that chip', (tester) async {
-    final db = AppDatabase(NativeDatabase.memory());
     final drugApiClient = _MockDrugApiClient();
     final categoryApiClient = _MockCategoryApiClient();
-    addTearDown(db.close);
     when(
       categoryApiClient.getCategories,
     ).thenAnswer((_) async => _categoriesFixture());
@@ -1741,10 +1696,8 @@ void main() {
   testWidgets('SearchView applies disease filters from category master sheet', (
     tester,
   ) async {
-    final db = AppDatabase(NativeDatabase.memory());
     final diseaseApiClient = _MockDiseaseApiClient();
     final categoryApiClient = _MockCategoryApiClient();
-    addTearDown(db.close);
     when(
       categoryApiClient.getCategories,
     ).thenAnswer((_) async => _categoriesFixture());
@@ -1831,9 +1784,7 @@ void main() {
   testWidgets('SearchView renders disease summary fields in result cards', (
     tester,
   ) async {
-    final db = AppDatabase(NativeDatabase.memory());
     final diseaseApiClient = _MockDiseaseApiClient();
-    addTearDown(db.close);
     when(
       () => diseaseApiClient.getDiseases(
         page: any(named: 'page'),
@@ -1870,9 +1821,7 @@ void main() {
   testWidgets('SearchView labels all ICD-10 chapters in disease cards', (
     tester,
   ) async {
-    final db = AppDatabase(NativeDatabase.memory());
     final diseaseApiClient = _MockDiseaseApiClient();
-    addTearDown(db.close);
     when(
       () => diseaseApiClient.getDiseases(
         page: any(named: 'page'),
@@ -1906,9 +1855,7 @@ void main() {
   testWidgets('SearchView stretches disease cards to the result width', (
     tester,
   ) async {
-    final db = AppDatabase(NativeDatabase.memory());
     final diseaseApiClient = _MockDiseaseApiClient();
-    addTearDown(db.close);
     when(
       () => diseaseApiClient.getDiseases(
         page: any(named: 'page'),
@@ -1953,9 +1900,7 @@ void main() {
   testWidgets('SearchView colors drug regulatory badges by classification', (
     tester,
   ) async {
-    final db = AppDatabase(NativeDatabase.memory());
     final drugApiClient = _MockDrugApiClient();
-    addTearDown(db.close);
     when(
       () => drugApiClient.getDrugs(
         page: any(named: 'page'),
@@ -2008,9 +1953,7 @@ void main() {
   testWidgets('SearchView opens drug sort sheet from results toolbar', (
     tester,
   ) async {
-    final db = AppDatabase(NativeDatabase.memory());
     final drugApiClient = _MockDrugApiClient();
-    addTearDown(db.close);
     when(
       () => drugApiClient.getDrugs(
         page: any(named: 'page'),
@@ -2050,9 +1993,7 @@ void main() {
   testWidgets('SearchView applies selected drug sort from sort sheet', (
     tester,
   ) async {
-    final db = AppDatabase(NativeDatabase.memory());
     final drugApiClient = _MockDrugApiClient();
-    addTearDown(db.close);
     when(
       () => drugApiClient.getDrugs(
         page: any(named: 'page'),
@@ -2101,10 +2042,8 @@ void main() {
     (
       tester,
     ) async {
-      final db = AppDatabase(NativeDatabase.memory());
       final drugApiClient = _MockDrugApiClient();
       final pending = Completer<DrugListResponseDto>();
-      addTearDown(db.close);
       when(
         () => drugApiClient.getDrugs(
           page: any(named: 'page'),
