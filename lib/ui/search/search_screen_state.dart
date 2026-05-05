@@ -1,5 +1,6 @@
 import 'package:fictional_drug_and_disease_ref/application/search/search_history_envelope.dart';
 import 'package:fictional_drug_and_disease_ref/core/error/app_exception.dart';
+import 'package:fictional_drug_and_disease_ref/domain/category/categories.dart';
 import 'package:fictional_drug_and_disease_ref/domain/disease/disease_search_params.dart';
 import 'package:fictional_drug_and_disease_ref/domain/disease/disease_summary.dart';
 import 'package:fictional_drug_and_disease_ref/domain/drug/drug_search_params.dart';
@@ -26,6 +27,7 @@ final class SearchScreenState {
     required this.historyForTab,
     required this.historyDropdownOpen,
     required this.appliedChips,
+    required this.categories,
   });
 
   /// Initial state.
@@ -38,6 +40,7 @@ final class SearchScreenState {
     historyForTab: [],
     historyDropdownOpen: false,
     appliedChips: AppliedFilterChips([]),
+    categories: null,
   );
 
   /// Active tab.
@@ -64,6 +67,9 @@ final class SearchScreenState {
   /// Applied filter chips.
   final AppliedFilterChips appliedChips;
 
+  /// Filter category master data.
+  final Categories? categories;
+
   /// Copies state.
   SearchScreenState copyWith({
     SearchTab? tab,
@@ -74,6 +80,7 @@ final class SearchScreenState {
     List<SearchHistoryEnvelope>? historyForTab,
     bool? historyDropdownOpen,
     AppliedFilterChips? appliedChips,
+    Categories? categories,
   }) {
     return SearchScreenState(
       tab: tab ?? this.tab,
@@ -84,6 +91,7 @@ final class SearchScreenState {
       historyForTab: historyForTab ?? this.historyForTab,
       historyDropdownOpen: historyDropdownOpen ?? this.historyDropdownOpen,
       appliedChips: appliedChips ?? this.appliedChips,
+      categories: categories ?? this.categories,
     );
   }
 }

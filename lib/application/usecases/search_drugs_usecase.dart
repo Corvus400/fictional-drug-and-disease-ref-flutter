@@ -39,6 +39,9 @@ final class SearchDrugsUsecase {
   }
 
   Future<void> _recordHistory(DrugSearchParams params, int totalCount) async {
+    if (!hasSearchHistoryKeyword(params.keyword)) {
+      return;
+    }
     final searchedAt = _clock();
     final queryJson = _codec.encode(params);
     final result = await _searchHistoryRepository.insertWithDedup(
@@ -62,4 +65,9 @@ String buildSearchHistoryId(String target, DateTime searchedAt, String query) {
   final epoch = searchedAt.millisecondsSinceEpoch;
   final hash = query.hashCode.toUnsigned(32).toRadixString(16);
   return '${target}_${epoch}_$hash';
+}
+
+/// Whether search params have a displayable keyword for search history.
+bool hasSearchHistoryKeyword(String? keyword) {
+  return keyword != null && keyword.trim().isNotEmpty;
 }

@@ -87,7 +87,22 @@ class AppLocalizationsJa extends AppLocalizations {
   String get searchHistoryTitle => '検索履歴';
 
   @override
-  String get searchHistoryClear => 'すべて削除';
+  String get searchHistoryEmptyTitle => '検索履歴はまだありません';
+
+  @override
+  String get searchHistoryEmptyDescription =>
+      '検索すると履歴が最大 5 件まで残ります。\n履歴は端末内にのみ保存されます。';
+
+  @override
+  String get searchHistoryClear => 'すべて消す';
+
+  @override
+  String get searchHistoryPrivacyNote => '最新 5 件まで表示。履歴は端末内にのみ保存されます';
+
+  @override
+  String searchHistoryFilterCount(int count) {
+    return '絞り込み +$count';
+  }
 
   @override
   String get searchHistoryClearConfirmTitle => '検索履歴を削除しますか？';
@@ -99,6 +114,9 @@ class AppLocalizationsJa extends AppLocalizations {
   String searchToolbarTotal(int count) {
     return '合計 $count 件';
   }
+
+  @override
+  String get searchToolbarApplied => '適用中';
 
   @override
   String get searchToolbarLoadMore => 'さらに読み込む';
@@ -125,7 +143,115 @@ class AppLocalizationsJa extends AppLocalizations {
   String get searchFilterTitle => '絞り込み';
 
   @override
+  String searchFilterTitleForTarget(String target) {
+    return '絞り込み（$target）';
+  }
+
+  @override
   String get searchFilterApply => '結果を見る';
+
+  @override
+  String searchFilterApplyWithCount(int count) {
+    return '結果を見る ($count 件)';
+  }
+
+  @override
+  String get searchFilterReset => 'リセット';
+
+  @override
+  String searchFilterAxisPolicy(int count) {
+    return '$count 軸 · 軸内 OR / 軸間 AND';
+  }
+
+  @override
+  String get searchFilterSummaryAll => 'すべて';
+
+  @override
+  String get searchFilterSummaryUnspecified => '未指定';
+
+  @override
+  String searchFilterHintMultiValue(int count) {
+    return '$count 値・複数選択 OR';
+  }
+
+  @override
+  String searchFilterHintSingleValue(int count) {
+    return '$count 値・単一選択';
+  }
+
+  @override
+  String get searchFilterHintBool => 'bool';
+
+  @override
+  String get searchFilterHintPartialMatch => '部分一致';
+
+  @override
+  String get searchFilterHintHierarchy => '階層選択';
+
+  @override
+  String searchFilterHintDrillIn(int count) {
+    return '$count 章・ドリルイン';
+  }
+
+  @override
+  String get searchFilterDrugRegulatoryClass => '薬事分類';
+
+  @override
+  String get searchFilterDrugDosageForm => '剤形';
+
+  @override
+  String get searchFilterDrugRoute => '投与経路';
+
+  @override
+  String get searchFilterDrugAtc => 'ATC 第 1 階層';
+
+  @override
+  String get searchFilterDrugTherapeuticCategory => '薬効分類';
+
+  @override
+  String get searchFilterDrugAdverseReactionKeyword => '副作用キーワード';
+
+  @override
+  String get searchFilterDrugPrecautionCategory => '患者背景';
+
+  @override
+  String get searchFilterDiseaseIcd10Chapter => 'ICD-10 章';
+
+  @override
+  String get searchFilterDiseaseDepartment => '診療科';
+
+  @override
+  String get searchFilterDiseaseChronicity => '慢性度';
+
+  @override
+  String get searchFilterDiseaseInfectious => '感染性';
+
+  @override
+  String get searchFilterDiseaseSymptomKeyword => '症状キーワード';
+
+  @override
+  String get searchFilterDiseaseOnsetPattern => '発症パターン';
+
+  @override
+  String get searchFilterDiseaseExamCategory => '検査区分';
+
+  @override
+  String get searchFilterDiseaseHasPharmacologicalTreatment => '薬物治療あり';
+
+  @override
+  String get searchFilterDiseaseHasSeverityGrading => '重症度評価あり';
+
+  @override
+  String get searchDiseasePharmacologicalTreatmentTrue => '薬物治療あり';
+
+  @override
+  String get searchDiseasePharmacologicalTreatmentFalse => '薬物治療なし';
+
+  @override
+  String get searchDiseaseSeverityGradingTrue => '重症度評価あり';
+
+  @override
+  String get searchDiseaseSeverityGradingFalse => '重症度評価なし';
 
   @override
   String get searchSortTitle => '並び替え';
@@ -141,6 +267,315 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get searchSortByTherapeuticCategory => '薬効分類名';
+
+  @override
+  String get searchDrugRegulatoryPoison => '毒薬';
+
+  @override
+  String get searchDrugRegulatoryPotent => '劇薬';
+
+  @override
+  String get searchDrugRegulatoryPrescriptionRequired => '処方箋医薬品';
+
+  @override
+  String get searchDrugRegulatoryOrdinary => '普通薬';
+
+  @override
+  String get searchDrugRegulatoryPsychotropic1 => '向精神薬第1種';
+
+  @override
+  String get searchDrugRegulatoryPsychotropic2 => '向精神薬第2種';
+
+  @override
+  String get searchDrugRegulatoryPsychotropic3 => '向精神薬第3種';
+
+  @override
+  String get searchDrugRegulatoryNarcotic => '麻薬';
+
+  @override
+  String get searchDrugRegulatoryStimulantPrecursor => '覚醒剤原料';
+
+  @override
+  String get searchDrugRegulatoryBiological => '生物由来製品';
+
+  @override
+  String get searchDrugRegulatorySpecifiedBiological => '特定生物由来製品';
+
+  @override
+  String get searchDrugDosageFormTablet => '錠剤';
+
+  @override
+  String get searchDrugDosageFormCapsule => 'カプセル';
+
+  @override
+  String get searchDrugDosageFormPowder => '散剤';
+
+  @override
+  String get searchDrugDosageFormGranule => '顆粒剤';
+
+  @override
+  String get searchDrugDosageFormLiquid => '液剤';
+
+  @override
+  String get searchDrugDosageFormInjection => '注射剤';
+
+  @override
+  String get searchDrugDosageFormOintment => '軟膏';
+
+  @override
+  String get searchDrugDosageFormCream => 'クリーム';
+
+  @override
+  String get searchDrugDosageFormPatch => '貼付剤';
+
+  @override
+  String get searchDrugDosageFormEyeDrops => '点眼剤';
+
+  @override
+  String get searchDrugDosageFormSuppository => '坐剤';
+
+  @override
+  String get searchDrugDosageFormInhaler => '吸入剤';
+
+  @override
+  String get searchDrugDosageFormNasalSpray => '点鼻剤';
+
+  @override
+  String get searchDrugRouteOral => '経口';
+
+  @override
+  String get searchDrugRouteTopical => '外用';
+
+  @override
+  String get searchDrugRouteInjection => '注射';
+
+  @override
+  String get searchDrugRouteInhalation => '吸入';
+
+  @override
+  String get searchDrugRouteRectal => '直腸';
+
+  @override
+  String get searchDrugRouteOphthalmic => '眼科';
+
+  @override
+  String get searchDrugRouteNasal => '鼻腔';
+
+  @override
+  String get searchDrugRouteTransdermal => '経皮';
+
+  @override
+  String get searchDrugPrecautionComorbidity => '合併症';
+
+  @override
+  String get searchDrugPrecautionRenalImpairment => '腎機能障害';
+
+  @override
+  String get searchDrugPrecautionHepaticImpairment => '肝機能障害';
+
+  @override
+  String get searchDrugPrecautionReproductivePotential => '生殖能を有する患者';
+
+  @override
+  String get searchDrugPrecautionPregnant => '妊婦';
+
+  @override
+  String get searchDrugPrecautionLactating => '授乳婦';
+
+  @override
+  String get searchDrugPrecautionPediatric => '小児等';
+
+  @override
+  String get searchDrugPrecautionGeriatric => '高齢者';
+
+  @override
+  String get searchDiseaseDepartmentInternalMedicine => '内科';
+
+  @override
+  String get searchDiseaseDepartmentCardiology => '循環器内科';
+
+  @override
+  String get searchDiseaseDepartmentGastroenterology => '消化器内科';
+
+  @override
+  String get searchDiseaseDepartmentEndocrinology => '内分泌内科';
+
+  @override
+  String get searchDiseaseDepartmentNeurology => '神経内科';
+
+  @override
+  String get searchDiseaseDepartmentPsychiatry => '精神科';
+
+  @override
+  String get searchDiseaseDepartmentSurgery => '外科';
+
+  @override
+  String get searchDiseaseDepartmentOrthopedics => '整形外科';
+
+  @override
+  String get searchDiseaseDepartmentDermatology => '皮膚科';
+
+  @override
+  String get searchDiseaseDepartmentOphthalmology => '眼科';
+
+  @override
+  String get searchDiseaseDepartmentOtolaryngology => '耳鼻咽喉科';
+
+  @override
+  String get searchDiseaseDepartmentUrology => '泌尿器科';
+
+  @override
+  String get searchDiseaseDepartmentGynecology => '婦人科';
+
+  @override
+  String get searchDiseaseDepartmentPediatrics => '小児科';
+
+  @override
+  String get searchDiseaseDepartmentEmergency => '救急科';
+
+  @override
+  String get searchDiseaseDepartmentInfectiousDisease => '感染症内科';
+
+  @override
+  String get searchDiseaseChronicityAcute => '急性';
+
+  @override
+  String get searchDiseaseChronicitySubacute => '亜急性';
+
+  @override
+  String get searchDiseaseChronicityChronic => '慢性';
+
+  @override
+  String get searchDiseaseChronicityRecurrent => '再発性';
+
+  @override
+  String get searchDiseaseInfectiousTrue => '感染性';
+
+  @override
+  String get searchDiseaseInfectiousFalse => '非感染性';
+
+  @override
+  String get searchDiseaseOnsetPatternSudden => '突然発症';
+
+  @override
+  String get searchDiseaseOnsetPatternGradual => '緩徐発症';
+
+  @override
+  String get searchDiseaseOnsetPatternEpisodic => '発作性';
+
+  @override
+  String get searchDiseaseOnsetPatternProgressive => '進行性';
+
+  @override
+  String get searchDiseaseOnsetPatternCongenital => '先天性';
+
+  @override
+  String get searchDiseaseExamCategoryBlood => '血液検査';
+
+  @override
+  String get searchDiseaseExamCategoryImaging => '画像検査';
+
+  @override
+  String get searchDiseaseExamCategoryPhysiological => '生理検査';
+
+  @override
+  String get searchDiseaseExamCategoryPathological => '病理検査';
+
+  @override
+  String get searchDiseaseExamCategoryGenetic => '遺伝子検査';
+
+  @override
+  String get searchDiseaseBoolTrue => 'あり';
+
+  @override
+  String get searchDiseaseBoolFalse => 'なし';
+
+  @override
+  String get searchDiseaseIcd10ChapterI => 'I 感染症および寄生虫症';
+
+  @override
+  String get searchDiseaseIcd10ChapterII => 'II 新生物';
+
+  @override
+  String get searchDiseaseIcd10ChapterIII => 'III 血液および造血器の疾患ならびに免疫機構の障害';
+
+  @override
+  String get searchDiseaseIcd10ChapterIV => 'IV 内分泌、栄養および代謝疾患';
+
+  @override
+  String get searchDiseaseIcd10ChapterV => 'V 精神および行動の障害';
+
+  @override
+  String get searchDiseaseIcd10ChapterVI => 'VI 神経系の疾患';
+
+  @override
+  String get searchDiseaseIcd10ChapterVII => 'VII 眼および付属器の疾患';
+
+  @override
+  String get searchDiseaseIcd10ChapterVIII => 'VIII 耳および乳様突起の疾患';
+
+  @override
+  String get searchDiseaseIcd10ChapterIX => 'IX 循環器系の疾患';
+
+  @override
+  String get searchDiseaseIcd10ChapterX => 'X 呼吸器系の疾患';
+
+  @override
+  String get searchDiseaseIcd10ChapterXI => 'XI 消化器系の疾患';
+
+  @override
+  String get searchDiseaseIcd10ChapterXII => 'XII 皮膚および皮下組織の疾患';
+
+  @override
+  String get searchDiseaseIcd10ChapterXIII => 'XIII 筋骨格系および結合組織の疾患';
+
+  @override
+  String get searchDiseaseIcd10ChapterXIV => 'XIV 腎尿路生殖器系の疾患';
+
+  @override
+  String get searchDiseaseIcd10ChapterXV => 'XV 妊娠、分娩および産褥';
+
+  @override
+  String get searchDiseaseIcd10ChapterXVI => 'XVI 周産期に発生した病態';
+
+  @override
+  String get searchDiseaseIcd10ChapterXVII => 'XVII 先天奇形、変形および染色体異常';
+
+  @override
+  String get searchDiseaseIcd10ChapterXVIII =>
+      'XVIII 症状、徴候および異常臨床所見・異常検査所見で他に分類されないもの';
+
+  @override
+  String get searchDiseaseIcd10ChapterXIX => 'XIX 損傷、中毒およびその他の外因の影響';
+
+  @override
+  String get searchDiseaseIcd10ChapterXX => 'XX 傷病および死亡の外因';
+
+  @override
+  String get searchDiseaseIcd10ChapterXXI => 'XXI 健康状態に影響を及ぼす要因および保健サービスの利用';
+
+  @override
+  String get searchDiseaseIcd10ChapterXXII => 'XXII 特殊目的用コード';
+
+  @override
+  String searchDiseaseMetaIcd10(String chapter) {
+    return 'ICD-10: $chapter';
+  }
+
+  @override
+  String searchDiseaseMetaRevised(String date) {
+    return '改訂 $date';
+  }
+
+  @override
+  String searchDrugMetaAtc(String code) {
+    return 'ATC: $code';
+  }
+
+  @override
+  String searchDrugMetaRevised(String date) {
+    return '改訂 $date';
+  }
 
   @override
   String get errorNetwork => 'ネットワークエラーが発生しました';

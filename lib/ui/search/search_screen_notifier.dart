@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:fictional_drug_and_disease_ref/application/providers/usecase_providers.dart';
 import 'package:fictional_drug_and_disease_ref/application/search/search_history_envelope.dart';
 import 'package:fictional_drug_and_disease_ref/core/result.dart';
+import 'package:fictional_drug_and_disease_ref/domain/category/categories.dart';
 import 'package:fictional_drug_and_disease_ref/domain/disease/disease_list_page.dart';
 import 'package:fictional_drug_and_disease_ref/domain/disease/disease_search_params.dart';
 import 'package:fictional_drug_and_disease_ref/domain/disease/disease_summary.dart';
@@ -75,9 +76,25 @@ final class SearchScreenNotifier extends Notifier<SearchScreenState> {
     }
   }
 
+  /// Loads category master data used by filter sheets.
+  Future<void> loadCategories({bool forceRefresh = false}) async {
+    if (state.categories != null && !forceRefresh) {
+      return;
+    }
+    final result = await ref
+        .read(loadCategoriesUsecaseProvider)
+        .execute(forceRefresh: forceRefresh);
+    if (result case Ok<Categories>(:final value)) {
+      state = state.copyWith(categories: value);
+    }
+  }
+
   /// Performs first-page search.
   Future<void> performSearch() async {
-    state = state.copyWith(phase: const SearchPhase.loading());
+    state = state.copyWith(
+      phase: const SearchPhase.loading(),
+      historyDropdownOpen: false,
+    );
     if (state.tab == SearchTab.drugs) {
       final params = _copyDrugParams(
         state.drugParams,
@@ -147,19 +164,75 @@ final class SearchScreenNotifier extends Notifier<SearchScreenState> {
 
   /// Applies drug filter values and searches immediately.
   Future<void> applyDrugFilter({
+    String? categoryAtc,
+    String? therapeuticCategory,
     List<String>? regulatoryClass,
     List<String>? dosageForm,
+    List<String>? route,
+    String? adverseReactionKeyword,
+    List<String>? precautionCategory,
   }) async {
     state = state.copyWith(
       drugParams: _copyDrugParams(
         state.drugParams,
         page: 1,
+        categoryAtc: categoryAtc,
+        therapeuticCategory: therapeuticCategory,
         regulatoryClass: regulatoryClass,
         dosageForm: dosageForm,
+        route: route,
+        adverseReactionKeyword: adverseReactionKeyword,
+        precautionCategory: precautionCategory,
       ),
       appliedChips: _drugChips(
+        categoryAtc: categoryAtc,
+        therapeuticCategory: therapeuticCategory,
         regulatoryClass: regulatoryClass,
         dosageForm: dosageForm,
+        route: route,
+        adverseReactionKeyword: adverseReactionKeyword,
+        precautionCategory: precautionCategory,
+      ),
+    );
+    await performSearch();
+  }
+
+  /// Applies disease filter values and searches immediately.
+  Future<void> applyDiseaseFilter({
+    List<String>? icd10Chapter,
+    List<String>? department,
+    List<String>? chronicity,
+    bool? infectious,
+    String? symptomKeyword,
+    List<String>? onsetPattern,
+    List<String>? examCategory,
+    bool? hasPharmacologicalTreatment,
+    bool? hasSeverityGrading,
+  }) async {
+    state = state.copyWith(
+      diseaseParams: _copyDiseaseParams(
+        state.diseaseParams,
+        page: 1,
+        icd10Chapter: icd10Chapter,
+        department: department,
+        chronicity: chronicity,
+        infectious: infectious,
+        symptomKeyword: symptomKeyword,
+        onsetPattern: onsetPattern,
+        examCategory: examCategory,
+        hasPharmacologicalTreatment: hasPharmacologicalTreatment,
+        hasSeverityGrading: hasSeverityGrading,
+      ),
+      appliedChips: _diseaseChips(
+        icd10Chapter: icd10Chapter,
+        department: department,
+        chronicity: chronicity,
+        infectious: infectious,
+        symptomKeyword: symptomKeyword,
+        onsetPattern: onsetPattern,
+        examCategory: examCategory,
+        hasPharmacologicalTreatment: hasPharmacologicalTreatment,
+        hasSeverityGrading: hasSeverityGrading,
       ),
     );
     await performSearch();
@@ -308,14 +381,72 @@ DiseaseSearchResultsView _diseaseResults(
 }
 
 AppliedFilterChips _drugChips({
+  String? categoryAtc,
+  String? therapeuticCategory,
   List<String>? regulatoryClass,
   List<String>? dosageForm,
+  List<String>? route,
+  String? adverseReactionKeyword,
+  List<String>? precautionCategory,
 }) {
   final chips = <AppliedChip>[
+    if (categoryAtc != null)
+      AppliedChip(axis: 'categoryAtc', label: categoryAtc),
+    if (therapeuticCategory != null)
+      AppliedChip(axis: 'therapeuticCategory', label: therapeuticCategory),
     for (final value in regulatoryClass ?? <String>[])
       AppliedChip(axis: 'regulatoryClass', label: value),
     for (final value in dosageForm ?? <String>[])
       AppliedChip(axis: 'dosageForm', label: value),
+    for (final value in route ?? <String>[])
+      AppliedChip(axis: 'route', label: value),
+    if (adverseReactionKeyword != null && adverseReactionKeyword.isNotEmpty)
+      AppliedChip(
+        axis: 'adverseReactionKeyword',
+        label: adverseReactionKeyword,
+      ),
+    for (final value in precautionCategory ?? <String>[])
+      AppliedChip(axis: 'precautionCategory', label: value),
+  ];
+  return AppliedFilterChips(chips);
+}
+
+AppliedFilterChips _diseaseChips({
+  List<String>? icd10Chapter,
+  List<String>? department,
+  List<String>? chronicity,
+  bool? infectious,
+  String? symptomKeyword,
+  List<String>? onsetPattern,
+  List<String>? examCategory,
+  bool? hasPharmacologicalTreatment,
+  bool? hasSeverityGrading,
+}) {
+  final chips = <AppliedChip>[
+    for (final value in icd10Chapter ?? <String>[])
+      AppliedChip(axis: 'icd10Chapter', label: value),
+    for (final value in department ?? <String>[])
+      AppliedChip(axis: 'department', label: value),
+    for (final value in chronicity ?? <String>[])
+      AppliedChip(axis: 'chronicity', label: value),
+    if (infectious != null)
+      AppliedChip(axis: 'infectious', label: infectious.toString()),
+    if (symptomKeyword != null && symptomKeyword.isNotEmpty)
+      AppliedChip(axis: 'symptomKeyword', label: symptomKeyword),
+    for (final value in onsetPattern ?? <String>[])
+      AppliedChip(axis: 'onsetPattern', label: value),
+    for (final value in examCategory ?? <String>[])
+      AppliedChip(axis: 'examCategory', label: value),
+    if (hasPharmacologicalTreatment != null)
+      AppliedChip(
+        axis: 'hasPharmacologicalTreatment',
+        label: hasPharmacologicalTreatment.toString(),
+      ),
+    if (hasSeverityGrading != null)
+      AppliedChip(
+        axis: 'hasSeverityGrading',
+        label: hasSeverityGrading.toString(),
+      ),
   ];
   return AppliedFilterChips(chips);
 }
@@ -327,22 +458,28 @@ DrugSearchParams _copyDrugParams(
   String? keyword,
   KeywordMatch? keywordMatch,
   DrugSort? sort,
+  String? categoryAtc,
+  String? therapeuticCategory,
   List<String>? regulatoryClass,
   List<String>? dosageForm,
+  List<String>? route,
+  String? adverseReactionKeyword,
+  List<String>? precautionCategory,
 }) {
   return DrugSearchParams(
     page: page ?? params.page,
     pageSize: pageSize ?? params.pageSize,
-    categoryAtc: params.categoryAtc,
-    therapeuticCategory: params.therapeuticCategory,
+    categoryAtc: categoryAtc ?? params.categoryAtc,
+    therapeuticCategory: therapeuticCategory ?? params.therapeuticCategory,
     regulatoryClass: regulatoryClass ?? params.regulatoryClass,
     dosageForm: dosageForm ?? params.dosageForm,
-    route: params.route,
+    route: route ?? params.route,
     keyword: keyword ?? params.keyword,
     keywordMatch: keywordMatch ?? params.keywordMatch,
     keywordTarget: params.keywordTarget,
-    adverseReactionKeyword: params.adverseReactionKeyword,
-    precautionCategory: params.precautionCategory,
+    adverseReactionKeyword:
+        adverseReactionKeyword ?? params.adverseReactionKeyword,
+    precautionCategory: precautionCategory ?? params.precautionCategory,
     sort: sort ?? params.sort,
   );
 }
@@ -353,22 +490,32 @@ DiseaseSearchParams _copyDiseaseParams(
   int? pageSize,
   String? keyword,
   KeywordMatch? keywordMatch,
+  List<String>? icd10Chapter,
+  List<String>? department,
+  List<String>? chronicity,
+  bool? infectious,
+  String? symptomKeyword,
+  List<String>? onsetPattern,
+  List<String>? examCategory,
+  bool? hasPharmacologicalTreatment,
+  bool? hasSeverityGrading,
 }) {
   return DiseaseSearchParams(
     page: page ?? params.page,
     pageSize: pageSize ?? params.pageSize,
-    icd10Chapter: params.icd10Chapter,
-    department: params.department,
-    chronicity: params.chronicity,
-    infectious: params.infectious,
+    icd10Chapter: icd10Chapter ?? params.icd10Chapter,
+    department: department ?? params.department,
+    chronicity: chronicity ?? params.chronicity,
+    infectious: infectious ?? params.infectious,
     keyword: keyword ?? params.keyword,
     keywordMatch: keywordMatch ?? params.keywordMatch,
     keywordTarget: params.keywordTarget,
-    symptomKeyword: params.symptomKeyword,
-    onsetPattern: params.onsetPattern,
-    examCategory: params.examCategory,
-    hasPharmacologicalTreatment: params.hasPharmacologicalTreatment,
-    hasSeverityGrading: params.hasSeverityGrading,
+    symptomKeyword: symptomKeyword ?? params.symptomKeyword,
+    onsetPattern: onsetPattern ?? params.onsetPattern,
+    examCategory: examCategory ?? params.examCategory,
+    hasPharmacologicalTreatment:
+        hasPharmacologicalTreatment ?? params.hasPharmacologicalTreatment,
+    hasSeverityGrading: hasSeverityGrading ?? params.hasSeverityGrading,
     sort: params.sort,
   );
 }

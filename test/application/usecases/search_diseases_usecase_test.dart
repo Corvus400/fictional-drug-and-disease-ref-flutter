@@ -70,6 +70,35 @@ void main() {
       expect(entries.single.totalCount, dto.totalCount);
       expect(entries.single.queryJson, contains('"keyword":"高血圧"'));
     });
+
+    test(
+      'execute allows blank keyword search without recording history',
+      () async {
+        final dto = _diseaseListFixture();
+        when(
+          () => apiClient.getDiseases(
+            page: any(named: 'page'),
+            pageSize: any(named: 'pageSize'),
+            keyword: any(named: 'keyword'),
+            icd10Chapter: any(named: 'icd10Chapter'),
+          ),
+        ).thenAnswer((_) async => dto);
+
+        final result = await usecase.execute(
+          const DiseaseSearchParams(
+            page: 1,
+            pageSize: 20,
+            keyword: '   ',
+            icd10Chapter: ['chapter_i'],
+          ),
+        );
+
+        expect(result, isA<Ok<DiseaseListPage>>());
+        final histories = await historyRepository.findByTarget('disease');
+        final entries = (histories as Ok<List<SearchHistoryEntry>>).value;
+        expect(entries, isEmpty);
+      },
+    );
   });
 }
 

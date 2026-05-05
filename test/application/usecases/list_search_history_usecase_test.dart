@@ -50,5 +50,56 @@ void main() {
       expect(envelopes.single.filterCount, 1);
       expect(envelopes.single.totalCount, 12);
     });
+
+    test(
+      'execute excludes blank keyword rows from display envelopes',
+      () async {
+        await repository.insertWithDedup(
+          id: 'search_blank_keyword',
+          target: 'drug',
+          queryJson: codec.encode(
+            const DrugSearchParams(regulatoryClass: ['poison']),
+          ),
+          searchedAt: DateTime.utc(2026, 5, 5),
+          totalCount: 120,
+        );
+
+        final result = await usecase.execute('drug');
+
+        expect(result, isA<Ok<List<SearchHistoryEnvelope>>>());
+        final envelopes = (result as Ok<List<SearchHistoryEnvelope>>).value;
+        expect(envelopes, isEmpty);
+      },
+    );
+
+    test(
+      'execute fills five display rows after excluding blank keywords',
+      () async {
+        for (var index = 0; index < 5; index += 1) {
+          await repository.insertWithDedup(
+            id: 'search_blank_keyword_$index',
+            target: 'drug',
+            queryJson: codec.encode(
+              DrugSearchParams(regulatoryClass: ['blank_$index']),
+            ),
+            searchedAt: DateTime.utc(2026, 5, 5, 12, index),
+            totalCount: 120,
+          );
+        }
+        await repository.insertWithDedup(
+          id: 'search_valid_keyword',
+          target: 'drug',
+          queryJson: codec.encode(const DrugSearchParams(keyword: 'アムロ')),
+          searchedAt: DateTime.utc(2026, 5, 5, 11),
+          totalCount: 12,
+        );
+
+        final result = await usecase.execute('drug');
+
+        expect(result, isA<Ok<List<SearchHistoryEnvelope>>>());
+        final envelopes = (result as Ok<List<SearchHistoryEnvelope>>).value;
+        expect(envelopes.single.queryText, 'アムロ');
+      },
+    );
   });
 }

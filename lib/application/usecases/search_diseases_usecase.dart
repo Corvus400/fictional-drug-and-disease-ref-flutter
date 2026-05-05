@@ -40,6 +40,9 @@ final class SearchDiseasesUsecase {
     DiseaseSearchParams params,
     int totalCount,
   ) async {
+    if (!hasSearchHistoryKeyword(params.keyword)) {
+      return;
+    }
     final searchedAt = _clock();
     final queryJson = _codec.encode(params);
     final result = await _searchHistoryRepository.insertWithDedup(
