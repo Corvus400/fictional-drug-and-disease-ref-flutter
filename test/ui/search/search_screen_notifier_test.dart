@@ -9,6 +9,7 @@ import 'package:fictional_drug_and_disease_ref/data/providers/api_providers.dart
 import 'package:fictional_drug_and_disease_ref/data/providers/local_providers.dart';
 import 'package:fictional_drug_and_disease_ref/data/services/api/disease_api_client.dart';
 import 'package:fictional_drug_and_disease_ref/data/services/api/drug_api_client.dart';
+import 'package:fictional_drug_and_disease_ref/domain/disease/disease_search_params.dart';
 import 'package:fictional_drug_and_disease_ref/domain/drug/drug_search_params.dart';
 import 'package:fictional_drug_and_disease_ref/ui/search/search_screen_notifier.dart';
 import 'package:fictional_drug_and_disease_ref/ui/search/search_screen_state.dart';
@@ -447,6 +448,52 @@ void main() {
         container.read(searchScreenProvider).diseaseParams.hasSeverityGrading,
         isNull,
       );
+    });
+
+    test(
+      'changeDiseaseSort updates diseaseParams.sort and triggers re-search',
+      () async {
+        _stubDiseaseSearch(diseaseApiClient);
+        final notifier = container.read(searchScreenProvider.notifier);
+
+        await notifier.changeTab(SearchTab.diseases);
+        await notifier.changeDiseaseSort(DiseaseSort.nameKana);
+
+        final state = container.read(searchScreenProvider);
+        expect(state.diseaseParams.sort, DiseaseSort.nameKana);
+        verify(
+          () => diseaseApiClient.getDiseases(
+            page: 1,
+            pageSize: 20,
+            icd10Chapter: any(named: 'icd10Chapter'),
+            department: any(named: 'department'),
+            chronicity: any(named: 'chronicity'),
+            infectious: any(named: 'infectious'),
+            keyword: any(named: 'keyword'),
+            keywordMatch: any(named: 'keywordMatch'),
+            keywordTarget: any(named: 'keywordTarget'),
+            symptomKeyword: any(named: 'symptomKeyword'),
+            onsetPattern: any(named: 'onsetPattern'),
+            examCategory: any(named: 'examCategory'),
+            hasPharmacologicalTreatment: any(
+              named: 'hasPharmacologicalTreatment',
+            ),
+            hasSeverityGrading: any(named: 'hasSeverityGrading'),
+            sort: DiseaseSort.nameKana.serialName,
+          ),
+        ).called(1);
+      },
+    );
+
+    test('changeDiseaseSort supports all disease sort axes', () async {
+      _stubDiseaseSearch(diseaseApiClient);
+      final notifier = container.read(searchScreenProvider.notifier);
+
+      await notifier.changeTab(SearchTab.diseases);
+      for (final sort in DiseaseSort.values) {
+        await notifier.changeDiseaseSort(sort);
+        expect(container.read(searchScreenProvider).diseaseParams.sort, sort);
+      }
     });
   });
 }
