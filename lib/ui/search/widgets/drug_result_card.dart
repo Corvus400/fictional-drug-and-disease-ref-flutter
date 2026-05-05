@@ -20,89 +20,94 @@ class _DrugResultCard extends StatelessWidget {
         ? SearchConstants.searchTabletDrugImageSize
         : SearchConstants.searchPhoneDrugImageSize;
     return Card(
+      key: ValueKey('drug-card-${item.id}'),
       margin: const EdgeInsets.only(top: 8),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(SearchConstants.searchCardRadius),
         side: BorderSide(color: palette.hairline),
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(8),
-              child: SizedBox.square(
-                dimension: imageSize,
-                child: Image.network(
-                  _drugCardImageUrl(item.imageUrl),
-                  key: ValueKey('drug-image-${item.id}'),
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) => DecoratedBox(
-                    decoration: BoxDecoration(
-                      color: palette.surfaceSubtle,
-                      border: Border.all(color: palette.hairline),
+      child: InkWell(
+        onTap: () => context.push(AppRoutes.drugDetail(item.id)),
+        borderRadius: BorderRadius.circular(SearchConstants.searchCardRadius),
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: SizedBox.square(
+                  dimension: imageSize,
+                  child: Image.network(
+                    _drugCardImageUrl(item.imageUrl),
+                    key: ValueKey('drug-image-${item.id}'),
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) => DecoratedBox(
+                      decoration: BoxDecoration(
+                        color: palette.surfaceSubtle,
+                        border: Border.all(color: palette.hairline),
+                      ),
+                      child: const Icon(Icons.medication_outlined),
                     ),
-                    child: const Icon(Icons.medication_outlined),
                   ),
                 ),
               ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Wrap(
-                    spacing: 5,
-                    runSpacing: 4,
-                    children: [
-                      for (final regulatoryClass in item.regulatoryClass)
-                        _DrugBadge(
-                          value: regulatoryClass,
-                          label: _regulatoryClassLabel(l10n, regulatoryClass),
-                          palette: palette,
-                        ),
-                    ],
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    item.brandName,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: theme.textTheme.titleSmall?.copyWith(
-                      fontWeight: FontWeight.w700,
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Wrap(
+                      spacing: 5,
+                      runSpacing: 4,
+                      children: [
+                        for (final regulatoryClass in item.regulatoryClass)
+                          _DrugBadge(
+                            value: regulatoryClass,
+                            label: _regulatoryClassLabel(l10n, regulatoryClass),
+                            palette: palette,
+                          ),
+                      ],
                     ),
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    item.genericName,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      color: theme.colorScheme.onSurfaceVariant,
+                    const SizedBox(height: 4),
+                    Text(
+                      item.brandName,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: theme.textTheme.titleSmall?.copyWith(
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 5),
-                  Wrap(
-                    spacing: 12,
-                    children: [
-                      Text(
-                        l10n.searchDrugMetaAtc(item.atcCode),
-                        style: theme.textTheme.labelSmall,
+                    const SizedBox(height: 2),
+                    Text(
+                      item.genericName,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: theme.colorScheme.onSurfaceVariant,
                       ),
-                      Text(
-                        l10n.searchDrugMetaRevised(
-                          _formatRevisionDate(item.revisedAt),
+                    ),
+                    const SizedBox(height: 5),
+                    Wrap(
+                      spacing: 12,
+                      children: [
+                        Text(
+                          l10n.searchDrugMetaAtc(item.atcCode),
+                          style: theme.textTheme.labelSmall,
                         ),
-                        style: theme.textTheme.labelSmall,
-                      ),
-                    ],
-                  ),
-                ],
+                        Text(
+                          l10n.searchDrugMetaRevised(
+                            _formatRevisionDate(item.revisedAt),
+                          ),
+                          style: theme.textTheme.labelSmall,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

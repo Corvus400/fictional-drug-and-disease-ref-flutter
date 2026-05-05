@@ -21,69 +21,73 @@ class _DiseaseResultCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(SearchConstants.searchCardRadius),
         side: BorderSide(color: palette.hairline),
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Wrap(
-              spacing: 5,
-              runSpacing: 4,
-              children: [
-                _DiseaseBadge(
-                  label: _chronicityLabel(l10n, item.chronicity),
-                  palette: palette,
-                ),
-                _DiseaseBadge(
-                  label: item.infectious
-                      ? l10n.searchDiseaseInfectiousTrue
-                      : l10n.searchDiseaseInfectiousFalse,
-                  palette: palette,
-                ),
-                for (final department in item.medicalDepartment)
+      child: InkWell(
+        onTap: () => context.push(AppRoutes.diseaseDetail(item.id)),
+        borderRadius: BorderRadius.circular(SearchConstants.searchCardRadius),
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Wrap(
+                spacing: 5,
+                runSpacing: 4,
+                children: [
                   _DiseaseBadge(
-                    label: _departmentLabel(l10n, department),
+                    label: _chronicityLabel(l10n, item.chronicity),
                     palette: palette,
                   ),
-              ],
-            ),
-            const SizedBox(height: 4),
-            Text(
-              item.name,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: theme.textTheme.titleSmall?.copyWith(
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-            const SizedBox(height: 2),
-            Text(
-              item.nameKana,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: theme.textTheme.bodySmall?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
-              ),
-            ),
-            const SizedBox(height: 5),
-            Wrap(
-              spacing: 12,
-              children: [
-                Text(
-                  l10n.searchDiseaseMetaIcd10(
-                    _diseaseIcd10ChapterLabel(l10n, item.icd10Chapter),
+                  _DiseaseBadge(
+                    label: item.infectious
+                        ? l10n.searchDiseaseInfectiousTrue
+                        : l10n.searchDiseaseInfectiousFalse,
+                    palette: palette,
                   ),
-                  style: theme.textTheme.labelSmall,
+                  for (final department in item.medicalDepartment)
+                    _DiseaseBadge(
+                      label: _departmentLabel(l10n, department),
+                      palette: palette,
+                    ),
+                ],
+              ),
+              const SizedBox(height: 4),
+              Text(
+                item.name,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: theme.textTheme.titleSmall?.copyWith(
+                  fontWeight: FontWeight.w700,
                 ),
-                Text(
-                  l10n.searchDiseaseMetaRevised(
-                    _formatRevisionDate(item.revisedAt),
+              ),
+              const SizedBox(height: 2),
+              Text(
+                item.nameKana,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
+              ),
+              const SizedBox(height: 5),
+              Wrap(
+                spacing: 12,
+                children: [
+                  Text(
+                    l10n.searchDiseaseMetaIcd10(
+                      _diseaseIcd10ChapterLabel(l10n, item.icd10Chapter),
+                    ),
+                    style: theme.textTheme.labelSmall,
                   ),
-                  style: theme.textTheme.labelSmall,
-                ),
-              ],
-            ),
-          ],
+                  Text(
+                    l10n.searchDiseaseMetaRevised(
+                      _formatRevisionDate(item.revisedAt),
+                    ),
+                    style: theme.textTheme.labelSmall,
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
