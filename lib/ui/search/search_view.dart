@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fictional_drug_and_disease_ref/application/search/search_history_envelope.dart';
 import 'package:fictional_drug_and_disease_ref/config/api_config.dart';
 import 'package:fictional_drug_and_disease_ref/core/error/app_exception.dart';
@@ -16,7 +17,6 @@ import 'package:fictional_drug_and_disease_ref/ui/search/constants/search_palett
 import 'package:fictional_drug_and_disease_ref/ui/search/format/relative_time_formatter.dart';
 import 'package:fictional_drug_and_disease_ref/ui/search/search_screen_notifier.dart';
 import 'package:fictional_drug_and_disease_ref/ui/search/search_screen_state.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -177,7 +177,6 @@ class _SearchViewState extends ConsumerState<SearchView> with RouteAware {
                 ),
                 if (state.historyDropdownOpen)
                   Flexible(
-                    fit: FlexFit.loose,
                     child: _SearchHistoryDropdown(
                       tapRegionGroupId: historyTapRegionGroupId,
                       entries: state.historyForTab,

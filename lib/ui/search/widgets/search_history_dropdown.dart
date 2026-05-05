@@ -63,7 +63,6 @@ class _SearchHistoryDropdown extends StatelessWidget {
               ),
             ),
             Flexible(
-              fit: FlexFit.loose,
               child: ConstrainedBox(
                 constraints: BoxConstraints(
                   maxHeight: entries.isEmpty
