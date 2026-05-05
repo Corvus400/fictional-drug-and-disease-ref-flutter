@@ -79,5 +79,5 @@ abstract final class SearchConstants {
   static const searchTabletDrugImageSize = 64.0;
 
   /// Round6 list-card drug image API size.
-  static const searchDrugCardImageApiSize = 'S';
+  static const searchDrugCardImageApiSize = 'M';
 }

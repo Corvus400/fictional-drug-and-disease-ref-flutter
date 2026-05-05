@@ -1170,7 +1170,7 @@ void main() {
   });
 
   testWidgets(
-    'SearchView renders drug card image from imageUrl normalized to size S',
+    'drug_card_image_url_uses_size_M_(T07)',
     (tester) async {
       ApiConfig.initialize(
         const FlavorConfig(
@@ -1217,8 +1217,9 @@ void main() {
 
       expect(
         provider.url,
-        'https://api.example.test/v1/images/drugs/${item.id}?size=S',
+        'https://api.example.test/v1/images/drugs/${item.id}?size=M',
       );
+      expect(provider.url, isNot(contains('size=S')));
     },
   );
 
