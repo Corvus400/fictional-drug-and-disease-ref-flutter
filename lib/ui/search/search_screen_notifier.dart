@@ -256,15 +256,9 @@ final class SearchScreenNotifier extends Notifier<SearchScreenState> {
     await performSearch();
   }
 
-  /// Removes the latest applied chip and searches.
+  /// Removes the oldest applied chip and searches.
   Future<void> removeOneChip() async {
-    final items = state.appliedChips.items;
-    if (items.isEmpty) {
-      return;
-    }
-    final next = items.sublist(0, items.length - 1);
-    state = state.copyWith(appliedChips: AppliedFilterChips(next));
-    await performSearch();
+    await removeChipAt(0);
   }
 
   /// Removes one applied chip by index and searches.
