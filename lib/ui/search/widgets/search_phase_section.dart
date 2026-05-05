@@ -174,16 +174,17 @@ class _SearchPhaseSection extends StatelessWidget {
               children: [
                 Center(
                   child: Container(
+                    key: const ValueKey('search-error-icon'),
                     width: 72,
                     height: 72,
                     decoration: BoxDecoration(
-                      color: palette.danger.withValues(alpha: 0.16),
+                      color: palette.dangerCont,
                       shape: BoxShape.circle,
                     ),
                     child: Icon(
                       Icons.warning_amber_rounded,
                       color: palette.danger,
-                      size: 36,
+                      size: 32,
                     ),
                   ),
                 ),

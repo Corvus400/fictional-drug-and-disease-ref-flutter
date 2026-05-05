@@ -1389,11 +1389,29 @@ void main() {
 
     expect(find.text('通信エラー — もう一度'), findsOneWidget);
     expect(find.byIcon(Icons.warning_amber_rounded), findsOneWidget);
+    final iconContainer = tester.widget<Container>(
+      find.byKey(const ValueKey('search-error-icon')),
+    );
+    final constraints = iconContainer.constraints!;
+    final decoration = iconContainer.decoration! as BoxDecoration;
+    final warningIcon = tester.widget<Icon>(
+      find.byIcon(Icons.warning_amber_rounded),
+    );
+
+    expect(constraints.minWidth, 72);
+    expect(constraints.maxWidth, 72);
+    expect(constraints.minHeight, 72);
+    expect(constraints.maxHeight, 72);
+    expect(decoration.color, SearchPalette.light.dangerCont);
+    expect(decoration.shape, BoxShape.circle);
+    expect(warningIcon.size, 32);
+    expect(warningIcon.color, SearchPalette.light.danger);
     expect(
       find.text('サーバーに接続できませんでした。\n通信環境を確認してから再試行してください。'),
       findsOneWidget,
     );
     expect(find.text('再試行'), findsOneWidget);
+    expect(find.widgetWithText(FilledButton, '再試行'), findsOneWidget);
     expect(find.text('Type: NetworkException'), findsOneWidget);
     expect(find.textContaining('Status:'), findsNothing);
   });
