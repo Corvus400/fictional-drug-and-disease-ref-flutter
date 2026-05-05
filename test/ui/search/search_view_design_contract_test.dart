@@ -12,6 +12,7 @@ import 'package:fictional_drug_and_disease_ref/data/services/api/category_api_cl
 import 'package:fictional_drug_and_disease_ref/data/services/api/drug_api_client.dart';
 import 'package:fictional_drug_and_disease_ref/l10n/app_localizations.dart';
 import 'package:fictional_drug_and_disease_ref/theme/app_theme.dart';
+import 'package:fictional_drug_and_disease_ref/ui/search/constants/search_palette.dart';
 import 'package:fictional_drug_and_disease_ref/ui/search/search_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -518,6 +519,76 @@ void main() {
     expect(find.text('副作用キーワード'), findsOneWidget);
     expect(find.text('患者背景'), findsOneWidget);
   });
+
+  // Design source:
+  // Round6/round6-screens.jsx FilterChip selected/unselected token contract.
+  testWidgets(
+    'SearchView drug filter selected chip follows Round6 token contract',
+    (
+      tester,
+    ) async {
+      await tester.binding.setSurfaceSize(const Size(390, 844));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+
+      final categoryApiClient = _MockCategoryApiClient();
+      when(
+        categoryApiClient.getCategories,
+      ).thenAnswer((_) async => _categoriesFixture());
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            appDatabaseProvider.overrideWithValue(db),
+            categoryApiClientProvider.overrideWithValue(categoryApiClient),
+          ],
+          child: MaterialApp(
+            theme: AppTheme.light(),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: const SearchView(),
+          ),
+        ),
+      );
+
+      await tester.tap(find.byType(FloatingActionButton));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('毒薬'));
+      await tester.pump();
+
+      final selectedFinder = find.byKey(
+        const ValueKey('search-filter-pill-chip-selected-poison'),
+      );
+      expect(selectedFinder, findsOneWidget);
+      final selected = tester.widget<DecoratedBox>(selectedFinder);
+      final decoration = selected.decoration as BoxDecoration;
+      expect(decoration.color, SearchPalette.light.primarySoft);
+      expect(decoration.border?.top.color, SearchPalette.light.primaryRing);
+      expect(decoration.border?.top.width, 0.5);
+      expect(decoration.borderRadius, BorderRadius.circular(16));
+      expect(
+        find.descendant(
+          of: selectedFinder,
+          matching: find.byKey(
+            const ValueKey('search-filter-pill-check-poison'),
+          ),
+        ),
+        findsOneWidget,
+      );
+      final unselectedFinder = find.byKey(
+        const ValueKey('search-filter-pill-chip-unselected-potent'),
+      );
+      expect(unselectedFinder, findsOneWidget);
+      final unselected = tester.widget<DecoratedBox>(unselectedFinder);
+      final unselectedDecoration = unselected.decoration as BoxDecoration;
+      expect(unselectedDecoration.color, SearchPalette.light.surface);
+      expect(
+        unselectedDecoration.border?.top.color,
+        SearchPalette.light.hairline,
+      );
+      expect(unselectedDecoration.border?.top.width, 0.5);
+      expect(find.byType(FilterChip), findsNothing);
+    },
+  );
 
   // Design source:
   // Round6/round6-screens.jsx TabletFrame and TopChrome gutter=28.

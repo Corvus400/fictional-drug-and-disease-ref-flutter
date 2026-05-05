@@ -343,12 +343,84 @@ class _FilterChipGroup extends StatelessWidget {
       runSpacing: 6,
       children: [
         for (final value in values)
-          FilterChip(
+          _FilterPillChip(
+            value: value,
             label: Text(labelFor(value)),
             selected: selected.contains(value),
-            onSelected: (_) => onToggle(value),
+            onTap: () => onToggle(value),
           ),
       ],
+    );
+  }
+}
+
+class _FilterPillChip extends StatelessWidget {
+  const _FilterPillChip({
+    required this.value,
+    required this.label,
+    required this.selected,
+    required this.onTap,
+  });
+
+  final String value;
+  final Widget label;
+  final bool selected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final palette =
+        theme.extension<SearchPalette>() ??
+        (theme.brightness == Brightness.dark
+            ? SearchPalette.dark
+            : SearchPalette.light);
+    final safeValue = value.replaceAll(RegExp('[^A-Za-z0-9_-]'), '_');
+    const borderRadius = 16.0;
+    final textStyle = theme.textTheme.labelSmall?.copyWith(
+      color: selected ? palette.primary : palette.ink2,
+      fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
+    );
+    final fillColor = selected
+        ? palette.primarySoft
+        : theme.brightness == Brightness.dark
+        ? palette.surface2
+        : palette.surface;
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(borderRadius),
+      child: DecoratedBox(
+        key: ValueKey(
+          'search-filter-pill-chip-'
+          '${selected ? 'selected' : 'unselected'}-$safeValue',
+        ),
+        decoration: BoxDecoration(
+          color: fillColor,
+          borderRadius: BorderRadius.circular(borderRadius),
+          border: Border.all(
+            color: selected ? palette.primaryRing : palette.hairline,
+            width: 0.5,
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (selected) ...[
+                Icon(
+                  Icons.check,
+                  key: ValueKey('search-filter-pill-check-$safeValue'),
+                  size: 10,
+                  color: palette.primary,
+                ),
+                const SizedBox(width: 4),
+              ],
+              DefaultTextStyle.merge(style: textStyle, child: label),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
@@ -370,16 +442,18 @@ class _BoolChipGroup extends StatelessWidget {
   Widget build(BuildContext context) {
     return Wrap(
       children: [
-        FilterChip(
+        _FilterPillChip(
+          value: 'true',
           label: Text(trueLabel),
           selected: value == true,
-          onSelected: (_) => onChanged(value == true ? null : true),
+          onTap: () => onChanged(value == true ? null : true),
         ),
         const SizedBox(width: 6),
-        FilterChip(
+        _FilterPillChip(
+          value: 'false',
           label: Text(falseLabel),
           selected: value == false,
-          onSelected: (_) => onChanged(value == false ? null : false),
+          onTap: () => onChanged(value == false ? null : false),
         ),
       ],
     );
