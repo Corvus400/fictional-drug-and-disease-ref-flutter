@@ -146,6 +146,56 @@ class AppLocalizationsJa extends AppLocalizations {
   String get searchErrorBody => 'サーバーに接続できませんでした。\n通信環境を確認してから再試行してください。';
 
   @override
+  String get searchErrorTitleNetwork => '通信エラー — もう一度';
+
+  @override
+  String get searchErrorBodyNetwork => 'もう一度試してください。';
+
+  @override
+  String get searchErrorTitleServer => 'サーバーエラー';
+
+  @override
+  String get searchErrorBodyServer => 'しばらく経ってから再試行してください。';
+
+  @override
+  String get searchErrorTitleBusiness => '条件に問題があります';
+
+  @override
+  String get searchErrorBodyBusiness => '指定された条件をご確認ください。';
+
+  @override
+  String get searchErrorTitleParse => 'データを読み込めません';
+
+  @override
+  String searchErrorBodyParse(Object message) {
+    return '$message';
+  }
+
+  @override
+  String get searchErrorTitleStorage => '保存に失敗しました';
+
+  @override
+  String searchErrorBodyStorage(Object message) {
+    return '$message';
+  }
+
+  @override
+  String get searchErrorTitleAuth => '権限がありません';
+
+  @override
+  String searchErrorBodyAuth(Object message) {
+    return '$message';
+  }
+
+  @override
+  String get searchErrorTitleUnknown => '予期しないエラー';
+
+  @override
+  String searchErrorBodyUnknown(Object message) {
+    return '$message';
+  }
+
+  @override
   String get searchErrorRetry => '再試行';
 
   @override

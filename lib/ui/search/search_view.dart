@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:fictional_drug_and_disease_ref/application/search/search_history_envelope.dart';
 import 'package:fictional_drug_and_disease_ref/config/api_config.dart';
 import 'package:fictional_drug_and_disease_ref/core/error/app_exception.dart';
+import 'package:fictional_drug_and_disease_ref/core/error/error_message_mapper.dart';
 import 'package:fictional_drug_and_disease_ref/domain/category/categories.dart';
 import 'package:fictional_drug_and_disease_ref/domain/disease/disease_search_params.dart';
 import 'package:fictional_drug_and_disease_ref/domain/disease/disease_summary.dart';

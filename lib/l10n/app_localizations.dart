@@ -346,6 +346,90 @@ abstract class AppLocalizations {
   /// **'サーバーに接続できませんでした。\n通信環境を確認してから再試行してください。'**
   String get searchErrorBody;
 
+  /// No description provided for @searchErrorTitleNetwork.
+  ///
+  /// In ja, this message translates to:
+  /// **'通信エラー — もう一度'**
+  String get searchErrorTitleNetwork;
+
+  /// No description provided for @searchErrorBodyNetwork.
+  ///
+  /// In ja, this message translates to:
+  /// **'もう一度試してください。'**
+  String get searchErrorBodyNetwork;
+
+  /// No description provided for @searchErrorTitleServer.
+  ///
+  /// In ja, this message translates to:
+  /// **'サーバーエラー'**
+  String get searchErrorTitleServer;
+
+  /// No description provided for @searchErrorBodyServer.
+  ///
+  /// In ja, this message translates to:
+  /// **'しばらく経ってから再試行してください。'**
+  String get searchErrorBodyServer;
+
+  /// No description provided for @searchErrorTitleBusiness.
+  ///
+  /// In ja, this message translates to:
+  /// **'条件に問題があります'**
+  String get searchErrorTitleBusiness;
+
+  /// No description provided for @searchErrorBodyBusiness.
+  ///
+  /// In ja, this message translates to:
+  /// **'指定された条件をご確認ください。'**
+  String get searchErrorBodyBusiness;
+
+  /// No description provided for @searchErrorTitleParse.
+  ///
+  /// In ja, this message translates to:
+  /// **'データを読み込めません'**
+  String get searchErrorTitleParse;
+
+  /// No description provided for @searchErrorBodyParse.
+  ///
+  /// In ja, this message translates to:
+  /// **'{message}'**
+  String searchErrorBodyParse(Object message);
+
+  /// No description provided for @searchErrorTitleStorage.
+  ///
+  /// In ja, this message translates to:
+  /// **'保存に失敗しました'**
+  String get searchErrorTitleStorage;
+
+  /// No description provided for @searchErrorBodyStorage.
+  ///
+  /// In ja, this message translates to:
+  /// **'{message}'**
+  String searchErrorBodyStorage(Object message);
+
+  /// No description provided for @searchErrorTitleAuth.
+  ///
+  /// In ja, this message translates to:
+  /// **'権限がありません'**
+  String get searchErrorTitleAuth;
+
+  /// No description provided for @searchErrorBodyAuth.
+  ///
+  /// In ja, this message translates to:
+  /// **'{message}'**
+  String searchErrorBodyAuth(Object message);
+
+  /// No description provided for @searchErrorTitleUnknown.
+  ///
+  /// In ja, this message translates to:
+  /// **'予期しないエラー'**
+  String get searchErrorTitleUnknown;
+
+  /// No description provided for @searchErrorBodyUnknown.
+  ///
+  /// In ja, this message translates to:
+  /// **'{message}'**
+  String searchErrorBodyUnknown(Object message);
+
   /// No description provided for @searchErrorRetry.
   ///
   /// In ja, this message translates to:

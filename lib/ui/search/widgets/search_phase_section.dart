@@ -191,7 +191,7 @@ class _SearchPhaseSection extends StatelessWidget {
                 ),
                 const SizedBox(height: 18),
                 Text(
-                  l10n.searchErrorTitle,
+                  _searchErrorTitle(l10n, phase.error),
                   textAlign: TextAlign.center,
                   style: theme.textTheme.titleMedium?.copyWith(
                     fontSize: 17,
@@ -200,7 +200,7 @@ class _SearchPhaseSection extends StatelessWidget {
                 ),
                 const SizedBox(height: 6),
                 Text(
-                  l10n.searchErrorBody,
+                  _searchErrorBody(l10n, phase.error),
                   textAlign: TextAlign.center,
                   style: theme.textTheme.bodySmall?.copyWith(
                     color: theme.colorScheme.onSurfaceVariant,
@@ -315,6 +315,74 @@ class _SearchPhaseSection extends StatelessWidget {
       ),
     );
   }
+}
+
+String _searchErrorTitle(AppLocalizations l10n, AppException error) {
+  return switch (_searchErrorCategory(error)) {
+    _SearchErrorCategory.network => l10n.searchErrorTitleNetwork,
+    _SearchErrorCategory.server => l10n.searchErrorTitleServer,
+    _SearchErrorCategory.business => l10n.searchErrorTitleBusiness,
+    _SearchErrorCategory.parse => l10n.searchErrorTitleParse,
+    _SearchErrorCategory.storage => l10n.searchErrorTitleStorage,
+    _SearchErrorCategory.auth => l10n.searchErrorTitleAuth,
+    _SearchErrorCategory.unknown => l10n.searchErrorTitleUnknown,
+  };
+}
+
+String _searchErrorBody(AppLocalizations l10n, AppException error) {
+  return switch (_searchErrorCategory(error)) {
+    _SearchErrorCategory.network => l10n.searchErrorBodyNetwork,
+    _SearchErrorCategory.server => l10n.searchErrorBodyServer,
+    _SearchErrorCategory.business => l10n.searchErrorBodyBusiness,
+    _SearchErrorCategory.parse => l10n.searchErrorBodyParse(
+      _errorMessage(error),
+    ),
+    _SearchErrorCategory.storage => l10n.searchErrorBodyStorage(
+      _errorMessage(error),
+    ),
+    _SearchErrorCategory.auth => l10n.searchErrorBodyAuth(_errorMessage(error)),
+    _SearchErrorCategory.unknown => l10n.searchErrorBodyUnknown(
+      _errorMessage(error),
+    ),
+  };
+}
+
+_SearchErrorCategory _searchErrorCategory(AppException error) {
+  if (error case ApiException(statusCode: 401 || 403)) {
+    return _SearchErrorCategory.auth;
+  }
+
+  return switch (errorKeyFor(error)) {
+    'errNetwork' => _SearchErrorCategory.network,
+    'errServer' => _SearchErrorCategory.server,
+    'errApiNotFound' ||
+    'errApiBadRequest' ||
+    'errApiInvalidCategory' => _SearchErrorCategory.business,
+    'errParse' => _SearchErrorCategory.parse,
+    'errStorageUnique' ||
+    'errStorageCheck' ||
+    'errStorageGeneric' => _SearchErrorCategory.storage,
+    _ => _SearchErrorCategory.unknown,
+  };
+}
+
+String _errorMessage(AppException error) {
+  return switch (error) {
+    ApiException(:final message) when message.isNotEmpty => message,
+    ServerException(:final statusCode) => 'HTTP $statusCode',
+    StorageException(:final kind) => kind.name,
+    _ => error.toString(),
+  };
+}
+
+enum _SearchErrorCategory {
+  network,
+  server,
+  business,
+  parse,
+  storage,
+  auth,
+  unknown,
 }
 
 List<String> _diagnosticLines(AppLocalizations l10n, AppException error) {
