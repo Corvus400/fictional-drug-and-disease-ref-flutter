@@ -1,5 +1,17 @@
 import 'package:flutter/material.dart';
 
+/// Disease card badge category.
+enum DiseaseBadgeCategory {
+  /// Disease chronicity.
+  chronicity,
+
+  /// Infectious flag.
+  infectious,
+
+  /// Medical department.
+  department,
+}
+
 /// Round6 search color tokens.
 final class SearchPalette extends ThemeExtension<SearchPalette> {
   /// Creates a palette.
@@ -193,6 +205,25 @@ final class SearchPalette extends ThemeExtension<SearchPalette> {
 
   /// Disease target pill ink.
   final Color diseaseInk;
+
+  /// Disease card badge colors derived from a category-specific base color.
+  ({Color background, Color foreground}) diseaseBadgeColors(
+    DiseaseBadgeCategory category,
+    String value,
+  ) {
+    final base = switch (category) {
+      DiseaseBadgeCategory.chronicity => switch (value) {
+        'acute' => const Color(0xFFC2410C),
+        'subacute' => const Color(0xFFB45309),
+        'chronic' => const Color(0xFF7C3AED),
+        'relapsing' => const Color(0xFF0F766E),
+        _ => diseaseInk,
+      },
+      DiseaseBadgeCategory.infectious => diseaseInk,
+      DiseaseBadgeCategory.department => diseaseInk,
+    };
+    return (background: base.withValues(alpha: 0.12), foreground: base);
+  }
 
   @override
   SearchPalette copyWith({

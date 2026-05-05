@@ -25,5 +25,25 @@ void main() {
         (SearchPalette.dark as dynamic).surface3,
       );
     });
+
+    test('diseaseBadgeColors chronicity colors differ across values', () {
+      const values = ['acute', 'subacute', 'chronic', 'relapsing'];
+
+      final foregrounds = {
+        for (final value in values)
+          SearchPalette.light
+              .diseaseBadgeColors(DiseaseBadgeCategory.chronicity, value)
+              .foreground,
+      };
+
+      expect(foregrounds.length, greaterThanOrEqualTo(4));
+      for (final value in values) {
+        final colors = SearchPalette.light.diseaseBadgeColors(
+          DiseaseBadgeCategory.chronicity,
+          value,
+        );
+        expect(colors.background, colors.foreground.withValues(alpha: 0.12));
+      }
+    });
   });
 }

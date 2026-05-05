@@ -34,10 +34,14 @@ class _DiseaseResultCard extends StatelessWidget {
                 runSpacing: 4,
                 children: [
                   _DiseaseBadge(
+                    category: DiseaseBadgeCategory.chronicity,
+                    value: item.chronicity,
                     label: _chronicityLabel(l10n, item.chronicity),
                     palette: palette,
                   ),
                   _DiseaseBadge(
+                    category: DiseaseBadgeCategory.infectious,
+                    value: item.infectious.toString(),
                     label: item.infectious
                         ? l10n.searchDiseaseInfectiousTrue
                         : l10n.searchDiseaseInfectiousFalse,
@@ -45,6 +49,8 @@ class _DiseaseResultCard extends StatelessWidget {
                   ),
                   for (final department in item.medicalDepartment)
                     _DiseaseBadge(
+                      category: DiseaseBadgeCategory.department,
+                      value: department,
                       label: _departmentLabel(l10n, department),
                       palette: palette,
                     ),
@@ -95,16 +101,24 @@ class _DiseaseResultCard extends StatelessWidget {
 }
 
 class _DiseaseBadge extends StatelessWidget {
-  const _DiseaseBadge({required this.label, required this.palette});
+  const _DiseaseBadge({
+    required this.category,
+    required this.value,
+    required this.label,
+    required this.palette,
+  });
 
+  final DiseaseBadgeCategory category;
+  final String value;
   final String label;
   final SearchPalette palette;
 
   @override
   Widget build(BuildContext context) {
+    final colors = palette.diseaseBadgeColors(category, value);
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: palette.diseaseTint,
+        color: colors.background,
         borderRadius: BorderRadius.circular(5),
       ),
       child: Padding(
@@ -112,7 +126,7 @@ class _DiseaseBadge extends StatelessWidget {
         child: Text(
           label,
           style: Theme.of(context).textTheme.labelSmall?.copyWith(
-            color: palette.diseaseInk,
+            color: colors.foreground,
             fontWeight: FontWeight.w700,
           ),
         ),
