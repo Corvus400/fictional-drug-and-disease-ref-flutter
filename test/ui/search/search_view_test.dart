@@ -2278,19 +2278,20 @@ void main() {
     await tester.tap(find.byType(FilledButton).first);
     await tester.pumpAndSettle();
 
-    final listWidth = tester
-        .getSize(
-          find.byKey(const PageStorageKey<String>('diseaseSearchResults')),
-        )
-        .width;
-    final cardWidth = tester
-        .getSize(
-          find.byKey(
-            ValueKey('disease-card-${_diseaseListFixture().items.first.id}'),
-          ),
-        )
-        .width;
-    expect(cardWidth, listWidth);
+    final listRect = tester.getRect(
+      find.byKey(const PageStorageKey<String>('diseaseSearchResults')),
+    );
+    final cardRect = tester.getRect(
+      find.byKey(
+        ValueKey('disease-card-${_diseaseListFixture().items.first.id}'),
+      ),
+    );
+
+    expect(cardRect.left, listRect.left + SearchConstants.searchTabletGutter);
+    expect(
+      cardRect.width,
+      listRect.width - SearchConstants.searchTabletGutter * 2,
+    );
   });
 
   testWidgets('SearchView colors drug regulatory badges by classification', (

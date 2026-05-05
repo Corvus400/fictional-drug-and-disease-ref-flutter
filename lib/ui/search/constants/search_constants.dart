@@ -69,6 +69,9 @@ abstract final class SearchConstants {
   /// Round6 result toolbar height.
   static const searchResultToolbarHeight = 36.0;
 
+  /// Round6 applied chip rail height.
+  static const searchAppliedChipBarHeight = 48.0;
+
   /// Round6 result card radius.
   static const searchCardRadius = 10.0;
 

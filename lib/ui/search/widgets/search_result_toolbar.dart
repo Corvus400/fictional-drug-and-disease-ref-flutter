@@ -1,8 +1,9 @@
 part of '../search_view.dart';
 
-class _SearchResultToolbar extends StatelessWidget {
+class _SearchResultToolbar extends StatefulWidget {
   const _SearchResultToolbar({
     required this.state,
+    required this.gutter,
     required this.totalCount,
     required this.onRemoveChipAt,
     required this.onChangeDrugSort,
@@ -10,10 +11,52 @@ class _SearchResultToolbar extends StatelessWidget {
   });
 
   final SearchScreenState state;
+  final double gutter;
   final int totalCount;
   final Future<void> Function(int index) onRemoveChipAt;
   final Future<void> Function(DrugSort sort) onChangeDrugSort;
   final Future<void> Function(DiseaseSort sort) onChangeDiseaseSort;
+
+  @override
+  State<_SearchResultToolbar> createState() => _SearchResultToolbarState();
+}
+
+class _SearchResultToolbarState extends State<_SearchResultToolbar> {
+  late final ScrollController _chipScrollController;
+  var _chipRailScrollable = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _chipScrollController = ScrollController()..addListener(_syncScrollable);
+    WidgetsBinding.instance.addPostFrameCallback((_) => _syncScrollable());
+  }
+
+  @override
+  void didUpdateWidget(covariant _SearchResultToolbar oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    WidgetsBinding.instance.addPostFrameCallback((_) => _syncScrollable());
+  }
+
+  @override
+  void dispose() {
+    _chipScrollController
+      ..removeListener(_syncScrollable)
+      ..dispose();
+    super.dispose();
+  }
+
+  void _syncScrollable() {
+    if (!mounted || !_chipScrollController.hasClients) {
+      return;
+    }
+    final next = _chipScrollController.position.maxScrollExtent > 0;
+    if (next != _chipRailScrollable) {
+      setState(() {
+        _chipRailScrollable = next;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +70,7 @@ class _SearchResultToolbar extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        if (state.appliedChips.count > 0)
+        if (widget.state.appliedChips.count > 0)
           DecoratedBox(
             key: const ValueKey('search-applied-filter-bar'),
             decoration: BoxDecoration(
@@ -35,16 +78,21 @@ class _SearchResultToolbar extends StatelessWidget {
               border: Border(top: BorderSide(color: palette.hairline)),
             ),
             child: SizedBox(
-              height: 36,
+              height: SearchConstants.searchAppliedChipBarHeight,
               child: Stack(
                 children: [
                   Positioned.fill(
                     child: SingleChildScrollView(
+                      controller: _chipScrollController,
                       scrollDirection: Axis.horizontal,
-                      padding: const EdgeInsets.symmetric(vertical: 6),
+                      padding: EdgeInsets.fromLTRB(
+                        16,
+                        8,
+                        _chipRailScrollable ? 36 : 16,
+                        10,
+                      ),
                       child: Row(
                         children: [
-                          const SizedBox(width: 2),
                           Text(
                             l10n.searchToolbarApplied,
                             style: theme.textTheme.labelSmall?.copyWith(
@@ -56,17 +104,17 @@ class _SearchResultToolbar extends StatelessWidget {
                           const SizedBox(width: 8),
                           for (
                             var i = 0;
-                            i < state.appliedChips.items.length;
+                            i < widget.state.appliedChips.items.length;
                             i++
                           ) ...[
                             _AppliedFilterChip(
                               label: _appliedChipLabel(
                                 l10n,
-                                state.categories,
-                                state.appliedChips.items[i],
+                                widget.state.categories,
+                                widget.state.appliedChips.items[i],
                               ),
                               palette: palette,
-                              onTap: () => onRemoveChipAt(i),
+                              onTap: () => widget.onRemoveChipAt(i),
                             ),
                             const SizedBox(width: 6),
                           ],
@@ -74,82 +122,87 @@ class _SearchResultToolbar extends StatelessWidget {
                       ),
                     ),
                   ),
-                  Positioned(
-                    key: const ValueKey('search-applied-filter-fade'),
-                    top: 0,
-                    right: 0,
-                    bottom: 0,
-                    width: 30,
-                    child: IgnorePointer(
-                      child: DecoratedBox(
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [
-                              theme.colorScheme.surface.withValues(alpha: 0),
-                              theme.colorScheme.surface,
-                            ],
+                  if (_chipRailScrollable) ...[
+                    Positioned(
+                      key: const ValueKey('search-applied-filter-fade'),
+                      top: 0,
+                      right: 0,
+                      bottom: 0,
+                      width: 30,
+                      child: IgnorePointer(
+                        child: DecoratedBox(
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [
+                                theme.colorScheme.surface.withValues(alpha: 0),
+                                theme.colorScheme.surface,
+                              ],
+                            ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                  Positioned(
-                    key: const ValueKey('search-applied-filter-chevron'),
-                    top: 8,
-                    right: 4,
-                    child: IgnorePointer(
-                      child: DecoratedBox(
-                        decoration: BoxDecoration(
-                          color: palette.surfaceSubtle,
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: const SizedBox(
-                          width: 20,
-                          height: 20,
-                          child: Icon(Icons.chevron_right, size: 16),
+                    Positioned(
+                      key: const ValueKey('search-applied-filter-chevron'),
+                      top: 14,
+                      right: 4,
+                      child: IgnorePointer(
+                        child: DecoratedBox(
+                          decoration: BoxDecoration(
+                            color: palette.surfaceSubtle,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: const SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: Icon(Icons.chevron_right, size: 16),
+                          ),
                         ),
                       ),
                     ),
-                  ),
+                  ],
                 ],
               ),
             ),
           ),
-        SizedBox(
-          key: const ValueKey('search-results-toolbar'),
-          height: SearchConstants.searchResultToolbarHeight,
-          child: Row(
-            children: [
-              Text(l10n.searchToolbarTotal(totalCount)),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Align(
-                  alignment: Alignment.centerRight,
-                  child: TextButton(
-                    style: TextButton.styleFrom(
-                      padding: EdgeInsets.zero,
-                      minimumSize: Size.zero,
-                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    ),
-                    onPressed: () => _showSortSheet(
-                      context,
-                      state,
-                      onChangeDrugSort: onChangeDrugSort,
-                      onChangeDiseaseSort: onChangeDiseaseSort,
-                    ),
-                    child: Text(
-                      _sortToolbarLabel(l10n, state),
-                      overflow: TextOverflow.ellipsis,
-                      style: theme.textTheme.labelSmall?.copyWith(
-                        color: palette.primary,
-                        fontSize: 12.5,
-                        fontWeight: FontWeight.w500,
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: widget.gutter),
+          child: SizedBox(
+            key: const ValueKey('search-results-toolbar'),
+            height: SearchConstants.searchResultToolbarHeight,
+            child: Row(
+              children: [
+                Text(l10n.searchToolbarTotal(widget.totalCount)),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Align(
+                    alignment: Alignment.centerRight,
+                    child: TextButton(
+                      style: TextButton.styleFrom(
+                        padding: EdgeInsets.zero,
+                        minimumSize: Size.zero,
+                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      ),
+                      onPressed: () => _showSortSheet(
+                        context,
+                        widget.state,
+                        onChangeDrugSort: widget.onChangeDrugSort,
+                        onChangeDiseaseSort: widget.onChangeDiseaseSort,
+                      ),
+                      child: Text(
+                        _sortToolbarLabel(l10n, widget.state),
+                        overflow: TextOverflow.ellipsis,
+                        style: theme.textTheme.labelSmall?.copyWith(
+                          color: palette.primary,
+                          fontSize: 12.5,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ],

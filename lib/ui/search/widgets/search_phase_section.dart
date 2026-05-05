@@ -3,6 +3,7 @@ part of '../search_view.dart';
 class _SearchPhaseSection extends StatelessWidget {
   const _SearchPhaseSection({
     required this.state,
+    required this.gutter,
     required this.onRetry,
     required this.onResetFilter,
     required this.onRemoveOneChip,
@@ -13,6 +14,7 @@ class _SearchPhaseSection extends StatelessWidget {
   });
 
   final SearchScreenState state;
+  final double gutter;
   final Future<void> Function() onRetry;
   final Future<void> Function() onResetFilter;
   final Future<void> Function() onRemoveOneChip;
@@ -32,51 +34,54 @@ class _SearchPhaseSection extends StatelessWidget {
           (theme.brightness == Brightness.dark
               ? SearchPalette.dark
               : SearchPalette.light);
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          SizedBox(
-            key: const ValueKey('search-loading-toolbar'),
-            height: SearchConstants.searchResultToolbarHeight,
-            child: Row(
-              children: [
-                Text(l10n.searchLoadingTotalPlaceholder),
-                const Spacer(),
-                TextButton(
-                  onPressed: null,
-                  child: Text(l10n.searchSortTitle),
-                ),
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 8),
-            child: Text(
-              l10n.searchLoadingCaption,
-              textAlign: TextAlign.center,
-              style: theme.textTheme.labelMedium?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
-                fontWeight: FontWeight.w500,
+      return Padding(
+        padding: EdgeInsets.symmetric(horizontal: gutter),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            SizedBox(
+              key: const ValueKey('search-loading-toolbar'),
+              height: SearchConstants.searchResultToolbarHeight,
+              child: Row(
+                children: [
+                  Text(l10n.searchLoadingTotalPlaceholder),
+                  const Spacer(),
+                  TextButton(
+                    onPressed: null,
+                    child: Text(l10n.searchSortTitle),
+                  ),
+                ],
               ),
             ),
-          ),
-          Expanded(
-            child: Skeletonizer(
-              effect: ShimmerEffect(
-                baseColor: palette.surface2,
-                highlightColor: palette.surface3,
-              ),
-              child: ListView.builder(
-                key: const PageStorageKey<String>('searchResultsSkeleton'),
-                itemCount: SearchConstants.searchShimmerSkeletonCount,
-                itemBuilder: (context, index) => const Card(
-                  key: ValueKey('search-loading-skeleton-card'),
-                  child: SizedBox(height: 72),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 8),
+              child: Text(
+                l10n.searchLoadingCaption,
+                textAlign: TextAlign.center,
+                style: theme.textTheme.labelMedium?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                  fontWeight: FontWeight.w500,
                 ),
               ),
             ),
-          ),
-        ],
+            Expanded(
+              child: Skeletonizer(
+                effect: ShimmerEffect(
+                  baseColor: palette.surface2,
+                  highlightColor: palette.surface3,
+                ),
+                child: ListView.builder(
+                  key: const PageStorageKey<String>('searchResultsSkeleton'),
+                  itemCount: SearchConstants.searchShimmerSkeletonCount,
+                  itemBuilder: (context, index) => const Card(
+                    key: ValueKey('search-loading-skeleton-card'),
+                    child: SizedBox(height: 72),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
       );
     }
     if (phase is SearchPhaseEmpty) {
@@ -90,6 +95,7 @@ class _SearchPhaseSection extends StatelessWidget {
         children: [
           _SearchResultToolbar(
             state: state,
+            gutter: gutter,
             totalCount: 0,
             onRemoveChipAt: onRemoveChipAt,
             onChangeDrugSort: onChangeDrugSort,
@@ -164,87 +170,93 @@ class _SearchPhaseSection extends StatelessWidget {
           (theme.brightness == Brightness.dark
               ? SearchPalette.dark
               : SearchPalette.light);
-      return Center(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(vertical: 50, horizontal: 24),
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 360),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Center(
-                  child: Container(
-                    key: const ValueKey('search-error-icon'),
-                    width: 72,
-                    height: 72,
+      return Padding(
+        padding: EdgeInsets.symmetric(horizontal: gutter),
+        child: Center(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(vertical: 50, horizontal: 24),
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 360),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Center(
+                    child: Container(
+                      key: const ValueKey('search-error-icon'),
+                      width: 72,
+                      height: 72,
+                      decoration: BoxDecoration(
+                        color: palette.dangerCont,
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(
+                        Icons.warning_amber_rounded,
+                        color: palette.danger,
+                        size: 32,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 18),
+                  Text(
+                    _searchErrorTitle(l10n, phase.error),
+                    textAlign: TextAlign.center,
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      fontSize: 17,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+                  Text(
+                    _searchErrorBody(l10n, phase.error),
+                    textAlign: TextAlign.center,
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant,
+                      height: 1.6,
+                      fontSize: 12.5,
+                    ),
+                  ),
+                  const SizedBox(height: 22),
+                  SizedBox(
+                    height: 48,
+                    child: FilledButton.icon(
+                      onPressed: () => unawaited(onRetry()),
+                      icon: const Icon(Icons.refresh, size: 16),
+                      label: Text(l10n.searchErrorRetry),
+                    ),
+                  ),
+                  const SizedBox(height: 18),
+                  DecoratedBox(
+                    key: const ValueKey('search-error-diagnostics-box'),
                     decoration: BoxDecoration(
-                      color: palette.dangerCont,
-                      shape: BoxShape.circle,
+                      color: theme.colorScheme.surface,
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(color: palette.hairline, width: 0.5),
                     ),
-                    child: Icon(
-                      Icons.warning_amber_rounded,
-                      color: palette.danger,
-                      size: 32,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 18),
-                Text(
-                  _searchErrorTitle(l10n, phase.error),
-                  textAlign: TextAlign.center,
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    fontSize: 17,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-                const SizedBox(height: 6),
-                Text(
-                  _searchErrorBody(l10n, phase.error),
-                  textAlign: TextAlign.center,
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    color: theme.colorScheme.onSurfaceVariant,
-                    height: 1.6,
-                    fontSize: 12.5,
-                  ),
-                ),
-                const SizedBox(height: 22),
-                SizedBox(
-                  height: 48,
-                  child: FilledButton.icon(
-                    onPressed: () => unawaited(onRetry()),
-                    icon: const Icon(Icons.refresh, size: 16),
-                    label: Text(l10n.searchErrorRetry),
-                  ),
-                ),
-                const SizedBox(height: 18),
-                DecoratedBox(
-                  key: const ValueKey('search-error-diagnostics-box'),
-                  decoration: BoxDecoration(
-                    color: theme.colorScheme.surface,
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(color: palette.hairline, width: 0.5),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(12),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        for (final line in _diagnosticLines(l10n, phase.error))
-                          Text(
-                            line,
-                            style: theme.textTheme.bodySmall?.copyWith(
-                              color: theme.colorScheme.onSurfaceVariant,
-                              fontFamily: 'monospace',
-                              fontSize: 11,
-                              height: 1.65,
+                    child: Padding(
+                      padding: const EdgeInsets.all(12),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          for (final line in _diagnosticLines(
+                            l10n,
+                            phase.error,
+                          ))
+                            Text(
+                              line,
+                              style: theme.textTheme.bodySmall?.copyWith(
+                                color: theme.colorScheme.onSurfaceVariant,
+                                fontFamily: 'monospace',
+                                fontSize: 11,
+                                height: 1.65,
+                              ),
                             ),
-                          ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
@@ -287,23 +299,30 @@ class _SearchPhaseSection extends StatelessWidget {
         children: [
           _SearchResultToolbar(
             state: state,
+            gutter: gutter,
             totalCount: view.totalCount,
             onRemoveChipAt: onRemoveChipAt,
             onChangeDrugSort: onChangeDrugSort,
             onChangeDiseaseSort: onChangeDiseaseSort,
           ),
           switch (view) {
-            DrugSearchResultsView(:final items) => Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                for (final item in items) _DrugResultCard(item: item),
-              ],
+            DrugSearchResultsView(:final items) => Padding(
+              padding: EdgeInsets.symmetric(horizontal: gutter),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  for (final item in items) _DrugResultCard(item: item),
+                ],
+              ),
             ),
-            DiseaseSearchResultsView(:final items) => Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                for (final item in items) _DiseaseResultCard(item: item),
-              ],
+            DiseaseSearchResultsView(:final items) => Padding(
+              padding: EdgeInsets.symmetric(horizontal: gutter),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  for (final item in items) _DiseaseResultCard(item: item),
+                ],
+              ),
             ),
           },
           if (view.canLoadMore)
