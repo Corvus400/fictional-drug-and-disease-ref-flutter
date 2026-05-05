@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:drift/native.dart';
 import 'package:fictional_drug_and_disease_ref/application/providers/usecase_providers.dart';
 import 'package:fictional_drug_and_disease_ref/data/dto/disease/disease_list_response_dto.dart';
 import 'package:fictional_drug_and_disease_ref/data/dto/drug/drug_list_response_dto.dart';
@@ -17,6 +16,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
+import '../../helpers/test_app_database.dart';
+
 void main() {
   group('SearchScreenNotifier', () {
     late AppDatabase db;
@@ -24,8 +25,11 @@ void main() {
     late _MockDiseaseApiClient diseaseApiClient;
     late ProviderContainer container;
 
+    setUpAll(() {
+      db = createTestAppDatabase();
+    });
+
     setUp(() {
-      db = AppDatabase(NativeDatabase.memory());
       drugApiClient = _MockDrugApiClient();
       diseaseApiClient = _MockDiseaseApiClient();
       container = ProviderContainer(
@@ -35,8 +39,16 @@ void main() {
           diseaseApiClientProvider.overrideWithValue(diseaseApiClient),
         ],
       );
-      addTearDown(container.dispose);
-      addTearDown(db.close);
+    });
+
+    tearDown(() async {
+      await pumpEventQueue();
+      container.dispose();
+      await clearTestAppDatabase(db);
+    });
+
+    tearDownAll(() async {
+      await db.close();
     });
 
     test('build starts with idle drug state', () {

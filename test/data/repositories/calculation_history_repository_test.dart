@@ -1,4 +1,3 @@
-import 'package:drift/native.dart';
 import 'package:fictional_drug_and_disease_ref/core/error/app_exception.dart';
 import 'package:fictional_drug_and_disease_ref/core/result.dart';
 import 'package:fictional_drug_and_disease_ref/data/local/app_database.dart';
@@ -6,17 +5,26 @@ import 'package:fictional_drug_and_disease_ref/data/repositories/calculation_his
 import 'package:fictional_drug_and_disease_ref/domain/calculation_history/calculation_history_entry.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import '../../helpers/test_app_database.dart';
+
 void main() {
   group('CalculationHistoryRepository', () {
     late AppDatabase db;
     late CalculationHistoryRepository repository;
 
+    setUpAll(() {
+      db = createTestAppDatabase();
+    });
+
     setUp(() {
-      db = AppDatabase(NativeDatabase.memory());
       repository = CalculationHistoryRepository(db.calculationHistoriesDao);
     });
 
     tearDown(() async {
+      await clearTestAppDatabase(db);
+    });
+
+    tearDownAll(() async {
       await db.close();
     });
 

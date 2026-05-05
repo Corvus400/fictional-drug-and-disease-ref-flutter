@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:drift/native.dart';
 import 'package:fictional_drug_and_disease_ref/application/search/search_query_codec.dart';
 import 'package:fictional_drug_and_disease_ref/application/usecases/search_drugs_usecase.dart';
 import 'package:fictional_drug_and_disease_ref/core/result.dart';
@@ -16,6 +15,8 @@ import 'package:fictional_drug_and_disease_ref/domain/search_history/search_hist
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
+import '../../helpers/test_app_database.dart';
+
 void main() {
   group('SearchDrugsUsecase', () {
     late AppDatabase db;
@@ -23,8 +24,11 @@ void main() {
     late SearchHistoryRepository historyRepository;
     late SearchDrugsUsecase usecase;
 
+    setUpAll(() {
+      db = createTestAppDatabase();
+    });
+
     setUp(() {
-      db = AppDatabase(NativeDatabase.memory());
       apiClient = _MockDrugApiClient();
       historyRepository = SearchHistoryRepository(db.searchHistoriesDao);
       usecase = SearchDrugsUsecase(
@@ -36,6 +40,10 @@ void main() {
     });
 
     tearDown(() async {
+      await clearTestAppDatabase(db);
+    });
+
+    tearDownAll(() async {
       await db.close();
     });
 

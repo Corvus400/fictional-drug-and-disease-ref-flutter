@@ -1,4 +1,3 @@
-import 'package:drift/native.dart';
 import 'package:fictional_drug_and_disease_ref/core/error/app_exception.dart';
 import 'package:fictional_drug_and_disease_ref/core/result.dart';
 import 'package:fictional_drug_and_disease_ref/data/local/app_database.dart';
@@ -6,17 +5,26 @@ import 'package:fictional_drug_and_disease_ref/data/repositories/search_history_
 import 'package:fictional_drug_and_disease_ref/domain/search_history/search_history_entry.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import '../../helpers/test_app_database.dart';
+
 void main() {
   group('SearchHistoryRepository', () {
     late AppDatabase db;
     late SearchHistoryRepository repository;
 
+    setUpAll(() {
+      db = createTestAppDatabase();
+    });
+
     setUp(() {
-      db = AppDatabase(NativeDatabase.memory());
       repository = SearchHistoryRepository(db.searchHistoriesDao);
     });
 
     tearDown(() async {
+      await clearTestAppDatabase(db);
+    });
+
+    tearDownAll(() async {
       await db.close();
     });
 
