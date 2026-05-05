@@ -173,18 +173,16 @@ class _SearchViewState extends ConsumerState<SearchView> with RouteAware {
                     ),
                   ),
                 Expanded(
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: gutter),
-                    child: _SearchPhaseSection(
-                      state: state,
-                      onRetry: notifier.performSearch,
-                      onResetFilter: notifier.resetFilter,
-                      onRemoveOneChip: notifier.removeOneChip,
-                      onRemoveChipAt: notifier.removeChipAt,
-                      onChangeDrugSort: notifier.changeDrugSort,
-                      onChangeDiseaseSort: notifier.changeDiseaseSort,
-                      onLoadMore: notifier.loadMore,
-                    ),
+                  child: _SearchPhaseSection(
+                    state: state,
+                    gutter: gutter,
+                    onRetry: notifier.performSearch,
+                    onResetFilter: notifier.resetFilter,
+                    onRemoveOneChip: notifier.removeOneChip,
+                    onRemoveChipAt: notifier.removeChipAt,
+                    onChangeDrugSort: notifier.changeDrugSort,
+                    onChangeDiseaseSort: notifier.changeDiseaseSort,
+                    onLoadMore: notifier.loadMore,
                   ),
                 ),
               ],

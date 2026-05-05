@@ -398,10 +398,14 @@ void main() {
 
     await tester.tap(find.byType(FloatingActionButton));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('毒薬'));
-    await tester.tap(find.text('劇薬'));
-    await tester.tap(find.text('処方箋医薬品'));
-    await tester.tap(find.textContaining('結果を見る'));
+    await _tapVisible(tester, find.text('毒薬'));
+    await _tapVisible(tester, find.text('劇薬'));
+    await _tapVisible(tester, find.text('処方箋医薬品'));
+    await _tapVisible(tester, find.text('剤形'));
+    await _tapVisible(tester, find.text('錠剤'));
+    await _tapVisible(tester, find.text('投与経路'));
+    await _tapVisible(tester, find.text('経口'));
+    await _tapVisible(tester, find.textContaining('結果を見る'));
     await tester.pumpAndSettle();
 
     final rail = tester.getRect(
@@ -414,10 +418,69 @@ void main() {
       find.byKey(const ValueKey('search-applied-filter-chevron')),
     );
 
-    expect(rail.height, 36);
+    expect(rail.left, 0);
+    expect(rail.right, 390);
+    expect(rail.height, 48);
     expect(fade.right, rail.right);
     expect(fade.width, 30);
     expect(chevron.right, rail.right - 4);
+  });
+
+  testWidgets('chip_bar_chevron_visibility_matches_scrollability_(T09)', (
+    tester,
+  ) async {
+    await tester.binding.setSurfaceSize(const Size(390, 844));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+
+    final drugApiClient = _MockDrugApiClient();
+    final categoryApiClient = _MockCategoryApiClient();
+    when(
+      () => drugApiClient.getDrugs(
+        page: any(named: 'page'),
+        pageSize: any(named: 'pageSize'),
+        categoryAtc: any(named: 'categoryAtc'),
+        therapeuticCategory: any(named: 'therapeuticCategory'),
+        regulatoryClass: any(named: 'regulatoryClass'),
+        dosageForm: any(named: 'dosageForm'),
+        route: any(named: 'route'),
+        keyword: any(named: 'keyword'),
+        keywordMatch: any(named: 'keywordMatch'),
+        keywordTarget: any(named: 'keywordTarget'),
+        adverseReactionKeyword: any(named: 'adverseReactionKeyword'),
+        precautionCategory: any(named: 'precautionCategory'),
+        sort: any(named: 'sort'),
+      ),
+    ).thenAnswer((_) async => _drugListFixture());
+    when(
+      categoryApiClient.getCategories,
+    ).thenAnswer((_) async => _categoriesFixture());
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          appDatabaseProvider.overrideWithValue(db),
+          drugApiClientProvider.overrideWithValue(drugApiClient),
+          categoryApiClientProvider.overrideWithValue(categoryApiClient),
+        ],
+        child: MaterialApp(
+          theme: AppTheme.light(),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: const SearchView(),
+        ),
+      ),
+    );
+
+    await tester.tap(find.byType(FloatingActionButton));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('毒薬'));
+    await tester.tap(find.textContaining('結果を見る'));
+    await tester.pumpAndSettle();
+
+    expect(
+      find.byKey(const ValueKey('search-applied-filter-chevron')),
+      findsNothing,
+    );
   });
 
   testWidgets('SearchView applied chip rail uses Round6 chip visuals', (
@@ -1028,4 +1091,11 @@ CategoriesResponseDto _categoriesFixture() {
   ).readAsStringSync();
   final json = jsonDecode(fixture) as Map<String, dynamic>;
   return CategoriesResponseDto.fromJson(json);
+}
+
+Future<void> _tapVisible(WidgetTester tester, Finder finder) async {
+  await tester.ensureVisible(finder);
+  await tester.pumpAndSettle();
+  await tester.tap(finder);
+  await tester.pumpAndSettle();
 }
