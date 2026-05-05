@@ -104,7 +104,9 @@ final class SearchScreenNotifier extends Notifier<SearchScreenState> {
       );
       state = state.copyWith(drugParams: params);
       final result = await ref.read(searchDrugsUsecaseProvider).execute(params);
-      state = state.copyWith(phase: _drugPhase(result, '検索: 医薬品'));
+      state = state.copyWith(
+        phase: _drugPhase(result, '検索: 医薬品', state.appliedChips),
+      );
     } else {
       final params = _copyDiseaseParams(
         state.diseaseParams,
@@ -116,7 +118,9 @@ final class SearchScreenNotifier extends Notifier<SearchScreenState> {
       final result = await ref
           .read(searchDiseasesUsecaseProvider)
           .execute(params);
-      state = state.copyWith(phase: _diseasePhase(result, '検索: 疾患'));
+      state = state.copyWith(
+        phase: _diseasePhase(result, '検索: 疾患', state.appliedChips),
+      );
     }
     await loadHistory();
   }
@@ -353,10 +357,14 @@ final class SearchScreenNotifier extends Notifier<SearchScreenState> {
   }
 }
 
-SearchPhase _drugPhase(Result<DrugListPage> result, String requestLabel) {
+SearchPhase _drugPhase(
+  Result<DrugListPage> result,
+  String requestLabel,
+  AppliedFilterChips appliedChips,
+) {
   return switch (result) {
-    Ok(:final value) when value.items.isEmpty => const SearchPhase.empty(
-      chips: AppliedFilterChips([]),
+    Ok(:final value) when value.items.isEmpty => SearchPhase.empty(
+      chips: appliedChips,
     ),
     Ok(:final value) => SearchPhase.results(_drugResults(value)),
     Err(:final error) => SearchPhase.error(
@@ -369,10 +377,11 @@ SearchPhase _drugPhase(Result<DrugListPage> result, String requestLabel) {
 SearchPhase _diseasePhase(
   Result<DiseaseListPage> result,
   String requestLabel,
+  AppliedFilterChips appliedChips,
 ) {
   return switch (result) {
-    Ok(:final value) when value.items.isEmpty => const SearchPhase.empty(
-      chips: AppliedFilterChips([]),
+    Ok(:final value) when value.items.isEmpty => SearchPhase.empty(
+      chips: appliedChips,
     ),
     Ok(:final value) => SearchPhase.results(_diseaseResults(value)),
     Err(:final error) => SearchPhase.error(
