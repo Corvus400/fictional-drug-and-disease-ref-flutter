@@ -4,12 +4,14 @@ class _SearchHistoryDropdown extends StatelessWidget {
   const _SearchHistoryDropdown({
     required this.tapRegionGroupId,
     required this.entries,
+    required this.onSelect,
     required this.onDelete,
     required this.onClearAll,
   });
 
   final Object tapRegionGroupId;
   final List<SearchHistoryEnvelope> entries;
+  final Future<void> Function(SearchHistoryEnvelope entry) onSelect;
   final Future<void> Function(String id) onDelete;
   final Future<void> Function() onClearAll;
 
@@ -59,6 +61,7 @@ class _SearchHistoryDropdown extends StatelessWidget {
               _SearchHistoryRow(
                 entry: entry,
                 palette: palette,
+                onSelect: onSelect,
                 onDelete: onDelete,
               ),
             Padding(
@@ -110,11 +113,13 @@ class _SearchHistoryRow extends StatelessWidget {
   const _SearchHistoryRow({
     required this.entry,
     required this.palette,
+    required this.onSelect,
     required this.onDelete,
   });
 
   final SearchHistoryEnvelope entry;
   final SearchPalette palette;
+  final Future<void> Function(SearchHistoryEnvelope entry) onSelect;
   final Future<void> Function(String id) onDelete;
 
   @override
@@ -122,6 +127,8 @@ class _SearchHistoryRow extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
     return ListTile(
+      key: ValueKey('history-row-${entry.id}'),
+      onTap: () => unawaited(onSelect(entry)),
       dense: true,
       leading: const Icon(Icons.history, size: 16),
       title: Text(

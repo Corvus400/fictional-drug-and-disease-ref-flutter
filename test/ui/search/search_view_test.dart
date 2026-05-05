@@ -251,6 +251,71 @@ void main() {
     expect(find.text('合計 7 件'), findsOneWidget);
   });
 
+  testWidgets('history row tap restores params and triggers search', (
+    tester,
+  ) async {
+    final db = AppDatabase(NativeDatabase.memory());
+    final drugApiClient = _MockDrugApiClient();
+    addTearDown(db.close);
+    when(
+      () => drugApiClient.getDrugs(
+        page: any(named: 'page'),
+        pageSize: any(named: 'pageSize'),
+        keyword: any(named: 'keyword'),
+      ),
+    ).thenAnswer((_) async => _drugListFixture());
+    final container = ProviderContainer(
+      overrides: [
+        appDatabaseProvider.overrideWithValue(db),
+        drugApiClientProvider.overrideWithValue(drugApiClient),
+      ],
+    );
+    addTearDown(container.dispose);
+    await container
+        .read(searchHistoryRepositoryProvider)
+        .insertWithDedup(
+          id: 'history_restore_target',
+          target: 'drug',
+          queryJson: container
+              .read(searchQueryCodecProvider)
+              .encode(
+                const DrugSearchParams(keyword: '復元キーワード'),
+              ),
+          searchedAt: DateTime.utc(2026, 5, 5),
+          totalCount: 7,
+        );
+
+    await tester.pumpWidget(
+      UncontrolledProviderScope(
+        container: container,
+        child: const MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: SearchView(),
+        ),
+      ),
+    );
+    await tester.pump();
+    await tester.tap(find.byKey(const ValueKey('search-field')));
+    await tester.pump();
+    expect(find.text('復元キーワード'), findsOneWidget);
+
+    await tester.tap(
+      find.byKey(const ValueKey('history-row-history_restore_target')),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('復元キーワード'), findsWidgets);
+    verify(
+      () => drugApiClient.getDrugs(
+        page: 1,
+        pageSize: 20,
+        keyword: '復元キーワード',
+      ),
+    ).called(1);
+    expect(container.read(searchScreenProvider).historyDropdownOpen, false);
+  });
+
   testWidgets('SearchView hides idle no-history panel while focused', (
     tester,
   ) async {

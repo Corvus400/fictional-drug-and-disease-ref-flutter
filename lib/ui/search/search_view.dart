@@ -114,6 +114,7 @@ class SearchView extends ConsumerWidget {
                   _SearchHistoryDropdown(
                     tapRegionGroupId: historyTapRegionGroupId,
                     entries: state.historyForTab,
+                    onSelect: notifier.selectHistory,
                     onDelete: notifier.deleteHistory,
                     onClearAll: notifier.clearAllHistory,
                   ),
