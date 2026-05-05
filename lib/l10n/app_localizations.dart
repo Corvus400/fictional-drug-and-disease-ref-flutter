@@ -556,6 +556,18 @@ abstract class AppLocalizations {
   /// **'並び替え'**
   String get searchSortTitle;
 
+  /// No description provided for @searchLoadingTotalPlaceholder.
+  ///
+  /// In ja, this message translates to:
+  /// **'合計 — 件'**
+  String get searchLoadingTotalPlaceholder;
+
+  /// No description provided for @searchLoadingCaption.
+  ///
+  /// In ja, this message translates to:
+  /// **'検索中…'**
+  String get searchLoadingCaption;
+
   /// No description provided for @searchSortByRevised.
   ///
   /// In ja, this message translates to:

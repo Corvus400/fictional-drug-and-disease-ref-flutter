@@ -26,14 +26,47 @@ class _SearchPhaseSection extends StatelessWidget {
     final phase = state.phase;
     final l10n = AppLocalizations.of(context)!;
     if (phase is SearchPhaseLoading) {
-      return Skeletonizer(
-        child: ListView.builder(
-          itemCount: SearchConstants.searchShimmerSkeletonCount,
-          itemBuilder: (context, index) => const Card(
-            key: ValueKey('search-loading-skeleton-card'),
-            child: SizedBox(height: 72),
+      final theme = Theme.of(context);
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          SizedBox(
+            key: const ValueKey('search-loading-toolbar'),
+            height: SearchConstants.searchResultToolbarHeight,
+            child: Row(
+              children: [
+                Text(l10n.searchLoadingTotalPlaceholder),
+                const Spacer(),
+                TextButton(
+                  onPressed: null,
+                  child: Text(l10n.searchSortTitle),
+                ),
+              ],
+            ),
           ),
-        ),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 8),
+            child: Text(
+              l10n.searchLoadingCaption,
+              textAlign: TextAlign.center,
+              style: theme.textTheme.labelMedium?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+          Expanded(
+            child: Skeletonizer(
+              child: ListView.builder(
+                itemCount: SearchConstants.searchShimmerSkeletonCount,
+                itemBuilder: (context, index) => const Card(
+                  key: ValueKey('search-loading-skeleton-card'),
+                  child: SizedBox(height: 72),
+                ),
+              ),
+            ),
+          ),
+        ],
       );
     }
     if (phase is SearchPhaseEmpty) {

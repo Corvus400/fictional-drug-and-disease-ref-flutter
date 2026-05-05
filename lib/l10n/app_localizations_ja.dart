@@ -263,6 +263,12 @@ class AppLocalizationsJa extends AppLocalizations {
   String get searchSortTitle => '並び替え';
 
   @override
+  String get searchLoadingTotalPlaceholder => '合計 — 件';
+
+  @override
+  String get searchLoadingCaption => '検索中…';
+
+  @override
   String get searchSortByRevised => '更新日 (新しい順)';
 
   @override

@@ -157,6 +157,8 @@
   "searchDiseaseSeverityGradingTrue": "重症度評価あり",
   "searchDiseaseSeverityGradingFalse": "重症度評価なし",
   "searchSortTitle": "並び替え",
+  "searchLoadingTotalPlaceholder": "合計 — 件",
+  "searchLoadingCaption": "検索中…",
   "searchSortByRevised": "更新日 (新しい順)",
   "searchSortByBrandKana": "ブランド名カナ",
   "searchSortByAtcCode": "ATC コード",

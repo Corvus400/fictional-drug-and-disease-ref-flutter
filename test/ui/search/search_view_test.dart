@@ -2072,6 +2072,8 @@ void main() {
         find.byWidgetPredicate((widget) => widget is Skeletonizer),
         findsOneWidget,
       );
+      expect(find.text('合計 — 件'), findsOneWidget);
+      expect(find.text('検索中…'), findsOneWidget);
       expect(
         find.byKey(const ValueKey('search-loading-skeleton-card')),
         findsNWidgets(5),
