@@ -167,6 +167,44 @@ void main() {
     expect(toolbar.width, 358);
   });
 
+  testWidgets(
+    'SearchView sort toolbar label shows current axis and direction',
+    (
+      tester,
+    ) async {
+      await tester.binding.setSurfaceSize(const Size(390, 844));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+
+      final drugApiClient = _MockDrugApiClient();
+      _stubDrugSearch(drugApiClient);
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            appDatabaseProvider.overrideWithValue(db),
+            drugApiClientProvider.overrideWithValue(drugApiClient),
+          ],
+          child: MaterialApp(
+            theme: AppTheme.light(),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: const SearchView(),
+          ),
+        ),
+      );
+
+      await tester.enterText(
+        find.byKey(const ValueKey('search-field')),
+        'アムロ',
+      );
+      await tester.tap(find.byType(FilledButton).first);
+      await tester.pumpAndSettle();
+
+      expect(find.text('並び替え： 更新日(新しい順) ↓ ▾'), findsOneWidget);
+      expect(find.text('並び替え'), findsNothing);
+    },
+  );
+
   // Design source:
   // Round5/Search - Round 5.html TASK 4 keyboard drag-to-dismiss.
   testWidgets('SearchView result list dismisses keyboard on drag', (

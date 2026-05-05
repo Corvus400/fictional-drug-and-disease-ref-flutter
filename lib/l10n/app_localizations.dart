@@ -613,8 +613,26 @@ abstract class AppLocalizations {
   /// No description provided for @searchSortByRevised.
   ///
   /// In ja, this message translates to:
-  /// **'更新日 (新しい順)'**
+  /// **'更新日(新しい順)'**
   String get searchSortByRevised;
+
+  /// No description provided for @searchSortDiseaseRevisedAt.
+  ///
+  /// In ja, this message translates to:
+  /// **'改訂日'**
+  String get searchSortDiseaseRevisedAt;
+
+  /// No description provided for @searchSortDiseaseName.
+  ///
+  /// In ja, this message translates to:
+  /// **'名称'**
+  String get searchSortDiseaseName;
+
+  /// No description provided for @searchSortDiseaseIcd10.
+  ///
+  /// In ja, this message translates to:
+  /// **'ICD-10'**
+  String get searchSortDiseaseIcd10;
 
   /// No description provided for @searchSortByBrandKana.
   ///
