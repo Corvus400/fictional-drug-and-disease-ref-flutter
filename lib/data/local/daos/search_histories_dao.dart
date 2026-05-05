@@ -40,4 +40,11 @@ class SearchHistoriesDao extends DatabaseAccessor<AppDatabase>
       searchHistoriesTable,
     )..where((table) => table.id.equals(id))).go();
   }
+
+  /// Deletes all rows for a target.
+  Future<void> clearByTarget(String target) async {
+    await (delete(
+      searchHistoriesTable,
+    )..where((table) => table.target.equals(target))).go();
+  }
 }
