@@ -41,6 +41,38 @@
       }
     }
   },
+  "searchTabDrugs": "医薬品",
+  "searchTabDiseases": "疾患",
+  "searchHintDrugs": "医薬品名・YJ・ATC コード",
+  "searchHintDiseases": "疾患名・症状・ICD-10",
+  "searchActionSearch": "検索",
+  "searchActionCancel": "キャンセル",
+  "searchHistoryTitle": "検索履歴",
+  "searchHistoryClear": "すべて削除",
+  "searchHistoryClearConfirmTitle": "検索履歴を削除しますか？",
+  "searchHistoryClearConfirmDelete": "削除",
+  "searchToolbarTotal": "合計 {count} 件",
+  "@searchToolbarTotal": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "searchToolbarLoadMore": "さらに読み込む",
+  "searchEmptyResultTitle": "該当する結果がありません",
+  "searchEmptyResetFilter": "条件をリセット",
+  "searchEmptyRemoveOneFilter": "条件を1つ外す",
+  "searchEmptyChangeMatchToPartial": "部分一致に変更",
+  "searchErrorTitle": "通信エラー — もう一度",
+  "searchErrorRetry": "再試行",
+  "searchFilterTitle": "絞り込み",
+  "searchFilterApply": "結果を見る",
+  "searchSortTitle": "並び替え",
+  "searchSortByRevised": "更新日 (新しい順)",
+  "searchSortByBrandKana": "ブランド名カナ",
+  "searchSortByAtcCode": "ATC コード",
+  "searchSortByTherapeuticCategory": "薬効分類名",
   "errorNetwork": "ネットワークエラーが発生しました",
   "errorUnknown": "不明なエラーが発生しました",
   "errNetwork": "ネットワークに接続できません",

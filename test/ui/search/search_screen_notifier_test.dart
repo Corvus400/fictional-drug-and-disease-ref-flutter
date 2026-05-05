@@ -43,13 +43,12 @@ void main() {
     });
 
     test('changeQueryText updates text without running search', () {
-      final notifier = container.read(searchScreenProvider.notifier);
-
-      notifier.changeQueryText('アムロ');
+      container.read(searchScreenProvider.notifier).changeQueryText('アムロ');
 
       final state = container.read(searchScreenProvider);
+      final queryText = state.queryText;
       final phase = state.phase;
-      expect(state.queryText, 'アムロ');
+      expect(queryText, 'アムロ');
       expect(phase, isA<SearchPhaseIdle>());
     });
 

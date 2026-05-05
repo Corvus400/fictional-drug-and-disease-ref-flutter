@@ -196,6 +196,156 @@ abstract class AppLocalizations {
   /// **'ERROR: {message}'**
   String healthError(String message);
 
+  /// No description provided for @searchTabDrugs.
+  ///
+  /// In ja, this message translates to:
+  /// **'医薬品'**
+  String get searchTabDrugs;
+
+  /// No description provided for @searchTabDiseases.
+  ///
+  /// In ja, this message translates to:
+  /// **'疾患'**
+  String get searchTabDiseases;
+
+  /// No description provided for @searchHintDrugs.
+  ///
+  /// In ja, this message translates to:
+  /// **'医薬品名・YJ・ATC コード'**
+  String get searchHintDrugs;
+
+  /// No description provided for @searchHintDiseases.
+  ///
+  /// In ja, this message translates to:
+  /// **'疾患名・症状・ICD-10'**
+  String get searchHintDiseases;
+
+  /// No description provided for @searchActionSearch.
+  ///
+  /// In ja, this message translates to:
+  /// **'検索'**
+  String get searchActionSearch;
+
+  /// No description provided for @searchActionCancel.
+  ///
+  /// In ja, this message translates to:
+  /// **'キャンセル'**
+  String get searchActionCancel;
+
+  /// No description provided for @searchHistoryTitle.
+  ///
+  /// In ja, this message translates to:
+  /// **'検索履歴'**
+  String get searchHistoryTitle;
+
+  /// No description provided for @searchHistoryClear.
+  ///
+  /// In ja, this message translates to:
+  /// **'すべて削除'**
+  String get searchHistoryClear;
+
+  /// No description provided for @searchHistoryClearConfirmTitle.
+  ///
+  /// In ja, this message translates to:
+  /// **'検索履歴を削除しますか？'**
+  String get searchHistoryClearConfirmTitle;
+
+  /// No description provided for @searchHistoryClearConfirmDelete.
+  ///
+  /// In ja, this message translates to:
+  /// **'削除'**
+  String get searchHistoryClearConfirmDelete;
+
+  /// No description provided for @searchToolbarTotal.
+  ///
+  /// In ja, this message translates to:
+  /// **'合計 {count} 件'**
+  String searchToolbarTotal(int count);
+
+  /// No description provided for @searchToolbarLoadMore.
+  ///
+  /// In ja, this message translates to:
+  /// **'さらに読み込む'**
+  String get searchToolbarLoadMore;
+
+  /// No description provided for @searchEmptyResultTitle.
+  ///
+  /// In ja, this message translates to:
+  /// **'該当する結果がありません'**
+  String get searchEmptyResultTitle;
+
+  /// No description provided for @searchEmptyResetFilter.
+  ///
+  /// In ja, this message translates to:
+  /// **'条件をリセット'**
+  String get searchEmptyResetFilter;
+
+  /// No description provided for @searchEmptyRemoveOneFilter.
+  ///
+  /// In ja, this message translates to:
+  /// **'条件を1つ外す'**
+  String get searchEmptyRemoveOneFilter;
+
+  /// No description provided for @searchEmptyChangeMatchToPartial.
+  ///
+  /// In ja, this message translates to:
+  /// **'部分一致に変更'**
+  String get searchEmptyChangeMatchToPartial;
+
+  /// No description provided for @searchErrorTitle.
+  ///
+  /// In ja, this message translates to:
+  /// **'通信エラー — もう一度'**
+  String get searchErrorTitle;
+
+  /// No description provided for @searchErrorRetry.
+  ///
+  /// In ja, this message translates to:
+  /// **'再試行'**
+  String get searchErrorRetry;
+
+  /// No description provided for @searchFilterTitle.
+  ///
+  /// In ja, this message translates to:
+  /// **'絞り込み'**
+  String get searchFilterTitle;
+
+  /// No description provided for @searchFilterApply.
+  ///
+  /// In ja, this message translates to:
+  /// **'結果を見る'**
+  String get searchFilterApply;
+
+  /// No description provided for @searchSortTitle.
+  ///
+  /// In ja, this message translates to:
+  /// **'並び替え'**
+  String get searchSortTitle;
+
+  /// No description provided for @searchSortByRevised.
+  ///
+  /// In ja, this message translates to:
+  /// **'更新日 (新しい順)'**
+  String get searchSortByRevised;
+
+  /// No description provided for @searchSortByBrandKana.
+  ///
+  /// In ja, this message translates to:
+  /// **'ブランド名カナ'**
+  String get searchSortByBrandKana;
+
+  /// No description provided for @searchSortByAtcCode.
+  ///
+  /// In ja, this message translates to:
+  /// **'ATC コード'**
+  String get searchSortByAtcCode;
+
+  /// No description provided for @searchSortByTherapeuticCategory.
+  ///
+  /// In ja, this message translates to:
+  /// **'薬効分類名'**
+  String get searchSortByTherapeuticCategory;
+
   /// No description provided for @errorNetwork.
   ///
   /// In ja, this message translates to:
