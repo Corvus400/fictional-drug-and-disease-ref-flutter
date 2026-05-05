@@ -6,6 +6,37 @@ fail() {
   exit 1
 }
 
+warn() {
+  printf 'plan completion guard advisory: %s\n' "$1" >&2
+}
+
+changed_files_since_upstream() {
+  local upstream
+  if upstream="$(git rev-parse --abbrev-ref --symbolic-full-name '@{u}' 2>/dev/null)"; then
+    git diff --name-only "$upstream"...HEAD
+    git diff --name-only
+    git diff --name-only --cached
+    return
+  fi
+  if git rev-parse --verify HEAD~1 >/dev/null 2>&1; then
+    git diff --name-only HEAD~1..HEAD
+  fi
+  git diff --name-only
+  git diff --name-only --cached
+}
+
+changed_ui_files="$(changed_files_since_upstream | sort -u | rg '^(lib/ui/|test/ui/)' || true)"
+
+if [ -n "$changed_ui_files" ]; then
+  warn "UI files changed. Before reporting completion, map user/design requirements to widget, design-contract, golden, integration, or Computer Use evidence."
+fi
+
+if [ -n "$changed_ui_files" ] &&
+  git diff '@{u}'...HEAD -- $changed_ui_files 2>/dev/null |
+    rg -n "Text\\(['\"]|labelText: ['\"]|hintText: ['\"]|tooltip: ['\"]" >/dev/null; then
+  warn "UI text literals changed. Confirm user-visible copy belongs in l10n/domain/config/fixtures instead of production UI code."
+fi
+
 cmp -s AGENTS.md CLAUDE.md || fail "AGENTS.md and CLAUDE.md must stay identical"
 
 if rg -n 'Dto\b' lib/domain lib/ui; then
