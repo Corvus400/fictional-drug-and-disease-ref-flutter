@@ -79,7 +79,7 @@ void main() {
     expect(find.textContaining('Health:'), findsNothing);
   });
 
-  testWidgets('SearchView renders Round6 no-history empty state on idle', (
+  testWidgets('empty_history_text_shown_only_when_dropdown_open_(T11)', (
     tester,
   ) async {
     await tester.pumpWidget(
@@ -93,6 +93,11 @@ void main() {
       ),
     );
     await tester.pump();
+
+    expect(find.text('検索履歴はまだありません'), findsNothing);
+
+    await tester.tap(find.byKey(const ValueKey('search-field')));
+    await tester.pumpAndSettle();
 
     expect(find.text('検索履歴はまだありません'), findsOneWidget);
     expect(
@@ -121,10 +126,10 @@ void main() {
       await tester.tap(find.text('疾患'));
       await tester.pumpAndSettle();
 
-      expect(find.text('検索履歴はまだありません'), findsOneWidget);
+      expect(find.text('検索履歴はまだありません'), findsNothing);
       expect(
         find.text('検索すると履歴が最大 5 件まで残ります。\n履歴は端末内にのみ保存されます。'),
-        findsOneWidget,
+        findsNothing,
       );
     },
   );
@@ -398,7 +403,7 @@ void main() {
     expect(container.read(searchScreenProvider).historyDropdownOpen, false);
   });
 
-  testWidgets('SearchView hides idle no-history panel while focused', (
+  testWidgets('SearchView shows no-history panel while focused', (
     tester,
   ) async {
     await tester.pumpWidget(
@@ -412,13 +417,13 @@ void main() {
       ),
     );
     await tester.pump();
-    expect(find.text('検索履歴はまだありません'), findsOneWidget);
+    expect(find.text('検索履歴はまだありません'), findsNothing);
 
     await tester.tap(find.byKey(const ValueKey('search-field')));
-    await tester.pump();
+    await tester.pumpAndSettle();
 
     expect(find.text('検索履歴'), findsOneWidget);
-    expect(find.text('検索履歴はまだありません'), findsNothing);
+    expect(find.text('検索履歴はまだありません'), findsOneWidget);
   });
 
   testWidgets('SearchView renders Round6 history row metadata and note', (
