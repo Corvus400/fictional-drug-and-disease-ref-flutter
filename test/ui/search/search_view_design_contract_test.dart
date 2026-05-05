@@ -341,7 +341,7 @@ void main() {
     await tester.pumpAndSettle();
 
     final listView = tester.widget<ListView>(
-      find.byKey(const ValueKey('search-results-list')),
+      find.byKey(const PageStorageKey<String>('drugSearchResults')),
     );
     expect(
       listView.keyboardDismissBehavior,
