@@ -35,7 +35,7 @@ part 'format/search_label_formatters.dart';
 part 'format/search_sort_sheet.dart';
 
 /// Search tab view.
-class SearchView extends ConsumerWidget {
+class SearchView extends ConsumerStatefulWidget {
   /// Creates a search view.
   const SearchView({super.key, this.healthCheck, this.currentTime});
 
@@ -48,7 +48,49 @@ class SearchView extends ConsumerWidget {
   final DateTime? currentTime;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<SearchView> createState() => _SearchViewState();
+}
+
+class _SearchViewState extends ConsumerState<SearchView> with RouteAware {
+  PageRoute<dynamic>? _route;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final route = ModalRoute.of(context);
+    if (route is PageRoute<dynamic> && route != _route) {
+      final previousRoute = _route;
+      if (previousRoute != null) {
+        appRouteObserver.unsubscribe(this);
+      }
+      _route = route;
+      appRouteObserver.subscribe(this, route);
+    }
+  }
+
+  @override
+  void dispose() {
+    appRouteObserver.unsubscribe(this);
+    super.dispose();
+  }
+
+  @override
+  void didPopNext() {
+    _clearReturnFocus();
+  }
+
+  @override
+  void didPushNext() {
+    _clearReturnFocus();
+  }
+
+  void _clearReturnFocus() {
+    FocusManager.instance.primaryFocus?.unfocus();
+    ref.read(searchScreenProvider.notifier).closeHistoryDropdown();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final state = ref.watch(searchScreenProvider);
     final notifier = ref.read(searchScreenProvider.notifier);
     final theme = Theme.of(context);
@@ -122,7 +164,7 @@ class SearchView extends ConsumerWidget {
                   _SearchHistoryDropdown(
                     tapRegionGroupId: historyTapRegionGroupId,
                     entries: state.historyForTab,
-                    currentTime: currentTime ?? DateTime.now(),
+                    currentTime: widget.currentTime ?? DateTime.now(),
                     onSelect: notifier.selectHistory,
                     onDelete: notifier.deleteHistory,
                     onClearAll: notifier.clearAllHistory,

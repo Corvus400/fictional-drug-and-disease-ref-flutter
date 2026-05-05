@@ -8,6 +8,9 @@ import 'package:fictional_drug_and_disease_ref/ui/shell/app_shell.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
 
+/// Route observer used by views that need stack return callbacks.
+final appRouteObserver = RouteObserver<PageRoute<dynamic>>();
+
 /// Application route paths.
 class AppRoutes {
   const AppRoutes._();
@@ -35,6 +38,7 @@ class AppRoutes {
 GoRouter buildRouter() {
   return GoRouter(
     initialLocation: AppRoutes.search,
+    observers: [appRouteObserver],
     routes: [
       StatefulShellRoute.indexedStack(
         builder: (context, state, shell) => AppShell(navigationShell: shell),
