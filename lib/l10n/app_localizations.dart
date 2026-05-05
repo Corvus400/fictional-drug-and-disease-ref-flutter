@@ -340,11 +340,53 @@ abstract class AppLocalizations {
   /// **'通信エラー — もう一度'**
   String get searchErrorTitle;
 
+  /// No description provided for @searchErrorBody.
+  ///
+  /// In ja, this message translates to:
+  /// **'サーバーに接続できませんでした。\n通信環境を確認してから再試行してください。'**
+  String get searchErrorBody;
+
   /// No description provided for @searchErrorRetry.
   ///
   /// In ja, this message translates to:
   /// **'再試行'**
   String get searchErrorRetry;
+
+  /// No description provided for @searchErrorDiagnosticsType.
+  ///
+  /// In ja, this message translates to:
+  /// **'Type: {type}'**
+  String searchErrorDiagnosticsType(Object type);
+
+  /// No description provided for @searchErrorDiagnosticsStatus.
+  ///
+  /// In ja, this message translates to:
+  /// **'Status: {statusCode}'**
+  String searchErrorDiagnosticsStatus(int statusCode);
+
+  /// No description provided for @searchErrorDiagnosticsCode.
+  ///
+  /// In ja, this message translates to:
+  /// **'Code: {code}'**
+  String searchErrorDiagnosticsCode(Object code);
+
+  /// No description provided for @searchErrorDiagnosticsMessage.
+  ///
+  /// In ja, this message translates to:
+  /// **'Message: {message}'**
+  String searchErrorDiagnosticsMessage(Object message);
+
+  /// No description provided for @searchErrorDiagnosticsDetails.
+  ///
+  /// In ja, this message translates to:
+  /// **'Details: {details}'**
+  String searchErrorDiagnosticsDetails(Object details);
+
+  /// No description provided for @searchErrorDiagnosticsStorageKind.
+  ///
+  /// In ja, this message translates to:
+  /// **'Storage kind: {kind}'**
+  String searchErrorDiagnosticsStorageKind(Object kind);
 
   /// No description provided for @searchFilterTitle.
   ///

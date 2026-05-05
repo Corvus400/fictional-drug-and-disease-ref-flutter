@@ -79,7 +79,46 @@
   "searchEmptyRemoveOneFilter": "条件を1つ外す",
   "searchEmptyChangeMatchToPartial": "部分一致に変更",
   "searchErrorTitle": "通信エラー — もう一度",
+  "searchErrorBody": "サーバーに接続できませんでした。\n通信環境を確認してから再試行してください。",
   "searchErrorRetry": "再試行",
+  "searchErrorDiagnosticsType": "Type: {type}",
+  "@searchErrorDiagnosticsType": {
+    "placeholders": {
+      "type": {}
+    }
+  },
+  "searchErrorDiagnosticsStatus": "Status: {statusCode}",
+  "@searchErrorDiagnosticsStatus": {
+    "placeholders": {
+      "statusCode": {
+        "type": "int"
+      }
+    }
+  },
+  "searchErrorDiagnosticsCode": "Code: {code}",
+  "@searchErrorDiagnosticsCode": {
+    "placeholders": {
+      "code": {}
+    }
+  },
+  "searchErrorDiagnosticsMessage": "Message: {message}",
+  "@searchErrorDiagnosticsMessage": {
+    "placeholders": {
+      "message": {}
+    }
+  },
+  "searchErrorDiagnosticsDetails": "Details: {details}",
+  "@searchErrorDiagnosticsDetails": {
+    "placeholders": {
+      "details": {}
+    }
+  },
+  "searchErrorDiagnosticsStorageKind": "Storage kind: {kind}",
+  "@searchErrorDiagnosticsStorageKind": {
+    "placeholders": {
+      "kind": {}
+    }
+  },
   "searchFilterTitle": "絞り込み",
   "searchFilterTitleForTarget": "絞り込み（{target}）",
   "@searchFilterTitleForTarget": {
