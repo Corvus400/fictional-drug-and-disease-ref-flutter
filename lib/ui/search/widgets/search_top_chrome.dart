@@ -198,7 +198,7 @@ class _SearchFieldState extends State<_SearchField> {
                 icon: const Icon(Icons.cancel),
               ),
         filled: true,
-        fillColor: widget.palette.surfaceSubtle,
+        fillColor: widget.palette.searchFieldBg,
         contentPadding: EdgeInsets.zero,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(

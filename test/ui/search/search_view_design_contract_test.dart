@@ -85,6 +85,53 @@ void main() {
     },
   );
 
+  testWidgets(
+    'search field bg matches token searchFieldBg (Light EBEBEF / Dark surface3)',
+    (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [appDatabaseProvider.overrideWithValue(db)],
+          child: MaterialApp(
+            theme: AppTheme.light(),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: const SearchView(),
+          ),
+        ),
+      );
+
+      final lightField = tester.widget<TextField>(
+        find.byKey(const ValueKey('search-field')),
+      );
+      expect(
+        lightField.decoration?.fillColor,
+        SearchPalette.light.searchFieldBg,
+      );
+
+      await tester.pumpWidget(const SizedBox.shrink());
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [appDatabaseProvider.overrideWithValue(db)],
+          child: MaterialApp(
+            darkTheme: AppTheme.dark(),
+            themeMode: ThemeMode.dark,
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: const SearchView(),
+          ),
+        ),
+      );
+
+      final darkField = tester.widget<TextField>(
+        find.byKey(const ValueKey('search-field')),
+      );
+      expect(darkField.decoration?.fillColor, SearchPalette.dark.searchFieldBg);
+    },
+  );
+
   testWidgets('SearchView FAB follows Round6 phone metrics', (tester) async {
     await tester.binding.setSurfaceSize(const Size(390, 844));
     addTearDown(() => tester.binding.setSurfaceSize(null));
