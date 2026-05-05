@@ -384,7 +384,7 @@ Future<Future<void> Function()?> _triggerLoadingMore(
   await _performSearch(tester);
   await tester.drag(
     find.byKey(const ValueKey('search-results-list')),
-    const Offset(0, -800),
+    const Offset(0, -820),
   );
   await tester.pump();
   return null;

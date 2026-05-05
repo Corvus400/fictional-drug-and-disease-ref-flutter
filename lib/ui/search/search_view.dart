@@ -7,12 +7,14 @@ import 'package:fictional_drug_and_disease_ref/domain/disease/disease_summary.da
 import 'package:fictional_drug_and_disease_ref/domain/drug/drug_search_params.dart';
 import 'package:fictional_drug_and_disease_ref/domain/drug/drug_summary.dart';
 import 'package:fictional_drug_and_disease_ref/l10n/app_localizations.dart';
+import 'package:fictional_drug_and_disease_ref/router/app_router.dart';
 import 'package:fictional_drug_and_disease_ref/ui/search/constants/search_constants.dart';
 import 'package:fictional_drug_and_disease_ref/ui/search/constants/search_palette.dart';
 import 'package:fictional_drug_and_disease_ref/ui/search/search_screen_notifier.dart';
 import 'package:fictional_drug_and_disease_ref/ui/search/search_screen_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 part 'widgets/search_top_chrome.dart';

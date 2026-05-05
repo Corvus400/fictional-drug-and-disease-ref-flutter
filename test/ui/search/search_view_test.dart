@@ -20,6 +20,7 @@ import 'package:fictional_drug_and_disease_ref/data/services/api/drug_api_client
 import 'package:fictional_drug_and_disease_ref/domain/disease/disease_search_params.dart';
 import 'package:fictional_drug_and_disease_ref/domain/drug/drug_search_params.dart';
 import 'package:fictional_drug_and_disease_ref/l10n/app_localizations.dart';
+import 'package:fictional_drug_and_disease_ref/router/app_router.dart';
 import 'package:fictional_drug_and_disease_ref/theme/app_theme.dart';
 import 'package:fictional_drug_and_disease_ref/ui/search/constants/search_palette.dart';
 import 'package:fictional_drug_and_disease_ref/ui/search/search_screen_notifier.dart';
@@ -27,6 +28,7 @@ import 'package:fictional_drug_and_disease_ref/ui/search/search_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:go_router/go_router.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
@@ -569,6 +571,150 @@ void main() {
     expect(find.text(item.brandName), findsOneWidget);
     expect(find.text(item.genericName), findsOneWidget);
     expect(find.text('合計 ${_drugListFixture().totalCount} 件'), findsOneWidget);
+  });
+
+  testWidgets('result card tap navigates to drug detail with correct id', (
+    tester,
+  ) async {
+    final db = AppDatabase(NativeDatabase.memory());
+    final drugApiClient = _MockDrugApiClient();
+    final fixture = _drugListFixture();
+    final item = fixture.items.firstWhere(
+      (item) => item.brandName != item.genericName,
+    );
+    addTearDown(db.close);
+    when(
+      () => drugApiClient.getDrugs(
+        page: any(named: 'page'),
+        pageSize: any(named: 'pageSize'),
+        keyword: any(named: 'keyword'),
+      ),
+    ).thenAnswer((_) async => fixture);
+
+    final router = GoRouter(
+      initialLocation: AppRoutes.search,
+      routes: [
+        GoRoute(
+          path: AppRoutes.search,
+          builder: (context, state) => const SearchView(),
+          routes: [
+            GoRoute(
+              path: 'drug/:id',
+              builder: (context, state) =>
+                  Text('drug-detail-${state.pathParameters['id']}'),
+            ),
+            GoRoute(
+              path: 'disease/:id',
+              builder: (context, state) =>
+                  Text('disease-detail-${state.pathParameters['id']}'),
+            ),
+          ],
+        ),
+      ],
+    );
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          appDatabaseProvider.overrideWithValue(db),
+          drugApiClientProvider.overrideWithValue(drugApiClient),
+        ],
+        child: MaterialApp.router(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          routerConfig: router,
+        ),
+      ),
+    );
+
+    await tester.enterText(
+      find.byKey(const ValueKey('search-field')),
+      'drug detail keyword',
+    );
+    await tester.tap(find.byType(FilledButton).first);
+    await tester.pumpAndSettle();
+    expect(find.text(item.brandName), findsAtLeastNWidgets(1));
+
+    await tester.tap(find.text(item.brandName).first);
+    await tester.pumpAndSettle();
+
+    expect(find.text('drug-detail-${item.id}'), findsOneWidget);
+    expect(
+      router.routerDelegate.currentConfiguration.last.matchedLocation,
+      AppRoutes.drugDetail(item.id),
+    );
+  });
+
+  testWidgets('result card tap navigates to disease detail with correct id', (
+    tester,
+  ) async {
+    final db = AppDatabase(NativeDatabase.memory());
+    final diseaseApiClient = _MockDiseaseApiClient();
+    final fixture = _diseaseListFixture();
+    final item = fixture.items.first;
+    addTearDown(db.close);
+    when(
+      () => diseaseApiClient.getDiseases(
+        page: any(named: 'page'),
+        pageSize: any(named: 'pageSize'),
+        keyword: any(named: 'keyword'),
+      ),
+    ).thenAnswer((_) async => fixture);
+
+    final router = GoRouter(
+      initialLocation: AppRoutes.search,
+      routes: [
+        GoRoute(
+          path: AppRoutes.search,
+          builder: (context, state) => const SearchView(),
+          routes: [
+            GoRoute(
+              path: 'drug/:id',
+              builder: (context, state) =>
+                  Text('drug-detail-${state.pathParameters['id']}'),
+            ),
+            GoRoute(
+              path: 'disease/:id',
+              builder: (context, state) =>
+                  Text('disease-detail-${state.pathParameters['id']}'),
+            ),
+          ],
+        ),
+      ],
+    );
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          appDatabaseProvider.overrideWithValue(db),
+          diseaseApiClientProvider.overrideWithValue(diseaseApiClient),
+        ],
+        child: MaterialApp.router(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          routerConfig: router,
+        ),
+      ),
+    );
+
+    await tester.tap(find.text('疾患'));
+    await tester.pumpAndSettle();
+    await tester.enterText(
+      find.byKey(const ValueKey('search-field')),
+      'disease detail keyword',
+    );
+    await tester.tap(find.byType(FilledButton).first);
+    await tester.pumpAndSettle();
+    expect(find.text(item.name), findsAtLeastNWidgets(1));
+
+    await tester.tap(find.text(item.name).first);
+    await tester.pumpAndSettle();
+
+    expect(find.text('disease-detail-${item.id}'), findsOneWidget);
+    expect(
+      router.routerDelegate.currentConfiguration.last.matchedLocation,
+      AppRoutes.diseaseDetail(item.id),
+    );
   });
 
   testWidgets(
