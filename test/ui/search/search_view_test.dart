@@ -466,7 +466,7 @@ void main() {
     expect(find.text('Rx'), findsNothing);
   });
 
-  testWidgets('drug history Rx pill uses drug tint background', (
+  testWidgets('history dropdown badges use Round6 target and filter colors', (
     tester,
   ) async {
     final container = ProviderContainer(
@@ -480,9 +480,26 @@ void main() {
           target: 'drug',
           queryJson: container
               .read(searchQueryCodecProvider)
-              .encode(const DrugSearchParams(keyword: '色確認履歴')),
+              .encode(
+                const DrugSearchParams(
+                  keyword: '色確認履歴',
+                  categoryAtc: 'C',
+                  dosageForm: ['tablet'],
+                ),
+              ),
           searchedAt: DateTime.utc(2026, 5, 5),
           totalCount: 4,
+        );
+    await container
+        .read(searchHistoryRepositoryProvider)
+        .insertWithDedup(
+          id: 'disease_history_target_pill_color',
+          target: 'disease',
+          queryJson: container
+              .read(searchQueryCodecProvider)
+              .encode(const DiseaseSearchParams(keyword: '疾患色確認履歴')),
+          searchedAt: DateTime.utc(2026, 5, 5),
+          totalCount: 6,
         );
 
     await tester.pumpWidget(
@@ -506,7 +523,35 @@ void main() {
           .first,
     );
     final decoration = containerWidget.decoration! as BoxDecoration;
-    expect(decoration.color, SearchPalette.light.drugTint);
+    final rxText = tester.widget<Text>(find.text('Rx'));
+    expect(decoration.color, SearchPalette.light.rxTint);
+    expect(rxText.style?.color, SearchPalette.light.rxInk);
+
+    final filterPill = tester.widget<Container>(
+      find
+          .ancestor(of: find.text('絞り込み +2'), matching: find.byType(Container))
+          .first,
+    );
+    final filterDecoration = filterPill.decoration! as BoxDecoration;
+    final filterText = tester.widget<Text>(find.text('絞り込み +2'));
+    expect(filterDecoration.color, SearchPalette.light.primarySoft);
+    expect(filterDecoration.border?.top.color, SearchPalette.light.primaryRing);
+    expect(filterText.style?.color, SearchPalette.light.rxInk);
+
+    await tester.tap(find.text('疾患'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const ValueKey('search-field')));
+    await tester.pump();
+
+    final dxContainer = tester.widget<Container>(
+      find
+          .ancestor(of: find.text('Dx'), matching: find.byType(Container))
+          .first,
+    );
+    final dxDecoration = dxContainer.decoration! as BoxDecoration;
+    final dxText = tester.widget<Text>(find.text('Dx'));
+    expect(dxDecoration.color, SearchPalette.light.dxTint);
+    expect(dxText.style?.color, SearchPalette.light.dxInk);
   });
 
   testWidgets('history row subtitle includes relative time and filter pill', (

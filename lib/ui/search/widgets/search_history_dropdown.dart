@@ -157,13 +157,13 @@ class _SearchHistoryRow extends StatelessWidget {
               key: ValueKey('history-target-pill-${entry.id}'),
               padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
               decoration: BoxDecoration(
-                color: isDrug ? palette.drugTint : palette.diseaseTint,
+                color: isDrug ? palette.rxTint : palette.dxTint,
                 borderRadius: BorderRadius.circular(3),
               ),
               child: Text(
                 isDrug ? l10n.searchHistoryRxBadge : l10n.searchHistoryDxBadge,
                 style: TextStyle(
-                  color: isDrug ? palette.drugInk : palette.diseaseInk,
+                  color: isDrug ? palette.rxInk : palette.dxInk,
                   fontFeatures: const [FontFeature.tabularFigures()],
                   fontSize: 9.5,
                   fontWeight: FontWeight.w700,
@@ -200,7 +200,7 @@ class _SearchHistoryRow extends StatelessWidget {
                 child: Text(
                   l10n.searchHistoryFilterCount(entry.filterCount),
                   style: TextStyle(
-                    color: palette.drugInk,
+                    color: palette.rxInk,
                     fontSize: 10.5,
                     fontWeight: FontWeight.w700,
                   ),
