@@ -111,10 +111,6 @@ class _SearchPhaseSection extends StatelessWidget {
                         onPressed: () => unawaited(onRemoveOneChip()),
                         child: Text(l10n.searchEmptyRemoveOneFilter),
                       ),
-                      TextButton(
-                        onPressed: () => unawaited(onChangeMatchToPartial()),
-                        child: Text(l10n.searchEmptyChangeMatchToPartial),
-                      ),
                     ],
                   ),
                 ),

@@ -134,7 +134,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get searchEmptyResetFilter => '条件をリセット';
 
   @override
-  String get searchEmptyRemoveOneFilter => '条件を1つ外す';
+  String get searchEmptyRemoveOneFilter => '絞り込みを 1 つずつ外す';
 
   @override
   String get searchEmptyChangeMatchToPartial => '部分一致に変更';

@@ -1216,8 +1216,14 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('条件をリセット'), findsOneWidget);
-    expect(find.text('条件を1つ外す'), findsOneWidget);
-    expect(find.text('部分一致に変更'), findsOneWidget);
+    expect(find.text('絞り込みを 1 つずつ外す'), findsOneWidget);
+    expect(find.text('部分一致に変更'), findsNothing);
+    expect(find.widgetWithText(FilledButton, '条件をリセット'), findsOneWidget);
+    expect(
+      find.widgetWithText(OutlinedButton, '絞り込みを 1 つずつ外す'),
+      findsOneWidget,
+    );
+    expect(find.widgetWithText(TextButton, '部分一致に変更'), findsNothing);
   });
 
   testWidgets('SearchView empty results keep history out of result space', (

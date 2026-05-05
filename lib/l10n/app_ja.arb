@@ -76,7 +76,7 @@
   "searchToolbarLoadMore": "さらに読み込む",
   "searchEmptyResultTitle": "該当する結果がありません",
   "searchEmptyResetFilter": "条件をリセット",
-  "searchEmptyRemoveOneFilter": "条件を1つ外す",
+  "searchEmptyRemoveOneFilter": "絞り込みを 1 つずつ外す",
   "searchEmptyChangeMatchToPartial": "部分一致に変更",
   "searchErrorTitle": "通信エラー — もう一度",
   "searchErrorBody": "サーバーに接続できませんでした。\n通信環境を確認してから再試行してください。",
