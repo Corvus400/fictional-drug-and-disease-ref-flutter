@@ -433,6 +433,52 @@ void main() {
     expect(find.text('削除対象キーワード'), findsNothing);
   });
 
+  testWidgets('history row swipe dismisses the entry', (tester) async {
+    final db = AppDatabase(NativeDatabase.memory());
+    addTearDown(db.close);
+    final container = ProviderContainer(
+      overrides: [appDatabaseProvider.overrideWithValue(db)],
+    );
+    addTearDown(container.dispose);
+    await container
+        .read(searchHistoryRepositoryProvider)
+        .insertWithDedup(
+          id: 'swipe_target',
+          target: 'drug',
+          queryJson: container
+              .read(searchQueryCodecProvider)
+              .encode(
+                const DrugSearchParams(keyword: 'スワイプ削除'),
+              ),
+          searchedAt: DateTime.utc(2026, 5, 5),
+          totalCount: 3,
+        );
+
+    await tester.pumpWidget(
+      UncontrolledProviderScope(
+        container: container,
+        child: const MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: SearchView(),
+        ),
+      ),
+    );
+    await tester.pump();
+    await tester.tap(find.byKey(const ValueKey('search-field')));
+    await tester.pump();
+    expect(find.text('スワイプ削除'), findsOneWidget);
+
+    await tester.fling(
+      find.byKey(const ValueKey('history-row-swipe_target')),
+      const Offset(-500, 0),
+      1000,
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('スワイプ削除'), findsNothing);
+  });
+
   testWidgets('SearchView clears persisted history after confirmation', (
     tester,
   ) async {
