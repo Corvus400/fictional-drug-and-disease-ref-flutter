@@ -66,6 +66,83 @@ class AppLocalizationsJa extends AppLocalizations {
   }
 
   @override
+  String get searchTabDrugs => '医薬品';
+
+  @override
+  String get searchTabDiseases => '疾患';
+
+  @override
+  String get searchHintDrugs => '医薬品名・YJ・ATC コード';
+
+  @override
+  String get searchHintDiseases => '疾患名・症状・ICD-10';
+
+  @override
+  String get searchActionSearch => '検索';
+
+  @override
+  String get searchActionCancel => 'キャンセル';
+
+  @override
+  String get searchHistoryTitle => '検索履歴';
+
+  @override
+  String get searchHistoryClear => 'すべて削除';
+
+  @override
+  String get searchHistoryClearConfirmTitle => '検索履歴を削除しますか？';
+
+  @override
+  String get searchHistoryClearConfirmDelete => '削除';
+
+  @override
+  String searchToolbarTotal(int count) {
+    return '合計 $count 件';
+  }
+
+  @override
+  String get searchToolbarLoadMore => 'さらに読み込む';
+
+  @override
+  String get searchEmptyResultTitle => '該当する結果がありません';
+
+  @override
+  String get searchEmptyResetFilter => '条件をリセット';
+
+  @override
+  String get searchEmptyRemoveOneFilter => '条件を1つ外す';
+
+  @override
+  String get searchEmptyChangeMatchToPartial => '部分一致に変更';
+
+  @override
+  String get searchErrorTitle => '通信エラー — もう一度';
+
+  @override
+  String get searchErrorRetry => '再試行';
+
+  @override
+  String get searchFilterTitle => '絞り込み';
+
+  @override
+  String get searchFilterApply => '結果を見る';
+
+  @override
+  String get searchSortTitle => '並び替え';
+
+  @override
+  String get searchSortByRevised => '更新日 (新しい順)';
+
+  @override
+  String get searchSortByBrandKana => 'ブランド名カナ';
+
+  @override
+  String get searchSortByAtcCode => 'ATC コード';
+
+  @override
+  String get searchSortByTherapeuticCategory => '薬効分類名';
+
+  @override
   String get errorNetwork => 'ネットワークエラーが発生しました';
 
   @override

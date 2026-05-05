@@ -13,6 +13,7 @@ import 'package:fictional_drug_and_disease_ref/data/services/api/disease_api_cli
 import 'package:fictional_drug_and_disease_ref/domain/disease/disease_list_page.dart';
 import 'package:fictional_drug_and_disease_ref/domain/disease/disease_search_params.dart';
 import 'package:fictional_drug_and_disease_ref/domain/drug/drug_search_params.dart';
+import 'package:fictional_drug_and_disease_ref/domain/search_history/search_history_entry.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
@@ -63,7 +64,7 @@ void main() {
 
       expect(result, isA<Ok<DiseaseListPage>>());
       final histories = await historyRepository.findByTarget('disease');
-      final entries = (histories as Ok).value;
+      final entries = (histories as Ok<List<SearchHistoryEntry>>).value;
       expect(entries, hasLength(1));
       expect(entries.single.target, 'disease');
       expect(entries.single.totalCount, dto.totalCount);
