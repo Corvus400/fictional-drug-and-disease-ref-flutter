@@ -1,7 +1,9 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
 import 'package:fictional_drug_and_disease_ref/application/providers/usecase_providers.dart';
+import 'package:fictional_drug_and_disease_ref/core/error/app_exception.dart';
 import 'package:fictional_drug_and_disease_ref/data/dto/disease/disease_list_response_dto.dart';
 import 'package:fictional_drug_and_disease_ref/data/dto/drug/drug_list_response_dto.dart';
 import 'package:fictional_drug_and_disease_ref/data/local/app_database.dart';
@@ -543,6 +545,272 @@ void main() {
         expect(phase.chips.items.single.label, 'tablet');
       },
     );
+
+    test('previewDrugCount returns total without affecting state', () async {
+      when(
+        () => drugApiClient.getDrugs(
+          page: any(named: 'page'),
+          pageSize: any(named: 'pageSize'),
+          categoryAtc: any(named: 'categoryAtc'),
+          therapeuticCategory: any(named: 'therapeuticCategory'),
+          regulatoryClass: any(named: 'regulatoryClass'),
+          dosageForm: any(named: 'dosageForm'),
+          route: any(named: 'route'),
+          keyword: any(named: 'keyword'),
+          keywordMatch: any(named: 'keywordMatch'),
+          keywordTarget: any(named: 'keywordTarget'),
+          adverseReactionKeyword: any(named: 'adverseReactionKeyword'),
+          precautionCategory: any(named: 'precautionCategory'),
+          sort: any(named: 'sort'),
+        ),
+      ).thenAnswer((_) async => _drugListFixture());
+      final notifier = container.read(searchScreenProvider.notifier);
+      final before = container.read(searchScreenProvider).phase;
+
+      final total = await (notifier as dynamic).previewDrugCount(
+        const DrugSearchParams(regulatoryClass: ['poison']),
+      );
+
+      expect(total, 120);
+      expect(container.read(searchScreenProvider).phase, same(before));
+      verify(
+        () => drugApiClient.getDrugs(
+          page: 1,
+          pageSize: 1,
+          categoryAtc: any(named: 'categoryAtc'),
+          therapeuticCategory: any(named: 'therapeuticCategory'),
+          regulatoryClass: ['poison'],
+          dosageForm: any(named: 'dosageForm'),
+          route: any(named: 'route'),
+          keyword: any(named: 'keyword'),
+          keywordMatch: any(named: 'keywordMatch'),
+          keywordTarget: any(named: 'keywordTarget'),
+          adverseReactionKeyword: any(named: 'adverseReactionKeyword'),
+          precautionCategory: any(named: 'precautionCategory'),
+          sort: any(named: 'sort'),
+        ),
+      ).called(1);
+    });
+
+    test('previewDrugCount returns null for stale in-flight request', () async {
+      final first = Completer<DrugListResponseDto>();
+      final second = Completer<DrugListResponseDto>();
+      var calls = 0;
+      when(
+        () => drugApiClient.getDrugs(
+          page: any(named: 'page'),
+          pageSize: any(named: 'pageSize'),
+          categoryAtc: any(named: 'categoryAtc'),
+          therapeuticCategory: any(named: 'therapeuticCategory'),
+          regulatoryClass: any(named: 'regulatoryClass'),
+          dosageForm: any(named: 'dosageForm'),
+          route: any(named: 'route'),
+          keyword: any(named: 'keyword'),
+          keywordMatch: any(named: 'keywordMatch'),
+          keywordTarget: any(named: 'keywordTarget'),
+          adverseReactionKeyword: any(named: 'adverseReactionKeyword'),
+          precautionCategory: any(named: 'precautionCategory'),
+          sort: any(named: 'sort'),
+        ),
+      ).thenAnswer((_) {
+        calls += 1;
+        return calls == 1 ? first.future : second.future;
+      });
+      final notifier = container.read(searchScreenProvider.notifier);
+
+      final staleFuture =
+          (notifier as dynamic).previewDrugCount(
+                const DrugSearchParams(regulatoryClass: ['poison']),
+              )
+              as Future<int?>;
+      final latestFuture =
+          (notifier as dynamic).previewDrugCount(
+                const DrugSearchParams(regulatoryClass: ['potent']),
+              )
+              as Future<int?>;
+      second.complete(_drugListFixture());
+      first.complete(_emptyDrugListFixture());
+
+      expect(await staleFuture, isNull);
+      expect(await latestFuture, 120);
+    });
+
+    test('previewDrugCount keeps only the latest of three requests', () async {
+      final first = Completer<DrugListResponseDto>();
+      final second = Completer<DrugListResponseDto>();
+      final third = Completer<DrugListResponseDto>();
+      var calls = 0;
+      when(
+        () => drugApiClient.getDrugs(
+          page: any(named: 'page'),
+          pageSize: any(named: 'pageSize'),
+          categoryAtc: any(named: 'categoryAtc'),
+          therapeuticCategory: any(named: 'therapeuticCategory'),
+          regulatoryClass: any(named: 'regulatoryClass'),
+          dosageForm: any(named: 'dosageForm'),
+          route: any(named: 'route'),
+          keyword: any(named: 'keyword'),
+          keywordMatch: any(named: 'keywordMatch'),
+          keywordTarget: any(named: 'keywordTarget'),
+          adverseReactionKeyword: any(named: 'adverseReactionKeyword'),
+          precautionCategory: any(named: 'precautionCategory'),
+          sort: any(named: 'sort'),
+        ),
+      ).thenAnswer((_) {
+        calls += 1;
+        return switch (calls) {
+          1 => first.future,
+          2 => second.future,
+          _ => third.future,
+        };
+      });
+      final notifier = container.read(searchScreenProvider.notifier);
+
+      final firstFuture = notifier.previewDrugCount(
+        const DrugSearchParams(regulatoryClass: ['poison']),
+      );
+      final secondFuture = notifier.previewDrugCount(
+        const DrugSearchParams(regulatoryClass: ['potent']),
+      );
+      final thirdFuture = notifier.previewDrugCount(
+        const DrugSearchParams(regulatoryClass: ['ordinary']),
+      );
+      third.complete(_drugListFixture());
+      second.complete(_emptyDrugListFixture());
+      first.complete(_emptyDrugListFixture());
+
+      expect(await firstFuture, isNull);
+      expect(await secondFuture, isNull);
+      expect(await thirdFuture, 120);
+    });
+
+    test('previewDiseaseCount returns total without affecting state', () async {
+      when(
+        () => diseaseApiClient.getDiseases(
+          page: any(named: 'page'),
+          pageSize: any(named: 'pageSize'),
+          icd10Chapter: any(named: 'icd10Chapter'),
+          department: any(named: 'department'),
+          chronicity: any(named: 'chronicity'),
+          infectious: any(named: 'infectious'),
+          keyword: any(named: 'keyword'),
+          keywordMatch: any(named: 'keywordMatch'),
+          keywordTarget: any(named: 'keywordTarget'),
+          symptomKeyword: any(named: 'symptomKeyword'),
+          onsetPattern: any(named: 'onsetPattern'),
+          examCategory: any(named: 'examCategory'),
+          hasPharmacologicalTreatment: any(
+            named: 'hasPharmacologicalTreatment',
+          ),
+          hasSeverityGrading: any(named: 'hasSeverityGrading'),
+          sort: any(named: 'sort'),
+        ),
+      ).thenAnswer((_) async => _diseaseListFixture());
+      final notifier = container.read(searchScreenProvider.notifier);
+      final before = container.read(searchScreenProvider).phase;
+
+      final total = await (notifier as dynamic).previewDiseaseCount(
+        const DiseaseSearchParams(chronicity: ['chronic']),
+      );
+
+      expect(total, 80);
+      expect(container.read(searchScreenProvider).phase, same(before));
+      verify(
+        () => diseaseApiClient.getDiseases(
+          page: 1,
+          pageSize: 1,
+          icd10Chapter: any(named: 'icd10Chapter'),
+          department: any(named: 'department'),
+          chronicity: ['chronic'],
+          infectious: any(named: 'infectious'),
+          keyword: any(named: 'keyword'),
+          keywordMatch: any(named: 'keywordMatch'),
+          keywordTarget: any(named: 'keywordTarget'),
+          symptomKeyword: any(named: 'symptomKeyword'),
+          onsetPattern: any(named: 'onsetPattern'),
+          examCategory: any(named: 'examCategory'),
+          hasPharmacologicalTreatment: any(
+            named: 'hasPharmacologicalTreatment',
+          ),
+          hasSeverityGrading: any(named: 'hasSeverityGrading'),
+          sort: any(named: 'sort'),
+        ),
+      ).called(1);
+    });
+
+    test(
+      'previewDiseaseCount returns null for stale in-flight request',
+      () async {
+        final first = Completer<DiseaseListResponseDto>();
+        final second = Completer<DiseaseListResponseDto>();
+        var calls = 0;
+        when(
+          () => diseaseApiClient.getDiseases(
+            page: any(named: 'page'),
+            pageSize: any(named: 'pageSize'),
+            icd10Chapter: any(named: 'icd10Chapter'),
+            department: any(named: 'department'),
+            chronicity: any(named: 'chronicity'),
+            infectious: any(named: 'infectious'),
+            keyword: any(named: 'keyword'),
+            keywordMatch: any(named: 'keywordMatch'),
+            keywordTarget: any(named: 'keywordTarget'),
+            symptomKeyword: any(named: 'symptomKeyword'),
+            onsetPattern: any(named: 'onsetPattern'),
+            examCategory: any(named: 'examCategory'),
+            hasPharmacologicalTreatment: any(
+              named: 'hasPharmacologicalTreatment',
+            ),
+            hasSeverityGrading: any(named: 'hasSeverityGrading'),
+            sort: any(named: 'sort'),
+          ),
+        ).thenAnswer((_) {
+          calls += 1;
+          return calls == 1 ? first.future : second.future;
+        });
+        final notifier = container.read(searchScreenProvider.notifier);
+
+        final staleFuture = notifier.previewDiseaseCount(
+          const DiseaseSearchParams(chronicity: ['chronic']),
+        );
+        final latestFuture = notifier.previewDiseaseCount(
+          const DiseaseSearchParams(chronicity: ['acute']),
+        );
+        second.complete(_diseaseListFixture());
+        first.complete(_emptyDiseaseListFixture());
+
+        expect(await staleFuture, isNull);
+        expect(await latestFuture, 80);
+      },
+    );
+
+    test('previewDrugCount propagates repository errors', () async {
+      when(
+        () => drugApiClient.getDrugs(
+          page: any(named: 'page'),
+          pageSize: any(named: 'pageSize'),
+          categoryAtc: any(named: 'categoryAtc'),
+          therapeuticCategory: any(named: 'therapeuticCategory'),
+          regulatoryClass: any(named: 'regulatoryClass'),
+          dosageForm: any(named: 'dosageForm'),
+          route: any(named: 'route'),
+          keyword: any(named: 'keyword'),
+          keywordMatch: any(named: 'keywordMatch'),
+          keywordTarget: any(named: 'keywordTarget'),
+          adverseReactionKeyword: any(named: 'adverseReactionKeyword'),
+          precautionCategory: any(named: 'precautionCategory'),
+          sort: any(named: 'sort'),
+        ),
+      ).thenThrow(StateError('preview failed'));
+      final notifier = container.read(searchScreenProvider.notifier);
+
+      await expectLater(
+        notifier.previewDrugCount(
+          const DrugSearchParams(regulatoryClass: ['poison']),
+        ),
+        throwsA(isA<UnknownException>()),
+      );
+    });
   });
 }
 
@@ -630,4 +898,15 @@ DiseaseListResponseDto _diseaseListFixture() {
   ).readAsStringSync();
   final json = jsonDecode(fixture) as Map<String, dynamic>;
   return DiseaseListResponseDto.fromJson(json);
+}
+
+DiseaseListResponseDto _emptyDiseaseListFixture() {
+  return const DiseaseListResponseDto(
+    items: [],
+    page: 1,
+    pageSize: 20,
+    totalPages: 0,
+    totalCount: 0,
+    disclaimer: 'fictional test data',
+  );
 }
