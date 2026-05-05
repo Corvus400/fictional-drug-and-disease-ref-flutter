@@ -578,6 +578,29 @@ class AppLocalizationsJa extends AppLocalizations {
   }
 
   @override
+  String get searchHistoryTimeJustNow => 'たった今';
+
+  @override
+  String searchHistoryTimeMinutesAgo(int minutes) {
+    return '$minutes分前';
+  }
+
+  @override
+  String searchHistoryTimeHoursAgo(int hours) {
+    return '$hours時間前';
+  }
+
+  @override
+  String searchHistoryTimeYesterday(String time) {
+    return '昨日 $time';
+  }
+
+  @override
+  String searchHistoryTimeDaysAgo(int days) {
+    return '$days日前';
+  }
+
+  @override
   String get errorNetwork => 'ネットワークエラーが発生しました';
 
   @override
