@@ -22,6 +22,8 @@ final searchScreenProvider =
 
 /// ViewModel for the search screen.
 final class SearchScreenNotifier extends Notifier<SearchScreenState> {
+  int _previewGeneration = 0;
+
   @override
   SearchScreenState build() {
     final initial = SearchScreenState.initial();
@@ -320,6 +322,42 @@ final class SearchScreenNotifier extends Notifier<SearchScreenState> {
       ),
     );
     await performSearch();
+  }
+
+  /// Returns the drug result count for tentative filter params.
+  Future<int?> previewDrugCount(DrugSearchParams params) async {
+    final generation = ++_previewGeneration;
+    final previewParams = _copyDrugParams(params, page: 1, pageSize: 1);
+    final result = await ref
+        .read(searchDrugsUsecaseProvider)
+        .execute(
+          previewParams,
+        );
+    if (generation != _previewGeneration) {
+      return null;
+    }
+    return switch (result) {
+      Ok(:final value) => value.totalCount,
+      Err(:final error) => throw error,
+    };
+  }
+
+  /// Returns the disease result count for tentative filter params.
+  Future<int?> previewDiseaseCount(DiseaseSearchParams params) async {
+    final generation = ++_previewGeneration;
+    final previewParams = _copyDiseaseParams(params, page: 1, pageSize: 1);
+    final result = await ref
+        .read(searchDiseasesUsecaseProvider)
+        .execute(
+          previewParams,
+        );
+    if (generation != _previewGeneration) {
+      return null;
+    }
+    return switch (result) {
+      Ok(:final value) => value.totalCount,
+      Err(:final error) => throw error,
+    };
   }
 
   /// Selects a history row, restores params, and searches immediately.
