@@ -1168,6 +1168,36 @@ abstract class AppLocalizations {
   /// **'改訂 {date}'**
   String searchDrugMetaRevised(String date);
 
+  /// No description provided for @searchHistoryTimeJustNow.
+  ///
+  /// In ja, this message translates to:
+  /// **'たった今'**
+  String get searchHistoryTimeJustNow;
+
+  /// No description provided for @searchHistoryTimeMinutesAgo.
+  ///
+  /// In ja, this message translates to:
+  /// **'{minutes}分前'**
+  String searchHistoryTimeMinutesAgo(int minutes);
+
+  /// No description provided for @searchHistoryTimeHoursAgo.
+  ///
+  /// In ja, this message translates to:
+  /// **'{hours}時間前'**
+  String searchHistoryTimeHoursAgo(int hours);
+
+  /// No description provided for @searchHistoryTimeYesterday.
+  ///
+  /// In ja, this message translates to:
+  /// **'昨日 {time}'**
+  String searchHistoryTimeYesterday(String time);
+
+  /// No description provided for @searchHistoryTimeDaysAgo.
+  ///
+  /// In ja, this message translates to:
+  /// **'{days}日前'**
+  String searchHistoryTimeDaysAgo(int days);
+
   /// No description provided for @errorNetwork.
   ///
   /// In ja, this message translates to:

@@ -287,6 +287,39 @@
       }
     }
   },
+  "searchHistoryTimeJustNow": "たった今",
+  "searchHistoryTimeMinutesAgo": "{minutes}分前",
+  "@searchHistoryTimeMinutesAgo": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "searchHistoryTimeHoursAgo": "{hours}時間前",
+  "@searchHistoryTimeHoursAgo": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
+  },
+  "searchHistoryTimeYesterday": "昨日 {time}",
+  "@searchHistoryTimeYesterday": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "searchHistoryTimeDaysAgo": "{days}日前",
+  "@searchHistoryTimeDaysAgo": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
   "errorNetwork": "ネットワークエラーが発生しました",
   "errorUnknown": "不明なエラーが発生しました",
   "errNetwork": "ネットワークに接続できません",
