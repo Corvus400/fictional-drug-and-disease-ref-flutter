@@ -66,22 +66,28 @@ class _SearchHistoryDropdown extends StatelessWidget {
               fit: FlexFit.loose,
               child: ConstrainedBox(
                 constraints: BoxConstraints(
-                  maxHeight: entries.length * _maxHistoryRowExtent,
+                  maxHeight: entries.isEmpty
+                      ? 150
+                      : entries.length * _maxHistoryRowExtent,
                 ),
-                child: ListView(
-                  padding: EdgeInsets.zero,
-                  shrinkWrap: true,
-                  children: [
-                    for (final entry in entries)
-                      _SearchHistoryRow(
-                        entry: entry,
-                        palette: palette,
-                        currentTime: currentTime,
-                        onSelect: onSelect,
-                        onDelete: onDelete,
+                child: entries.isEmpty
+                    ? const SingleChildScrollView(
+                        child: _NoSearchHistoryState(),
+                      )
+                    : ListView(
+                        padding: EdgeInsets.zero,
+                        shrinkWrap: true,
+                        children: [
+                          for (final entry in entries)
+                            _SearchHistoryRow(
+                              entry: entry,
+                              palette: palette,
+                              currentTime: currentTime,
+                              onSelect: onSelect,
+                              onDelete: onDelete,
+                            ),
+                        ],
                       ),
-                  ],
-                ),
               ),
             ),
             Padding(

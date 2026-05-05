@@ -271,9 +271,6 @@ class _SearchPhaseSection extends StatelessWidget {
       if (state.historyDropdownOpen) {
         return const SizedBox.shrink();
       }
-      if (state.queryText.isEmpty && state.historyForTab.isEmpty) {
-        return const _NoSearchHistoryState();
-      }
       return const SizedBox.shrink();
     }
     return NotificationListener<ScrollNotification>(
