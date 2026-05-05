@@ -590,6 +590,62 @@ void main() {
     },
   );
 
+  testWidgets('SearchView drug filter footer count updates after chip toggle', (
+    tester,
+  ) async {
+    await tester.binding.setSurfaceSize(const Size(390, 844));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+
+    final drugApiClient = _MockDrugApiClient();
+    final categoryApiClient = _MockCategoryApiClient();
+    when(
+      () => drugApiClient.getDrugs(
+        page: any(named: 'page'),
+        pageSize: any(named: 'pageSize'),
+        categoryAtc: any(named: 'categoryAtc'),
+        therapeuticCategory: any(named: 'therapeuticCategory'),
+        regulatoryClass: any(named: 'regulatoryClass'),
+        dosageForm: any(named: 'dosageForm'),
+        route: any(named: 'route'),
+        keyword: any(named: 'keyword'),
+        keywordMatch: any(named: 'keywordMatch'),
+        keywordTarget: any(named: 'keywordTarget'),
+        adverseReactionKeyword: any(named: 'adverseReactionKeyword'),
+        precautionCategory: any(named: 'precautionCategory'),
+        sort: any(named: 'sort'),
+      ),
+    ).thenAnswer((_) async => _drugListFixture().copyWith(totalCount: 17));
+    when(
+      categoryApiClient.getCategories,
+    ).thenAnswer((_) async => _categoriesFixture());
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          appDatabaseProvider.overrideWithValue(db),
+          drugApiClientProvider.overrideWithValue(drugApiClient),
+          categoryApiClientProvider.overrideWithValue(categoryApiClient),
+        ],
+        child: MaterialApp(
+          theme: AppTheme.light(),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: const SearchView(),
+        ),
+      ),
+    );
+
+    await tester.tap(find.byType(FloatingActionButton));
+    await tester.pumpAndSettle();
+    expect(find.text('結果を見る (0 件)'), findsOneWidget);
+
+    await tester.tap(find.text('毒薬'));
+    await tester.pump(const Duration(milliseconds: 250));
+    await tester.pump();
+
+    expect(find.text('結果を見る (17 件)'), findsOneWidget);
+  });
+
   // Design source:
   // Round6/round6-screens.jsx TabletFrame and TopChrome gutter=28.
   testWidgets('SearchView tablet chrome follows Round6 gutters', (

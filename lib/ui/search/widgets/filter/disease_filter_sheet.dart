@@ -1,6 +1,6 @@
 part of '../../search_view.dart';
 
-class _DiseaseFilterSheet extends StatefulWidget {
+class _DiseaseFilterSheet extends ConsumerStatefulWidget {
   const _DiseaseFilterSheet({
     required this.state,
     required this.onApply,
@@ -21,10 +21,11 @@ class _DiseaseFilterSheet extends StatefulWidget {
   onApply;
 
   @override
-  State<_DiseaseFilterSheet> createState() => _DiseaseFilterSheetState();
+  ConsumerState<_DiseaseFilterSheet> createState() =>
+      _DiseaseFilterSheetState();
 }
 
-class _DiseaseFilterSheetState extends State<_DiseaseFilterSheet> {
+class _DiseaseFilterSheetState extends ConsumerState<_DiseaseFilterSheet> {
   late final Set<String> _icd10Chapter = {
     ...?widget.state.diseaseParams.icd10Chapter,
   };
@@ -48,9 +49,12 @@ class _DiseaseFilterSheetState extends State<_DiseaseFilterSheet> {
   late bool? _hasSeverityGrading =
       widget.state.diseaseParams.hasSeverityGrading;
   String _expandedAxis = 'icd10_chapter';
+  Timer? _previewDebounce;
+  int? _previewCount;
 
   @override
   void dispose() {
+    _previewDebounce?.cancel();
     _symptomKeywordController.dispose();
     super.dispose();
   }
@@ -80,8 +84,10 @@ class _DiseaseFilterSheetState extends State<_DiseaseFilterSheet> {
                     .toList(),
                 selected: _icd10Chapter,
                 labelFor: (value) => _icd10ChapterLabel(categories, value),
-                onToggle: (value) =>
-                    setState(() => _toggle(_icd10Chapter, value)),
+                onToggle: (value) => setState(() {
+                  _toggle(_icd10Chapter, value);
+                  _schedulePreview();
+                }),
               ),
             ),
             _FilterAxis(
@@ -100,8 +106,10 @@ class _DiseaseFilterSheetState extends State<_DiseaseFilterSheet> {
                 values: categories.medicalDepartments,
                 selected: _department,
                 labelFor: (value) => _departmentLabel(l10n, value),
-                onToggle: (value) =>
-                    setState(() => _toggle(_department, value)),
+                onToggle: (value) => setState(() {
+                  _toggle(_department, value);
+                  _schedulePreview();
+                }),
               ),
             ),
             _FilterAxis(
@@ -120,8 +128,10 @@ class _DiseaseFilterSheetState extends State<_DiseaseFilterSheet> {
                 values: _diseaseChronicityValues,
                 selected: _chronicity,
                 labelFor: (value) => _chronicityLabel(l10n, value),
-                onToggle: (value) =>
-                    setState(() => _toggleSingle(_chronicity, value)),
+                onToggle: (value) => setState(() {
+                  _toggleSingle(_chronicity, value);
+                  _schedulePreview();
+                }),
               ),
             ),
             _FilterAxis(
@@ -134,7 +144,10 @@ class _DiseaseFilterSheetState extends State<_DiseaseFilterSheet> {
                 value: _infectious,
                 trueLabel: l10n.searchDiseaseInfectiousTrue,
                 falseLabel: l10n.searchDiseaseInfectiousFalse,
-                onChanged: (value) => setState(() => _infectious = value),
+                onChanged: (value) => setState(() {
+                  _infectious = value;
+                  _schedulePreview();
+                }),
               ),
             ),
             _FilterAxis(
@@ -152,7 +165,7 @@ class _DiseaseFilterSheetState extends State<_DiseaseFilterSheet> {
               content: TextField(
                 key: const ValueKey('disease-filter-symptom-keyword'),
                 controller: _symptomKeywordController,
-                onChanged: (_) => setState(() {}),
+                onChanged: (_) => setState(_schedulePreview),
                 decoration: InputDecoration(
                   labelText: l10n.searchFilterDiseaseSymptomKeyword,
                 ),
@@ -174,8 +187,10 @@ class _DiseaseFilterSheetState extends State<_DiseaseFilterSheet> {
                 values: _diseaseOnsetPatternValues,
                 selected: _onsetPattern,
                 labelFor: (value) => _onsetPatternLabel(l10n, value),
-                onToggle: (value) =>
-                    setState(() => _toggle(_onsetPattern, value)),
+                onToggle: (value) => setState(() {
+                  _toggle(_onsetPattern, value);
+                  _schedulePreview();
+                }),
               ),
             ),
             _FilterAxis(
@@ -194,8 +209,10 @@ class _DiseaseFilterSheetState extends State<_DiseaseFilterSheet> {
                 values: _diseaseExamCategoryValues,
                 selected: _examCategory,
                 labelFor: (value) => _examCategoryLabel(l10n, value),
-                onToggle: (value) =>
-                    setState(() => _toggle(_examCategory, value)),
+                onToggle: (value) => setState(() {
+                  _toggle(_examCategory, value);
+                  _schedulePreview();
+                }),
               ),
             ),
             _FilterAxis(
@@ -208,8 +225,10 @@ class _DiseaseFilterSheetState extends State<_DiseaseFilterSheet> {
                 value: _hasPharmacologicalTreatment,
                 trueLabel: l10n.searchDiseaseBoolTrue,
                 falseLabel: l10n.searchDiseaseBoolFalse,
-                onChanged: (value) =>
-                    setState(() => _hasPharmacologicalTreatment = value),
+                onChanged: (value) => setState(() {
+                  _hasPharmacologicalTreatment = value;
+                  _schedulePreview();
+                }),
               ),
             ),
             _FilterAxis(
@@ -222,8 +241,10 @@ class _DiseaseFilterSheetState extends State<_DiseaseFilterSheet> {
                 value: _hasSeverityGrading,
                 trueLabel: l10n.searchDiseaseBoolTrue,
                 falseLabel: l10n.searchDiseaseBoolFalse,
-                onChanged: (value) =>
-                    setState(() => _hasSeverityGrading = value),
+                onChanged: (value) => setState(() {
+                  _hasSeverityGrading = value;
+                  _schedulePreview();
+                }),
               ),
             ),
           ];
@@ -245,6 +266,7 @@ class _DiseaseFilterSheetState extends State<_DiseaseFilterSheet> {
         _hasPharmacologicalTreatment = null;
         _hasSeverityGrading = null;
         _symptomKeywordController.clear();
+        _schedulePreview();
       }),
       onApply: () => unawaited(
         widget.onApply(
@@ -259,7 +281,44 @@ class _DiseaseFilterSheetState extends State<_DiseaseFilterSheet> {
           hasSeverityGrading: _hasSeverityGrading,
         ),
       ),
-      resultCount: _resultCount(widget.state.phase),
+      resultCount: _previewCount ?? _resultCount(widget.state.phase),
+    );
+  }
+
+  void _schedulePreview() {
+    _previewDebounce?.cancel();
+    _previewDebounce = Timer(const Duration(milliseconds: 200), () {
+      unawaited(_loadPreviewCount());
+    });
+  }
+
+  Future<void> _loadPreviewCount() async {
+    final count = await ref
+        .read(searchScreenProvider.notifier)
+        .previewDiseaseCount(_previewParams());
+    if (!mounted || count == null) {
+      return;
+    }
+    setState(() => _previewCount = count);
+  }
+
+  DiseaseSearchParams _previewParams() {
+    return DiseaseSearchParams(
+      page: 1,
+      pageSize: 1,
+      icd10Chapter: _icd10Chapter.toList(),
+      department: _department.toList(),
+      chronicity: _chronicity.toList(),
+      infectious: _infectious,
+      keyword: widget.state.diseaseParams.keyword,
+      keywordMatch: widget.state.diseaseParams.keywordMatch,
+      keywordTarget: widget.state.diseaseParams.keywordTarget,
+      symptomKeyword: _emptyToNull(_symptomKeywordController.text.trim()),
+      onsetPattern: _onsetPattern.toList(),
+      examCategory: _examCategory.toList(),
+      hasPharmacologicalTreatment: _hasPharmacologicalTreatment,
+      hasSeverityGrading: _hasSeverityGrading,
+      sort: widget.state.diseaseParams.sort,
     );
   }
 
