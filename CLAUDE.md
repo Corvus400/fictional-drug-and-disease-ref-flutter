@@ -4,7 +4,7 @@
 
 ## 作業分担
 
-- プラン作成: Claude Code (`<LOCAL_HOME>/.claude/plans/` 配下にプランファイルを作成)
+- プラン作成: Claude Code (ユーザー管理の Claude Code プランディレクトリ配下にプランファイルを作成)
 - 実装: Codex (Plan モードを抜けて Phase 順に実行、各 Phase の完了確認コマンドが exit 0 になることを live test で確認)
 - 両 AI とも本ファイルのルールに従う。Codex は加えて `~/.codex/AGENTS.md` (global) のルールも遵守
 
@@ -21,7 +21,7 @@
 ## UI / デザイン仕様準拠の完了判定
 
 - 「デザイン通り」と指示された UI 作業では、参照された画像 / JSX / HTML / 仕様書を先に確認し、対象画面状態・操作状態・余白・角丸・色・密度・データ表示要件をタスクリスト化してから実装する。
-- 検索画面の Round 系仕様では、Round6 だけで不足する状態がある場合、`<LOCAL_HOME>/Desktop/Claude Design/検索画面` 配下を Round5 から遡って確認し、古い仕様と新しい仕様の衝突を明示する。
+- 検索画面の Round 系仕様では、Round6 だけで不足する状態がある場合、ユーザーが共有した検索画面デザイン資料を Round5 から遡って確認し、古い仕様と新しい仕様の衝突を明示する。
 - TDD 指定時は、production UI を変更する前に該当要件を Red として固定する。構造・操作は widget test、見た目は design contract / golden、端末依存操作は integration test または Computer Use で担保する。
 - 「機能テストが通った」だけで「デザイン通り」と報告してはならない。完了報告では、デザイン状態ごとに対応する test / golden / Computer Use / 未確認項目を列挙する。
 - `flutter run` やインストール成功は「端末に入った」証跡であり、「操作できる」「デザイン通り」「全パターン確認済み」の証跡ではない。Android / iPhone / iPad の確認は端末別に、実施した操作と結果を分けて報告する。
