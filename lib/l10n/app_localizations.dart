@@ -343,7 +343,7 @@ abstract class AppLocalizations {
   /// No description provided for @searchErrorTitle.
   ///
   /// In ja, this message translates to:
-  /// **'通信エラー — もう一度'**
+  /// **'通信エラー'**
   String get searchErrorTitle;
 
   /// No description provided for @searchErrorBody.
@@ -355,7 +355,7 @@ abstract class AppLocalizations {
   /// No description provided for @searchErrorTitleNetwork.
   ///
   /// In ja, this message translates to:
-  /// **'通信エラー — もう一度'**
+  /// **'通信エラー'**
   String get searchErrorTitleNetwork;
 
   /// No description provided for @searchErrorBodyNetwork.
