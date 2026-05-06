@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:dio/dio.dart';
 import 'package:fictional_drug_and_disease_ref/config/api_config.dart';
 import 'package:fictional_drug_and_disease_ref/config/flavor.dart';
 import 'package:fictional_drug_and_disease_ref/data/dto/categories/categories_response_dto.dart';
@@ -17,6 +18,7 @@ import 'package:fictional_drug_and_disease_ref/l10n/app_localizations.dart';
 import 'package:fictional_drug_and_disease_ref/theme/app_theme.dart';
 import 'package:fictional_drug_and_disease_ref/ui/search/constants/search_constants.dart';
 import 'package:fictional_drug_and_disease_ref/ui/search/constants/search_palette.dart';
+import 'package:fictional_drug_and_disease_ref/ui/search/search_screen_notifier.dart';
 import 'package:fictional_drug_and_disease_ref/ui/search/search_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -158,6 +160,259 @@ void main() {
     expect(fab.height, 56);
     expect(390 - fab.right, 20);
     expect(844 - fab.bottom, 28);
+  });
+
+  testWidgets('search submit button uses Round6 primary palette and radius', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [appDatabaseProvider.overrideWithValue(db)],
+        child: MaterialApp(
+          theme: AppTheme.light(),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: const SearchView(),
+        ),
+      ),
+    );
+
+    final button = tester.widget<FilledButton>(
+      find.byKey(const ValueKey('search-submit-button')),
+    );
+    final shape = button.style?.shape?.resolve(<WidgetState>{});
+
+    expect(
+      button.style?.backgroundColor?.resolve(<WidgetState>{}),
+      SearchPalette.light.searchPrimaryActionBg,
+    );
+    expect(
+      button.style?.foregroundColor?.resolve(<WidgetState>{}),
+      SearchPalette.light.searchPrimaryActionFg,
+    );
+    expect(
+      (shape! as RoundedRectangleBorder).borderRadius,
+      BorderRadius.circular(SearchConstants.searchButtonRadius),
+    );
+  });
+
+  testWidgets('error retry CTA uses Round6 primary palette and radius', (
+    tester,
+  ) async {
+    final drugApiClient = _MockDrugApiClient();
+    when(
+      () => drugApiClient.getDrugs(
+        page: any(named: 'page'),
+        pageSize: any(named: 'pageSize'),
+        keyword: any(named: 'keyword'),
+      ),
+    ).thenThrow(
+      DioException(
+        requestOptions: RequestOptions(path: '/v1/drugs'),
+        type: DioExceptionType.connectionError,
+      ),
+    );
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          appDatabaseProvider.overrideWithValue(db),
+          drugApiClientProvider.overrideWithValue(drugApiClient),
+        ],
+        child: MaterialApp(
+          theme: AppTheme.light(),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: const SearchView(),
+        ),
+      ),
+    );
+
+    await tester.enterText(
+      find.byKey(const ValueKey('search-field')),
+      'network failure keyword',
+    );
+    await tester.tap(find.byKey(const ValueKey('search-submit-button')));
+    await tester.pumpAndSettle();
+
+    final ctaFinder = find.byKey(const ValueKey('search-error-retry-cta'));
+    final cta = tester.widget<FilledButton>(ctaFinder);
+    final shape = cta.style?.shape?.resolve(<WidgetState>{});
+
+    expect(
+      tester.getSize(ctaFinder).height,
+      SearchConstants.searchErrorCtaHeight,
+    );
+    expect(
+      cta.style?.backgroundColor?.resolve(<WidgetState>{}),
+      SearchPalette.light.searchPrimaryActionBg,
+    );
+    expect(
+      cta.style?.foregroundColor?.resolve(<WidgetState>{}),
+      SearchPalette.light.searchPrimaryActionFg,
+    );
+    expect(
+      (shape! as RoundedRectangleBorder).borderRadius,
+      BorderRadius.circular(SearchConstants.searchErrorCtaRadius),
+    );
+  });
+
+  testWidgets('empty recovery CTAs use Round6 sizes, palette, and radius', (
+    tester,
+  ) async {
+    final drugApiClient = _MockDrugApiClient();
+    when(
+      () => drugApiClient.getDrugs(
+        page: any(named: 'page'),
+        pageSize: any(named: 'pageSize'),
+        keyword: any(named: 'keyword'),
+      ),
+    ).thenAnswer(
+      (_) async => _drugListFixture().copyWith(items: [], totalCount: 0),
+    );
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          appDatabaseProvider.overrideWithValue(db),
+          drugApiClientProvider.overrideWithValue(drugApiClient),
+        ],
+        child: MaterialApp(
+          theme: AppTheme.light(),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: const SearchView(),
+        ),
+      ),
+    );
+
+    await tester.enterText(
+      find.byKey(const ValueKey('search-field')),
+      'empty keyword',
+    );
+    await tester.tap(find.byKey(const ValueKey('search-submit-button')));
+    await tester.pumpAndSettle();
+
+    final resetFinder = find.byKey(const ValueKey('search-empty-reset-cta'));
+    final removeFinder = find.byKey(
+      const ValueKey('search-empty-remove-one-cta'),
+    );
+    final reset = tester.widget<FilledButton>(resetFinder);
+    final remove = tester.widget<OutlinedButton>(removeFinder);
+    final resetShape = reset.style?.shape?.resolve(<WidgetState>{});
+    final removeShape = remove.style?.shape?.resolve(<WidgetState>{});
+
+    expect(
+      tester.getSize(resetFinder).height,
+      SearchConstants.searchEmptyCtaHeight,
+    );
+    expect(
+      reset.style?.backgroundColor?.resolve(<WidgetState>{}),
+      SearchPalette.light.searchPrimaryActionBg,
+    );
+    expect(
+      reset.style?.foregroundColor?.resolve(<WidgetState>{}),
+      SearchPalette.light.searchPrimaryActionFg,
+    );
+    expect(
+      (resetShape! as RoundedRectangleBorder).borderRadius,
+      BorderRadius.circular(SearchConstants.searchEmptyCtaRadius),
+    );
+    expect(
+      tester.getSize(removeFinder).height,
+      SearchConstants.searchEmptyCtaHeight,
+    );
+    expect(
+      remove.style?.foregroundColor?.resolve(<WidgetState>{}),
+      SearchPalette.light.primary,
+    );
+    expect(
+      remove.style?.side?.resolve(<WidgetState>{})?.color,
+      SearchPalette.light.primaryRing,
+    );
+    expect(
+      (removeShape! as RoundedRectangleBorder).borderRadius,
+      BorderRadius.circular(SearchConstants.searchEmptyCtaRadius),
+    );
+  });
+
+  testWidgets('filter sheet close icon uses Round6 ink color', (tester) async {
+    final categoryApiClient = _MockCategoryApiClient();
+    final drugApiClient = _MockDrugApiClient();
+    _stubDrugSearch(drugApiClient);
+    when(categoryApiClient.getCategories).thenAnswer(
+      (_) async => _categoriesFixture(),
+    );
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          appDatabaseProvider.overrideWithValue(db),
+          drugApiClientProvider.overrideWithValue(drugApiClient),
+          categoryApiClientProvider.overrideWithValue(categoryApiClient),
+        ],
+        child: MaterialApp(
+          theme: AppTheme.light(),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: const SearchView(),
+        ),
+      ),
+    );
+
+    await tester.tap(find.byType(FloatingActionButton));
+    await tester.pumpAndSettle();
+
+    final closeButton = tester.widget<IconButton>(
+      find.byKey(const ValueKey('filter-sheet-close-icon')),
+    );
+    final closeIcon = closeButton.icon as Icon;
+
+    expect(closeIcon.icon, Icons.close);
+    expect(closeIcon.color, SearchPalette.light.ink2);
+  });
+
+  testWidgets('FAB badge uses Round6 custom +N geometry and colors', (
+    tester,
+  ) async {
+    final drugApiClient = _MockDrugApiClient();
+    _stubDrugSearch(drugApiClient);
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          appDatabaseProvider.overrideWithValue(db),
+          drugApiClientProvider.overrideWithValue(drugApiClient),
+        ],
+        child: MaterialApp(
+          theme: AppTheme.light(),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: const SearchView(),
+        ),
+      ),
+    );
+
+    final context = tester.element(find.byType(SearchView));
+    await ProviderScope.containerOf(context)
+        .read(searchScreenProvider.notifier)
+        .applyDrugFilter(regulatoryClass: ['poison'], dosageForm: ['tablet']);
+    await tester.pumpAndSettle();
+
+    final badgeFinder = find.byKey(const ValueKey('search-fab-badge'));
+    final badge = tester.widget<Container>(badgeFinder);
+    final decoration = badge.decoration! as BoxDecoration;
+    final text = tester.widget<Text>(
+      find.descendant(of: badgeFinder, matching: find.text('+2')),
+    );
+
+    expect(tester.getSize(badgeFinder).width, greaterThanOrEqualTo(24));
+    expect(tester.getSize(badgeFinder).height, 22);
+    expect(decoration.color, SearchPalette.light.danger);
+    expect(decoration.borderRadius, BorderRadius.circular(11));
+    expect(decoration.border?.top.width, 2);
+    expect(decoration.border?.top.color, SearchPalette.light.background);
+    expect(text.style?.color, Colors.white);
   });
 
   // Design source:

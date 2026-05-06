@@ -99,8 +99,11 @@ class _SearchTopChrome extends StatelessWidget {
                     SizedBox(
                       height: fieldHeight,
                       child: FilledButton(
+                        key: const ValueKey('search-submit-button'),
                         onPressed: () => unawaited(onSubmit()),
                         style: FilledButton.styleFrom(
+                          backgroundColor: palette.searchPrimaryActionBg,
+                          foregroundColor: palette.searchPrimaryActionFg,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(
                               SearchConstants.searchButtonRadius,
