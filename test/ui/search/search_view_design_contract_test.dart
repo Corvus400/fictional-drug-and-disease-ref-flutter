@@ -588,6 +588,64 @@ void main() {
     expect(selectedTitle.style?.color, SearchPalette.light.primary);
   });
 
+  testWidgets(
+    'SearchView sort sheet follows Round6 selector surface contract',
+    (
+      tester,
+    ) async {
+      await _pumpSearchViewWithDrugResults(tester, db);
+
+      await tester.tap(find.text('並び替え： 更新日(新しい順) ↓ ▾'));
+      await tester.pumpAndSettle();
+
+      final sheet = tester.widget<Material>(
+        find.byKey(const ValueKey('search-sort-sheet')),
+      );
+      final handle = tester.widget<DecoratedBox>(
+        find.byKey(const ValueKey('search-sort-sheet-handle')),
+      );
+      final header = tester.widget<Text>(
+        find.descendant(
+          of: find.byKey(const ValueKey('search-sort-sheet-header')),
+          matching: find.text('並び替え'),
+        ),
+      );
+      final firstRow = tester.widget<InkWell>(
+        find.byKey(const ValueKey('search-sort-row-drug-revised')),
+      );
+      final firstDivider = tester.widget<Divider>(
+        find.byKey(const ValueKey('search-sort-divider-drug-revised')),
+      );
+      final selectedLabel = tester.widget<Text>(
+        find.descendant(
+          of: find.byKey(const ValueKey('search-sort-row-drug-revised')),
+          matching: find.text('更新日(新しい順)'),
+        ),
+      );
+      final selectedCheck = tester.widget<Icon>(
+        find.byKey(const ValueKey('search-sort-check-drug-revised')),
+      );
+
+      expect(sheet.color, SearchPalette.light.surface);
+      expect(
+        (sheet.shape! as RoundedRectangleBorder).borderRadius,
+        const BorderRadius.vertical(top: Radius.circular(20)),
+      );
+      expect(
+        (handle.decoration as BoxDecoration).color,
+        SearchPalette.light.hairline,
+      );
+      expect(header.style?.color, SearchPalette.light.ink);
+      expect(header.style?.fontWeight, FontWeight.w700);
+      expect(firstRow.borderRadius, BorderRadius.zero);
+      expect(firstDivider.color, SearchPalette.light.hairline2);
+      expect(selectedLabel.style?.color, SearchPalette.light.primary);
+      expect(selectedLabel.style?.fontWeight, FontWeight.w700);
+      expect(selectedCheck.color, SearchPalette.light.primary);
+      expect(selectedCheck.size, 16);
+    },
+  );
+
   // Design source:
   // Round5/Search - Round 5.html TASK 4 keyboard drag-to-dismiss.
   testWidgets('SearchView result list dismisses keyboard on drag', (
