@@ -74,6 +74,17 @@
   },
   "searchToolbarApplied": "適用中",
   "searchToolbarLoadMore": "さらに読み込む",
+  "searchToolbarLoadMoreWithProgress": "さらに読み込む · {currentPage} / {totalPages}",
+  "@searchToolbarLoadMoreWithProgress": {
+    "placeholders": {
+      "currentPage": {
+        "type": "int"
+      },
+      "totalPages": {
+        "type": "int"
+      }
+    }
+  },
   "searchEmptyResultTitle": "該当する結果がありません",
   "searchEmptyResultSubtitle": "検索キーワードや絞り込みを見直してください。",
   "searchEmptyResetFilter": "条件をリセット",

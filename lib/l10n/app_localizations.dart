@@ -310,6 +310,12 @@ abstract class AppLocalizations {
   /// **'さらに読み込む'**
   String get searchToolbarLoadMore;
 
+  /// No description provided for @searchToolbarLoadMoreWithProgress.
+  ///
+  /// In ja, this message translates to:
+  /// **'さらに読み込む · {currentPage} / {totalPages}'**
+  String searchToolbarLoadMoreWithProgress(int currentPage, int totalPages);
+
   /// No description provided for @searchEmptyResultTitle.
   ///
   /// In ja, this message translates to:
