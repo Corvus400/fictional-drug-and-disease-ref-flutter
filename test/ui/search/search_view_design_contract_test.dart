@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -21,6 +22,7 @@ import 'package:fictional_drug_and_disease_ref/theme/app_theme.dart';
 import 'package:fictional_drug_and_disease_ref/ui/search/constants/search_constants.dart';
 import 'package:fictional_drug_and_disease_ref/ui/search/constants/search_palette.dart';
 import 'package:fictional_drug_and_disease_ref/ui/search/search_screen_notifier.dart';
+import 'package:fictional_drug_and_disease_ref/ui/search/search_screen_state.dart';
 import 'package:fictional_drug_and_disease_ref/ui/search/search_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -761,6 +763,100 @@ void main() {
     expect(divider.color, SearchPalette.light.hairline2);
     expect(divider.thickness, 0.5);
     expect(find.text('キーボード履歴4'), findsOneWidget);
+  });
+
+  testWidgets('loading-more footer uses Round6 spinner and progress text', (
+    tester,
+  ) async {
+    final page2 = Completer<DrugListResponseDto>();
+    final drugApiClient = _MockDrugApiClient();
+    when(
+      () => drugApiClient.getDrugs(
+        page: any(named: 'page'),
+        pageSize: any(named: 'pageSize'),
+        keyword: any(named: 'keyword'),
+      ),
+    ).thenAnswer((invocation) {
+      final page = invocation.namedArguments[#page] as int?;
+      if (page == 2) {
+        return page2.future;
+      }
+      final fixture = _drugListFixture();
+      return Future.value(
+        fixture.copyWith(items: fixture.items.take(4).toList()),
+      );
+    });
+    when(
+      () => drugApiClient.getDrugs(
+        page: 2,
+        pageSize: any(named: 'pageSize'),
+        categoryAtc: any(named: 'categoryAtc'),
+        therapeuticCategory: any(named: 'therapeuticCategory'),
+        regulatoryClass: any(named: 'regulatoryClass'),
+        dosageForm: any(named: 'dosageForm'),
+        route: any(named: 'route'),
+        keyword: any(named: 'keyword'),
+        keywordMatch: any(named: 'keywordMatch'),
+        keywordTarget: any(named: 'keywordTarget'),
+        adverseReactionKeyword: any(named: 'adverseReactionKeyword'),
+        precautionCategory: any(named: 'precautionCategory'),
+        sort: any(named: 'sort'),
+      ),
+    ).thenAnswer((_) => page2.future);
+
+    final container = ProviderContainer(
+      overrides: [
+        appDatabaseProvider.overrideWithValue(db),
+        drugApiClientProvider.overrideWithValue(drugApiClient),
+      ],
+    );
+    addTearDown(container.dispose);
+
+    await tester.pumpWidget(
+      UncontrolledProviderScope(
+        container: container,
+        child: MaterialApp(
+          theme: AppTheme.light(),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: const SearchView(),
+        ),
+      ),
+    );
+
+    await tester.enterText(
+      find.byKey(const ValueKey('search-field')),
+      'loading more keyword',
+    );
+    await tester.tap(find.byKey(const ValueKey('search-submit-button')));
+    await tester.pumpAndSettle();
+    unawaited(container.read(searchScreenProvider.notifier).loadMore());
+    await tester.pump();
+    expect(
+      container.read(searchScreenProvider).phase,
+      isA<SearchPhaseLoadingMore>(),
+    );
+    await tester.drag(
+      find.byKey(const PageStorageKey<String>('drugSearchResults')),
+      const Offset(0, -3000),
+    );
+    await tester.pump();
+
+    final footerFinder = find.byKey(const ValueKey('search-load-more-footer'));
+    final footer = tester.widget<DecoratedBox>(footerFinder);
+    final decoration = footer.decoration as BoxDecoration;
+    final spinner = tester.widget<CircularProgressIndicator>(
+      find.byKey(const ValueKey('search-load-more-spinner')),
+    );
+
+    expect(find.text('さらに読み込む · 1 / 6'), findsOneWidget);
+    expect(spinner.strokeWidth, 2);
+    expect(spinner.color, SearchPalette.light.primary);
+    expect(decoration.color, SearchPalette.light.surface);
+    expect(decoration.border?.top.color, SearchPalette.light.hairline);
+    expect(decoration.borderRadius, BorderRadius.circular(10));
+
+    page2.complete(_drugListFixture().copyWith(page: 2));
   });
 
   // Design source:
