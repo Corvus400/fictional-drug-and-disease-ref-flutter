@@ -450,7 +450,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get searchDrugDosageFormNasalSpray => '点鼻剤';
 
   @override
-  String get searchDrugRouteOral => '経口';
+  String get searchDrugRouteOral => '内服';
 
   @override
   String get searchDrugRouteTopical => '外用';
@@ -462,16 +462,16 @@ class AppLocalizationsJa extends AppLocalizations {
   String get searchDrugRouteInhalation => '吸入';
 
   @override
-  String get searchDrugRouteRectal => '直腸';
+  String get searchDrugRouteRectal => '坐剤';
 
   @override
-  String get searchDrugRouteOphthalmic => '眼科';
+  String get searchDrugRouteOphthalmic => '点眼';
 
   @override
-  String get searchDrugRouteNasal => '鼻腔';
+  String get searchDrugRouteNasal => '点鼻';
 
   @override
-  String get searchDrugRouteTransdermal => '経皮';
+  String get searchDrugRouteTransdermal => '貼付';
 
   @override
   String get searchDrugPrecautionComorbidity => '合併症';

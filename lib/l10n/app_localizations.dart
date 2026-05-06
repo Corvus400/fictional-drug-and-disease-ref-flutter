@@ -889,7 +889,7 @@ abstract class AppLocalizations {
   /// No description provided for @searchDrugRouteOral.
   ///
   /// In ja, this message translates to:
-  /// **'経口'**
+  /// **'内服'**
   String get searchDrugRouteOral;
 
   /// No description provided for @searchDrugRouteTopical.
@@ -913,25 +913,25 @@ abstract class AppLocalizations {
   /// No description provided for @searchDrugRouteRectal.
   ///
   /// In ja, this message translates to:
-  /// **'直腸'**
+  /// **'坐剤'**
   String get searchDrugRouteRectal;
 
   /// No description provided for @searchDrugRouteOphthalmic.
   ///
   /// In ja, this message translates to:
-  /// **'眼科'**
+  /// **'点眼'**
   String get searchDrugRouteOphthalmic;
 
   /// No description provided for @searchDrugRouteNasal.
   ///
   /// In ja, this message translates to:
-  /// **'鼻腔'**
+  /// **'点鼻'**
   String get searchDrugRouteNasal;
 
   /// No description provided for @searchDrugRouteTransdermal.
   ///
   /// In ja, this message translates to:
-  /// **'経皮'**
+  /// **'貼付'**
   String get searchDrugRouteTransdermal;
 
   /// No description provided for @searchDrugPrecautionComorbidity.
