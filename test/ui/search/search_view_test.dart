@@ -1824,7 +1824,7 @@ void main() {
     await tester.tap(find.byType(FilledButton));
     await tester.pumpAndSettle();
 
-    expect(find.text('通信エラー — もう一度'), findsOneWidget);
+    expect(find.text('通信エラー'), findsOneWidget);
     expect(find.byIcon(Icons.warning_amber_rounded), findsOneWidget);
     final iconContainer = tester.widget<Container>(
       find.byKey(const ValueKey('search-error-icon')),
@@ -1952,7 +1952,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('条件に問題があります'), findsOneWidget);
-    expect(find.text('通信エラー — もう一度'), findsNothing);
+    expect(find.text('通信エラー'), findsNothing);
     expect(find.text('指定された条件をご確認ください。'), findsOneWidget);
     expect(find.text('Type: ApiException'), findsOneWidget);
     expect(find.text('Code: INVALID_ONSET_PATTERN'), findsOneWidget);
@@ -1999,7 +1999,7 @@ void main() {
     );
     await tester.tap(find.byType(FilledButton));
     await tester.pumpAndSettle();
-    expect(find.text('通信エラー — もう一度'), findsOneWidget);
+    expect(find.text('通信エラー'), findsOneWidget);
 
     await tester.tap(find.text('再試行'));
     await tester.pumpAndSettle();

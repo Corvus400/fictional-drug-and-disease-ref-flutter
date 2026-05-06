@@ -145,13 +145,13 @@ class AppLocalizationsJa extends AppLocalizations {
   String get searchEmptyRemoveOneFilter => '絞り込みを 1 つずつ外す';
 
   @override
-  String get searchErrorTitle => '通信エラー — もう一度';
+  String get searchErrorTitle => '通信エラー';
 
   @override
   String get searchErrorBody => 'サーバーに接続できませんでした。\n通信環境を確認してから再試行してください。';
 
   @override
-  String get searchErrorTitleNetwork => '通信エラー — もう一度';
+  String get searchErrorTitleNetwork => '通信エラー';
 
   @override
   String get searchErrorBodyNetwork => 'もう一度試してください。';
