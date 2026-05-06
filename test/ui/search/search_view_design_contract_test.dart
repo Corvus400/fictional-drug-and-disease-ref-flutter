@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fictional_drug_and_disease_ref/config/api_config.dart';
 import 'package:fictional_drug_and_disease_ref/config/flavor.dart';
 import 'package:fictional_drug_and_disease_ref/data/dto/categories/categories_response_dto.dart';
@@ -14,6 +15,7 @@ import 'package:fictional_drug_and_disease_ref/data/services/api/disease_api_cli
 import 'package:fictional_drug_and_disease_ref/data/services/api/drug_api_client.dart';
 import 'package:fictional_drug_and_disease_ref/l10n/app_localizations.dart';
 import 'package:fictional_drug_and_disease_ref/theme/app_theme.dart';
+import 'package:fictional_drug_and_disease_ref/ui/search/constants/search_constants.dart';
 import 'package:fictional_drug_and_disease_ref/ui/search/constants/search_palette.dart';
 import 'package:fictional_drug_and_disease_ref/ui/search/search_view.dart';
 import 'package:flutter/material.dart';
@@ -214,6 +216,41 @@ void main() {
     expect(toolbar.height, 36);
     expect(toolbar.left, 16);
     expect(toolbar.width, 358);
+  });
+
+  testWidgets('drug card image uses 2:3 aspect ratio', (tester) async {
+    await _pumpSearchViewWithDrugResults(tester, db);
+
+    final imageFinder = find.byKey(const ValueKey('drug-image-drug_0080'));
+    expect(imageFinder, findsOneWidget);
+    final size = tester.getSize(imageFinder);
+
+    expect(
+      size.width / size.height,
+      closeTo(SearchConstants.searchDrugCardImageAspectRatio, 0.01),
+      reason: 'image should be 2:3 to match native 512x768 source',
+    );
+  });
+
+  testWidgets('drug card uses memCacheWidth only', (tester) async {
+    await _pumpSearchViewWithDrugResults(tester, db);
+
+    final cached = tester.widget<CachedNetworkImage>(
+      find.byKey(const ValueKey('drug-image-drug_0080')),
+    );
+
+    expect(cached.memCacheWidth, isNotNull);
+    expect(cached.memCacheHeight, isNull);
+  });
+
+  testWidgets('drug card cacheManager is non-null', (tester) async {
+    await _pumpSearchViewWithDrugResults(tester, db);
+
+    final cached = tester.widget<CachedNetworkImage>(
+      find.byKey(const ValueKey('drug-image-drug_0080')),
+    );
+
+    expect(cached.cacheManager, isNotNull);
   });
 
   testWidgets(
@@ -1333,5 +1370,35 @@ Future<void> _tapVisible(WidgetTester tester, Finder finder) async {
   await tester.ensureVisible(finder);
   await tester.pumpAndSettle();
   await tester.tap(finder);
+  await tester.pumpAndSettle();
+}
+
+Future<void> _pumpSearchViewWithDrugResults(
+  WidgetTester tester,
+  AppDatabase db,
+) async {
+  final drugApiClient = _MockDrugApiClient();
+  _stubDrugSearch(drugApiClient);
+
+  await tester.pumpWidget(
+    ProviderScope(
+      overrides: [
+        appDatabaseProvider.overrideWithValue(db),
+        drugApiClientProvider.overrideWithValue(drugApiClient),
+      ],
+      child: MaterialApp(
+        theme: AppTheme.light(),
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        home: const SearchView(),
+      ),
+    ),
+  );
+
+  await tester.enterText(
+    find.byKey(const ValueKey('search-field')),
+    'アムロ',
+  );
+  await tester.tap(find.byType(FilledButton).first);
   await tester.pumpAndSettle();
 }

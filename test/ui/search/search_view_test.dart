@@ -1172,7 +1172,10 @@ void main() {
       of: listFinder,
       matching: find.byType(Scrollable),
     );
+    final targetCard = find.byKey(const ValueKey('drug-card-scroll_drug_1_10'));
     await tester.drag(listFinder, const Offset(0, -900));
+    await tester.pumpAndSettle();
+    await tester.ensureVisible(targetCard);
     await tester.pumpAndSettle();
     final beforePush = tester
         .state<ScrollableState>(scrollableFinder)
@@ -1180,7 +1183,7 @@ void main() {
         .pixels;
     expect(beforePush, greaterThan(0));
 
-    await tester.tap(find.byKey(const ValueKey('drug-card-scroll_drug_1_10')));
+    await tester.tap(targetCard);
     await tester.pumpAndSettle();
     expect(find.text('drug-detail-scroll_drug_1_10'), findsOneWidget);
 

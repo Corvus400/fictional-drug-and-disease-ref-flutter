@@ -20,7 +20,7 @@ class _DrugResultCard extends StatelessWidget {
             SearchConstants.searchTabletBreakpoint
         ? SearchConstants.searchTabletDrugImageSize
         : SearchConstants.searchPhoneDrugImageSize;
-    final imageCacheSize = (imageSize * MediaQuery.devicePixelRatioOf(context))
+    final imageCacheWidth = (imageSize * MediaQuery.devicePixelRatioOf(context))
         .round();
     return Card(
       key: ValueKey('drug-card-${item.id}'),
@@ -38,15 +38,17 @@ class _DrugResultCard extends StatelessWidget {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(8),
-                child: SizedBox.square(
-                  dimension: imageSize,
+                child: SizedBox(
+                  width: imageSize,
+                  height:
+                      imageSize /
+                      SearchConstants.searchDrugCardImageAspectRatio,
                   child: CachedNetworkImage(
                     key: ValueKey('drug-image-${item.id}'),
                     imageUrl: _drugCardImageUrl(item.imageUrl),
-                    cacheManager: cacheManager,
+                    cacheManager: cacheManager ?? DefaultCacheManager(),
                     fit: BoxFit.cover,
-                    memCacheWidth: imageCacheSize,
-                    memCacheHeight: imageCacheSize,
+                    memCacheWidth: imageCacheWidth,
                     placeholder: (context, url) => _DrugImageFallback(
                       palette: palette,
                     ),
