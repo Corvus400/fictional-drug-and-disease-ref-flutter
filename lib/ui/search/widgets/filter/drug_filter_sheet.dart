@@ -144,7 +144,7 @@ class _DrugFilterSheetState extends ConsumerState<_DrugFilterSheet> {
                 (value) => _atcLabel(categories, value),
               ),
               selectedCount: _categoryAtc.length,
-              hint: l10n.searchFilterHintMultiValue(categories.atc.length),
+              hint: l10n.searchFilterHintSingleValue(categories.atc.length),
               content: _FilterChipGroup(
                 values: categories.atc.map((entry) => entry.code).toList(),
                 selected: _categoryAtc,
