@@ -123,7 +123,12 @@ class _Round6FilterSheetScaffold extends StatelessWidget {
                             ),
                             TextButton(
                               onPressed: onReset,
-                              child: Text(l10n.searchFilterReset),
+                              child: Text(
+                                l10n.searchFilterReset,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
                             ),
                             IconButton(
                               key: const ValueKey('filter-sheet-close-icon'),
@@ -190,6 +195,7 @@ class _Round6FilterSheetScaffold extends StatelessWidget {
                         ),
                         child: Text(
                           l10n.searchFilterApplyWithCount(resultCount),
+                          style: const TextStyle(fontWeight: FontWeight.w700),
                         ),
                       ),
                     ),

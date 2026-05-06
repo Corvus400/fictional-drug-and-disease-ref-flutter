@@ -165,6 +165,41 @@ void main() {
     expect(844 - fab.bottom, 28);
   });
 
+  testWidgets('SearchView FAB uses Round6 colors in both modes', (
+    tester,
+  ) async {
+    Future<void> pumpWithTheme(ThemeData theme, {ThemeMode? themeMode}) async {
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [appDatabaseProvider.overrideWithValue(db)],
+          child: MaterialApp(
+            theme: themeMode == ThemeMode.dark ? AppTheme.light() : theme,
+            darkTheme: themeMode == ThemeMode.dark ? theme : null,
+            themeMode: themeMode ?? ThemeMode.light,
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: const SearchView(),
+          ),
+        ),
+      );
+    }
+
+    await pumpWithTheme(AppTheme.light());
+    var fab = tester.widget<FloatingActionButton>(
+      find.byType(FloatingActionButton),
+    );
+    expect(fab.backgroundColor, SearchPalette.light.filterFabBg);
+    expect(fab.foregroundColor, SearchPalette.light.filterFabFg);
+
+    await tester.pumpWidget(const SizedBox.shrink());
+    await pumpWithTheme(AppTheme.dark(), themeMode: ThemeMode.dark);
+    fab = tester.widget<FloatingActionButton>(
+      find.byType(FloatingActionButton),
+    );
+    expect(fab.backgroundColor, SearchPalette.dark.filterFabBg);
+    expect(fab.foregroundColor, SearchPalette.dark.filterFabFg);
+  });
+
   testWidgets('search submit button uses Round6 primary palette and radius', (
     tester,
   ) async {
@@ -196,6 +231,44 @@ void main() {
     expect(
       (shape! as RoundedRectangleBorder).borderRadius,
       BorderRadius.circular(SearchConstants.searchButtonRadius),
+    );
+    final label = tester.widget<Text>(
+      find.descendant(
+        of: find.byKey(const ValueKey('search-submit-button')),
+        matching: find.text('検索'),
+      ),
+    );
+    expect(label.style?.fontWeight, FontWeight.w700);
+  });
+
+  testWidgets('dark search submit button uses Round6 primary button colors', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [appDatabaseProvider.overrideWithValue(db)],
+        child: MaterialApp(
+          theme: AppTheme.light(),
+          darkTheme: AppTheme.dark(),
+          themeMode: ThemeMode.dark,
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: const SearchView(),
+        ),
+      ),
+    );
+
+    final button = tester.widget<FilledButton>(
+      find.byKey(const ValueKey('search-submit-button')),
+    );
+
+    expect(
+      button.style?.backgroundColor?.resolve(<WidgetState>{}),
+      SearchPalette.dark.searchPrimaryActionBg,
+    );
+    expect(
+      button.style?.foregroundColor?.resolve(<WidgetState>{}),
+      SearchPalette.dark.searchPrimaryActionFg,
     );
   });
 
@@ -296,6 +369,10 @@ void main() {
     await tester.tap(find.byKey(const ValueKey('search-submit-button')));
     await tester.pumpAndSettle();
 
+    final title = tester.widget<Text>(find.text('該当する結果がありません'));
+    final subtitle = tester.widget<Text>(
+      find.text('検索キーワードや絞り込みを\n見直してください。'),
+    );
     final resetFinder = find.byKey(const ValueKey('search-empty-reset-cta'));
     final removeFinder = find.byKey(
       const ValueKey('search-empty-remove-one-cta'),
@@ -305,6 +382,8 @@ void main() {
     final resetShape = reset.style?.shape?.resolve(<WidgetState>{});
     final removeShape = remove.style?.shape?.resolve(<WidgetState>{});
 
+    expect(title.style?.fontWeight, FontWeight.w700);
+    expect(subtitle.textAlign, TextAlign.center);
     expect(
       tester.getSize(resetFinder).height,
       SearchConstants.searchEmptyCtaHeight,
@@ -337,6 +416,23 @@ void main() {
       (removeShape! as RoundedRectangleBorder).borderRadius,
       BorderRadius.circular(SearchConstants.searchEmptyCtaRadius),
     );
+    final resetRect = tester.getRect(resetFinder);
+    final removeRect = tester.getRect(removeFinder);
+    expect(removeRect.top - resetRect.bottom, 8);
+    final resetLabel = tester.widget<Text>(
+      find.descendant(
+        of: resetFinder,
+        matching: find.text('条件をリセット'),
+      ),
+    );
+    final removeLabel = tester.widget<Text>(
+      find.descendant(
+        of: removeFinder,
+        matching: find.text('絞り込みを 1 つずつ外す'),
+      ),
+    );
+    expect(resetLabel.style?.fontWeight, FontWeight.w700);
+    expect(removeLabel.style?.fontWeight, FontWeight.w700);
   });
 
   testWidgets('filter sheet close icon uses Round6 ink color', (tester) async {
@@ -756,6 +852,82 @@ void main() {
     expect(divider.color, SearchPalette.light.hairline2);
     expect(divider.thickness, 0.5);
     expect(find.text('キーボード履歴4'), findsOneWidget);
+  });
+
+  testWidgets('history actions follow Round6 light controls', (tester) async {
+    final container = ProviderContainer(
+      overrides: [appDatabaseProvider.overrideWithValue(db)],
+    );
+    addTearDown(container.dispose);
+    final codec = container.read(searchQueryCodecProvider);
+    final repository = container.read(searchHistoryRepositoryProvider);
+    await repository.insertWithDedup(
+      id: 'round6_history_action',
+      target: 'drug',
+      queryJson: codec.encode(const DrugSearchParams(keyword: 'アムロジピン')),
+      searchedAt: DateTime.utc(2026, 5, 5, 8, 50),
+      totalCount: 23,
+    );
+
+    await tester.pumpWidget(
+      UncontrolledProviderScope(
+        container: container,
+        child: MaterialApp(
+          theme: AppTheme.light(),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: SearchView(currentTime: DateTime.utc(2026, 5, 5, 9)),
+        ),
+      ),
+    );
+
+    await tester.tap(find.byKey(const ValueKey('search-field')));
+    await tester.pumpAndSettle();
+
+    final clearButton = tester.widget<TextButton>(
+      find.byKey(const ValueKey('clear-history-button')),
+    );
+    final clearLabel = clearButton.child! as Text;
+    expect(clearLabel.style?.fontWeight, FontWeight.w700);
+    expect(clearLabel.style?.color, SearchPalette.light.primary);
+
+    final deleteBgFinder = find.byKey(
+      const ValueKey('search-history-delete-bg-round6_history_action'),
+    );
+    expect(deleteBgFinder, findsOneWidget);
+    final deleteBg = tester.widget<DecoratedBox>(deleteBgFinder);
+    final decoration = deleteBg.decoration as BoxDecoration;
+    expect(decoration.color, SearchPalette.light.surface3);
+    expect(decoration.borderRadius, BorderRadius.circular(11));
+    expect(tester.getSize(deleteBgFinder), const Size(22, 22));
+
+    final deleteIcon = tester.widget<Icon>(
+      find.descendant(of: deleteBgFinder, matching: find.byIcon(Icons.close)),
+    );
+    expect(deleteIcon.size, 9);
+    expect(deleteIcon.color, SearchPalette.light.muted);
+  });
+
+  testWidgets('focused search cancel follows Round6 bold action text', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [appDatabaseProvider.overrideWithValue(db)],
+        child: MaterialApp(
+          theme: AppTheme.light(),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: const SearchView(),
+        ),
+      ),
+    );
+
+    await tester.tap(find.byKey(const ValueKey('search-field')));
+    await tester.pumpAndSettle();
+
+    final cancel = tester.widget<Text>(find.text('キャンセル'));
+    expect(cancel.style?.fontWeight, FontWeight.w700);
   });
 
   testWidgets('loading-more footer uses Round6 spinner and progress text', (

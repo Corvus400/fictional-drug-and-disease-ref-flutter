@@ -138,7 +138,9 @@ class _SearchPhaseSection extends StatelessWidget {
                       Text(
                         l10n.searchEmptyResultTitle,
                         textAlign: TextAlign.center,
-                        style: theme.textTheme.titleMedium,
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
                       const SizedBox(height: 6),
                       Text(
@@ -164,9 +166,15 @@ class _SearchPhaseSection extends StatelessWidget {
                               ),
                             ),
                           ),
-                          child: Text(l10n.searchEmptyResetFilter),
+                          child: Text(
+                            l10n.searchEmptyResetFilter,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
                         ),
                       ),
+                      const SizedBox(height: 8),
                       SizedBox(
                         height: SearchConstants.searchEmptyCtaHeight,
                         child: OutlinedButton(
@@ -181,7 +189,12 @@ class _SearchPhaseSection extends StatelessWidget {
                               ),
                             ),
                           ),
-                          child: Text(l10n.searchEmptyRemoveOneFilter),
+                          child: Text(
+                            l10n.searchEmptyRemoveOneFilter,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
                         ),
                       ),
                     ],
@@ -223,7 +236,7 @@ class _SearchPhaseSection extends StatelessWidget {
                       child: Icon(
                         Icons.warning_amber_rounded,
                         color: palette.danger,
-                        size: 32,
+                        size: 36,
                       ),
                     ),
                   ),
@@ -262,7 +275,10 @@ class _SearchPhaseSection extends StatelessWidget {
                         ),
                       ),
                       icon: const Icon(Icons.refresh, size: 16),
-                      label: Text(l10n.searchErrorRetry),
+                      label: Text(
+                        l10n.searchErrorRetry,
+                        style: const TextStyle(fontWeight: FontWeight.w700),
+                      ),
                     ),
                   ),
                   const SizedBox(height: 18),

@@ -325,7 +325,7 @@ abstract class AppLocalizations {
   /// No description provided for @searchEmptyResultSubtitle.
   ///
   /// In ja, this message translates to:
-  /// **'検索キーワードや絞り込みを見直してください。'**
+  /// **'検索キーワードや絞り込みを\n見直してください。'**
   String get searchEmptyResultSubtitle;
 
   /// No description provided for @searchEmptyResetFilter.

@@ -1654,7 +1654,7 @@ void main() {
 
     expect(find.text('条件をリセット'), findsOneWidget);
     expect(find.text('絞り込みを 1 つずつ外す'), findsOneWidget);
-    expect(find.text('検索キーワードや絞り込みを見直してください。'), findsOneWidget);
+    expect(find.text('検索キーワードや絞り込みを\n見直してください。'), findsOneWidget);
     expect(find.text('部分一致に変更'), findsNothing);
     expect(find.widgetWithText(FilledButton, '条件をリセット'), findsOneWidget);
     expect(
@@ -1841,7 +1841,7 @@ void main() {
     expect(constraints.maxHeight, 72);
     expect(decoration.color, SearchPalette.light.dangerCont);
     expect(decoration.shape, BoxShape.circle);
-    expect(warningIcon.size, 32);
+    expect(warningIcon.size, 36);
     expect(warningIcon.color, SearchPalette.light.danger);
     expect(find.text('もう一度試してください。'), findsOneWidget);
     expect(find.text('再試行'), findsOneWidget);

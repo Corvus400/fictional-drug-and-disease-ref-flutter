@@ -20,7 +20,7 @@ void main() {
       });
 
       test(
-        'keeps readable contrast for all drug regulatory values',
+        'keeps WCAG AA contrast for all drug regulatory badges',
         () {
           const values = [
             'poison',
@@ -46,7 +46,7 @@ void main() {
                   colors.background,
                   palette.surface,
                 ),
-                greaterThanOrEqualTo(3),
+                greaterThanOrEqualTo(4.5),
                 reason: 'value=$value brightness=${palette.brightness}',
               );
             }
@@ -70,12 +70,19 @@ void main() {
       test('dark bg and fg match Round6 spec', () {
         expect(
           SearchPalette.dark.searchPrimaryActionBg,
-          const Color(0xFF00497F),
+          const Color(0xFF9ECAFF),
         );
         expect(
           SearchPalette.dark.searchPrimaryActionFg,
           const Color(0xFF003258),
         );
+      });
+
+      test('filter FAB colors match Round6 token split', () {
+        expect(SearchPalette.light.filterFabBg, const Color(0xFF007AFF));
+        expect(SearchPalette.light.filterFabFg, const Color(0xFFFFFFFF));
+        expect(SearchPalette.dark.filterFabBg, const Color(0xFF00497F));
+        expect(SearchPalette.dark.filterFabFg, const Color(0xFFD1E4FF));
       });
     });
 
@@ -117,7 +124,14 @@ void main() {
           DiseaseBadgeCategory.chronicity,
           value,
         );
-        expect(colors.background, colors.foreground.withValues(alpha: 0.02));
+        expect(
+          _contrastOnSurface(
+            colors.foreground,
+            colors.background,
+            SearchPalette.light.surface,
+          ),
+          greaterThanOrEqualTo(4.5),
+        );
       }
     });
 
@@ -139,13 +153,69 @@ void main() {
 
         expect(trueColors.foreground, SearchPalette.light.danger);
         expect(
-          trueColors.background,
-          SearchPalette.light.danger.withValues(alpha: 0.02),
+          _contrastOnSurface(
+            trueColors.foreground,
+            trueColors.background,
+            SearchPalette.light.surface,
+          ),
+          greaterThanOrEqualTo(4.5),
         );
         expect(falseColors.foreground, const Color(0xFF0F766E));
         expect(darkTrueColors.foreground, SearchPalette.dark.danger);
       },
     );
+
+    test('keeps WCAG AA contrast for all disease badges', () {
+      const chronicityValues = ['acute', 'chronic', 'episodic', 'remission'];
+      const infectiousValues = ['true', 'false'];
+      const departmentValues = [
+        'internal_medicine',
+        'cardiology',
+        'gastroenterology',
+        'endocrinology',
+        'neurology',
+        'psychiatry',
+        'surgery',
+        'orthopedics',
+        'dermatology',
+        'ophthalmology',
+        'otolaryngology',
+        'urology',
+        'gynecology',
+        'pediatrics',
+        'emergency',
+        'infectious_disease',
+      ];
+      final cases = [
+        for (final value in chronicityValues)
+          (category: DiseaseBadgeCategory.chronicity, value: value),
+        for (final value in infectiousValues)
+          (category: DiseaseBadgeCategory.infectious, value: value),
+        for (final value in departmentValues)
+          (category: DiseaseBadgeCategory.department, value: value),
+      ];
+
+      for (final palette in [SearchPalette.light, SearchPalette.dark]) {
+        for (final testCase in cases) {
+          final colors = palette.diseaseBadgeColors(
+            testCase.category,
+            testCase.value,
+          );
+
+          expect(
+            _contrastOnSurface(
+              colors.foreground,
+              colors.background,
+              palette.surface,
+            ),
+            greaterThanOrEqualTo(4.5),
+            reason:
+                'category=${testCase.category} value=${testCase.value} '
+                'brightness=${palette.brightness}',
+          );
+        }
+      }
+    });
 
     test('disease badge department colors differ across all 16 values', () {
       const values = [
