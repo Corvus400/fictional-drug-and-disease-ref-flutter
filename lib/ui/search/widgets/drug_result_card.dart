@@ -150,7 +150,7 @@ class _DrugBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = _regulatoryBadgeColors(palette, value);
+    final colors = palette.regulatoryBadgeColors(value);
     return DecoratedBox(
       key: ValueKey('drug-regulatory-badge-$value'),
       decoration: BoxDecoration(
@@ -169,27 +169,4 @@ class _DrugBadge extends StatelessWidget {
       ),
     );
   }
-}
-
-({Color background, Color foreground}) _regulatoryBadgeColors(
-  SearchPalette palette,
-  String value,
-) {
-  final color = switch (value) {
-    'poison' => palette.danger,
-    'potent' => const Color(0xFFB45309),
-    'prescription_required' => palette.drugInk,
-    'psychotropic_1' || 'psychotropic_2' || 'psychotropic_3' => const Color(
-      0xFF7C3AED,
-    ),
-    'narcotic' => const Color(0xFF9333EA),
-    'stimulant_precursor' => const Color(0xFFEA580C),
-    'biological' || 'specified_biological' => const Color(0xFF0F766E),
-    'ordinary' => const Color(0xFF4B5563),
-    _ => palette.drugInk,
-  };
-  return (
-    background: color.withValues(alpha: 0.12),
-    foreground: color,
-  );
 }
