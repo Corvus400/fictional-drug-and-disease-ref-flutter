@@ -829,7 +829,7 @@ abstract class AppLocalizations {
   /// No description provided for @searchDrugDosageFormGranule.
   ///
   /// In ja, this message translates to:
-  /// **'顆粒剤'**
+  /// **'顆粒'**
   String get searchDrugDosageFormGranule;
 
   /// No description provided for @searchDrugDosageFormLiquid.
@@ -865,7 +865,7 @@ abstract class AppLocalizations {
   /// No description provided for @searchDrugDosageFormEyeDrops.
   ///
   /// In ja, this message translates to:
-  /// **'点眼剤'**
+  /// **'点眼液'**
   String get searchDrugDosageFormEyeDrops;
 
   /// No description provided for @searchDrugDosageFormSuppository.
@@ -883,7 +883,7 @@ abstract class AppLocalizations {
   /// No description provided for @searchDrugDosageFormNasalSpray.
   ///
   /// In ja, this message translates to:
-  /// **'点鼻剤'**
+  /// **'点鼻液'**
   String get searchDrugDosageFormNasalSpray;
 
   /// No description provided for @searchDrugRouteOral.
