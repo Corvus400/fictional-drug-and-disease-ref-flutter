@@ -81,4 +81,13 @@ void main() {
     expect(source, isNot(contains('Image.network(')));
     expect(pubspec, contains('cached_network_image:'));
   });
+
+  test('drug regulatory badge colors come from SearchPalette', () {
+    final source = File(
+      'lib/ui/search/widgets/drug_result_card.dart',
+    ).readAsStringSync();
+
+    expect(source, isNot(contains('_regulatoryBadgeColors')));
+    expect(source, contains('palette.regulatoryBadgeColors('));
+  });
 }
