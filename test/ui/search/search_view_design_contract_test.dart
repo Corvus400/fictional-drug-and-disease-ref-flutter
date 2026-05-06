@@ -859,6 +859,23 @@ void main() {
     page2.complete(_drugListFixture().copyWith(page: 2));
   });
 
+  testWidgets('result list reserves Round6 bottom padding from SSOT', (
+    tester,
+  ) async {
+    final fixture = _drugListFixture();
+    await _pumpSearchViewWithDrugResults(
+      tester,
+      db,
+      response: fixture.copyWith(items: fixture.items.take(1).toList()),
+    );
+
+    final spacer = tester.widget<SizedBox>(
+      find.byKey(const ValueKey('search-results-bottom-padding')),
+    );
+
+    expect(spacer.height, SearchConstants.searchListBottomPadding);
+  });
+
   // Design source:
   // Round5/Search - Round 5.html TASK 2 chip rail overflow.
   testWidgets('SearchView applied chip rail follows Round5 overflow contract', (
@@ -1846,10 +1863,31 @@ Future<void> _tapVisible(WidgetTester tester, Finder finder) async {
 
 Future<void> _pumpSearchViewWithDrugResults(
   WidgetTester tester,
-  AppDatabase db,
-) async {
+  AppDatabase db, {
+  DrugListResponseDto? response,
+}) async {
   final drugApiClient = _MockDrugApiClient();
-  _stubDrugSearch(drugApiClient);
+  if (response == null) {
+    _stubDrugSearch(drugApiClient);
+  } else {
+    when(
+      () => drugApiClient.getDrugs(
+        page: any(named: 'page'),
+        pageSize: any(named: 'pageSize'),
+        categoryAtc: any(named: 'categoryAtc'),
+        therapeuticCategory: any(named: 'therapeuticCategory'),
+        regulatoryClass: any(named: 'regulatoryClass'),
+        dosageForm: any(named: 'dosageForm'),
+        route: any(named: 'route'),
+        keyword: any(named: 'keyword'),
+        keywordMatch: any(named: 'keywordMatch'),
+        keywordTarget: any(named: 'keywordTarget'),
+        adverseReactionKeyword: any(named: 'adverseReactionKeyword'),
+        precautionCategory: any(named: 'precautionCategory'),
+        sort: any(named: 'sort'),
+      ),
+    ).thenAnswer((_) async => response);
+  }
 
   await tester.pumpWidget(
     ProviderScope(

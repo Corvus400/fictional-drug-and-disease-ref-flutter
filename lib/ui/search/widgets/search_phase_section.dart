@@ -424,6 +424,10 @@ class _SearchPhaseSection extends StatelessWidget {
                     )
                   : Center(child: Text(l10n.searchToolbarLoadMore)),
             ),
+          const SizedBox(
+            key: ValueKey('search-results-bottom-padding'),
+            height: SearchConstants.searchListBottomPadding,
+          ),
         ],
       ),
     );
