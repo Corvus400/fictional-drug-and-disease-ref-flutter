@@ -47,6 +47,14 @@ brew install pre-commit
 pre-commit install --hook-type pre-commit --hook-type pre-push
 ```
 
+## l10n と mock-server の SSOT 整合
+
+- 医薬品 / 疾患の絞り込み軸 (投与経路・剤形・規制区分・診療科・患者背景・ICD-10 章 等) のラベル文字列は mock-server (https://github.com/Corvus400/fictional-drug-and-disease-ref-mock-server) の Kotlin enum (`model/drug/enums/` および `model/disease/enums/`) の KDoc コメント (`/** 〜 */`) を SSOT とする。アプリ側で独自に翻訳・改変しない (例: 「ophthalmic = 点眼」を「眼科」と訳出するのは禁止 — 「眼科」は診療科の `MedicalDepartment.OPHTHALMOLOGY`)
+- l10n キー (`searchDrug*` / `searchDisease*`) を追加・変更する際は mock-server の対応する enum KDoc 値と完全一致させる
+- chip の表示順は mock-server `/categories` API レスポンス順に従う。アプリ側で `sort` 等の並び替えは入れない
+- 整合は `test/l10n/drug_filter_alignment_test.dart` の contract test で守る
+- 別タスク TODO: mock-server enum から l10n arb を codegen する仕組みは今回スコープ外
+
 ## build_runner 運用 (完全自動化)
 
 git 操作 (commit / push) における手動 `build_runner` 実行は **完全に廃止**。以下のフックで自動化:
