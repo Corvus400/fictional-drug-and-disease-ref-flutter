@@ -1003,7 +1003,7 @@ abstract class AppLocalizations {
   /// No description provided for @searchDiseaseDepartmentEndocrinology.
   ///
   /// In ja, this message translates to:
-  /// **'内分泌内科'**
+  /// **'内分泌代謝科'**
   String get searchDiseaseDepartmentEndocrinology;
 
   /// No description provided for @searchDiseaseDepartmentNeurology.
