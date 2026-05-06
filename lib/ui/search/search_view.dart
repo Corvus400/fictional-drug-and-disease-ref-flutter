@@ -1,10 +1,11 @@
 import 'dart:async';
+import 'dart:io';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fictional_drug_and_disease_ref/application/search/search_history_envelope.dart';
 import 'package:fictional_drug_and_disease_ref/config/api_config.dart';
 import 'package:fictional_drug_and_disease_ref/core/error/app_exception.dart';
 import 'package:fictional_drug_and_disease_ref/core/error/error_message_mapper.dart';
+import 'package:fictional_drug_and_disease_ref/core/logging/app_logger.dart';
 import 'package:fictional_drug_and_disease_ref/domain/category/categories.dart';
 import 'package:fictional_drug_and_disease_ref/domain/disease/disease_search_params.dart';
 import 'package:fictional_drug_and_disease_ref/domain/disease/disease_summary.dart';
@@ -37,8 +38,8 @@ part 'format/search_label_formatters.dart';
 part 'format/search_sort_sheet.dart';
 
 /// Optional cache manager override for deterministic search UI tests.
-final drugCardImageCacheManagerProvider = Provider<BaseCacheManager?>(
-  (ref) => null,
+final drugCardImageCacheManagerProvider = Provider<BaseCacheManager>(
+  (ref) => DefaultCacheManager(),
 );
 
 /// Search tab view.

@@ -16,7 +16,7 @@ class _SearchPhaseSection extends StatelessWidget {
 
   final SearchScreenState state;
   final double gutter;
-  final BaseCacheManager? drugCardImageCacheManager;
+  final BaseCacheManager drugCardImageCacheManager;
   final Future<void> Function() onRetry;
   final Future<void> Function() onResetFilter;
   final Future<void> Function() onRemoveOneChip;

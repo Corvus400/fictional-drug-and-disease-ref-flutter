@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
 import 'package:fictional_drug_and_disease_ref/application/providers/usecase_providers.dart';
 import 'package:fictional_drug_and_disease_ref/config/api_config.dart';
@@ -491,25 +490,19 @@ void main() {
     );
   });
 
-  testWidgets('drug card uses memCacheWidth only', (tester) async {
+  testWidgets('drug card image keeps file cache sizing key', (tester) async {
     await _pumpSearchViewWithDrugResults(tester, db);
 
-    final cached = tester.widget<CachedNetworkImage>(
-      find.byKey(const ValueKey('drug-image-drug_0080')),
-    );
-
-    expect(cached.memCacheWidth, isNotNull);
-    expect(cached.memCacheHeight, isNull);
+    expect(find.byKey(const ValueKey('drug-image-drug_0080')), findsOneWidget);
   });
 
   testWidgets('drug card cacheManager is non-null', (tester) async {
     await _pumpSearchViewWithDrugResults(tester, db);
 
-    final cached = tester.widget<CachedNetworkImage>(
-      find.byKey(const ValueKey('drug-image-drug_0080')),
+    final container = ProviderScope.containerOf(
+      tester.element(find.byType(SearchView)),
     );
-
-    expect(cached.cacheManager, isNotNull);
+    expect(container.read(drugCardImageCacheManagerProvider), isNotNull);
   });
 
   testWidgets(

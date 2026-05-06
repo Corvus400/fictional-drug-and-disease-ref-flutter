@@ -24,6 +24,8 @@ patch_manifest() {
     patched = source
       .gsub(%{"objective_c.framework/objective_c"}, %{"Frameworks/objective_c.framework/objective_c"})
       .gsub(%{"sqlite3.framework/sqlite3"}, %{"Frameworks/sqlite3.framework/sqlite3"})
+      .gsub(%{"Frameworks/objective_c.framework/objective_c"}, %{"@executable_path/Frameworks/objective_c.framework/objective_c"})
+      .gsub(%{"Frameworks/sqlite3.framework/sqlite3"}, %{"@executable_path/Frameworks/sqlite3.framework/sqlite3"})
     File.write(path, patched) if patched != source
   ' "$manifest"
 }
