@@ -229,6 +229,7 @@
 				97C146EC1CF9000F007C117D /* Resources */,
 				9705A1C41CF9048500538489 /* Embed Frameworks */,
 				3B06AD1E1E4923F5004D2608 /* Thin Binary */,
+				B7D7E0A12F9648D6A5E0F821 /* Patch Native Assets Manifest */,
 				4E6BCCE4F296747EAAC2BEA4 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
@@ -355,6 +356,22 @@
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
+		};
+		B7D7E0A12F9648D6A5E0F821 /* Patch Native Assets Manifest */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/scripts/patch_native_assets_manifest.sh",
+			);
+			name = "Patch Native Assets Manifest";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "/bin/sh \"${SRCROOT}/scripts/patch_native_assets_manifest.sh\"";
 		};
 		8945058E39CDDD679DC5E2DF /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
