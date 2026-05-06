@@ -117,6 +117,8 @@ class _Round6FilterSheetScaffold extends StatelessWidget {
                               child: Text(
                                 title,
                                 style: theme.textTheme.titleMedium?.copyWith(
+                                  color: palette.ink,
+                                  fontSize: 16,
                                   fontWeight: FontWeight.w700,
                                 ),
                               ),
@@ -125,7 +127,8 @@ class _Round6FilterSheetScaffold extends StatelessWidget {
                               onPressed: onReset,
                               child: Text(
                                 l10n.searchFilterReset,
-                                style: const TextStyle(
+                                style: TextStyle(
+                                  color: palette.primary,
                                   fontWeight: FontWeight.w700,
                                 ),
                               ),
@@ -133,7 +136,11 @@ class _Round6FilterSheetScaffold extends StatelessWidget {
                             IconButton(
                               key: const ValueKey('filter-sheet-close-icon'),
                               onPressed: () => Navigator.of(context).pop(),
-                              icon: Icon(Icons.close, color: palette.ink2),
+                              icon: Icon(
+                                Icons.close,
+                                color: palette.primary,
+                                size: 22,
+                              ),
                             ),
                           ],
                         ),
@@ -195,7 +202,10 @@ class _Round6FilterSheetScaffold extends StatelessWidget {
                         ),
                         child: Text(
                           l10n.searchFilterApplyWithCount(resultCount),
-                          style: const TextStyle(fontWeight: FontWeight.w700),
+                          style: const TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w700,
+                          ),
                         ),
                       ),
                     ),
@@ -261,7 +271,12 @@ class _FilterAxisRow extends StatelessWidget {
                             ),
                             if (axis.selectedCount > 0) ...[
                               const SizedBox(width: 6),
-                              _FilterCountPill(count: axis.selectedCount),
+                              _FilterCountPill(
+                                key: ValueKey(
+                                  'search-filter-count-pill-$keySuffix',
+                                ),
+                                count: axis.selectedCount,
+                              ),
                             ],
                           ],
                         ),
@@ -324,26 +339,36 @@ String _axisWidgetKeySuffix(String id) {
 }
 
 class _FilterCountPill extends StatelessWidget {
-  const _FilterCountPill({required this.count});
+  const _FilterCountPill({required this.count, super.key});
 
   final int count;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final palette =
+        theme.extension<SearchPalette>() ??
+        (theme.brightness == Brightness.dark
+            ? SearchPalette.dark
+            : SearchPalette.light);
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: theme.colorScheme.primary,
+        color: palette.primary,
         borderRadius: BorderRadius.circular(9),
       ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 5),
-        child: Text(
-          '$count',
-          style: theme.textTheme.labelSmall?.copyWith(
-            color: theme.colorScheme.onPrimary,
-            fontSize: 10,
-            fontWeight: FontWeight.w700,
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(minWidth: 18, minHeight: 18),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 5),
+          child: Center(
+            child: Text(
+              '$count',
+              style: theme.textTheme.labelSmall?.copyWith(
+                color: palette.onPrimary,
+                fontSize: 10,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
           ),
         ),
       ),
@@ -408,9 +433,10 @@ class _FilterPillChip extends StatelessWidget {
             ? SearchPalette.dark
             : SearchPalette.light);
     final safeValue = value.replaceAll(RegExp('[^A-Za-z0-9_-]'), '_');
-    const borderRadius = 16.0;
+    const borderRadius = 14.0;
     final textStyle = theme.textTheme.labelSmall?.copyWith(
       color: selected ? palette.primary : palette.ink2,
+      fontSize: 12,
       fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
     );
     final fillColor = selected
@@ -434,24 +460,27 @@ class _FilterPillChip extends StatelessWidget {
             width: 0.5,
           ),
         ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              if (selected) ...[
-                Icon(
-                  Icons.check,
-                  key: ValueKey('search-filter-pill-check-$safeValue'),
-                  size: 10,
-                  color: palette.primary,
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(minHeight: 30),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 6),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (selected) ...[
+                  Icon(
+                    Icons.check,
+                    key: ValueKey('search-filter-pill-check-$safeValue'),
+                    size: 10,
+                    color: palette.primary,
+                  ),
+                  const SizedBox(width: 4),
+                ],
+                Flexible(
+                  child: DefaultTextStyle.merge(style: textStyle, child: label),
                 ),
-                const SizedBox(width: 4),
               ],
-              Flexible(
-                child: DefaultTextStyle.merge(style: textStyle, child: label),
-              ),
-            ],
+            ),
           ),
         ),
       ),

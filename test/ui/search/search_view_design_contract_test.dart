@@ -435,7 +435,9 @@ void main() {
     expect(removeLabel.style?.fontWeight, FontWeight.w700);
   });
 
-  testWidgets('filter sheet close icon uses Round6 ink color', (tester) async {
+  testWidgets('filter sheet close icon uses Round6 primary color', (
+    tester,
+  ) async {
     final categoryApiClient = _MockCategoryApiClient();
     final drugApiClient = _MockDrugApiClient();
     _stubDrugSearch(drugApiClient);
@@ -468,7 +470,7 @@ void main() {
     final closeIcon = closeButton.icon as Icon;
 
     expect(closeIcon.icon, Icons.close);
-    expect(closeIcon.color, SearchPalette.light.ink2);
+    expect(closeIcon.color, SearchPalette.light.primary);
   });
 
   testWidgets('FAB badge uses Round6 custom +N geometry and colors', (
@@ -1470,9 +1472,9 @@ void main() {
   });
 
   // Design source:
-  // Round6/round6-screens.jsx FilterChip selected/unselected token contract.
+  // Round6/round6-screens.jsx FilterSheet red-box contract from 15.47.48.png.
   testWidgets(
-    'SearchView drug filter selected chip follows Round6 token contract',
+    'SearchView drug filter red-box controls follow Round6 light contract',
     (
       tester,
     ) async {
@@ -1504,11 +1506,13 @@ void main() {
 
       await tester.tap(find.byType(FloatingActionButton));
       await tester.pumpAndSettle();
-      await tester.tap(find.text('毒薬'));
+      await tester.tap(find.text('劇薬'));
+      await tester.pump();
+      await tester.tap(find.text('処方箋医薬品'));
       await tester.pump();
 
       final selectedFinder = find.byKey(
-        const ValueKey('search-filter-pill-chip-selected-poison'),
+        const ValueKey('search-filter-pill-chip-selected-potent'),
       );
       expect(selectedFinder, findsOneWidget);
       final selected = tester.widget<DecoratedBox>(selectedFinder);
@@ -1516,18 +1520,33 @@ void main() {
       expect(decoration.color, SearchPalette.light.primarySoft);
       expect(decoration.border?.top.color, SearchPalette.light.primaryRing);
       expect(decoration.border?.top.width, 0.5);
-      expect(decoration.borderRadius, BorderRadius.circular(16));
+      expect(decoration.borderRadius, BorderRadius.circular(14));
+      expect(tester.getSize(selectedFinder).height, 30);
+      expect(
+        DefaultTextStyle.of(tester.element(find.text('劇薬'))).style.color,
+        SearchPalette.light.primary,
+      );
+      expect(
+        DefaultTextStyle.of(tester.element(find.text('劇薬'))).style.fontWeight,
+        FontWeight.w700,
+      );
       expect(
         find.descendant(
           of: selectedFinder,
           matching: find.byKey(
-            const ValueKey('search-filter-pill-check-poison'),
+            const ValueKey('search-filter-pill-check-potent'),
           ),
         ),
         findsOneWidget,
       );
+      final selectedCheck = tester.widget<Icon>(
+        find.byKey(const ValueKey('search-filter-pill-check-potent')),
+      );
+      expect(selectedCheck.size, 10);
+      expect(selectedCheck.color, SearchPalette.light.primary);
+
       final unselectedFinder = find.byKey(
-        const ValueKey('search-filter-pill-chip-unselected-potent'),
+        const ValueKey('search-filter-pill-chip-unselected-poison'),
       );
       expect(unselectedFinder, findsOneWidget);
       final unselected = tester.widget<DecoratedBox>(unselectedFinder);
@@ -1538,6 +1557,62 @@ void main() {
         SearchPalette.light.hairline,
       );
       expect(unselectedDecoration.border?.top.width, 0.5);
+      expect(unselectedDecoration.borderRadius, BorderRadius.circular(14));
+      expect(tester.getSize(unselectedFinder).height, 30);
+      expect(
+        DefaultTextStyle.of(tester.element(find.text('毒薬'))).style.color,
+        SearchPalette.light.ink2,
+      );
+      expect(
+        DefaultTextStyle.of(tester.element(find.text('毒薬'))).style.fontWeight,
+        FontWeight.w500,
+      );
+
+      final countPillFinder = find.byKey(
+        const ValueKey('search-filter-count-pill-regulatoryClass'),
+      );
+      final countPillBoxFinder = find.descendant(
+        of: countPillFinder,
+        matching: find.byType(DecoratedBox),
+      );
+      final countPill = tester.widget<DecoratedBox>(countPillBoxFinder);
+      final countDecoration = countPill.decoration as BoxDecoration;
+      expect(countDecoration.color, SearchPalette.light.primary);
+      expect(countDecoration.borderRadius, BorderRadius.circular(9));
+      expect(tester.getSize(countPillBoxFinder).height, 18);
+      final countTextFinder = find.descendant(
+        of: countPillFinder,
+        matching: find.text('2'),
+      );
+      final countText = tester.widget<Text>(countTextFinder);
+      expect(countText.style?.color, SearchPalette.light.onPrimary);
+      expect(countText.style?.fontWeight, FontWeight.w700);
+
+      final title = tester.widget<Text>(find.text('絞り込み（医薬品）'));
+      expect(title.style?.color, SearchPalette.light.ink);
+      expect(title.style?.fontWeight, FontWeight.w700);
+
+      final reset = tester.widget<Text>(find.text('リセット'));
+      expect(reset.style?.color, SearchPalette.light.primary);
+      expect(reset.style?.fontWeight, FontWeight.w700);
+
+      final closeButton = tester.widget<IconButton>(
+        find.byKey(const ValueKey('filter-sheet-close-icon')),
+      );
+      final closeIcon = closeButton.icon as Icon;
+      expect(closeIcon.color, SearchPalette.light.primary);
+
+      final ctaLabel = tester.widget<Text>(
+        find.descendant(
+          of: find.byKey(const ValueKey('filterApplyCta')),
+          matching: find.byWidgetPredicate(
+            (widget) =>
+                widget is Text && widget.data?.startsWith('結果を見る') == true,
+          ),
+        ),
+      );
+      expect(ctaLabel.style?.fontSize, 15);
+      expect(ctaLabel.style?.fontWeight, FontWeight.w700);
       expect(find.byType(FilterChip), findsNothing);
     },
   );
