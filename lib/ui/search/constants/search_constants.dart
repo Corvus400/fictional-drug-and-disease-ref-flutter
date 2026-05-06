@@ -83,4 +83,22 @@ abstract final class SearchConstants {
 
   /// Round6 list-card drug image API size.
   static const searchDrugCardImageApiSize = 'M';
+
+  /// Round6 drug card source aspect ratio (512x768).
+  static const double searchDrugCardImageAspectRatio = 2 / 3;
+
+  /// Round6 bottom padding for result lists to clear bottom navigation.
+  static const searchListBottomPadding = 100.0;
+
+  /// Round6 empty-state CTA corner radius.
+  static const searchEmptyCtaRadius = 10.0;
+
+  /// Round6 empty-state CTA height.
+  static const searchEmptyCtaHeight = 44.0;
+
+  /// Round6 error-state CTA corner radius.
+  static const searchErrorCtaRadius = 12.0;
+
+  /// Round6 error-state CTA height.
+  static const searchErrorCtaHeight = 48.0;
 }

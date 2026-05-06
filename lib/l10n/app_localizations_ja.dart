@@ -128,6 +128,11 @@ class AppLocalizationsJa extends AppLocalizations {
   String get searchToolbarLoadMore => 'さらに読み込む';
 
   @override
+  String searchToolbarLoadMoreWithProgress(int currentPage, int totalPages) {
+    return 'さらに読み込む · $currentPage / $totalPages';
+  }
+
+  @override
   String get searchEmptyResultTitle => '該当する結果がありません';
 
   @override

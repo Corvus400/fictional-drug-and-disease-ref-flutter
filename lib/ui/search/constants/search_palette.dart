@@ -32,6 +32,8 @@ final class SearchPalette extends ThemeExtension<SearchPalette> {
     required this.hairline2,
     required this.primary,
     required this.onPrimary,
+    required this.searchPrimaryActionBg,
+    required this.searchPrimaryActionFg,
     required this.primarySoft,
     required this.primaryRing,
     required this.danger,
@@ -66,6 +68,8 @@ final class SearchPalette extends ThemeExtension<SearchPalette> {
     hairline2: Color(0x143C3C43),
     primary: Color(0xFF007AFF),
     onPrimary: Color(0xFFFFFFFF),
+    searchPrimaryActionBg: Color(0xFF007AFF),
+    searchPrimaryActionFg: Color(0xFFFFFFFF),
     primarySoft: Color(0x1A007AFF),
     primaryRing: Color(0x59007AFF),
     danger: Color(0xFFD62A2A),
@@ -100,6 +104,8 @@ final class SearchPalette extends ThemeExtension<SearchPalette> {
     hairline2: Color(0x0FFFFFFF),
     primary: Color(0xFF9ECAFF),
     onPrimary: Color(0xFF003258),
+    searchPrimaryActionBg: Color(0xFF00497F),
+    searchPrimaryActionFg: Color(0xFF003258),
     primarySoft: Color(0x249ECAFF),
     primaryRing: Color(0x739ECAFF),
     danger: Color(0xFFFFB4AB),
@@ -164,6 +170,12 @@ final class SearchPalette extends ThemeExtension<SearchPalette> {
   /// Text/icon color on primary.
   final Color onPrimary;
 
+  /// Round6 primary action background.
+  final Color searchPrimaryActionBg;
+
+  /// Round6 primary action foreground.
+  final Color searchPrimaryActionFg;
+
   /// Soft primary fill.
   final Color primarySoft;
 
@@ -206,6 +218,44 @@ final class SearchPalette extends ThemeExtension<SearchPalette> {
   /// Disease target pill ink.
   final Color diseaseInk;
 
+  /// Drug regulatory badge colors.
+  ({Color background, Color foreground}) regulatoryBadgeColors(String value) {
+    final base = switch (value) {
+      'poison' => danger,
+      'potent' => _byBrightness(
+        light: const Color(0xFFB45309),
+        dark: const Color(0xFFFFB77C),
+      ),
+      'prescription_required' => drugInk,
+      'psychotropic_1' || 'psychotropic_2' || 'psychotropic_3' => _byBrightness(
+        light: const Color(0xFF7C3AED),
+        dark: const Color(0xFFD5BAFF),
+      ),
+      'narcotic' => _byBrightness(
+        light: const Color(0xFF9333EA),
+        dark: const Color(0xFFE1BDFF),
+      ),
+      'stimulant_precursor' => _byBrightness(
+        light: const Color(0xFFEA580C),
+        dark: const Color(0xFFFFB68B),
+      ),
+      'biological' => _byBrightness(
+        light: const Color(0xFF0F766E),
+        dark: const Color(0xFF5DD5BB),
+      ),
+      'specified_biological' => _byBrightness(
+        light: const Color(0xFF0E7490),
+        dark: const Color(0xFF7DD3FC),
+      ),
+      'ordinary' => _byBrightness(
+        light: const Color(0xFF4B5563),
+        dark: const Color(0xFFC5CAD0),
+      ),
+      _ => drugInk,
+    };
+    return _badgeColors(base);
+  }
+
   /// Disease card badge colors derived from a category-specific base color.
   ({Color background, Color foreground}) diseaseBadgeColors(
     DiseaseBadgeCategory category,
@@ -213,38 +263,118 @@ final class SearchPalette extends ThemeExtension<SearchPalette> {
   ) {
     final base = switch (category) {
       DiseaseBadgeCategory.chronicity => switch (value) {
-        'acute' => const Color(0xFFC2410C),
-        'subacute' => const Color(0xFFB45309),
-        'chronic' => const Color(0xFF7C3AED),
-        'relapsing' => const Color(0xFF0F766E),
+        'acute' => _byBrightness(
+          light: const Color(0xFFC2410C),
+          dark: const Color(0xFFFB923C),
+        ),
+        'chronic' || 'subacute' => _byBrightness(
+          light: const Color(0xFFB45309),
+          dark: const Color(0xFFFFB77C),
+        ),
+        'episodic' || 'relapsing' => _byBrightness(
+          light: const Color(0xFF7C3AED),
+          dark: const Color(0xFFD5BAFF),
+        ),
+        'remission' => _byBrightness(
+          light: const Color(0xFF0F766E),
+          dark: const Color(0xFF5DD5BB),
+        ),
         _ => diseaseInk,
       },
       DiseaseBadgeCategory.infectious => switch (value) {
         'true' => danger,
-        'false' => const Color(0xFF4B5563),
+        'false' => _byBrightness(
+          light: const Color(0xFF0F766E),
+          dark: const Color(0xFF5DD5BB),
+        ),
+        'infectious' => _byBrightness(
+          light: const Color(0xFF4B5563),
+          dark: const Color(0xFFC5CAD0),
+        ),
+        'non_infectious' => _byBrightness(
+          light: const Color(0xFF0F766E),
+          dark: const Color(0xFF5DD5BB),
+        ),
         _ => diseaseInk,
       },
       DiseaseBadgeCategory.department => switch (value) {
-        'internal_medicine' => const Color(0xFF1D4ED8),
-        'cardiology' => const Color(0xFFB91C1C),
-        'gastroenterology' => const Color(0xFF15803D),
-        'endocrinology' => const Color(0xFFEA580C),
-        'neurology' => const Color(0xFF6D28D9),
-        'psychiatry' => diseaseInk,
-        'surgery' => const Color(0xFF0E7490),
-        'orthopedics' => const Color(0xFFA16207),
-        'dermatology' => const Color(0xFFBE185D),
-        'ophthalmology' => const Color(0xFF0891B2),
-        'otolaryngology' => const Color(0xFF4D7C0F),
-        'urology' => const Color(0xFF3730A3),
-        'gynecology' => const Color(0xFF9F1239),
-        'pediatrics' => const Color(0xFFCA8A04),
-        'emergency' => const Color(0xFF7F1D1D),
-        'infectious_disease' => const Color(0xFF9A3412),
+        'internal_medicine' => _byBrightness(
+          light: const Color(0xFF1D4ED8),
+          dark: const Color(0xFFBFD7FF),
+        ),
+        'surgery' => _byBrightness(
+          light: const Color(0xFFB91C1C),
+          dark: const Color(0xFFFFB4AB),
+        ),
+        'pediatrics' => _byBrightness(
+          light: const Color(0xFF15803D),
+          dark: const Color(0xFF86E0A4),
+        ),
+        'obstetrics_gynecology' || 'gynecology' => _byBrightness(
+          light: const Color(0xFFEA580C),
+          dark: const Color(0xFFFFB68B),
+        ),
+        'psychiatry' => _byBrightness(
+          light: const Color(0xFF6D28D9),
+          dark: const Color(0xFFC9B5FF),
+        ),
+        'dermatology' => _byBrightness(
+          light: const Color(0xFF0E7490),
+          dark: const Color(0xFF7DD3FC),
+        ),
+        'orthopedics' => _byBrightness(
+          light: const Color(0xFFA16207),
+          dark: const Color(0xFFFFC966),
+        ),
+        'ophthalmology' => _byBrightness(
+          light: const Color(0xFFBE185D),
+          dark: const Color(0xFFFFB1C8),
+        ),
+        'otolaryngology' => _byBrightness(
+          light: const Color(0xFF0891B2),
+          dark: const Color(0xFF67E8F9),
+        ),
+        'cardiology' => _byBrightness(
+          light: const Color(0xFF4D7C0F),
+          dark: const Color(0xFFBEF264),
+        ),
+        'neurology' => _byBrightness(
+          light: const Color(0xFF3730A3),
+          dark: const Color(0xFFC7D2FE),
+        ),
+        'urology' => _byBrightness(
+          light: const Color(0xFF9F1239),
+          dark: const Color(0xFFFDA4AF),
+        ),
+        'gastroenterology' => _byBrightness(
+          light: const Color(0xFFCA8A04),
+          dark: const Color(0xFFFDE68A),
+        ),
+        'respiratory' || 'emergency' => _byBrightness(
+          light: const Color(0xFF7F1D1D),
+          dark: const Color(0xFFFCA5A5),
+        ),
+        'nephrology' || 'infectious_disease' => _byBrightness(
+          light: const Color(0xFF9A3412),
+          dark: const Color(0xFFFDBA74),
+        ),
+        'endocrinology' => _byBrightness(
+          light: const Color(0xFF0F766E),
+          dark: const Color(0xFF5DD5BB),
+        ),
         _ => diseaseInk,
       },
     };
-    return (background: base.withValues(alpha: 0.12), foreground: base);
+    return _badgeColors(base);
+  }
+
+  ({Color background, Color foreground}) _badgeColors(Color base) {
+    final alpha = brightness == Brightness.dark ? 0.20 : 0.02;
+    return (background: base.withValues(alpha: alpha), foreground: base);
+  }
+
+  Color _byBrightness({required Color light, required Color dark}) {
+    return brightness == Brightness.dark ? dark : light;
   }
 
   @override
@@ -265,6 +395,8 @@ final class SearchPalette extends ThemeExtension<SearchPalette> {
     Color? hairline2,
     Color? primary,
     Color? onPrimary,
+    Color? searchPrimaryActionBg,
+    Color? searchPrimaryActionFg,
     Color? primarySoft,
     Color? primaryRing,
     Color? danger,
@@ -297,6 +429,10 @@ final class SearchPalette extends ThemeExtension<SearchPalette> {
       hairline2: hairline2 ?? this.hairline2,
       primary: primary ?? this.primary,
       onPrimary: onPrimary ?? this.onPrimary,
+      searchPrimaryActionBg:
+          searchPrimaryActionBg ?? this.searchPrimaryActionBg,
+      searchPrimaryActionFg:
+          searchPrimaryActionFg ?? this.searchPrimaryActionFg,
       primarySoft: primarySoft ?? this.primarySoft,
       primaryRing: primaryRing ?? this.primaryRing,
       danger: danger ?? this.danger,
@@ -336,6 +472,16 @@ final class SearchPalette extends ThemeExtension<SearchPalette> {
       hairline2: Color.lerp(hairline2, other.hairline2, t)!,
       primary: Color.lerp(primary, other.primary, t)!,
       onPrimary: Color.lerp(onPrimary, other.onPrimary, t)!,
+      searchPrimaryActionBg: Color.lerp(
+        searchPrimaryActionBg,
+        other.searchPrimaryActionBg,
+        t,
+      )!,
+      searchPrimaryActionFg: Color.lerp(
+        searchPrimaryActionFg,
+        other.searchPrimaryActionFg,
+        t,
+      )!,
       primarySoft: Color.lerp(primarySoft, other.primarySoft, t)!,
       primaryRing: Color.lerp(primaryRing, other.primaryRing, t)!,
       danger: Color.lerp(danger, other.danger, t)!,
