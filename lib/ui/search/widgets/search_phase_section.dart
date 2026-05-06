@@ -5,6 +5,7 @@ class _SearchPhaseSection extends StatelessWidget {
     required this.state,
     required this.gutter,
     required this.drugCardImageCacheManager,
+    required this.resultScrollController,
     required this.onRetry,
     required this.onResetFilter,
     required this.onRemoveOneChip,
@@ -17,6 +18,7 @@ class _SearchPhaseSection extends StatelessWidget {
   final SearchScreenState state;
   final double gutter;
   final BaseCacheManager drugCardImageCacheManager;
+  final ScrollController resultScrollController;
   final Future<void> Function() onRetry;
   final Future<void> Function() onResetFilter;
   final Future<void> Function() onRemoveOneChip;
@@ -336,6 +338,8 @@ class _SearchPhaseSection extends StatelessWidget {
         key: state.tab == SearchTab.drugs
             ? const PageStorageKey<String>('drugSearchResults')
             : const PageStorageKey<String>('diseaseSearchResults'),
+        controller: resultScrollController,
+        primary: false,
         keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
         children: [
           _SearchResultToolbar(

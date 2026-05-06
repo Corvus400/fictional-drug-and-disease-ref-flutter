@@ -1201,6 +1201,74 @@ void main() {
     expect(afterPop, closeTo(beforePush, 1));
   });
 
+  testWidgets('ios_primary_scroll_to_top_does_not_reset_search_results_(T15)', (
+    tester,
+  ) async {
+    final drugApiClient = _MockDrugApiClient();
+    final firstPage = _scrollRestorationFixture(page: 1);
+    when(
+      () => drugApiClient.getDrugs(
+        page: any(named: 'page'),
+        pageSize: any(named: 'pageSize'),
+        keyword: any(named: 'keyword'),
+      ),
+    ).thenAnswer((_) async => firstPage);
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          appDatabaseProvider.overrideWithValue(db),
+          drugApiClientProvider.overrideWithValue(drugApiClient),
+        ],
+        child: const MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: SearchView(),
+        ),
+      ),
+    );
+
+    await tester.enterText(
+      find.byKey(const ValueKey('search-field')),
+      'primary scroll keyword',
+    );
+    await tester.tap(find.byType(FilledButton).first);
+    await tester.pumpAndSettle();
+
+    final listFinder = find.byKey(
+      const PageStorageKey<String>('drugSearchResults'),
+    );
+    final scrollableFinder = find.descendant(
+      of: listFinder,
+      matching: find.byType(Scrollable),
+    );
+    final targetCard = find.byKey(const ValueKey('drug-card-scroll_drug_1_10'));
+    await tester.drag(listFinder, const Offset(0, -900));
+    await tester.pumpAndSettle();
+    await tester.ensureVisible(targetCard);
+    await tester.pumpAndSettle();
+
+    final beforePrimaryScrollToTop = tester
+        .state<ScrollableState>(scrollableFinder)
+        .position
+        .pixels;
+    expect(beforePrimaryScrollToTop, greaterThan(0));
+
+    final primaryController = PrimaryScrollController.maybeOf(
+      tester.element(listFinder),
+    );
+    if (primaryController != null && primaryController.hasClients) {
+      primaryController.jumpTo(0);
+      await tester.pump();
+    }
+
+    final afterPrimaryScrollToTop = tester
+        .state<ScrollableState>(scrollableFinder)
+        .position
+        .pixels;
+    expect(afterPrimaryScrollToTop, closeTo(beforePrimaryScrollToTop, 1));
+  });
+
   testWidgets('result card tap navigates to disease detail with correct id', (
     tester,
   ) async {

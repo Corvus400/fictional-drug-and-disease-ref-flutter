@@ -60,7 +60,16 @@ class SearchView extends ConsumerStatefulWidget {
 }
 
 class _SearchViewState extends ConsumerState<SearchView> with RouteAware {
+  late final ScrollController _drugSearchResultsScrollController;
+  late final ScrollController _diseaseSearchResultsScrollController;
   PageRoute<dynamic>? _route;
+
+  @override
+  void initState() {
+    super.initState();
+    _drugSearchResultsScrollController = ScrollController();
+    _diseaseSearchResultsScrollController = ScrollController();
+  }
 
   @override
   void didChangeDependencies() {
@@ -79,6 +88,8 @@ class _SearchViewState extends ConsumerState<SearchView> with RouteAware {
   @override
   void dispose() {
     appRouteObserver.unsubscribe(this);
+    _drugSearchResultsScrollController.dispose();
+    _diseaseSearchResultsScrollController.dispose();
     super.dispose();
   }
 
@@ -202,6 +213,9 @@ class _SearchViewState extends ConsumerState<SearchView> with RouteAware {
                     state: state,
                     gutter: gutter,
                     drugCardImageCacheManager: drugCardImageCacheManager,
+                    resultScrollController: state.tab == SearchTab.drugs
+                        ? _drugSearchResultsScrollController
+                        : _diseaseSearchResultsScrollController,
                     onRetry: notifier.performSearch,
                     onResetFilter: notifier.resetFilter,
                     onRemoveOneChip: notifier.removeOneChip,
