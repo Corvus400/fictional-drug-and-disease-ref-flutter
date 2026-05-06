@@ -354,13 +354,12 @@ void _searchGolden({
         }
         final imageCacheManager = _MockBaseCacheManager();
         when(
-          () => imageCacheManager.getFileStream(
+          () => imageCacheManager.getSingleFile(
             any(),
             key: any(named: 'key'),
             headers: any(named: 'headers'),
-            withProgress: any<bool>(named: 'withProgress'),
           ),
-        ).thenAnswer((_) => const Stream<FileResponse>.empty());
+        ).thenThrow(StateError('golden tests render the fallback image'));
         return ProviderScope(
           overrides: [
             appDatabaseProvider.overrideWithValue(_db),

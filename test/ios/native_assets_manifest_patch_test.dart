@@ -54,8 +54,13 @@ void main() {
     final patched = manifest.readAsStringSync();
     expect(
       patched,
-      contains('"Frameworks/objective_c.framework/objective_c"'),
+      contains(
+        '"@executable_path/Frameworks/objective_c.framework/objective_c"',
+      ),
     );
-    expect(patched, contains('"Frameworks/sqlite3.framework/sqlite3"'));
+    expect(
+      patched,
+      contains('"@executable_path/Frameworks/sqlite3.framework/sqlite3"'),
+    );
   });
 }

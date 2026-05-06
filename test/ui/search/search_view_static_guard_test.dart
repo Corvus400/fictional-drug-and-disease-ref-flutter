@@ -77,9 +77,12 @@ void main() {
     ).readAsStringSync();
     final pubspec = File('pubspec.yaml').readAsStringSync();
 
-    expect(source, contains('CachedNetworkImage'));
+    expect(source, contains('getSingleFile'));
+    expect(source, contains('Image.file'));
+    expect(source, contains('BaseCacheManager'));
+    expect(source, isNot(contains('CachedNetworkImage')));
     expect(source, isNot(contains('Image.network(')));
-    expect(pubspec, contains('cached_network_image:'));
+    expect(pubspec, contains('flutter_cache_manager:'));
   });
 
   test('drug regulatory badge colors come from SearchPalette', () {

@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:ui';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
 import 'package:fictional_drug_and_disease_ref/application/providers/usecase_providers.dart';
 import 'package:fictional_drug_and_disease_ref/config/api_config.dart';
@@ -27,7 +26,10 @@ import 'package:fictional_drug_and_disease_ref/ui/search/constants/search_palett
 import 'package:fictional_drug_and_disease_ref/ui/search/search_screen_notifier.dart';
 import 'package:fictional_drug_and_disease_ref/ui/search/search_screen_state.dart';
 import 'package:fictional_drug_and_disease_ref/ui/search/search_view.dart';
+import 'package:file/file.dart' as file;
+import 'package:file/local.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
@@ -1279,7 +1281,9 @@ void main() {
         ),
       );
       final drugApiClient = _MockDrugApiClient();
+      final imageCacheManager = _MockBaseCacheManager();
       final fixture = _drugListFixture();
+      final imageFile = _writeTestImageFile('drug-card-t07.png');
       when(
         () => drugApiClient.getDrugs(
           page: any(named: 'page'),
@@ -1287,12 +1291,22 @@ void main() {
           keyword: any(named: 'keyword'),
         ),
       ).thenAnswer((_) async => fixture);
+      when(
+        () => imageCacheManager.getSingleFile(
+          any(),
+          key: any(named: 'key'),
+          headers: any(named: 'headers'),
+        ),
+      ).thenAnswer((_) async => imageFile);
 
       await tester.pumpWidget(
         ProviderScope(
           overrides: [
             appDatabaseProvider.overrideWithValue(db),
             drugApiClientProvider.overrideWithValue(drugApiClient),
+            drugCardImageCacheManagerProvider.overrideWithValue(
+              imageCacheManager,
+            ),
           ],
           child: const MaterialApp(
             localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -1310,15 +1324,27 @@ void main() {
       await tester.pumpAndSettle();
 
       final item = fixture.items.first;
-      final image = tester.widget<CachedNetworkImage>(
-        find.byKey(ValueKey('drug-image-${item.id}')),
-      );
-
+      expect(find.byKey(ValueKey('drug-image-${item.id}')), findsOneWidget);
+      final imageProvider = tester
+          .widget<Image>(find.byKey(ValueKey('drug-image-${item.id}')))
+          .image;
       expect(
-        image.imageUrl,
-        'https://api.example.test/v1/images/drugs/${item.id}?size=M',
+        imageProvider,
+        isA<ResizeImage>().having(
+          (image) => image.imageProvider,
+          'imageProvider',
+          isA<FileImage>(),
+        ),
       );
-      expect(image.imageUrl, isNot(contains('size=S')));
+      verify(
+        () => imageCacheManager.getSingleFile(
+          'https://api.example.test/v1/images/drugs/${item.id}?size=M',
+          key:
+              'drug-card-image-v2::https://api.example.test/v1/images/drugs/'
+              '${item.id}?size=M',
+          headers: any(named: 'headers'),
+        ),
+      ).called(1);
     },
   );
 
@@ -2659,6 +2685,21 @@ final class _MockDrugApiClient extends Mock implements DrugApiClient {}
 final class _MockDiseaseApiClient extends Mock implements DiseaseApiClient {}
 
 final class _MockCategoryApiClient extends Mock implements CategoryApiClient {}
+
+final class _MockBaseCacheManager extends Mock implements BaseCacheManager {}
+
+file.File _writeTestImageFile(String name) {
+  const fileSystem = LocalFileSystem();
+  final ioFile = File('${Directory.systemTemp.path}/$name');
+  final bytes = base64Decode(
+    'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAFgwJ/'
+    'l6cG7wAAAABJRU5ErkJggg==',
+  );
+  ioFile.writeAsBytesSync(
+    bytes,
+  );
+  return fileSystem.file(ioFile.path);
+}
 
 DrugListResponseDto _drugListFixture() {
   final fixture = File(

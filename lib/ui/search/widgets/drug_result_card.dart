@@ -1,10 +1,10 @@
 part of '../search_view.dart';
 
 class _DrugResultCard extends StatelessWidget {
-  const _DrugResultCard({required this.item, this.cacheManager});
+  const _DrugResultCard({required this.item, required this.cacheManager});
 
   final DrugSummary item;
-  final BaseCacheManager? cacheManager;
+  final BaseCacheManager cacheManager;
 
   @override
   Widget build(BuildContext context) {
@@ -22,6 +22,8 @@ class _DrugResultCard extends StatelessWidget {
         : SearchConstants.searchPhoneDrugImageSize;
     final imageCacheWidth = (imageSize * MediaQuery.devicePixelRatioOf(context))
         .round();
+    final imageUrl = _drugCardImageUrl(item.imageUrl);
+    final imageCacheKey = _drugCardImageCacheKey(item.imageUrl);
     return Card(
       key: ValueKey('drug-card-${item.id}'),
       margin: const EdgeInsets.only(top: 8),
@@ -43,18 +45,13 @@ class _DrugResultCard extends StatelessWidget {
                   height:
                       imageSize /
                       SearchConstants.searchDrugCardImageAspectRatio,
-                  child: CachedNetworkImage(
-                    key: ValueKey('drug-image-${item.id}'),
-                    imageUrl: _drugCardImageUrl(item.imageUrl),
-                    cacheManager: cacheManager ?? DefaultCacheManager(),
-                    fit: BoxFit.cover,
-                    memCacheWidth: imageCacheWidth,
-                    placeholder: (context, url) => _DrugImageFallback(
-                      palette: palette,
-                    ),
-                    errorWidget: (context, url, error) => _DrugImageFallback(
-                      palette: palette,
-                    ),
+                  child: _DrugCardCachedImage(
+                    item: item,
+                    imageUrl: imageUrl,
+                    imageCacheKey: imageCacheKey,
+                    imageCacheWidth: imageCacheWidth,
+                    cacheManager: cacheManager,
+                    palette: palette,
                   ),
                 ),
               ),
@@ -117,6 +114,120 @@ class _DrugResultCard extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+class _DrugCardCachedImage extends StatefulWidget {
+  const _DrugCardCachedImage({
+    required this.item,
+    required this.imageUrl,
+    required this.imageCacheKey,
+    required this.imageCacheWidth,
+    required this.cacheManager,
+    required this.palette,
+  });
+
+  final DrugSummary item;
+  final String imageUrl;
+  final String imageCacheKey;
+  final int imageCacheWidth;
+  final BaseCacheManager cacheManager;
+  final SearchPalette palette;
+
+  @override
+  State<_DrugCardCachedImage> createState() => _DrugCardCachedImageState();
+}
+
+class _DrugCardCachedImageState extends State<_DrugCardCachedImage> {
+  late Future<File> _imageFile;
+  bool _loggedLoadError = false;
+  bool _loggedDecodeError = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _imageFile = _loadImageFile();
+  }
+
+  @override
+  void didUpdateWidget(covariant _DrugCardCachedImage oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.imageUrl != widget.imageUrl ||
+        oldWidget.imageCacheKey != widget.imageCacheKey ||
+        oldWidget.cacheManager != widget.cacheManager) {
+      _loggedLoadError = false;
+      _loggedDecodeError = false;
+      _imageFile = _loadImageFile();
+    }
+  }
+
+  Future<File> _loadImageFile() async {
+    final cachedFile = await widget.cacheManager.getSingleFile(
+      widget.imageUrl,
+      key: widget.imageCacheKey,
+    );
+    return File(cachedFile.path);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<File>(
+      future: _imageFile,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return Image.file(
+            snapshot.requireData,
+            key: ValueKey('drug-image-${widget.item.id}'),
+            fit: BoxFit.cover,
+            cacheWidth: widget.imageCacheWidth,
+            errorBuilder: (context, error, stackTrace) {
+              _logDecodeError(error, stackTrace ?? StackTrace.current);
+              return KeyedSubtree(
+                key: ValueKey('drug-image-${widget.item.id}'),
+                child: _DrugImageFallback(palette: widget.palette),
+              );
+            },
+          );
+        }
+        if (snapshot.hasError) {
+          _logLoadError(snapshot.error!, snapshot.stackTrace);
+        }
+        return KeyedSubtree(
+          key: ValueKey('drug-image-${widget.item.id}'),
+          child: _DrugImageFallback(palette: widget.palette),
+        );
+      },
+    );
+  }
+
+  void _logLoadError(Object error, StackTrace? stackTrace) {
+    if (_loggedLoadError) {
+      return;
+    }
+    _loggedLoadError = true;
+    appLogger.w(
+      _logPayload(),
+      error: error,
+      stackTrace: stackTrace ?? StackTrace.current,
+    );
+  }
+
+  void _logDecodeError(Object error, StackTrace stackTrace) {
+    if (_loggedDecodeError) {
+      return;
+    }
+    _loggedDecodeError = true;
+    appLogger.w(_logPayload(), error: error, stackTrace: stackTrace);
+  }
+
+  Map<String, Object?> _logPayload() {
+    return {
+      'message': 'failed to load drug card image',
+      'drugId': widget.item.id,
+      'dosageForm': widget.item.dosageForm,
+      'imageUrl': widget.imageUrl,
+      'cacheKey': widget.imageCacheKey,
+    };
   }
 }
 
