@@ -483,7 +483,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get searchDrugPrecautionHepaticImpairment => '肝機能障害';
 
   @override
-  String get searchDrugPrecautionReproductivePotential => '生殖能を有する患者';
+  String get searchDrugPrecautionReproductivePotential => '生殖能有する患者';
 
   @override
   String get searchDrugPrecautionPregnant => '妊婦';
