@@ -300,6 +300,7 @@ class _SearchPhaseSection extends StatelessWidget {
         ),
       );
     }
+    final isLoadingMore = phase is SearchPhaseLoadingMore;
     final view = switch (phase) {
       SearchPhaseResults(:final view) => view,
       SearchPhaseLoadingMore(:final previous) => previous,
@@ -311,6 +312,12 @@ class _SearchPhaseSection extends StatelessWidget {
       }
       return const SizedBox.shrink();
     }
+    final theme = Theme.of(context);
+    final palette =
+        theme.extension<SearchPalette>() ??
+        (theme.brightness == Brightness.dark
+            ? SearchPalette.dark
+            : SearchPalette.light);
     return NotificationListener<ScrollNotification>(
       onNotification: (notification) {
         if (notification is! ScrollUpdateNotification) {
@@ -366,7 +373,56 @@ class _SearchPhaseSection extends StatelessWidget {
           if (view.canLoadMore)
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 16),
-              child: Center(child: Text(l10n.searchToolbarLoadMore)),
+              child: isLoadingMore
+                  ? Center(
+                      child: DecoratedBox(
+                        key: const ValueKey('search-load-more-footer'),
+                        decoration: BoxDecoration(
+                          color: palette.surface,
+                          border: Border.all(
+                            color: palette.hairline,
+                            width: 0.5,
+                          ),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 14,
+                            vertical: 12,
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              SizedBox(
+                                width: 16,
+                                height: 16,
+                                child: CircularProgressIndicator(
+                                  key: const ValueKey(
+                                    'search-load-more-spinner',
+                                  ),
+                                  strokeWidth: 2,
+                                  color: palette.primary,
+                                  backgroundColor: palette.surface3,
+                                ),
+                              ),
+                              const SizedBox(width: 10),
+                              Text(
+                                l10n.searchToolbarLoadMoreWithProgress(
+                                  view.page,
+                                  view.totalPages,
+                                ),
+                                style: Theme.of(context).textTheme.labelSmall
+                                    ?.copyWith(
+                                      color: palette.muted,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    )
+                  : Center(child: Text(l10n.searchToolbarLoadMore)),
             ),
         ],
       ),
