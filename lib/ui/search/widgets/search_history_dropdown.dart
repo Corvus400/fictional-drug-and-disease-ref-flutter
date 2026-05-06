@@ -28,83 +28,106 @@ class _SearchHistoryDropdown extends StatelessWidget {
         (theme.brightness == Brightness.dark
             ? SearchPalette.dark
             : SearchPalette.light);
+    final keyboardVisible = MediaQuery.viewInsetsOf(context).bottom > 0;
     return TapRegion(
       groupId: tapRegionGroupId,
-      child: Material(
-        color: theme.colorScheme.surface,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(
-                SearchConstants.searchPhoneGutter,
-                10,
-                SearchConstants.searchPhoneGutter,
-                6,
-              ),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      l10n.searchHistoryTitle,
-                      style: theme.textTheme.labelMedium?.copyWith(
-                        color: theme.colorScheme.onSurfaceVariant,
-                        fontWeight: FontWeight.w700,
+      child: ConstrainedBox(
+        constraints: BoxConstraints(
+          maxHeight: keyboardVisible ? 250 : double.infinity,
+        ),
+        child: Material(
+          key: const ValueKey('search-history-dropdown'),
+          color: theme.colorScheme.surface,
+          clipBehavior: Clip.hardEdge,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(
+                  SearchConstants.searchPhoneGutter,
+                  10,
+                  SearchConstants.searchPhoneGutter,
+                  6,
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        l10n.searchHistoryTitle,
+                        style: theme.textTheme.labelMedium?.copyWith(
+                          color: theme.colorScheme.onSurfaceVariant,
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
                     ),
-                  ),
-                  TextButton(
-                    key: const ValueKey('clear-history-button'),
-                    onPressed: () => unawaited(_confirmClearHistory(context)),
-                    child: Text(l10n.searchHistoryClear),
-                  ),
-                ],
-              ),
-            ),
-            Flexible(
-              child: ConstrainedBox(
-                constraints: BoxConstraints(
-                  maxHeight: entries.isEmpty
-                      ? 150
-                      : entries.length * _maxHistoryRowExtent,
-                ),
-                child: entries.isEmpty
-                    ? const SingleChildScrollView(
-                        child: _NoSearchHistoryState(),
-                      )
-                    : ListView(
-                        padding: EdgeInsets.zero,
-                        shrinkWrap: true,
-                        children: [
-                          for (final entry in entries)
-                            _SearchHistoryRow(
-                              entry: entry,
-                              palette: palette,
-                              currentTime: currentTime,
-                              onSelect: onSelect,
-                              onDelete: onDelete,
-                            ),
-                        ],
-                      ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(
-                SearchConstants.searchPhoneGutter,
-                8,
-                SearchConstants.searchPhoneGutter,
-                10,
-              ),
-              child: Text(
-                l10n.searchHistoryPrivacyNote,
-                textAlign: TextAlign.center,
-                style: theme.textTheme.labelSmall?.copyWith(
-                  color: theme.colorScheme.onSurfaceVariant,
+                    TextButton(
+                      key: const ValueKey('clear-history-button'),
+                      onPressed: () => unawaited(_confirmClearHistory(context)),
+                      child: Text(l10n.searchHistoryClear),
+                    ),
+                  ],
                 ),
               ),
-            ),
-          ],
+              Flexible(
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxHeight: entries.isEmpty
+                        ? 150
+                        : entries.length * _maxHistoryRowExtent,
+                  ),
+                  child: entries.isEmpty
+                      ? const SingleChildScrollView(
+                          child: _NoSearchHistoryState(),
+                        )
+                      : ListView(
+                          padding: EdgeInsets.zero,
+                          shrinkWrap: true,
+                          children: [
+                            for (
+                              var index = 0;
+                              index < entries.length;
+                              index++
+                            ) ...[
+                              _SearchHistoryRow(
+                                entry: entries[index],
+                                palette: palette,
+                                currentTime: currentTime,
+                                onSelect: onSelect,
+                                onDelete: onDelete,
+                              ),
+                              if (index != entries.length - 1)
+                                Divider(
+                                  key: ValueKey(
+                                    'search-history-row-divider-'
+                                    '${entries[index].id}',
+                                  ),
+                                  height: 0,
+                                  thickness: 0.5,
+                                  color: palette.hairline2,
+                                ),
+                            ],
+                          ],
+                        ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(
+                  SearchConstants.searchPhoneGutter,
+                  8,
+                  SearchConstants.searchPhoneGutter,
+                  10,
+                ),
+                child: Text(
+                  l10n.searchHistoryPrivacyNote,
+                  textAlign: TextAlign.center,
+                  style: theme.textTheme.labelSmall?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

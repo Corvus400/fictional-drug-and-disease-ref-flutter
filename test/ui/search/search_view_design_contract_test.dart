@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
+import 'package:fictional_drug_and_disease_ref/application/providers/usecase_providers.dart';
 import 'package:fictional_drug_and_disease_ref/config/api_config.dart';
 import 'package:fictional_drug_and_disease_ref/config/flavor.dart';
 import 'package:fictional_drug_and_disease_ref/data/dto/categories/categories_response_dto.dart';
@@ -14,6 +15,7 @@ import 'package:fictional_drug_and_disease_ref/data/providers/local_providers.da
 import 'package:fictional_drug_and_disease_ref/data/services/api/category_api_client.dart';
 import 'package:fictional_drug_and_disease_ref/data/services/api/disease_api_client.dart';
 import 'package:fictional_drug_and_disease_ref/data/services/api/drug_api_client.dart';
+import 'package:fictional_drug_and_disease_ref/domain/drug/drug_search_params.dart';
 import 'package:fictional_drug_and_disease_ref/l10n/app_localizations.dart';
 import 'package:fictional_drug_and_disease_ref/theme/app_theme.dart';
 import 'package:fictional_drug_and_disease_ref/ui/search/constants/search_constants.dart';
@@ -699,6 +701,66 @@ void main() {
       listView.keyboardDismissBehavior,
       ScrollViewKeyboardDismissBehavior.onDrag,
     );
+  });
+
+  testWidgets('history dropdown follows Round6 divider and keyboard geometry', (
+    tester,
+  ) async {
+    await tester.binding.setSurfaceSize(const Size(390, 844));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+
+    final container = ProviderContainer(
+      overrides: [appDatabaseProvider.overrideWithValue(db)],
+    );
+    addTearDown(container.dispose);
+    final codec = container.read(searchQueryCodecProvider);
+    final repository = container.read(searchHistoryRepositoryProvider);
+    for (var index = 0; index < 5; index += 1) {
+      await repository.insertWithDedup(
+        id: 'round6_keyboard_history_$index',
+        target: 'drug',
+        queryJson: codec.encode(
+          DrugSearchParams(keyword: 'キーボード履歴$index'),
+        ),
+        searchedAt: DateTime.utc(2026, 5, 5, 9, index),
+        totalCount: index + 1,
+      );
+    }
+
+    await tester.pumpWidget(
+      UncontrolledProviderScope(
+        container: container,
+        child: MaterialApp(
+          theme: AppTheme.light(),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: const MediaQuery(
+            data: MediaQueryData(
+              size: Size(390, 844),
+              viewInsets: EdgeInsets.only(bottom: 300),
+            ),
+            child: SearchView(),
+          ),
+        ),
+      ),
+    );
+
+    await tester.tap(find.byKey(const ValueKey('search-field')));
+    await tester.pumpAndSettle();
+
+    final dropdown = tester.getRect(
+      find.byKey(const ValueKey('search-history-dropdown')),
+    );
+    final divider = tester.widget<Divider>(
+      find.byKey(
+        const ValueKey('search-history-row-divider-round6_keyboard_history_4'),
+      ),
+    );
+
+    expect(dropdown.height, lessThanOrEqualTo(250));
+    expect(divider.color, SearchPalette.light.hairline2);
+    expect(divider.thickness, 0.5);
+    expect(find.text('キーボード履歴4'), findsOneWidget);
   });
 
   // Design source:
