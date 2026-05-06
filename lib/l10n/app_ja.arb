@@ -86,7 +86,7 @@
     }
   },
   "searchEmptyResultTitle": "該当する結果がありません",
-  "searchEmptyResultSubtitle": "検索キーワードや絞り込みを見直してください。",
+  "searchEmptyResultSubtitle": "検索キーワードや絞り込みを\n見直してください。",
   "searchEmptyResetFilter": "条件をリセット",
   "searchEmptyRemoveOneFilter": "絞り込みを 1 つずつ外す",
   "searchErrorTitle": "通信エラー — もう一度",

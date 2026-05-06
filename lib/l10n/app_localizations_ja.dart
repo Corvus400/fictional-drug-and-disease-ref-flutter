@@ -136,7 +136,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get searchEmptyResultTitle => '該当する結果がありません';
 
   @override
-  String get searchEmptyResultSubtitle => '検索キーワードや絞り込みを見直してください。';
+  String get searchEmptyResultSubtitle => '検索キーワードや絞り込みを\n見直してください。';
 
   @override
   String get searchEmptyResetFilter => '条件をリセット';

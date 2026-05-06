@@ -64,7 +64,13 @@ class _SearchHistoryDropdown extends StatelessWidget {
                     TextButton(
                       key: const ValueKey('clear-history-button'),
                       onPressed: () => unawaited(_confirmClearHistory(context)),
-                      child: Text(l10n.searchHistoryClear),
+                      child: Text(
+                        l10n.searchHistoryClear,
+                        style: TextStyle(
+                          color: palette.primary,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
                     ),
                   ],
                 ),
@@ -256,7 +262,18 @@ class _SearchHistoryRow extends StatelessWidget {
         trailing: IconButton(
           key: ValueKey('delete-history-${entry.id}'),
           onPressed: () => unawaited(onDelete(entry.id)),
-          icon: const Icon(Icons.close),
+          icon: DecoratedBox(
+            key: ValueKey('search-history-delete-bg-${entry.id}'),
+            decoration: BoxDecoration(
+              color: palette.surface3,
+              borderRadius: BorderRadius.circular(11),
+            ),
+            child: SizedBox(
+              width: 22,
+              height: 22,
+              child: Icon(Icons.close, size: 9, color: palette.muted),
+            ),
+          ),
         ),
       ),
     );

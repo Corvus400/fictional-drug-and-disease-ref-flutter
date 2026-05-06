@@ -34,6 +34,8 @@ final class SearchPalette extends ThemeExtension<SearchPalette> {
     required this.onPrimary,
     required this.searchPrimaryActionBg,
     required this.searchPrimaryActionFg,
+    required this.filterFabBg,
+    required this.filterFabFg,
     required this.primarySoft,
     required this.primaryRing,
     required this.danger,
@@ -70,6 +72,8 @@ final class SearchPalette extends ThemeExtension<SearchPalette> {
     onPrimary: Color(0xFFFFFFFF),
     searchPrimaryActionBg: Color(0xFF007AFF),
     searchPrimaryActionFg: Color(0xFFFFFFFF),
+    filterFabBg: Color(0xFF007AFF),
+    filterFabFg: Color(0xFFFFFFFF),
     primarySoft: Color(0x1A007AFF),
     primaryRing: Color(0x59007AFF),
     danger: Color(0xFFD62A2A),
@@ -104,8 +108,10 @@ final class SearchPalette extends ThemeExtension<SearchPalette> {
     hairline2: Color(0x0FFFFFFF),
     primary: Color(0xFF9ECAFF),
     onPrimary: Color(0xFF003258),
-    searchPrimaryActionBg: Color(0xFF00497F),
+    searchPrimaryActionBg: Color(0xFF9ECAFF),
     searchPrimaryActionFg: Color(0xFF003258),
+    filterFabBg: Color(0xFF00497F),
+    filterFabFg: Color(0xFFD1E4FF),
     primarySoft: Color(0x249ECAFF),
     primaryRing: Color(0x739ECAFF),
     danger: Color(0xFFFFB4AB),
@@ -175,6 +181,12 @@ final class SearchPalette extends ThemeExtension<SearchPalette> {
 
   /// Round6 primary action foreground.
   final Color searchPrimaryActionFg;
+
+  /// Round6 filter FAB background.
+  final Color filterFabBg;
+
+  /// Round6 filter FAB foreground.
+  final Color filterFabFg;
 
   /// Soft primary fill.
   final Color primarySoft;
@@ -369,8 +381,36 @@ final class SearchPalette extends ThemeExtension<SearchPalette> {
   }
 
   ({Color background, Color foreground}) _badgeColors(Color base) {
-    final alpha = brightness == Brightness.dark ? 0.20 : 0.02;
-    return (background: base.withValues(alpha: alpha), foreground: base);
+    final alpha = brightness == Brightness.dark ? 0.20 : 0.05;
+    final background = base.withValues(alpha: alpha);
+    return (
+      background: background,
+      foreground: _ensureBadgeContrast(base, background),
+    );
+  }
+
+  Color _ensureBadgeContrast(Color foreground, Color background) {
+    final surfaceColor = Color.alphaBlend(background, surface);
+    var adjusted = foreground;
+    for (var index = 0; index < 16; index += 1) {
+      if (_contrast(adjusted, surfaceColor) >= 4.5) {
+        return adjusted;
+      }
+      final hsl = HSLColor.fromColor(adjusted);
+      final nextLightness = brightness == Brightness.dark
+          ? (hsl.lightness + 0.04).clamp(0.0, 1.0)
+          : (hsl.lightness - 0.04).clamp(0.0, 1.0);
+      adjusted = hsl.withLightness(nextLightness).toColor();
+    }
+    return adjusted;
+  }
+
+  double _contrast(Color a, Color b) {
+    final l1 = a.computeLuminance();
+    final l2 = b.computeLuminance();
+    final lighter = l1 > l2 ? l1 : l2;
+    final darker = l1 > l2 ? l2 : l1;
+    return (lighter + 0.05) / (darker + 0.05);
   }
 
   Color _byBrightness({required Color light, required Color dark}) {
@@ -397,6 +437,8 @@ final class SearchPalette extends ThemeExtension<SearchPalette> {
     Color? onPrimary,
     Color? searchPrimaryActionBg,
     Color? searchPrimaryActionFg,
+    Color? filterFabBg,
+    Color? filterFabFg,
     Color? primarySoft,
     Color? primaryRing,
     Color? danger,
@@ -433,6 +475,8 @@ final class SearchPalette extends ThemeExtension<SearchPalette> {
           searchPrimaryActionBg ?? this.searchPrimaryActionBg,
       searchPrimaryActionFg:
           searchPrimaryActionFg ?? this.searchPrimaryActionFg,
+      filterFabBg: filterFabBg ?? this.filterFabBg,
+      filterFabFg: filterFabFg ?? this.filterFabFg,
       primarySoft: primarySoft ?? this.primarySoft,
       primaryRing: primaryRing ?? this.primaryRing,
       danger: danger ?? this.danger,
@@ -482,6 +526,8 @@ final class SearchPalette extends ThemeExtension<SearchPalette> {
         other.searchPrimaryActionFg,
         t,
       )!,
+      filterFabBg: Color.lerp(filterFabBg, other.filterFabBg, t)!,
+      filterFabFg: Color.lerp(filterFabFg, other.filterFabFg, t)!,
       primarySoft: Color.lerp(primarySoft, other.primarySoft, t)!,
       primaryRing: Color.lerp(primaryRing, other.primaryRing, t)!,
       danger: Color.lerp(danger, other.danger, t)!,

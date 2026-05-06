@@ -93,7 +93,10 @@ class _SearchTopChrome extends StatelessWidget {
                   if (state.historyDropdownOpen)
                     TextButton(
                       onPressed: onCancel,
-                      child: Text(l10n.searchActionCancel),
+                      child: Text(
+                        l10n.searchActionCancel,
+                        style: const TextStyle(fontWeight: FontWeight.w700),
+                      ),
                     )
                   else
                     SizedBox(
@@ -110,7 +113,10 @@ class _SearchTopChrome extends StatelessWidget {
                             ),
                           ),
                         ),
-                        child: Text(l10n.searchActionSearch),
+                        child: Text(
+                          l10n.searchActionSearch,
+                          style: const TextStyle(fontWeight: FontWeight.w700),
+                        ),
                       ),
                     ),
                 ],
