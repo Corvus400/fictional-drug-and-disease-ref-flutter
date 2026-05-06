@@ -117,35 +117,45 @@ class _SearchViewState extends ConsumerState<SearchView> with RouteAware {
 
     return Scaffold(
       backgroundColor: palette.background,
-      floatingActionButton: Badge(
-        isLabelVisible: state.appliedChips.count > 0,
-        label: Text('+${state.appliedChips.count}'),
-        child: Padding(
-          padding: const EdgeInsets.only(
-            right: SearchConstants.searchFilterFabRightOffset - 16,
-            bottom: SearchConstants.searchFilterFabBottomOffset - 16,
+      floatingActionButton: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(
+              right: SearchConstants.searchFilterFabRightOffset - 16,
+              bottom: SearchConstants.searchFilterFabBottomOffset - 16,
+            ),
+            child: FloatingActionButton(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(
+                  SearchConstants.searchFilterFabRadius,
+                ),
+              ),
+              onPressed: () async {
+                await notifier.loadCategories();
+                if (!context.mounted) {
+                  return;
+                }
+                _showFilterSheet(
+                  context,
+                  ref.read(searchScreenProvider),
+                  onApplyDrugFilter: notifier.applyDrugFilter,
+                  onApplyDiseaseFilter: notifier.applyDiseaseFilter,
+                );
+              },
+              child: const Icon(Icons.tune),
+            ),
           ),
-          child: FloatingActionButton(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(
-                SearchConstants.searchFilterFabRadius,
+          if (state.appliedChips.count > 0)
+            Positioned(
+              top: -2,
+              right: 0,
+              child: _SearchFilterFabBadge(
+                count: state.appliedChips.count,
+                palette: palette,
               ),
             ),
-            onPressed: () async {
-              await notifier.loadCategories();
-              if (!context.mounted) {
-                return;
-              }
-              _showFilterSheet(
-                context,
-                ref.read(searchScreenProvider),
-                onApplyDrugFilter: notifier.applyDrugFilter,
-                onApplyDiseaseFilter: notifier.applyDiseaseFilter,
-              );
-            },
-            child: const Icon(Icons.tune),
-          ),
-        ),
+        ],
       ),
       body: SafeArea(
         child: LayoutBuilder(
@@ -311,6 +321,38 @@ class _SearchViewState extends ConsumerState<SearchView> with RouteAware {
               ),
             },
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class _SearchFilterFabBadge extends StatelessWidget {
+  const _SearchFilterFabBadge({required this.count, required this.palette});
+
+  final int count;
+  final SearchPalette palette;
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    return Container(
+      key: const ValueKey('search-fab-badge'),
+      height: 22,
+      constraints: const BoxConstraints(minWidth: 24),
+      padding: const EdgeInsets.symmetric(horizontal: 7),
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        color: palette.danger,
+        borderRadius: BorderRadius.circular(11),
+        border: Border.all(color: palette.background, width: 2),
+      ),
+      child: Text(
+        '+$count',
+        style: Theme.of(context).textTheme.labelSmall?.copyWith(
+          color: isDark ? const Color(0xFF3A0907) : Colors.white,
+          fontWeight: FontWeight.w700,
+          height: 1,
         ),
       ),
     );

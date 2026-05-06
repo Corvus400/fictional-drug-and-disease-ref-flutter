@@ -126,8 +126,9 @@ class _Round6FilterSheetScaffold extends StatelessWidget {
                               child: Text(l10n.searchFilterReset),
                             ),
                             IconButton(
+                              key: const ValueKey('filter-sheet-close-icon'),
                               onPressed: () => Navigator.of(context).pop(),
-                              icon: const Icon(Icons.close),
+                              icon: Icon(Icons.close, color: palette.ink2),
                             ),
                           ],
                         ),

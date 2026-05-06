@@ -148,13 +148,39 @@ class _SearchPhaseSection extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: 16),
-                      FilledButton(
-                        onPressed: () => unawaited(onResetFilter()),
-                        child: Text(l10n.searchEmptyResetFilter),
+                      SizedBox(
+                        height: SearchConstants.searchEmptyCtaHeight,
+                        child: FilledButton(
+                          key: const ValueKey('search-empty-reset-cta'),
+                          onPressed: () => unawaited(onResetFilter()),
+                          style: FilledButton.styleFrom(
+                            backgroundColor: palette.searchPrimaryActionBg,
+                            foregroundColor: palette.searchPrimaryActionFg,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(
+                                SearchConstants.searchEmptyCtaRadius,
+                              ),
+                            ),
+                          ),
+                          child: Text(l10n.searchEmptyResetFilter),
+                        ),
                       ),
-                      OutlinedButton(
-                        onPressed: () => unawaited(onRemoveOneChip()),
-                        child: Text(l10n.searchEmptyRemoveOneFilter),
+                      SizedBox(
+                        height: SearchConstants.searchEmptyCtaHeight,
+                        child: OutlinedButton(
+                          key: const ValueKey('search-empty-remove-one-cta'),
+                          onPressed: () => unawaited(onRemoveOneChip()),
+                          style: OutlinedButton.styleFrom(
+                            foregroundColor: palette.primary,
+                            side: BorderSide(color: palette.primaryRing),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(
+                                SearchConstants.searchEmptyCtaRadius,
+                              ),
+                            ),
+                          ),
+                          child: Text(l10n.searchEmptyRemoveOneFilter),
+                        ),
                       ),
                     ],
                   ),
@@ -220,9 +246,19 @@ class _SearchPhaseSection extends StatelessWidget {
                   ),
                   const SizedBox(height: 22),
                   SizedBox(
-                    height: 48,
+                    height: SearchConstants.searchErrorCtaHeight,
                     child: FilledButton.icon(
+                      key: const ValueKey('search-error-retry-cta'),
                       onPressed: () => unawaited(onRetry()),
+                      style: FilledButton.styleFrom(
+                        backgroundColor: palette.searchPrimaryActionBg,
+                        foregroundColor: palette.searchPrimaryActionFg,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(
+                            SearchConstants.searchErrorCtaRadius,
+                          ),
+                        ),
+                      ),
                       icon: const Icon(Icons.refresh, size: 16),
                       label: Text(l10n.searchErrorRetry),
                     ),
