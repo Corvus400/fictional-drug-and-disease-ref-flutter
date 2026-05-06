@@ -955,7 +955,7 @@ abstract class AppLocalizations {
   /// No description provided for @searchDrugPrecautionReproductivePotential.
   ///
   /// In ja, this message translates to:
-  /// **'生殖能を有する患者'**
+  /// **'生殖能有する患者'**
   String get searchDrugPrecautionReproductivePotential;
 
   /// No description provided for @searchDrugPrecautionPregnant.
