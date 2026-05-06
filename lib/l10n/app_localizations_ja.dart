@@ -420,7 +420,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get searchDrugDosageFormPowder => '散剤';
 
   @override
-  String get searchDrugDosageFormGranule => '顆粒剤';
+  String get searchDrugDosageFormGranule => '顆粒';
 
   @override
   String get searchDrugDosageFormLiquid => '液剤';
@@ -438,7 +438,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get searchDrugDosageFormPatch => '貼付剤';
 
   @override
-  String get searchDrugDosageFormEyeDrops => '点眼剤';
+  String get searchDrugDosageFormEyeDrops => '点眼液';
 
   @override
   String get searchDrugDosageFormSuppository => '坐剤';
@@ -447,7 +447,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get searchDrugDosageFormInhaler => '吸入剤';
 
   @override
-  String get searchDrugDosageFormNasalSpray => '点鼻剤';
+  String get searchDrugDosageFormNasalSpray => '点鼻液';
 
   @override
   String get searchDrugRouteOral => '内服';
