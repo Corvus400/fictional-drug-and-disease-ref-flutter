@@ -1099,7 +1099,7 @@ void main() {
     await _tapVisible(tester, find.text('剤形'));
     await _tapVisible(tester, find.text('錠剤'));
     await _tapVisible(tester, find.text('投与経路'));
-    await _tapVisible(tester, find.text('経口'));
+    await _tapVisible(tester, find.text('内服'));
     await _tapVisible(tester, find.textContaining('結果を見る'));
     await tester.pumpAndSettle();
 

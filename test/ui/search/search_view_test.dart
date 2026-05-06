@@ -2128,8 +2128,8 @@ void main() {
     await _tapVisible(tester, find.text('錠剤'));
     await _tapVisible(tester, find.text('投与経路'));
     await tester.pumpAndSettle();
-    expect(find.text('経口'), findsOneWidget);
-    await _tapVisible(tester, find.text('経口'));
+    expect(find.text('内服'), findsOneWidget);
+    await _tapVisible(tester, find.text('内服'));
     await _tapVisible(tester, find.text('ATC 第 1 階層'));
     await tester.pumpAndSettle();
     expect(find.text('C 循環器系'), findsOneWidget);
