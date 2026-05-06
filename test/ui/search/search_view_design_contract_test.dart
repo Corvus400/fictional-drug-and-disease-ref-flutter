@@ -929,6 +929,7 @@ void main() {
     await tester.pumpAndSettle();
 
     final cancel = tester.widget<Text>(find.text('キャンセル'));
+    expect(cancel.style?.color, SearchPalette.light.primary);
     expect(cancel.style?.fontWeight, FontWeight.w700);
   });
 
