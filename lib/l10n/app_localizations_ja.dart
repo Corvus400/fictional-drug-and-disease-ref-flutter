@@ -507,7 +507,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get searchDiseaseDepartmentGastroenterology => '消化器内科';
 
   @override
-  String get searchDiseaseDepartmentEndocrinology => '内分泌内科';
+  String get searchDiseaseDepartmentEndocrinology => '内分泌代謝科';
 
   @override
   String get searchDiseaseDepartmentNeurology => '神経内科';
