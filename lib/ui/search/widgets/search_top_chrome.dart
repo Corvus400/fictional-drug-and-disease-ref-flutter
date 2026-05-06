@@ -95,7 +95,10 @@ class _SearchTopChrome extends StatelessWidget {
                       onPressed: onCancel,
                       child: Text(
                         l10n.searchActionCancel,
-                        style: const TextStyle(fontWeight: FontWeight.w700),
+                        style: TextStyle(
+                          color: palette.primary,
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
                     )
                   else
