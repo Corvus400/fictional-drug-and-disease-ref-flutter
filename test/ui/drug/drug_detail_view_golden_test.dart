@@ -161,6 +161,14 @@ void main() {
     constraints: const BoxConstraints.tightFor(width: 834, height: 1194),
     selectTabLabel: '注意・併用',
   );
+
+  _drugDetailGolden(
+    description: 'Drug detail tablet adverse effects light',
+    fileName: 'drug_t7_adverse_effects_light',
+    theme: AppTheme.light(),
+    constraints: const BoxConstraints.tightFor(width: 834, height: 1194),
+    selectTabLabel: '副作用',
+  );
 }
 
 void _drugDetailGolden({
