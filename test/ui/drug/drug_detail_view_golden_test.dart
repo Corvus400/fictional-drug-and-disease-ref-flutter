@@ -8,6 +8,8 @@ import 'package:fictional_drug_and_disease_ref/data/providers/api_providers.dart
 import 'package:fictional_drug_and_disease_ref/data/providers/local_providers.dart';
 import 'package:fictional_drug_and_disease_ref/data/services/api/drug_api_client.dart';
 import 'package:fictional_drug_and_disease_ref/l10n/app_localizations.dart';
+import 'package:fictional_drug_and_disease_ref/ui/drug/drug_detail_screen_notifier.dart';
+import 'package:fictional_drug_and_disease_ref/ui/drug/drug_detail_screen_state.dart';
 import 'package:fictional_drug_and_disease_ref/ui/drug/drug_detail_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -32,18 +34,18 @@ void main() {
     await _db.close();
   });
 
-  const tabs = <String, String?>{
-    'overview': null,
-    'dose': '用法・用量',
-    'caution': '注意・併用',
-    'adverse_effects': '副作用',
-    'pharmacokinetics': '薬物動態',
-    'related': '関連',
+  const tabs = <String, DrugDetailTab>{
+    'overview': DrugDetailTab.overview,
+    'dose': DrugDetailTab.dose,
+    'caution': DrugDetailTab.caution,
+    'adverse_effects': DrugDetailTab.adverseEffects,
+    'pharmacokinetics': DrugDetailTab.pharmacokinetics,
+    'related': DrugDetailTab.related,
   };
 
   for (final entry in tabs.entries) {
     final tabKey = entry.key;
-    final tabLabel = entry.value;
+    final tab = entry.value;
 
     runGoldenMatrix(
       fileNamePrefix: 'drug_$tabKey',
@@ -71,14 +73,13 @@ void main() {
       whilePerforming: (tester) async {
         await tester.pump();
         await tester.pump();
-        if (tabLabel != null) {
-          final tabFinder = find.text(tabLabel);
-          final count = tabFinder.evaluate().length;
-          for (var index = 0; index < count; index++) {
-            await tester.tap(tabFinder.at(index), warnIfMissed: false);
-            await tester.pump(const Duration(milliseconds: 250));
-          }
+        for (final element in find.byType(DrugDetailView).evaluate()) {
+          final container = ProviderScope.containerOf(element);
+          container
+              .read(drugDetailScreenProvider(_drugFixture().id).notifier)
+              .selectTab(tab);
         }
+        await tester.pumpAndSettle();
         return null;
       },
     );

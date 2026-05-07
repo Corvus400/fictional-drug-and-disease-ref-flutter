@@ -8,6 +8,8 @@ import 'package:fictional_drug_and_disease_ref/data/providers/api_providers.dart
 import 'package:fictional_drug_and_disease_ref/data/providers/local_providers.dart';
 import 'package:fictional_drug_and_disease_ref/data/services/api/disease_api_client.dart';
 import 'package:fictional_drug_and_disease_ref/l10n/app_localizations.dart';
+import 'package:fictional_drug_and_disease_ref/ui/disease/disease_detail_screen_notifier.dart';
+import 'package:fictional_drug_and_disease_ref/ui/disease/disease_detail_screen_state.dart';
 import 'package:fictional_drug_and_disease_ref/ui/disease/disease_detail_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -32,17 +34,17 @@ void main() {
     await _db.close();
   });
 
-  const tabs = <String, String?>{
-    'overview': null,
-    'diagnosis': '診断',
-    'treatment': '治療',
-    'clinical_course': '経過',
-    'related': '関連',
+  const tabs = <String, DiseaseDetailTab>{
+    'overview': DiseaseDetailTab.overview,
+    'diagnosis': DiseaseDetailTab.diagnosis,
+    'treatment': DiseaseDetailTab.treatment,
+    'clinical_course': DiseaseDetailTab.clinicalCourse,
+    'related': DiseaseDetailTab.related,
   };
 
   for (final entry in tabs.entries) {
     final tabKey = entry.key;
-    final tabLabel = entry.value;
+    final tab = entry.value;
 
     runGoldenMatrix(
       fileNamePrefix: 'disease_$tabKey',
@@ -70,14 +72,13 @@ void main() {
       whilePerforming: (tester) async {
         await tester.pump();
         await tester.pump();
-        if (tabLabel != null) {
-          final tabFinder = find.text(tabLabel);
-          final count = tabFinder.evaluate().length;
-          for (var index = 0; index < count; index++) {
-            await tester.tap(tabFinder.at(index), warnIfMissed: false);
-            await tester.pump(const Duration(milliseconds: 250));
-          }
+        for (final element in find.byType(DiseaseDetailView).evaluate()) {
+          final container = ProviderScope.containerOf(element);
+          container
+              .read(diseaseDetailScreenProvider(_diseaseFixture().id).notifier)
+              .selectTab(tab);
         }
+        await tester.pumpAndSettle();
         return null;
       },
     );

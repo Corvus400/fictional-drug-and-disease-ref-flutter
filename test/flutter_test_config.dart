@@ -36,6 +36,10 @@ Future<void> testExecutable(FutureOr<void> Function() testMain) async {
       platformGoldensConfig: PlatformGoldensConfig(
         enabled: Platform.isMacOS,
         platforms: {HostPlatform.macOS},
+        // ignore: avoid_redundant_argument_values, explicit golden default
+        renderShadows: true,
+        // ignore: avoid_redundant_argument_values, explicit golden default
+        obscureText: false,
       ),
       ciGoldensConfig: const CiGoldensConfig(enabled: false),
     ),
