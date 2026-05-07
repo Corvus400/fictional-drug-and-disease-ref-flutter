@@ -758,4 +758,173 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get errGoBack => '戻る';
+
+  @override
+  String get detailDrugTabOverview => '概要';
+
+  @override
+  String get detailDrugTabDose => '用法・用量';
+
+  @override
+  String get detailDrugTabCaution => '注意・併用';
+
+  @override
+  String get detailDrugTabAdverseEffects => '副作用';
+
+  @override
+  String get detailDrugTabPharmacokinetics => '薬物動態';
+
+  @override
+  String get detailDrugTabRelated => '関連';
+
+  @override
+  String get detailDrugSectionWarning => '警告';
+
+  @override
+  String get detailDrugSectionTherapeuticCategory => '薬効分類';
+
+  @override
+  String get detailDrugSectionComposition => '組成・性状';
+
+  @override
+  String get detailDrugSectionContraindications => '禁忌';
+
+  @override
+  String get detailDrugSectionIndications => '効能・効果';
+
+  @override
+  String get detailDrugSectionDosage => '用法・用量';
+
+  @override
+  String get detailDrugSectionDosageStandard => '標準';
+
+  @override
+  String get detailDrugSectionDosagePediatric => '年齢別';
+
+  @override
+  String get detailDrugSectionDosageRenal => '腎機能';
+
+  @override
+  String get detailDrugSectionDosageHepatic => '肝機能';
+
+  @override
+  String get detailDrugSectionDosageRelatedPrecautions => '用法・用量関連注意';
+
+  @override
+  String get detailDrugSectionImportantPrecautions => '重要な基本的注意';
+
+  @override
+  String get detailDrugSectionPrecautionsForSpecificPopulations => '特定背景患者';
+
+  @override
+  String get detailDrugSectionInteractions => '相互作用';
+
+  @override
+  String get detailDrugSectionInteractionsProhibited => '併用禁忌';
+
+  @override
+  String get detailDrugSectionInteractionsCaution => '併用注意';
+
+  @override
+  String get detailDrugSectionSeriousAdverseReactions => '重大な副作用';
+
+  @override
+  String get detailDrugSectionOtherAdverseReactions => 'その他副作用';
+
+  @override
+  String get detailDrugSectionFreqOver5 => '5%以上';
+
+  @override
+  String get detailDrugSectionFreq1to5 => '1〜5%';
+
+  @override
+  String get detailDrugSectionFreqUnder1 => '1%未満';
+
+  @override
+  String get detailDrugSectionFreqUnknown => '不明';
+
+  @override
+  String get detailDrugSectionPharmacokinetics => '薬物動態';
+
+  @override
+  String get detailDrugSectionBloodConcentration => '血中濃度';
+
+  @override
+  String get detailDrugSectionAbsorption => '吸収';
+
+  @override
+  String get detailDrugSectionDistribution => '分布';
+
+  @override
+  String get detailDrugSectionMetabolism => '代謝';
+
+  @override
+  String get detailDrugSectionExcretion => '排泄';
+
+  @override
+  String get detailDrugSectionParameters => 'PK パラメータ';
+
+  @override
+  String get detailDrugSectionAdditionalInfo => '補足情報';
+
+  @override
+  String get detailDrugSectionClinicalResults => '臨床成績';
+
+  @override
+  String get detailDrugSectionPharmacology => '薬効薬理';
+
+  @override
+  String get detailDrugSectionOverdose => '過量投与';
+
+  @override
+  String get detailDrugSectionEffectsOnLabTests => '臨床検査結果に及ぼす影響';
+
+  @override
+  String get detailDrugSectionOtherPrecautions => 'その他の注意';
+
+  @override
+  String get detailDrugSectionPhysicochemical => '有効成分に関する理化学的知見';
+
+  @override
+  String get detailDrugSectionPackages => '包装';
+
+  @override
+  String get detailDrugSectionHandlingPrecautions => '取扱い上の注意';
+
+  @override
+  String get detailDrugSectionInsuranceNotes => '保険給付上の注意';
+
+  @override
+  String get detailDrugSectionApprovalConditions => '承認条件';
+
+  @override
+  String get detailDrugSectionReferences => '主要文献';
+
+  @override
+  String get detailDrugSectionRevisedAt => '改訂日';
+
+  @override
+  String get detailDrugSectionManufacturer => '製造販売元';
+
+  @override
+  String get detailDrugSectionRelatedDiseases => '関連疾患';
+
+  @override
+  String get detailBookmarkAdd => 'ブックマークに追加';
+
+  @override
+  String get detailBookmarkRemove => 'ブックマークを解除';
+
+  @override
+  String get detailBookmarkToggleSemantics => 'ブックマーク状態を切り替え';
+
+  @override
+  String get detailBookmarkErrorMessage => 'ブックマークの更新に失敗しました';
+
+  @override
+  String get detailRetry => '再試行';
+
+  @override
+  String get detailDisclaimer =>
+      'FICTIONAL DATA - NOT FOR MEDICAL USE / 架空データ・医療判断には使用不可';
 }

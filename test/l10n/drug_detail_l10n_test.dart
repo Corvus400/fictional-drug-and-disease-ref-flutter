@@ -1,0 +1,74 @@
+import 'package:fictional_drug_and_disease_ref/l10n/app_localizations_ja.dart';
+import 'package:flutter_test/flutter_test.dart';
+
+void main() {
+  test('drug detail labels match Detail Spec tab and section copy', () {
+    final l10n = AppLocalizationsJa();
+
+    final labels = <(String actual, String expected)>[
+      (l10n.detailDrugTabOverview, '概要'),
+      (l10n.detailDrugTabDose, '用法・用量'),
+      (l10n.detailDrugTabCaution, '注意・併用'),
+      (l10n.detailDrugTabAdverseEffects, '副作用'),
+      (l10n.detailDrugTabPharmacokinetics, '薬物動態'),
+      (l10n.detailDrugTabRelated, '関連'),
+      (l10n.detailDrugSectionWarning, '警告'),
+      (l10n.detailDrugSectionTherapeuticCategory, '薬効分類'),
+      (l10n.detailDrugSectionComposition, '組成・性状'),
+      (l10n.detailDrugSectionContraindications, '禁忌'),
+      (l10n.detailDrugSectionIndications, '効能・効果'),
+      (l10n.detailDrugSectionDosage, '用法・用量'),
+      (l10n.detailDrugSectionDosageStandard, '標準'),
+      (l10n.detailDrugSectionDosagePediatric, '年齢別'),
+      (l10n.detailDrugSectionDosageRenal, '腎機能'),
+      (l10n.detailDrugSectionDosageHepatic, '肝機能'),
+      (l10n.detailDrugSectionDosageRelatedPrecautions, '用法・用量関連注意'),
+      (l10n.detailDrugSectionImportantPrecautions, '重要な基本的注意'),
+      (l10n.detailDrugSectionPrecautionsForSpecificPopulations, '特定背景患者'),
+      (l10n.detailDrugSectionInteractions, '相互作用'),
+      (l10n.detailDrugSectionInteractionsProhibited, '併用禁忌'),
+      (l10n.detailDrugSectionInteractionsCaution, '併用注意'),
+      (l10n.detailDrugSectionSeriousAdverseReactions, '重大な副作用'),
+      (l10n.detailDrugSectionOtherAdverseReactions, 'その他副作用'),
+      (l10n.detailDrugSectionFreqOver5, '5%以上'),
+      (l10n.detailDrugSectionFreq1to5, '1〜5%'),
+      (l10n.detailDrugSectionFreqUnder1, '1%未満'),
+      (l10n.detailDrugSectionFreqUnknown, '不明'),
+      (l10n.detailDrugSectionPharmacokinetics, '薬物動態'),
+      (l10n.detailDrugSectionBloodConcentration, '血中濃度'),
+      (l10n.detailDrugSectionAbsorption, '吸収'),
+      (l10n.detailDrugSectionDistribution, '分布'),
+      (l10n.detailDrugSectionMetabolism, '代謝'),
+      (l10n.detailDrugSectionExcretion, '排泄'),
+      (l10n.detailDrugSectionParameters, 'PK パラメータ'),
+      (l10n.detailDrugSectionAdditionalInfo, '補足情報'),
+      (l10n.detailDrugSectionClinicalResults, '臨床成績'),
+      (l10n.detailDrugSectionPharmacology, '薬効薬理'),
+      (l10n.detailDrugSectionOverdose, '過量投与'),
+      (l10n.detailDrugSectionEffectsOnLabTests, '臨床検査結果に及ぼす影響'),
+      (l10n.detailDrugSectionOtherPrecautions, 'その他の注意'),
+      (l10n.detailDrugSectionPhysicochemical, '有効成分に関する理化学的知見'),
+      (l10n.detailDrugSectionPackages, '包装'),
+      (l10n.detailDrugSectionHandlingPrecautions, '取扱い上の注意'),
+      (l10n.detailDrugSectionInsuranceNotes, '保険給付上の注意'),
+      (l10n.detailDrugSectionApprovalConditions, '承認条件'),
+      (l10n.detailDrugSectionReferences, '主要文献'),
+      (l10n.detailDrugSectionRevisedAt, '改訂日'),
+      (l10n.detailDrugSectionManufacturer, '製造販売元'),
+      (l10n.detailDrugSectionRelatedDiseases, '関連疾患'),
+      (l10n.detailBookmarkAdd, 'ブックマークに追加'),
+      (l10n.detailBookmarkRemove, 'ブックマークを解除'),
+      (l10n.detailBookmarkToggleSemantics, 'ブックマーク状態を切り替え'),
+      (l10n.detailBookmarkErrorMessage, 'ブックマークの更新に失敗しました'),
+      (l10n.detailRetry, '再試行'),
+      (
+        l10n.detailDisclaimer,
+        'FICTIONAL DATA - NOT FOR MEDICAL USE / 架空データ・医療判断には使用不可',
+      ),
+    ];
+
+    for (final label in labels) {
+      expect(label.$1, label.$2);
+    }
+  });
+}
