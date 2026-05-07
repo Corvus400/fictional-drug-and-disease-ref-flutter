@@ -1,8 +1,6 @@
-import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:alchemist/alchemist.dart';
 import 'package:fictional_drug_and_disease_ref/application/providers/usecase_providers.dart';
 import 'package:fictional_drug_and_disease_ref/data/dto/drug/drug_dto.dart';
 import 'package:fictional_drug_and_disease_ref/data/local/app_database.dart';
@@ -10,13 +8,13 @@ import 'package:fictional_drug_and_disease_ref/data/providers/api_providers.dart
 import 'package:fictional_drug_and_disease_ref/data/providers/local_providers.dart';
 import 'package:fictional_drug_and_disease_ref/data/services/api/drug_api_client.dart';
 import 'package:fictional_drug_and_disease_ref/l10n/app_localizations.dart';
-import 'package:fictional_drug_and_disease_ref/theme/app_theme.dart';
 import 'package:fictional_drug_and_disease_ref/ui/drug/drug_detail_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
+import '../../golden/golden_test_helpers.dart';
 import '../../helpers/test_app_database.dart';
 
 late AppDatabase _db;
@@ -34,242 +32,57 @@ void main() {
     await _db.close();
   });
 
-  _drugDetailGolden(
-    description: 'Drug detail phone overview light',
-    fileName: 'drug_p1_overview_light',
-    theme: AppTheme.light(),
-  );
+  const tabs = <String, String?>{
+    'overview': null,
+    'dose': '用法・用量',
+    'caution': '注意・併用',
+    'adverse_effects': '副作用',
+    'pharmacokinetics': '薬物動態',
+    'related': '関連',
+  };
 
-  _drugDetailGolden(
-    description: 'Drug detail phone overview dark',
-    fileName: 'drug_p2_overview_dark',
-    theme: AppTheme.dark(),
-  );
+  for (final entry in tabs.entries) {
+    final tabKey = entry.key;
+    final tabLabel = entry.value;
 
-  _drugDetailGolden(
-    description: 'Drug detail phone dose light',
-    fileName: 'drug_p3_dose_light',
-    theme: AppTheme.light(),
-    selectTabLabel: '用法・用量',
-  );
-
-  _drugDetailGolden(
-    description: 'Drug detail phone dose dark',
-    fileName: 'drug_p4_dose_dark',
-    theme: AppTheme.dark(),
-    selectTabLabel: '用法・用量',
-  );
-
-  _drugDetailGolden(
-    description: 'Drug detail phone caution light',
-    fileName: 'drug_p5_caution_light',
-    theme: AppTheme.light(),
-    selectTabLabel: '注意・併用',
-  );
-
-  _drugDetailGolden(
-    description: 'Drug detail phone caution dark',
-    fileName: 'drug_p6_caution_dark',
-    theme: AppTheme.dark(),
-    selectTabLabel: '注意・併用',
-  );
-
-  _drugDetailGolden(
-    description: 'Drug detail phone adverse effects light',
-    fileName: 'drug_p7_adverse_effects_light',
-    theme: AppTheme.light(),
-    selectTabLabel: '副作用',
-  );
-
-  _drugDetailGolden(
-    description: 'Drug detail phone adverse effects dark',
-    fileName: 'drug_p8_adverse_effects_dark',
-    theme: AppTheme.dark(),
-    selectTabLabel: '副作用',
-  );
-
-  _drugDetailGolden(
-    description: 'Drug detail phone pharmacokinetics light',
-    fileName: 'drug_p9_pharmacokinetics_light',
-    theme: AppTheme.light(),
-    selectTabLabel: '薬物動態',
-  );
-
-  _drugDetailGolden(
-    description: 'Drug detail phone pharmacokinetics dark',
-    fileName: 'drug_p10_pharmacokinetics_dark',
-    theme: AppTheme.dark(),
-    selectTabLabel: '薬物動態',
-  );
-
-  _drugDetailGolden(
-    description: 'Drug detail phone related light',
-    fileName: 'drug_p11_related_light',
-    theme: AppTheme.light(),
-    selectTabLabel: '関連',
-  );
-
-  _drugDetailGolden(
-    description: 'Drug detail phone related dark',
-    fileName: 'drug_p12_related_dark',
-    theme: AppTheme.dark(),
-    selectTabLabel: '関連',
-  );
-
-  _drugDetailGolden(
-    description: 'Drug detail tablet overview light',
-    fileName: 'drug_t1_overview_light',
-    theme: AppTheme.light(),
-    constraints: const BoxConstraints.tightFor(width: 834, height: 1194),
-  );
-
-  _drugDetailGolden(
-    description: 'Drug detail tablet overview dark',
-    fileName: 'drug_t2_overview_dark',
-    theme: AppTheme.dark(),
-    constraints: const BoxConstraints.tightFor(width: 834, height: 1194),
-  );
-
-  _drugDetailGolden(
-    description: 'Drug detail tablet dose light',
-    fileName: 'drug_t3_dose_light',
-    theme: AppTheme.light(),
-    constraints: const BoxConstraints.tightFor(width: 834, height: 1194),
-    selectTabLabel: '用法・用量',
-  );
-
-  _drugDetailGolden(
-    description: 'Drug detail tablet dose dark',
-    fileName: 'drug_t4_dose_dark',
-    theme: AppTheme.dark(),
-    constraints: const BoxConstraints.tightFor(width: 834, height: 1194),
-    selectTabLabel: '用法・用量',
-  );
-
-  _drugDetailGolden(
-    description: 'Drug detail tablet caution light',
-    fileName: 'drug_t5_caution_light',
-    theme: AppTheme.light(),
-    constraints: const BoxConstraints.tightFor(width: 834, height: 1194),
-    selectTabLabel: '注意・併用',
-  );
-
-  _drugDetailGolden(
-    description: 'Drug detail tablet caution dark',
-    fileName: 'drug_t6_caution_dark',
-    theme: AppTheme.dark(),
-    constraints: const BoxConstraints.tightFor(width: 834, height: 1194),
-    selectTabLabel: '注意・併用',
-  );
-
-  _drugDetailGolden(
-    description: 'Drug detail tablet adverse effects light',
-    fileName: 'drug_t7_adverse_effects_light',
-    theme: AppTheme.light(),
-    constraints: const BoxConstraints.tightFor(width: 834, height: 1194),
-    selectTabLabel: '副作用',
-  );
-
-  _drugDetailGolden(
-    description: 'Drug detail tablet adverse effects dark',
-    fileName: 'drug_t8_adverse_effects_dark',
-    theme: AppTheme.dark(),
-    constraints: const BoxConstraints.tightFor(width: 834, height: 1194),
-    selectTabLabel: '副作用',
-  );
-
-  _drugDetailGolden(
-    description: 'Drug detail tablet pharmacokinetics light',
-    fileName: 'drug_t9_pharmacokinetics_light',
-    theme: AppTheme.light(),
-    constraints: const BoxConstraints.tightFor(width: 834, height: 1194),
-    selectTabLabel: '薬物動態',
-  );
-
-  _drugDetailGolden(
-    description: 'Drug detail tablet pharmacokinetics dark',
-    fileName: 'drug_t10_pharmacokinetics_dark',
-    theme: AppTheme.dark(),
-    constraints: const BoxConstraints.tightFor(width: 834, height: 1194),
-    selectTabLabel: '薬物動態',
-  );
-
-  _drugDetailGolden(
-    description: 'Drug detail tablet related light',
-    fileName: 'drug_t11_related_light',
-    theme: AppTheme.light(),
-    constraints: const BoxConstraints.tightFor(width: 834, height: 1194),
-    selectTabLabel: '関連',
-  );
-
-  _drugDetailGolden(
-    description: 'Drug detail tablet related dark',
-    fileName: 'drug_t12_related_dark',
-    theme: AppTheme.dark(),
-    constraints: const BoxConstraints.tightFor(width: 834, height: 1194),
-    selectTabLabel: '関連',
-  );
-}
-
-void _drugDetailGolden({
-  required String description,
-  required String fileName,
-  required ThemeData theme,
-  BoxConstraints constraints = const BoxConstraints.tightFor(
-    width: 390,
-    height: 844,
-  ),
-  String? selectTabLabel,
-}) {
-  unawaited(
-    goldenTest(
-      description,
-      fileName: fileName,
-      constraints: constraints,
-      builder: () {
+    runGoldenMatrix(
+      fileNamePrefix: 'drug_$tabKey',
+      description: 'Drug detail $tabKey',
+      builder: (theme, size, scaler) {
         final dto = _drugFixture();
         final apiClient = _MockDrugApiClient();
         when(() => apiClient.getDrug(dto.id)).thenAnswer((_) async => dto);
-        return GoldenTestGroup(
-          children: [
-            GoldenTestScenario(
-              name: fileName,
-              child: SizedBox(
-                width: constraints.maxWidth,
-                height: constraints.maxHeight,
-                child: ProviderScope(
-                  overrides: [
-                    appDatabaseProvider.overrideWithValue(_db),
-                    drugApiClientProvider.overrideWithValue(apiClient),
-                    streamBookmarkStateProvider(
-                      dto.id,
-                    ).overrideWith((ref) => const Stream<bool>.empty()),
-                  ],
-                  child: MaterialApp(
-                    theme: theme,
-                    localizationsDelegates:
-                        AppLocalizations.localizationsDelegates,
-                    supportedLocales: AppLocalizations.supportedLocales,
-                    home: DrugDetailView(id: dto.id),
-                  ),
-                ),
-              ),
-            ),
+        return ProviderScope(
+          overrides: [
+            appDatabaseProvider.overrideWithValue(_db),
+            drugApiClientProvider.overrideWithValue(apiClient),
+            streamBookmarkStateProvider(
+              dto.id,
+            ).overrideWith((ref) => const Stream<bool>.empty()),
           ],
+          child: MaterialApp(
+            theme: theme,
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: DrugDetailView(id: dto.id),
+          ),
         );
       },
       whilePerforming: (tester) async {
         await tester.pump();
         await tester.pump();
-        if (selectTabLabel != null) {
-          await tester.tap(find.text(selectTabLabel));
-          await tester.pump(const Duration(milliseconds: 250));
+        if (tabLabel != null) {
+          final tabFinder = find.text(tabLabel);
+          final count = tabFinder.evaluate().length;
+          for (var index = 0; index < count; index++) {
+            await tester.tap(tabFinder.at(index), warnIfMissed: false);
+            await tester.pump(const Duration(milliseconds: 250));
+          }
         }
         return null;
       },
-      tags: ['golden'],
-    ),
-  );
+    );
+  }
 }
 
 final class _MockDrugApiClient extends Mock implements DrugApiClient {}

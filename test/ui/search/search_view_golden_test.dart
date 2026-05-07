@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:alchemist/alchemist.dart';
 import 'package:dio/dio.dart';
 import 'package:fictional_drug_and_disease_ref/application/providers/usecase_providers.dart';
 import 'package:fictional_drug_and_disease_ref/config/api_config.dart';
@@ -18,7 +17,6 @@ import 'package:fictional_drug_and_disease_ref/data/services/api/disease_api_cli
 import 'package:fictional_drug_and_disease_ref/data/services/api/drug_api_client.dart';
 import 'package:fictional_drug_and_disease_ref/domain/drug/drug_search_params.dart';
 import 'package:fictional_drug_and_disease_ref/l10n/app_localizations.dart';
-import 'package:fictional_drug_and_disease_ref/theme/app_theme.dart';
 import 'package:fictional_drug_and_disease_ref/ui/search/search_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
@@ -26,6 +24,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
+import '../../golden/golden_test_helpers.dart';
 import '../../helpers/test_app_database.dart';
 
 late AppDatabase _db;
@@ -50,341 +49,172 @@ void main() {
     await _db.close();
   });
 
-  _searchGolden(
-    description: 'S1 idle light',
-    fileName: 'search_s1_idle_light',
-    theme: AppTheme.light(),
-  );
-
-  _searchGolden(
-    description: 'S1 idle dark',
-    fileName: 'search_s1_idle_dark',
-    theme: AppTheme.dark(),
-  );
-
-  _searchGolden(
-    description: 'S2 history light',
-    fileName: 'search_s2_history_light',
-    theme: AppTheme.light(),
-    whilePerforming: _openHistory,
-  );
-
-  _searchGolden(
-    description: 'S2 history dark',
-    fileName: 'search_s2_history_dark',
-    theme: AppTheme.dark(),
-    whilePerforming: _openHistory,
-  );
-
-  _searchGolden(
-    description: 'S3 loading light',
-    fileName: 'search_s3_loading_light',
-    theme: AppTheme.light(),
+  _searchGoldenMatrix(name: 's1_idle');
+  _searchGoldenMatrix(name: 's2_history', whilePerforming: _openHistory);
+  _searchGoldenMatrix(
+    name: 's3_loading',
     responseCompleter: Completer<DrugListResponseDto>(),
     whilePerforming: _performPendingSearch,
   );
-
-  _searchGolden(
-    description: 'S3 loading dark',
-    fileName: 'search_s3_loading_dark',
-    theme: AppTheme.dark(),
-    responseCompleter: Completer<DrugListResponseDto>(),
-    whilePerforming: _performPendingSearch,
-  );
-
-  _searchGolden(
-    description: 'S4 loading more light',
-    fileName: 'search_s4_loading_more_light',
-    theme: AppTheme.light(),
+  _searchGoldenMatrix(
+    name: 's4_loading_more',
     response: _drugListFixture(),
     page2Completer: Completer<DrugListResponseDto>(),
     whilePerforming: _triggerLoadingMore,
   );
-
-  _searchGolden(
-    description: 'S4 loading more dark',
-    fileName: 'search_s4_loading_more_dark',
-    theme: AppTheme.dark(),
-    response: _drugListFixture(),
-    page2Completer: Completer<DrugListResponseDto>(),
-    whilePerforming: _triggerLoadingMore,
-  );
-
-  _searchGolden(
-    description: 'S5 drug results light',
-    fileName: 'search_s5_drug_results_light',
-    theme: AppTheme.light(),
+  _searchGoldenMatrix(
+    name: 's5_drug_results',
     response: _drugListFixture(),
     whilePerforming: _performSearch,
   );
-
-  _searchGolden(
-    description: 'S5 drug results dark',
-    fileName: 'search_s5_drug_results_dark',
-    theme: AppTheme.dark(),
-    response: _drugListFixture(),
-    whilePerforming: _performSearch,
-  );
-
-  _searchGolden(
-    description: 'S6 empty light',
-    fileName: 'search_s6_empty_light',
-    theme: AppTheme.light(),
+  _searchGoldenMatrix(
+    name: 's6_empty',
     response: _drugListFixture().copyWith(items: [], totalCount: 0),
     whilePerforming: _performSearch,
   );
-
-  _searchGolden(
-    description: 'S6 empty dark',
-    fileName: 'search_s6_empty_dark',
-    theme: AppTheme.dark(),
-    response: _drugListFixture().copyWith(items: [], totalCount: 0),
-    whilePerforming: _performSearch,
-  );
-
-  _searchGolden(
-    description: 'S7 error light',
-    fileName: 'search_s7_error_light',
-    theme: AppTheme.light(),
+  _searchGoldenMatrix(
+    name: 's7_error',
     error: DioException(
       requestOptions: RequestOptions(path: '/v1/drugs'),
       type: DioExceptionType.connectionError,
     ),
     whilePerforming: _performSearch,
   );
-
-  _searchGolden(
-    description: 'S8 drug filters light',
-    fileName: 'search_s8_filter_drugs_light',
-    theme: AppTheme.light(),
+  _searchGoldenMatrix(
+    name: 's8_filter_drugs',
     whilePerforming: _openDrugFilter,
   );
-
-  _searchGolden(
-    description: 'S8 drug filters dark',
-    fileName: 'search_s8_filter_drugs_dark',
-    theme: AppTheme.dark(),
-    whilePerforming: _openDrugFilter,
-  );
-
-  _searchGolden(
-    description: 'S9 disease filters light',
-    fileName: 'search_s9_filter_diseases_light',
-    theme: AppTheme.light(),
+  _searchGoldenMatrix(
+    name: 's9_filter_diseases',
     whilePerforming: _openDiseaseFilter,
   );
-
-  _searchGolden(
-    description: 'S9 disease filters dark',
-    fileName: 'search_s9_filter_diseases_dark',
-    theme: AppTheme.dark(),
-    whilePerforming: _openDiseaseFilter,
-  );
-
-  _searchGolden(
-    description: 'S10 sort light',
-    fileName: 'search_s10_sort_light',
-    theme: AppTheme.light(),
+  _searchGoldenMatrix(
+    name: 's10_sort',
     response: _drugListFixture(),
     whilePerforming: _openSort,
-  );
-
-  _searchGolden(
-    description: 'S10 sort dark',
-    fileName: 'search_s10_sort_dark',
-    theme: AppTheme.dark(),
-    response: _drugListFixture(),
-    whilePerforming: _openSort,
-  );
-
-  _searchGolden(
-    description: 'T1 tablet history light',
-    fileName: 'search_t1_tablet_history_light',
-    theme: AppTheme.light(),
-    constraints: const BoxConstraints.tightFor(width: 834, height: 1194),
-    whilePerforming: _openHistory,
-  );
-
-  _searchGolden(
-    description: 'T1 tablet history dark',
-    fileName: 'search_t1_tablet_history_dark',
-    theme: AppTheme.dark(),
-    constraints: const BoxConstraints.tightFor(width: 834, height: 1194),
-    whilePerforming: _openHistory,
-  );
-
-  _searchGolden(
-    description: 'T2 tablet results light',
-    fileName: 'search_t2_tablet_results_light',
-    theme: AppTheme.light(),
-    constraints: const BoxConstraints.tightFor(width: 834, height: 1194),
-    response: _drugListFixture(),
-    whilePerforming: _performSearch,
-  );
-
-  _searchGolden(
-    description: 'T2 tablet results dark',
-    fileName: 'search_t2_tablet_results_dark',
-    theme: AppTheme.dark(),
-    constraints: const BoxConstraints.tightFor(width: 834, height: 1194),
-    response: _drugListFixture(),
-    whilePerforming: _performSearch,
-  );
-
-  _searchGolden(
-    description: 'T3 tablet drug filters light',
-    fileName: 'search_t3_tablet_filter_light',
-    theme: AppTheme.light(),
-    constraints: const BoxConstraints.tightFor(width: 834, height: 1194),
-    whilePerforming: _openDrugFilter,
-  );
-
-  _searchGolden(
-    description: 'T3 tablet drug filters dark',
-    fileName: 'search_t3_tablet_filter_dark',
-    theme: AppTheme.dark(),
-    constraints: const BoxConstraints.tightFor(width: 834, height: 1194),
-    whilePerforming: _openDrugFilter,
-  );
-
-  _searchGolden(
-    description: 'S7 error dark',
-    fileName: 'search_s7_error_dark',
-    theme: AppTheme.dark(),
-    error: DioException(
-      requestOptions: RequestOptions(path: '/v1/drugs'),
-      type: DioExceptionType.connectionError,
-    ),
-    whilePerforming: _performSearch,
   );
 }
 
-void _searchGolden({
-  required String description,
-  required String fileName,
-  required ThemeData theme,
-  BoxConstraints constraints = const BoxConstraints.tightFor(
-    width: 390,
-    height: 844,
-  ),
+void _searchGoldenMatrix({
+  required String name,
   DrugListResponseDto? response,
   Completer<DrugListResponseDto>? responseCompleter,
   Completer<DrugListResponseDto>? page2Completer,
   Object? error,
-  Interaction? whilePerforming,
+  GoldenInteraction? whilePerforming,
 }) {
-  unawaited(
-    goldenTest(
-      description,
-      fileName: fileName,
-      constraints: constraints,
-      builder: () {
-        final drugApiClient = _MockDrugApiClient();
-        final diseaseApiClient = _MockDiseaseApiClient();
-        final categoryApiClient = _MockCategoryApiClient();
+  runGoldenMatrix(
+    fileNamePrefix: 'search_$name',
+    description: 'Search $name',
+    builder: (theme, size, scaler) {
+      final drugApiClient = _MockDrugApiClient();
+      final diseaseApiClient = _MockDiseaseApiClient();
+      final categoryApiClient = _MockCategoryApiClient();
+      when(
+        categoryApiClient.getCategories,
+      ).thenAnswer((_) async => _categoriesFixture());
+      when(
+        () => diseaseApiClient.getDiseases(
+          page: any(named: 'page'),
+          pageSize: any(named: 'pageSize'),
+          icd10Chapter: any(named: 'icd10Chapter'),
+          department: any(named: 'department'),
+          chronicity: any(named: 'chronicity'),
+          infectious: any(named: 'infectious'),
+          keyword: any(named: 'keyword'),
+          keywordMatch: any(named: 'keywordMatch'),
+          keywordTarget: any(named: 'keywordTarget'),
+          symptomKeyword: any(named: 'symptomKeyword'),
+          onsetPattern: any(named: 'onsetPattern'),
+          examCategory: any(named: 'examCategory'),
+          hasPharmacologicalTreatment: any(
+            named: 'hasPharmacologicalTreatment',
+          ),
+          hasSeverityGrading: any(named: 'hasSeverityGrading'),
+          sort: any(named: 'sort'),
+        ),
+      ).thenAnswer((_) async => _diseaseListFixture());
+
+      if (error != null) {
         when(
-          categoryApiClient.getCategories,
-        ).thenAnswer((_) async => _categoriesFixture());
-        when(
-          () => diseaseApiClient.getDiseases(
+          () => drugApiClient.getDrugs(
             page: any(named: 'page'),
             pageSize: any(named: 'pageSize'),
-            icd10Chapter: any(named: 'icd10Chapter'),
-            department: any(named: 'department'),
-            chronicity: any(named: 'chronicity'),
-            infectious: any(named: 'infectious'),
+            categoryAtc: any(named: 'categoryAtc'),
+            therapeuticCategory: any(named: 'therapeuticCategory'),
+            regulatoryClass: any(named: 'regulatoryClass'),
+            dosageForm: any(named: 'dosageForm'),
+            route: any(named: 'route'),
             keyword: any(named: 'keyword'),
             keywordMatch: any(named: 'keywordMatch'),
             keywordTarget: any(named: 'keywordTarget'),
-            symptomKeyword: any(named: 'symptomKeyword'),
-            onsetPattern: any(named: 'onsetPattern'),
-            examCategory: any(named: 'examCategory'),
-            hasPharmacologicalTreatment: any(
-              named: 'hasPharmacologicalTreatment',
-            ),
-            hasSeverityGrading: any(named: 'hasSeverityGrading'),
+            adverseReactionKeyword: any(named: 'adverseReactionKeyword'),
+            precautionCategory: any(named: 'precautionCategory'),
             sort: any(named: 'sort'),
           ),
-        ).thenAnswer((_) async => _diseaseListFixture());
-        if (error != null) {
-          when(
-            () => drugApiClient.getDrugs(
-              page: any(named: 'page'),
-              pageSize: any(named: 'pageSize'),
-              categoryAtc: any(named: 'categoryAtc'),
-              therapeuticCategory: any(named: 'therapeuticCategory'),
-              regulatoryClass: any(named: 'regulatoryClass'),
-              dosageForm: any(named: 'dosageForm'),
-              route: any(named: 'route'),
-              keyword: any(named: 'keyword'),
-              keywordMatch: any(named: 'keywordMatch'),
-              keywordTarget: any(named: 'keywordTarget'),
-              adverseReactionKeyword: any(named: 'adverseReactionKeyword'),
-              precautionCategory: any(named: 'precautionCategory'),
-              sort: any(named: 'sort'),
-            ),
-          ).thenThrow(error);
-        } else {
-          when(
-            () => drugApiClient.getDrugs(
-              page: any(named: 'page'),
-              pageSize: any(named: 'pageSize'),
-              categoryAtc: any(named: 'categoryAtc'),
-              therapeuticCategory: any(named: 'therapeuticCategory'),
-              regulatoryClass: any(named: 'regulatoryClass'),
-              dosageForm: any(named: 'dosageForm'),
-              route: any(named: 'route'),
-              keyword: any(named: 'keyword'),
-              keywordMatch: any(named: 'keywordMatch'),
-              keywordTarget: any(named: 'keywordTarget'),
-              adverseReactionKeyword: any(named: 'adverseReactionKeyword'),
-              precautionCategory: any(named: 'precautionCategory'),
-              sort: any(named: 'sort'),
-            ),
-          ).thenAnswer((invocation) {
-            final page = invocation.namedArguments[#page] as int? ?? 1;
-            if (page == 2 && page2Completer != null) {
-              return page2Completer.future;
-            }
-            if (responseCompleter != null) {
-              return responseCompleter.future;
-            }
-            return Future.value(response ?? _drugListFixture());
-          });
-        }
-        final imageCacheManager = _MockBaseCacheManager();
+        ).thenThrow(error);
+      } else {
         when(
-          () => imageCacheManager.getSingleFile(
-            any(),
-            key: any(named: 'key'),
-            headers: any(named: 'headers'),
+          () => drugApiClient.getDrugs(
+            page: any(named: 'page'),
+            pageSize: any(named: 'pageSize'),
+            categoryAtc: any(named: 'categoryAtc'),
+            therapeuticCategory: any(named: 'therapeuticCategory'),
+            regulatoryClass: any(named: 'regulatoryClass'),
+            dosageForm: any(named: 'dosageForm'),
+            route: any(named: 'route'),
+            keyword: any(named: 'keyword'),
+            keywordMatch: any(named: 'keywordMatch'),
+            keywordTarget: any(named: 'keywordTarget'),
+            adverseReactionKeyword: any(named: 'adverseReactionKeyword'),
+            precautionCategory: any(named: 'precautionCategory'),
+            sort: any(named: 'sort'),
           ),
-        ).thenThrow(StateError('golden tests render the fallback image'));
-        return ProviderScope(
-          overrides: [
-            appDatabaseProvider.overrideWithValue(_db),
-            drugApiClientProvider.overrideWithValue(drugApiClient),
-            diseaseApiClientProvider.overrideWithValue(diseaseApiClient),
-            categoryApiClientProvider.overrideWithValue(categoryApiClient),
-            drugCardImageCacheManagerProvider.overrideWithValue(
-              imageCacheManager,
-            ),
-          ],
-          child: MaterialApp(
-            theme: theme,
-            localizationsDelegates: AppLocalizations.localizationsDelegates,
-            supportedLocales: AppLocalizations.supportedLocales,
-            home: SearchView(currentTime: DateTime.utc(2026, 5, 5, 9)),
+        ).thenAnswer((invocation) {
+          final page = invocation.namedArguments[#page] as int? ?? 1;
+          if (page == 2 && page2Completer != null) {
+            return page2Completer.future;
+          }
+          if (responseCompleter != null) {
+            return responseCompleter.future;
+          }
+          return Future.value(response ?? _drugListFixture());
+        });
+      }
+
+      final imageCacheManager = _MockBaseCacheManager();
+      when(
+        () => imageCacheManager.getSingleFile(
+          any(),
+          key: any(named: 'key'),
+          headers: any(named: 'headers'),
+        ),
+      ).thenThrow(StateError('golden tests render the fallback image'));
+
+      return ProviderScope(
+        overrides: [
+          appDatabaseProvider.overrideWithValue(_db),
+          drugApiClientProvider.overrideWithValue(drugApiClient),
+          diseaseApiClientProvider.overrideWithValue(diseaseApiClient),
+          categoryApiClientProvider.overrideWithValue(categoryApiClient),
+          drugCardImageCacheManagerProvider.overrideWithValue(
+            imageCacheManager,
           ),
-        );
-      },
-      whilePerforming: whilePerforming,
-    ),
+        ],
+        child: MaterialApp(
+          theme: theme,
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: SearchView(currentTime: DateTime.utc(2026, 5, 5, 9)),
+        ),
+      );
+    },
+    whilePerforming: whilePerforming,
   );
 }
 
 Future<Future<void> Function()?> _openHistory(WidgetTester tester) async {
-  final context = tester.element(find.byType(SearchView));
+  final context = tester.element(find.byType(SearchView).first);
   final container = ProviderScope.containerOf(context);
   final repository = container.read(searchHistoryRepositoryProvider);
   final codec = container.read(searchQueryCodecProvider);
@@ -402,14 +232,14 @@ Future<Future<void> Function()?> _openHistory(WidgetTester tester) async {
     searchedAt: DateTime.utc(2026, 5, 4, 22, 15),
     totalCount: 8,
   );
-  await tester.tap(find.byKey(const ValueKey('search-field')));
+  await tester.tap(find.byKey(const ValueKey('search-field')).first);
   await tester.pumpAndSettle();
   return null;
 }
 
 Future<Future<void> Function()?> _performSearch(WidgetTester tester) async {
   await tester.enterText(
-    find.byKey(const ValueKey('search-field')),
+    find.byKey(const ValueKey('search-field')).first,
     'golden keyword',
   );
   await tester.tap(find.byType(FilledButton).first);
@@ -421,7 +251,7 @@ Future<Future<void> Function()?> _performPendingSearch(
   WidgetTester tester,
 ) async {
   await tester.enterText(
-    find.byKey(const ValueKey('search-field')),
+    find.byKey(const ValueKey('search-field')).first,
     'アムロ',
   );
   await tester.tap(find.byType(FilledButton).first);
@@ -434,7 +264,7 @@ Future<Future<void> Function()?> _triggerLoadingMore(
 ) async {
   await _performSearch(tester);
   await tester.drag(
-    find.byKey(const PageStorageKey<String>('drugSearchResults')),
+    find.byKey(const PageStorageKey<String>('drugSearchResults')).first,
     const Offset(0, -820),
   );
   await tester.pump();
@@ -442,17 +272,23 @@ Future<Future<void> Function()?> _triggerLoadingMore(
 }
 
 Future<Future<void> Function()?> _openDrugFilter(WidgetTester tester) async {
-  await tester.enterText(find.byKey(const ValueKey('search-field')), 'アムロ');
-  await tester.tap(find.byType(FloatingActionButton));
+  await tester.enterText(
+    find.byKey(const ValueKey('search-field')).first,
+    'アムロ',
+  );
+  await tester.tap(find.byType(FloatingActionButton).first);
   await tester.pumpAndSettle();
   return null;
 }
 
 Future<Future<void> Function()?> _openDiseaseFilter(WidgetTester tester) async {
-  await tester.tap(find.text('疾患'));
+  await tester.tap(find.text('疾患').first);
   await tester.pumpAndSettle();
-  await tester.enterText(find.byKey(const ValueKey('search-field')), '高血圧');
-  await tester.tap(find.byType(FloatingActionButton));
+  await tester.enterText(
+    find.byKey(const ValueKey('search-field')).first,
+    '高血圧',
+  );
+  await tester.tap(find.byType(FloatingActionButton).first);
   await tester.pumpAndSettle();
   return null;
 }
