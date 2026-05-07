@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:fictional_drug_and_disease_ref/application/providers/usecase_providers.dart';
 import 'package:fictional_drug_and_disease_ref/application/usecases/observe_bookmark_state_usecase.dart';
+import 'package:fictional_drug_and_disease_ref/application/usecases/toggle_bookmark_usecase.dart';
 import 'package:fictional_drug_and_disease_ref/application/usecases/view_disease_detail_usecase.dart';
 import 'package:fictional_drug_and_disease_ref/application/usecases/view_drug_detail_usecase.dart';
 import 'package:fictional_drug_and_disease_ref/config/api_config.dart';
@@ -66,6 +67,32 @@ void main() {
     expect(
       container.read(observeBookmarkStateUsecaseProvider),
       isA<ObserveBookmarkStateUsecase>(),
+    );
+    expect(
+      container.read(toggleBookmarkUsecaseProvider),
+      isA<ToggleBookmarkUsecase>(),
+    );
+  });
+
+  test('streamBookmarkStateProvider exposes bookmark state by id', () async {
+    final container = ProviderContainer();
+    addTearDown(container.dispose);
+    final subscription = container.listen(
+      streamBookmarkStateProvider('drug_001'),
+      (_, _) {},
+    );
+    addTearDown(subscription.close);
+
+    await expectLater(
+      container.read(streamBookmarkStateProvider('drug_001').future),
+      completion(isFalse),
+    );
+  });
+
+  test('streamBookmarkStateProvider reuses the provider for the same id', () {
+    expect(
+      streamBookmarkStateProvider('drug_001'),
+      streamBookmarkStateProvider('drug_001'),
     );
   });
 }
