@@ -1,8 +1,22 @@
+import 'package:fictional_drug_and_disease_ref/core/error/app_exception.dart';
+import 'package:fictional_drug_and_disease_ref/core/error/error_message_mapper.dart';
+import 'package:fictional_drug_and_disease_ref/domain/drug/drug.dart';
 import 'package:fictional_drug_and_disease_ref/l10n/app_localizations.dart';
+import 'package:fictional_drug_and_disease_ref/ui/detail/constants/detail_constants.dart';
+import 'package:fictional_drug_and_disease_ref/ui/detail/widgets/detail_bookmark_footer.dart';
+import 'package:fictional_drug_and_disease_ref/ui/drug/drug_detail_screen_notifier.dart';
+import 'package:fictional_drug_and_disease_ref/ui/drug/drug_detail_screen_state.dart';
+import 'package:fictional_drug_and_disease_ref/ui/drug/widgets/drug_detail_adverse_effects_tab.dart';
+import 'package:fictional_drug_and_disease_ref/ui/drug/widgets/drug_detail_caution_tab.dart';
+import 'package:fictional_drug_and_disease_ref/ui/drug/widgets/drug_detail_dose_tab.dart';
+import 'package:fictional_drug_and_disease_ref/ui/drug/widgets/drug_detail_overview_tab.dart';
+import 'package:fictional_drug_and_disease_ref/ui/drug/widgets/drug_detail_pharmacokinetics_tab.dart';
+import 'package:fictional_drug_and_disease_ref/ui/drug/widgets/drug_detail_related_tab.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Drug detail placeholder.
-class DrugDetailView extends StatelessWidget {
+class DrugDetailView extends ConsumerWidget {
   /// Creates a drug detail view.
   const DrugDetailView({required this.id, super.key});
 
@@ -10,11 +24,195 @@ class DrugDetailView extends StatelessWidget {
   final String id;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
+    final state = ref.watch(drugDetailScreenProvider(id));
+    final notifier = ref.read(drugDetailScreenProvider(id).notifier);
     return Scaffold(
       appBar: AppBar(title: Text(l10n.drugDetailTitle)),
-      body: Center(child: Text(l10n.detailId(id))),
+      body: switch (state.phase) {
+        DrugDetailLoadingPhase() => const Center(
+          child: CircularProgressIndicator(),
+        ),
+        DrugDetailErrorPhase(:final error) => _DetailErrorView(
+          error: error,
+          onRetry: notifier.retry,
+        ),
+        DrugDetailLoadedPhase(:final drug) => _DrugLoadedView(
+          state: state,
+          drug: drug,
+          onSelectTab: notifier.selectTab,
+          onToggleBookmark: notifier.toggleBookmark,
+          onClearBookmarkError: notifier.clearBookmarkError,
+        ),
+      },
     );
   }
+}
+
+class _DrugLoadedView extends StatelessWidget {
+  const _DrugLoadedView({
+    required this.state,
+    required this.drug,
+    required this.onSelectTab,
+    required this.onToggleBookmark,
+    required this.onClearBookmarkError,
+  });
+
+  final DrugDetailScreenState state;
+  final Drug drug;
+  final ValueChanged<DrugDetailTab> onSelectTab;
+  final VoidCallback onToggleBookmark;
+  final VoidCallback onClearBookmarkError;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return Column(
+      children: [
+        Expanded(
+          child: ListView(
+            padding: const EdgeInsets.all(DetailConstants.contentPadding),
+            children: [
+              Text(
+                drug.genericName,
+                key: const ValueKey('drug-detail-generic-name'),
+              ),
+              Text(
+                drug.brandName,
+                key: const ValueKey('drug-detail-brand-name'),
+                style: Theme.of(context).textTheme.headlineSmall,
+              ),
+              Text(
+                drug.brandNameKana,
+                key: const ValueKey('drug-detail-brand-name-kana'),
+              ),
+              const SizedBox(height: DetailConstants.gapM),
+              Wrap(
+                spacing: DetailConstants.gapS,
+                runSpacing: DetailConstants.gapS,
+                children: [
+                  for (final tab in DrugDetailTab.values)
+                    ChoiceChip(
+                      label: Text(_drugTabLabel(l10n, tab)),
+                      selected: state.activeTab == tab,
+                      onSelected: (_) => onSelectTab(tab),
+                    ),
+                ],
+              ),
+              const SizedBox(height: DetailConstants.gapM),
+              AnimatedSwitcher(
+                key: const ValueKey('drug-detail-active-tab-switcher'),
+                duration: DetailConstants.tabSwitchDuration,
+                child: _activeDrugTabBody(l10n, drug, state.activeTab),
+              ),
+            ],
+          ),
+        ),
+        DetailBookmarkFooter(
+          isBookmarked: state.isBookmarked,
+          isBusy: state.isBookmarkBusy,
+          bookmarkError: state.bookmarkError,
+          onToggleBookmark: onToggleBookmark,
+          onClearBookmarkError: onClearBookmarkError,
+        ),
+      ],
+    );
+  }
+}
+
+class _DetailErrorView extends StatelessWidget {
+  const _DetailErrorView({
+    required this.error,
+    required this.onRetry,
+  });
+
+  final AppException error;
+  final VoidCallback onRetry;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const Icon(
+            Icons.wifi_off_rounded,
+            size: DetailConstants.errorIconSize,
+          ),
+          const SizedBox(height: DetailConstants.gapM),
+          Text(_detailErrorMessage(l10n, error), textAlign: TextAlign.center),
+          const SizedBox(height: DetailConstants.gapL),
+          SizedBox(
+            width: DetailConstants.retryButtonWidth,
+            child: FilledButton(
+              onPressed: onRetry,
+              child: Text(l10n.detailRetry),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+String _detailErrorMessage(AppLocalizations l10n, AppException error) {
+  return switch (errorKeyFor(error)) {
+    'errNetwork' => l10n.errNetwork,
+    'errServer' => l10n.errServer,
+    'errApiNotFound' => l10n.errApiNotFound,
+    'errApiBadRequest' => l10n.errApiBadRequest,
+    'errApiInvalidCategory' => l10n.errApiInvalidCategory,
+    'errParse' => l10n.errParse,
+    'errStorageUnique' => l10n.errStorageUnique,
+    'errStorageCheck' => l10n.errStorageCheck,
+    'errStorageGeneric' => l10n.errStorageGeneric,
+    'errApi4xx' => l10n.errApi4xx(error is ApiException ? error.message : ''),
+    _ => l10n.errUnknown,
+  };
+}
+
+String _drugTabLabel(AppLocalizations l10n, DrugDetailTab tab) {
+  return switch (tab) {
+    DrugDetailTab.overview => l10n.detailDrugTabOverview,
+    DrugDetailTab.dose => l10n.detailDrugTabDose,
+    DrugDetailTab.caution => l10n.detailDrugTabCaution,
+    DrugDetailTab.adverseEffects => l10n.detailDrugTabAdverseEffects,
+    DrugDetailTab.pharmacokinetics => l10n.detailDrugTabPharmacokinetics,
+    DrugDetailTab.related => l10n.detailDrugTabRelated,
+  };
+}
+
+Widget _activeDrugTabBody(
+  AppLocalizations l10n,
+  Drug drug,
+  DrugDetailTab activeTab,
+) {
+  return switch (activeTab) {
+    DrugDetailTab.overview => DrugDetailOverviewTab(
+      key: const ValueKey('drug-detail-active-tab-body'),
+      drug: drug,
+    ),
+    DrugDetailTab.dose => DrugDetailDoseTab(
+      key: const ValueKey('drug-detail-active-tab-body'),
+      drug: drug,
+    ),
+    DrugDetailTab.caution => DrugDetailCautionTab(
+      key: const ValueKey('drug-detail-active-tab-body'),
+      drug: drug,
+    ),
+    DrugDetailTab.adverseEffects => DrugDetailAdverseEffectsTab(
+      key: const ValueKey('drug-detail-active-tab-body'),
+      drug: drug,
+    ),
+    DrugDetailTab.pharmacokinetics => DrugDetailPharmacokineticsTab(
+      key: const ValueKey('drug-detail-active-tab-body'),
+      drug: drug,
+    ),
+    DrugDetailTab.related => DrugDetailRelatedTab(
+      key: const ValueKey('drug-detail-active-tab-body'),
+      drug: drug,
+    ),
+  };
 }

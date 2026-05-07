@@ -1,4 +1,5 @@
 import 'package:fictional_drug_and_disease_ref/theme/app_palette.dart';
+import 'package:fictional_drug_and_disease_ref/ui/detail/constants/detail_constants.dart';
 import 'package:flutter/material.dart';
 
 /// Detail chip color source.
@@ -52,19 +53,22 @@ class DetailChip extends StatelessWidget {
       key: const ValueKey<String>('detail-chip-wrapper'),
       decoration: BoxDecoration(
         color: palette.surface,
-        border: Border.all(color: palette.hairline, width: 0.5),
-        borderRadius: BorderRadius.circular(10),
+        border: Border.all(
+          color: palette.hairline,
+          width: DetailConstants.chipHostBorderWidth,
+        ),
+        borderRadius: BorderRadius.circular(DetailConstants.chipHostRadius),
       ),
       child: Container(
         key: const ValueKey<String>('detail-chip'),
         constraints: const BoxConstraints(
-          minHeight: 30,
+          minHeight: DetailConstants.chipMinHeight,
         ),
         decoration: BoxDecoration(color: color),
         child: Text(
           label,
           softWrap: true,
-          style: const TextStyle(height: 1.35),
+          style: const TextStyle(height: DetailConstants.chipTextHeight),
         ),
       ),
     );
