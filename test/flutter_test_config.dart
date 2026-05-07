@@ -1,13 +1,40 @@
 import 'dart:async';
+import 'dart:io' show Directory, Platform, stderr;
 
 import 'package:alchemist/alchemist.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:path/path.dart' as p;
+
+import 'golden/_comparator/diff_image_comparator.dart';
+import 'golden/_helpers/font_loader.dart';
 
 Future<void> testExecutable(FutureOr<void> Function() testMain) async {
-  return AlchemistConfig.runWithConfig(
+  if (!Platform.isMacOS) {
+    stderr.writeln(
+      'WARNING: Golden tests are designed for macOS only. '
+      'Generated images on this host (${Platform.operatingSystem}) '
+      'MUST NOT be committed.',
+    );
+  }
+
+  TestWidgetsFlutterBinding.ensureInitialized();
+  await loadAppFontsForTest();
+
+  final cwd = Directory.current.path;
+  final resolvedTestFile = Uri.file(p.join(cwd, 'test', '_resolved.dart'));
+  goldenFileComparator = DiffImageComparator(
+    resolvedTestFile,
+    outputRoot: p.join(cwd, 'build', 'outputs', 'golden'),
+    resultsRoot: p.join(cwd, 'build', 'test-results', 'golden'),
+  );
+
+  await AlchemistConfig.runWithConfig(
     config: AlchemistConfig(
       platformGoldensConfig: PlatformGoldensConfig(
+        enabled: Platform.isMacOS,
         platforms: {HostPlatform.macOS},
       ),
+      ciGoldensConfig: const CiGoldensConfig(enabled: false),
     ),
     run: testMain,
   );
