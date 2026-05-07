@@ -59,4 +59,43 @@ abstract final class DetailConstants {
 
   /// Detail chip text line height.
   static const chipTextHeight = 1.35;
+
+  /// Detail panel vertical padding.
+  static const panelPaddingVertical = 14.0;
+
+  /// Detail panel horizontal padding.
+  static const panelPaddingHorizontal = 16.0;
+
+  /// Detail panel title-to-content gap.
+  static const panelTitleBottomGap = 10.0;
+
+  /// Detail panel title-to-subtitle gap.
+  static const panelSubtitleTopGap = 4.0;
+
+  /// Detail panel subtitle-to-content gap.
+  static const panelSubtitleBottomGap = 8.0;
+
+  /// Detail panel title row gap.
+  static const panelTitleGap = 8.0;
+
+  /// Detail panel section index horizontal padding.
+  static const panelIndexPaddingHorizontal = 5.0;
+
+  /// Detail panel section index vertical padding.
+  static const panelIndexPaddingVertical = 3.0;
+
+  /// Detail panel section index radius.
+  static const panelIndexRadius = 3.0;
+
+  /// Detail panel title font size.
+  static const panelTitleFontSize = 14.0;
+
+  /// Detail panel section index font size.
+  static const panelIndexFontSize = 9.0;
+
+  /// Detail panel sub index font size.
+  static const panelSubIndexFontSize = 10.0;
+
+  /// Detail panel subtitle font size.
+  static const panelSubtitleFontSize = 11.0;
 }
