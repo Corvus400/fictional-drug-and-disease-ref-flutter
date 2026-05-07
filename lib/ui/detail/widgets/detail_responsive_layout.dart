@@ -1,3 +1,4 @@
+import 'package:fictional_drug_and_disease_ref/theme/detail_color_extension.dart';
 import 'package:fictional_drug_and_disease_ref/ui/detail/constants/detail_constants.dart';
 import 'package:flutter/material.dart';
 
@@ -29,14 +30,66 @@ class DetailResponsiveLayout extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, constraints) {
         if (constraints.maxWidth >= DetailConstants.tabletBreakpoint) {
-          return Row(
+          final colors = _detailColors(context);
+          return Column(
             key: const ValueKey<String>('detail-tablet-layout'),
             children: [
-              SizedBox(
-                width: DetailConstants.tabletNavWidth,
-                child: Column(children: tabs),
+              if (appBar != null)
+                SizedBox(
+                  height: DetailConstants.appBarHeight,
+                  child: appBar,
+                ),
+              Expanded(
+                child: Row(
+                  key: const ValueKey<String>('detail-tablet-shell'),
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    SizedBox(
+                      key: const ValueKey<String>('detail-tablet-nav-pane'),
+                      width: DetailConstants.tabletNavWidth,
+                      child: DecoratedBox(
+                        decoration: BoxDecoration(
+                          color: colors.surfaceContainerLow,
+                          border: Border(
+                            right: BorderSide(color: colors.outlineVariant),
+                          ),
+                        ),
+                        child: Padding(
+                          key: const ValueKey<String>(
+                            'detail-tablet-nav-padding',
+                          ),
+                          padding: const EdgeInsets.symmetric(
+                            vertical: DetailConstants.tabletNavPaddingVertical,
+                          ),
+                          child: SingleChildScrollView(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: tabs,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      key: const ValueKey<String>('detail-tablet-content-pane'),
+                      child: SingleChildScrollView(
+                        key: const ValueKey<String>(
+                          'detail-tablet-content-scroll',
+                        ),
+                        padding: const EdgeInsets.only(
+                          bottom: DetailConstants.tabletContentBottomPadding,
+                        ),
+                        child: activeBody,
+                      ),
+                    ),
+                  ],
+                ),
               ),
-              Expanded(child: activeBody),
+              if (footer != null)
+                SizedBox(
+                  height: DetailConstants.footerHeight,
+                  child: footer,
+                ),
             ],
           );
         }
@@ -63,4 +116,15 @@ class DetailResponsiveLayout extends StatelessWidget {
       },
     );
   }
+}
+
+DetailColorExtension _detailColors(BuildContext context) {
+  final theme = Theme.of(context);
+  final extension = theme.extension<DetailColorExtension>();
+  if (extension != null) {
+    return extension;
+  }
+  return theme.brightness == Brightness.dark
+      ? DetailColorExtension.dark
+      : DetailColorExtension.light;
 }
