@@ -305,4 +305,25 @@ abstract final class DetailConstants {
 
   /// Detail carousel badge font size.
   static const carouselBadgeFontSize = 10.0;
+
+  /// Detail reference row summary vertical padding.
+  static const expandTileSummaryPaddingVertical = 10.0;
+
+  /// Detail reference row gap.
+  static const expandTileSummaryGap = 8.0;
+
+  /// Detail reference row title font size.
+  static const expandTileTitleFontSize = 12.0;
+
+  /// Detail reference body bottom padding.
+  static const expandTileBodyPaddingBottom = 12.0;
+
+  /// Detail reference body font size.
+  static const expandTileBodyFontSize = 11.5;
+
+  /// Detail reference body line height.
+  static const expandTileBodyLineHeight = 1.6;
+
+  /// Detail reference expansion animation duration.
+  static const expandTileDuration = Duration(milliseconds: 200);
 }
