@@ -1762,6 +1762,54 @@ abstract class AppLocalizations {
   /// **'製造販売元'**
   String get detailDrugSectionManufacturer;
 
+  /// No description provided for @detailDrugMetaRevisedPrefix.
+  ///
+  /// In ja, this message translates to:
+  /// **'改訂'**
+  String get detailDrugMetaRevisedPrefix;
+
+  /// No description provided for @detailDrugLabelAtcCode.
+  ///
+  /// In ja, this message translates to:
+  /// **'ATC コード'**
+  String get detailDrugLabelAtcCode;
+
+  /// No description provided for @detailDrugLabelTherapeuticHierarchy.
+  ///
+  /// In ja, this message translates to:
+  /// **'階層'**
+  String get detailDrugLabelTherapeuticHierarchy;
+
+  /// No description provided for @detailDrugLabelYjCode.
+  ///
+  /// In ja, this message translates to:
+  /// **'YJ コード'**
+  String get detailDrugLabelYjCode;
+
+  /// No description provided for @detailDrugLabelActiveIngredient.
+  ///
+  /// In ja, this message translates to:
+  /// **'有効成分'**
+  String get detailDrugLabelActiveIngredient;
+
+  /// No description provided for @detailDrugLabelInactiveIngredients.
+  ///
+  /// In ja, this message translates to:
+  /// **'添加物'**
+  String get detailDrugLabelInactiveIngredients;
+
+  /// No description provided for @detailDrugLabelAppearance.
+  ///
+  /// In ja, this message translates to:
+  /// **'外観'**
+  String get detailDrugLabelAppearance;
+
+  /// No description provided for @detailDrugLabelIdentificationCode.
+  ///
+  /// In ja, this message translates to:
+  /// **'識別コード'**
+  String get detailDrugLabelIdentificationCode;
+
   /// No description provided for @detailDrugSectionRelatedDiseases.
   ///
   /// In ja, this message translates to:

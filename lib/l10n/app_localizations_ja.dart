@@ -907,6 +907,30 @@ class AppLocalizationsJa extends AppLocalizations {
   String get detailDrugSectionManufacturer => '製造販売元';
 
   @override
+  String get detailDrugMetaRevisedPrefix => '改訂';
+
+  @override
+  String get detailDrugLabelAtcCode => 'ATC コード';
+
+  @override
+  String get detailDrugLabelTherapeuticHierarchy => '階層';
+
+  @override
+  String get detailDrugLabelYjCode => 'YJ コード';
+
+  @override
+  String get detailDrugLabelActiveIngredient => '有効成分';
+
+  @override
+  String get detailDrugLabelInactiveIngredients => '添加物';
+
+  @override
+  String get detailDrugLabelAppearance => '外観';
+
+  @override
+  String get detailDrugLabelIdentificationCode => '識別コード';
+
+  @override
   String get detailDrugSectionRelatedDiseases => '関連疾患';
 
   @override
