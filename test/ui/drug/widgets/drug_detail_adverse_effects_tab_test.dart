@@ -56,9 +56,43 @@ void main() {
       findsOneWidget,
     );
   });
+
+  testWidgets('DrugDetailAdverseEffectsTab localizes serious frequency enums', (
+    tester,
+  ) async {
+    final drug = _drugFixture(
+      seriousFrequencies: [
+        'over_5_percent',
+        'between_1_and_5_percent',
+        'under_1_percent',
+        'unknown',
+      ],
+    ).toDomain();
+
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: AppTheme.light(),
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        home: Scaffold(
+          body: SingleChildScrollView(
+            child: DrugDetailAdverseEffectsTab(drug: drug),
+          ),
+        ),
+      ),
+    );
+
+    expect(find.textContaining('5%以上 —'), findsOneWidget);
+    expect(find.textContaining('1〜5% —'), findsOneWidget);
+    expect(find.textContaining('1%未満 —'), findsOneWidget);
+    expect(find.textContaining('不明 —'), findsOneWidget);
+    expect(find.textContaining('over_5_percent'), findsNothing);
+    expect(find.textContaining('between_1_and_5_percent'), findsNothing);
+    expect(find.textContaining('under_1_percent'), findsNothing);
+  });
 }
 
-DrugDto _drugFixture() {
+DrugDto _drugFixture({List<String>? seriousFrequencies}) {
   final json =
       jsonDecode(
             File(
@@ -66,5 +100,19 @@ DrugDto _drugFixture() {
             ).readAsStringSync(),
           )
           as Map<String, dynamic>;
+  if (seriousFrequencies != null) {
+    final adverseReactions = json['adverse_reactions'] as Map<String, dynamic>;
+    final firstSerious =
+        (adverseReactions['serious'] as List<dynamic>).first
+            as Map<String, dynamic>;
+    adverseReactions['serious'] = [
+      for (final (index, frequency) in seriousFrequencies.indexed)
+        {
+          ...firstSerious,
+          'name': '重大な副作用 ${index + 1}',
+          'frequency': frequency,
+        },
+    ];
+  }
   return DrugDto.fromJson(json);
 }

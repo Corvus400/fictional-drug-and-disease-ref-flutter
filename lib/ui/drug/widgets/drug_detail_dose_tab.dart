@@ -133,13 +133,27 @@ Widget _doseInnerTabBody(Drug drug, _DoseInnerTab tab) {
           '${dose.range.label}: ${dose.dose}',
       ],
     ),
-    _DoseInnerTab.hepatic => _DoseAdjustmentList(
+    _DoseInnerTab.hepatic => Builder(
       key: const ValueKey<_DoseInnerTab>(_DoseInnerTab.hepatic),
-      items: [
-        for (final dose in drug.dosage.hepaticAdjustment)
-          '${dose.severity}: ${dose.dose}',
-      ],
+      builder: (context) {
+        final l10n = AppLocalizations.of(context)!;
+        return _DoseAdjustmentList(
+          items: [
+            for (final dose in drug.dosage.hepaticAdjustment)
+              '${_hepaticSeverityLabel(l10n, dose.severity)}: ${dose.dose}',
+          ],
+        );
+      },
     ),
+  };
+}
+
+String _hepaticSeverityLabel(AppLocalizations l10n, String severity) {
+  return switch (severity) {
+    'mild' => l10n.detailDrugHepaticSeverityMild,
+    'moderate' => l10n.detailDrugHepaticSeverityModerate,
+    'severe' => l10n.detailDrugHepaticSeveritySevere,
+    _ => severity,
   };
 }
 

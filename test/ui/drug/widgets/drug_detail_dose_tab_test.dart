@@ -68,9 +68,38 @@ void main() {
     await tester.pumpAndSettle();
     expect(tester.widget<Tab>(find.widgetWithText(Tab, '肝機能')).text, '肝機能');
   });
+
+  testWidgets('DrugDetailDoseTab localizes hepatic severity enums', (
+    tester,
+  ) async {
+    final drug = _drugFixture(
+      hepaticSeverities: ['mild', 'moderate', 'severe'],
+    ).toDomain();
+
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: AppTheme.light(),
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        home: Scaffold(
+          body: SingleChildScrollView(child: DrugDetailDoseTab(drug: drug)),
+        ),
+      ),
+    );
+
+    await tester.tap(find.text('肝機能'));
+    await tester.pumpAndSettle();
+
+    expect(find.textContaining('軽度:'), findsOneWidget);
+    expect(find.textContaining('中等度:'), findsOneWidget);
+    expect(find.textContaining('重度:'), findsOneWidget);
+    expect(find.textContaining('mild:'), findsNothing);
+    expect(find.textContaining('moderate:'), findsNothing);
+    expect(find.textContaining('severe:'), findsNothing);
+  });
 }
 
-DrugDto _drugFixture() {
+DrugDto _drugFixture({List<String>? hepaticSeverities}) {
   final json =
       jsonDecode(
             File(
@@ -78,5 +107,15 @@ DrugDto _drugFixture() {
             ).readAsStringSync(),
           )
           as Map<String, dynamic>;
+  if (hepaticSeverities != null) {
+    final dosage = json['dosage'] as Map<String, dynamic>;
+    dosage['hepatic_adjustment'] = [
+      for (final severity in hepaticSeverities)
+        {
+          'severity': severity,
+          'dose': '$severity dose',
+        },
+    ];
+  }
   return DrugDto.fromJson(json);
 }

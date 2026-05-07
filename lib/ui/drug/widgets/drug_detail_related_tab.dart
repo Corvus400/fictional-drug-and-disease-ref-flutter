@@ -110,7 +110,9 @@ String _storageConditionLabel(
 
 String _storageTemperatureLabel(AppLocalizations l10n, String temperature) {
   return switch (temperature) {
+    'room_temperature' => l10n.detailDrugStorageRoomTemperature,
     'cold' => l10n.detailDrugStorageCold,
+    'frozen' => l10n.detailDrugStorageFrozen,
     _ => temperature,
   };
 }
