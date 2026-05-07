@@ -66,6 +66,13 @@ void main() {
     theme: AppTheme.light(),
     selectTabLabel: '治療',
   );
+
+  _diseaseDetailGolden(
+    description: 'Disease detail phone treatment dark',
+    fileName: 'disease_p6_treatment_dark',
+    theme: AppTheme.dark(),
+    selectTabLabel: '治療',
+  );
 }
 
 void _diseaseDetailGolden({
