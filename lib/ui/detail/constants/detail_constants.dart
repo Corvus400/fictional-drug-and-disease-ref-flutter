@@ -383,4 +383,16 @@ abstract final class DetailConstants {
 
   /// Detail severity grade criteria bottom margin.
   static const severityGradeCriteriaBottomMargin = 2.0;
+
+  /// Detail exam table body font size.
+  static const examTableBodyFontSize = 11.5;
+
+  /// Detail exam table header font size.
+  static const examTableHeaderFontSize = 10.5;
+
+  /// Detail exam table cell padding.
+  static const examTableCellPadding = 6.0;
+
+  /// Detail exam table header letter spacing.
+  static const examTableHeaderLetterSpacing = 0.42;
 }
