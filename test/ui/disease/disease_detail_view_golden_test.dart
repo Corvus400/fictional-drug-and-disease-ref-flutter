@@ -45,6 +45,13 @@ void main() {
     fileName: 'disease_p2_overview_dark',
     theme: AppTheme.dark(),
   );
+
+  _diseaseDetailGolden(
+    description: 'Disease detail phone diagnosis light',
+    fileName: 'disease_p3_diagnosis_light',
+    theme: AppTheme.light(),
+    selectTabLabel: '診断',
+  );
 }
 
 void _diseaseDetailGolden({
