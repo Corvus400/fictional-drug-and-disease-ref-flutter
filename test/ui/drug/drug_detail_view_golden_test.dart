@@ -145,6 +145,14 @@ void main() {
     constraints: const BoxConstraints.tightFor(width: 834, height: 1194),
     selectTabLabel: '用法・用量',
   );
+
+  _drugDetailGolden(
+    description: 'Drug detail tablet caution light',
+    fileName: 'drug_t5_caution_light',
+    theme: AppTheme.light(),
+    constraints: const BoxConstraints.tightFor(width: 834, height: 1194),
+    selectTabLabel: '注意・併用',
+  );
 }
 
 void _drugDetailGolden({
