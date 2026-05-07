@@ -1618,6 +1618,18 @@ abstract class AppLocalizations {
   /// **'その他副作用'**
   String get detailDrugSectionOtherAdverseReactions;
 
+  /// No description provided for @detailDrugInitialSigns.
+  ///
+  /// In ja, this message translates to:
+  /// **'初期症状'**
+  String get detailDrugInitialSigns;
+
+  /// No description provided for @detailDrugCountermeasure.
+  ///
+  /// In ja, this message translates to:
+  /// **'対応'**
+  String get detailDrugCountermeasure;
+
   /// No description provided for @detailDrugSectionFreqOver5.
   ///
   /// In ja, this message translates to:

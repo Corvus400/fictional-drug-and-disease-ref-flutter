@@ -34,6 +34,8 @@ void main() {
       (l10n.detailDrugNoInteractions, '該当する薬剤はありません。'),
       (l10n.detailDrugSectionSeriousAdverseReactions, '重大な副作用'),
       (l10n.detailDrugSectionOtherAdverseReactions, 'その他副作用'),
+      (l10n.detailDrugInitialSigns, '初期症状'),
+      (l10n.detailDrugCountermeasure, '対応'),
       (l10n.detailDrugSectionFreqOver5, '5%以上'),
       (l10n.detailDrugSectionFreq1to5, '1〜5%'),
       (l10n.detailDrugSectionFreqUnder1, '1%未満'),

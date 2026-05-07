@@ -836,6 +836,12 @@ class AppLocalizationsJa extends AppLocalizations {
   String get detailDrugSectionOtherAdverseReactions => 'その他副作用';
 
   @override
+  String get detailDrugInitialSigns => '初期症状';
+
+  @override
+  String get detailDrugCountermeasure => '対応';
+
+  @override
   String get detailDrugSectionFreqOver5 => '5%以上';
 
   @override
