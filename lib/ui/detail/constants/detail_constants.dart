@@ -384,6 +384,9 @@ abstract final class DetailConstants {
   /// Detail carousel card width.
   static const carouselCardWidth = 184.0;
 
+  /// Detail related drug card width.
+  static const relatedDrugCardWidth = 260.0;
+
   /// Detail carousel card radius.
   static const carouselCardRadius = 12.0;
 

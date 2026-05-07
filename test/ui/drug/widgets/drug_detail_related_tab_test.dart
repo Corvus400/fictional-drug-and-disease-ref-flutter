@@ -78,6 +78,10 @@ void main() {
     expect(find.text('関連疾患'), findsOneWidget);
     expect(find.byType(DetailCarousel), findsOneWidget);
     expect(find.byType(DetailCarouselCard), findsWidgets);
+    expect(
+      find.byKey(const ValueKey<String>('detail-carousel-card-image')),
+      findsNothing,
+    );
     expect(find.byType(ListView), findsNothing);
     expect(find.text(diseaseId), findsOneWidget);
     expect(find.text(diseaseDto.name), findsOneWidget);

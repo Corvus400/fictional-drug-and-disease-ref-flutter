@@ -81,8 +81,6 @@ class DetailCarouselCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          const _CarouselImage(),
-          const SizedBox(height: DetailConstants.carouselCardGap),
           Text(
             title,
             softWrap: true,
@@ -112,31 +110,6 @@ class DetailCarouselCard extends StatelessWidget {
             ),
           ],
         ],
-      ),
-    );
-  }
-}
-
-class _CarouselImage extends StatelessWidget {
-  const _CarouselImage();
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = Theme.of(context).extension<DetailColorExtension>()!;
-    return Container(
-      key: const ValueKey<String>('detail-carousel-card-image'),
-      constraints: const BoxConstraints.tightFor(
-        height: DetailConstants.carouselCardImageHeight,
-      ),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(
-          DetailConstants.carouselCardImageRadius,
-        ),
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [colors.primaryContainer, colors.tertiaryContainer],
-        ),
       ),
     );
   }
