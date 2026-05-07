@@ -1750,6 +1750,18 @@ abstract class AppLocalizations {
   /// **'有効成分に関する理化学的知見'**
   String get detailDrugSectionPhysicochemical;
 
+  /// No description provided for @detailDrugSectionHandlingPackagesInsurance.
+  ///
+  /// In ja, this message translates to:
+  /// **'取扱い・包装・保険'**
+  String get detailDrugSectionHandlingPackagesInsurance;
+
+  /// No description provided for @detailDrugSectionApprovalReferences.
+  ///
+  /// In ja, this message translates to:
+  /// **'承認条件・参考文献'**
+  String get detailDrugSectionApprovalReferences;
+
   /// No description provided for @detailDrugSectionPackages.
   ///
   /// In ja, this message translates to:
@@ -1779,6 +1791,48 @@ abstract class AppLocalizations {
   /// In ja, this message translates to:
   /// **'主要文献'**
   String get detailDrugSectionReferences;
+
+  /// No description provided for @detailDrugPackageSizeHeader.
+  ///
+  /// In ja, this message translates to:
+  /// **'サイズ'**
+  String get detailDrugPackageSizeHeader;
+
+  /// No description provided for @detailDrugPackageStorageHeader.
+  ///
+  /// In ja, this message translates to:
+  /// **'保存'**
+  String get detailDrugPackageStorageHeader;
+
+  /// No description provided for @detailDrugPackageExpirationHeader.
+  ///
+  /// In ja, this message translates to:
+  /// **'有効期間'**
+  String get detailDrugPackageExpirationHeader;
+
+  /// No description provided for @detailDrugStorageCold.
+  ///
+  /// In ja, this message translates to:
+  /// **'冷所'**
+  String get detailDrugStorageCold;
+
+  /// No description provided for @detailDrugStorageLightProtection.
+  ///
+  /// In ja, this message translates to:
+  /// **'遮光'**
+  String get detailDrugStorageLightProtection;
+
+  /// No description provided for @detailDrugStorageMoistureProtection.
+  ///
+  /// In ja, this message translates to:
+  /// **'防湿'**
+  String get detailDrugStorageMoistureProtection;
+
+  /// No description provided for @detailDrugExpirationMonthsSuffix.
+  ///
+  /// In ja, this message translates to:
+  /// **'か月'**
+  String get detailDrugExpirationMonthsSuffix;
 
   /// No description provided for @detailDrugSectionRevisedAt.
   ///

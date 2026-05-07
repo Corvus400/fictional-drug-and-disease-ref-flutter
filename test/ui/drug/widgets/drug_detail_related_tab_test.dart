@@ -5,6 +5,10 @@ import 'package:fictional_drug_and_disease_ref/data/dto/drug/drug_dto.dart';
 import 'package:fictional_drug_and_disease_ref/data/mappers/drug_mapper.dart';
 import 'package:fictional_drug_and_disease_ref/l10n/app_localizations.dart';
 import 'package:fictional_drug_and_disease_ref/router/app_router.dart';
+import 'package:fictional_drug_and_disease_ref/theme/app_theme.dart';
+import 'package:fictional_drug_and_disease_ref/ui/detail/widgets/detail_carousel.dart';
+import 'package:fictional_drug_and_disease_ref/ui/detail/widgets/detail_exam_table.dart';
+import 'package:fictional_drug_and_disease_ref/ui/detail/widgets/detail_panel.dart';
 import 'package:fictional_drug_and_disease_ref/ui/drug/widgets/drug_detail_related_tab.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -21,7 +25,9 @@ void main() {
       routes: [
         GoRoute(
           path: AppRoutes.search,
-          builder: (context, state) => DrugDetailRelatedTab(drug: drug),
+          builder: (context, state) => SingleChildScrollView(
+            child: DrugDetailRelatedTab(drug: drug),
+          ),
           routes: [
             GoRoute(
               path: 'disease/:id',
@@ -37,15 +43,31 @@ void main() {
     await tester.pumpWidget(
       MaterialApp.router(
         routerConfig: router,
+        theme: AppTheme.light(),
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
       ),
     );
 
+    expect(find.byType(DetailPanel), findsNWidgets(3));
+    expect(find.text('D16'), findsOneWidget);
+    expect(find.text('取扱い・包装・保険'), findsOneWidget);
+    expect(find.byType(DetailExamTable), findsOneWidget);
+    expect(find.text(drug.packages.first.size), findsOneWidget);
+    expect(find.text('D17'), findsOneWidget);
+    expect(find.text('承認条件・参考文献'), findsOneWidget);
+    expect(
+      find.textContaining(drug.approvalConditions.first.content),
+      findsOneWidget,
+    );
+    expect(find.text('D18'), findsOneWidget);
     expect(find.text('関連疾患'), findsOneWidget);
-    expect(find.byType(ListView), findsOneWidget);
+    expect(find.byType(DetailCarousel), findsOneWidget);
+    expect(find.byType(DetailCarouselCard), findsWidgets);
+    expect(find.byType(ListView), findsNothing);
     expect(find.text(diseaseId), findsOneWidget);
 
+    await tester.ensureVisible(find.text(diseaseId));
     await tester.tap(find.text(diseaseId));
     await tester.pumpAndSettle();
 
