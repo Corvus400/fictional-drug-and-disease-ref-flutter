@@ -1467,6 +1467,342 @@ abstract class AppLocalizations {
   /// In ja, this message translates to:
   /// **'戻る'**
   String get errGoBack;
+
+  /// No description provided for @detailDrugTabOverview.
+  ///
+  /// In ja, this message translates to:
+  /// **'概要'**
+  String get detailDrugTabOverview;
+
+  /// No description provided for @detailDrugTabDose.
+  ///
+  /// In ja, this message translates to:
+  /// **'用法・用量'**
+  String get detailDrugTabDose;
+
+  /// No description provided for @detailDrugTabCaution.
+  ///
+  /// In ja, this message translates to:
+  /// **'注意・併用'**
+  String get detailDrugTabCaution;
+
+  /// No description provided for @detailDrugTabAdverseEffects.
+  ///
+  /// In ja, this message translates to:
+  /// **'副作用'**
+  String get detailDrugTabAdverseEffects;
+
+  /// No description provided for @detailDrugTabPharmacokinetics.
+  ///
+  /// In ja, this message translates to:
+  /// **'薬物動態'**
+  String get detailDrugTabPharmacokinetics;
+
+  /// No description provided for @detailDrugTabRelated.
+  ///
+  /// In ja, this message translates to:
+  /// **'関連'**
+  String get detailDrugTabRelated;
+
+  /// No description provided for @detailDrugSectionWarning.
+  ///
+  /// In ja, this message translates to:
+  /// **'警告'**
+  String get detailDrugSectionWarning;
+
+  /// No description provided for @detailDrugSectionTherapeuticCategory.
+  ///
+  /// In ja, this message translates to:
+  /// **'薬効分類'**
+  String get detailDrugSectionTherapeuticCategory;
+
+  /// No description provided for @detailDrugSectionComposition.
+  ///
+  /// In ja, this message translates to:
+  /// **'組成・性状'**
+  String get detailDrugSectionComposition;
+
+  /// No description provided for @detailDrugSectionContraindications.
+  ///
+  /// In ja, this message translates to:
+  /// **'禁忌'**
+  String get detailDrugSectionContraindications;
+
+  /// No description provided for @detailDrugSectionIndications.
+  ///
+  /// In ja, this message translates to:
+  /// **'効能・効果'**
+  String get detailDrugSectionIndications;
+
+  /// No description provided for @detailDrugSectionDosage.
+  ///
+  /// In ja, this message translates to:
+  /// **'用法・用量'**
+  String get detailDrugSectionDosage;
+
+  /// No description provided for @detailDrugSectionDosageStandard.
+  ///
+  /// In ja, this message translates to:
+  /// **'標準'**
+  String get detailDrugSectionDosageStandard;
+
+  /// No description provided for @detailDrugSectionDosagePediatric.
+  ///
+  /// In ja, this message translates to:
+  /// **'年齢別'**
+  String get detailDrugSectionDosagePediatric;
+
+  /// No description provided for @detailDrugSectionDosageRenal.
+  ///
+  /// In ja, this message translates to:
+  /// **'腎機能'**
+  String get detailDrugSectionDosageRenal;
+
+  /// No description provided for @detailDrugSectionDosageHepatic.
+  ///
+  /// In ja, this message translates to:
+  /// **'肝機能'**
+  String get detailDrugSectionDosageHepatic;
+
+  /// No description provided for @detailDrugSectionDosageRelatedPrecautions.
+  ///
+  /// In ja, this message translates to:
+  /// **'用法・用量関連注意'**
+  String get detailDrugSectionDosageRelatedPrecautions;
+
+  /// No description provided for @detailDrugSectionImportantPrecautions.
+  ///
+  /// In ja, this message translates to:
+  /// **'重要な基本的注意'**
+  String get detailDrugSectionImportantPrecautions;
+
+  /// No description provided for @detailDrugSectionPrecautionsForSpecificPopulations.
+  ///
+  /// In ja, this message translates to:
+  /// **'特定背景患者'**
+  String get detailDrugSectionPrecautionsForSpecificPopulations;
+
+  /// No description provided for @detailDrugSectionInteractions.
+  ///
+  /// In ja, this message translates to:
+  /// **'相互作用'**
+  String get detailDrugSectionInteractions;
+
+  /// No description provided for @detailDrugSectionInteractionsProhibited.
+  ///
+  /// In ja, this message translates to:
+  /// **'併用禁忌'**
+  String get detailDrugSectionInteractionsProhibited;
+
+  /// No description provided for @detailDrugSectionInteractionsCaution.
+  ///
+  /// In ja, this message translates to:
+  /// **'併用注意'**
+  String get detailDrugSectionInteractionsCaution;
+
+  /// No description provided for @detailDrugSectionSeriousAdverseReactions.
+  ///
+  /// In ja, this message translates to:
+  /// **'重大な副作用'**
+  String get detailDrugSectionSeriousAdverseReactions;
+
+  /// No description provided for @detailDrugSectionOtherAdverseReactions.
+  ///
+  /// In ja, this message translates to:
+  /// **'その他副作用'**
+  String get detailDrugSectionOtherAdverseReactions;
+
+  /// No description provided for @detailDrugSectionFreqOver5.
+  ///
+  /// In ja, this message translates to:
+  /// **'5%以上'**
+  String get detailDrugSectionFreqOver5;
+
+  /// No description provided for @detailDrugSectionFreq1to5.
+  ///
+  /// In ja, this message translates to:
+  /// **'1〜5%'**
+  String get detailDrugSectionFreq1to5;
+
+  /// No description provided for @detailDrugSectionFreqUnder1.
+  ///
+  /// In ja, this message translates to:
+  /// **'1%未満'**
+  String get detailDrugSectionFreqUnder1;
+
+  /// No description provided for @detailDrugSectionFreqUnknown.
+  ///
+  /// In ja, this message translates to:
+  /// **'不明'**
+  String get detailDrugSectionFreqUnknown;
+
+  /// No description provided for @detailDrugSectionPharmacokinetics.
+  ///
+  /// In ja, this message translates to:
+  /// **'薬物動態'**
+  String get detailDrugSectionPharmacokinetics;
+
+  /// No description provided for @detailDrugSectionBloodConcentration.
+  ///
+  /// In ja, this message translates to:
+  /// **'血中濃度'**
+  String get detailDrugSectionBloodConcentration;
+
+  /// No description provided for @detailDrugSectionAbsorption.
+  ///
+  /// In ja, this message translates to:
+  /// **'吸収'**
+  String get detailDrugSectionAbsorption;
+
+  /// No description provided for @detailDrugSectionDistribution.
+  ///
+  /// In ja, this message translates to:
+  /// **'分布'**
+  String get detailDrugSectionDistribution;
+
+  /// No description provided for @detailDrugSectionMetabolism.
+  ///
+  /// In ja, this message translates to:
+  /// **'代謝'**
+  String get detailDrugSectionMetabolism;
+
+  /// No description provided for @detailDrugSectionExcretion.
+  ///
+  /// In ja, this message translates to:
+  /// **'排泄'**
+  String get detailDrugSectionExcretion;
+
+  /// No description provided for @detailDrugSectionParameters.
+  ///
+  /// In ja, this message translates to:
+  /// **'PK パラメータ'**
+  String get detailDrugSectionParameters;
+
+  /// No description provided for @detailDrugSectionAdditionalInfo.
+  ///
+  /// In ja, this message translates to:
+  /// **'補足情報'**
+  String get detailDrugSectionAdditionalInfo;
+
+  /// No description provided for @detailDrugSectionClinicalResults.
+  ///
+  /// In ja, this message translates to:
+  /// **'臨床成績'**
+  String get detailDrugSectionClinicalResults;
+
+  /// No description provided for @detailDrugSectionPharmacology.
+  ///
+  /// In ja, this message translates to:
+  /// **'薬効薬理'**
+  String get detailDrugSectionPharmacology;
+
+  /// No description provided for @detailDrugSectionOverdose.
+  ///
+  /// In ja, this message translates to:
+  /// **'過量投与'**
+  String get detailDrugSectionOverdose;
+
+  /// No description provided for @detailDrugSectionEffectsOnLabTests.
+  ///
+  /// In ja, this message translates to:
+  /// **'臨床検査結果に及ぼす影響'**
+  String get detailDrugSectionEffectsOnLabTests;
+
+  /// No description provided for @detailDrugSectionOtherPrecautions.
+  ///
+  /// In ja, this message translates to:
+  /// **'その他の注意'**
+  String get detailDrugSectionOtherPrecautions;
+
+  /// No description provided for @detailDrugSectionPhysicochemical.
+  ///
+  /// In ja, this message translates to:
+  /// **'有効成分に関する理化学的知見'**
+  String get detailDrugSectionPhysicochemical;
+
+  /// No description provided for @detailDrugSectionPackages.
+  ///
+  /// In ja, this message translates to:
+  /// **'包装'**
+  String get detailDrugSectionPackages;
+
+  /// No description provided for @detailDrugSectionHandlingPrecautions.
+  ///
+  /// In ja, this message translates to:
+  /// **'取扱い上の注意'**
+  String get detailDrugSectionHandlingPrecautions;
+
+  /// No description provided for @detailDrugSectionInsuranceNotes.
+  ///
+  /// In ja, this message translates to:
+  /// **'保険給付上の注意'**
+  String get detailDrugSectionInsuranceNotes;
+
+  /// No description provided for @detailDrugSectionApprovalConditions.
+  ///
+  /// In ja, this message translates to:
+  /// **'承認条件'**
+  String get detailDrugSectionApprovalConditions;
+
+  /// No description provided for @detailDrugSectionReferences.
+  ///
+  /// In ja, this message translates to:
+  /// **'主要文献'**
+  String get detailDrugSectionReferences;
+
+  /// No description provided for @detailDrugSectionRevisedAt.
+  ///
+  /// In ja, this message translates to:
+  /// **'改訂日'**
+  String get detailDrugSectionRevisedAt;
+
+  /// No description provided for @detailDrugSectionManufacturer.
+  ///
+  /// In ja, this message translates to:
+  /// **'製造販売元'**
+  String get detailDrugSectionManufacturer;
+
+  /// No description provided for @detailDrugSectionRelatedDiseases.
+  ///
+  /// In ja, this message translates to:
+  /// **'関連疾患'**
+  String get detailDrugSectionRelatedDiseases;
+
+  /// No description provided for @detailBookmarkAdd.
+  ///
+  /// In ja, this message translates to:
+  /// **'ブックマークに追加'**
+  String get detailBookmarkAdd;
+
+  /// No description provided for @detailBookmarkRemove.
+  ///
+  /// In ja, this message translates to:
+  /// **'ブックマークを解除'**
+  String get detailBookmarkRemove;
+
+  /// No description provided for @detailBookmarkToggleSemantics.
+  ///
+  /// In ja, this message translates to:
+  /// **'ブックマーク状態を切り替え'**
+  String get detailBookmarkToggleSemantics;
+
+  /// No description provided for @detailBookmarkErrorMessage.
+  ///
+  /// In ja, this message translates to:
+  /// **'ブックマークの更新に失敗しました'**
+  String get detailBookmarkErrorMessage;
+
+  /// No description provided for @detailRetry.
+  ///
+  /// In ja, this message translates to:
+  /// **'再試行'**
+  String get detailRetry;
+
+  /// No description provided for @detailDisclaimer.
+  ///
+  /// In ja, this message translates to:
+  /// **'FICTIONAL DATA - NOT FOR MEDICAL USE / 架空データ・医療判断には使用不可'**
+  String get detailDisclaimer;
 }
 
 class _AppLocalizationsDelegate
