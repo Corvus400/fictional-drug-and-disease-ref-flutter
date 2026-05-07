@@ -138,6 +138,33 @@ abstract final class DetailConstants {
   /// Detail panel subtitle font size.
   static const panelSubtitleFontSize = 11.0;
 
+  /// Detail hero image height.
+  static const heroImageHeight = 140.0;
+
+  /// Detail hero metadata horizontal padding.
+  static const heroMetaPaddingHorizontal = 16.0;
+
+  /// Detail hero metadata vertical padding.
+  static const heroMetaPaddingVertical = 14.0;
+
+  /// Detail hero generic name font size.
+  static const heroGenericFontSize = 12.0;
+
+  /// Detail hero brand name font size.
+  static const heroBrandFontSize = 20.0;
+
+  /// Detail hero kana font size.
+  static const heroKanaFontSize = 12.0;
+
+  /// Detail hero revised metadata font size.
+  static const heroRevisedFontSize = 11.0;
+
+  /// Detail hero brand top margin.
+  static const heroBrandTopMargin = 2.0;
+
+  /// Detail hero revised top margin.
+  static const heroRevisedTopMargin = 8.0;
+
   /// Detail accordion radius.
   static const accordionRadius = 10.0;
 

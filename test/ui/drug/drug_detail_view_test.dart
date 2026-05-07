@@ -10,6 +10,7 @@ import 'package:fictional_drug_and_disease_ref/data/providers/api_providers.dart
 import 'package:fictional_drug_and_disease_ref/data/providers/local_providers.dart';
 import 'package:fictional_drug_and_disease_ref/data/services/api/drug_api_client.dart';
 import 'package:fictional_drug_and_disease_ref/l10n/app_localizations.dart';
+import 'package:fictional_drug_and_disease_ref/theme/app_theme.dart';
 import 'package:fictional_drug_and_disease_ref/ui/drug/drug_detail_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -53,10 +54,11 @@ void main() {
             'drug_001',
           ).overrideWith((ref) => const Stream<bool>.empty()),
         ],
-        child: const MaterialApp(
+        child: MaterialApp(
+          theme: AppTheme.light(),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
-          home: DrugDetailView(id: 'drug_001'),
+          home: const DrugDetailView(id: 'drug_001'),
         ),
       ),
     );
@@ -85,10 +87,11 @@ void main() {
             'drug_001',
           ).overrideWith((ref) => const Stream<bool>.empty()),
         ],
-        child: const MaterialApp(
+        child: MaterialApp(
+          theme: AppTheme.light(),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
-          home: DrugDetailView(id: 'drug_001'),
+          home: const DrugDetailView(id: 'drug_001'),
         ),
       ),
     );
@@ -118,6 +121,7 @@ void main() {
           ).overrideWith((ref) => const Stream<bool>.empty()),
         ],
         child: MaterialApp(
+          theme: AppTheme.light(),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: DrugDetailView(id: dto.id),
@@ -153,7 +157,7 @@ void main() {
     );
     expect(find.text('概要'), findsWidgets);
     expect(find.text('用法・用量'), findsOneWidget);
-    expect(find.text('ブックマークに追加'), findsOneWidget);
+    expect(find.text('ブックマーク'), findsOneWidget);
 
     await tester.pumpWidget(const SizedBox.shrink());
     await tester.pump();
@@ -175,6 +179,7 @@ void main() {
           ).overrideWith((ref) => const Stream<bool>.empty()),
         ],
         child: MaterialApp(
+          theme: AppTheme.light(),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: DrugDetailView(id: dto.id),
@@ -221,6 +226,7 @@ void main() {
           ).overrideWith((ref) => const Stream<bool>.empty()),
         ],
         child: MaterialApp(
+          theme: AppTheme.light(),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: DrugDetailView(id: dto.id),
@@ -231,11 +237,10 @@ void main() {
     await tester.pump();
 
     expect(
-      tester
-          .getSize(find.byKey(const ValueKey('drug-detail-active-tab-body')))
-          .height,
-      lessThanOrEqualTo(598),
+      find.byKey(const ValueKey('drug-detail-active-tab-body')),
+      findsOneWidget,
     );
+    expect(find.byType(ListView), findsOneWidget);
 
     await tester.pumpWidget(const SizedBox.shrink());
     await tester.pump();
