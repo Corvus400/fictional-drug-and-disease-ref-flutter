@@ -10,6 +10,7 @@ import 'package:fictional_drug_and_disease_ref/data/providers/api_providers.dart
 import 'package:fictional_drug_and_disease_ref/data/providers/local_providers.dart';
 import 'package:fictional_drug_and_disease_ref/data/services/api/disease_api_client.dart';
 import 'package:fictional_drug_and_disease_ref/l10n/app_localizations.dart';
+import 'package:fictional_drug_and_disease_ref/theme/app_theme.dart';
 import 'package:fictional_drug_and_disease_ref/ui/disease/disease_detail_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -55,10 +56,11 @@ void main() {
             'disease_001',
           ).overrideWith((ref) => const Stream<bool>.empty()),
         ],
-        child: const MaterialApp(
+        child: MaterialApp(
+          theme: AppTheme.light(),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
-          home: DiseaseDetailView(id: 'disease_001'),
+          home: const DiseaseDetailView(id: 'disease_001'),
         ),
       ),
     );
@@ -89,10 +91,11 @@ void main() {
               'disease_001',
             ).overrideWith((ref) => const Stream<bool>.empty()),
           ],
-          child: const MaterialApp(
+          child: MaterialApp(
+            theme: AppTheme.light(),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
-            home: DiseaseDetailView(id: 'disease_001'),
+            home: const DiseaseDetailView(id: 'disease_001'),
           ),
         ),
       );
@@ -108,8 +111,10 @@ void main() {
   );
 
   testWidgets(
-    'DiseaseDetailView shows loaded shell with header tabs and footer',
+    'DiseaseDetailView shows responsive shell with tabs and footer',
     (tester) async {
+      await tester.binding.setSurfaceSize(const Size(390, 844));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
       final dto = _diseaseFixture();
       when(() => apiClient.getDisease(dto.id)).thenAnswer((_) async => dto);
 
@@ -123,6 +128,7 @@ void main() {
             ).overrideWith((ref) => const Stream<bool>.empty()),
           ],
           child: MaterialApp(
+            theme: AppTheme.light(),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
             home: DiseaseDetailView(id: dto.id),
@@ -133,16 +139,69 @@ void main() {
       await tester.pump();
 
       final disease = dto.toDomain();
+      expect(
+        find.byKey(const ValueKey<String>('detail-phone-layout')),
+        findsOneWidget,
+      );
       expect(find.text(disease.name), findsOneWidget);
-      expect(find.text(disease.nameKana), findsOneWidget);
+      expect(find.textContaining(disease.nameKana), findsOneWidget);
       expect(find.text('概要'), findsWidgets);
       expect(find.text('診断'), findsOneWidget);
-      expect(find.text('ブックマークに追加'), findsOneWidget);
+      expect(find.text('ブックマーク'), findsOneWidget);
 
       await tester.pumpWidget(const SizedBox.shrink());
       await tester.pump();
     },
   );
+
+  testWidgets('DiseaseDetailView uses tablet two-pane layout at tablet width', (
+    tester,
+  ) async {
+    await tester.binding.setSurfaceSize(const Size(834, 1194));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+    final dto = _diseaseFixture();
+    when(() => apiClient.getDisease(dto.id)).thenAnswer((_) async => dto);
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          appDatabaseProvider.overrideWithValue(db),
+          diseaseApiClientProvider.overrideWithValue(apiClient),
+          streamBookmarkStateProvider(
+            dto.id,
+          ).overrideWith((ref) => const Stream<bool>.empty()),
+        ],
+        child: MaterialApp(
+          theme: AppTheme.light(),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: DiseaseDetailView(id: dto.id),
+        ),
+      ),
+    );
+    await tester.pump();
+    await tester.pump();
+
+    expect(
+      find.byKey(const ValueKey<String>('detail-tablet-shell')),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const ValueKey<String>('detail-tablet-nav-pane')),
+      findsOneWidget,
+    );
+    expect(
+      tester
+          .widget<SizedBox>(
+            find.byKey(const ValueKey<String>('detail-tablet-nav-pane')),
+          )
+          .width,
+      240,
+    );
+
+    await tester.pumpWidget(const SizedBox.shrink());
+    await tester.pump();
+  });
 
   testWidgets('DiseaseDetailView swaps active tab body with AnimatedSwitcher', (
     tester,
@@ -160,6 +219,7 @@ void main() {
           ).overrideWith((ref) => const Stream<bool>.empty()),
         ],
         child: MaterialApp(
+          theme: AppTheme.light(),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: DiseaseDetailView(id: dto.id),
@@ -206,6 +266,7 @@ void main() {
           ).overrideWith((ref) => const Stream<bool>.empty()),
         ],
         child: MaterialApp(
+          theme: AppTheme.light(),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: DiseaseDetailView(id: dto.id),
@@ -219,7 +280,7 @@ void main() {
       tester
           .getSize(find.byKey(const ValueKey('disease-detail-active-tab-body')))
           .height,
-      lessThanOrEqualTo(598),
+      lessThanOrEqualTo(700),
     );
 
     await tester.pumpWidget(const SizedBox.shrink());

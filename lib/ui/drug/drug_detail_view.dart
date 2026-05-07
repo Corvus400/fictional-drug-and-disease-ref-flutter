@@ -6,6 +6,8 @@ import 'package:fictional_drug_and_disease_ref/router/app_router.dart';
 import 'package:fictional_drug_and_disease_ref/ui/detail/constants/detail_constants.dart';
 import 'package:fictional_drug_and_disease_ref/ui/detail/widgets/detail_bookmark_footer.dart';
 import 'package:fictional_drug_and_disease_ref/ui/detail/widgets/detail_dose_calc_button.dart';
+import 'package:fictional_drug_and_disease_ref/ui/detail/widgets/detail_responsive_layout.dart';
+import 'package:fictional_drug_and_disease_ref/ui/detail/widgets/detail_tab_button.dart';
 import 'package:fictional_drug_and_disease_ref/ui/drug/drug_detail_screen_notifier.dart';
 import 'package:fictional_drug_and_disease_ref/ui/drug/drug_detail_screen_state.dart';
 import 'package:fictional_drug_and_disease_ref/ui/drug/widgets/drug_detail_adverse_effects_tab.dart';
@@ -71,59 +73,31 @@ class _DrugLoadedView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    return Column(
-      children: [
-        Expanded(
-          child: ListView(
-            padding: const EdgeInsets.all(DetailConstants.contentPadding),
-            children: [
-              Text(
-                drug.genericName,
-                key: const ValueKey('drug-detail-generic-name'),
-              ),
-              Text(
-                drug.brandName,
-                key: const ValueKey('drug-detail-brand-name'),
-                style: Theme.of(context).textTheme.headlineSmall,
-              ),
-              Text(
-                drug.brandNameKana,
-                key: const ValueKey('drug-detail-brand-name-kana'),
-              ),
-              const SizedBox(height: DetailConstants.gapM),
-              Wrap(
-                spacing: DetailConstants.gapS,
-                runSpacing: DetailConstants.gapS,
-                children: [
-                  for (final tab in DrugDetailTab.values)
-                    ChoiceChip(
-                      label: Text(_drugTabLabel(l10n, tab)),
-                      selected: state.activeTab == tab,
-                      onSelected: (_) => onSelectTab(tab),
-                    ),
-                ],
-              ),
-              const SizedBox(height: DetailConstants.gapM),
-              AnimatedSwitcher(
-                key: const ValueKey('drug-detail-active-tab-switcher'),
-                duration: DetailConstants.tabSwitchDuration,
-                child: _activeDrugTabBody(l10n, drug, state.activeTab),
-              ),
-            ],
+    return DetailResponsiveLayout(
+      tabs: [
+        for (final tab in DrugDetailTab.values)
+          DetailTabButton(
+            label: _drugTabLabel(l10n, tab),
+            selected: state.activeTab == tab,
+            onPressed: () => onSelectTab(tab),
           ),
-        ),
-        DetailBookmarkFooter(
-          isBookmarked: state.isBookmarked,
-          isBusy: state.isBookmarkBusy,
-          bookmarkError: state.bookmarkError,
-          onToggleBookmark: onToggleBookmark,
-          onClearBookmarkError: onClearBookmarkError,
-          trailing: DetailDoseCalcButton(
-            label: l10n.detailDoseCalculatorLabel,
-            onPressed: () => context.go(AppRoutes.calc),
-          ),
-        ),
       ],
+      activeBody: AnimatedSwitcher(
+        key: const ValueKey('drug-detail-active-tab-switcher'),
+        duration: DetailConstants.tabSwitchDuration,
+        child: _activeDrugTabBody(l10n, drug, state.activeTab),
+      ),
+      footer: DetailBookmarkFooter(
+        isBookmarked: state.isBookmarked,
+        isBusy: state.isBookmarkBusy,
+        bookmarkError: state.bookmarkError,
+        onToggleBookmark: onToggleBookmark,
+        onClearBookmarkError: onClearBookmarkError,
+        trailing: DetailDoseCalcButton(
+          label: l10n.detailDoseCalculatorLabel,
+          onPressed: () => context.go(AppRoutes.calc),
+        ),
+      ),
     );
   }
 }

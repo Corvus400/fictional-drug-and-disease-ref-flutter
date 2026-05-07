@@ -9,6 +9,21 @@ abstract final class DetailConstants {
   /// Phone horizontal tab bar height.
   static const tabBarHeight = 40.0;
 
+  /// Phone tab horizontal padding.
+  static const phoneTabPaddingHorizontal = 14.0;
+
+  /// Phone tab vertical padding.
+  static const phoneTabPaddingVertical = 12.0;
+
+  /// Phone selected tab indicator height.
+  static const phoneTabIndicatorHeight = 3.0;
+
+  /// Detail top-level tab font size.
+  static const detailTabFontSize = 13.0;
+
+  /// Single-line text max line count.
+  static const singleLineTextMaxLines = 1;
+
   /// Fixed bookmark footer height.
   static const footerHeight = 64.0;
 
@@ -29,6 +44,18 @@ abstract final class DetailConstants {
 
   /// Tablet navigation pane vertical padding.
   static const tabletNavPaddingVertical = 14.0;
+
+  /// Tablet navigation item horizontal padding.
+  static const tabletNavItemPaddingHorizontal = 18.0;
+
+  /// Tablet navigation item vertical padding.
+  static const tabletNavItemPaddingVertical = 12.0;
+
+  /// Tablet selected navigation left indicator width.
+  static const tabletNavIndicatorWidth = 3.0;
+
+  /// Tablet navigation item gap.
+  static const tabletNavItemGap = 10.0;
 
   /// Tablet content scroll bottom padding for fixed footer clearance.
   static const tabletContentBottomPadding = 80.0;

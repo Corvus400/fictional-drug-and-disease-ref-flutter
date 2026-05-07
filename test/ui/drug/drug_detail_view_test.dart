@@ -107,9 +107,11 @@ void main() {
     await tester.pump();
   });
 
-  testWidgets('DrugDetailView shows loaded shell with header tabs and footer', (
+  testWidgets('DrugDetailView shows responsive shell with tabs and footer', (
     tester,
   ) async {
+    await tester.binding.setSurfaceSize(const Size(390, 844));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
     final dto = _drugFixture();
     when(() => apiClient.getDrug(dto.id)).thenAnswer((_) async => dto);
 
@@ -134,33 +136,71 @@ void main() {
     await tester.pump();
 
     expect(
-      tester
-          .widget<Text>(
-            find.byKey(const ValueKey('drug-detail-generic-name')),
-          )
-          .data,
-      dto.genericName,
+      find.byKey(const ValueKey<String>('detail-phone-layout')),
+      findsOneWidget,
     );
     expect(
-      tester
-          .widget<Text>(
-            find.byKey(const ValueKey('drug-detail-brand-name')),
-          )
-          .data,
-      dto.brandName,
+      find.byKey(const ValueKey('drug-detail-generic-name')),
+      findsNothing,
     );
+    expect(find.byKey(const ValueKey('drug-detail-brand-name')), findsNothing);
     expect(
-      tester
-          .widget<Text>(
-            find.byKey(const ValueKey('drug-detail-brand-name-kana')),
-          )
-          .data,
-      dto.brandNameKana,
+      find.byKey(const ValueKey('drug-detail-brand-name-kana')),
+      findsNothing,
     );
     expect(find.text('概要'), findsWidgets);
     expect(find.text('用法・用量'), findsOneWidget);
     expect(find.text('ブックマーク'), findsOneWidget);
     expect(find.text('用量計算'), findsOneWidget);
+
+    await tester.pumpWidget(const SizedBox.shrink());
+    await tester.pump();
+  });
+
+  testWidgets('DrugDetailView uses tablet two-pane layout at tablet width', (
+    tester,
+  ) async {
+    await tester.binding.setSurfaceSize(const Size(834, 1194));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+    final dto = _drugFixture();
+    when(() => apiClient.getDrug(dto.id)).thenAnswer((_) async => dto);
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          appDatabaseProvider.overrideWithValue(db),
+          drugApiClientProvider.overrideWithValue(apiClient),
+          streamBookmarkStateProvider(
+            dto.id,
+          ).overrideWith((ref) => const Stream<bool>.empty()),
+        ],
+        child: MaterialApp(
+          theme: AppTheme.light(),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: DrugDetailView(id: dto.id),
+        ),
+      ),
+    );
+    await tester.pump();
+    await tester.pump();
+
+    expect(
+      find.byKey(const ValueKey<String>('detail-tablet-shell')),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const ValueKey<String>('detail-tablet-nav-pane')),
+      findsOneWidget,
+    );
+    expect(
+      tester
+          .widget<SizedBox>(
+            find.byKey(const ValueKey<String>('detail-tablet-nav-pane')),
+          )
+          .width,
+      240,
+    );
 
     await tester.pumpWidget(const SizedBox.shrink());
     await tester.pump();
@@ -301,7 +341,10 @@ void main() {
       find.byKey(const ValueKey('drug-detail-active-tab-body')),
       findsOneWidget,
     );
-    expect(find.byType(ListView), findsOneWidget);
+    expect(
+      find.byKey(const ValueKey<String>('detail-phone-content-scroll')),
+      findsOneWidget,
+    );
 
     await tester.pumpWidget(const SizedBox.shrink());
     await tester.pump();

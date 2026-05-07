@@ -4,6 +4,8 @@ import 'package:fictional_drug_and_disease_ref/domain/disease/disease.dart';
 import 'package:fictional_drug_and_disease_ref/l10n/app_localizations.dart';
 import 'package:fictional_drug_and_disease_ref/ui/detail/constants/detail_constants.dart';
 import 'package:fictional_drug_and_disease_ref/ui/detail/widgets/detail_bookmark_footer.dart';
+import 'package:fictional_drug_and_disease_ref/ui/detail/widgets/detail_responsive_layout.dart';
+import 'package:fictional_drug_and_disease_ref/ui/detail/widgets/detail_tab_button.dart';
 import 'package:fictional_drug_and_disease_ref/ui/disease/disease_detail_screen_notifier.dart';
 import 'package:fictional_drug_and_disease_ref/ui/disease/disease_detail_screen_state.dart';
 import 'package:fictional_drug_and_disease_ref/ui/disease/widgets/disease_detail_clinical_course_tab.dart';
@@ -67,48 +69,27 @@ class _DiseaseLoadedView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    return Column(
-      children: [
-        Expanded(
-          child: ListView(
-            padding: const EdgeInsets.all(DetailConstants.contentPadding),
-            children: [
-              Text(disease.id),
-              Text(
-                disease.name,
-                style: Theme.of(context).textTheme.headlineSmall,
-              ),
-              Text(disease.nameKana),
-              const SizedBox(height: DetailConstants.gapM),
-              Wrap(
-                spacing: DetailConstants.gapS,
-                runSpacing: DetailConstants.gapS,
-                children: [
-                  for (final tab in DiseaseDetailTab.values)
-                    ChoiceChip(
-                      label: Text(_diseaseTabLabel(l10n, tab)),
-                      selected: state.activeTab == tab,
-                      onSelected: (_) => onSelectTab(tab),
-                    ),
-                ],
-              ),
-              const SizedBox(height: DetailConstants.gapM),
-              AnimatedSwitcher(
-                key: const ValueKey('disease-detail-active-tab-switcher'),
-                duration: DetailConstants.tabSwitchDuration,
-                child: _activeDiseaseTabBody(l10n, disease, state.activeTab),
-              ),
-            ],
+    return DetailResponsiveLayout(
+      tabs: [
+        for (final tab in DiseaseDetailTab.values)
+          DetailTabButton(
+            label: _diseaseTabLabel(l10n, tab),
+            selected: state.activeTab == tab,
+            onPressed: () => onSelectTab(tab),
           ),
-        ),
-        DetailBookmarkFooter(
-          isBookmarked: state.isBookmarked,
-          isBusy: state.isBookmarkBusy,
-          bookmarkError: state.bookmarkError,
-          onToggleBookmark: onToggleBookmark,
-          onClearBookmarkError: onClearBookmarkError,
-        ),
       ],
+      activeBody: AnimatedSwitcher(
+        key: const ValueKey('disease-detail-active-tab-switcher'),
+        duration: DetailConstants.tabSwitchDuration,
+        child: _activeDiseaseTabBody(l10n, disease, state.activeTab),
+      ),
+      footer: DetailBookmarkFooter(
+        isBookmarked: state.isBookmarked,
+        isBusy: state.isBookmarkBusy,
+        bookmarkError: state.bookmarkError,
+        onToggleBookmark: onToggleBookmark,
+        onClearBookmarkError: onClearBookmarkError,
+      ),
     );
   }
 }
