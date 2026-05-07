@@ -182,4 +182,22 @@ abstract final class DetailConstants {
 
   /// Detail key-value font size.
   static const kvFontSize = 12.5;
+
+  /// Detail footer action height.
+  static const footerActionHeight = 44.0;
+
+  /// Detail footer action radius.
+  static const footerActionRadius = 22.0;
+
+  /// Detail footer action horizontal padding.
+  static const footerActionPaddingHorizontal = 16.0;
+
+  /// Detail footer action gap.
+  static const footerActionGap = 6.0;
+
+  /// Detail footer action font size.
+  static const footerActionFontSize = 14.0;
+
+  /// Detail footer action icon size.
+  static const footerActionIconSize = 18.0;
 }
