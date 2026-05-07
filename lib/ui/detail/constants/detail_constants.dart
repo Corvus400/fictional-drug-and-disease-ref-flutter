@@ -326,4 +326,37 @@ abstract final class DetailConstants {
 
   /// Detail reference expansion animation duration.
   static const expandTileDuration = Duration(milliseconds: 200);
+
+  /// Detail serious adverse event card left border width.
+  static const seriousCardLeftBorderWidth = 3.0;
+
+  /// Detail serious card radius.
+  static const seriousCardRadius = 8.0;
+
+  /// Detail serious card horizontal padding.
+  static const seriousCardPaddingHorizontal = 12.0;
+
+  /// Detail serious card vertical padding.
+  static const seriousCardPaddingVertical = 10.0;
+
+  /// Detail serious card bottom margin.
+  static const seriousCardBottomMargin = 8.0;
+
+  /// Detail serious card title font size.
+  static const seriousCardNameFontSize = 13.0;
+
+  /// Detail serious card title bottom margin.
+  static const seriousCardNameBottomMargin = 4.0;
+
+  /// Detail serious card meta font size.
+  static const seriousCardMetaFontSize = 11.0;
+
+  /// Detail serious card meta opacity.
+  static const seriousCardMetaOpacity = 0.85;
+
+  /// Detail serious card meta top margin.
+  static const seriousCardMetaTopMargin = 6.0;
+
+  /// Detail serious card meta gap.
+  static const seriousCardMetaGap = 8.0;
 }
