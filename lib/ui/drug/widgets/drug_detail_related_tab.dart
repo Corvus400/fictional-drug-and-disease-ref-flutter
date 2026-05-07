@@ -1,3 +1,6 @@
+import 'package:fictional_drug_and_disease_ref/core/result.dart';
+import 'package:fictional_drug_and_disease_ref/data/providers/api_providers.dart';
+import 'package:fictional_drug_and_disease_ref/domain/disease/disease.dart';
 import 'package:fictional_drug_and_disease_ref/domain/drug/drug.dart';
 import 'package:fictional_drug_and_disease_ref/l10n/app_localizations.dart';
 import 'package:fictional_drug_and_disease_ref/router/app_router.dart';
@@ -7,7 +10,18 @@ import 'package:fictional_drug_and_disease_ref/ui/detail/widgets/detail_exam_tab
 import 'package:fictional_drug_and_disease_ref/ui/detail/widgets/detail_expand_tile.dart';
 import 'package:fictional_drug_and_disease_ref/ui/detail/widgets/detail_panel.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/misc.dart';
 import 'package:go_router/go_router.dart';
+
+final FutureProviderFamily<Disease, String> _relatedDiseaseProvider =
+    FutureProvider.autoDispose.family<Disease, String>((ref, id) async {
+      final result = await ref.watch(diseaseRepositoryProvider).getDisease(id);
+      return switch (result) {
+        Ok<Disease>(:final value) => value,
+        Err<Disease>(:final error) => throw error,
+      };
+    });
 
 /// Related diseases tab for drug detail.
 class DrugDetailRelatedTab extends StatelessWidget {
@@ -161,20 +175,43 @@ String _paragraphIndex(NumberedParagraph item) {
   return '${item.order}.${item.subOrder}';
 }
 
-class _RelatedDiseaseCard extends StatelessWidget {
+class _RelatedDiseaseCard extends ConsumerWidget {
   const _RelatedDiseaseCard({required this.id});
 
   final String id;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
+    final disease = ref.watch(_relatedDiseaseProvider(id));
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: () => context.push(AppRoutes.diseaseDetail(id)),
-      child: DetailCarouselCard(
-        title: id,
-        subtitle: '',
+      child: disease.when(
+        data: (disease) => DetailCarouselCard(
+          title: disease.name,
+          subtitle: disease.id,
+          badges: [_chronicityLabel(l10n, disease.chronicity)],
+        ),
+        loading: () => DetailCarouselCard(
+          title: id,
+          subtitle: l10n.detailDrugSectionRelatedDiseases,
+        ),
+        error: (_, _) => DetailCarouselCard(
+          title: id,
+          subtitle: l10n.detailDrugSectionRelatedDiseases,
+        ),
       ),
     );
   }
+}
+
+String _chronicityLabel(AppLocalizations l10n, String value) {
+  return switch (value) {
+    'acute' => l10n.searchDiseaseChronicityAcute,
+    'subacute' => l10n.searchDiseaseChronicitySubacute,
+    'chronic' => l10n.searchDiseaseChronicityChronic,
+    'relapsing' => l10n.searchDiseaseChronicityRelapsing,
+    _ => value,
+  };
 }
