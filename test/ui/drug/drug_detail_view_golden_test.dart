@@ -45,12 +45,20 @@ void main() {
     fileName: 'drug_p2_overview_dark',
     theme: AppTheme.dark(),
   );
+
+  _drugDetailGolden(
+    description: 'Drug detail phone dose light',
+    fileName: 'drug_p3_dose_light',
+    theme: AppTheme.light(),
+    selectTabLabel: '用法・用量',
+  );
 }
 
 void _drugDetailGolden({
   required String description,
   required String fileName,
   required ThemeData theme,
+  String? selectTabLabel,
 }) {
   unawaited(
     goldenTest(
@@ -92,6 +100,10 @@ void _drugDetailGolden({
       whilePerforming: (tester) async {
         await tester.pump();
         await tester.pump();
+        if (selectTabLabel != null) {
+          await tester.tap(find.text(selectTabLabel));
+          await tester.pump(const Duration(milliseconds: 250));
+        }
         return null;
       },
       tags: ['golden'],
