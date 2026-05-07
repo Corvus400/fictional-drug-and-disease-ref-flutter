@@ -1,4 +1,5 @@
 import 'package:fictional_drug_and_disease_ref/theme/app_palette.dart';
+import 'package:fictional_drug_and_disease_ref/theme/detail_color_extension.dart';
 import 'package:flutter/material.dart';
 
 /// Application theme definitions.
@@ -46,6 +47,10 @@ class AppTheme {
           AppPalette.light
         else
           AppPalette.dark,
+        if (brightness == Brightness.light)
+          DetailColorExtension.light
+        else
+          DetailColorExtension.dark,
       ],
     );
   }
