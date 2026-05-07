@@ -359,4 +359,28 @@ abstract final class DetailConstants {
 
   /// Detail serious card meta gap.
   static const seriousCardMetaGap = 8.0;
+
+  /// Detail severity grade label column width.
+  static const severityGradeLabelWidth = 46.0;
+
+  /// Detail severity grade grid gap.
+  static const severityGradeGap = 8.0;
+
+  /// Detail severity grade padding.
+  static const severityGradePadding = 8.0;
+
+  /// Detail severity grade radius.
+  static const severityGradeRadius = 8.0;
+
+  /// Detail severity grade top margin between cards.
+  static const severityGradeTopMargin = 6.0;
+
+  /// Detail severity grade base font size.
+  static const severityGradeFontSize = 12.0;
+
+  /// Detail severity grade label font size.
+  static const severityGradeLabelFontSize = 13.0;
+
+  /// Detail severity grade criteria bottom margin.
+  static const severityGradeCriteriaBottomMargin = 2.0;
 }
