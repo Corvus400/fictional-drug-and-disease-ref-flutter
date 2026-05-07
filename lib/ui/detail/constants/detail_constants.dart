@@ -231,6 +231,9 @@ abstract final class DetailConstants {
   /// Detail key-value font size.
   static const kvFontSize = 12.5;
 
+  /// Detail ordered/body text line height.
+  static const bodyTextLineHeight = 1.6;
+
   /// Detail footer action height.
   static const footerActionHeight = 44.0;
 

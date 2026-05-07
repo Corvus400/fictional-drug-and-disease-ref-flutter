@@ -22,7 +22,7 @@ void main() {
       (l10n.detailDrugSectionDosagePediatric, '年齢別'),
       (l10n.detailDrugSectionDosageRenal, '腎機能'),
       (l10n.detailDrugSectionDosageHepatic, '肝機能'),
-      (l10n.detailDrugSectionDosageRelatedPrecautions, '用法・用量関連注意'),
+      (l10n.detailDrugSectionDosageRelatedPrecautions, '用法・用量に関連する注意'),
       (l10n.detailDrugSectionImportantPrecautions, '重要な基本的注意'),
       (l10n.detailDrugSectionPrecautionsForSpecificPopulations, '特定背景患者'),
       (l10n.detailDrugSectionInteractions, '相互作用'),
