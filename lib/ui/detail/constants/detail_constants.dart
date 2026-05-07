@@ -98,4 +98,37 @@ abstract final class DetailConstants {
 
   /// Detail panel subtitle font size.
   static const panelSubtitleFontSize = 11.0;
+
+  /// Detail accordion radius.
+  static const accordionRadius = 10.0;
+
+  /// Detail accordion summary vertical padding.
+  static const accordionSummaryPaddingVertical = 10.0;
+
+  /// Detail accordion summary horizontal padding.
+  static const accordionSummaryPaddingHorizontal = 12.0;
+
+  /// Detail accordion summary gap.
+  static const accordionSummaryGap = 8.0;
+
+  /// Detail accordion title font size.
+  static const accordionTitleFontSize = 13.0;
+
+  /// Detail accordion title line height.
+  static const accordionTitleLineHeight = 1.4;
+
+  /// Detail accordion body horizontal padding.
+  static const accordionBodyPaddingHorizontal = 12.0;
+
+  /// Detail accordion body bottom padding.
+  static const accordionBodyPaddingBottom = 12.0;
+
+  /// Detail accordion body font size.
+  static const accordionBodyFontSize = 12.5;
+
+  /// Detail accordion body line height.
+  static const accordionBodyLineHeight = 1.6;
+
+  /// Detail accordion chevron animation duration.
+  static const accordionChevronDuration = Duration(milliseconds: 200);
 }
