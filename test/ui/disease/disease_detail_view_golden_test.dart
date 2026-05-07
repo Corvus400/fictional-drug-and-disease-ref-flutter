@@ -80,6 +80,13 @@ void main() {
     theme: AppTheme.light(),
     selectTabLabel: '経過',
   );
+
+  _diseaseDetailGolden(
+    description: 'Disease detail phone clinical course dark',
+    fileName: 'disease_p8_clinical_course_dark',
+    theme: AppTheme.dark(),
+    selectTabLabel: '経過',
+  );
 }
 
 void _diseaseDetailGolden({
