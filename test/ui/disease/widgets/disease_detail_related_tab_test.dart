@@ -11,6 +11,7 @@ import 'package:fictional_drug_and_disease_ref/data/services/api/drug_api_client
 import 'package:fictional_drug_and_disease_ref/l10n/app_localizations.dart';
 import 'package:fictional_drug_and_disease_ref/router/app_router.dart';
 import 'package:fictional_drug_and_disease_ref/theme/app_theme.dart';
+import 'package:fictional_drug_and_disease_ref/ui/detail/constants/detail_constants.dart';
 import 'package:fictional_drug_and_disease_ref/ui/detail/widgets/detail_carousel.dart';
 import 'package:fictional_drug_and_disease_ref/ui/detail/widgets/detail_panel.dart';
 import 'package:fictional_drug_and_disease_ref/ui/disease/widgets/disease_detail_related_tab.dart';
@@ -93,6 +94,23 @@ void main() {
       expect(
         find.byKey(const ValueKey<String>('detail-related-drug-card')),
         findsOneWidget,
+      );
+      final relatedDrugCardSize = tester.getSize(
+        find.byKey(const ValueKey<String>('detail-related-drug-card')),
+      );
+      expect(
+        relatedDrugCardSize.width,
+        lessThanOrEqualTo(DetailConstants.relatedDrugCardMaxWidth),
+      );
+      expect(
+        tester
+            .widget<SizedBox>(
+              find.byKey(
+                const ValueKey<String>('detail-related-drug-image-text-gap'),
+              ),
+            )
+            .width,
+        DetailConstants.relatedDrugCardImageTextGap,
       );
       expect(find.text(drugId), findsOneWidget);
       expect(find.text(drugDto.brandName), findsOneWidget);

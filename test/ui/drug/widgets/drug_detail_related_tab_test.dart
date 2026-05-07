@@ -9,6 +9,7 @@ import 'package:fictional_drug_and_disease_ref/data/services/api/disease_api_cli
 import 'package:fictional_drug_and_disease_ref/l10n/app_localizations.dart';
 import 'package:fictional_drug_and_disease_ref/router/app_router.dart';
 import 'package:fictional_drug_and_disease_ref/theme/app_theme.dart';
+import 'package:fictional_drug_and_disease_ref/ui/detail/constants/detail_constants.dart';
 import 'package:fictional_drug_and_disease_ref/ui/detail/widgets/detail_carousel.dart';
 import 'package:fictional_drug_and_disease_ref/ui/detail/widgets/detail_exam_table.dart';
 import 'package:fictional_drug_and_disease_ref/ui/detail/widgets/detail_panel.dart';
@@ -78,6 +79,13 @@ void main() {
     expect(find.text('関連疾患'), findsOneWidget);
     expect(find.byType(DetailCarousel), findsOneWidget);
     expect(find.byType(DetailCarouselCard), findsWidgets);
+    final relatedDiseaseCardSize = tester.getSize(
+      find.byKey(const ValueKey<String>('detail-carousel-card')).first,
+    );
+    expect(
+      relatedDiseaseCardSize.width,
+      lessThanOrEqualTo(DetailConstants.carouselCardMaxWidth),
+    );
     expect(
       find.byKey(const ValueKey<String>('detail-carousel-card-image')),
       findsNothing,

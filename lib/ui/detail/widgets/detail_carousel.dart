@@ -66,50 +66,54 @@ class DetailCarouselCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).extension<DetailColorExtension>()!;
-    return Container(
-      key: const ValueKey<String>('detail-carousel-card'),
-      constraints: const BoxConstraints.tightFor(
-        width: DetailConstants.carouselCardWidth,
-      ),
-      padding: const EdgeInsets.all(DetailConstants.carouselCardPadding),
-      decoration: BoxDecoration(
-        color: colors.surfaceContainerLow,
-        border: Border.all(color: colors.outlineVariant),
-        borderRadius: BorderRadius.circular(DetailConstants.carouselCardRadius),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            title,
-            softWrap: true,
-            style: TextStyle(
-              color: colors.onSurface,
-              fontSize: DetailConstants.carouselCardTitleFontSize,
-              fontWeight: FontWeight.w700,
-              height: DetailConstants.carouselCardTitleLineHeight,
-            ),
+    return IntrinsicWidth(
+      child: Container(
+        key: const ValueKey<String>('detail-carousel-card'),
+        constraints: const BoxConstraints(
+          maxWidth: DetailConstants.carouselCardMaxWidth,
+        ),
+        padding: const EdgeInsets.all(DetailConstants.carouselCardPadding),
+        decoration: BoxDecoration(
+          color: colors.surfaceContainerLow,
+          border: Border.all(color: colors.outlineVariant),
+          borderRadius: BorderRadius.circular(
+            DetailConstants.carouselCardRadius,
           ),
-          const SizedBox(height: DetailConstants.carouselCardGap),
-          Text(
-            subtitle,
-            style: TextStyle(
-              color: colors.onSurfaceVariant,
-              fontSize: DetailConstants.carouselCardSubtitleFontSize,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              title,
+              softWrap: true,
+              style: TextStyle(
+                color: colors.onSurface,
+                fontSize: DetailConstants.carouselCardTitleFontSize,
+                fontWeight: FontWeight.w700,
+                height: DetailConstants.carouselCardTitleLineHeight,
+              ),
             ),
-          ),
-          if (badges.isNotEmpty) ...[
-            const SizedBox(height: DetailConstants.carouselBadgeTopMargin),
-            Wrap(
-              spacing: DetailConstants.carouselBadgeGap,
-              runSpacing: DetailConstants.carouselBadgeGap,
-              children: [
-                for (final badge in badges) _CarouselBadge(label: badge),
-              ],
+            const SizedBox(height: DetailConstants.carouselCardGap),
+            Text(
+              subtitle,
+              style: TextStyle(
+                color: colors.onSurfaceVariant,
+                fontSize: DetailConstants.carouselCardSubtitleFontSize,
+              ),
             ),
+            if (badges.isNotEmpty) ...[
+              const SizedBox(height: DetailConstants.carouselBadgeTopMargin),
+              Wrap(
+                spacing: DetailConstants.carouselBadgeGap,
+                runSpacing: DetailConstants.carouselBadgeGap,
+                children: [
+                  for (final badge in badges) _CarouselBadge(label: badge),
+                ],
+              ),
+            ],
           ],
-        ],
+        ),
       ),
     );
   }

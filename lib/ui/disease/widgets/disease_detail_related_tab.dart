@@ -180,82 +180,95 @@ class _RelatedDrugCarouselCard extends StatelessWidget {
         : SearchConstants.searchPhoneDrugImageSize;
     final imageCacheWidth = (imageSize * MediaQuery.devicePixelRatioOf(context))
         .round();
-    return Container(
-      key: const ValueKey<String>('detail-related-drug-card'),
-      constraints: const BoxConstraints.tightFor(
-        width: DetailConstants.relatedDrugCardWidth,
-      ),
-      padding: const EdgeInsets.all(DetailConstants.carouselCardPadding),
-      decoration: BoxDecoration(
-        color: colors.surfaceContainerLow,
-        border: Border.all(color: colors.outlineVariant),
-        borderRadius: BorderRadius.circular(DetailConstants.carouselCardRadius),
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(
-              DetailConstants.carouselCardImageRadius,
-            ),
-            child: SizedBox(
-              width: imageSize,
-              height:
-                  imageSize / SearchConstants.searchDrugCardImageAspectRatio,
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                  color: palette.surfaceSubtle,
-                  border: Border.all(color: palette.hairline),
-                ),
-                child: _RelatedDrugCachedImage(
-                  drug: drug,
-                  imageCacheWidth: imageCacheWidth,
-                  cacheManager: cacheManager,
-                  palette: palette,
+    return IntrinsicWidth(
+      child: Container(
+        key: const ValueKey<String>('detail-related-drug-card'),
+        constraints: const BoxConstraints(
+          maxWidth: DetailConstants.relatedDrugCardMaxWidth,
+        ),
+        padding: const EdgeInsets.all(DetailConstants.carouselCardPadding),
+        decoration: BoxDecoration(
+          color: colors.surfaceContainerLow,
+          border: Border.all(color: colors.outlineVariant),
+          borderRadius: BorderRadius.circular(
+            DetailConstants.carouselCardRadius,
+          ),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(
+                DetailConstants.carouselCardImageRadius,
+              ),
+              child: SizedBox(
+                width: imageSize,
+                height:
+                    imageSize / SearchConstants.searchDrugCardImageAspectRatio,
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                    color: palette.surfaceSubtle,
+                    border: Border.all(color: palette.hairline),
+                  ),
+                  child: _RelatedDrugCachedImage(
+                    drug: drug,
+                    imageCacheWidth: imageCacheWidth,
+                    cacheManager: cacheManager,
+                    palette: palette,
+                  ),
                 ),
               ),
             ),
-          ),
-          const SizedBox(width: DetailConstants.carouselCardGap),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  drug.brandName,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    color: colors.onSurface,
-                    fontSize: DetailConstants.carouselCardTitleFontSize,
-                    fontWeight: FontWeight.w700,
-                    height: DetailConstants.carouselCardTitleLineHeight,
-                  ),
-                ),
-                const SizedBox(height: DetailConstants.carouselCardGap),
-                Text(
-                  drug.id,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    color: colors.onSurfaceVariant,
-                    fontSize: DetailConstants.carouselCardSubtitleFontSize,
-                  ),
-                ),
-                const SizedBox(height: DetailConstants.carouselBadgeTopMargin),
-                Wrap(
-                  spacing: DetailConstants.carouselBadgeGap,
-                  runSpacing: DetailConstants.carouselBadgeGap,
-                  children: [
-                    _RelatedCardBadge(label: dosageFormLabel, palette: palette),
-                    _RelatedCardBadge(label: routeLabel, palette: palette),
-                  ],
-                ),
-              ],
+            const SizedBox(
+              key: ValueKey<String>('detail-related-drug-image-text-gap'),
+              width: DetailConstants.relatedDrugCardImageTextGap,
             ),
-          ),
-        ],
+            Flexible(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    drug.brandName,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: colors.onSurface,
+                      fontSize: DetailConstants.carouselCardTitleFontSize,
+                      fontWeight: FontWeight.w700,
+                      height: DetailConstants.carouselCardTitleLineHeight,
+                    ),
+                  ),
+                  const SizedBox(height: DetailConstants.carouselCardGap),
+                  Text(
+                    drug.id,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: colors.onSurfaceVariant,
+                      fontSize: DetailConstants.carouselCardSubtitleFontSize,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: DetailConstants.carouselBadgeTopMargin,
+                  ),
+                  Wrap(
+                    spacing: DetailConstants.carouselBadgeGap,
+                    runSpacing: DetailConstants.carouselBadgeGap,
+                    children: [
+                      _RelatedCardBadge(
+                        label: dosageFormLabel,
+                        palette: palette,
+                      ),
+                      _RelatedCardBadge(label: routeLabel, palette: palette),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
