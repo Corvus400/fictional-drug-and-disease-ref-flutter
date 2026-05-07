@@ -137,6 +137,14 @@ void main() {
     constraints: const BoxConstraints.tightFor(width: 834, height: 1194),
     selectTabLabel: '用法・用量',
   );
+
+  _drugDetailGolden(
+    description: 'Drug detail tablet dose dark',
+    fileName: 'drug_t4_dose_dark',
+    theme: AppTheme.dark(),
+    constraints: const BoxConstraints.tightFor(width: 834, height: 1194),
+    selectTabLabel: '用法・用量',
+  );
 }
 
 void _drugDetailGolden({
