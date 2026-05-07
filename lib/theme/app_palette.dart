@@ -50,6 +50,12 @@ final class AppPalette extends ThemeExtension<AppPalette> {
     required this.drugInk,
     required this.diseaseTint,
     required this.diseaseInk,
+    required this.chipDosageForm,
+    required this.chipRouteOfAdmin,
+    required this.chipPrecaution,
+    required this.chipIcd10Chapter,
+    required this.chipOnsetPattern,
+    required this.chipExamCategory,
   });
 
   /// Light Round6 palette.
@@ -88,6 +94,12 @@ final class AppPalette extends ThemeExtension<AppPalette> {
     drugInk: Color(0xFF0A6FE8),
     diseaseTint: Color(0x1A7A4FCC),
     diseaseInk: Color(0xFF7A4FCC),
+    chipDosageForm: _lightChipDosageForm,
+    chipRouteOfAdmin: _lightChipRouteOfAdmin,
+    chipPrecaution: _lightChipPrecaution,
+    chipIcd10Chapter: _lightChipIcd10Chapter,
+    chipOnsetPattern: _lightChipOnsetPattern,
+    chipExamCategory: _lightChipExamCategory,
   );
 
   /// Dark Round6 palette.
@@ -126,6 +138,12 @@ final class AppPalette extends ThemeExtension<AppPalette> {
     drugInk: Color(0xFF9ECAFF),
     diseaseTint: Color(0x29D5BAFF),
     diseaseInk: Color(0xFFD5BAFF),
+    chipDosageForm: _darkChipDosageForm,
+    chipRouteOfAdmin: _darkChipRouteOfAdmin,
+    chipPrecaution: _darkChipPrecaution,
+    chipIcd10Chapter: _darkChipIcd10Chapter,
+    chipOnsetPattern: _darkChipOnsetPattern,
+    chipExamCategory: _darkChipExamCategory,
   );
 
   /// Theme brightness this palette represents.
@@ -229,6 +247,24 @@ final class AppPalette extends ThemeExtension<AppPalette> {
 
   /// Disease target pill ink.
   final Color diseaseInk;
+
+  /// W2 dosage-form chip foreground colors keyed by mock-server serial name.
+  final Map<String, Color> chipDosageForm;
+
+  /// W2 route-of-administration chip foreground colors keyed by serial name.
+  final Map<String, Color> chipRouteOfAdmin;
+
+  /// W2 precaution-population chip foreground colors keyed by serial name.
+  final Map<String, Color> chipPrecaution;
+
+  /// W2 ICD-10 chapter chip foreground colors keyed by serial name.
+  final Map<String, Color> chipIcd10Chapter;
+
+  /// W2 onset-pattern chip foreground colors keyed by serial name.
+  final Map<String, Color> chipOnsetPattern;
+
+  /// W2 exam-category chip foreground colors keyed by serial name.
+  final Map<String, Color> chipExamCategory;
 
   /// Drug regulatory badge colors.
   ({Color background, Color foreground}) regulatoryBadgeColors(String value) {
@@ -453,6 +489,12 @@ final class AppPalette extends ThemeExtension<AppPalette> {
     Color? drugInk,
     Color? diseaseTint,
     Color? diseaseInk,
+    Map<String, Color>? chipDosageForm,
+    Map<String, Color>? chipRouteOfAdmin,
+    Map<String, Color>? chipPrecaution,
+    Map<String, Color>? chipIcd10Chapter,
+    Map<String, Color>? chipOnsetPattern,
+    Map<String, Color>? chipExamCategory,
   }) {
     return AppPalette(
       brightness: brightness ?? this.brightness,
@@ -491,6 +533,12 @@ final class AppPalette extends ThemeExtension<AppPalette> {
       drugInk: drugInk ?? this.drugInk,
       diseaseTint: diseaseTint ?? this.diseaseTint,
       diseaseInk: diseaseInk ?? this.diseaseInk,
+      chipDosageForm: chipDosageForm ?? this.chipDosageForm,
+      chipRouteOfAdmin: chipRouteOfAdmin ?? this.chipRouteOfAdmin,
+      chipPrecaution: chipPrecaution ?? this.chipPrecaution,
+      chipIcd10Chapter: chipIcd10Chapter ?? this.chipIcd10Chapter,
+      chipOnsetPattern: chipOnsetPattern ?? this.chipOnsetPattern,
+      chipExamCategory: chipExamCategory ?? this.chipExamCategory,
     );
   }
 
@@ -542,6 +590,205 @@ final class AppPalette extends ThemeExtension<AppPalette> {
       drugInk: Color.lerp(drugInk, other.drugInk, t)!,
       diseaseTint: Color.lerp(diseaseTint, other.diseaseTint, t)!,
       diseaseInk: Color.lerp(diseaseInk, other.diseaseInk, t)!,
+      chipDosageForm: _lerpColorMap(
+        chipDosageForm,
+        other.chipDosageForm,
+        t,
+      ),
+      chipRouteOfAdmin: _lerpColorMap(
+        chipRouteOfAdmin,
+        other.chipRouteOfAdmin,
+        t,
+      ),
+      chipPrecaution: _lerpColorMap(
+        chipPrecaution,
+        other.chipPrecaution,
+        t,
+      ),
+      chipIcd10Chapter: _lerpColorMap(
+        chipIcd10Chapter,
+        other.chipIcd10Chapter,
+        t,
+      ),
+      chipOnsetPattern: _lerpColorMap(
+        chipOnsetPattern,
+        other.chipOnsetPattern,
+        t,
+      ),
+      chipExamCategory: _lerpColorMap(
+        chipExamCategory,
+        other.chipExamCategory,
+        t,
+      ),
     );
   }
 }
+
+Map<String, Color> _lerpColorMap(
+  Map<String, Color> a,
+  Map<String, Color> b,
+  double t,
+) {
+  return <String, Color>{
+    for (final key in {...a.keys, ...b.keys})
+      key: Color.lerp(a[key] ?? b[key], b[key] ?? a[key], t)!,
+  };
+}
+
+const _lightChipRouteOfAdmin = <String, Color>{
+  'oral': Color(0xFF1D4ED8),
+  'topical': Color(0xFF0E7490),
+  'injection_route': Color(0xFFB91C1C),
+  'inhalation': Color(0xFF0891B2),
+  'rectal': Color(0xFFA16207),
+  'ophthalmic': Color(0xFF6D28D9),
+  'nasal': Color(0xFF15803D),
+  'transdermal': Color(0xFFBE185D),
+};
+
+const _darkChipRouteOfAdmin = <String, Color>{
+  'oral': Color(0xFFBFD7FF),
+  'topical': Color(0xFF7DD3FC),
+  'injection_route': Color(0xFFFFB4AB),
+  'inhalation': Color(0xFF67E8F9),
+  'rectal': Color(0xFFFFC966),
+  'ophthalmic': Color(0xFFC9B5FF),
+  'nasal': Color(0xFF86E0A4),
+  'transdermal': Color(0xFFFFB1C8),
+};
+
+const _lightChipDosageForm = <String, Color>{
+  'tablet': Color(0xFF1D4ED8),
+  'capsule': Color(0xFF7C3AED),
+  'powder': Color(0xFFA16207),
+  'granule': Color(0xFFCA8A04),
+  'liquid': Color(0xFF0891B2),
+  'injection_form': Color(0xFFB91C1C),
+  'ointment': Color(0xFF15803D),
+  'cream': Color(0xFF0F766E),
+  'patch': Color(0xFFBE185D),
+  'eye_drops': Color(0xFF3730A3),
+  'suppository': Color(0xFF9A3412),
+  'inhaler': Color(0xFF0E7490),
+  'nasal_spray': Color(0xFF6D28D9),
+};
+
+const _darkChipDosageForm = <String, Color>{
+  'tablet': Color(0xFFBFD7FF),
+  'capsule': Color(0xFFD5BAFF),
+  'powder': Color(0xFFFFC966),
+  'granule': Color(0xFFFDE68A),
+  'liquid': Color(0xFF67E8F9),
+  'injection_form': Color(0xFFFFB4AB),
+  'ointment': Color(0xFF86E0A4),
+  'cream': Color(0xFF5DD5BB),
+  'patch': Color(0xFFFFB1C8),
+  'eye_drops': Color(0xFFC7D2FE),
+  'suppository': Color(0xFFFDBA74),
+  'inhaler': Color(0xFF7DD3FC),
+  'nasal_spray': Color(0xFFC9B5FF),
+};
+
+const _lightChipPrecaution = <String, Color>{
+  'comorbidity': Color(0xFF4B5563),
+  'renal_impairment': Color(0xFFA16207),
+  'hepatic_impairment': Color(0xFFCA8A04),
+  'reproductive_potential': Color(0xFFBE185D),
+  'pregnant': Color(0xFF9F1239),
+  'lactating': Color(0xFF6D28D9),
+  'pediatric': Color(0xFF15803D),
+  'geriatric': Color(0xFF1D4ED8),
+};
+
+const _darkChipPrecaution = <String, Color>{
+  'comorbidity': Color(0xFFC5CAD0),
+  'renal_impairment': Color(0xFFFFC966),
+  'hepatic_impairment': Color(0xFFFDE68A),
+  'reproductive_potential': Color(0xFFFFB1C8),
+  'pregnant': Color(0xFFFDA4AF),
+  'lactating': Color(0xFFC9B5FF),
+  'pediatric': Color(0xFF86E0A4),
+  'geriatric': Color(0xFFBFD7FF),
+};
+
+const _lightChipIcd10Chapter = <String, Color>{
+  'chapter_i': Color(0xFFB91C1C),
+  'chapter_ii': Color(0xFF7C3AED),
+  'chapter_iii': Color(0xFF9F1239),
+  'chapter_iv': Color(0xFFA16207),
+  'chapter_v': Color(0xFF6D28D9),
+  'chapter_vi': Color(0xFF3730A3),
+  'chapter_vii': Color(0xFF0E7490),
+  'chapter_viii': Color(0xFF0891B2),
+  'chapter_ix': Color(0xFFB45309),
+  'chapter_x': Color(0xFF0A6FE8),
+  'chapter_xi': Color(0xFFCA8A04),
+  'chapter_xii': Color(0xFFBE185D),
+  'chapter_xiii': Color(0xFF4D7C0F),
+  'chapter_xiv': Color(0xFF0F766E),
+  'chapter_xv': Color(0xFF9333EA),
+  'chapter_xvi': Color(0xFF15803D),
+  'chapter_xvii': Color(0xFFEA580C),
+  'chapter_xviii': Color(0xFF475569),
+  'chapter_xix': Color(0xFF7F1D1D),
+  'chapter_xx': Color(0xFF9A3412),
+  'chapter_xxi': Color(0xFF1D4ED8),
+  'chapter_xxii': Color(0xFF374151),
+};
+
+const _darkChipIcd10Chapter = <String, Color>{
+  'chapter_i': Color(0xFFFFB4AB),
+  'chapter_ii': Color(0xFFD5BAFF),
+  'chapter_iii': Color(0xFFFDA4AF),
+  'chapter_iv': Color(0xFFFFC966),
+  'chapter_v': Color(0xFFC9B5FF),
+  'chapter_vi': Color(0xFFC7D2FE),
+  'chapter_vii': Color(0xFF7DD3FC),
+  'chapter_viii': Color(0xFF67E8F9),
+  'chapter_ix': Color(0xFFFFB77C),
+  'chapter_x': Color(0xFF9ECAFF),
+  'chapter_xi': Color(0xFFFDE68A),
+  'chapter_xii': Color(0xFFFFB1C8),
+  'chapter_xiii': Color(0xFFBEF264),
+  'chapter_xiv': Color(0xFF5DD5BB),
+  'chapter_xv': Color(0xFFE1BDFF),
+  'chapter_xvi': Color(0xFF86E0A4),
+  'chapter_xvii': Color(0xFFFFB68B),
+  'chapter_xviii': Color(0xFFCBD5E1),
+  'chapter_xix': Color(0xFFFCA5A5),
+  'chapter_xx': Color(0xFFFDBA74),
+  'chapter_xxi': Color(0xFFBFD7FF),
+  'chapter_xxii': Color(0xFF9CA3AF),
+};
+
+const _lightChipOnsetPattern = <String, Color>{
+  'acute': Color(0xFFC2410C),
+  'subacute': Color(0xFFB45309),
+  'chronic': Color(0xFF1D4ED8),
+  'intermittent': Color(0xFF0F766E),
+  'relapsing': Color(0xFF7C3AED),
+};
+
+const _darkChipOnsetPattern = <String, Color>{
+  'acute': Color(0xFFFB923C),
+  'subacute': Color(0xFFFFB77C),
+  'chronic': Color(0xFFBFD7FF),
+  'intermittent': Color(0xFF5DD5BB),
+  'relapsing': Color(0xFFD5BAFF),
+};
+
+const _lightChipExamCategory = <String, Color>{
+  'blood_test': Color(0xFFB91C1C),
+  'imaging': Color(0xFF1D4ED8),
+  'physiological': Color(0xFF0891B2),
+  'pathology': Color(0xFF7C3AED),
+  'interview': Color(0xFF15803D),
+};
+
+const _darkChipExamCategory = <String, Color>{
+  'blood_test': Color(0xFFFFB4AB),
+  'imaging': Color(0xFFBFD7FF),
+  'physiological': Color(0xFF67E8F9),
+  'pathology': Color(0xFFD5BAFF),
+  'interview': Color(0xFF86E0A4),
+};
