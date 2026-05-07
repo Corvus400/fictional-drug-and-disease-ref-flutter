@@ -232,17 +232,18 @@ Future<Future<void> Function()?> _openHistory(WidgetTester tester) async {
     searchedAt: DateTime.utc(2026, 5, 4, 22, 15),
     totalCount: 8,
   );
-  await tester.tap(find.byKey(const ValueKey('search-field')).first);
+  await _tapAll(tester, find.byKey(const ValueKey('search-field')));
   await tester.pumpAndSettle();
   return null;
 }
 
 Future<Future<void> Function()?> _performSearch(WidgetTester tester) async {
-  await tester.enterText(
-    find.byKey(const ValueKey('search-field')).first,
+  await _enterTextAll(
+    tester,
+    find.byKey(const ValueKey('search-field')),
     'golden keyword',
   );
-  await tester.tap(find.byType(FilledButton).first);
+  await _tapAll(tester, find.byType(FilledButton));
   await tester.pumpAndSettle();
   return null;
 }
@@ -250,11 +251,12 @@ Future<Future<void> Function()?> _performSearch(WidgetTester tester) async {
 Future<Future<void> Function()?> _performPendingSearch(
   WidgetTester tester,
 ) async {
-  await tester.enterText(
-    find.byKey(const ValueKey('search-field')).first,
+  await _enterTextAll(
+    tester,
+    find.byKey(const ValueKey('search-field')),
     'アムロ',
   );
-  await tester.tap(find.byType(FilledButton).first);
+  await _tapAll(tester, find.byType(FilledButton));
   await tester.pump();
   return null;
 }
@@ -263,8 +265,9 @@ Future<Future<void> Function()?> _triggerLoadingMore(
   WidgetTester tester,
 ) async {
   await _performSearch(tester);
-  await tester.drag(
-    find.byKey(const PageStorageKey<String>('drugSearchResults')).first,
+  await _dragAll(
+    tester,
+    find.byKey(const PageStorageKey<String>('drugSearchResults')),
     const Offset(0, -820),
   );
   await tester.pump();
@@ -272,32 +275,65 @@ Future<Future<void> Function()?> _triggerLoadingMore(
 }
 
 Future<Future<void> Function()?> _openDrugFilter(WidgetTester tester) async {
-  await tester.enterText(
-    find.byKey(const ValueKey('search-field')).first,
+  await _enterTextAll(
+    tester,
+    find.byKey(const ValueKey('search-field')),
     'アムロ',
   );
-  await tester.tap(find.byType(FloatingActionButton).first);
+  await _tapAll(tester, find.byType(FloatingActionButton));
   await tester.pumpAndSettle();
   return null;
 }
 
 Future<Future<void> Function()?> _openDiseaseFilter(WidgetTester tester) async {
-  await tester.tap(find.text('疾患').first);
+  await _tapAll(tester, find.text('疾患'));
   await tester.pumpAndSettle();
-  await tester.enterText(
-    find.byKey(const ValueKey('search-field')).first,
+  await _enterTextAll(
+    tester,
+    find.byKey(const ValueKey('search-field')),
     '高血圧',
   );
-  await tester.tap(find.byType(FloatingActionButton).first);
+  await _tapAll(tester, find.byType(FloatingActionButton));
   await tester.pumpAndSettle();
   return null;
 }
 
 Future<Future<void> Function()?> _openSort(WidgetTester tester) async {
   await _performSearch(tester);
-  await tester.tap(find.textContaining('並び替え').first);
+  await _tapAll(tester, find.textContaining('並び替え'));
   await tester.pumpAndSettle();
   return null;
+}
+
+Future<void> _enterTextAll(
+  WidgetTester tester,
+  Finder finder,
+  String text,
+) async {
+  final count = finder.evaluate().length;
+  for (var index = 0; index < count; index++) {
+    await tester.enterText(finder.at(index), text);
+  }
+}
+
+Future<void> _tapAll(WidgetTester tester, Finder finder) async {
+  final count = finder.evaluate().length;
+  for (var index = 0; index < count; index++) {
+    await tester.tap(finder.at(index), warnIfMissed: false);
+    await tester.pump();
+  }
+}
+
+Future<void> _dragAll(
+  WidgetTester tester,
+  Finder finder,
+  Offset offset,
+) async {
+  final count = finder.evaluate().length;
+  for (var index = 0; index < count; index++) {
+    await tester.drag(finder.at(index), offset, warnIfMissed: false);
+    await tester.pump();
+  }
 }
 
 final class _MockDrugApiClient extends Mock implements DrugApiClient {}
