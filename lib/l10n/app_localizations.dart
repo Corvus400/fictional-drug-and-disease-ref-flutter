@@ -1696,6 +1696,18 @@ abstract class AppLocalizations {
   /// **'PK パラメータ'**
   String get detailDrugSectionParameters;
 
+  /// No description provided for @detailDrugPkTableItemHeader.
+  ///
+  /// In ja, this message translates to:
+  /// **'項目'**
+  String get detailDrugPkTableItemHeader;
+
+  /// No description provided for @detailDrugPkTableValueHeader.
+  ///
+  /// In ja, this message translates to:
+  /// **'値'**
+  String get detailDrugPkTableValueHeader;
+
   /// No description provided for @detailDrugSectionAdditionalInfo.
   ///
   /// In ja, this message translates to:

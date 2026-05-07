@@ -472,6 +472,8 @@
   "detailDrugSectionMetabolism": "代謝",
   "detailDrugSectionExcretion": "排泄",
   "detailDrugSectionParameters": "PK パラメータ",
+  "detailDrugPkTableItemHeader": "項目",
+  "detailDrugPkTableValueHeader": "値",
   "detailDrugSectionAdditionalInfo": "補足情報",
   "detailDrugSectionClinicalResults": "臨床成績",
   "detailDrugSectionPharmacology": "薬効薬理",
