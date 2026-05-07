@@ -4,10 +4,12 @@ import 'dart:io';
 import 'package:fictional_drug_and_disease_ref/application/providers/usecase_providers.dart';
 import 'package:fictional_drug_and_disease_ref/config/api_config.dart';
 import 'package:fictional_drug_and_disease_ref/config/flavor.dart';
+import 'package:fictional_drug_and_disease_ref/data/dto/disease/disease_dto.dart';
 import 'package:fictional_drug_and_disease_ref/data/dto/drug/drug_dto.dart';
 import 'package:fictional_drug_and_disease_ref/data/local/app_database.dart';
 import 'package:fictional_drug_and_disease_ref/data/providers/api_providers.dart';
 import 'package:fictional_drug_and_disease_ref/data/providers/local_providers.dart';
+import 'package:fictional_drug_and_disease_ref/data/services/api/disease_api_client.dart';
 import 'package:fictional_drug_and_disease_ref/data/services/api/drug_api_client.dart';
 import 'package:fictional_drug_and_disease_ref/l10n/app_localizations.dart';
 import 'package:fictional_drug_and_disease_ref/ui/drug/drug_detail_screen_notifier.dart';
@@ -63,15 +65,23 @@ void main() {
       description: 'Drug detail $tabKey',
       builder: (theme, size, scaler) {
         final dto = _drugFixture();
+        final diseaseDto = _diseaseFixture();
         final apiClient = _MockDrugApiClient();
+        final diseaseApiClient = _MockDiseaseApiClient();
         final imageCacheManager = _mockCacheManagerWithImage(
           'drug-detail-golden-$tabKey.png',
         );
         when(() => apiClient.getDrug(dto.id)).thenAnswer((_) async => dto);
+        for (final id in dto.relatedDiseaseIds) {
+          when(
+            () => diseaseApiClient.getDisease(id),
+          ).thenAnswer((_) async => diseaseDto);
+        }
         return ProviderScope(
           overrides: [
             appDatabaseProvider.overrideWithValue(_db),
             drugApiClientProvider.overrideWithValue(apiClient),
+            diseaseApiClientProvider.overrideWithValue(diseaseApiClient),
             drugDetailHeroImageCacheManagerProvider.overrideWithValue(
               imageCacheManager,
             ),
@@ -105,6 +115,8 @@ void main() {
 }
 
 final class _MockDrugApiClient extends Mock implements DrugApiClient {}
+
+final class _MockDiseaseApiClient extends Mock implements DiseaseApiClient {}
 
 final class _MockBaseCacheManager extends Mock implements BaseCacheManager {}
 
@@ -141,4 +153,15 @@ DrugDto _drugFixture() {
           )
           as Map<String, dynamic>;
   return DrugDto.fromJson(json);
+}
+
+DiseaseDto _diseaseFixture() {
+  final json =
+      jsonDecode(
+            File(
+              'test/fixtures/swagger/get_v1_diseases__id_.json',
+            ).readAsStringSync(),
+          )
+          as Map<String, dynamic>;
+  return DiseaseDto.fromJson(json);
 }

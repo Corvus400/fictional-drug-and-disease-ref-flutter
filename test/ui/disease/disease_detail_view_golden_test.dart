@@ -3,10 +3,12 @@ import 'dart:io';
 
 import 'package:fictional_drug_and_disease_ref/application/providers/usecase_providers.dart';
 import 'package:fictional_drug_and_disease_ref/data/dto/disease/disease_dto.dart';
+import 'package:fictional_drug_and_disease_ref/data/dto/drug/drug_dto.dart';
 import 'package:fictional_drug_and_disease_ref/data/local/app_database.dart';
 import 'package:fictional_drug_and_disease_ref/data/providers/api_providers.dart';
 import 'package:fictional_drug_and_disease_ref/data/providers/local_providers.dart';
 import 'package:fictional_drug_and_disease_ref/data/services/api/disease_api_client.dart';
+import 'package:fictional_drug_and_disease_ref/data/services/api/drug_api_client.dart';
 import 'package:fictional_drug_and_disease_ref/l10n/app_localizations.dart';
 import 'package:fictional_drug_and_disease_ref/ui/disease/disease_detail_screen_notifier.dart';
 import 'package:fictional_drug_and_disease_ref/ui/disease/disease_detail_screen_state.dart';
@@ -51,12 +53,20 @@ void main() {
       description: 'Disease detail $tabKey',
       builder: (theme, size, scaler) {
         final dto = _diseaseFixture();
+        final drugDto = _drugFixture();
         final apiClient = _MockDiseaseApiClient();
+        final drugApiClient = _MockDrugApiClient();
         when(() => apiClient.getDisease(dto.id)).thenAnswer((_) async => dto);
+        for (final id in dto.relatedDrugIds) {
+          when(
+            () => drugApiClient.getDrug(id),
+          ).thenAnswer((_) async => drugDto);
+        }
         return ProviderScope(
           overrides: [
             appDatabaseProvider.overrideWithValue(_db),
             diseaseApiClientProvider.overrideWithValue(apiClient),
+            drugApiClientProvider.overrideWithValue(drugApiClient),
             streamBookmarkStateProvider(
               dto.id,
             ).overrideWith((ref) => const Stream<bool>.empty()),
@@ -87,6 +97,8 @@ void main() {
 
 final class _MockDiseaseApiClient extends Mock implements DiseaseApiClient {}
 
+final class _MockDrugApiClient extends Mock implements DrugApiClient {}
+
 DiseaseDto _diseaseFixture() {
   final json =
       jsonDecode(
@@ -96,4 +108,15 @@ DiseaseDto _diseaseFixture() {
           )
           as Map<String, dynamic>;
   return DiseaseDto.fromJson(json);
+}
+
+DrugDto _drugFixture() {
+  final json =
+      jsonDecode(
+            File(
+              'test/fixtures/swagger/get_v1_drugs__id_.json',
+            ).readAsStringSync(),
+          )
+          as Map<String, dynamic>;
+  return DrugDto.fromJson(json);
 }
