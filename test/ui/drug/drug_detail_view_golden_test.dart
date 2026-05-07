@@ -80,6 +80,13 @@ void main() {
     theme: AppTheme.light(),
     selectTabLabel: '副作用',
   );
+
+  _drugDetailGolden(
+    description: 'Drug detail phone adverse effects dark',
+    fileName: 'drug_p8_adverse_effects_dark',
+    theme: AppTheme.dark(),
+    selectTabLabel: '副作用',
+  );
 }
 
 void _drugDetailGolden({
