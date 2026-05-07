@@ -54,8 +54,26 @@ abstract final class DetailConstants {
   /// Detail chip host border radius.
   static const chipHostRadius = 10.0;
 
+  /// Detail chip host horizontal padding.
+  static const chipHostPaddingHorizontal = 10.0;
+
+  /// Detail chip host vertical padding.
+  static const chipHostPaddingVertical = 8.0;
+
   /// Minimum detail chip height.
   static const chipMinHeight = 30.0;
+
+  /// Detail chip horizontal padding.
+  static const chipPaddingHorizontal = 10.0;
+
+  /// Detail chip vertical padding.
+  static const chipPaddingVertical = 4.0;
+
+  /// Detail chip radius.
+  static const chipRadius = 15.0;
+
+  /// Detail chip font size.
+  static const chipFontSize = 12.0;
 
   /// Detail chip text line height.
   static const chipTextHeight = 1.35;

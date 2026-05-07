@@ -2,55 +2,43 @@ import 'package:fictional_drug_and_disease_ref/theme/app_palette.dart';
 import 'package:fictional_drug_and_disease_ref/ui/detail/constants/detail_constants.dart';
 import 'package:flutter/material.dart';
 
-/// Detail chip color source.
-enum ChipKind {
-  /// DosageForm W2 color map.
-  dosageForm,
+/// Detail Spec chip tone variants.
+enum DetailChipTone {
+  /// Neutral search-chip tone.
+  neutral,
 
-  /// RouteOfAdministration W2 color map.
-  routeOfAdmin,
+  /// Danger search-chip tone.
+  danger,
 
-  /// PrecautionPopulationCategory W2 color map.
-  precaution,
-
-  /// Icd10Chapter W2 color map.
-  icd10Chapter,
-
-  /// OnsetPattern W2 color map.
-  onsetPattern,
-
-  /// ExamCategory W2 color map.
-  examCategory,
-
-  /// W1 semantic color source.
-  w1Semantic,
+  /// Diagnosis/accent search-chip tone.
+  dx,
 }
 
-/// Badge-like chip used on detail screens.
+/// Search-screen chip analogue used inside detail screens.
 class DetailChip extends StatelessWidget {
   /// Creates a detail chip.
   const DetailChip({
-    required this.enumKey,
-    required this.enumKind,
     required this.label,
+    this.tone = DetailChipTone.neutral,
     super.key,
   });
-
-  /// Mock-server serial name.
-  final String enumKey;
-
-  /// Enum kind used to choose a W2 color map.
-  final ChipKind enumKind;
 
   /// User-visible label from l10n or domain data.
   final String label;
 
+  /// Chip tone.
+  final DetailChipTone tone;
+
   @override
   Widget build(BuildContext context) {
     final palette = Theme.of(context).extension<AppPalette>()!;
-    final color = _colorFor(palette);
+    final colors = _resolveColors(palette);
     return Container(
       key: const ValueKey<String>('detail-chip-wrapper'),
+      padding: const EdgeInsets.symmetric(
+        horizontal: DetailConstants.chipHostPaddingHorizontal,
+        vertical: DetailConstants.chipHostPaddingVertical,
+      ),
       decoration: BoxDecoration(
         color: palette.surface,
         border: Border.all(
@@ -59,31 +47,53 @@ class DetailChip extends StatelessWidget {
         ),
         borderRadius: BorderRadius.circular(DetailConstants.chipHostRadius),
       ),
-      child: Container(
-        key: const ValueKey<String>('detail-chip'),
-        constraints: const BoxConstraints(
-          minHeight: DetailConstants.chipMinHeight,
-        ),
-        decoration: BoxDecoration(color: color),
-        child: Text(
-          label,
-          softWrap: true,
-          style: const TextStyle(height: DetailConstants.chipTextHeight),
+      child: Align(
+        key: const ValueKey<String>('detail-chip-host-align'),
+        widthFactor: 1,
+        heightFactor: 1,
+        child: Container(
+          key: const ValueKey<String>('detail-chip'),
+          constraints: const BoxConstraints(
+            minHeight: DetailConstants.chipMinHeight,
+          ),
+          padding: const EdgeInsets.symmetric(
+            horizontal: DetailConstants.chipPaddingHorizontal,
+            vertical: DetailConstants.chipPaddingVertical,
+          ),
+          decoration: BoxDecoration(
+            color: colors.background,
+            borderRadius: BorderRadius.circular(DetailConstants.chipRadius),
+          ),
+          child: Text(
+            label,
+            softWrap: true,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: colors.foreground,
+              fontSize: DetailConstants.chipFontSize,
+              fontWeight: FontWeight.w600,
+              height: DetailConstants.chipTextHeight,
+            ),
+          ),
         ),
       ),
     );
   }
 
-  Color _colorFor(AppPalette palette) {
-    return switch (enumKind) {
-          ChipKind.dosageForm => palette.chipDosageForm[enumKey],
-          ChipKind.routeOfAdmin => palette.chipRouteOfAdmin[enumKey],
-          ChipKind.precaution => palette.chipPrecaution[enumKey],
-          ChipKind.icd10Chapter => palette.chipIcd10Chapter[enumKey],
-          ChipKind.onsetPattern => palette.chipOnsetPattern[enumKey],
-          ChipKind.examCategory => palette.chipExamCategory[enumKey],
-          ChipKind.w1Semantic => null,
-        } ??
-        palette.ink2;
+  ({Color background, Color foreground}) _resolveColors(AppPalette palette) {
+    return switch (tone) {
+      DetailChipTone.neutral => (
+        background: palette.surface3,
+        foreground: palette.ink2,
+      ),
+      DetailChipTone.danger => (
+        background: palette.dangerCont,
+        foreground: palette.danger,
+      ),
+      DetailChipTone.dx => (
+        background: palette.dxTint,
+        foreground: palette.dxInk,
+      ),
+    };
   }
 }
