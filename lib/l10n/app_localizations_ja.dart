@@ -902,6 +902,12 @@ class AppLocalizationsJa extends AppLocalizations {
   String get detailDrugSectionPhysicochemical => '有効成分に関する理化学的知見';
 
   @override
+  String get detailDrugSectionHandlingPackagesInsurance => '取扱い・包装・保険';
+
+  @override
+  String get detailDrugSectionApprovalReferences => '承認条件・参考文献';
+
+  @override
   String get detailDrugSectionPackages => '包装';
 
   @override
@@ -915,6 +921,27 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get detailDrugSectionReferences => '主要文献';
+
+  @override
+  String get detailDrugPackageSizeHeader => 'サイズ';
+
+  @override
+  String get detailDrugPackageStorageHeader => '保存';
+
+  @override
+  String get detailDrugPackageExpirationHeader => '有効期間';
+
+  @override
+  String get detailDrugStorageCold => '冷所';
+
+  @override
+  String get detailDrugStorageLightProtection => '遮光';
+
+  @override
+  String get detailDrugStorageMoistureProtection => '防湿';
+
+  @override
+  String get detailDrugExpirationMonthsSuffix => 'か月';
 
   @override
   String get detailDrugSectionRevisedAt => '改訂日';
