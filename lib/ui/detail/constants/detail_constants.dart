@@ -25,7 +25,13 @@ abstract final class DetailConstants {
   static const footerShadowBlurRadius = 12.0;
 
   /// Tablet vertical tab navigation width.
-  static const tabletNavWidth = 200.0;
+  static const tabletNavWidth = 240.0;
+
+  /// Tablet navigation pane vertical padding.
+  static const tabletNavPaddingVertical = 14.0;
+
+  /// Tablet content scroll bottom padding for fixed footer clearance.
+  static const tabletContentBottomPadding = 80.0;
 
   /// Standard content padding inside detail views.
   static const contentPadding = 16.0;
