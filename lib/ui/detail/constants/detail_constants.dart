@@ -417,11 +417,11 @@ abstract final class DetailConstants {
   /// Detail carousel bottom padding.
   static const carouselPaddingBottom = 8.0;
 
-  /// Detail carousel card width.
-  static const carouselCardWidth = 184.0;
+  /// Detail carousel card max width.
+  static const carouselCardMaxWidth = 184.0;
 
-  /// Detail related drug card width.
-  static const relatedDrugCardWidth = 260.0;
+  /// Detail related drug card max width.
+  static const relatedDrugCardMaxWidth = 260.0;
 
   /// Detail carousel card radius.
   static const carouselCardRadius = 12.0;
@@ -431,6 +431,9 @@ abstract final class DetailConstants {
 
   /// Detail carousel card content gap.
   static const carouselCardGap = 6.0;
+
+  /// Detail related drug card image to text gap.
+  static const relatedDrugCardImageTextGap = 12.0;
 
   /// Detail carousel card image height.
   static const carouselCardImageHeight = 64.0;
