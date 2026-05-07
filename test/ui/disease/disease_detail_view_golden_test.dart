@@ -94,6 +94,13 @@ void main() {
     theme: AppTheme.light(),
     selectTabLabel: '関連',
   );
+
+  _diseaseDetailGolden(
+    description: 'Disease detail phone related dark',
+    fileName: 'disease_p10_related_dark',
+    theme: AppTheme.dark(),
+    selectTabLabel: '関連',
+  );
 }
 
 void _diseaseDetailGolden({
