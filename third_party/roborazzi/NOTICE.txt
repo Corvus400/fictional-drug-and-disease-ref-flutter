@@ -1,0 +1,17 @@
+This project's golden testing infrastructure (under test/golden/_comparator/)
+is inspired by Roborazzi (https://github.com/takahirom/roborazzi),
+which is licensed under the Apache License, Version 2.0.
+
+The output file naming conventions (*_compare.png, *_actual.png),
+comparison image layout (3-pane grid), JSON report schema, and the
+record/verify/compare task type model all follow Roborazzi's specification
+for forward compatibility with downstream CI tooling (such as the
+screenshot-comparison workflows used by DroidKaigi/conference-app-2025).
+
+The Dart implementation under test/golden/_comparator/ is an independent
+clean-room implementation written for the Flutter test runner.
+No source code from Roborazzi is included in this repository.
+
+This NOTICE is provided as a courtesy attribution and does not constitute
+a redistribution of Roborazzi source code under Section 4 of the
+Apache License, Version 2.0.
