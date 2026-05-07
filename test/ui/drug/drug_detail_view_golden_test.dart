@@ -115,19 +115,30 @@ void main() {
     theme: AppTheme.dark(),
     selectTabLabel: '関連',
   );
+
+  _drugDetailGolden(
+    description: 'Drug detail tablet overview light',
+    fileName: 'drug_t1_overview_light',
+    theme: AppTheme.light(),
+    constraints: const BoxConstraints.tightFor(width: 834, height: 1194),
+  );
 }
 
 void _drugDetailGolden({
   required String description,
   required String fileName,
   required ThemeData theme,
+  BoxConstraints constraints = const BoxConstraints.tightFor(
+    width: 390,
+    height: 844,
+  ),
   String? selectTabLabel,
 }) {
   unawaited(
     goldenTest(
       description,
       fileName: fileName,
-      constraints: const BoxConstraints.tightFor(width: 390, height: 844),
+      constraints: constraints,
       builder: () {
         final dto = _drugFixture();
         final apiClient = _MockDrugApiClient();
@@ -137,8 +148,8 @@ void _drugDetailGolden({
             GoldenTestScenario(
               name: fileName,
               child: SizedBox(
-                width: 390,
-                height: 844,
+                width: constraints.maxWidth,
+                height: constraints.maxHeight,
                 child: ProviderScope(
                   overrides: [
                     appDatabaseProvider.overrideWithValue(_db),
