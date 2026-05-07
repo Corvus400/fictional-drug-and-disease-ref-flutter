@@ -39,6 +39,12 @@ void main() {
     fileName: 'disease_p1_overview_light',
     theme: AppTheme.light(),
   );
+
+  _diseaseDetailGolden(
+    description: 'Disease detail phone overview dark',
+    fileName: 'disease_p2_overview_dark',
+    theme: AppTheme.dark(),
+  );
 }
 
 void _diseaseDetailGolden({
