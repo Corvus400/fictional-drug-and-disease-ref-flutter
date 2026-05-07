@@ -547,6 +547,7 @@
   "detailBookmarkRemove": "ブックマークを解除",
   "detailBookmarkToggleSemantics": "ブックマーク状態を切り替え",
   "detailBookmarkErrorMessage": "ブックマークの更新に失敗しました",
+  "detailDoseCalculatorLabel": "用量計算",
   "detailRetry": "再試行",
   "detailDisclaimer": "FICTIONAL DATA - NOT FOR MEDICAL USE / 架空データ・医療判断には使用不可"
 }

@@ -2146,6 +2146,12 @@ abstract class AppLocalizations {
   /// **'ブックマークの更新に失敗しました'**
   String get detailBookmarkErrorMessage;
 
+  /// No description provided for @detailDoseCalculatorLabel.
+  ///
+  /// In ja, this message translates to:
+  /// **'用量計算'**
+  String get detailDoseCalculatorLabel;
+
   /// No description provided for @detailRetry.
   ///
   /// In ja, this message translates to:

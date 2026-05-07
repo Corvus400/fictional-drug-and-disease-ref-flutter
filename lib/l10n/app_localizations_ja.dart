@@ -1100,6 +1100,9 @@ class AppLocalizationsJa extends AppLocalizations {
   String get detailBookmarkErrorMessage => 'ブックマークの更新に失敗しました';
 
   @override
+  String get detailDoseCalculatorLabel => '用量計算';
+
+  @override
   String get detailRetry => '再試行';
 
   @override

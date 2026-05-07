@@ -77,6 +77,7 @@ void main() {
       (l10n.detailBookmarkRemove, 'ブックマークを解除'),
       (l10n.detailBookmarkToggleSemantics, 'ブックマーク状態を切り替え'),
       (l10n.detailBookmarkErrorMessage, 'ブックマークの更新に失敗しました'),
+      (l10n.detailDoseCalculatorLabel, '用量計算'),
       (l10n.detailRetry, '再試行'),
       (
         l10n.detailDisclaimer,

@@ -2,8 +2,10 @@ import 'package:fictional_drug_and_disease_ref/core/error/app_exception.dart';
 import 'package:fictional_drug_and_disease_ref/core/error/error_message_mapper.dart';
 import 'package:fictional_drug_and_disease_ref/domain/drug/drug.dart';
 import 'package:fictional_drug_and_disease_ref/l10n/app_localizations.dart';
+import 'package:fictional_drug_and_disease_ref/router/app_router.dart';
 import 'package:fictional_drug_and_disease_ref/ui/detail/constants/detail_constants.dart';
 import 'package:fictional_drug_and_disease_ref/ui/detail/widgets/detail_bookmark_footer.dart';
+import 'package:fictional_drug_and_disease_ref/ui/detail/widgets/detail_dose_calc_button.dart';
 import 'package:fictional_drug_and_disease_ref/ui/drug/drug_detail_screen_notifier.dart';
 import 'package:fictional_drug_and_disease_ref/ui/drug/drug_detail_screen_state.dart';
 import 'package:fictional_drug_and_disease_ref/ui/drug/widgets/drug_detail_adverse_effects_tab.dart';
@@ -14,6 +16,7 @@ import 'package:fictional_drug_and_disease_ref/ui/drug/widgets/drug_detail_pharm
 import 'package:fictional_drug_and_disease_ref/ui/drug/widgets/drug_detail_related_tab.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 /// Drug detail placeholder.
 class DrugDetailView extends ConsumerWidget {
@@ -115,6 +118,10 @@ class _DrugLoadedView extends StatelessWidget {
           bookmarkError: state.bookmarkError,
           onToggleBookmark: onToggleBookmark,
           onClearBookmarkError: onClearBookmarkError,
+          trailing: DetailDoseCalcButton(
+            label: l10n.detailDoseCalculatorLabel,
+            onPressed: () => context.go(AppRoutes.calc),
+          ),
         ),
       ],
     );
