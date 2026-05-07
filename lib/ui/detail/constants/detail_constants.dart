@@ -234,6 +234,27 @@ abstract final class DetailConstants {
   /// Detail ordered/body text line height.
   static const bodyTextLineHeight = 1.6;
 
+  /// Detail adverse frequency label width.
+  static const frequencyLabelWidth = 72.0;
+
+  /// Detail adverse frequency row vertical padding.
+  static const frequencyRowPaddingVertical = 8.0;
+
+  /// Detail adverse frequency row item gap.
+  static const frequencyRowGap = 8.0;
+
+  /// Detail adverse frequency value chip gap.
+  static const frequencyValueGap = 6.0;
+
+  /// Detail adverse frequency value chip horizontal padding.
+  static const frequencyValuePaddingHorizontal = 8.0;
+
+  /// Detail adverse frequency value chip vertical padding.
+  static const frequencyValuePaddingVertical = 2.0;
+
+  /// Detail adverse frequency value chip radius.
+  static const frequencyValueRadius = 8.0;
+
   /// Detail footer action height.
   static const footerActionHeight = 44.0;
 
