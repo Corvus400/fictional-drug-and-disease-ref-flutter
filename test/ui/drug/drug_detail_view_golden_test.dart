@@ -59,6 +59,13 @@ void main() {
     theme: AppTheme.dark(),
     selectTabLabel: '用法・用量',
   );
+
+  _drugDetailGolden(
+    description: 'Drug detail phone caution light',
+    fileName: 'drug_p5_caution_light',
+    theme: AppTheme.light(),
+    selectTabLabel: '注意・併用',
+  );
 }
 
 void _drugDetailGolden({
