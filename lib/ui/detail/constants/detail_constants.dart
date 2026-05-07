@@ -131,4 +131,28 @@ abstract final class DetailConstants {
 
   /// Detail accordion chevron animation duration.
   static const accordionChevronDuration = Duration(milliseconds: 200);
+
+  /// Detail badge wrap top margin.
+  static const badgeWrapTopMargin = 8.0;
+
+  /// Detail badge wrap gap.
+  static const badgeWrapGap = 6.0;
+
+  /// Detail badge minimum height.
+  static const badgeMinHeight = 24.0;
+
+  /// Detail badge horizontal padding.
+  static const badgePaddingHorizontal = 10.0;
+
+  /// Detail badge vertical padding.
+  static const badgePaddingVertical = 4.0;
+
+  /// Detail badge radius.
+  static const badgeRadius = 12.0;
+
+  /// Detail badge font size.
+  static const badgeFontSize = 11.0;
+
+  /// Detail badge text line height.
+  static const badgeTextLineHeight = 1.35;
 }
