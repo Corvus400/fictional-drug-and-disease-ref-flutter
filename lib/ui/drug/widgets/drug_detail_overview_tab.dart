@@ -305,23 +305,29 @@ class _DrugHeroImageState extends State<_DrugHeroImage> {
                           '${widget.drug.id}',
                         ),
                         onTap: () => _openImagePreview(context, imageFile),
-                        child: Image.file(
-                          imageFile,
+                        child: Hero(
                           key: ValueKey<String>(
-                            'drug-detail-hero-image-${widget.drug.id}',
+                            'drug-detail-hero-image-hero-${widget.drug.id}',
                           ),
-                          width: double.infinity,
-                          height: double.infinity,
-                          fit: BoxFit.contain,
-                          errorBuilder: (context, error, stackTrace) {
-                            _logDecodeError(
-                              error,
-                              stackTrace ?? StackTrace.current,
-                            );
-                            return _DrugHeroImageFallback(
-                              colors: widget.colors,
-                            );
-                          },
+                          tag: _drugDetailHeroImageHeroTag(widget.drug.id),
+                          child: Image.file(
+                            imageFile,
+                            key: ValueKey<String>(
+                              'drug-detail-hero-image-${widget.drug.id}',
+                            ),
+                            width: double.infinity,
+                            height: double.infinity,
+                            fit: BoxFit.contain,
+                            errorBuilder: (context, error, stackTrace) {
+                              _logDecodeError(
+                                error,
+                                stackTrace ?? StackTrace.current,
+                              );
+                              return _DrugHeroImageFallback(
+                                colors: widget.colors,
+                              );
+                            },
+                          ),
                         ),
                       );
                     }
@@ -370,12 +376,18 @@ class _DrugHeroImageState extends State<_DrugHeroImage> {
   }
 
   Future<void> _openImagePreview(BuildContext context, File imageFile) {
-    return showDialog<void>(
-      context: context,
-      builder: (context) => _DrugHeroImagePreview(
-        drugId: widget.drug.id,
-        imageFile: imageFile,
-        colors: widget.colors,
+    return Navigator.of(context).push<void>(
+      PageRouteBuilder<void>(
+        pageBuilder: (context, animation, secondaryAnimation) {
+          return _DrugHeroImagePreview(
+            drugId: widget.drug.id,
+            imageFile: imageFile,
+            colors: widget.colors,
+          );
+        },
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          return child;
+        },
       ),
     );
   }
@@ -407,12 +419,18 @@ class _DrugHeroImagePreview extends StatelessWidget {
                   'drug-detail-hero-image-preview-zoom-$drugId',
                 ),
                 maxScale: DetailConstants.heroImagePreviewMaxScale,
-                child: Image.file(
-                  imageFile,
+                child: Hero(
                   key: ValueKey<String>(
-                    'drug-detail-hero-image-preview-image-$drugId',
+                    'drug-detail-hero-image-preview-hero-$drugId',
                   ),
-                  fit: BoxFit.contain,
+                  tag: _drugDetailHeroImageHeroTag(drugId),
+                  child: Image.file(
+                    imageFile,
+                    key: ValueKey<String>(
+                      'drug-detail-hero-image-preview-image-$drugId',
+                    ),
+                    fit: BoxFit.contain,
+                  ),
                 ),
               ),
             ),
@@ -493,6 +511,10 @@ String _drugDetailHeroImageUrl(String imageUrl) {
 
 String _drugDetailHeroImageCacheKey(String imageUrl) {
   return 'drug-detail-hero-image-v1::${_drugDetailHeroImageUrl(imageUrl)}';
+}
+
+String _drugDetailHeroImageHeroTag(String drugId) {
+  return 'drug-detail-hero-image::$drugId';
 }
 
 DetailBadgeColors _badgeColors(({Color background, Color foreground}) colors) {
