@@ -73,6 +73,13 @@ void main() {
     theme: AppTheme.dark(),
     selectTabLabel: '注意・併用',
   );
+
+  _drugDetailGolden(
+    description: 'Drug detail phone adverse effects light',
+    fileName: 'drug_p7_adverse_effects_light',
+    theme: AppTheme.light(),
+    selectTabLabel: '副作用',
+  );
 }
 
 void _drugDetailGolden({
