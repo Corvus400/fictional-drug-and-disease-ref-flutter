@@ -6,6 +6,9 @@ abstract final class DetailConstants {
   /// Phone and tablet app bar height.
   static const appBarHeight = 40.0;
 
+  /// Detail app bar title font size.
+  static const appBarTitleFontSize = 15.0;
+
   /// Phone horizontal tab bar height.
   static const tabBarHeight = 40.0;
 
@@ -20,6 +23,9 @@ abstract final class DetailConstants {
 
   /// Detail top-level tab font size.
   static const detailTabFontSize = 13.0;
+
+  /// Tablet rail top-level tab font size.
+  static const tabletNavItemFontSize = 14.0;
 
   /// Single-line text max line count.
   static const singleLineTextMaxLines = 1;
@@ -45,6 +51,21 @@ abstract final class DetailConstants {
   /// Tablet navigation pane vertical padding.
   static const tabletNavPaddingVertical = 14.0;
 
+  /// Tablet navigation header horizontal padding.
+  static const tabletNavHeaderPaddingHorizontal = 18.0;
+
+  /// Tablet navigation header vertical padding.
+  static const tabletNavHeaderPaddingVertical = 6.0;
+
+  /// Tablet navigation header bottom margin.
+  static const tabletNavHeaderBottomMargin = 6.0;
+
+  /// Tablet navigation header font size.
+  static const tabletNavHeaderFontSize = 11.0;
+
+  /// Tablet navigation header letter spacing.
+  static const tabletNavHeaderLetterSpacing = 0.08;
+
   /// Tablet navigation item horizontal padding.
   static const tabletNavItemPaddingHorizontal = 18.0;
 
@@ -53,6 +74,21 @@ abstract final class DetailConstants {
 
   /// Tablet selected navigation left indicator width.
   static const tabletNavIndicatorWidth = 3.0;
+
+  /// Tablet navigation section index gap.
+  static const tabletNavIndexGap = 10.0;
+
+  /// Tablet navigation section index horizontal padding.
+  static const tabletNavIndexPaddingHorizontal = 4.0;
+
+  /// Tablet navigation section index vertical padding.
+  static const tabletNavIndexPaddingVertical = 3.0;
+
+  /// Tablet navigation section index radius.
+  static const tabletNavIndexRadius = 3.0;
+
+  /// Tablet navigation section index font size.
+  static const tabletNavIndexFontSize = 9.0;
 
   /// Tablet navigation item gap.
   static const tabletNavItemGap = 10.0;
