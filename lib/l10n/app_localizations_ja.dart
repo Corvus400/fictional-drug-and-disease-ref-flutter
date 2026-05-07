@@ -910,6 +910,111 @@ class AppLocalizationsJa extends AppLocalizations {
   String get detailDrugSectionRelatedDiseases => '関連疾患';
 
   @override
+  String get detailDiseaseTabOverview => '概要';
+
+  @override
+  String get detailDiseaseTabDiagnosis => '診断';
+
+  @override
+  String get detailDiseaseTabTreatment => '治療';
+
+  @override
+  String get detailDiseaseTabClinicalCourse => '経過';
+
+  @override
+  String get detailDiseaseTabRelated => '関連';
+
+  @override
+  String get detailDiseaseSectionSynonyms => '同義語';
+
+  @override
+  String get detailDiseaseSectionSummary => '概要';
+
+  @override
+  String get detailDiseaseSectionEpidemiology => '疫学';
+
+  @override
+  String get detailDiseaseSectionPrevalence => '有病率';
+
+  @override
+  String get detailDiseaseSectionOnsetAge => '発症年齢';
+
+  @override
+  String get detailDiseaseSectionSexRatio => '性別';
+
+  @override
+  String get detailDiseaseSectionRiskFactors => 'リスク因子';
+
+  @override
+  String get detailDiseaseSectionEtiology => '原因・病態';
+
+  @override
+  String get detailDiseaseSectionSymptoms => '症状';
+
+  @override
+  String get detailDiseaseSectionMainSymptoms => '主症状';
+
+  @override
+  String get detailDiseaseSectionAssociatedSymptoms => '随伴症状';
+
+  @override
+  String get detailDiseaseSectionOnsetPattern => '発症パターン';
+
+  @override
+  String get detailDiseaseSectionDiagnosticCriteria => '診断基準';
+
+  @override
+  String get detailDiseaseSectionRequired => '必須';
+
+  @override
+  String get detailDiseaseSectionSupporting => '補助';
+
+  @override
+  String get detailDiseaseSectionNotes => '備考';
+
+  @override
+  String get detailDiseaseSectionRequiredExams => '必須検査';
+
+  @override
+  String get detailDiseaseSectionSeverityGrading => '重症度分類';
+
+  @override
+  String get detailDiseaseSectionGradingSystem => '体系';
+
+  @override
+  String get detailDiseaseSectionDifferentialDiagnoses => '鑑別';
+
+  @override
+  String get detailDiseaseSectionComplications => '合併症';
+
+  @override
+  String get detailDiseaseSectionTreatments => '治療';
+
+  @override
+  String get detailDiseaseSectionPharmacological => '薬物療法';
+
+  @override
+  String get detailDiseaseSectionNonPharmacological => '非薬物療法';
+
+  @override
+  String get detailDiseaseSectionAcutePhaseProtocol => '急性期プロトコル';
+
+  @override
+  String get detailDiseaseSectionPrognosis => '予後';
+
+  @override
+  String get detailDiseaseSectionPrevention => '予防';
+
+  @override
+  String get detailDiseaseSectionRelatedDrugs => '関連医薬品';
+
+  @override
+  String get detailDiseaseSectionRelatedDiseases => '関連疾患';
+
+  @override
+  String get detailDiseaseSectionRevisedAt => '改訂日';
+
+  @override
   String get detailBookmarkAdd => 'ブックマークに追加';
 
   @override

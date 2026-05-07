@@ -1768,6 +1768,216 @@ abstract class AppLocalizations {
   /// **'関連疾患'**
   String get detailDrugSectionRelatedDiseases;
 
+  /// No description provided for @detailDiseaseTabOverview.
+  ///
+  /// In ja, this message translates to:
+  /// **'概要'**
+  String get detailDiseaseTabOverview;
+
+  /// No description provided for @detailDiseaseTabDiagnosis.
+  ///
+  /// In ja, this message translates to:
+  /// **'診断'**
+  String get detailDiseaseTabDiagnosis;
+
+  /// No description provided for @detailDiseaseTabTreatment.
+  ///
+  /// In ja, this message translates to:
+  /// **'治療'**
+  String get detailDiseaseTabTreatment;
+
+  /// No description provided for @detailDiseaseTabClinicalCourse.
+  ///
+  /// In ja, this message translates to:
+  /// **'経過'**
+  String get detailDiseaseTabClinicalCourse;
+
+  /// No description provided for @detailDiseaseTabRelated.
+  ///
+  /// In ja, this message translates to:
+  /// **'関連'**
+  String get detailDiseaseTabRelated;
+
+  /// No description provided for @detailDiseaseSectionSynonyms.
+  ///
+  /// In ja, this message translates to:
+  /// **'同義語'**
+  String get detailDiseaseSectionSynonyms;
+
+  /// No description provided for @detailDiseaseSectionSummary.
+  ///
+  /// In ja, this message translates to:
+  /// **'概要'**
+  String get detailDiseaseSectionSummary;
+
+  /// No description provided for @detailDiseaseSectionEpidemiology.
+  ///
+  /// In ja, this message translates to:
+  /// **'疫学'**
+  String get detailDiseaseSectionEpidemiology;
+
+  /// No description provided for @detailDiseaseSectionPrevalence.
+  ///
+  /// In ja, this message translates to:
+  /// **'有病率'**
+  String get detailDiseaseSectionPrevalence;
+
+  /// No description provided for @detailDiseaseSectionOnsetAge.
+  ///
+  /// In ja, this message translates to:
+  /// **'発症年齢'**
+  String get detailDiseaseSectionOnsetAge;
+
+  /// No description provided for @detailDiseaseSectionSexRatio.
+  ///
+  /// In ja, this message translates to:
+  /// **'性別'**
+  String get detailDiseaseSectionSexRatio;
+
+  /// No description provided for @detailDiseaseSectionRiskFactors.
+  ///
+  /// In ja, this message translates to:
+  /// **'リスク因子'**
+  String get detailDiseaseSectionRiskFactors;
+
+  /// No description provided for @detailDiseaseSectionEtiology.
+  ///
+  /// In ja, this message translates to:
+  /// **'原因・病態'**
+  String get detailDiseaseSectionEtiology;
+
+  /// No description provided for @detailDiseaseSectionSymptoms.
+  ///
+  /// In ja, this message translates to:
+  /// **'症状'**
+  String get detailDiseaseSectionSymptoms;
+
+  /// No description provided for @detailDiseaseSectionMainSymptoms.
+  ///
+  /// In ja, this message translates to:
+  /// **'主症状'**
+  String get detailDiseaseSectionMainSymptoms;
+
+  /// No description provided for @detailDiseaseSectionAssociatedSymptoms.
+  ///
+  /// In ja, this message translates to:
+  /// **'随伴症状'**
+  String get detailDiseaseSectionAssociatedSymptoms;
+
+  /// No description provided for @detailDiseaseSectionOnsetPattern.
+  ///
+  /// In ja, this message translates to:
+  /// **'発症パターン'**
+  String get detailDiseaseSectionOnsetPattern;
+
+  /// No description provided for @detailDiseaseSectionDiagnosticCriteria.
+  ///
+  /// In ja, this message translates to:
+  /// **'診断基準'**
+  String get detailDiseaseSectionDiagnosticCriteria;
+
+  /// No description provided for @detailDiseaseSectionRequired.
+  ///
+  /// In ja, this message translates to:
+  /// **'必須'**
+  String get detailDiseaseSectionRequired;
+
+  /// No description provided for @detailDiseaseSectionSupporting.
+  ///
+  /// In ja, this message translates to:
+  /// **'補助'**
+  String get detailDiseaseSectionSupporting;
+
+  /// No description provided for @detailDiseaseSectionNotes.
+  ///
+  /// In ja, this message translates to:
+  /// **'備考'**
+  String get detailDiseaseSectionNotes;
+
+  /// No description provided for @detailDiseaseSectionRequiredExams.
+  ///
+  /// In ja, this message translates to:
+  /// **'必須検査'**
+  String get detailDiseaseSectionRequiredExams;
+
+  /// No description provided for @detailDiseaseSectionSeverityGrading.
+  ///
+  /// In ja, this message translates to:
+  /// **'重症度分類'**
+  String get detailDiseaseSectionSeverityGrading;
+
+  /// No description provided for @detailDiseaseSectionGradingSystem.
+  ///
+  /// In ja, this message translates to:
+  /// **'体系'**
+  String get detailDiseaseSectionGradingSystem;
+
+  /// No description provided for @detailDiseaseSectionDifferentialDiagnoses.
+  ///
+  /// In ja, this message translates to:
+  /// **'鑑別'**
+  String get detailDiseaseSectionDifferentialDiagnoses;
+
+  /// No description provided for @detailDiseaseSectionComplications.
+  ///
+  /// In ja, this message translates to:
+  /// **'合併症'**
+  String get detailDiseaseSectionComplications;
+
+  /// No description provided for @detailDiseaseSectionTreatments.
+  ///
+  /// In ja, this message translates to:
+  /// **'治療'**
+  String get detailDiseaseSectionTreatments;
+
+  /// No description provided for @detailDiseaseSectionPharmacological.
+  ///
+  /// In ja, this message translates to:
+  /// **'薬物療法'**
+  String get detailDiseaseSectionPharmacological;
+
+  /// No description provided for @detailDiseaseSectionNonPharmacological.
+  ///
+  /// In ja, this message translates to:
+  /// **'非薬物療法'**
+  String get detailDiseaseSectionNonPharmacological;
+
+  /// No description provided for @detailDiseaseSectionAcutePhaseProtocol.
+  ///
+  /// In ja, this message translates to:
+  /// **'急性期プロトコル'**
+  String get detailDiseaseSectionAcutePhaseProtocol;
+
+  /// No description provided for @detailDiseaseSectionPrognosis.
+  ///
+  /// In ja, this message translates to:
+  /// **'予後'**
+  String get detailDiseaseSectionPrognosis;
+
+  /// No description provided for @detailDiseaseSectionPrevention.
+  ///
+  /// In ja, this message translates to:
+  /// **'予防'**
+  String get detailDiseaseSectionPrevention;
+
+  /// No description provided for @detailDiseaseSectionRelatedDrugs.
+  ///
+  /// In ja, this message translates to:
+  /// **'関連医薬品'**
+  String get detailDiseaseSectionRelatedDrugs;
+
+  /// No description provided for @detailDiseaseSectionRelatedDiseases.
+  ///
+  /// In ja, this message translates to:
+  /// **'関連疾患'**
+  String get detailDiseaseSectionRelatedDiseases;
+
+  /// No description provided for @detailDiseaseSectionRevisedAt.
+  ///
+  /// In ja, this message translates to:
+  /// **'改訂日'**
+  String get detailDiseaseSectionRevisedAt;
+
   /// No description provided for @detailBookmarkAdd.
   ///
   /// In ja, this message translates to:
