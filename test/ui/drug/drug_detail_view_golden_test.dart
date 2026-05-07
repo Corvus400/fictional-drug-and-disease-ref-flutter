@@ -193,6 +193,14 @@ void main() {
     constraints: const BoxConstraints.tightFor(width: 834, height: 1194),
     selectTabLabel: '薬物動態',
   );
+
+  _drugDetailGolden(
+    description: 'Drug detail tablet related light',
+    fileName: 'drug_t11_related_light',
+    theme: AppTheme.light(),
+    constraints: const BoxConstraints.tightFor(width: 834, height: 1194),
+    selectTabLabel: '関連',
+  );
 }
 
 void _drugDetailGolden({
