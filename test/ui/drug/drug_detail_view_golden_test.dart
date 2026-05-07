@@ -185,6 +185,14 @@ void main() {
     constraints: const BoxConstraints.tightFor(width: 834, height: 1194),
     selectTabLabel: '薬物動態',
   );
+
+  _drugDetailGolden(
+    description: 'Drug detail tablet pharmacokinetics dark',
+    fileName: 'drug_t10_pharmacokinetics_dark',
+    theme: AppTheme.dark(),
+    constraints: const BoxConstraints.tightFor(width: 834, height: 1194),
+    selectTabLabel: '薬物動態',
+  );
 }
 
 void _drugDetailGolden({
