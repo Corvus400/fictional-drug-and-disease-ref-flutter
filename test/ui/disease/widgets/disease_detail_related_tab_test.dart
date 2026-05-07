@@ -5,6 +5,9 @@ import 'package:fictional_drug_and_disease_ref/data/dto/disease/disease_dto.dart
 import 'package:fictional_drug_and_disease_ref/data/mappers/disease_mapper.dart';
 import 'package:fictional_drug_and_disease_ref/l10n/app_localizations.dart';
 import 'package:fictional_drug_and_disease_ref/router/app_router.dart';
+import 'package:fictional_drug_and_disease_ref/theme/app_theme.dart';
+import 'package:fictional_drug_and_disease_ref/ui/detail/widgets/detail_carousel.dart';
+import 'package:fictional_drug_and_disease_ref/ui/detail/widgets/detail_panel.dart';
 import 'package:fictional_drug_and_disease_ref/ui/disease/widgets/disease_detail_related_tab.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -40,14 +43,22 @@ void main() {
       await tester.pumpWidget(
         MaterialApp.router(
           routerConfig: router,
+          theme: AppTheme.light(),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
         ),
       );
 
-      expect(find.text('関連医薬品'), findsOneWidget);
-      expect(find.byType(ListView), findsOneWidget);
+      expect(find.byType(DetailPanel), findsNWidgets(2));
+      expect(find.text('E15'), findsOneWidget);
+      expect(find.text('関連医薬品'), findsWidgets);
+      expect(find.byType(DetailCarousel), findsWidgets);
+      expect(find.byType(DetailCarouselCard), findsWidgets);
       expect(find.text(drugId), findsOneWidget);
+      expect(find.text('E16'), findsOneWidget);
+      expect(find.text('関連疾患'), findsWidgets);
+      expect(find.textContaining('E17'), findsOneWidget);
+      expect(find.textContaining(disease.revisedAt), findsOneWidget);
 
       await tester.tap(find.text(drugId));
       await tester.pumpAndSettle();

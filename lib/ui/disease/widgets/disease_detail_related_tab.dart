@@ -1,7 +1,10 @@
 import 'package:fictional_drug_and_disease_ref/domain/disease/disease.dart';
 import 'package:fictional_drug_and_disease_ref/l10n/app_localizations.dart';
 import 'package:fictional_drug_and_disease_ref/router/app_router.dart';
+import 'package:fictional_drug_and_disease_ref/theme/detail_color_extension.dart';
 import 'package:fictional_drug_and_disease_ref/ui/detail/constants/detail_constants.dart';
+import 'package:fictional_drug_and_disease_ref/ui/detail/widgets/detail_carousel.dart';
+import 'package:fictional_drug_and_disease_ref/ui/detail/widgets/detail_panel.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -19,31 +22,95 @@ class DiseaseDetailRelatedTab extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          l10n.detailDiseaseSectionRelatedDrugs,
-          style: Theme.of(context).textTheme.titleMedium,
+        DetailPanel(
+          sectionIndex: 'E15',
+          title: l10n.detailDiseaseSectionRelatedDrugs,
+          child: SizedBox(
+            width: double.infinity,
+            child: DetailCarousel(
+              children: [
+                for (final id in disease.relatedDrugIds)
+                  _RelatedCard(
+                    title: id,
+                    subtitle: l10n.detailDiseaseSectionRelatedDrugs,
+                    onTap: () => context.push(AppRoutes.drugDetail(id)),
+                  ),
+              ],
+            ),
+          ),
         ),
-        const SizedBox(height: DetailConstants.gapS),
-        SizedBox(
-          height: DetailConstants.relatedCarouselHeight,
-          child: ListView.separated(
-            scrollDirection: Axis.horizontal,
-            itemCount: disease.relatedDrugIds.length,
-            separatorBuilder: (context, index) =>
-                const SizedBox(width: DetailConstants.gapS),
-            itemBuilder: (context, index) {
-              final id = disease.relatedDrugIds[index];
-              return SizedBox(
-                width: DetailConstants.relatedCarouselItemWidth,
-                child: OutlinedButton(
-                  onPressed: () => context.push(AppRoutes.drugDetail(id)),
-                  child: Text(id),
+        DetailPanel(
+          sectionIndex: 'E16',
+          title: l10n.detailDiseaseSectionRelatedDiseases,
+          showBottomDivider: false,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(
+                width: double.infinity,
+                child: DetailCarousel(
+                  children: [
+                    for (final id in disease.relatedDiseaseIds)
+                      _RelatedCard(
+                        title: id,
+                        subtitle: l10n.detailDiseaseSectionRelatedDiseases,
+                        onTap: () => context.push(AppRoutes.diseaseDetail(id)),
+                      ),
+                  ],
                 ),
-              );
-            },
+              ),
+              Padding(
+                padding: const EdgeInsets.only(
+                  top: DetailConstants.heroRevisedTopMargin,
+                ),
+                child: _RevisedText(revisedAt: disease.revisedAt),
+              ),
+            ],
           ),
         ),
       ],
+    );
+  }
+}
+
+class _RelatedCard extends StatelessWidget {
+  const _RelatedCard({
+    required this.title,
+    required this.subtitle,
+    required this.onTap,
+  });
+
+  final String title;
+  final String subtitle;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      type: MaterialType.transparency,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(DetailConstants.carouselCardRadius),
+        onTap: onTap,
+        child: DetailCarouselCard(title: title, subtitle: subtitle),
+      ),
+    );
+  }
+}
+
+class _RevisedText extends StatelessWidget {
+  const _RevisedText({required this.revisedAt});
+
+  final String revisedAt;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = Theme.of(context).extension<DetailColorExtension>()!;
+    return Text(
+      'E17 最終改訂 $revisedAt',
+      style: TextStyle(
+        color: colors.onSurfaceVariant,
+        fontSize: DetailConstants.heroRevisedFontSize,
+      ),
     );
   }
 }
