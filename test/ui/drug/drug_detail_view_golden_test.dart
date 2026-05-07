@@ -129,6 +129,14 @@ void main() {
     theme: AppTheme.dark(),
     constraints: const BoxConstraints.tightFor(width: 834, height: 1194),
   );
+
+  _drugDetailGolden(
+    description: 'Drug detail tablet dose light',
+    fileName: 'drug_t3_dose_light',
+    theme: AppTheme.light(),
+    constraints: const BoxConstraints.tightFor(width: 834, height: 1194),
+    selectTabLabel: '用法・用量',
+  );
 }
 
 void _drugDetailGolden({
