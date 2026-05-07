@@ -171,6 +171,14 @@ void main() {
     constraints: const BoxConstraints.tightFor(width: 834, height: 1194),
     selectTabLabel: '関連',
   );
+
+  _diseaseDetailGolden(
+    description: 'Disease detail tablet related dark',
+    fileName: 'disease_t10_related_dark',
+    theme: AppTheme.dark(),
+    constraints: const BoxConstraints.tightFor(width: 834, height: 1194),
+    selectTabLabel: '関連',
+  );
 }
 
 void _diseaseDetailGolden({
