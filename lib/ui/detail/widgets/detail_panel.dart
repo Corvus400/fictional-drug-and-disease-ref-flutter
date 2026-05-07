@@ -38,6 +38,7 @@ class DetailPanel extends StatelessWidget {
     final colors = Theme.of(context).extension<DetailColorExtension>()!;
     return Container(
       key: const ValueKey<String>('detail-panel'),
+      width: double.infinity,
       padding: const EdgeInsets.fromLTRB(
         DetailConstants.panelPaddingHorizontal,
         DetailConstants.panelPaddingVertical,
@@ -50,7 +51,7 @@ class DetailPanel extends StatelessWidget {
             : null,
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisSize: MainAxisSize.min,
         children: [
           _DetailPanelHeading(

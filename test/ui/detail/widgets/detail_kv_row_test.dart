@@ -80,6 +80,32 @@ void main() {
     );
   });
 
+  testWidgets('DetailKvRow stretches row borders to the available width', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: AppTheme.light(),
+        home: const Scaffold(
+          body: SizedBox(
+            width: 280,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                DetailKvRow(label: '有病率', value: '人口 100000 対 21'),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+
+    expect(
+      tester.getSize(find.byKey(const ValueKey<String>('detail-kv-row'))).width,
+      280,
+    );
+  });
+
   runGoldenMatrix(
     fileNamePrefix: 'detail_kv_row',
     description: 'DetailKvRow follows Detail Spec kv CSS',

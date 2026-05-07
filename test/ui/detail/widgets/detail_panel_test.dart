@@ -66,6 +66,36 @@ void main() {
     expect(decoration.border, isNull);
   });
 
+  testWidgets('DetailPanel stretches divider to the available block width', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: AppTheme.light(),
+        home: const Scaffold(
+          body: SizedBox(
+            width: 320,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                DetailPanel(
+                  sectionIndex: 'E4',
+                  title: '概要',
+                  child: Text('content'),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+
+    expect(
+      tester.getSize(find.byKey(const ValueKey<String>('detail-panel'))).width,
+      320,
+    );
+  });
+
   testWidgets('DetailPanel section index and title use h-section styles', (
     tester,
   ) async {
