@@ -195,6 +195,12 @@ abstract final class DetailConstants {
   /// Detail hero fallback icon size.
   static const heroImageFallbackIconSize = 40.0;
 
+  /// Detail hero image preview max scale.
+  static const heroImagePreviewMaxScale = 4.0;
+
+  /// Detail hero image preview close button inset.
+  static const heroImagePreviewCloseInset = 12.0;
+
   /// Detail hero metadata horizontal padding.
   static const heroMetaPaddingHorizontal = 16.0;
 

@@ -72,6 +72,14 @@ void main() {
       find.byKey(ValueKey<String>('drug-detail-hero-image-${drug.id}')),
       findsOneWidget,
     );
+    expect(
+      find.byKey(
+        ValueKey<String>(
+          'drug-detail-hero-image-preview-trigger-${drug.id}',
+        ),
+      ),
+      findsOneWidget,
+    );
     final image = tester.widget<Image>(
       find.byKey(ValueKey<String>('drug-detail-hero-image-${drug.id}')),
     );
@@ -114,6 +122,55 @@ void main() {
         headers: any(named: 'headers'),
       ),
     ).called(1);
+  });
+
+  testWidgets('DrugDetailOverviewTab opens zoomable hero image preview', (
+    tester,
+  ) async {
+    final drug = _drugFixture().toDomain();
+    final cacheManager = _mockCacheManagerWithImage(
+      'drug-detail-hero-preview.png',
+    );
+
+    await tester.pumpWidget(_overviewTab(drug, cacheManager: cacheManager));
+    await tester.pumpAndSettle();
+
+    await tester.tap(
+      find.byKey(
+        ValueKey<String>(
+          'drug-detail-hero-image-preview-trigger-${drug.id}',
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(
+      find.byKey(
+        ValueKey<String>('drug-detail-hero-image-preview-${drug.id}'),
+      ),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(
+        ValueKey<String>('drug-detail-hero-image-preview-zoom-${drug.id}'),
+      ),
+      findsOneWidget,
+    );
+    expect(find.byType(InteractiveViewer), findsOneWidget);
+
+    await tester.tap(
+      find.byKey(
+        ValueKey<String>('drug-detail-hero-image-preview-close-${drug.id}'),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(
+      find.byKey(
+        ValueKey<String>('drug-detail-hero-image-preview-${drug.id}'),
+      ),
+      findsNothing,
+    );
   });
 
   testWidgets('DrugDetailOverviewTab renders warning section from D3', (
