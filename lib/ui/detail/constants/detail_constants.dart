@@ -168,6 +168,9 @@ abstract final class DetailConstants {
   /// Detail panel title-to-content gap.
   static const panelTitleBottomGap = 10.0;
 
+  /// Detail same-panel subsection top margin.
+  static const panelSubsectionTopMargin = 14.0;
+
   /// Detail panel title-to-subtitle gap.
   static const panelSubtitleTopGap = 4.0;
 

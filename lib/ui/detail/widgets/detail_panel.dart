@@ -54,7 +54,7 @@ class DetailPanel extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisSize: MainAxisSize.min,
         children: [
-          _DetailPanelHeading(
+          DetailSectionHeading(
             colors: colors,
             sectionIndex: sectionIndex,
             subIndex: subIndex,
@@ -80,17 +80,27 @@ class DetailPanel extends StatelessWidget {
   }
 }
 
-class _DetailPanelHeading extends StatelessWidget {
-  const _DetailPanelHeading({
+/// Detail Spec `.h-section` heading with compact D/E section marker.
+class DetailSectionHeading extends StatelessWidget {
+  /// Creates a section heading.
+  const DetailSectionHeading({
     required this.colors,
     required this.sectionIndex,
     required this.title,
     this.subIndex,
+    super.key,
   });
 
+  /// Detail color tokens.
   final DetailColorExtension colors;
+
+  /// Compact section marker such as `D14` or `E8`.
   final String sectionIndex;
+
+  /// Optional secondary marker rendered after the title.
   final String? subIndex;
+
+  /// Heading title.
   final String title;
 
   @override
