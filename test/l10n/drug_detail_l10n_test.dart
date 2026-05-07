@@ -47,6 +47,8 @@ void main() {
       (l10n.detailDrugSectionMetabolism, '代謝'),
       (l10n.detailDrugSectionExcretion, '排泄'),
       (l10n.detailDrugSectionParameters, 'PK パラメータ'),
+      (l10n.detailDrugPkTableItemHeader, '項目'),
+      (l10n.detailDrugPkTableValueHeader, '値'),
       (l10n.detailDrugSectionAdditionalInfo, '補足情報'),
       (l10n.detailDrugSectionClinicalResults, '臨床成績'),
       (l10n.detailDrugSectionPharmacology, '薬効薬理'),

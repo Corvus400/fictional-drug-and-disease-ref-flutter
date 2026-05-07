@@ -875,6 +875,12 @@ class AppLocalizationsJa extends AppLocalizations {
   String get detailDrugSectionParameters => 'PK パラメータ';
 
   @override
+  String get detailDrugPkTableItemHeader => '項目';
+
+  @override
+  String get detailDrugPkTableValueHeader => '値';
+
+  @override
   String get detailDrugSectionAdditionalInfo => '補足情報';
 
   @override
