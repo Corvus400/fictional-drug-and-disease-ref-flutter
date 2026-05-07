@@ -297,21 +297,31 @@ class _DrugHeroImageState extends State<_DrugHeroImage> {
                   future: _imageFile,
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
-                      return Image.file(
-                        snapshot.requireData,
+                      final imageFile = snapshot.requireData;
+                      return GestureDetector(
                         key: ValueKey<String>(
-                          'drug-detail-hero-image-${widget.drug.id}',
+                          'drug-detail-hero-image-preview-trigger-'
+                          '${widget.drug.id}',
                         ),
-                        width: double.infinity,
-                        height: double.infinity,
-                        fit: BoxFit.contain,
-                        errorBuilder: (context, error, stackTrace) {
-                          _logDecodeError(
-                            error,
-                            stackTrace ?? StackTrace.current,
-                          );
-                          return _DrugHeroImageFallback(colors: widget.colors);
-                        },
+                        onTap: () => _openImagePreview(context, imageFile),
+                        child: Image.file(
+                          imageFile,
+                          key: ValueKey<String>(
+                            'drug-detail-hero-image-${widget.drug.id}',
+                          ),
+                          width: double.infinity,
+                          height: double.infinity,
+                          fit: BoxFit.contain,
+                          errorBuilder: (context, error, stackTrace) {
+                            _logDecodeError(
+                              error,
+                              stackTrace ?? StackTrace.current,
+                            );
+                            return _DrugHeroImageFallback(
+                              colors: widget.colors,
+                            );
+                          },
+                        ),
                       );
                     }
                     if (snapshot.hasError) {
@@ -356,6 +366,71 @@ class _DrugHeroImageState extends State<_DrugHeroImage> {
       'imageUrl': _drugDetailHeroImageUrl(widget.drug.imageUrl),
       'cacheKey': _drugDetailHeroImageCacheKey(widget.drug.imageUrl),
     };
+  }
+
+  Future<void> _openImagePreview(BuildContext context, File imageFile) {
+    return showDialog<void>(
+      context: context,
+      builder: (context) => _DrugHeroImagePreview(
+        drugId: widget.drug.id,
+        imageFile: imageFile,
+        colors: widget.colors,
+      ),
+    );
+  }
+}
+
+class _DrugHeroImagePreview extends StatelessWidget {
+  const _DrugHeroImagePreview({
+    required this.drugId,
+    required this.imageFile,
+    required this.colors,
+  });
+
+  final String drugId;
+  final File imageFile;
+  final DetailColorExtension colors;
+
+  @override
+  Widget build(BuildContext context) {
+    final materialLocalizations = MaterialLocalizations.of(context);
+    return Dialog.fullscreen(
+      key: ValueKey<String>('drug-detail-hero-image-preview-$drugId'),
+      backgroundColor: colors.surface,
+      child: SafeArea(
+        child: Stack(
+          children: [
+            Center(
+              child: InteractiveViewer(
+                key: ValueKey<String>(
+                  'drug-detail-hero-image-preview-zoom-$drugId',
+                ),
+                maxScale: DetailConstants.heroImagePreviewMaxScale,
+                child: Image.file(
+                  imageFile,
+                  key: ValueKey<String>(
+                    'drug-detail-hero-image-preview-image-$drugId',
+                  ),
+                  fit: BoxFit.contain,
+                ),
+              ),
+            ),
+            PositionedDirectional(
+              top: DetailConstants.heroImagePreviewCloseInset,
+              end: DetailConstants.heroImagePreviewCloseInset,
+              child: IconButton.filledTonal(
+                key: ValueKey<String>(
+                  'drug-detail-hero-image-preview-close-$drugId',
+                ),
+                tooltip: materialLocalizations.closeButtonTooltip,
+                onPressed: () => Navigator.of(context).pop(),
+                icon: const Icon(Icons.close),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
 
