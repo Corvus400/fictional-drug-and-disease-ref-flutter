@@ -39,6 +39,12 @@ void main() {
     fileName: 'drug_p1_overview_light',
     theme: AppTheme.light(),
   );
+
+  _drugDetailGolden(
+    description: 'Drug detail phone overview dark',
+    fileName: 'drug_p2_overview_dark',
+    theme: AppTheme.dark(),
+  );
 }
 
 void _drugDetailGolden({
