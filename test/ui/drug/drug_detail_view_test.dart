@@ -10,11 +10,13 @@ import 'package:fictional_drug_and_disease_ref/data/providers/api_providers.dart
 import 'package:fictional_drug_and_disease_ref/data/providers/local_providers.dart';
 import 'package:fictional_drug_and_disease_ref/data/services/api/drug_api_client.dart';
 import 'package:fictional_drug_and_disease_ref/l10n/app_localizations.dart';
+import 'package:fictional_drug_and_disease_ref/router/app_router.dart';
 import 'package:fictional_drug_and_disease_ref/theme/app_theme.dart';
 import 'package:fictional_drug_and_disease_ref/ui/drug/drug_detail_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:go_router/go_router.dart';
 import 'package:mocktail/mocktail.dart';
 
 import '../../helpers/test_app_database.dart';
@@ -158,9 +160,68 @@ void main() {
     expect(find.text('概要'), findsWidgets);
     expect(find.text('用法・用量'), findsOneWidget);
     expect(find.text('ブックマーク'), findsOneWidget);
+    expect(find.text('用量計算'), findsOneWidget);
 
     await tester.pumpWidget(const SizedBox.shrink());
     await tester.pump();
+  });
+
+  testWidgets('DrugDetailView D19 dose calculator button opens /calc', (
+    tester,
+  ) async {
+    final dto = _drugFixture();
+    when(() => apiClient.getDrug(dto.id)).thenAnswer((_) async => dto);
+    final router = GoRouter(
+      initialLocation: AppRoutes.drugDetail(dto.id),
+      routes: [
+        GoRoute(
+          path: AppRoutes.search,
+          builder: (context, state) => const SizedBox.shrink(),
+          routes: [
+            GoRoute(
+              path: 'drug/:id',
+              builder: (context, state) => DrugDetailView(
+                id: state.pathParameters['id']!,
+              ),
+            ),
+          ],
+        ),
+        GoRoute(
+          path: AppRoutes.calc,
+          builder: (context, state) => const Text('calc-target'),
+        ),
+      ],
+    );
+    addTearDown(router.dispose);
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          appDatabaseProvider.overrideWithValue(db),
+          drugApiClientProvider.overrideWithValue(apiClient),
+          streamBookmarkStateProvider(
+            dto.id,
+          ).overrideWith((ref) => const Stream<bool>.empty()),
+        ],
+        child: MaterialApp.router(
+          theme: AppTheme.light(),
+          routerConfig: router,
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+        ),
+      ),
+    );
+    await tester.pump();
+    await tester.pump();
+
+    await tester.tap(find.text('用量計算'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('calc-target'), findsOneWidget);
+    expect(
+      router.routerDelegate.currentConfiguration.last.matchedLocation,
+      AppRoutes.calc,
+    );
   });
 
   testWidgets('DrugDetailView swaps active tab body with AnimatedSwitcher', (
