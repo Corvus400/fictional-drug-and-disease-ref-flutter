@@ -101,6 +101,13 @@ void main() {
     theme: AppTheme.dark(),
     selectTabLabel: '薬物動態',
   );
+
+  _drugDetailGolden(
+    description: 'Drug detail phone related light',
+    fileName: 'drug_p11_related_light',
+    theme: AppTheme.light(),
+    selectTabLabel: '関連',
+  );
 }
 
 void _drugDetailGolden({
