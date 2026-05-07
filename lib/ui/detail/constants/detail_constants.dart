@@ -132,6 +132,9 @@ abstract final class DetailConstants {
   /// Detail panel sub index font size.
   static const panelSubIndexFontSize = 10.0;
 
+  /// Detail panel compact label line height.
+  static const panelCompactLabelLineHeight = 1.0;
+
   /// Detail panel subtitle font size.
   static const panelSubtitleFontSize = 11.0;
 
