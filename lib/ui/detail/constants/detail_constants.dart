@@ -245,4 +245,64 @@ abstract final class DetailConstants {
 
   /// Detail warning banner dot font size.
   static const warnBannerDotFontSize = 11.0;
+
+  /// Detail carousel item gap.
+  static const carouselGap = 10.0;
+
+  /// Detail carousel left padding.
+  static const carouselPaddingLeft = 16.0;
+
+  /// Detail carousel top padding.
+  static const carouselPaddingTop = 4.0;
+
+  /// Detail carousel right padding.
+  static const carouselPaddingRight = 16.0;
+
+  /// Detail carousel bottom padding.
+  static const carouselPaddingBottom = 8.0;
+
+  /// Detail carousel card width.
+  static const carouselCardWidth = 184.0;
+
+  /// Detail carousel card radius.
+  static const carouselCardRadius = 12.0;
+
+  /// Detail carousel card padding.
+  static const carouselCardPadding = 12.0;
+
+  /// Detail carousel card content gap.
+  static const carouselCardGap = 6.0;
+
+  /// Detail carousel card image height.
+  static const carouselCardImageHeight = 64.0;
+
+  /// Detail carousel card image radius.
+  static const carouselCardImageRadius = 8.0;
+
+  /// Detail carousel card title font size.
+  static const carouselCardTitleFontSize = 12.5;
+
+  /// Detail carousel card title line height.
+  static const carouselCardTitleLineHeight = 1.35;
+
+  /// Detail carousel card subtitle font size.
+  static const carouselCardSubtitleFontSize = 11.0;
+
+  /// Detail carousel badge gap.
+  static const carouselBadgeGap = 4.0;
+
+  /// Detail carousel badge top margin.
+  static const carouselBadgeTopMargin = 4.0;
+
+  /// Detail carousel badge horizontal padding.
+  static const carouselBadgePaddingHorizontal = 6.0;
+
+  /// Detail carousel badge vertical padding.
+  static const carouselBadgePaddingVertical = 1.0;
+
+  /// Detail carousel badge radius.
+  static const carouselBadgeRadius = 6.0;
+
+  /// Detail carousel badge font size.
+  static const carouselBadgeFontSize = 10.0;
 }
