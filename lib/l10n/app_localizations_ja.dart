@@ -808,7 +808,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get detailDrugSectionDosageHepatic => '肝機能';
 
   @override
-  String get detailDrugSectionDosageRelatedPrecautions => '用法・用量関連注意';
+  String get detailDrugSectionDosageRelatedPrecautions => '用法・用量に関連する注意';
 
   @override
   String get detailDrugSectionImportantPrecautions => '重要な基本的注意';

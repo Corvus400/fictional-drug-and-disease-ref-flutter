@@ -450,7 +450,7 @@
   "detailDrugSectionDosagePediatric": "年齢別",
   "detailDrugSectionDosageRenal": "腎機能",
   "detailDrugSectionDosageHepatic": "肝機能",
-  "detailDrugSectionDosageRelatedPrecautions": "用法・用量関連注意",
+  "detailDrugSectionDosageRelatedPrecautions": "用法・用量に関連する注意",
   "detailDrugSectionImportantPrecautions": "重要な基本的注意",
   "detailDrugSectionPrecautionsForSpecificPopulations": "特定背景患者",
   "detailDrugSectionInteractions": "相互作用",

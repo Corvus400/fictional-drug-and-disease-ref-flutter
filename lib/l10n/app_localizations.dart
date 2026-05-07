@@ -1567,7 +1567,7 @@ abstract class AppLocalizations {
   /// No description provided for @detailDrugSectionDosageRelatedPrecautions.
   ///
   /// In ja, this message translates to:
-  /// **'用法・用量関連注意'**
+  /// **'用法・用量に関連する注意'**
   String get detailDrugSectionDosageRelatedPrecautions;
 
   /// No description provided for @detailDrugSectionImportantPrecautions.
