@@ -215,4 +215,34 @@ abstract final class DetailConstants {
 
   /// Detail bookmark action gap.
   static const bookmarkActionGap = 8.0;
+
+  /// Detail warning banner radius.
+  static const warnBannerRadius = 10.0;
+
+  /// Detail warning banner border width.
+  static const warnBannerBorderWidth = 1.5;
+
+  /// Detail warning banner horizontal padding.
+  static const warnBannerPaddingHorizontal = 12.0;
+
+  /// Detail warning banner vertical padding.
+  static const warnBannerPaddingVertical = 10.0;
+
+  /// Detail warning banner content gap.
+  static const warnBannerGap = 10.0;
+
+  /// Detail warning banner font size.
+  static const warnBannerFontSize = 12.5;
+
+  /// Detail warning banner line height.
+  static const warnBannerLineHeight = 1.55;
+
+  /// Detail warning banner dot size.
+  static const warnBannerDotSize = 18.0;
+
+  /// Detail warning banner dot top margin.
+  static const warnBannerDotTopMargin = 1.0;
+
+  /// Detail warning banner dot font size.
+  static const warnBannerDotFontSize = 11.0;
 }
