@@ -21,7 +21,10 @@ Future<void> testExecutable(FutureOr<void> Function() testMain) async {
   await loadAppFontsForTest();
 
   final cwd = Directory.current.path;
-  final resolvedTestFile = Uri.file(p.join(cwd, 'test', '_resolved.dart'));
+  final existingComparator = goldenFileComparator;
+  final resolvedTestFile = existingComparator is LocalFileComparator
+      ? existingComparator.basedir.resolve('_resolved.dart')
+      : Uri.file(p.join(cwd, 'test', '_resolved.dart'));
   goldenFileComparator = DiffImageComparator(
     resolvedTestFile,
     outputRoot: p.join(cwd, 'build', 'outputs', 'golden'),

@@ -33,6 +33,9 @@ migrate_working_dir/
 /build/
 /coverage/
 
+# alchemist / Flutter golden test per-test failures dir
+**/failures/
+
 # Symbolication related
 app.*.symbols
 
