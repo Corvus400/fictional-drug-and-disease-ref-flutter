@@ -87,6 +87,13 @@ void main() {
     theme: AppTheme.dark(),
     selectTabLabel: '副作用',
   );
+
+  _drugDetailGolden(
+    description: 'Drug detail phone pharmacokinetics light',
+    fileName: 'drug_p9_pharmacokinetics_light',
+    theme: AppTheme.light(),
+    selectTabLabel: '薬物動態',
+  );
 }
 
 void _drugDetailGolden({
