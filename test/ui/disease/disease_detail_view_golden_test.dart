@@ -115,6 +115,14 @@ void main() {
     theme: AppTheme.dark(),
     constraints: const BoxConstraints.tightFor(width: 834, height: 1194),
   );
+
+  _diseaseDetailGolden(
+    description: 'Disease detail tablet diagnosis light',
+    fileName: 'disease_t3_diagnosis_light',
+    theme: AppTheme.light(),
+    constraints: const BoxConstraints.tightFor(width: 834, height: 1194),
+    selectTabLabel: '診断',
+  );
 }
 
 void _diseaseDetailGolden({
