@@ -34,8 +34,19 @@ class DiseaseDetailView extends ConsumerWidget {
     final l10n = AppLocalizations.of(context)!;
     final state = ref.watch(diseaseDetailScreenProvider(id));
     final notifier = ref.read(diseaseDetailScreenProvider(id).notifier);
+    final theme = Theme.of(context);
+    final colors = theme.colorScheme;
     return Scaffold(
-      appBar: AppBar(title: Text(l10n.diseaseDetailTitle)),
+      appBar: AppBar(
+        toolbarHeight: DetailConstants.appBarHeight,
+        centerTitle: true,
+        title: Text(l10n.diseaseDetailTitle),
+        titleTextStyle: theme.textTheme.titleLarge?.copyWith(
+          color: colors.onSurface,
+          fontSize: DetailConstants.appBarTitleFontSize,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
       body: switch (state.phase) {
         DiseaseDetailLoadingPhase() => const Center(
           child: CircularProgressIndicator(),
@@ -81,10 +92,11 @@ class _DiseaseLoadedView extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
     return DetailResponsiveLayout(
       tabs: [
-        for (final tab in DiseaseDetailTab.values)
+        for (final (index, tab) in DiseaseDetailTab.values.indexed)
           DetailTabButton(
             label: _diseaseTabLabel(l10n, tab),
             selected: state.activeTab == tab,
+            sectionNumber: index + 1,
             onPressed: () => onSelectTab(tab),
           ),
       ],

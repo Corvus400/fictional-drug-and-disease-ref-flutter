@@ -11,6 +11,8 @@ import 'package:fictional_drug_and_disease_ref/data/providers/local_providers.da
 import 'package:fictional_drug_and_disease_ref/data/services/api/disease_api_client.dart';
 import 'package:fictional_drug_and_disease_ref/l10n/app_localizations.dart';
 import 'package:fictional_drug_and_disease_ref/theme/app_theme.dart';
+import 'package:fictional_drug_and_disease_ref/ui/detail/constants/detail_constants.dart';
+import 'package:fictional_drug_and_disease_ref/ui/disease/disease_detail_screen_state.dart';
 import 'package:fictional_drug_and_disease_ref/ui/disease/disease_detail_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -198,6 +200,26 @@ void main() {
           .width,
       240,
     );
+    final appBar = tester.widget<AppBar>(find.byType(AppBar));
+    expect(appBar.toolbarHeight, DetailConstants.appBarHeight);
+    expect(
+      appBar.titleTextStyle?.fontSize,
+      DetailConstants.appBarTitleFontSize,
+    );
+    expect(appBar.titleTextStyle?.fontWeight, FontWeight.w600);
+    expect(
+      find.byKey(const ValueKey<String>('detail-tablet-nav-header')),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const ValueKey<String>('detail-tablet-nav-index')),
+      findsNWidgets(DiseaseDetailTab.values.length),
+    );
+    final firstNavIndex = tester.widget<Text>(
+      find.byKey(const ValueKey<String>('detail-tablet-nav-index')).first,
+    );
+    expect(firstNavIndex.data, '1');
+    expect(firstNavIndex.style?.fontWeight, FontWeight.w700);
 
     await tester.pumpWidget(const SizedBox.shrink());
     await tester.pump();

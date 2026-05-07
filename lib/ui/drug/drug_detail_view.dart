@@ -39,8 +39,19 @@ class DrugDetailView extends ConsumerWidget {
     final l10n = AppLocalizations.of(context)!;
     final state = ref.watch(drugDetailScreenProvider(id));
     final notifier = ref.read(drugDetailScreenProvider(id).notifier);
+    final theme = Theme.of(context);
+    final colors = theme.colorScheme;
     return Scaffold(
-      appBar: AppBar(title: Text(l10n.drugDetailTitle)),
+      appBar: AppBar(
+        toolbarHeight: DetailConstants.appBarHeight,
+        centerTitle: true,
+        title: Text(l10n.drugDetailTitle),
+        titleTextStyle: theme.textTheme.titleLarge?.copyWith(
+          color: colors.onSurface,
+          fontSize: DetailConstants.appBarTitleFontSize,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
       body: switch (state.phase) {
         DrugDetailLoadingPhase() => const Center(
           child: CircularProgressIndicator(),
@@ -84,10 +95,11 @@ class _DrugLoadedView extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
     return DetailResponsiveLayout(
       tabs: [
-        for (final tab in DrugDetailTab.values)
+        for (final (index, tab) in DrugDetailTab.values.indexed)
           DetailTabButton(
             label: _drugTabLabel(l10n, tab),
             selected: state.activeTab == tab,
+            sectionNumber: index + 1,
             onPressed: () => onSelectTab(tab),
           ),
       ],

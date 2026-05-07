@@ -9,6 +9,7 @@ class DetailTabButton extends StatelessWidget {
     required this.label,
     required this.selected,
     required this.onPressed,
+    this.sectionNumber,
     super.key,
   });
 
@@ -20,6 +21,9 @@ class DetailTabButton extends StatelessWidget {
 
   /// Selects this tab.
   final VoidCallback onPressed;
+
+  /// Tablet navigation section number.
+  final int? sectionNumber;
 
   @override
   Widget build(BuildContext context) {
@@ -86,6 +90,10 @@ class DetailTabButton extends StatelessWidget {
             ),
             child: Row(
               children: [
+                if (sectionNumber != null) ...[
+                  _TabletNavIndex(number: sectionNumber!),
+                  const SizedBox(width: DetailConstants.tabletNavIndexGap),
+                ],
                 Expanded(
                   child: Text(
                     label,
@@ -95,13 +103,49 @@ class DetailTabButton extends StatelessWidget {
                       color: selected
                           ? colors.onPrimaryContainer
                           : colors.onSurfaceVariant,
-                      fontSize: DetailConstants.detailTabFontSize,
+                      fontSize: DetailConstants.tabletNavItemFontSize,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
                 ),
               ],
             ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _TabletNavIndex extends StatelessWidget {
+  const _TabletNavIndex({required this.number});
+
+  final int number;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = _detailColors(context);
+    return DecoratedBox(
+      key: const ValueKey<String>('detail-tablet-nav-index-box'),
+      decoration: BoxDecoration(
+        color: colors.surfaceContainerHigh,
+        borderRadius: BorderRadius.circular(
+          DetailConstants.tabletNavIndexRadius,
+        ),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: DetailConstants.tabletNavIndexPaddingHorizontal,
+          vertical: DetailConstants.tabletNavIndexPaddingVertical,
+        ),
+        child: Text(
+          number.toString(),
+          key: const ValueKey<String>('detail-tablet-nav-index'),
+          style: TextStyle(
+            color: colors.onSurfaceVariant,
+            fontSize: DetailConstants.tabletNavIndexFontSize,
+            fontWeight: FontWeight.w700,
+            height: DetailConstants.panelCompactLabelLineHeight,
           ),
         ),
       ),

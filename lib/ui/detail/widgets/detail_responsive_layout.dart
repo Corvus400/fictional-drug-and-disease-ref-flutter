@@ -64,7 +64,10 @@ class DetailResponsiveLayout extends StatelessWidget {
                           child: SingleChildScrollView(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.stretch,
-                              children: tabs,
+                              children: [
+                                _TabletNavHeader(colors: colors),
+                                ...tabs,
+                              ],
                             ),
                           ),
                         ),
@@ -143,6 +146,35 @@ class DetailResponsiveLayout extends StatelessWidget {
           ],
         );
       },
+    );
+  }
+}
+
+class _TabletNavHeader extends StatelessWidget {
+  const _TabletNavHeader({required this.colors});
+
+  final DetailColorExtension colors;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      key: const ValueKey<String>('detail-tablet-nav-header'),
+      padding: const EdgeInsets.fromLTRB(
+        DetailConstants.tabletNavHeaderPaddingHorizontal,
+        DetailConstants.tabletNavHeaderPaddingVertical,
+        DetailConstants.tabletNavHeaderPaddingHorizontal,
+        DetailConstants.tabletNavHeaderPaddingVertical +
+            DetailConstants.tabletNavHeaderBottomMargin,
+      ),
+      child: Text(
+        'セクション',
+        style: TextStyle(
+          color: colors.onSurfaceVariant,
+          fontSize: DetailConstants.tabletNavHeaderFontSize,
+          fontWeight: FontWeight.w700,
+          letterSpacing: DetailConstants.tabletNavHeaderLetterSpacing,
+        ),
+      ),
     );
   }
 }
