@@ -932,13 +932,28 @@ class AppLocalizationsJa extends AppLocalizations {
   String get detailDrugPackageExpirationHeader => '有効期間';
 
   @override
+  String get detailDrugStorageRoomTemperature => '室温';
+
+  @override
   String get detailDrugStorageCold => '冷所';
+
+  @override
+  String get detailDrugStorageFrozen => '冷凍';
 
   @override
   String get detailDrugStorageLightProtection => '遮光';
 
   @override
   String get detailDrugStorageMoistureProtection => '防湿';
+
+  @override
+  String get detailDrugHepaticSeverityMild => '軽度';
+
+  @override
+  String get detailDrugHepaticSeverityModerate => '中等度';
+
+  @override
+  String get detailDrugHepaticSeveritySevere => '重度';
 
   @override
   String get detailDrugExpirationMonthsSuffix => 'か月';

@@ -1810,11 +1810,23 @@ abstract class AppLocalizations {
   /// **'有効期間'**
   String get detailDrugPackageExpirationHeader;
 
+  /// No description provided for @detailDrugStorageRoomTemperature.
+  ///
+  /// In ja, this message translates to:
+  /// **'室温'**
+  String get detailDrugStorageRoomTemperature;
+
   /// No description provided for @detailDrugStorageCold.
   ///
   /// In ja, this message translates to:
   /// **'冷所'**
   String get detailDrugStorageCold;
+
+  /// No description provided for @detailDrugStorageFrozen.
+  ///
+  /// In ja, this message translates to:
+  /// **'冷凍'**
+  String get detailDrugStorageFrozen;
 
   /// No description provided for @detailDrugStorageLightProtection.
   ///
@@ -1827,6 +1839,24 @@ abstract class AppLocalizations {
   /// In ja, this message translates to:
   /// **'防湿'**
   String get detailDrugStorageMoistureProtection;
+
+  /// No description provided for @detailDrugHepaticSeverityMild.
+  ///
+  /// In ja, this message translates to:
+  /// **'軽度'**
+  String get detailDrugHepaticSeverityMild;
+
+  /// No description provided for @detailDrugHepaticSeverityModerate.
+  ///
+  /// In ja, this message translates to:
+  /// **'中等度'**
+  String get detailDrugHepaticSeverityModerate;
+
+  /// No description provided for @detailDrugHepaticSeveritySevere.
+  ///
+  /// In ja, this message translates to:
+  /// **'重度'**
+  String get detailDrugHepaticSeveritySevere;
 
   /// No description provided for @detailDrugExpirationMonthsSuffix.
   ///

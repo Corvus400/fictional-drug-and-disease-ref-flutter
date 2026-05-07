@@ -69,6 +69,7 @@ void main() {
     expect(find.text('取扱い・包装・保険'), findsOneWidget);
     expect(find.byType(DetailExamTable), findsOneWidget);
     expect(find.text(drug.packages.first.size), findsOneWidget);
+    expect(find.textContaining('冷所・遮光・防湿'), findsOneWidget);
     expect(find.text('D17'), findsOneWidget);
     expect(find.text('承認条件・参考文献'), findsOneWidget);
     expect(
@@ -105,11 +106,42 @@ void main() {
       AppRoutes.diseaseDetail(diseaseId),
     );
   });
+
+  testWidgets('DrugDetailRelatedTab localizes storage temperature enums', (
+    tester,
+  ) async {
+    final drug = _drugFixture(
+      storageTemperatures: ['room_temperature', 'cold', 'frozen'],
+    ).toDomain();
+    final apiClient = _MockDiseaseApiClient();
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [diseaseApiClientProvider.overrideWithValue(apiClient)],
+        child: MaterialApp(
+          theme: AppTheme.light(),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: Scaffold(
+            body: SingleChildScrollView(
+              child: DrugDetailRelatedTab(drug: drug),
+            ),
+          ),
+        ),
+      ),
+    );
+
+    expect(find.text('室温'), findsOneWidget);
+    expect(find.text('冷所'), findsOneWidget);
+    expect(find.text('冷凍'), findsOneWidget);
+    expect(find.textContaining('room_temperature'), findsNothing);
+    expect(find.textContaining('frozen'), findsNothing);
+  });
 }
 
 final class _MockDiseaseApiClient extends Mock implements DiseaseApiClient {}
 
-DrugDto _drugFixture() {
+DrugDto _drugFixture({List<String>? storageTemperatures}) {
   final json =
       jsonDecode(
             File(
@@ -117,6 +149,24 @@ DrugDto _drugFixture() {
             ).readAsStringSync(),
           )
           as Map<String, dynamic>;
+  if (storageTemperatures != null) {
+    final packages = json['packages'] as List<dynamic>;
+    final firstPackage = packages.first as Map<String, dynamic>;
+    json['packages'] = [
+      for (final (index, temperature) in storageTemperatures.indexed)
+        {
+          ...firstPackage,
+          'size': '包装 ${index + 1}',
+          'storage_condition': {
+            ...(firstPackage['storage_condition'] as Map<String, dynamic>),
+            'temperature': temperature,
+            'light_protection': false,
+            'moisture_protection': false,
+            'additional_note': null,
+          },
+        },
+    ];
+  }
   return DrugDto.fromJson(json);
 }
 

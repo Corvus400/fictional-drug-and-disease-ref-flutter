@@ -162,9 +162,9 @@ class _FrequencyRow extends StatelessWidget {
 
 String _frequencyLabel(AppLocalizations l10n, String frequency) {
   return switch (frequency) {
-    'over5_percent' => l10n.detailDrugSectionFreqOver5,
-    'between1_and5_percent' => l10n.detailDrugSectionFreq1to5,
-    'under1_percent' => l10n.detailDrugSectionFreqUnder1,
+    'over_5_percent' => l10n.detailDrugSectionFreqOver5,
+    'between_1_and_5_percent' => l10n.detailDrugSectionFreq1to5,
+    'under_1_percent' => l10n.detailDrugSectionFreqUnder1,
     'unknown' => l10n.detailDrugSectionFreqUnknown,
     _ => frequency,
   };
