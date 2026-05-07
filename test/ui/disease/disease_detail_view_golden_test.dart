@@ -108,6 +108,13 @@ void main() {
     theme: AppTheme.light(),
     constraints: const BoxConstraints.tightFor(width: 834, height: 1194),
   );
+
+  _diseaseDetailGolden(
+    description: 'Disease detail tablet overview dark',
+    fileName: 'disease_t2_overview_dark',
+    theme: AppTheme.dark(),
+    constraints: const BoxConstraints.tightFor(width: 834, height: 1194),
+  );
 }
 
 void _diseaseDetailGolden({
