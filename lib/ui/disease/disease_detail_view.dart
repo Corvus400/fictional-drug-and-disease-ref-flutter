@@ -14,7 +14,12 @@ import 'package:fictional_drug_and_disease_ref/ui/disease/widgets/disease_detail
 import 'package:fictional_drug_and_disease_ref/ui/disease/widgets/disease_detail_related_tab.dart';
 import 'package:fictional_drug_and_disease_ref/ui/disease/widgets/disease_detail_treatment_tab.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+/// Cache manager for disease detail related drug thumbnails.
+final diseaseDetailRelatedDrugImageCacheManagerProvider =
+    Provider<BaseCacheManager>((ref) => DefaultCacheManager());
 
 /// Disease detail placeholder.
 class DiseaseDetailView extends ConsumerWidget {
@@ -42,6 +47,9 @@ class DiseaseDetailView extends ConsumerWidget {
         DiseaseDetailLoadedPhase(:final disease) => _DiseaseLoadedView(
           state: state,
           disease: disease,
+          relatedDrugImageCacheManager: ref.watch(
+            diseaseDetailRelatedDrugImageCacheManagerProvider,
+          ),
           onSelectTab: notifier.selectTab,
           onToggleBookmark: notifier.toggleBookmark,
           onClearBookmarkError: notifier.clearBookmarkError,
@@ -55,6 +63,7 @@ class _DiseaseLoadedView extends StatelessWidget {
   const _DiseaseLoadedView({
     required this.state,
     required this.disease,
+    required this.relatedDrugImageCacheManager,
     required this.onSelectTab,
     required this.onToggleBookmark,
     required this.onClearBookmarkError,
@@ -62,6 +71,7 @@ class _DiseaseLoadedView extends StatelessWidget {
 
   final DiseaseDetailScreenState state;
   final Disease disease;
+  final BaseCacheManager relatedDrugImageCacheManager;
   final ValueChanged<DiseaseDetailTab> onSelectTab;
   final VoidCallback onToggleBookmark;
   final VoidCallback onClearBookmarkError;
@@ -81,7 +91,12 @@ class _DiseaseLoadedView extends StatelessWidget {
       activeBody: AnimatedSwitcher(
         key: const ValueKey('disease-detail-active-tab-switcher'),
         duration: DetailConstants.tabSwitchDuration,
-        child: _activeDiseaseTabBody(l10n, disease, state.activeTab),
+        child: _activeDiseaseTabBody(
+          l10n,
+          disease,
+          state.activeTab,
+          relatedDrugImageCacheManager,
+        ),
       ),
       footer: DetailBookmarkFooter(
         isBookmarked: state.isBookmarked,
@@ -160,6 +175,7 @@ Widget _activeDiseaseTabBody(
   AppLocalizations l10n,
   Disease disease,
   DiseaseDetailTab activeTab,
+  BaseCacheManager relatedDrugImageCacheManager,
 ) {
   return switch (activeTab) {
     DiseaseDetailTab.overview => DiseaseDetailOverviewTab(
@@ -181,6 +197,7 @@ Widget _activeDiseaseTabBody(
     DiseaseDetailTab.related => DiseaseDetailRelatedTab(
       key: const ValueKey('disease-detail-active-tab-body'),
       disease: disease,
+      cacheManager: relatedDrugImageCacheManager,
     ),
   };
 }

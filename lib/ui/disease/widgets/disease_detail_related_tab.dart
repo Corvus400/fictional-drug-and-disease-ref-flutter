@@ -1,14 +1,21 @@
+import 'dart:io';
+
+import 'package:fictional_drug_and_disease_ref/config/api_config.dart';
+import 'package:fictional_drug_and_disease_ref/core/logging/app_logger.dart';
 import 'package:fictional_drug_and_disease_ref/core/result.dart';
 import 'package:fictional_drug_and_disease_ref/data/providers/api_providers.dart';
 import 'package:fictional_drug_and_disease_ref/domain/disease/disease.dart';
 import 'package:fictional_drug_and_disease_ref/domain/drug/drug.dart';
 import 'package:fictional_drug_and_disease_ref/l10n/app_localizations.dart';
 import 'package:fictional_drug_and_disease_ref/router/app_router.dart';
+import 'package:fictional_drug_and_disease_ref/theme/app_palette.dart';
 import 'package:fictional_drug_and_disease_ref/theme/detail_color_extension.dart';
 import 'package:fictional_drug_and_disease_ref/ui/detail/constants/detail_constants.dart';
 import 'package:fictional_drug_and_disease_ref/ui/detail/widgets/detail_carousel.dart';
 import 'package:fictional_drug_and_disease_ref/ui/detail/widgets/detail_panel.dart';
+import 'package:fictional_drug_and_disease_ref/ui/search/constants/search_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/misc.dart';
 import 'package:go_router/go_router.dart';
@@ -35,14 +42,22 @@ final FutureProviderFamily<Disease, String> _relatedDiseaseProvider =
 /// Related entities tab for disease detail.
 class DiseaseDetailRelatedTab extends StatelessWidget {
   /// Creates a related tab.
-  const DiseaseDetailRelatedTab({required this.disease, super.key});
+  const DiseaseDetailRelatedTab({
+    required this.disease,
+    this.cacheManager,
+    super.key,
+  });
 
   /// Disease detail model.
   final Disease disease;
 
+  /// Cache manager for related drug thumbnail loading.
+  final BaseCacheManager? cacheManager;
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final resolvedCacheManager = cacheManager ?? DefaultCacheManager();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -56,6 +71,7 @@ class DiseaseDetailRelatedTab extends StatelessWidget {
                 for (final id in disease.relatedDrugIds)
                   _RelatedDrugCard(
                     id: id,
+                    cacheManager: resolvedCacheManager,
                     onTap: () => context.push(AppRoutes.drugDetail(id)),
                   ),
               ],
@@ -96,9 +112,14 @@ class DiseaseDetailRelatedTab extends StatelessWidget {
 }
 
 class _RelatedDrugCard extends ConsumerWidget {
-  const _RelatedDrugCard({required this.id, required this.onTap});
+  const _RelatedDrugCard({
+    required this.id,
+    required this.cacheManager,
+    required this.onTap,
+  });
 
   final String id;
+  final BaseCacheManager cacheManager;
   final VoidCallback onTap;
 
   @override
@@ -111,13 +132,11 @@ class _RelatedDrugCard extends ConsumerWidget {
         borderRadius: BorderRadius.circular(DetailConstants.carouselCardRadius),
         onTap: onTap,
         child: drug.when(
-          data: (drug) => DetailCarouselCard(
-            title: drug.brandName,
-            subtitle: drug.id,
-            badges: [
-              _dosageFormLabel(l10n, drug.dosageForm),
-              _routeLabel(l10n, drug.routeOfAdministration),
-            ],
+          data: (drug) => _RelatedDrugCarouselCard(
+            drug: drug,
+            cacheManager: cacheManager,
+            dosageFormLabel: _dosageFormLabel(l10n, drug.dosageForm),
+            routeLabel: _routeLabel(l10n, drug.routeOfAdministration),
           ),
           loading: () => DetailCarouselCard(
             title: id,
@@ -129,6 +148,235 @@ class _RelatedDrugCard extends ConsumerWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class _RelatedDrugCarouselCard extends StatelessWidget {
+  const _RelatedDrugCarouselCard({
+    required this.drug,
+    required this.cacheManager,
+    required this.dosageFormLabel,
+    required this.routeLabel,
+  });
+
+  final Drug drug;
+  final BaseCacheManager cacheManager;
+  final String dosageFormLabel;
+  final String routeLabel;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = Theme.of(context).extension<DetailColorExtension>()!;
+    final palette =
+        Theme.of(context).extension<AppPalette>() ??
+        (Theme.of(context).brightness == Brightness.dark
+            ? AppPalette.dark
+            : AppPalette.light);
+    final imageSize =
+        MediaQuery.sizeOf(context).width >=
+            SearchConstants.searchTabletBreakpoint
+        ? SearchConstants.searchTabletDrugImageSize
+        : SearchConstants.searchPhoneDrugImageSize;
+    final imageCacheWidth = (imageSize * MediaQuery.devicePixelRatioOf(context))
+        .round();
+    return Container(
+      key: const ValueKey<String>('detail-related-drug-card'),
+      constraints: const BoxConstraints.tightFor(
+        width: DetailConstants.relatedDrugCardWidth,
+      ),
+      padding: const EdgeInsets.all(DetailConstants.carouselCardPadding),
+      decoration: BoxDecoration(
+        color: colors.surfaceContainerLow,
+        border: Border.all(color: colors.outlineVariant),
+        borderRadius: BorderRadius.circular(DetailConstants.carouselCardRadius),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(
+              DetailConstants.carouselCardImageRadius,
+            ),
+            child: SizedBox(
+              width: imageSize,
+              height:
+                  imageSize / SearchConstants.searchDrugCardImageAspectRatio,
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  color: palette.surfaceSubtle,
+                  border: Border.all(color: palette.hairline),
+                ),
+                child: _RelatedDrugCachedImage(
+                  drug: drug,
+                  imageCacheWidth: imageCacheWidth,
+                  cacheManager: cacheManager,
+                  palette: palette,
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(width: DetailConstants.carouselCardGap),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  drug.brandName,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: colors.onSurface,
+                    fontSize: DetailConstants.carouselCardTitleFontSize,
+                    fontWeight: FontWeight.w700,
+                    height: DetailConstants.carouselCardTitleLineHeight,
+                  ),
+                ),
+                const SizedBox(height: DetailConstants.carouselCardGap),
+                Text(
+                  drug.id,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: colors.onSurfaceVariant,
+                    fontSize: DetailConstants.carouselCardSubtitleFontSize,
+                  ),
+                ),
+                const SizedBox(height: DetailConstants.carouselBadgeTopMargin),
+                Wrap(
+                  spacing: DetailConstants.carouselBadgeGap,
+                  runSpacing: DetailConstants.carouselBadgeGap,
+                  children: [
+                    _RelatedCardBadge(label: dosageFormLabel, palette: palette),
+                    _RelatedCardBadge(label: routeLabel, palette: palette),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _RelatedDrugCachedImage extends StatefulWidget {
+  const _RelatedDrugCachedImage({
+    required this.drug,
+    required this.imageCacheWidth,
+    required this.cacheManager,
+    required this.palette,
+  });
+
+  final Drug drug;
+  final int imageCacheWidth;
+  final BaseCacheManager cacheManager;
+  final AppPalette palette;
+
+  @override
+  State<_RelatedDrugCachedImage> createState() =>
+      _RelatedDrugCachedImageState();
+}
+
+class _RelatedDrugCachedImageState extends State<_RelatedDrugCachedImage> {
+  late Future<File> _imageFile;
+  bool _loggedLoadError = false;
+  bool _loggedDecodeError = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _imageFile = _loadImageFile();
+  }
+
+  @override
+  void didUpdateWidget(covariant _RelatedDrugCachedImage oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.drug.imageUrl != widget.drug.imageUrl ||
+        oldWidget.cacheManager != widget.cacheManager) {
+      _loggedLoadError = false;
+      _loggedDecodeError = false;
+      _imageFile = _loadImageFile();
+    }
+  }
+
+  Future<File> _loadImageFile() async {
+    final cachedFile = await widget.cacheManager.getSingleFile(
+      _relatedDrugCardImageUrl(widget.drug.imageUrl),
+      key: _relatedDrugCardImageCacheKey(widget.drug.imageUrl),
+    );
+    return File(cachedFile.path);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<File>(
+      future: _imageFile,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return Image.file(
+            snapshot.requireData,
+            key: ValueKey<String>(
+              'detail-related-drug-image-${widget.drug.id}',
+            ),
+            fit: BoxFit.cover,
+            cacheWidth: widget.imageCacheWidth,
+            errorBuilder: (context, error, stackTrace) {
+              _logDecodeError(error, stackTrace ?? StackTrace.current);
+              return _RelatedDrugImageFallback(palette: widget.palette);
+            },
+          );
+        }
+        if (snapshot.hasError) {
+          _logLoadError(snapshot.error!, snapshot.stackTrace);
+        }
+        return _RelatedDrugImageFallback(palette: widget.palette);
+      },
+    );
+  }
+
+  void _logLoadError(Object error, StackTrace? stackTrace) {
+    if (_loggedLoadError) {
+      return;
+    }
+    _loggedLoadError = true;
+    appLogger.w(
+      _logPayload(),
+      error: error,
+      stackTrace: stackTrace ?? StackTrace.current,
+    );
+  }
+
+  void _logDecodeError(Object error, StackTrace stackTrace) {
+    if (_loggedDecodeError) {
+      return;
+    }
+    _loggedDecodeError = true;
+    appLogger.w(_logPayload(), error: error, stackTrace: stackTrace);
+  }
+
+  Map<String, Object?> _logPayload() {
+    return {
+      'message': 'failed to load related drug card image',
+      'drugId': widget.drug.id,
+      'imageUrl': _relatedDrugCardImageUrl(widget.drug.imageUrl),
+      'cacheKey': _relatedDrugCardImageCacheKey(widget.drug.imageUrl),
+    };
+  }
+}
+
+class _RelatedDrugImageFallback extends StatelessWidget {
+  const _RelatedDrugImageFallback({required this.palette});
+
+  final AppPalette palette;
+
+  @override
+  Widget build(BuildContext context) {
+    return ColoredBox(
+      key: const ValueKey<String>('detail-related-drug-image-fallback'),
+      color: palette.surfaceSubtle,
+      child: Icon(Icons.medication_outlined, color: palette.ink2, size: 24),
     );
   }
 }
@@ -209,6 +457,57 @@ String _chronicityLabel(AppLocalizations l10n, String value) {
     'relapsing' => l10n.searchDiseaseChronicityRelapsing,
     _ => value,
   };
+}
+
+String _relatedDrugCardImageUrl(String imageUrl) {
+  final base = Uri.parse(ApiConfig.current.apiBaseUrl);
+  final resolved = base.resolve(imageUrl);
+  return resolved
+      .replace(
+        queryParameters: {
+          ...resolved.queryParameters,
+          'size': SearchConstants.searchDrugCardImageApiSize,
+        },
+      )
+      .toString();
+}
+
+String _relatedDrugCardImageCacheKey(String imageUrl) {
+  return 'detail-related-drug-card-image-v1::'
+      '${_relatedDrugCardImageUrl(imageUrl)}';
+}
+
+class _RelatedCardBadge extends StatelessWidget {
+  const _RelatedCardBadge({required this.label, required this.palette});
+
+  final String label;
+  final AppPalette palette;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      key: const ValueKey<String>('detail-related-card-badge'),
+      padding: const EdgeInsets.symmetric(
+        horizontal: DetailConstants.carouselBadgePaddingHorizontal,
+        vertical: DetailConstants.carouselBadgePaddingVertical,
+      ),
+      decoration: BoxDecoration(
+        color: palette.surface3,
+        borderRadius: BorderRadius.circular(
+          DetailConstants.carouselBadgeRadius,
+        ),
+      ),
+      child: Text(
+        label,
+        softWrap: true,
+        style: TextStyle(
+          color: palette.ink2,
+          fontSize: DetailConstants.carouselBadgeFontSize,
+          height: DetailConstants.carouselCardTitleLineHeight,
+        ),
+      ),
+    );
+  }
 }
 
 class _RevisedText extends StatelessWidget {
