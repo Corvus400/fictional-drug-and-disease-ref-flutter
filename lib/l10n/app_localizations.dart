@@ -1978,6 +1978,18 @@ abstract class AppLocalizations {
   /// **'改訂日'**
   String get detailDiseaseSectionRevisedAt;
 
+  /// No description provided for @detailBookmarkLabel.
+  ///
+  /// In ja, this message translates to:
+  /// **'ブックマーク'**
+  String get detailBookmarkLabel;
+
+  /// No description provided for @detailBookmarkedLabel.
+  ///
+  /// In ja, this message translates to:
+  /// **'ブックマーク済み'**
+  String get detailBookmarkedLabel;
+
   /// No description provided for @detailBookmarkAdd.
   ///
   /// In ja, this message translates to:

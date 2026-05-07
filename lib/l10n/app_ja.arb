@@ -519,6 +519,8 @@
   "detailDiseaseSectionRelatedDrugs": "関連医薬品",
   "detailDiseaseSectionRelatedDiseases": "関連疾患",
   "detailDiseaseSectionRevisedAt": "改訂日",
+  "detailBookmarkLabel": "ブックマーク",
+  "detailBookmarkedLabel": "ブックマーク済み",
   "detailBookmarkAdd": "ブックマークに追加",
   "detailBookmarkRemove": "ブックマークを解除",
   "detailBookmarkToggleSemantics": "ブックマーク状態を切り替え",

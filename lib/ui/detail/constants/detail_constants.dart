@@ -12,6 +12,18 @@ abstract final class DetailConstants {
   /// Fixed bookmark footer height.
   static const footerHeight = 64.0;
 
+  /// Fixed bookmark footer horizontal padding.
+  static const footerPaddingHorizontal = 16.0;
+
+  /// Detail footer action spacing.
+  static const footerGap = 12.0;
+
+  /// Detail footer top shadow dy.
+  static const footerShadowDy = -4.0;
+
+  /// Detail footer top shadow blur radius.
+  static const footerShadowBlurRadius = 12.0;
+
   /// Tablet vertical tab navigation width.
   static const tabletNavWidth = 200.0;
 
@@ -200,4 +212,7 @@ abstract final class DetailConstants {
 
   /// Detail footer action icon size.
   static const footerActionIconSize = 18.0;
+
+  /// Detail bookmark action gap.
+  static const bookmarkActionGap = 8.0;
 }

@@ -1015,6 +1015,12 @@ class AppLocalizationsJa extends AppLocalizations {
   String get detailDiseaseSectionRevisedAt => '改訂日';
 
   @override
+  String get detailBookmarkLabel => 'ブックマーク';
+
+  @override
+  String get detailBookmarkedLabel => 'ブックマーク済み';
+
+  @override
   String get detailBookmarkAdd => 'ブックマークに追加';
 
   @override
