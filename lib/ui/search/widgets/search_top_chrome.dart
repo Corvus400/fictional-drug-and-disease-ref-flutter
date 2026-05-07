@@ -16,7 +16,7 @@ class _SearchTopChrome extends StatelessWidget {
   });
 
   final SearchScreenState state;
-  final SearchPalette palette;
+  final AppPalette palette;
   final double gutter;
   final bool isTablet;
   final Object historyTapRegionGroupId;
@@ -147,7 +147,7 @@ class _SearchField extends StatefulWidget {
 
   final String queryText;
   final String hintText;
-  final SearchPalette palette;
+  final AppPalette palette;
   final Object tapRegionGroupId;
   final VoidCallback onTap;
   final ValueChanged<String> onChanged;
@@ -244,7 +244,7 @@ class _Round6SegmentedControl extends StatelessWidget {
   });
 
   final SearchTab selected;
-  final SearchPalette palette;
+  final AppPalette palette;
   final ValueChanged<SearchTab> onChanged;
 
   @override

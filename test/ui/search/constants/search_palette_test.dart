@@ -1,20 +1,20 @@
 import 'dart:math' as math;
 
-import 'package:fictional_drug_and_disease_ref/ui/search/constants/search_palette.dart';
+import 'package:fictional_drug_and_disease_ref/theme/app_palette.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  group('SearchPalette', () {
+  group('AppPalette', () {
     group('regulatoryBadgeColors', () {
       test('returns light hex for poison value in light brightness', () {
-        final result = SearchPalette.light.regulatoryBadgeColors('poison');
+        final result = AppPalette.light.regulatoryBadgeColors('poison');
 
         expect(result.foreground, const Color(0xFFD62A2A));
       });
 
       test('returns dark hex for poison value in dark brightness', () {
-        final result = SearchPalette.dark.regulatoryBadgeColors('poison');
+        final result = AppPalette.dark.regulatoryBadgeColors('poison');
 
         expect(result.foreground, const Color(0xFFFFB4AB));
       });
@@ -36,7 +36,7 @@ void main() {
             'ordinary',
           ];
 
-          for (final palette in [SearchPalette.light, SearchPalette.dark]) {
+          for (final palette in [AppPalette.light, AppPalette.dark]) {
             for (final value in values) {
               final colors = palette.regulatoryBadgeColors(value);
 
@@ -58,53 +58,53 @@ void main() {
     group('primary action colors', () {
       test('light bg and fg match Round6 spec', () {
         expect(
-          SearchPalette.light.searchPrimaryActionBg,
+          AppPalette.light.searchPrimaryActionBg,
           const Color(0xFF007AFF),
         );
         expect(
-          SearchPalette.light.searchPrimaryActionFg,
+          AppPalette.light.searchPrimaryActionFg,
           const Color(0xFFFFFFFF),
         );
       });
 
       test('dark bg and fg match Round6 spec', () {
         expect(
-          SearchPalette.dark.searchPrimaryActionBg,
+          AppPalette.dark.searchPrimaryActionBg,
           const Color(0xFF9ECAFF),
         );
         expect(
-          SearchPalette.dark.searchPrimaryActionFg,
+          AppPalette.dark.searchPrimaryActionFg,
           const Color(0xFF003258),
         );
       });
 
       test('filter FAB colors match Round6 token split', () {
-        expect(SearchPalette.light.filterFabBg, const Color(0xFF007AFF));
-        expect(SearchPalette.light.filterFabFg, const Color(0xFFFFFFFF));
-        expect(SearchPalette.dark.filterFabBg, const Color(0xFF00497F));
-        expect(SearchPalette.dark.filterFabFg, const Color(0xFFD1E4FF));
+        expect(AppPalette.light.filterFabBg, const Color(0xFF007AFF));
+        expect(AppPalette.light.filterFabFg, const Color(0xFFFFFFFF));
+        expect(AppPalette.dark.filterFabBg, const Color(0xFF00497F));
+        expect(AppPalette.dark.filterFabFg, const Color(0xFFD1E4FF));
       });
     });
 
     test('separates drugTint and primarySoft tokens', () {
       expect(
-        SearchPalette.light.drugTint,
-        isNot(SearchPalette.light.primarySoft),
+        AppPalette.light.drugTint,
+        isNot(AppPalette.light.primarySoft),
       );
       expect(
-        SearchPalette.dark.drugTint,
-        isNot(SearchPalette.dark.primarySoft),
+        AppPalette.dark.drugTint,
+        isNot(AppPalette.dark.primarySoft),
       );
     });
 
     test('searchFieldBg follows Round5 search field tokens', () {
       expect(
-        (SearchPalette.light as dynamic).searchFieldBg,
+        (AppPalette.light as dynamic).searchFieldBg,
         const Color(0xFFEBEBEF),
       );
       expect(
-        (SearchPalette.dark as dynamic).searchFieldBg,
-        (SearchPalette.dark as dynamic).surface3,
+        (AppPalette.dark as dynamic).searchFieldBg,
+        (AppPalette.dark as dynamic).surface3,
       );
     });
 
@@ -113,14 +113,14 @@ void main() {
 
       final foregrounds = {
         for (final value in values)
-          SearchPalette.light
+          AppPalette.light
               .diseaseBadgeColors(DiseaseBadgeCategory.chronicity, value)
               .foreground,
       };
 
       expect(foregrounds.length, greaterThanOrEqualTo(4));
       for (final value in values) {
-        final colors = SearchPalette.light.diseaseBadgeColors(
+        final colors = AppPalette.light.diseaseBadgeColors(
           DiseaseBadgeCategory.chronicity,
           value,
         );
@@ -128,7 +128,7 @@ void main() {
           _contrastOnSurface(
             colors.foreground,
             colors.background,
-            SearchPalette.light.surface,
+            AppPalette.light.surface,
           ),
           greaterThanOrEqualTo(4.5),
         );
@@ -138,30 +138,30 @@ void main() {
     test(
       'disease badge infectious true uses danger; false uses neutral gray',
       () {
-        final trueColors = SearchPalette.light.diseaseBadgeColors(
+        final trueColors = AppPalette.light.diseaseBadgeColors(
           DiseaseBadgeCategory.infectious,
           'true',
         );
-        final falseColors = SearchPalette.light.diseaseBadgeColors(
+        final falseColors = AppPalette.light.diseaseBadgeColors(
           DiseaseBadgeCategory.infectious,
           'false',
         );
-        final darkTrueColors = SearchPalette.dark.diseaseBadgeColors(
+        final darkTrueColors = AppPalette.dark.diseaseBadgeColors(
           DiseaseBadgeCategory.infectious,
           'true',
         );
 
-        expect(trueColors.foreground, SearchPalette.light.danger);
+        expect(trueColors.foreground, AppPalette.light.danger);
         expect(
           _contrastOnSurface(
             trueColors.foreground,
             trueColors.background,
-            SearchPalette.light.surface,
+            AppPalette.light.surface,
           ),
           greaterThanOrEqualTo(4.5),
         );
         expect(falseColors.foreground, const Color(0xFF0F766E));
-        expect(darkTrueColors.foreground, SearchPalette.dark.danger);
+        expect(darkTrueColors.foreground, AppPalette.dark.danger);
       },
     );
 
@@ -195,7 +195,7 @@ void main() {
           (category: DiseaseBadgeCategory.department, value: value),
       ];
 
-      for (final palette in [SearchPalette.light, SearchPalette.dark]) {
+      for (final palette in [AppPalette.light, AppPalette.dark]) {
         for (final testCase in cases) {
           final colors = palette.diseaseBadgeColors(
             testCase.category,
@@ -239,14 +239,14 @@ void main() {
 
       final foregrounds = {
         for (final value in values)
-          SearchPalette.light
+          AppPalette.light
               .diseaseBadgeColors(DiseaseBadgeCategory.department, value)
               .foreground,
       };
 
       expect(foregrounds.length, greaterThanOrEqualTo(12));
       expect(
-        SearchPalette.light
+        AppPalette.light
             .diseaseBadgeColors(
               DiseaseBadgeCategory.department,
               'psychiatry',
@@ -255,14 +255,14 @@ void main() {
         const Color(0xFF6D28D9),
       );
       expect(
-        SearchPalette.light
+        AppPalette.light
             .diseaseBadgeColors(
               DiseaseBadgeCategory.department,
               'cardiology',
             )
             .foreground,
         isNot(
-          SearchPalette.light
+          AppPalette.light
               .diseaseBadgeColors(
                 DiseaseBadgeCategory.department,
                 'emergency',

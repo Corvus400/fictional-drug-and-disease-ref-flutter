@@ -17,9 +17,9 @@ import 'package:fictional_drug_and_disease_ref/data/services/api/disease_api_cli
 import 'package:fictional_drug_and_disease_ref/data/services/api/drug_api_client.dart';
 import 'package:fictional_drug_and_disease_ref/domain/drug/drug_search_params.dart';
 import 'package:fictional_drug_and_disease_ref/l10n/app_localizations.dart';
+import 'package:fictional_drug_and_disease_ref/theme/app_palette.dart';
 import 'package:fictional_drug_and_disease_ref/theme/app_theme.dart';
 import 'package:fictional_drug_and_disease_ref/ui/search/constants/search_constants.dart';
-import 'package:fictional_drug_and_disease_ref/ui/search/constants/search_palette.dart';
 import 'package:fictional_drug_and_disease_ref/ui/search/search_screen_notifier.dart';
 import 'package:fictional_drug_and_disease_ref/ui/search/search_screen_state.dart';
 import 'package:fictional_drug_and_disease_ref/ui/search/search_view.dart';
@@ -116,7 +116,7 @@ void main() {
       );
       expect(
         lightField.decoration?.fillColor,
-        SearchPalette.light.searchFieldBg,
+        AppPalette.light.searchFieldBg,
       );
 
       await tester.pumpWidget(const SizedBox.shrink());
@@ -137,7 +137,7 @@ void main() {
       final darkField = tester.widget<TextField>(
         find.byKey(const ValueKey('search-field')),
       );
-      expect(darkField.decoration?.fillColor, SearchPalette.dark.searchFieldBg);
+      expect(darkField.decoration?.fillColor, AppPalette.dark.searchFieldBg);
     },
   );
 
@@ -188,16 +188,16 @@ void main() {
     var fab = tester.widget<FloatingActionButton>(
       find.byType(FloatingActionButton),
     );
-    expect(fab.backgroundColor, SearchPalette.light.filterFabBg);
-    expect(fab.foregroundColor, SearchPalette.light.filterFabFg);
+    expect(fab.backgroundColor, AppPalette.light.filterFabBg);
+    expect(fab.foregroundColor, AppPalette.light.filterFabFg);
 
     await tester.pumpWidget(const SizedBox.shrink());
     await pumpWithTheme(AppTheme.dark(), themeMode: ThemeMode.dark);
     fab = tester.widget<FloatingActionButton>(
       find.byType(FloatingActionButton),
     );
-    expect(fab.backgroundColor, SearchPalette.dark.filterFabBg);
-    expect(fab.foregroundColor, SearchPalette.dark.filterFabFg);
+    expect(fab.backgroundColor, AppPalette.dark.filterFabBg);
+    expect(fab.foregroundColor, AppPalette.dark.filterFabFg);
   });
 
   testWidgets('search submit button uses Round6 primary palette and radius', (
@@ -222,11 +222,11 @@ void main() {
 
     expect(
       button.style?.backgroundColor?.resolve(<WidgetState>{}),
-      SearchPalette.light.searchPrimaryActionBg,
+      AppPalette.light.searchPrimaryActionBg,
     );
     expect(
       button.style?.foregroundColor?.resolve(<WidgetState>{}),
-      SearchPalette.light.searchPrimaryActionFg,
+      AppPalette.light.searchPrimaryActionFg,
     );
     expect(
       (shape! as RoundedRectangleBorder).borderRadius,
@@ -264,11 +264,11 @@ void main() {
 
     expect(
       button.style?.backgroundColor?.resolve(<WidgetState>{}),
-      SearchPalette.dark.searchPrimaryActionBg,
+      AppPalette.dark.searchPrimaryActionBg,
     );
     expect(
       button.style?.foregroundColor?.resolve(<WidgetState>{}),
-      SearchPalette.dark.searchPrimaryActionFg,
+      AppPalette.dark.searchPrimaryActionFg,
     );
   });
 
@@ -321,11 +321,11 @@ void main() {
     );
     expect(
       cta.style?.backgroundColor?.resolve(<WidgetState>{}),
-      SearchPalette.light.searchPrimaryActionBg,
+      AppPalette.light.searchPrimaryActionBg,
     );
     expect(
       cta.style?.foregroundColor?.resolve(<WidgetState>{}),
-      SearchPalette.light.searchPrimaryActionFg,
+      AppPalette.light.searchPrimaryActionFg,
     );
     expect(
       (shape! as RoundedRectangleBorder).borderRadius,
@@ -390,11 +390,11 @@ void main() {
     );
     expect(
       reset.style?.backgroundColor?.resolve(<WidgetState>{}),
-      SearchPalette.light.searchPrimaryActionBg,
+      AppPalette.light.searchPrimaryActionBg,
     );
     expect(
       reset.style?.foregroundColor?.resolve(<WidgetState>{}),
-      SearchPalette.light.searchPrimaryActionFg,
+      AppPalette.light.searchPrimaryActionFg,
     );
     expect(
       (resetShape! as RoundedRectangleBorder).borderRadius,
@@ -406,11 +406,11 @@ void main() {
     );
     expect(
       remove.style?.foregroundColor?.resolve(<WidgetState>{}),
-      SearchPalette.light.primary,
+      AppPalette.light.primary,
     );
     expect(
       remove.style?.side?.resolve(<WidgetState>{})?.color,
-      SearchPalette.light.primaryRing,
+      AppPalette.light.primaryRing,
     );
     expect(
       (removeShape! as RoundedRectangleBorder).borderRadius,
@@ -470,7 +470,7 @@ void main() {
     final closeIcon = closeButton.icon as Icon;
 
     expect(closeIcon.icon, Icons.close);
-    expect(closeIcon.color, SearchPalette.light.primary);
+    expect(closeIcon.color, AppPalette.light.primary);
   });
 
   testWidgets('FAB badge uses Round6 custom +N geometry and colors', (
@@ -509,10 +509,10 @@ void main() {
 
     expect(tester.getSize(badgeFinder).width, greaterThanOrEqualTo(24));
     expect(tester.getSize(badgeFinder).height, 22);
-    expect(decoration.color, SearchPalette.light.danger);
+    expect(decoration.color, AppPalette.light.danger);
     expect(decoration.borderRadius, BorderRadius.circular(11));
     expect(decoration.border?.top.width, 2);
-    expect(decoration.border?.top.color, SearchPalette.light.background);
+    expect(decoration.border?.top.color, AppPalette.light.background);
     expect(text.style?.color, Colors.white);
   });
 
@@ -680,7 +680,7 @@ void main() {
     );
     final selectedTitle = tester.widget<Text>(find.text('更新日(新しい順)').last);
     expect(selectedTitle.style?.fontWeight, FontWeight.w700);
-    expect(selectedTitle.style?.color, SearchPalette.light.primary);
+    expect(selectedTitle.style?.color, AppPalette.light.primary);
   });
 
   testWidgets(
@@ -721,22 +721,22 @@ void main() {
         find.byKey(const ValueKey('search-sort-check-drug-revised')),
       );
 
-      expect(sheet.color, SearchPalette.light.surface);
+      expect(sheet.color, AppPalette.light.surface);
       expect(
         (sheet.shape! as RoundedRectangleBorder).borderRadius,
         const BorderRadius.vertical(top: Radius.circular(20)),
       );
       expect(
         (handle.decoration as BoxDecoration).color,
-        SearchPalette.light.hairline,
+        AppPalette.light.hairline,
       );
-      expect(header.style?.color, SearchPalette.light.ink);
+      expect(header.style?.color, AppPalette.light.ink);
       expect(header.style?.fontWeight, FontWeight.w700);
       expect(firstRow.borderRadius, BorderRadius.zero);
-      expect(firstDivider.color, SearchPalette.light.hairline2);
-      expect(selectedLabel.style?.color, SearchPalette.light.primary);
+      expect(firstDivider.color, AppPalette.light.hairline2);
+      expect(selectedLabel.style?.color, AppPalette.light.primary);
       expect(selectedLabel.style?.fontWeight, FontWeight.w700);
-      expect(selectedCheck.color, SearchPalette.light.primary);
+      expect(selectedCheck.color, AppPalette.light.primary);
       expect(selectedCheck.size, 16);
     },
   );
@@ -851,7 +851,7 @@ void main() {
     );
 
     expect(dropdown.height, lessThanOrEqualTo(250));
-    expect(divider.color, SearchPalette.light.hairline2);
+    expect(divider.color, AppPalette.light.hairline2);
     expect(divider.thickness, 0.5);
     expect(find.text('キーボード履歴4'), findsOneWidget);
   });
@@ -891,7 +891,7 @@ void main() {
     );
     final clearLabel = clearButton.child! as Text;
     expect(clearLabel.style?.fontWeight, FontWeight.w700);
-    expect(clearLabel.style?.color, SearchPalette.light.primary);
+    expect(clearLabel.style?.color, AppPalette.light.primary);
 
     final deleteBgFinder = find.byKey(
       const ValueKey('search-history-delete-bg-round6_history_action'),
@@ -899,7 +899,7 @@ void main() {
     expect(deleteBgFinder, findsOneWidget);
     final deleteBg = tester.widget<DecoratedBox>(deleteBgFinder);
     final decoration = deleteBg.decoration as BoxDecoration;
-    expect(decoration.color, SearchPalette.light.surface3);
+    expect(decoration.color, AppPalette.light.surface3);
     expect(decoration.borderRadius, BorderRadius.circular(11));
     expect(tester.getSize(deleteBgFinder), const Size(22, 22));
 
@@ -907,7 +907,7 @@ void main() {
       find.descendant(of: deleteBgFinder, matching: find.byIcon(Icons.close)),
     );
     expect(deleteIcon.size, 9);
-    expect(deleteIcon.color, SearchPalette.light.muted);
+    expect(deleteIcon.color, AppPalette.light.muted);
   });
 
   testWidgets('focused search cancel follows Round6 bold action text', (
@@ -929,7 +929,7 @@ void main() {
     await tester.pumpAndSettle();
 
     final cancel = tester.widget<Text>(find.text('キャンセル'));
-    expect(cancel.style?.color, SearchPalette.light.primary);
+    expect(cancel.style?.color, AppPalette.light.primary);
     expect(cancel.style?.fontWeight, FontWeight.w700);
   });
 
@@ -1019,9 +1019,9 @@ void main() {
 
     expect(find.text('さらに読み込む · 1 / 6'), findsOneWidget);
     expect(spinner.strokeWidth, 2);
-    expect(spinner.color, SearchPalette.light.primary);
-    expect(decoration.color, SearchPalette.light.surface);
-    expect(decoration.border?.top.color, SearchPalette.light.hairline);
+    expect(spinner.color, AppPalette.light.primary);
+    expect(decoration.color, AppPalette.light.surface);
+    expect(decoration.border?.top.color, AppPalette.light.hairline);
     expect(decoration.borderRadius, BorderRadius.circular(10));
 
     page2.complete(_drugListFixture().copyWith(page: 2));
@@ -1216,7 +1216,7 @@ void main() {
     final label = tester.widget<Text>(find.text('適用中'));
     expect(label.style?.fontWeight, FontWeight.w700);
     expect(label.style?.letterSpacing, 0.5);
-    expect(label.style?.color, SearchPalette.light.muted);
+    expect(label.style?.color, AppPalette.light.muted);
 
     final chipFinder = find.byKey(
       const ValueKey('search-applied-filter-chip-毒薬'),
@@ -1224,8 +1224,8 @@ void main() {
     expect(chipFinder, findsOneWidget);
     final chip = tester.widget<DecoratedBox>(chipFinder);
     final decoration = chip.decoration as BoxDecoration;
-    expect(decoration.color, SearchPalette.light.primarySoft);
-    expect(decoration.border?.top.color, SearchPalette.light.primaryRing);
+    expect(decoration.color, AppPalette.light.primarySoft);
+    expect(decoration.border?.top.color, AppPalette.light.primaryRing);
     expect(decoration.border?.top.width, 0.5);
     expect(decoration.borderRadius, BorderRadius.circular(14));
 
@@ -1518,14 +1518,14 @@ void main() {
       expect(selectedFinder, findsOneWidget);
       final selected = tester.widget<DecoratedBox>(selectedFinder);
       final decoration = selected.decoration as BoxDecoration;
-      expect(decoration.color, SearchPalette.light.primarySoft);
-      expect(decoration.border?.top.color, SearchPalette.light.primaryRing);
+      expect(decoration.color, AppPalette.light.primarySoft);
+      expect(decoration.border?.top.color, AppPalette.light.primaryRing);
       expect(decoration.border?.top.width, 0.5);
       expect(decoration.borderRadius, BorderRadius.circular(14));
       expect(tester.getSize(selectedFinder).height, 30);
       expect(
         DefaultTextStyle.of(tester.element(find.text('劇薬'))).style.color,
-        SearchPalette.light.primary,
+        AppPalette.light.primary,
       );
       expect(
         DefaultTextStyle.of(tester.element(find.text('劇薬'))).style.fontWeight,
@@ -1544,7 +1544,7 @@ void main() {
         find.byKey(const ValueKey('search-filter-pill-check-potent')),
       );
       expect(selectedCheck.size, 10);
-      expect(selectedCheck.color, SearchPalette.light.primary);
+      expect(selectedCheck.color, AppPalette.light.primary);
 
       final unselectedFinder = find.byKey(
         const ValueKey('search-filter-pill-chip-unselected-poison'),
@@ -1552,17 +1552,17 @@ void main() {
       expect(unselectedFinder, findsOneWidget);
       final unselected = tester.widget<DecoratedBox>(unselectedFinder);
       final unselectedDecoration = unselected.decoration as BoxDecoration;
-      expect(unselectedDecoration.color, SearchPalette.light.surface);
+      expect(unselectedDecoration.color, AppPalette.light.surface);
       expect(
         unselectedDecoration.border?.top.color,
-        SearchPalette.light.hairline,
+        AppPalette.light.hairline,
       );
       expect(unselectedDecoration.border?.top.width, 0.5);
       expect(unselectedDecoration.borderRadius, BorderRadius.circular(14));
       expect(tester.getSize(unselectedFinder).height, 30);
       expect(
         DefaultTextStyle.of(tester.element(find.text('毒薬'))).style.color,
-        SearchPalette.light.ink2,
+        AppPalette.light.ink2,
       );
       expect(
         DefaultTextStyle.of(tester.element(find.text('毒薬'))).style.fontWeight,
@@ -1578,7 +1578,7 @@ void main() {
       );
       final countPill = tester.widget<DecoratedBox>(countPillBoxFinder);
       final countDecoration = countPill.decoration as BoxDecoration;
-      expect(countDecoration.color, SearchPalette.light.primary);
+      expect(countDecoration.color, AppPalette.light.primary);
       expect(countDecoration.borderRadius, BorderRadius.circular(9));
       expect(tester.getSize(countPillBoxFinder).height, 18);
       final countTextFinder = find.descendant(
@@ -1586,22 +1586,22 @@ void main() {
         matching: find.text('2'),
       );
       final countText = tester.widget<Text>(countTextFinder);
-      expect(countText.style?.color, SearchPalette.light.onPrimary);
+      expect(countText.style?.color, AppPalette.light.onPrimary);
       expect(countText.style?.fontWeight, FontWeight.w700);
 
       final title = tester.widget<Text>(find.text('絞り込み（医薬品）'));
-      expect(title.style?.color, SearchPalette.light.ink);
+      expect(title.style?.color, AppPalette.light.ink);
       expect(title.style?.fontWeight, FontWeight.w700);
 
       final reset = tester.widget<Text>(find.text('リセット'));
-      expect(reset.style?.color, SearchPalette.light.primary);
+      expect(reset.style?.color, AppPalette.light.primary);
       expect(reset.style?.fontWeight, FontWeight.w700);
 
       final closeButton = tester.widget<IconButton>(
         find.byKey(const ValueKey('filter-sheet-close-icon')),
       );
       final closeIcon = closeButton.icon as Icon;
-      expect(closeIcon.color, SearchPalette.light.primary);
+      expect(closeIcon.color, AppPalette.light.primary);
 
       final ctaLabel = tester.widget<Text>(
         find.descendant(
@@ -1701,8 +1701,8 @@ void main() {
 
     Future<void> verifyCta(Brightness brightness) async {
       final palette = brightness == Brightness.dark
-          ? SearchPalette.dark
-          : SearchPalette.light;
+          ? AppPalette.dark
+          : AppPalette.light;
       final cta = tester.widget<FilledButton>(
         find.byKey(const ValueKey('filterApplyCta')),
       );

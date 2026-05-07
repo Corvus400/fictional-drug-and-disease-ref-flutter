@@ -1,4 +1,4 @@
-import 'package:fictional_drug_and_disease_ref/ui/search/constants/search_palette.dart';
+import 'package:fictional_drug_and_disease_ref/theme/app_palette.dart';
 import 'package:flutter/material.dart';
 
 /// Application theme definitions.
@@ -42,9 +42,9 @@ class AppTheme {
       ),
       extensions: [
         if (brightness == Brightness.light)
-          SearchPalette.light
+          AppPalette.light
         else
-          SearchPalette.dark,
+          AppPalette.dark,
       ],
     );
   }

@@ -11,10 +11,10 @@ class _DrugResultCard extends StatelessWidget {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context)!;
     final palette =
-        theme.extension<SearchPalette>() ??
+        theme.extension<AppPalette>() ??
         (theme.brightness == Brightness.dark
-            ? SearchPalette.dark
-            : SearchPalette.light);
+            ? AppPalette.dark
+            : AppPalette.light);
     final imageSize =
         MediaQuery.sizeOf(context).width >=
             SearchConstants.searchTabletBreakpoint
@@ -132,7 +132,7 @@ class _DrugCardCachedImage extends StatefulWidget {
   final String imageCacheKey;
   final int imageCacheWidth;
   final BaseCacheManager cacheManager;
-  final SearchPalette palette;
+  final AppPalette palette;
 
   @override
   State<_DrugCardCachedImage> createState() => _DrugCardCachedImageState();
@@ -234,7 +234,7 @@ class _DrugCardCachedImageState extends State<_DrugCardCachedImage> {
 class _DrugImageFallback extends StatelessWidget {
   const _DrugImageFallback({required this.palette});
 
-  final SearchPalette palette;
+  final AppPalette palette;
 
   @override
   Widget build(BuildContext context) {
@@ -257,7 +257,7 @@ class _DrugBadge extends StatelessWidget {
 
   final String value;
   final String label;
-  final SearchPalette palette;
+  final AppPalette palette;
 
   @override
   Widget build(BuildContext context) {

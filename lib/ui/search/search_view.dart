@@ -13,8 +13,8 @@ import 'package:fictional_drug_and_disease_ref/domain/drug/drug_search_params.da
 import 'package:fictional_drug_and_disease_ref/domain/drug/drug_summary.dart';
 import 'package:fictional_drug_and_disease_ref/l10n/app_localizations.dart';
 import 'package:fictional_drug_and_disease_ref/router/app_router.dart';
+import 'package:fictional_drug_and_disease_ref/theme/app_palette.dart';
 import 'package:fictional_drug_and_disease_ref/ui/search/constants/search_constants.dart';
-import 'package:fictional_drug_and_disease_ref/ui/search/constants/search_palette.dart';
 import 'package:fictional_drug_and_disease_ref/ui/search/format/relative_time_formatter.dart';
 import 'package:fictional_drug_and_disease_ref/ui/search/search_screen_notifier.dart';
 import 'package:fictional_drug_and_disease_ref/ui/search/search_screen_state.dart';
@@ -122,10 +122,10 @@ class _SearchViewState extends ConsumerState<SearchView> with RouteAware {
     final notifier = ref.read(searchScreenProvider.notifier);
     final theme = Theme.of(context);
     final palette =
-        theme.extension<SearchPalette>() ??
+        theme.extension<AppPalette>() ??
         (theme.brightness == Brightness.dark
-            ? SearchPalette.dark
-            : SearchPalette.light);
+            ? AppPalette.dark
+            : AppPalette.light);
 
     return Scaffold(
       backgroundColor: palette.background,
@@ -348,7 +348,7 @@ class _SearchFilterFabBadge extends StatelessWidget {
   const _SearchFilterFabBadge({required this.count, required this.palette});
 
   final int count;
-  final SearchPalette palette;
+  final AppPalette palette;
 
   @override
   Widget build(BuildContext context) {

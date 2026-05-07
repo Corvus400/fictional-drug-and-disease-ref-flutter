@@ -72,10 +72,10 @@ class _Round6FilterSheetScaffold extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
     final palette =
-        theme.extension<SearchPalette>() ??
+        theme.extension<AppPalette>() ??
         (theme.brightness == Brightness.dark
-            ? SearchPalette.dark
-            : SearchPalette.light);
+            ? AppPalette.dark
+            : AppPalette.light);
     return LayoutBuilder(
       builder: (context, constraints) {
         final isTablet =
@@ -237,10 +237,10 @@ class _FilterAxisRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final palette =
-        theme.extension<SearchPalette>() ??
+        theme.extension<AppPalette>() ??
         (theme.brightness == Brightness.dark
-            ? SearchPalette.dark
-            : SearchPalette.light);
+            ? AppPalette.dark
+            : AppPalette.light);
     final keySuffix = _axisWidgetKeySuffix(axis.id);
     return DecoratedBox(
       decoration: BoxDecoration(
@@ -347,10 +347,10 @@ class _FilterCountPill extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final palette =
-        theme.extension<SearchPalette>() ??
+        theme.extension<AppPalette>() ??
         (theme.brightness == Brightness.dark
-            ? SearchPalette.dark
-            : SearchPalette.light);
+            ? AppPalette.dark
+            : AppPalette.light);
     return DecoratedBox(
       decoration: BoxDecoration(
         color: palette.primary,
@@ -428,10 +428,10 @@ class _FilterPillChip extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final palette =
-        theme.extension<SearchPalette>() ??
+        theme.extension<AppPalette>() ??
         (theme.brightness == Brightness.dark
-            ? SearchPalette.dark
-            : SearchPalette.light);
+            ? AppPalette.dark
+            : AppPalette.light);
     final safeValue = value.replaceAll(RegExp('[^A-Za-z0-9_-]'), '_');
     const borderRadius = 14.0;
     final textStyle = theme.textTheme.labelSmall?.copyWith(
