@@ -32,7 +32,7 @@ void main() {
     );
 
     expect(find.byType(DetailPanel), findsNWidgets(2));
-    expect(find.text('D14'), findsOneWidget);
+    expect(find.text('D14'), findsNWidgets(2));
     expect(find.text('薬物動態'), findsOneWidget);
     expect(find.text('血中濃度'), findsOneWidget);
     expect(
@@ -40,6 +40,7 @@ void main() {
       findsOneWidget,
     );
     expect(find.byType(DetailPkTable), findsOneWidget);
+    expect(find.text('PK パラメータ'), findsOneWidget);
     expect(find.text('致死濃度到達時間'), findsOneWidget);
     expect(find.text('数分以内'), findsOneWidget);
     expect(find.text('D15'), findsOneWidget);

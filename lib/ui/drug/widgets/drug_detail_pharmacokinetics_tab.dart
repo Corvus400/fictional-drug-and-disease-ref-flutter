@@ -83,9 +83,13 @@ class _PharmacokineticsBody extends StatelessWidget {
       children: [
         ...rows,
         if (pk.parameters.isNotEmpty) ...[
-          const SizedBox(height: DetailConstants.gapM),
-          _SubsectionTitle(title: l10n.detailDrugSectionParameters),
-          const SizedBox(height: DetailConstants.gapS),
+          const SizedBox(height: DetailConstants.panelSubsectionTopMargin),
+          DetailSectionHeading(
+            colors: Theme.of(context).extension<DetailColorExtension>()!,
+            sectionIndex: 'D14',
+            title: l10n.detailDrugSectionParameters,
+          ),
+          const SizedBox(height: DetailConstants.panelTitleBottomGap),
           DetailPkTable(
             itemHeader: l10n.detailDrugPkTableItemHeader,
             valueHeader: l10n.detailDrugPkTableValueHeader,
@@ -194,25 +198,6 @@ class _OverdoseBody extends StatelessWidget {
         const SizedBox(height: DetailConstants.gapXs),
         _BodyText(text: info.management),
       ],
-    );
-  }
-}
-
-class _SubsectionTitle extends StatelessWidget {
-  const _SubsectionTitle({required this.title});
-
-  final String title;
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = Theme.of(context).extension<DetailColorExtension>()!;
-    return Text(
-      title,
-      style: TextStyle(
-        color: colors.onSurface,
-        fontSize: DetailConstants.panelTitleFontSize,
-        fontWeight: FontWeight.w700,
-      ),
     );
   }
 }
