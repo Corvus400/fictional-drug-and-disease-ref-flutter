@@ -123,6 +123,14 @@ void main() {
     constraints: const BoxConstraints.tightFor(width: 834, height: 1194),
     selectTabLabel: '診断',
   );
+
+  _diseaseDetailGolden(
+    description: 'Disease detail tablet diagnosis dark',
+    fileName: 'disease_t4_diagnosis_dark',
+    theme: AppTheme.dark(),
+    constraints: const BoxConstraints.tightFor(width: 834, height: 1194),
+    selectTabLabel: '診断',
+  );
 }
 
 void _diseaseDetailGolden({
