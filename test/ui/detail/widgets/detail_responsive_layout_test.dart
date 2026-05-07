@@ -79,7 +79,11 @@ void main() {
     );
 
     expect(
-      tester.getSize(find.byKey(const ValueKey<String>('active-body'))).height,
+      tester
+          .getSize(
+            find.byKey(const ValueKey<String>('detail-phone-content-scroll')),
+          )
+          .height,
       700,
     );
   });

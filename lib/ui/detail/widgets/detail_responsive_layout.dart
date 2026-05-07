@@ -79,7 +79,10 @@ class DetailResponsiveLayout extends StatelessWidget {
                         padding: const EdgeInsets.only(
                           bottom: DetailConstants.tabletContentBottomPadding,
                         ),
-                        child: activeBody,
+                        child: SizedBox(
+                          width: double.infinity,
+                          child: activeBody,
+                        ),
                       ),
                     ),
                   ],
@@ -103,9 +106,35 @@ class DetailResponsiveLayout extends StatelessWidget {
               ),
             SizedBox(
               height: DetailConstants.tabBarHeight,
-              child: Row(children: tabs),
+              child: SingleChildScrollView(
+                key: const ValueKey<String>('detail-phone-tab-scroll'),
+                scrollDirection: Axis.horizontal,
+                child: Row(children: tabs),
+              ),
             ),
-            Expanded(child: activeBody),
+            Expanded(
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  return SingleChildScrollView(
+                    key: const ValueKey<String>(
+                      'detail-phone-content-scroll',
+                    ),
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(
+                        minHeight: constraints.maxHeight,
+                      ),
+                      child: Align(
+                        alignment: Alignment.topCenter,
+                        child: SizedBox(
+                          width: double.infinity,
+                          child: activeBody,
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
             if (footer != null)
               SizedBox(
                 height: DetailConstants.footerHeight,
