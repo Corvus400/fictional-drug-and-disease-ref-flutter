@@ -131,6 +131,14 @@ void main() {
     constraints: const BoxConstraints.tightFor(width: 834, height: 1194),
     selectTabLabel: '診断',
   );
+
+  _diseaseDetailGolden(
+    description: 'Disease detail tablet treatment light',
+    fileName: 'disease_t5_treatment_light',
+    theme: AppTheme.light(),
+    constraints: const BoxConstraints.tightFor(width: 834, height: 1194),
+    selectTabLabel: '治療',
+  );
 }
 
 void _diseaseDetailGolden({
