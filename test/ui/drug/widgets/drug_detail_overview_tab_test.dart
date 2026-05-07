@@ -80,6 +80,11 @@ void main() {
       ),
       findsOneWidget,
     );
+    final hero = tester.widget<Hero>(
+      find.byKey(ValueKey<String>('drug-detail-hero-image-hero-${drug.id}')),
+    );
+    expect(hero.tag, 'drug-detail-hero-image::${drug.id}');
+
     final image = tester.widget<Image>(
       find.byKey(ValueKey<String>('drug-detail-hero-image-${drug.id}')),
     );
@@ -124,16 +129,24 @@ void main() {
     ).called(1);
   });
 
-  testWidgets('DrugDetailOverviewTab opens zoomable hero image preview', (
+  testWidgets('DrugDetailOverviewTab opens zoomable Hero route preview', (
     tester,
   ) async {
     final drug = _drugFixture().toDomain();
     final cacheManager = _mockCacheManagerWithImage(
       'drug-detail-hero-preview.png',
     );
+    final navigatorObserver = _RecordingNavigatorObserver();
 
-    await tester.pumpWidget(_overviewTab(drug, cacheManager: cacheManager));
+    await tester.pumpWidget(
+      _overviewTab(
+        drug,
+        cacheManager: cacheManager,
+        navigatorObservers: [navigatorObserver],
+      ),
+    );
     await tester.pumpAndSettle();
+    navigatorObserver.pushedRoute = null;
 
     await tester.tap(
       find.byKey(
@@ -142,6 +155,8 @@ void main() {
         ),
       ),
     );
+    await tester.pump();
+    expect(navigatorObserver.pushedRoute, isA<PageRoute<void>>());
     await tester.pumpAndSettle();
 
     expect(
@@ -157,6 +172,12 @@ void main() {
       findsOneWidget,
     );
     expect(find.byType(InteractiveViewer), findsOneWidget);
+    final previewHero = tester.widget<Hero>(
+      find.byKey(
+        ValueKey<String>('drug-detail-hero-image-preview-hero-${drug.id}'),
+      ),
+    );
+    expect(previewHero.tag, 'drug-detail-hero-image::${drug.id}');
 
     await tester.tap(
       find.byKey(
@@ -220,7 +241,11 @@ void main() {
   });
 }
 
-Widget _overviewTab(Drug drug, {_MockBaseCacheManager? cacheManager}) {
+Widget _overviewTab(
+  Drug drug, {
+  _MockBaseCacheManager? cacheManager,
+  List<NavigatorObserver> navigatorObservers = const [],
+}) {
   final resolvedCacheManager =
       cacheManager ??
       _mockCacheManagerWithImage('drug-detail-hero-default.png');
@@ -229,6 +254,7 @@ Widget _overviewTab(Drug drug, {_MockBaseCacheManager? cacheManager}) {
     theme: AppTheme.light(),
     localizationsDelegates: AppLocalizations.localizationsDelegates,
     supportedLocales: AppLocalizations.supportedLocales,
+    navigatorObservers: navigatorObservers,
     home: Scaffold(
       body: SingleChildScrollView(
         child: DrugDetailOverviewTab(
@@ -241,6 +267,16 @@ Widget _overviewTab(Drug drug, {_MockBaseCacheManager? cacheManager}) {
 }
 
 final class _MockBaseCacheManager extends Mock implements BaseCacheManager {}
+
+final class _RecordingNavigatorObserver extends NavigatorObserver {
+  Route<dynamic>? pushedRoute;
+
+  @override
+  void didPush(Route<dynamic> route, Route<dynamic>? previousRoute) {
+    pushedRoute = route;
+    super.didPush(route, previousRoute);
+  }
+}
 
 _MockBaseCacheManager _mockCacheManagerWithImage(String name) {
   final cacheManager = _MockBaseCacheManager();
