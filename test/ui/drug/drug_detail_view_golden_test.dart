@@ -52,6 +52,13 @@ void main() {
     theme: AppTheme.light(),
     selectTabLabel: '用法・用量',
   );
+
+  _drugDetailGolden(
+    description: 'Drug detail phone dose dark',
+    fileName: 'drug_p4_dose_dark',
+    theme: AppTheme.dark(),
+    selectTabLabel: '用法・用量',
+  );
 }
 
 void _drugDetailGolden({
