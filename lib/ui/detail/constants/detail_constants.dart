@@ -173,4 +173,13 @@ abstract final class DetailConstants {
 
   /// Detail badge text line height.
   static const badgeTextLineHeight = 1.35;
+
+  /// Detail key-value label column width.
+  static const kvLabelWidth = 96.0;
+
+  /// Detail key-value row vertical padding.
+  static const kvPaddingVertical = 8.0;
+
+  /// Detail key-value font size.
+  static const kvFontSize = 12.5;
 }
