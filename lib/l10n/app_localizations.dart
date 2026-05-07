@@ -1579,7 +1579,7 @@ abstract class AppLocalizations {
   /// No description provided for @detailDrugSectionPrecautionsForSpecificPopulations.
   ///
   /// In ja, this message translates to:
-  /// **'特定背景患者'**
+  /// **'特定の背景を有する患者への注意'**
   String get detailDrugSectionPrecautionsForSpecificPopulations;
 
   /// No description provided for @detailDrugSectionInteractions.
@@ -1599,6 +1599,12 @@ abstract class AppLocalizations {
   /// In ja, this message translates to:
   /// **'併用注意'**
   String get detailDrugSectionInteractionsCaution;
+
+  /// No description provided for @detailDrugNoInteractions.
+  ///
+  /// In ja, this message translates to:
+  /// **'該当する薬剤はありません。'**
+  String get detailDrugNoInteractions;
 
   /// No description provided for @detailDrugSectionSeriousAdverseReactions.
   ///

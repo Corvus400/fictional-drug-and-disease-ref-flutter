@@ -814,7 +814,8 @@ class AppLocalizationsJa extends AppLocalizations {
   String get detailDrugSectionImportantPrecautions => '重要な基本的注意';
 
   @override
-  String get detailDrugSectionPrecautionsForSpecificPopulations => '特定背景患者';
+  String get detailDrugSectionPrecautionsForSpecificPopulations =>
+      '特定の背景を有する患者への注意';
 
   @override
   String get detailDrugSectionInteractions => '相互作用';
@@ -824,6 +825,9 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get detailDrugSectionInteractionsCaution => '併用注意';
+
+  @override
+  String get detailDrugNoInteractions => '該当する薬剤はありません。';
 
   @override
   String get detailDrugSectionSeriousAdverseReactions => '重大な副作用';
