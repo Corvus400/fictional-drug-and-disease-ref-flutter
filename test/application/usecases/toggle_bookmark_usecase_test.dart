@@ -92,7 +92,8 @@ void main() {
     );
 
     test(
-      'toggleDisease adds a disease bookmark snapshot when it is not bookmarked',
+      'toggleDisease adds a disease bookmark snapshot '
+      'when it is not bookmarked',
       () async {
         final disease = _diseaseFixture().toDomain();
 
