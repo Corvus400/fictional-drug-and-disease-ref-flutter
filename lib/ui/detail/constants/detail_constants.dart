@@ -395,4 +395,16 @@ abstract final class DetailConstants {
 
   /// Detail exam table header letter spacing.
   static const examTableHeaderLetterSpacing = 0.42;
+
+  /// Detail exam category pill font size.
+  static const examTablePillFontSize = 10.0;
+
+  /// Detail exam category pill horizontal padding.
+  static const examTablePillPaddingHorizontal = 6.0;
+
+  /// Detail exam category pill vertical padding.
+  static const examTablePillPaddingVertical = 1.0;
+
+  /// Detail exam category pill radius.
+  static const examTablePillRadius = 5.0;
 }
