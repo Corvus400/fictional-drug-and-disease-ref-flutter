@@ -12,10 +12,10 @@ enum DiseaseBadgeCategory {
   department,
 }
 
-/// Round6 search color tokens.
-final class SearchPalette extends ThemeExtension<SearchPalette> {
+/// Round6 application color tokens.
+final class AppPalette extends ThemeExtension<AppPalette> {
   /// Creates a palette.
-  const SearchPalette({
+  const AppPalette({
     required this.brightness,
     required this.bg,
     required this.surface,
@@ -53,7 +53,7 @@ final class SearchPalette extends ThemeExtension<SearchPalette> {
   });
 
   /// Light Round6 palette.
-  static const light = SearchPalette(
+  static const light = AppPalette(
     brightness: Brightness.light,
     bg: Color(0xFFF2F2F7),
     surface: Color(0xFFFFFFFF),
@@ -91,7 +91,7 @@ final class SearchPalette extends ThemeExtension<SearchPalette> {
   );
 
   /// Dark Round6 palette.
-  static const dark = SearchPalette(
+  static const dark = AppPalette(
     brightness: Brightness.dark,
     bg: Color(0xFF101317),
     surface: Color(0xFF181B20),
@@ -418,7 +418,7 @@ final class SearchPalette extends ThemeExtension<SearchPalette> {
   }
 
   @override
-  SearchPalette copyWith({
+  AppPalette copyWith({
     Brightness? brightness,
     Color? bg,
     Color? surface,
@@ -454,7 +454,7 @@ final class SearchPalette extends ThemeExtension<SearchPalette> {
     Color? diseaseTint,
     Color? diseaseInk,
   }) {
-    return SearchPalette(
+    return AppPalette(
       brightness: brightness ?? this.brightness,
       bg: bg ?? this.bg,
       surface: surface ?? this.surface,
@@ -495,11 +495,11 @@ final class SearchPalette extends ThemeExtension<SearchPalette> {
   }
 
   @override
-  SearchPalette lerp(ThemeExtension<SearchPalette>? other, double t) {
-    if (other is! SearchPalette) {
+  AppPalette lerp(ThemeExtension<AppPalette>? other, double t) {
+    if (other is! AppPalette) {
       return this;
     }
-    return SearchPalette(
+    return AppPalette(
       brightness: t < 0.5 ? brightness : other.brightness,
       bg: Color.lerp(bg, other.bg, t)!,
       surface: Color.lerp(surface, other.surface, t)!,

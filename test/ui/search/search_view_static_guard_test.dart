@@ -31,9 +31,7 @@ void main() {
         File(
           'lib/ui/search/widgets/filter/round6_filter_sheet_scaffold.dart',
         ).readAsStringSync(),
-        File(
-          'lib/ui/search/constants/search_palette.dart',
-        ).readAsStringSync(),
+        File('lib/theme/app_palette.dart').readAsStringSync(),
         File(
           'lib/ui/search/format/search_label_formatters.dart',
         ).readAsStringSync(),
@@ -85,7 +83,7 @@ void main() {
     expect(pubspec, contains('flutter_cache_manager:'));
   });
 
-  test('drug regulatory badge colors come from SearchPalette', () {
+  test('drug regulatory badge colors come from AppPalette', () {
     final source = File(
       'lib/ui/search/widgets/drug_result_card.dart',
     ).readAsStringSync();

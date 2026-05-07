@@ -20,9 +20,9 @@ import 'package:fictional_drug_and_disease_ref/domain/disease/disease_search_par
 import 'package:fictional_drug_and_disease_ref/domain/drug/drug_search_params.dart';
 import 'package:fictional_drug_and_disease_ref/l10n/app_localizations.dart';
 import 'package:fictional_drug_and_disease_ref/router/app_router.dart';
+import 'package:fictional_drug_and_disease_ref/theme/app_palette.dart';
 import 'package:fictional_drug_and_disease_ref/theme/app_theme.dart';
 import 'package:fictional_drug_and_disease_ref/ui/search/constants/search_constants.dart';
-import 'package:fictional_drug_and_disease_ref/ui/search/constants/search_palette.dart';
 import 'package:fictional_drug_and_disease_ref/ui/search/search_screen_notifier.dart';
 import 'package:fictional_drug_and_disease_ref/ui/search/search_screen_state.dart';
 import 'package:fictional_drug_and_disease_ref/ui/search/search_view.dart';
@@ -276,7 +276,7 @@ void main() {
     );
   });
 
-  testWidgets('SearchView uses SearchPalette from theme', (tester) async {
+  testWidgets('SearchView uses AppPalette from theme', (tester) async {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [appDatabaseProvider.overrideWithValue(db)],
@@ -290,7 +290,7 @@ void main() {
     );
 
     final scaffold = tester.widget<Scaffold>(find.byType(Scaffold));
-    expect(scaffold.backgroundColor, SearchPalette.light.background);
+    expect(scaffold.backgroundColor, AppPalette.light.background);
   });
 
   testWidgets('SearchView renders persisted search history when focused', (
@@ -604,8 +604,8 @@ void main() {
     );
     final decoration = containerWidget.decoration! as BoxDecoration;
     final rxText = tester.widget<Text>(find.text('Rx'));
-    expect(decoration.color, SearchPalette.light.rxTint);
-    expect(rxText.style?.color, SearchPalette.light.rxInk);
+    expect(decoration.color, AppPalette.light.rxTint);
+    expect(rxText.style?.color, AppPalette.light.rxInk);
 
     final filterPill = tester.widget<Container>(
       find
@@ -614,9 +614,9 @@ void main() {
     );
     final filterDecoration = filterPill.decoration! as BoxDecoration;
     final filterText = tester.widget<Text>(find.text('絞り込み +2'));
-    expect(filterDecoration.color, SearchPalette.light.primarySoft);
-    expect(filterDecoration.border?.top.color, SearchPalette.light.primaryRing);
-    expect(filterText.style?.color, SearchPalette.light.rxInk);
+    expect(filterDecoration.color, AppPalette.light.primarySoft);
+    expect(filterDecoration.border?.top.color, AppPalette.light.primaryRing);
+    expect(filterText.style?.color, AppPalette.light.rxInk);
 
     await tester.tap(find.text('疾患'));
     await tester.pumpAndSettle();
@@ -630,8 +630,8 @@ void main() {
     );
     final dxDecoration = dxContainer.decoration! as BoxDecoration;
     final dxText = tester.widget<Text>(find.text('Dx'));
-    expect(dxDecoration.color, SearchPalette.light.dxTint);
-    expect(dxText.style?.color, SearchPalette.light.dxInk);
+    expect(dxDecoration.color, AppPalette.light.dxTint);
+    expect(dxText.style?.color, AppPalette.light.dxInk);
   });
 
   testWidgets('history row subtitle includes relative time and filter pill', (
@@ -685,8 +685,8 @@ void main() {
           .first,
     );
     final decoration = containerWidget.decoration! as BoxDecoration;
-    expect(decoration.color, SearchPalette.light.primarySoft);
-    expect(decoration.border?.top.color, SearchPalette.light.primaryRing);
+    expect(decoration.color, AppPalette.light.primarySoft);
+    expect(decoration.border?.top.color, AppPalette.light.primaryRing);
   });
 
   testWidgets('SearchView deletes a persisted history row from dropdown', (
@@ -1709,7 +1709,7 @@ void main() {
     expect(constraints.maxWidth, 64);
     expect(constraints.minHeight, 64);
     expect(constraints.maxHeight, 64);
-    expect(decoration.color, SearchPalette.light.surface3);
+    expect(decoration.color, AppPalette.light.surface3);
     expect(decoration.shape, BoxShape.circle);
     expect(
       find.descendant(
@@ -1839,10 +1839,10 @@ void main() {
     expect(constraints.maxWidth, 72);
     expect(constraints.minHeight, 72);
     expect(constraints.maxHeight, 72);
-    expect(decoration.color, SearchPalette.light.dangerCont);
+    expect(decoration.color, AppPalette.light.dangerCont);
     expect(decoration.shape, BoxShape.circle);
     expect(warningIcon.size, 36);
-    expect(warningIcon.color, SearchPalette.light.danger);
+    expect(warningIcon.color, AppPalette.light.danger);
     expect(find.text('もう一度試してください。'), findsOneWidget);
     expect(find.text('再試行'), findsOneWidget);
     expect(find.widgetWithText(FilledButton, '再試行'), findsOneWidget);
@@ -2732,9 +2732,9 @@ void main() {
       );
       final effect = skeletonizer.effect! as ShimmerEffect;
       expect(effect.colors, [
-        SearchPalette.light.surface2,
-        SearchPalette.light.surface3,
-        SearchPalette.light.surface2,
+        AppPalette.light.surface2,
+        AppPalette.light.surface3,
+        AppPalette.light.surface2,
       ]);
       expect(find.text('合計 — 件'), findsOneWidget);
       expect(find.text('検索中…'), findsOneWidget);

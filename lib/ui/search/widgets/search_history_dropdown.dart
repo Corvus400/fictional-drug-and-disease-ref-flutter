@@ -24,10 +24,10 @@ class _SearchHistoryDropdown extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
     final palette =
-        theme.extension<SearchPalette>() ??
+        theme.extension<AppPalette>() ??
         (theme.brightness == Brightness.dark
-            ? SearchPalette.dark
-            : SearchPalette.light);
+            ? AppPalette.dark
+            : AppPalette.light);
     final keyboardVisible = MediaQuery.viewInsetsOf(context).bottom > 0;
     return TapRegion(
       groupId: tapRegionGroupId,
@@ -173,7 +173,7 @@ class _SearchHistoryRow extends StatelessWidget {
   });
 
   final SearchHistoryEnvelope entry;
-  final SearchPalette palette;
+  final AppPalette palette;
   final DateTime currentTime;
   final Future<void> Function(SearchHistoryEnvelope entry) onSelect;
   final Future<void> Function(String id) onDelete;

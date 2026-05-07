@@ -8,10 +8,10 @@ void _showSortSheet(
 }) {
   final l10n = AppLocalizations.of(context)!;
   final palette =
-      Theme.of(context).extension<SearchPalette>() ??
+      Theme.of(context).extension<AppPalette>() ??
       (Theme.of(context).brightness == Brightness.dark
-          ? SearchPalette.dark
-          : SearchPalette.light);
+          ? AppPalette.dark
+          : AppPalette.light);
   final drugOptions = <({DrugSort sort, String label, String key})>[
     (
       sort: DrugSort.revisedAtDesc,
@@ -101,7 +101,7 @@ void _showSortSheet(
 class _Round6SortSheet extends StatelessWidget {
   const _Round6SortSheet({required this.palette, required this.children});
 
-  final SearchPalette palette;
+  final AppPalette palette;
   final List<Widget> children;
 
   @override
@@ -174,7 +174,7 @@ class _SortOptionTile extends StatelessWidget {
   final bool selected;
   final String selectedKey;
   final bool isLast;
-  final SearchPalette palette;
+  final AppPalette palette;
   final VoidCallback onTap;
 
   @override

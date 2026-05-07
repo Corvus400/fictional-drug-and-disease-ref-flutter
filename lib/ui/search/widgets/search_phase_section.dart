@@ -34,10 +34,10 @@ class _SearchPhaseSection extends StatelessWidget {
     if (phase is SearchPhaseLoading) {
       final theme = Theme.of(context);
       final palette =
-          theme.extension<SearchPalette>() ??
+          theme.extension<AppPalette>() ??
           (theme.brightness == Brightness.dark
-              ? SearchPalette.dark
-              : SearchPalette.light);
+              ? AppPalette.dark
+              : AppPalette.light);
       return Padding(
         padding: EdgeInsets.symmetric(horizontal: gutter),
         child: Column(
@@ -91,10 +91,10 @@ class _SearchPhaseSection extends StatelessWidget {
     if (phase is SearchPhaseEmpty) {
       final theme = Theme.of(context);
       final palette =
-          theme.extension<SearchPalette>() ??
+          theme.extension<AppPalette>() ??
           (theme.brightness == Brightness.dark
-              ? SearchPalette.dark
-              : SearchPalette.light);
+              ? AppPalette.dark
+              : AppPalette.light);
       return Column(
         children: [
           _SearchResultToolbar(
@@ -209,10 +209,10 @@ class _SearchPhaseSection extends StatelessWidget {
     if (phase is SearchPhaseError) {
       final theme = Theme.of(context);
       final palette =
-          theme.extension<SearchPalette>() ??
+          theme.extension<AppPalette>() ??
           (theme.brightness == Brightness.dark
-              ? SearchPalette.dark
-              : SearchPalette.light);
+              ? AppPalette.dark
+              : AppPalette.light);
       return Padding(
         padding: EdgeInsets.symmetric(horizontal: gutter),
         child: Center(
@@ -332,10 +332,10 @@ class _SearchPhaseSection extends StatelessWidget {
     }
     final theme = Theme.of(context);
     final palette =
-        theme.extension<SearchPalette>() ??
+        theme.extension<AppPalette>() ??
         (theme.brightness == Brightness.dark
-            ? SearchPalette.dark
-            : SearchPalette.light);
+            ? AppPalette.dark
+            : AppPalette.light);
     return NotificationListener<ScrollNotification>(
       onNotification: (notification) {
         if (notification is! ScrollUpdateNotification) {
@@ -565,10 +565,10 @@ class _NoSearchHistoryState extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
     final palette =
-        theme.extension<SearchPalette>() ??
+        theme.extension<AppPalette>() ??
         (theme.brightness == Brightness.dark
-            ? SearchPalette.dark
-            : SearchPalette.light);
+            ? AppPalette.dark
+            : AppPalette.light);
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 40, 16, 0),
       child: Column(

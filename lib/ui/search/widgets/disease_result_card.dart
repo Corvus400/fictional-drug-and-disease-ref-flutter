@@ -10,10 +10,10 @@ class _DiseaseResultCard extends StatelessWidget {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context)!;
     final palette =
-        theme.extension<SearchPalette>() ??
+        theme.extension<AppPalette>() ??
         (theme.brightness == Brightness.dark
-            ? SearchPalette.dark
-            : SearchPalette.light);
+            ? AppPalette.dark
+            : AppPalette.light);
     return Card(
       key: ValueKey('disease-card-${item.id}'),
       margin: const EdgeInsets.only(top: 8),
@@ -111,7 +111,7 @@ class _DiseaseBadge extends StatelessWidget {
   final DiseaseBadgeCategory category;
   final String value;
   final String label;
-  final SearchPalette palette;
+  final AppPalette palette;
 
   @override
   Widget build(BuildContext context) {

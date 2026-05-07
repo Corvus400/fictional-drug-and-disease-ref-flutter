@@ -63,10 +63,10 @@ class _SearchResultToolbarState extends State<_SearchResultToolbar> {
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
     final palette =
-        theme.extension<SearchPalette>() ??
+        theme.extension<AppPalette>() ??
         (theme.brightness == Brightness.dark
-            ? SearchPalette.dark
-            : SearchPalette.light);
+            ? AppPalette.dark
+            : AppPalette.light);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -273,7 +273,7 @@ class _AppliedFilterChip extends StatelessWidget {
   });
 
   final String label;
-  final SearchPalette palette;
+  final AppPalette palette;
   final Future<void> Function() onTap;
 
   @override
