@@ -318,7 +318,7 @@ Future<void> _enterTextAll(
 
 Future<void> _tapAll(WidgetTester tester, Finder finder) async {
   final count = finder.evaluate().length;
-  for (var index = 0; index < count; index++) {
+  for (var index = count - 1; index >= 0; index--) {
     await tester.tap(finder.at(index), warnIfMissed: false);
     await tester.pump();
   }

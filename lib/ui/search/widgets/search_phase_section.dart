@@ -302,7 +302,6 @@ class _SearchPhaseSection extends StatelessWidget {
                               line,
                               style: theme.textTheme.bodySmall?.copyWith(
                                 color: theme.colorScheme.onSurfaceVariant,
-                                fontFamily: 'monospace',
                                 fontSize: 11,
                                 height: 1.65,
                               ),
