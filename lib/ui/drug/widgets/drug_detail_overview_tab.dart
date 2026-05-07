@@ -1,3 +1,7 @@
+import 'dart:io';
+
+import 'package:fictional_drug_and_disease_ref/config/api_config.dart';
+import 'package:fictional_drug_and_disease_ref/core/logging/app_logger.dart';
 import 'package:fictional_drug_and_disease_ref/domain/drug/drug.dart';
 import 'package:fictional_drug_and_disease_ref/l10n/app_localizations.dart';
 import 'package:fictional_drug_and_disease_ref/theme/app_palette.dart';
@@ -8,14 +12,22 @@ import 'package:fictional_drug_and_disease_ref/ui/detail/widgets/detail_kv_row.d
 import 'package:fictional_drug_and_disease_ref/ui/detail/widgets/detail_panel.dart';
 import 'package:fictional_drug_and_disease_ref/ui/detail/widgets/detail_warn_banner.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 
 /// Overview tab for drug detail.
 class DrugDetailOverviewTab extends StatelessWidget {
   /// Creates an overview tab.
-  const DrugDetailOverviewTab({required this.drug, super.key});
+  const DrugDetailOverviewTab({
+    required this.drug,
+    this.cacheManager,
+    super.key,
+  });
 
   /// Drug detail model.
   final Drug drug;
+
+  /// Cache manager for detail hero image loading.
+  final BaseCacheManager? cacheManager;
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +35,11 @@ class DrugDetailOverviewTab extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _DrugHero(drug: drug, l10n: l10n),
+        _DrugHero(
+          drug: drug,
+          l10n: l10n,
+          cacheManager: cacheManager ?? DefaultCacheManager(),
+        ),
         DetailPanel(
           sectionIndex: 'D3',
           title: l10n.detailDrugSectionWarning,
@@ -91,10 +107,15 @@ class DrugDetailOverviewTab extends StatelessWidget {
 }
 
 class _DrugHero extends StatelessWidget {
-  const _DrugHero({required this.drug, required this.l10n});
+  const _DrugHero({
+    required this.drug,
+    required this.l10n,
+    required this.cacheManager,
+  });
 
   final Drug drug;
   final AppLocalizations l10n;
+  final BaseCacheManager cacheManager;
 
   @override
   Widget build(BuildContext context) {
@@ -109,18 +130,13 @@ class _DrugHero extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(
+            key: ValueKey<String>('drug-detail-hero-image-area-${drug.id}'),
             height: DetailConstants.heroImageHeight,
             width: double.infinity,
-            child: DecoratedBox(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    colors.primaryContainer,
-                    colors.tertiaryContainer,
-                    colors.surfaceContainer,
-                  ],
-                ),
-              ),
+            child: _DrugHeroImage(
+              drug: drug,
+              cacheManager: cacheManager,
+              colors: colors,
             ),
           ),
           Padding(
@@ -201,6 +217,206 @@ class _DrugHero extends StatelessWidget {
       ),
     ];
   }
+}
+
+class _DrugHeroImage extends StatefulWidget {
+  const _DrugHeroImage({
+    required this.drug,
+    required this.cacheManager,
+    required this.colors,
+  });
+
+  final Drug drug;
+  final BaseCacheManager cacheManager;
+  final DetailColorExtension colors;
+
+  @override
+  State<_DrugHeroImage> createState() => _DrugHeroImageState();
+}
+
+class _DrugHeroImageState extends State<_DrugHeroImage> {
+  late Future<File> _imageFile;
+  bool _loggedLoadError = false;
+  bool _loggedDecodeError = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _imageFile = _loadImageFile();
+  }
+
+  @override
+  void didUpdateWidget(covariant _DrugHeroImage oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.drug.imageUrl != widget.drug.imageUrl ||
+        oldWidget.cacheManager != widget.cacheManager) {
+      _loggedLoadError = false;
+      _loggedDecodeError = false;
+      _imageFile = _loadImageFile();
+    }
+  }
+
+  Future<File> _loadImageFile() async {
+    final imageUrl = _drugDetailHeroImageUrl(widget.drug.imageUrl);
+    final cachedFile = await widget.cacheManager.getSingleFile(
+      imageUrl,
+      key: _drugDetailHeroImageCacheKey(widget.drug.imageUrl),
+    );
+    return File(cachedFile.path);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            widget.colors.primaryContainer,
+            widget.colors.tertiaryContainer,
+            widget.colors.surfaceContainer,
+          ],
+        ),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.only(
+          right: DetailConstants.heroDrugImageRightInset,
+          bottom: DetailConstants.heroDrugImageBottomInset,
+        ),
+        child: Align(
+          alignment: Alignment.bottomRight,
+          child: SizedBox(
+            key: ValueKey<String>(
+              'drug-detail-hero-image-frame-${widget.drug.id}',
+            ),
+            width: DetailConstants.heroDrugImageWidth,
+            child: AspectRatio(
+              aspectRatio: DetailConstants.heroDrugImageAspectRatio,
+              child: _DrugHeroImageFrame(
+                colors: widget.colors,
+                child: FutureBuilder<File>(
+                  future: _imageFile,
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return Image.file(
+                        snapshot.requireData,
+                        key: ValueKey<String>(
+                          'drug-detail-hero-image-${widget.drug.id}',
+                        ),
+                        width: double.infinity,
+                        height: double.infinity,
+                        fit: BoxFit.contain,
+                        errorBuilder: (context, error, stackTrace) {
+                          _logDecodeError(
+                            error,
+                            stackTrace ?? StackTrace.current,
+                          );
+                          return _DrugHeroImageFallback(colors: widget.colors);
+                        },
+                      );
+                    }
+                    if (snapshot.hasError) {
+                      _logLoadError(snapshot.error!, snapshot.stackTrace);
+                    }
+                    return _DrugHeroImageFallback(colors: widget.colors);
+                  },
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _logLoadError(Object error, StackTrace? stackTrace) {
+    if (_loggedLoadError) {
+      return;
+    }
+    _loggedLoadError = true;
+    appLogger.w(
+      _logPayload(),
+      error: error,
+      stackTrace: stackTrace ?? StackTrace.current,
+    );
+  }
+
+  void _logDecodeError(Object error, StackTrace stackTrace) {
+    if (_loggedDecodeError) {
+      return;
+    }
+    _loggedDecodeError = true;
+    appLogger.w(_logPayload(), error: error, stackTrace: stackTrace);
+  }
+
+  Map<String, Object?> _logPayload() {
+    return {
+      'message': 'failed to load drug detail hero image',
+      'drugId': widget.drug.id,
+      'dosageForm': widget.drug.dosageForm,
+      'imageUrl': _drugDetailHeroImageUrl(widget.drug.imageUrl),
+      'cacheKey': _drugDetailHeroImageCacheKey(widget.drug.imageUrl),
+    };
+  }
+}
+
+class _DrugHeroImageFrame extends StatelessWidget {
+  const _DrugHeroImageFrame({required this.colors, required this.child});
+
+  final DetailColorExtension colors;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: colors.surfaceContainerHighest,
+        borderRadius: BorderRadius.circular(DetailConstants.heroImageRadius),
+        boxShadow: [
+          BoxShadow(
+            color: colors.shadow,
+            offset: const Offset(0, DetailConstants.heroImageShadowDy),
+            blurRadius: DetailConstants.heroImageShadowBlurRadius,
+          ),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(DetailConstants.heroImageRadius),
+        child: child,
+      ),
+    );
+  }
+}
+
+class _DrugHeroImageFallback extends StatelessWidget {
+  const _DrugHeroImageFallback({required this.colors});
+
+  final DetailColorExtension colors;
+
+  @override
+  Widget build(BuildContext context) {
+    return Icon(
+      Icons.medication_outlined,
+      color: colors.onSurfaceVariant,
+      size: DetailConstants.heroImageFallbackIconSize,
+    );
+  }
+}
+
+String _drugDetailHeroImageUrl(String imageUrl) {
+  final base = Uri.parse(ApiConfig.current.apiBaseUrl);
+  final resolved = base.resolve(imageUrl);
+  return resolved
+      .replace(
+        queryParameters: {
+          ...resolved.queryParameters,
+          'size': DetailConstants.heroDrugImageApiSize,
+        },
+      )
+      .toString();
+}
+
+String _drugDetailHeroImageCacheKey(String imageUrl) {
+  return 'drug-detail-hero-image-v1::${_drugDetailHeroImageUrl(imageUrl)}';
 }
 
 DetailBadgeColors _badgeColors(({Color background, Color foreground}) colors) {

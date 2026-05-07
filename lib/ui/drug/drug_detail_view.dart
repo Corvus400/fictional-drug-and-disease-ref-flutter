@@ -17,8 +17,14 @@ import 'package:fictional_drug_and_disease_ref/ui/drug/widgets/drug_detail_overv
 import 'package:fictional_drug_and_disease_ref/ui/drug/widgets/drug_detail_pharmacokinetics_tab.dart';
 import 'package:fictional_drug_and_disease_ref/ui/drug/widgets/drug_detail_related_tab.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+
+/// Cache manager for drug detail hero images.
+final drugDetailHeroImageCacheManagerProvider = Provider<BaseCacheManager>(
+  (ref) => DefaultCacheManager(),
+);
 
 /// Drug detail placeholder.
 class DrugDetailView extends ConsumerWidget {
@@ -46,6 +52,7 @@ class DrugDetailView extends ConsumerWidget {
         DrugDetailLoadedPhase(:final drug) => _DrugLoadedView(
           state: state,
           drug: drug,
+          cacheManager: ref.watch(drugDetailHeroImageCacheManagerProvider),
           onSelectTab: notifier.selectTab,
           onToggleBookmark: notifier.toggleBookmark,
           onClearBookmarkError: notifier.clearBookmarkError,
@@ -59,6 +66,7 @@ class _DrugLoadedView extends StatelessWidget {
   const _DrugLoadedView({
     required this.state,
     required this.drug,
+    required this.cacheManager,
     required this.onSelectTab,
     required this.onToggleBookmark,
     required this.onClearBookmarkError,
@@ -66,6 +74,7 @@ class _DrugLoadedView extends StatelessWidget {
 
   final DrugDetailScreenState state;
   final Drug drug;
+  final BaseCacheManager cacheManager;
   final ValueChanged<DrugDetailTab> onSelectTab;
   final VoidCallback onToggleBookmark;
   final VoidCallback onClearBookmarkError;
@@ -85,7 +94,7 @@ class _DrugLoadedView extends StatelessWidget {
       activeBody: AnimatedSwitcher(
         key: const ValueKey('drug-detail-active-tab-switcher'),
         duration: DetailConstants.tabSwitchDuration,
-        child: _activeDrugTabBody(l10n, drug, state.activeTab),
+        child: _activeDrugTabBody(l10n, drug, state.activeTab, cacheManager),
       ),
       footer: DetailBookmarkFooter(
         isBookmarked: state.isBookmarked,
@@ -169,11 +178,13 @@ Widget _activeDrugTabBody(
   AppLocalizations l10n,
   Drug drug,
   DrugDetailTab activeTab,
+  BaseCacheManager cacheManager,
 ) {
   return switch (activeTab) {
     DrugDetailTab.overview => DrugDetailOverviewTab(
       key: const ValueKey('drug-detail-active-tab-body'),
       drug: drug,
+      cacheManager: cacheManager,
     ),
     DrugDetailTab.dose => DrugDetailDoseTab(
       key: const ValueKey('drug-detail-active-tab-body'),

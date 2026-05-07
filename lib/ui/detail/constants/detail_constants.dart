@@ -168,6 +168,33 @@ abstract final class DetailConstants {
   /// Detail hero image height.
   static const heroImageHeight = 140.0;
 
+  /// Detail hero image aspect ratio shared with search drug cards.
+  static const double heroDrugImageAspectRatio = 2 / 3;
+
+  /// Detail hero image API size for original-resolution display.
+  static const heroDrugImageApiSize = 'Original';
+
+  /// Detail hero image width.
+  static const heroDrugImageWidth = 64.0;
+
+  /// Detail hero image right inset.
+  static const heroDrugImageRightInset = 16.0;
+
+  /// Detail hero image bottom inset.
+  static const heroDrugImageBottomInset = 12.0;
+
+  /// Detail hero fallback image radius.
+  static const heroImageRadius = 14.0;
+
+  /// Detail hero fallback image shadow dy.
+  static const heroImageShadowDy = 4.0;
+
+  /// Detail hero fallback image shadow blur radius.
+  static const heroImageShadowBlurRadius = 16.0;
+
+  /// Detail hero fallback icon size.
+  static const heroImageFallbackIconSize = 40.0;
+
   /// Detail hero metadata horizontal padding.
   static const heroMetaPaddingHorizontal = 16.0;
 
