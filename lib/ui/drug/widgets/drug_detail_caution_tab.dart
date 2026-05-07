@@ -47,7 +47,7 @@ class _DrugDetailCautionTabState extends State<DrugDetailCautionTab> {
           child: DefaultTabController(
             length: _InteractionInnerTab.values.length,
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 _InteractionTabBar(
                   activeTab: _activeInteractionTab,

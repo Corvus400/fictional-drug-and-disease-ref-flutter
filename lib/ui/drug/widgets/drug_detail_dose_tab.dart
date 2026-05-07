@@ -38,7 +38,7 @@ class _DrugDetailDoseTabState extends State<DrugDetailDoseTab> {
           child: DefaultTabController(
             length: _DoseInnerTab.values.length,
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 _DoseInnerTabBar(
                   activeTab: _activeTab,

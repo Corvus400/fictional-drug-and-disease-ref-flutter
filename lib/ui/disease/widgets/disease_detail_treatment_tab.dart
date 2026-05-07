@@ -57,7 +57,7 @@ class _DiseaseDetailTreatmentTabState extends State<DiseaseDetailTreatmentTab> {
             length: _TreatmentInnerTab.values.length,
             initialIndex: _TreatmentInnerTab.values.indexOf(_activeTab),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 _TreatmentInnerTabBar(
                   activeTab: _activeTab,

@@ -27,6 +27,7 @@ class DetailKvRow extends StatelessWidget {
     final borderSide = BorderSide(color: colors.outlineVariant);
     return Container(
       key: const ValueKey<String>('detail-kv-row'),
+      width: double.infinity,
       decoration: BoxDecoration(
         border: Border(
           top: showTopBorder ? borderSide : BorderSide.none,

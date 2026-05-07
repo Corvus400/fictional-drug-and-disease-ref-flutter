@@ -69,6 +69,7 @@ class _DiseaseHero extends StatelessWidget {
     final colors = Theme.of(context).extension<DetailColorExtension>()!;
     return Container(
       key: const ValueKey<String>('disease-detail-hero'),
+      width: double.infinity,
       decoration: BoxDecoration(
         color: colors.surfaceContainerLow,
         border: Border(bottom: BorderSide(color: colors.outlineVariant)),

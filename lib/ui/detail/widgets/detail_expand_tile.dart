@@ -26,6 +26,7 @@ class DetailExpandTile extends StatelessWidget {
     final colors = Theme.of(context).extension<DetailColorExtension>()!;
     return Container(
       key: const ValueKey<String>('detail-expand-tile'),
+      width: double.infinity,
       decoration: BoxDecoration(
         border: Border(bottom: BorderSide(color: colors.outlineVariant)),
       ),
