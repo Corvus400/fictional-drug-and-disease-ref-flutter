@@ -60,6 +60,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   freezed: ^3.2.5
+  image: ^4.3.0
   integration_test:
     sdk: flutter
   json_serializable: ^6.13.2
