@@ -25,6 +25,7 @@ class DrugDetailAdverseEffectsTab extends StatelessWidget {
           sectionIndex: 'D12',
           title: l10n.detailDrugSectionSeriousAdverseReactions,
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               for (final reaction in reactions.serious)
                 DetailSeriousCard(
