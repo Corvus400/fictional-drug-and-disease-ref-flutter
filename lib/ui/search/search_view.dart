@@ -16,6 +16,7 @@ import 'package:fictional_drug_and_disease_ref/router/app_router.dart';
 import 'package:fictional_drug_and_disease_ref/theme/app_palette.dart';
 import 'package:fictional_drug_and_disease_ref/ui/search/constants/search_constants.dart';
 import 'package:fictional_drug_and_disease_ref/ui/search/format/relative_time_formatter.dart';
+import 'package:fictional_drug_and_disease_ref/ui/search/providers/drug_card_image_cache_manager_provider.dart';
 import 'package:fictional_drug_and_disease_ref/ui/search/search_screen_notifier.dart';
 import 'package:fictional_drug_and_disease_ref/ui/search/search_screen_state.dart';
 import 'package:flutter/material.dart';
@@ -23,6 +24,8 @@ import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:skeletonizer/skeletonizer.dart';
+
+export 'package:fictional_drug_and_disease_ref/ui/search/providers/drug_card_image_cache_manager_provider.dart';
 
 part 'widgets/search_top_chrome.dart';
 part 'widgets/search_phase_section.dart';
@@ -36,11 +39,6 @@ part 'widgets/filter/round6_filter_sheet_scaffold.dart';
 part 'format/drug_card_image_url.dart';
 part 'format/search_label_formatters.dart';
 part 'format/search_sort_sheet.dart';
-
-/// Optional cache manager override for deterministic search UI tests.
-final drugCardImageCacheManagerProvider = Provider<BaseCacheManager>(
-  (ref) => DefaultCacheManager(),
-);
 
 /// Search tab view.
 class SearchView extends ConsumerStatefulWidget {

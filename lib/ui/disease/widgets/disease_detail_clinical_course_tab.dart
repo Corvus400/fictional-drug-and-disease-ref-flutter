@@ -2,6 +2,7 @@ import 'package:fictional_drug_and_disease_ref/domain/disease/disease.dart';
 import 'package:fictional_drug_and_disease_ref/l10n/app_localizations.dart';
 import 'package:fictional_drug_and_disease_ref/theme/detail_color_extension.dart';
 import 'package:fictional_drug_and_disease_ref/ui/detail/constants/detail_constants.dart';
+import 'package:fictional_drug_and_disease_ref/ui/detail/widgets/detail_markdown_body.dart';
 import 'package:fictional_drug_and_disease_ref/ui/detail/widgets/detail_panel.dart';
 import 'package:flutter/material.dart';
 
@@ -24,7 +25,7 @@ class DiseaseDetailClinicalCourseTab extends StatelessWidget {
           title: l10n.detailDiseaseSectionPrognosis,
           child: disease.prognosis == null
               ? const SizedBox.shrink()
-              : _BodyText(disease.prognosis!),
+              : DetailMarkdownBody(data: disease.prognosis!),
         ),
         DetailPanel(
           sectionIndex: 'E14',

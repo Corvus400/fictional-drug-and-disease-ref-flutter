@@ -1,6 +1,7 @@
 import 'package:fictional_drug_and_disease_ref/theme/app_palette.dart';
 import 'package:fictional_drug_and_disease_ref/theme/detail_color_extension.dart';
 import 'package:fictional_drug_and_disease_ref/ui/detail/constants/detail_constants.dart';
+import 'package:fictional_drug_and_disease_ref/ui/detail/widgets/detail_markdown_body.dart';
 import 'package:flutter/material.dart';
 
 /// A required-exam table row.
@@ -30,6 +31,10 @@ class DetailExamTable extends StatelessWidget {
     this.nameHeader = '検査',
     this.categoryHeader = '区分',
     this.findingHeader = '所見',
+    this.categoryAsPill = true,
+    this.nameAsMarkdown = false,
+    this.categoryAsMarkdown = false,
+    this.findingAsMarkdown = false,
     super.key,
   });
 
@@ -44,6 +49,18 @@ class DetailExamTable extends StatelessWidget {
 
   /// Third column header.
   final String findingHeader;
+
+  /// Whether the second column body is rendered as a compact pill.
+  final bool categoryAsPill;
+
+  /// Whether the first column body is Markdown.
+  final bool nameAsMarkdown;
+
+  /// Whether the second column body is Markdown.
+  final bool categoryAsMarkdown;
+
+  /// Whether the third column body is Markdown.
+  final bool findingAsMarkdown;
 
   @override
   Widget build(BuildContext context) {
@@ -81,41 +98,27 @@ class DetailExamTable extends StatelessWidget {
                   cellKey: ValueKey<String>('detail-exam-cell-name-$index'),
                   text: row.name,
                   style: _bodyStyle(colors),
+                  asMarkdown: nameAsMarkdown,
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(
-                    DetailConstants.examTableCellPadding,
-                  ),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Container(
-                      key: ValueKey<String>(
-                        'detail-exam-category-pill-$index',
-                      ),
-                      padding: const EdgeInsets.symmetric(
-                        horizontal:
-                            DetailConstants.examTablePillPaddingHorizontal,
-                        vertical: DetailConstants.examTablePillPaddingVertical,
-                      ),
-                      decoration: BoxDecoration(
-                        color: palette.surface3,
-                        borderRadius: BorderRadius.circular(
-                          DetailConstants.examTablePillRadius,
-                        ),
-                      ),
-                      child: Text(
-                        row.category,
-                        style: TextStyle(
-                          color: palette.ink2,
-                          fontSize: DetailConstants.examTablePillFontSize,
-                        ),
-                      ),
+                if (categoryAsPill)
+                  _DetailExamCategoryPillCell(
+                    index: index,
+                    text: row.category,
+                    palette: palette,
+                  )
+                else
+                  _DetailExamTextCell(
+                    cellKey: ValueKey<String>(
+                      'detail-exam-cell-category-$index',
                     ),
+                    text: row.category,
+                    style: _bodyStyle(colors),
+                    asMarkdown: categoryAsMarkdown,
                   ),
-                ),
                 _DetailExamTextCell(
                   text: row.finding,
                   style: _bodyStyle(colors),
+                  asMarkdown: findingAsMarkdown,
                 ),
               ],
             ),
@@ -146,18 +149,68 @@ class _DetailExamTextCell extends StatelessWidget {
     required this.text,
     required this.style,
     this.cellKey,
+    this.asMarkdown = false,
   });
 
   final String text;
   final TextStyle style;
   final Key? cellKey;
+  final bool asMarkdown;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       key: cellKey,
       padding: const EdgeInsets.all(DetailConstants.examTableCellPadding),
-      child: Text(text, style: style),
+      child: asMarkdown
+          ? DetailMarkdownBody(
+              data: text,
+              color: style.color,
+              fontSize: style.fontSize,
+            )
+          : Text(text, style: style),
+    );
+  }
+}
+
+class _DetailExamCategoryPillCell extends StatelessWidget {
+  const _DetailExamCategoryPillCell({
+    required this.index,
+    required this.text,
+    required this.palette,
+  });
+
+  final int index;
+  final String text;
+  final AppPalette palette;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(DetailConstants.examTableCellPadding),
+      child: Align(
+        alignment: Alignment.centerLeft,
+        child: Container(
+          key: ValueKey<String>('detail-exam-category-pill-$index'),
+          padding: const EdgeInsets.symmetric(
+            horizontal: DetailConstants.examTablePillPaddingHorizontal,
+            vertical: DetailConstants.examTablePillPaddingVertical,
+          ),
+          decoration: BoxDecoration(
+            color: palette.surface3,
+            borderRadius: BorderRadius.circular(
+              DetailConstants.examTablePillRadius,
+            ),
+          ),
+          child: Text(
+            text,
+            style: TextStyle(
+              color: palette.ink2,
+              fontSize: DetailConstants.examTablePillFontSize,
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

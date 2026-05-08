@@ -902,6 +902,18 @@ class AppLocalizationsJa extends AppLocalizations {
   String get detailDrugSectionPhysicochemical => '有効成分に関する理化学的知見';
 
   @override
+  String get detailDrugPhysicochemicalGenericNameEnglish => '一般名英語';
+
+  @override
+  String get detailDrugPhysicochemicalMolecularFormula => '分子式';
+
+  @override
+  String get detailDrugPhysicochemicalMolecularWeight => '分子量';
+
+  @override
+  String get detailDrugPhysicochemicalDescription => '性状';
+
+  @override
   String get detailDrugSectionHandlingPackagesInsurance => '取扱い・包装・保険';
 
   @override

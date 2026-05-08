@@ -1,5 +1,6 @@
 import 'package:fictional_drug_and_disease_ref/theme/app_palette.dart';
 import 'package:fictional_drug_and_disease_ref/ui/detail/constants/detail_constants.dart';
+import 'package:fictional_drug_and_disease_ref/ui/detail/widgets/detail_markdown_body.dart';
 import 'package:flutter/material.dart';
 
 /// Detail Spec `.serious-card` for serious adverse events.
@@ -9,6 +10,7 @@ class DetailSeriousCard extends StatelessWidget {
     required this.name,
     required this.description,
     this.meta = const [],
+    this.descriptionAsMarkdown = false,
     super.key,
   });
 
@@ -20,6 +22,9 @@ class DetailSeriousCard extends StatelessWidget {
 
   /// Optional metadata chips rendered as text spans.
   final List<String> meta;
+
+  /// Whether [description] is CommonMark/GFM Markdown.
+  final bool descriptionAsMarkdown;
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +67,10 @@ class DetailSeriousCard extends StatelessWidget {
                 ),
               ),
             ),
-            Text(description, style: TextStyle(color: palette.danger)),
+            if (descriptionAsMarkdown)
+              DetailMarkdownBody(data: description, color: palette.danger)
+            else
+              Text(description, style: TextStyle(color: palette.danger)),
             if (meta.isNotEmpty) ...[
               const SizedBox(height: DetailConstants.seriousCardMetaTopMargin),
               Wrap(

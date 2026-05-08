@@ -48,6 +48,14 @@ void main() {
       find.text(disease.treatments.nonPharmacological.first.heading),
       findsOneWidget,
     );
+    expect(
+      find.byKey(const ValueKey<String>('detail-exam-category-pill-0')),
+      findsNothing,
+    );
+    expect(
+      find.byKey(const ValueKey<String>('detail-exam-cell-category-0')),
+      findsOneWidget,
+    );
   });
 }
 

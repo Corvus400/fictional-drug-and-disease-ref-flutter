@@ -1,5 +1,6 @@
 import 'package:fictional_drug_and_disease_ref/theme/app_theme.dart';
 import 'package:fictional_drug_and_disease_ref/theme/detail_color_extension.dart';
+import 'package:fictional_drug_and_disease_ref/ui/detail/widgets/detail_markdown_body.dart';
 import 'package:fictional_drug_and_disease_ref/ui/detail/widgets/detail_severity_grade.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -34,7 +35,9 @@ void main() {
     );
     final label = tester.widget<Text>(find.text('重'));
     final criteria = tester.widget<Text>(find.text('3'));
-    final action = tester.widget<Text>(find.text('HCU'));
+    final action = tester.widget<DetailMarkdownBody>(
+      find.byType(DetailMarkdownBody),
+    );
 
     expect(card.padding, const EdgeInsets.all(8));
     expect(card.margin, const EdgeInsets.only(top: 6));
@@ -50,8 +53,9 @@ void main() {
     expect(criteria.style?.fontSize, 12);
     expect(criteria.style?.fontWeight, FontWeight.w700);
     expect(criteria.style?.color, colors.onSurface);
-    expect(action.style?.fontSize, 12);
-    expect(action.style?.color, colors.onSurfaceVariant);
+    expect(action.data, 'HCU');
+    expect(action.fontSize, 12);
+    expect(action.color, colors.onSurfaceVariant);
   });
 
   runGoldenMatrix(

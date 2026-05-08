@@ -70,6 +70,14 @@ void main() {
     expect(find.byType(DetailExamTable), findsOneWidget);
     expect(find.text(drug.packages.first.size), findsOneWidget);
     expect(find.textContaining('冷所・遮光・防湿'), findsOneWidget);
+    expect(
+      find.byKey(const ValueKey<String>('detail-exam-category-pill-0')),
+      findsNothing,
+    );
+    expect(
+      find.byKey(const ValueKey<String>('detail-exam-cell-category-0')),
+      findsOneWidget,
+    );
     expect(find.text('D17'), findsOneWidget);
     expect(find.text('承認条件・参考文献'), findsOneWidget);
     expect(

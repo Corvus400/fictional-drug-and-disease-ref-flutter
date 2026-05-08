@@ -7,6 +7,7 @@ import 'package:fictional_drug_and_disease_ref/l10n/app_localizations.dart';
 import 'package:fictional_drug_and_disease_ref/theme/app_theme.dart';
 import 'package:fictional_drug_and_disease_ref/ui/detail/widgets/detail_badge.dart';
 import 'package:fictional_drug_and_disease_ref/ui/detail/widgets/detail_kv_row.dart';
+import 'package:fictional_drug_and_disease_ref/ui/detail/widgets/detail_markdown_body.dart';
 import 'package:fictional_drug_and_disease_ref/ui/detail/widgets/detail_panel.dart';
 import 'package:fictional_drug_and_disease_ref/ui/disease/widgets/disease_detail_overview_tab.dart';
 import 'package:flutter/material.dart';
@@ -45,7 +46,7 @@ void main() {
     expect(find.text(disease.synonyms.first), findsOneWidget);
     expect(find.text('E4'), findsOneWidget);
     expect(find.text('概要'), findsOneWidget);
-    expect(find.text(disease.summary), findsOneWidget);
+    expect(find.byType(DetailMarkdownBody), findsOneWidget);
     expect(find.text('E5'), findsOneWidget);
     expect(find.text('疫学'), findsOneWidget);
     expect(find.byType(DetailKvRow), findsWidgets);

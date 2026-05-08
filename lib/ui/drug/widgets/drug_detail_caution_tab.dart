@@ -3,6 +3,7 @@ import 'package:fictional_drug_and_disease_ref/l10n/app_localizations.dart';
 import 'package:fictional_drug_and_disease_ref/theme/detail_color_extension.dart';
 import 'package:fictional_drug_and_disease_ref/ui/detail/constants/detail_constants.dart';
 import 'package:fictional_drug_and_disease_ref/ui/detail/widgets/detail_accordion.dart';
+import 'package:fictional_drug_and_disease_ref/ui/detail/widgets/detail_markdown_body.dart';
 import 'package:fictional_drug_and_disease_ref/ui/detail/widgets/detail_panel.dart';
 import 'package:flutter/material.dart';
 
@@ -121,7 +122,7 @@ class _PrecautionAccordion extends StatelessWidget {
       statusLabel: hasNote ? null : l10n.detailNoData,
       enabled: hasNote,
       initiallyExpanded: initiallyExpanded,
-      child: _CautionBodyText(text: text ?? ''),
+      child: DetailMarkdownBody(data: text ?? ''),
     );
   }
 }
@@ -289,9 +290,7 @@ class _NumberedParagraphList extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         for (final item in sorted)
-          _CautionBodyText(
-            text: '${_paragraphIndex(item)}. ${item.content}',
-          ),
+          _NumberedMarkdownParagraph(index: _paragraphIndex(item), item: item),
       ],
     );
   }
@@ -302,6 +301,36 @@ String _paragraphIndex(NumberedParagraph item) {
     return item.order.toString();
   }
   return '${item.order}.${item.subOrder}';
+}
+
+class _NumberedMarkdownParagraph extends StatelessWidget {
+  const _NumberedMarkdownParagraph({required this.index, required this.item});
+
+  final String index;
+  final NumberedParagraph item;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = Theme.of(context).extension<DetailColorExtension>()!;
+    return Padding(
+      padding: const EdgeInsets.only(bottom: DetailConstants.gapXs),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            '$index. ',
+            style: TextStyle(
+              color: colors.onSurface,
+              fontSize: DetailConstants.kvFontSize,
+              fontWeight: FontWeight.w700,
+              height: DetailConstants.bodyTextLineHeight,
+            ),
+          ),
+          Expanded(child: DetailMarkdownBody(data: item.content)),
+        ],
+      ),
+    );
+  }
 }
 
 class _CautionBodyText extends StatelessWidget {

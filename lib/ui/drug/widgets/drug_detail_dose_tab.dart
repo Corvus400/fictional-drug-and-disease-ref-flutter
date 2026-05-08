@@ -2,6 +2,7 @@ import 'package:fictional_drug_and_disease_ref/domain/drug/drug.dart';
 import 'package:fictional_drug_and_disease_ref/l10n/app_localizations.dart';
 import 'package:fictional_drug_and_disease_ref/theme/detail_color_extension.dart';
 import 'package:fictional_drug_and_disease_ref/ui/detail/constants/detail_constants.dart';
+import 'package:fictional_drug_and_disease_ref/ui/detail/widgets/detail_markdown_body.dart';
 import 'package:fictional_drug_and_disease_ref/ui/detail/widgets/detail_panel.dart';
 import 'package:flutter/material.dart';
 
@@ -221,15 +222,23 @@ class _OrderedText extends StatelessWidget {
     final indexText = index is int || index == index.roundToDouble()
         ? index.toInt().toString()
         : index.toString();
+    final prefix = Text(
+      '$indexText. ',
+      style: TextStyle(
+        color: colors.onSurface,
+        fontSize: DetailConstants.kvFontSize,
+        fontWeight: FontWeight.w700,
+        height: DetailConstants.bodyTextLineHeight,
+      ),
+    );
     return Padding(
       padding: const EdgeInsets.only(bottom: DetailConstants.gapXs),
-      child: Text(
-        '$indexText. $text',
-        style: TextStyle(
-          color: colors.onSurface,
-          fontSize: DetailConstants.kvFontSize,
-          height: DetailConstants.bodyTextLineHeight,
-        ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          prefix,
+          Expanded(child: DetailMarkdownBody(data: text)),
+        ],
       ),
     );
   }
@@ -243,14 +252,7 @@ class _DoseBodyText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).extension<DetailColorExtension>()!;
-    return Text(
-      text,
-      style: TextStyle(
-        color: colors.onSurface,
-        fontSize: DetailConstants.kvFontSize,
-        height: DetailConstants.bodyTextLineHeight,
-      ),
-    );
+    return DetailMarkdownBody(data: text, color: colors.onSurface);
   }
 }
 

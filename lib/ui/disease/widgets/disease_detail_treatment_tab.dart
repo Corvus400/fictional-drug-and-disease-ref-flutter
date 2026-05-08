@@ -130,6 +130,8 @@ Widget _treatmentBody(
       nameHeader: '分類',
       categoryHeader: '適応',
       findingHeader: '備考',
+      categoryAsPill: false,
+      findingAsMarkdown: true,
       rows: [
         for (final item in disease.treatments.pharmacological)
           DetailExamRow(
@@ -146,6 +148,8 @@ Widget _treatmentBody(
       nameHeader: '方針',
       categoryHeader: '内容',
       findingHeader: '説明',
+      categoryAsPill: false,
+      findingAsMarkdown: true,
       rows: [
         for (final item in disease.treatments.nonPharmacological)
           DetailExamRow(
@@ -160,6 +164,8 @@ Widget _treatmentBody(
       nameHeader: '順序',
       categoryHeader: '対応',
       findingHeader: '目標',
+      categoryAsPill: false,
+      categoryAsMarkdown: true,
       rows: [
         for (final item in disease.treatments.acutePhaseProtocol)
           DetailExamRow(

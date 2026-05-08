@@ -8,6 +8,7 @@ import 'package:fictional_drug_and_disease_ref/ui/detail/constants/detail_consta
 import 'package:fictional_drug_and_disease_ref/ui/detail/widgets/detail_carousel.dart';
 import 'package:fictional_drug_and_disease_ref/ui/detail/widgets/detail_exam_table.dart';
 import 'package:fictional_drug_and_disease_ref/ui/detail/widgets/detail_expand_tile.dart';
+import 'package:fictional_drug_and_disease_ref/ui/detail/widgets/detail_markdown_body.dart';
 import 'package:fictional_drug_and_disease_ref/ui/detail/widgets/detail_panel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -75,6 +76,7 @@ class _PackageTable extends StatelessWidget {
       nameHeader: l10n.detailDrugPackageSizeHeader,
       categoryHeader: l10n.detailDrugPackageStorageHeader,
       findingHeader: l10n.detailDrugPackageExpirationHeader,
+      categoryAsPill: false,
       rows: [
         for (final package in packages)
           DetailExamRow(
@@ -161,10 +163,7 @@ class _NumberedParagraphList extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         for (final item in sorted)
-          Padding(
-            padding: const EdgeInsets.only(bottom: DetailConstants.gapXs),
-            child: Text('${_paragraphIndex(item)}. ${item.content}'),
-          ),
+          _NumberedMarkdownParagraph(index: _paragraphIndex(item), item: item),
       ],
     );
   }
@@ -175,6 +174,27 @@ String _paragraphIndex(NumberedParagraph item) {
     return item.order.toString();
   }
   return '${item.order}.${item.subOrder}';
+}
+
+class _NumberedMarkdownParagraph extends StatelessWidget {
+  const _NumberedMarkdownParagraph({required this.index, required this.item});
+
+  final String index;
+  final NumberedParagraph item;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: DetailConstants.gapXs),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('$index. '),
+          Expanded(child: DetailMarkdownBody(data: item.content)),
+        ],
+      ),
+    );
+  }
 }
 
 class _RelatedDiseaseCard extends ConsumerWidget {

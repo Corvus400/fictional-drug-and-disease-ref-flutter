@@ -1,5 +1,6 @@
 import 'package:fictional_drug_and_disease_ref/theme/detail_color_extension.dart';
 import 'package:fictional_drug_and_disease_ref/ui/detail/constants/detail_constants.dart';
+import 'package:fictional_drug_and_disease_ref/ui/detail/widgets/detail_markdown_body.dart';
 import 'package:flutter/material.dart';
 
 /// Severity grading row matching Detail Spec `.grade`.
@@ -76,12 +77,10 @@ class DetailSeverityGrade extends StatelessWidget {
                     ),
                   ),
                 ),
-                Text(
-                  recommendedAction,
-                  style: TextStyle(
-                    color: colors.onSurfaceVariant,
-                    fontSize: DetailConstants.severityGradeFontSize,
-                  ),
+                DetailMarkdownBody(
+                  data: recommendedAction,
+                  color: colors.onSurfaceVariant,
+                  fontSize: DetailConstants.severityGradeFontSize,
                 ),
               ],
             ),

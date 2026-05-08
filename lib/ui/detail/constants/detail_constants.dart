@@ -447,6 +447,9 @@ abstract final class DetailConstants {
   /// Detail carousel card image radius.
   static const carouselCardImageRadius = 8.0;
 
+  /// Detail related drug fallback icon size.
+  static const relatedDrugCardFallbackIconSize = 24.0;
+
   /// Detail carousel card title font size.
   static const carouselCardTitleFontSize = 12.5;
 

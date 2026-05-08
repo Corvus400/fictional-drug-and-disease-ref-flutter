@@ -13,13 +13,10 @@ import 'package:fictional_drug_and_disease_ref/ui/disease/widgets/disease_detail
 import 'package:fictional_drug_and_disease_ref/ui/disease/widgets/disease_detail_overview_tab.dart';
 import 'package:fictional_drug_and_disease_ref/ui/disease/widgets/disease_detail_related_tab.dart';
 import 'package:fictional_drug_and_disease_ref/ui/disease/widgets/disease_detail_treatment_tab.dart';
+import 'package:fictional_drug_and_disease_ref/ui/search/providers/drug_card_image_cache_manager_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-/// Cache manager for disease detail related drug thumbnails.
-final diseaseDetailRelatedDrugImageCacheManagerProvider =
-    Provider<BaseCacheManager>((ref) => DefaultCacheManager());
 
 /// Disease detail placeholder.
 class DiseaseDetailView extends ConsumerWidget {
@@ -59,7 +56,7 @@ class DiseaseDetailView extends ConsumerWidget {
           state: state,
           disease: disease,
           relatedDrugImageCacheManager: ref.watch(
-            diseaseDetailRelatedDrugImageCacheManagerProvider,
+            drugCardImageCacheManagerProvider,
           ),
           onSelectTab: notifier.selectTab,
           onToggleBookmark: notifier.toggleBookmark,
