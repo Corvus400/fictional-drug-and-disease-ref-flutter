@@ -2182,6 +2182,12 @@ abstract class AppLocalizations {
   /// **'用量計算'**
   String get detailDoseCalculatorLabel;
 
+  /// No description provided for @detailNoData.
+  ///
+  /// In ja, this message translates to:
+  /// **'該当なし'**
+  String get detailNoData;
+
   /// No description provided for @detailRetry.
   ///
   /// In ja, this message translates to:

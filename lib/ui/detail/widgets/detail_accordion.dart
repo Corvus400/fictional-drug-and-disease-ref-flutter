@@ -8,7 +8,9 @@ class DetailAccordion extends StatefulWidget {
   const DetailAccordion({
     required this.title,
     required this.child,
+    this.statusLabel,
     this.initiallyExpanded = false,
+    this.enabled = true,
     super.key,
   });
 
@@ -18,8 +20,14 @@ class DetailAccordion extends StatefulWidget {
   /// Body content shown while expanded.
   final Widget child;
 
+  /// Optional status shown in the summary row.
+  final String? statusLabel;
+
   /// Whether the accordion starts open.
   final bool initiallyExpanded;
+
+  /// Whether the accordion can be expanded.
+  final bool enabled;
 
   @override
   State<DetailAccordion> createState() => _DetailAccordionState();
@@ -33,7 +41,9 @@ class _DetailAccordionState extends State<DetailAccordion> {
     final colors = Theme.of(context).extension<DetailColorExtension>()!;
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
-      onTap: () => setState(() => _expanded = !_expanded),
+      onTap: widget.enabled
+          ? () => setState(() => _expanded = !_expanded)
+          : null,
       child: Container(
         key: const ValueKey<String>('detail-accordion'),
         clipBehavior: Clip.antiAlias,
@@ -69,20 +79,34 @@ class _DetailAccordionState extends State<DetailAccordion> {
                     ),
                   ),
                   const SizedBox(width: DetailConstants.accordionSummaryGap),
-                  AnimatedRotation(
-                    key: const ValueKey<String>('detail-accordion-chevron'),
-                    turns: _expanded ? 0.5 : 0,
-                    duration: DetailConstants.accordionChevronDuration,
-                    child: Icon(
-                      Icons.keyboard_arrow_down,
-                      color: colors.onSurfaceVariant,
-                      size: DetailConstants.gapL,
+                  if (widget.statusLabel != null) ...[
+                    Text(
+                      widget.statusLabel!,
+                      key: const ValueKey<String>('detail-accordion-status'),
+                      style: TextStyle(
+                        color: colors.onSurfaceVariant,
+                        fontSize: DetailConstants.accordionStatusFontSize,
+                        fontWeight: FontWeight.w600,
+                        height: DetailConstants.accordionTitleLineHeight,
+                      ),
                     ),
-                  ),
+                    const SizedBox(width: DetailConstants.accordionSummaryGap),
+                  ],
+                  if (widget.enabled)
+                    AnimatedRotation(
+                      key: const ValueKey<String>('detail-accordion-chevron'),
+                      turns: _expanded ? 0.5 : 0,
+                      duration: DetailConstants.accordionChevronDuration,
+                      child: Icon(
+                        Icons.keyboard_arrow_down,
+                        color: colors.onSurfaceVariant,
+                        size: DetailConstants.gapL,
+                      ),
+                    ),
                 ],
               ),
             ),
-            if (_expanded)
+            if (_expanded && widget.enabled)
               Padding(
                 key: const ValueKey<String>('detail-accordion-body'),
                 padding: const EdgeInsets.fromLTRB(

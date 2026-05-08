@@ -1118,6 +1118,9 @@ class AppLocalizationsJa extends AppLocalizations {
   String get detailDoseCalculatorLabel => '用量計算';
 
   @override
+  String get detailNoData => '該当なし';
+
+  @override
   String get detailRetry => '再試行';
 
   @override
