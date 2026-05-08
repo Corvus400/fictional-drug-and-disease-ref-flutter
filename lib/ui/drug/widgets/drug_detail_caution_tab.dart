@@ -81,21 +81,47 @@ class _PrecautionAccordions extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final byCategory = {for (final item in items) item.category: item.note};
+    final firstPopulatedCategory = _precautionCategoryOrder
+        .where((category) => byCategory[category]?.trim().isNotEmpty ?? false)
+        .firstOrNull;
     return Column(
       children: [
         for (final category in _precautionCategoryOrder) ...[
-          DetailAccordion(
-            title: _precautionCategoryLabel(
-              AppLocalizations.of(context)!,
-              category,
-            ),
-            initiallyExpanded: category == _precautionCategoryOrder.first,
-            child: _CautionBodyText(text: byCategory[category] ?? ''),
+          _PrecautionAccordion(
+            category: category,
+            note: byCategory[category],
+            initiallyExpanded: category == firstPopulatedCategory,
           ),
           if (category != _precautionCategoryOrder.last)
             const SizedBox(height: DetailConstants.gapS),
         ],
       ],
+    );
+  }
+}
+
+class _PrecautionAccordion extends StatelessWidget {
+  const _PrecautionAccordion({
+    required this.category,
+    required this.note,
+    required this.initiallyExpanded,
+  });
+
+  final String category;
+  final String? note;
+  final bool initiallyExpanded;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final text = note?.trim();
+    final hasNote = text != null && text.isNotEmpty;
+    return DetailAccordion(
+      title: _precautionCategoryLabel(l10n, category),
+      statusLabel: hasNote ? null : l10n.detailNoData,
+      enabled: hasNote,
+      initiallyExpanded: initiallyExpanded,
+      child: _CautionBodyText(text: text ?? ''),
     );
   }
 }

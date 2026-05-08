@@ -76,6 +76,35 @@ void main() {
     expect(rotation.turns, 0.5);
   });
 
+  testWidgets('DetailAccordion shows disabled status without expanding', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: AppTheme.light(),
+        home: const Scaffold(
+          body: DetailAccordion(
+            title: '妊婦',
+            statusLabel: '該当なし',
+            enabled: false,
+            child: Text('表示しない'),
+          ),
+        ),
+      ),
+    );
+
+    expect(find.text('該当なし'), findsOneWidget);
+    expect(
+      find.byKey(const ValueKey<String>('detail-accordion-chevron')),
+      findsNothing,
+    );
+
+    await tester.tap(find.byKey(const ValueKey<String>('detail-accordion')));
+    await tester.pumpAndSettle();
+
+    expect(find.text('表示しない'), findsNothing);
+  });
+
   runGoldenMatrix(
     fileNamePrefix: 'detail_accordion',
     description: 'DetailAccordion follows Detail Spec acc CSS',

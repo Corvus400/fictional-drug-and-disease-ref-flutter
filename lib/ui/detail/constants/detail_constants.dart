@@ -291,6 +291,9 @@ abstract final class DetailConstants {
   /// Detail accordion body font size.
   static const accordionBodyFontSize = 12.5;
 
+  /// Detail accordion summary status font size.
+  static const accordionStatusFontSize = 11.5;
+
   /// Detail accordion body line height.
   static const accordionBodyLineHeight = 1.6;
 

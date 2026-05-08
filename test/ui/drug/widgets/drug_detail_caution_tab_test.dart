@@ -39,6 +39,7 @@ void main() {
     expect(find.text('特定の背景を有する患者への注意'), findsOneWidget);
     expect(find.byType(DetailAccordion), findsNWidgets(7));
     expect(find.byType(ExpansionTile), findsNothing);
+    expect(find.text('該当なし'), findsNWidgets(6));
     expect(find.text('D11'), findsOneWidget);
     expect(find.text('相互作用'), findsOneWidget);
     expect(find.text('併用禁忌（0）'), findsOneWidget);
@@ -92,12 +93,27 @@ void main() {
     expect(find.text('特定の背景を有する患者への注意'), findsOneWidget);
     expect(find.byType(DetailAccordion), findsNWidgets(7));
     expect(find.text('小児等'), findsOneWidget);
-
-    await tester.tap(find.text('小児等'));
-    await tester.pumpAndSettle();
+    expect(find.text('該当なし'), findsNWidgets(6));
+    expect(
+      find.byKey(const ValueKey<String>('detail-accordion-chevron')),
+      findsOneWidget,
+    );
 
     expect(
       find.text(drug.precautionsForSpecificPopulations.first.note),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const ValueKey<String>('detail-accordion-body')),
+      findsOneWidget,
+    );
+
+    await tester.tap(find.text('妊婦'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('該当なし'), findsNWidgets(6));
+    expect(
+      find.byKey(const ValueKey<String>('detail-accordion-body')),
       findsOneWidget,
     );
   });
