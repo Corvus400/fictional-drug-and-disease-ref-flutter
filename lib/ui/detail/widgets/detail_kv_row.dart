@@ -1,5 +1,6 @@
 import 'package:fictional_drug_and_disease_ref/theme/detail_color_extension.dart';
 import 'package:fictional_drug_and_disease_ref/ui/detail/constants/detail_constants.dart';
+import 'package:fictional_drug_and_disease_ref/ui/detail/widgets/detail_markdown_body.dart';
 import 'package:flutter/material.dart';
 
 /// Detail Spec `.kv` key-value row.
@@ -9,6 +10,7 @@ class DetailKvRow extends StatelessWidget {
     required this.label,
     required this.value,
     this.showTopBorder = false,
+    this.valueAsMarkdown = false,
     super.key,
   });
 
@@ -20,6 +22,9 @@ class DetailKvRow extends StatelessWidget {
 
   /// Whether to render the top border.
   final bool showTopBorder;
+
+  /// Whether the value is CommonMark/GFM Markdown.
+  final bool valueAsMarkdown;
 
   @override
   Widget build(BuildContext context) {
@@ -60,13 +65,15 @@ class DetailKvRow extends StatelessWidget {
               padding: const EdgeInsets.symmetric(
                 vertical: DetailConstants.kvPaddingVertical,
               ),
-              child: Text(
-                value,
-                style: TextStyle(
-                  color: colors.onSurface,
-                  fontSize: DetailConstants.kvFontSize,
-                ),
-              ),
+              child: valueAsMarkdown
+                  ? DetailMarkdownBody(data: value)
+                  : Text(
+                      value,
+                      style: TextStyle(
+                        color: colors.onSurface,
+                        fontSize: DetailConstants.kvFontSize,
+                      ),
+                    ),
             ),
           ),
         ],

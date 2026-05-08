@@ -6,6 +6,7 @@ import 'package:fictional_drug_and_disease_ref/data/mappers/drug_mapper.dart';
 import 'package:fictional_drug_and_disease_ref/l10n/app_localizations.dart';
 import 'package:fictional_drug_and_disease_ref/theme/app_theme.dart';
 import 'package:fictional_drug_and_disease_ref/ui/detail/widgets/detail_accordion.dart';
+import 'package:fictional_drug_and_disease_ref/ui/detail/widgets/detail_markdown_body.dart';
 import 'package:fictional_drug_and_disease_ref/ui/detail/widgets/detail_panel.dart';
 import 'package:fictional_drug_and_disease_ref/ui/detail/widgets/detail_pk_table.dart';
 import 'package:fictional_drug_and_disease_ref/ui/drug/widgets/drug_detail_pharmacokinetics_tab.dart';
@@ -45,15 +46,39 @@ void main() {
     expect(find.text('数分以内'), findsOneWidget);
     expect(find.text('D15'), findsOneWidget);
     expect(find.text('補足情報'), findsOneWidget);
-    expect(find.byType(DetailAccordion), findsNWidgets(3));
+    expect(find.byType(DetailAccordion), findsNWidgets(6));
     expect(find.byType(ExpansionTile), findsNothing);
     expect(find.text('過量投与'), findsOneWidget);
+    expect(find.text('有効成分に関する理化学的知見'), findsOneWidget);
+    expect(find.text('臨床検査結果に及ぼす影響'), findsOneWidget);
+    expect(find.text('その他の注意'), findsOneWidget);
+
+    await tester.tap(find.text('臨床成績'));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(DetailMarkdownBody), findsWidgets);
 
     await tester.ensureVisible(find.text('過量投与'));
     await tester.tap(find.text('過量投与'));
     await tester.pumpAndSettle();
 
-    expect(find.text(drug.overdose!.symptoms), findsOneWidget);
+    final markdownBodies = tester
+        .widgetList<DetailMarkdownBody>(find.byType(DetailMarkdownBody))
+        .toList();
+    expect(
+      markdownBodies.any((body) => body.data == drug.overdose!.symptoms),
+      isTrue,
+    );
+
+    await tester.ensureVisible(find.text('有効成分に関する理化学的知見'));
+    await tester.tap(find.text('有効成分に関する理化学的知見'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('一般名英語'), findsOneWidget);
+    expect(
+      find.text(drug.physicochemicalProperties!.genericNameEnglish),
+      findsOneWidget,
+    );
   });
 }
 

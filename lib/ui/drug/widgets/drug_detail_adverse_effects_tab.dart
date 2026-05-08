@@ -33,6 +33,7 @@ class DrugDetailAdverseEffectsTab extends StatelessWidget {
                   description:
                       '${_frequencyLabel(l10n, reaction.frequency)} — '
                       '${reaction.symptom}',
+                  descriptionAsMarkdown: true,
                   meta: [
                     _seriousMetaLabel(
                       l10n.detailDrugInitialSigns,

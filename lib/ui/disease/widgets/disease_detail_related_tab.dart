@@ -44,7 +44,7 @@ class DiseaseDetailRelatedTab extends StatelessWidget {
   /// Creates a related tab.
   const DiseaseDetailRelatedTab({
     required this.disease,
-    this.cacheManager,
+    required this.cacheManager,
     super.key,
   });
 
@@ -52,12 +52,11 @@ class DiseaseDetailRelatedTab extends StatelessWidget {
   final Disease disease;
 
   /// Cache manager for related drug thumbnail loading.
-  final BaseCacheManager? cacheManager;
+  final BaseCacheManager cacheManager;
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final resolvedCacheManager = cacheManager ?? DefaultCacheManager();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -71,7 +70,7 @@ class DiseaseDetailRelatedTab extends StatelessWidget {
                 for (final id in disease.relatedDrugIds)
                   _RelatedDrugCard(
                     id: id,
-                    cacheManager: resolvedCacheManager,
+                    cacheManager: cacheManager,
                     onTap: () => context.push(AppRoutes.drugDetail(id)),
                   ),
               ],
@@ -389,7 +388,11 @@ class _RelatedDrugImageFallback extends StatelessWidget {
     return ColoredBox(
       key: const ValueKey<String>('detail-related-drug-image-fallback'),
       color: palette.surfaceSubtle,
-      child: Icon(Icons.medication_outlined, color: palette.ink2, size: 24),
+      child: Icon(
+        Icons.medication_outlined,
+        color: palette.ink2,
+        size: DetailConstants.relatedDrugCardFallbackIconSize,
+      ),
     );
   }
 }

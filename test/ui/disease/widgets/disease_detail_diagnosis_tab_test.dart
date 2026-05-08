@@ -7,6 +7,7 @@ import 'package:fictional_drug_and_disease_ref/l10n/app_localizations.dart';
 import 'package:fictional_drug_and_disease_ref/theme/app_theme.dart';
 import 'package:fictional_drug_and_disease_ref/ui/detail/widgets/detail_badge.dart';
 import 'package:fictional_drug_and_disease_ref/ui/detail/widgets/detail_exam_table.dart';
+import 'package:fictional_drug_and_disease_ref/ui/detail/widgets/detail_markdown_body.dart';
 import 'package:fictional_drug_and_disease_ref/ui/detail/widgets/detail_panel.dart';
 import 'package:fictional_drug_and_disease_ref/ui/detail/widgets/detail_severity_grade.dart';
 import 'package:fictional_drug_and_disease_ref/ui/disease/widgets/disease_detail_diagnosis_tab.dart';
@@ -36,7 +37,7 @@ void main() {
     expect(find.byType(DetailPanel), findsNWidgets(5));
     expect(find.text('E6'), findsOneWidget);
     expect(find.text('原因・病態'), findsOneWidget);
-    expect(find.text(disease.etiology), findsOneWidget);
+    expect(find.byType(DetailMarkdownBody), findsWidgets);
     expect(find.text('E7'), findsOneWidget);
     expect(find.text('症状'), findsOneWidget);
     expect(find.byType(DetailBadge), findsWidgets);

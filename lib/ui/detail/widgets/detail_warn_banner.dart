@@ -1,5 +1,6 @@
 import 'package:fictional_drug_and_disease_ref/theme/app_palette.dart';
 import 'package:fictional_drug_and_disease_ref/ui/detail/constants/detail_constants.dart';
+import 'package:fictional_drug_and_disease_ref/ui/detail/widgets/detail_markdown_body.dart';
 import 'package:flutter/material.dart';
 
 /// Detail Spec `.warn-banner` alert block.
@@ -68,13 +69,26 @@ class DetailWarnBanner extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 for (final (index, item) in items.indexed)
-                  Text(
-                    '${index + 1}. $item',
-                    style: TextStyle(
-                      color: palette.danger,
-                      fontSize: DetailConstants.warnBannerFontSize,
-                      height: DetailConstants.warnBannerLineHeight,
-                    ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        '${index + 1}. ',
+                        style: TextStyle(
+                          color: palette.danger,
+                          fontSize: DetailConstants.warnBannerFontSize,
+                          height: DetailConstants.warnBannerLineHeight,
+                        ),
+                      ),
+                      Expanded(
+                        child: DetailMarkdownBody(
+                          data: item,
+                          color: palette.danger,
+                          fontSize: DetailConstants.warnBannerFontSize,
+                          height: DetailConstants.warnBannerLineHeight,
+                        ),
+                      ),
+                    ],
                   ),
               ],
             ),

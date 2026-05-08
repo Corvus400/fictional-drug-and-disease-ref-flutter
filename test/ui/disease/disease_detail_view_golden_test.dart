@@ -15,6 +15,7 @@ import 'package:fictional_drug_and_disease_ref/l10n/app_localizations.dart';
 import 'package:fictional_drug_and_disease_ref/ui/disease/disease_detail_screen_notifier.dart';
 import 'package:fictional_drug_and_disease_ref/ui/disease/disease_detail_screen_state.dart';
 import 'package:fictional_drug_and_disease_ref/ui/disease/disease_detail_view.dart';
+import 'package:fictional_drug_and_disease_ref/ui/search/providers/drug_card_image_cache_manager_provider.dart';
 import 'package:file/file.dart' as file;
 import 'package:file/local.dart';
 import 'package:flutter/material.dart';
@@ -81,7 +82,7 @@ void main() {
             appDatabaseProvider.overrideWithValue(_db),
             diseaseApiClientProvider.overrideWithValue(apiClient),
             drugApiClientProvider.overrideWithValue(drugApiClient),
-            diseaseDetailRelatedDrugImageCacheManagerProvider.overrideWithValue(
+            drugCardImageCacheManagerProvider.overrideWithValue(
               imageCacheManager,
             ),
             streamBookmarkStateProvider(

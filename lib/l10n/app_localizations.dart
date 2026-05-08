@@ -1750,6 +1750,30 @@ abstract class AppLocalizations {
   /// **'有効成分に関する理化学的知見'**
   String get detailDrugSectionPhysicochemical;
 
+  /// No description provided for @detailDrugPhysicochemicalGenericNameEnglish.
+  ///
+  /// In ja, this message translates to:
+  /// **'一般名英語'**
+  String get detailDrugPhysicochemicalGenericNameEnglish;
+
+  /// No description provided for @detailDrugPhysicochemicalMolecularFormula.
+  ///
+  /// In ja, this message translates to:
+  /// **'分子式'**
+  String get detailDrugPhysicochemicalMolecularFormula;
+
+  /// No description provided for @detailDrugPhysicochemicalMolecularWeight.
+  ///
+  /// In ja, this message translates to:
+  /// **'分子量'**
+  String get detailDrugPhysicochemicalMolecularWeight;
+
+  /// No description provided for @detailDrugPhysicochemicalDescription.
+  ///
+  /// In ja, this message translates to:
+  /// **'性状'**
+  String get detailDrugPhysicochemicalDescription;
+
   /// No description provided for @detailDrugSectionHandlingPackagesInsurance.
   ///
   /// In ja, this message translates to:

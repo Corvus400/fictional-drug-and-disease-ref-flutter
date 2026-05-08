@@ -1,5 +1,6 @@
 import 'package:fictional_drug_and_disease_ref/theme/app_palette.dart';
 import 'package:fictional_drug_and_disease_ref/theme/app_theme.dart';
+import 'package:fictional_drug_and_disease_ref/ui/detail/widgets/detail_markdown_body.dart';
 import 'package:fictional_drug_and_disease_ref/ui/detail/widgets/detail_warn_banner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -29,7 +30,10 @@ void main() {
     );
     final dotDecoration = dot.decoration! as BoxDecoration;
     final dotText = tester.widget<Text>(find.text('!'));
-    final text = tester.widget<Text>(find.text('1. 妊婦には投与しないこと。'));
+    final prefix = tester.widget<Text>(find.text('1. '));
+    final markdown = tester.widget<DetailMarkdownBody>(
+      find.byType(DetailMarkdownBody).first,
+    );
 
     expect(
       banner.padding,
@@ -46,9 +50,13 @@ void main() {
     expect(dotText.style?.fontSize, 11);
     expect(dotText.style?.fontWeight, FontWeight.w700);
     expect(dotText.style?.color, palette.onPrimary);
-    expect(text.style?.fontSize, 12.5);
-    expect(text.style?.height, 1.55);
-    expect(text.style?.color, palette.danger);
+    expect(prefix.style?.fontSize, 12.5);
+    expect(prefix.style?.height, 1.55);
+    expect(prefix.style?.color, palette.danger);
+    expect(markdown.data, '妊婦には投与しないこと。');
+    expect(markdown.fontSize, 12.5);
+    expect(markdown.height, 1.55);
+    expect(markdown.color, palette.danger);
   });
 
   runGoldenMatrix(

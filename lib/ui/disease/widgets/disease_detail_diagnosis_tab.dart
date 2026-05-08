@@ -4,6 +4,7 @@ import 'package:fictional_drug_and_disease_ref/theme/detail_color_extension.dart
 import 'package:fictional_drug_and_disease_ref/ui/detail/constants/detail_constants.dart';
 import 'package:fictional_drug_and_disease_ref/ui/detail/widgets/detail_badge.dart';
 import 'package:fictional_drug_and_disease_ref/ui/detail/widgets/detail_exam_table.dart';
+import 'package:fictional_drug_and_disease_ref/ui/detail/widgets/detail_markdown_body.dart';
 import 'package:fictional_drug_and_disease_ref/ui/detail/widgets/detail_panel.dart';
 import 'package:fictional_drug_and_disease_ref/ui/detail/widgets/detail_severity_grade.dart';
 import 'package:flutter/material.dart';
@@ -25,7 +26,7 @@ class DiseaseDetailDiagnosisTab extends StatelessWidget {
         DetailPanel(
           sectionIndex: 'E6',
           title: l10n.detailDiseaseSectionEtiology,
-          child: _BodyText(disease.etiology),
+          child: DetailMarkdownBody(data: disease.etiology),
         ),
         DetailPanel(
           sectionIndex: 'E7',
@@ -124,13 +125,14 @@ class _DiagnosticCriteriaBody extends StatelessWidget {
           const SizedBox(height: DetailConstants.gapS),
           _MutedText(l10n.detailDiseaseSectionSupporting),
           const SizedBox(height: DetailConstants.gapXs),
-          for (final supporting in criteria.supporting) _BodyText(supporting),
+          for (final supporting in criteria.supporting)
+            DetailMarkdownBody(data: supporting),
         ],
         if (criteria.notes != null) ...[
           const SizedBox(height: DetailConstants.gapS),
           _MutedText(l10n.detailDiseaseSectionNotes),
           const SizedBox(height: DetailConstants.gapXs),
-          _BodyText(criteria.notes!),
+          DetailMarkdownBody(data: criteria.notes!),
         ],
       ],
     );
@@ -203,27 +205,8 @@ class _NumberedText extends StatelessWidget {
               height: DetailConstants.bodyTextLineHeight,
             ),
           ),
-          Expanded(child: _BodyText(text)),
+          Expanded(child: DetailMarkdownBody(data: text)),
         ],
-      ),
-    );
-  }
-}
-
-class _BodyText extends StatelessWidget {
-  const _BodyText(this.text);
-
-  final String text;
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = Theme.of(context).extension<DetailColorExtension>()!;
-    return Text(
-      text,
-      style: TextStyle(
-        color: colors.onSurface,
-        fontSize: DetailConstants.kvFontSize,
-        height: DetailConstants.bodyTextLineHeight,
       ),
     );
   }

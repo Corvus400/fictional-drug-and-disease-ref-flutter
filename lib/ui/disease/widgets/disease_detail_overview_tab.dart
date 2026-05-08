@@ -5,6 +5,7 @@ import 'package:fictional_drug_and_disease_ref/theme/detail_color_extension.dart
 import 'package:fictional_drug_and_disease_ref/ui/detail/constants/detail_constants.dart';
 import 'package:fictional_drug_and_disease_ref/ui/detail/widgets/detail_badge.dart';
 import 'package:fictional_drug_and_disease_ref/ui/detail/widgets/detail_kv_row.dart';
+import 'package:fictional_drug_and_disease_ref/ui/detail/widgets/detail_markdown_body.dart';
 import 'package:fictional_drug_and_disease_ref/ui/detail/widgets/detail_panel.dart';
 import 'package:flutter/material.dart';
 
@@ -36,16 +37,7 @@ class DiseaseDetailOverviewTab extends StatelessWidget {
         DetailPanel(
           sectionIndex: 'E4',
           title: l10n.detailDiseaseSectionSummary,
-          child: Text(
-            disease.summary,
-            style: TextStyle(
-              color: Theme.of(
-                context,
-              ).extension<DetailColorExtension>()!.onSurface,
-              fontSize: DetailConstants.kvFontSize,
-              height: DetailConstants.bodyTextLineHeight,
-            ),
-          ),
+          child: DetailMarkdownBody(data: disease.summary),
         ),
         DetailPanel(
           sectionIndex: 'E5',
