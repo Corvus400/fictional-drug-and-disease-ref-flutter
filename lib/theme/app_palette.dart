@@ -1,5 +1,53 @@
 import 'package:flutter/material.dart';
 
+/// Calc BMI category palette token key.
+enum CalcBmiCategoryToken {
+  /// BMI < 18.5.
+  underweight,
+
+  /// 18.5 <= BMI < 25.
+  normal,
+
+  /// 25 <= BMI < 30.
+  overweight,
+
+  /// 30 <= BMI < 35.
+  obese1,
+
+  /// 35 <= BMI < 40.
+  obese2,
+
+  /// 40 <= BMI < 45.
+  obese3,
+
+  /// BMI >= 45.
+  obese4,
+}
+
+/// Calc CKD stage palette token key.
+enum CalcCkdStageToken {
+  /// eGFR >= 90.
+  g1,
+
+  /// 60 <= eGFR < 90.
+  g2,
+
+  /// 45 <= eGFR < 60.
+  g3a,
+
+  /// 30 <= eGFR < 45.
+  g3b,
+
+  /// 15 <= eGFR < 30.
+  g4,
+
+  /// eGFR < 15.
+  g5,
+}
+
+/// Calc category palette token.
+typedef CalcCategoryPaletteToken = ({Color bg, Color fg, IconData shape});
+
 /// Disease card badge category.
 enum DiseaseBadgeCategory {
   /// Disease chronicity.
@@ -453,6 +501,198 @@ final class AppPalette extends ThemeExtension<AppPalette> {
     return brightness == Brightness.dark ? dark : light;
   }
 
+  /// Calc tools screen background token.
+  Color get calcBg => bg;
+
+  /// Calc tools primary surface token.
+  Color get calcSurface => surface;
+
+  /// Calc tools secondary surface token.
+  Color get calcSurface2 => surface2;
+
+  /// Calc tools tertiary surface token.
+  Color get calcSurface3 => surface3;
+
+  /// Calc tools quaternary surface token.
+  Color get calcSurface4 => surface4;
+
+  /// Calc tools primary ink token.
+  Color get calcInk => ink;
+
+  /// Calc tools secondary ink token.
+  Color get calcInk2 => ink2;
+
+  /// Calc tools muted text token.
+  Color get calcMuted => muted;
+
+  /// Calc tools extra-muted text token.
+  Color get calcMuted2 => muted2;
+
+  /// Calc tools hairline token.
+  Color get calcHairline => hairline;
+
+  /// Calc tools faint hairline token.
+  Color get calcHairline2 => hairline2;
+
+  /// Calc tools primary token.
+  Color get calcPrimary => primary;
+
+  /// Calc tools on-primary token.
+  Color get calcOnPrimary => onPrimary;
+
+  /// Calc tools soft primary token.
+  Color get calcPrimarySoft => primarySoft;
+
+  /// Calc tools focus ring token.
+  Color get calcPrimaryRing => primaryRing;
+
+  /// Calc tools primary container token.
+  Color get calcPrimaryContainer => _byBrightness(
+    light: const Color(0xFFD8E4FF),
+    dark: const Color(0xFF003494),
+  );
+
+  /// Calc tools on-primary-container token.
+  Color get calcOnPrimaryContainer => _byBrightness(
+    light: const Color(0xFF001A41),
+    dark: const Color(0xFFD8E4FF),
+  );
+
+  /// Calc tools secondary token.
+  Color get calcSecondary => _byBrightness(
+    light: const Color(0xFF525E78),
+    dark: const Color(0xFFBBC6E4),
+  );
+
+  /// Calc tools on-secondary token.
+  Color get calcOnSecondary => _byBrightness(
+    light: const Color(0xFFFFFFFF),
+    dark: const Color(0xFF253048),
+  );
+
+  /// Calc tools secondary container token.
+  Color get calcSecondaryContainer => _byBrightness(
+    light: const Color(0xFFD7E3F8),
+    dark: const Color(0xFF39435B),
+  );
+
+  /// Calc tools on-secondary-container token.
+  Color get calcOnSecondaryContainer => _byBrightness(
+    light: const Color(0xFF101C2F),
+    dark: const Color(0xFFD7E3F8),
+  );
+
+  /// Calc tools tertiary token.
+  Color get calcTertiary => _byBrightness(
+    light: const Color(0xFF705574),
+    dark: const Color(0xFFDEBCDF),
+  );
+
+  /// Calc tools on-tertiary token.
+  Color get calcOnTertiary => _byBrightness(
+    light: const Color(0xFFFFFFFF),
+    dark: const Color(0xFF3F2843),
+  );
+
+  /// Calc tools tertiary container token.
+  Color get calcTertiaryContainer => _byBrightness(
+    light: const Color(0xFFFBD8FF),
+    dark: const Color(0xFF573C5B),
+  );
+
+  /// Calc tools on-tertiary-container token.
+  Color get calcOnTertiaryContainer => _byBrightness(
+    light: const Color(0xFF280A2D),
+    dark: const Color(0xFFFBD8FF),
+  );
+
+  /// Calc tools error token.
+  Color get calcError => _byBrightness(
+    light: const Color(0xFFB3261E),
+    dark: const Color(0xFFFFB4AB),
+  );
+
+  /// Calc tools on-error token.
+  Color get calcOnError => _byBrightness(
+    light: const Color(0xFFFFFFFF),
+    dark: const Color(0xFF601410),
+  );
+
+  /// Calc tools error container token.
+  Color get calcErrorContainer => _byBrightness(
+    light: const Color(0xFFFFEDED),
+    dark: const Color(0xFF5C1612),
+  );
+
+  /// Calc tools on-error-container token.
+  Color get calcOnErrorContainer => _byBrightness(
+    light: const Color(0xFF5C1612),
+    dark: const Color(0xFFFFE3DC),
+  );
+
+  /// Calc tools warning token.
+  Color get calcWarn => _byBrightness(
+    light: const Color(0xFFB45309),
+    dark: const Color(0xFFFFD080),
+  );
+
+  /// Calc tools warning container token.
+  Color get calcWarnContainer => _byBrightness(
+    light: const Color(0xFFFFEACC),
+    dark: const Color(0xFF412E10),
+  );
+
+  /// Calc tools on-warning-container token.
+  Color get calcOnWarnContainer => _byBrightness(
+    light: const Color(0xFF4A2A00),
+    dark: const Color(0xFFFFE5BD),
+  );
+
+  /// Calc tools success token.
+  Color get calcSuccess => _byBrightness(
+    light: const Color(0xFF1F7A3A),
+    dark: const Color(0xFF7BD8A0),
+  );
+
+  /// Calc tools success container token.
+  Color get calcSuccessContainer => _byBrightness(
+    light: const Color(0xFFDDF5E2),
+    dark: const Color(0xFF0E3920),
+  );
+
+  /// Calc tools on-success-container token.
+  Color get calcOnSuccessContainer => _byBrightness(
+    light: const Color(0xFF0A3517),
+    dark: const Color(0xFFC9F5D5),
+  );
+
+  /// Calc tools search field fill token.
+  Color get calcSearchFieldBg => searchFieldBg;
+
+  /// App-wide disclaimer ribbon background token.
+  Color get calcRibbonBg => _byBrightness(
+    light: const Color(0xFF1A1C1E),
+    dark: const Color(0xFF0D0E13),
+  );
+
+  /// App-wide disclaimer ribbon foreground token.
+  Color get calcRibbonFg => const Color(0xFFFFFFFF);
+
+  /// App-wide disclaimer ribbon accent token.
+  Color get calcRibbonAccent => const Color(0xFFFFB4AB);
+
+  /// BMI category palette tokens for calc badges and charts.
+  Map<CalcBmiCategoryToken, CalcCategoryPaletteToken>
+  get calcBmiCategoryPalette => brightness == Brightness.dark
+      ? _darkCalcBmiCategoryPalette
+      : _lightCalcBmiCategoryPalette;
+
+  /// CKD stage palette tokens for calc badges and charts.
+  Map<CalcCkdStageToken, CalcCategoryPaletteToken> get calcCkdStagePalette =>
+      brightness == Brightness.dark
+      ? _darkCalcCkdStagePalette
+      : _lightCalcCkdStagePalette;
+
   @override
   AppPalette copyWith({
     Brightness? brightness,
@@ -791,4 +1031,148 @@ const _darkChipExamCategory = <String, Color>{
   'physiological': Color(0xFF67E8F9),
   'pathology': Color(0xFFD5BAFF),
   'interview': Color(0xFF86E0A4),
+};
+
+const _lightCalcBmiCategoryPalette =
+    <CalcBmiCategoryToken, CalcCategoryPaletteToken>{
+      CalcBmiCategoryToken.underweight: (
+        bg: Color(0xFF3F8AE0),
+        fg: Color(0xFF06294F),
+        shape: Icons.circle,
+      ),
+      CalcBmiCategoryToken.normal: (
+        bg: Color(0xFF1F7A3A),
+        fg: Color(0xFF0A3517),
+        shape: Icons.change_history,
+      ),
+      CalcBmiCategoryToken.overweight: (
+        bg: Color(0xFFB47A00),
+        fg: Color(0xFF3A2700),
+        shape: Icons.square,
+      ),
+      CalcBmiCategoryToken.obese1: (
+        bg: Color(0xFFC25600),
+        fg: Color(0xFF3D1A00),
+        shape: Icons.diamond,
+      ),
+      CalcBmiCategoryToken.obese2: (
+        bg: Color(0xFFA8341B),
+        fg: Color(0xFF3A0F03),
+        shape: Icons.pentagon,
+      ),
+      CalcBmiCategoryToken.obese3: (
+        bg: Color(0xFF8C1D18),
+        fg: Color(0xFFFBE9E7),
+        shape: Icons.hexagon,
+      ),
+      CalcBmiCategoryToken.obese4: (
+        bg: Color(0xFF5A1212),
+        fg: Color(0xFFFFE3DC),
+        shape: Icons.close,
+      ),
+    };
+
+const _darkCalcBmiCategoryPalette =
+    <CalcBmiCategoryToken, CalcCategoryPaletteToken>{
+      CalcBmiCategoryToken.underweight: (
+        bg: Color(0xFF7AB5FF),
+        fg: Color(0xFF001A41),
+        shape: Icons.circle,
+      ),
+      CalcBmiCategoryToken.normal: (
+        bg: Color(0xFF7BD8A0),
+        fg: Color(0xFF0A3517),
+        shape: Icons.change_history,
+      ),
+      CalcBmiCategoryToken.overweight: (
+        bg: Color(0xFFF5C56A),
+        fg: Color(0xFF3A2700),
+        shape: Icons.square,
+      ),
+      CalcBmiCategoryToken.obese1: (
+        bg: Color(0xFFFF9A4A),
+        fg: Color(0xFF3D1A00),
+        shape: Icons.diamond,
+      ),
+      CalcBmiCategoryToken.obese2: (
+        bg: Color(0xFFF08C72),
+        fg: Color(0xFF3A0F03),
+        shape: Icons.pentagon,
+      ),
+      CalcBmiCategoryToken.obese3: (
+        bg: Color(0xFFF2B8B5),
+        fg: Color(0xFF601410),
+        shape: Icons.hexagon,
+      ),
+      CalcBmiCategoryToken.obese4: (
+        bg: Color(0xFFFFB4AB),
+        fg: Color(0xFF5A1212),
+        shape: Icons.close,
+      ),
+    };
+
+const _lightCalcCkdStagePalette = <CalcCkdStageToken, CalcCategoryPaletteToken>{
+  CalcCkdStageToken.g1: (
+    bg: Color(0xFF1F7A3A),
+    fg: Color(0xFF0A3517),
+    shape: Icons.circle,
+  ),
+  CalcCkdStageToken.g2: (
+    bg: Color(0xFF5C8A1F),
+    fg: Color(0xFF1F2F08),
+    shape: Icons.change_history,
+  ),
+  CalcCkdStageToken.g3a: (
+    bg: Color(0xFFB47A00),
+    fg: Color(0xFF3A2700),
+    shape: Icons.square,
+  ),
+  CalcCkdStageToken.g3b: (
+    bg: Color(0xFFC25600),
+    fg: Color(0xFF3D1A00),
+    shape: Icons.diamond,
+  ),
+  CalcCkdStageToken.g4: (
+    bg: Color(0xFFA8341B),
+    fg: Color(0xFFFBE9E7),
+    shape: Icons.hexagon,
+  ),
+  CalcCkdStageToken.g5: (
+    bg: Color(0xFF5A1212),
+    fg: Color(0xFFFFE3DC),
+    shape: Icons.close,
+  ),
+};
+
+const _darkCalcCkdStagePalette = <CalcCkdStageToken, CalcCategoryPaletteToken>{
+  CalcCkdStageToken.g1: (
+    bg: Color(0xFF7BD8A0),
+    fg: Color(0xFF0A3517),
+    shape: Icons.circle,
+  ),
+  CalcCkdStageToken.g2: (
+    bg: Color(0xFFBFD96E),
+    fg: Color(0xFF1F2F08),
+    shape: Icons.change_history,
+  ),
+  CalcCkdStageToken.g3a: (
+    bg: Color(0xFFF5C56A),
+    fg: Color(0xFF3A2700),
+    shape: Icons.square,
+  ),
+  CalcCkdStageToken.g3b: (
+    bg: Color(0xFFFF9A4A),
+    fg: Color(0xFF3D1A00),
+    shape: Icons.diamond,
+  ),
+  CalcCkdStageToken.g4: (
+    bg: Color(0xFFF08C72),
+    fg: Color(0xFF3A0F03),
+    shape: Icons.hexagon,
+  ),
+  CalcCkdStageToken.g5: (
+    bg: Color(0xFFFFB4AB),
+    fg: Color(0xFF5A1212),
+    shape: Icons.close,
+  ),
 };

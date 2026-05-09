@@ -1136,6 +1136,186 @@ class AppLocalizationsJa extends AppLocalizations {
   String get detailRetry => '再試行';
 
   @override
+  String get calcAppBarTitle => '計算ツール';
+
+  @override
+  String get calcToolBmi => 'BMI';
+
+  @override
+  String get calcToolEgfr => 'eGFR';
+
+  @override
+  String get calcToolCrcl => 'CrCl';
+
+  @override
+  String get calcFormulaBmi => 'BMI = w / h²';
+
+  @override
+  String get calcFormulaEgfr =>
+      'eGFR = 194 × Cr⁻¹·⁰⁹⁴ × age⁻⁰·²⁸⁷ ×(0.739 if F)';
+
+  @override
+  String get calcFormulaCrcl =>
+      'CrCl = (140 - age) × w / (72 × Cr) ×(0.85 if F)';
+
+  @override
+  String get calcInputHeight => '身長';
+
+  @override
+  String get calcInputWeight => '体重';
+
+  @override
+  String get calcInputAge => '年齢';
+
+  @override
+  String get calcInputCreatinine => '血清クレアチニン';
+
+  @override
+  String get calcInputSex => '性別';
+
+  @override
+  String get calcSexMale => '男性';
+
+  @override
+  String get calcSexFemale => '女性';
+
+  @override
+  String get calcActionCalculate => '計算する';
+
+  @override
+  String get calcActionHistory => '履歴';
+
+  @override
+  String get calcActionClear => 'クリア';
+
+  @override
+  String get calcActionClose => '閉じる';
+
+  @override
+  String get calcUnitCm => 'cm';
+
+  @override
+  String get calcUnitKg => 'kg';
+
+  @override
+  String get calcUnitYear => '歳';
+
+  @override
+  String get calcUnitMgDl => 'mg/dL';
+
+  @override
+  String get calcResultTitle => '結果';
+
+  @override
+  String get calcResultClassification => '分類';
+
+  @override
+  String get calcResultBmiUnit => 'kg/m²';
+
+  @override
+  String get calcResultEgfrUnit => 'mL/min/1.73m²';
+
+  @override
+  String get calcResultCrclUnit => 'mL/min';
+
+  @override
+  String get calcResultPlaceholder => '--';
+
+  @override
+  String get calcResultHint => 'すべての項目を入力してください';
+
+  @override
+  String get calcRangeErrorHeight => '範囲外: 50.0〜250.0 cm';
+
+  @override
+  String get calcRangeErrorWeight => '範囲外: 1.0〜300.0 kg';
+
+  @override
+  String get calcRangeErrorAge => '範囲外: 18〜120 歳';
+
+  @override
+  String get calcRangeErrorCreatinine => '範囲外: 0.10〜20.00 mg/dL';
+
+  @override
+  String get calcBmiCategoryUnderweight => '低体重';
+
+  @override
+  String get calcBmiCategoryNormal => '普通体重';
+
+  @override
+  String get calcBmiCategoryOverweight => '過体重';
+
+  @override
+  String get calcBmiCategoryObese1 => '肥満1度';
+
+  @override
+  String get calcBmiCategoryObese2 => '肥満2度';
+
+  @override
+  String get calcBmiCategoryObese3 => '肥満3度';
+
+  @override
+  String get calcBmiCategoryObese4 => '肥満4度';
+
+  @override
+  String get calcCkdStageG1 => 'G1 正常';
+
+  @override
+  String get calcCkdStageG2 => 'G2 軽度低下';
+
+  @override
+  String get calcCkdStageG3a => 'G3a 軽度〜中等度低下';
+
+  @override
+  String get calcCkdStageG3b => 'G3b 中等度〜高度低下';
+
+  @override
+  String get calcCkdStageG4 => 'G4 高度低下';
+
+  @override
+  String get calcCkdStageG5 => 'G5 末期腎不全';
+
+  @override
+  String get calcCkdShortG1 => 'G1';
+
+  @override
+  String get calcCkdShortG2 => 'G2';
+
+  @override
+  String get calcCkdShortG3a => 'G3a';
+
+  @override
+  String get calcCkdShortG3b => 'G3b';
+
+  @override
+  String get calcCkdShortG4 => 'G4';
+
+  @override
+  String get calcCkdShortG5 => 'G5';
+
+  @override
+  String get calcHistoryHeader => '履歴';
+
+  @override
+  String get calcHistoryEmpty => '履歴はありません';
+
+  @override
+  String get calcHistoryActionDelete => '削除';
+
+  @override
+  String get calcHistoryActionRestore => '復元';
+
+  @override
+  String get calcHistoryRestoring => '復元中…';
+
+  @override
+  String get calcKeyboardDone => '確定';
+
+  @override
+  String get disclaimerRibbonText =>
+      'FICTIONAL DATA - NOT FOR MEDICAL USE / 架空データ・医療判断には使用不可';
+
+  @override
   String get detailDisclaimer =>
       'FICTIONAL DATA - NOT FOR MEDICAL USE / 架空データ・医療判断には使用不可';
 }
