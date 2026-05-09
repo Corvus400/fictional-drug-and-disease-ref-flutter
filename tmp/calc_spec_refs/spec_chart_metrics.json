@@ -1,0 +1,939 @@
+{
+  "bmi": {
+    "chart": {
+      "rect": {
+        "x": 367,
+        "y": 467.78,
+        "width": 167.5,
+        "height": 44
+      },
+      "style": {
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "border": "0px none rgb(92, 99, 112)",
+        "borderRadius": "0px",
+        "color": "rgb(92, 99, 112)",
+        "display": "block",
+        "fontFamily": "\"JetBrains Mono\", ui-monospace, Menlo, monospace",
+        "fontSize": "11px",
+        "fontWeight": "500",
+        "gap": "normal",
+        "height": "44px",
+        "lineHeight": "normal",
+        "marginTop": "8px",
+        "overflow": "visible",
+        "padding": "0px",
+        "width": "167.5px"
+      }
+    },
+    "scale": {
+      "rect": {
+        "x": 367,
+        "y": 467.78,
+        "width": 167.5,
+        "height": 24
+      },
+      "style": {
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "border": "1px solid rgba(60, 60, 67, 0.13)",
+        "borderRadius": "8px",
+        "color": "rgb(92, 99, 112)",
+        "display": "flex",
+        "fontFamily": "\"JetBrains Mono\", ui-monospace, Menlo, monospace",
+        "fontSize": "11px",
+        "fontWeight": "500",
+        "gap": "normal",
+        "height": "24px",
+        "lineHeight": "normal",
+        "marginTop": "0px",
+        "overflow": "hidden",
+        "padding": "0px",
+        "width": "167.5px"
+      }
+    },
+    "marker": {
+      "rect": {
+        "x": 419.72,
+        "y": 464.78,
+        "width": 2,
+        "height": 32
+      },
+      "style": {
+        "backgroundColor": "rgb(26, 28, 30)",
+        "border": "0px none rgb(92, 99, 112)",
+        "borderRadius": "0px",
+        "color": "rgb(92, 99, 112)",
+        "display": "block",
+        "fontFamily": "\"JetBrains Mono\", ui-monospace, Menlo, monospace",
+        "fontSize": "11px",
+        "fontWeight": "500",
+        "gap": "normal",
+        "height": "32px",
+        "lineHeight": "normal",
+        "marginTop": "0px",
+        "overflow": "visible",
+        "padding": "0px",
+        "width": "2px"
+      },
+      "label": "22.5"
+    },
+    "segments": [
+      {
+        "rect": {
+          "x": 368,
+          "y": 468.78,
+          "width": 27,
+          "height": 22
+        },
+        "style": {
+          "backgroundColor": "rgb(63, 138, 224)",
+          "border": "0px none rgb(6, 41, 79)",
+          "borderRadius": "0px",
+          "color": "rgb(6, 41, 79)",
+          "display": "flex",
+          "fontFamily": "\"JetBrains Mono\", ui-monospace, Menlo, monospace",
+          "fontSize": "9px",
+          "fontWeight": "700",
+          "gap": "normal",
+          "height": "22px",
+          "lineHeight": "normal",
+          "marginTop": "0px",
+          "overflow": "visible",
+          "padding": "0px",
+          "width": "27px"
+        },
+        "text": "<18.5"
+      },
+      {
+        "rect": {
+          "x": 395,
+          "y": 468.78,
+          "width": 23.08,
+          "height": 22
+        },
+        "style": {
+          "backgroundColor": "rgb(31, 122, 58)",
+          "border": "0px none rgb(10, 53, 23)",
+          "borderRadius": "0px",
+          "color": "rgb(10, 53, 23)",
+          "display": "flex",
+          "fontFamily": "\"JetBrains Mono\", ui-monospace, Menlo, monospace",
+          "fontSize": "9px",
+          "fontWeight": "700",
+          "gap": "normal",
+          "height": "22px",
+          "lineHeight": "normal",
+          "marginTop": "0px",
+          "overflow": "visible",
+          "padding": "0px",
+          "width": "23.0781px"
+        },
+        "text": "18.5"
+      },
+      {
+        "rect": {
+          "x": 418.08,
+          "y": 468.78,
+          "width": 23.09,
+          "height": 22
+        },
+        "style": {
+          "backgroundColor": "rgb(180, 122, 0)",
+          "border": "0px none rgb(58, 39, 0)",
+          "borderRadius": "0px",
+          "color": "rgb(58, 39, 0)",
+          "display": "flex",
+          "fontFamily": "\"JetBrains Mono\", ui-monospace, Menlo, monospace",
+          "fontSize": "9px",
+          "fontWeight": "700",
+          "gap": "normal",
+          "height": "22px",
+          "lineHeight": "normal",
+          "marginTop": "0px",
+          "overflow": "visible",
+          "padding": "0px",
+          "width": "23.0938px"
+        },
+        "text": "25"
+      },
+      {
+        "rect": {
+          "x": 441.17,
+          "y": 468.78,
+          "width": 23.08,
+          "height": 22
+        },
+        "style": {
+          "backgroundColor": "rgb(194, 86, 0)",
+          "border": "0px none rgb(61, 26, 0)",
+          "borderRadius": "0px",
+          "color": "rgb(61, 26, 0)",
+          "display": "flex",
+          "fontFamily": "\"JetBrains Mono\", ui-monospace, Menlo, monospace",
+          "fontSize": "9px",
+          "fontWeight": "700",
+          "gap": "normal",
+          "height": "22px",
+          "lineHeight": "normal",
+          "marginTop": "0px",
+          "overflow": "visible",
+          "padding": "0px",
+          "width": "23.0781px"
+        },
+        "text": "30"
+      },
+      {
+        "rect": {
+          "x": 464.25,
+          "y": 468.78,
+          "width": 23.09,
+          "height": 22
+        },
+        "style": {
+          "backgroundColor": "rgb(168, 52, 27)",
+          "border": "0px none rgb(58, 15, 3)",
+          "borderRadius": "0px",
+          "color": "rgb(58, 15, 3)",
+          "display": "flex",
+          "fontFamily": "\"JetBrains Mono\", ui-monospace, Menlo, monospace",
+          "fontSize": "9px",
+          "fontWeight": "700",
+          "gap": "normal",
+          "height": "22px",
+          "lineHeight": "normal",
+          "marginTop": "0px",
+          "overflow": "visible",
+          "padding": "0px",
+          "width": "23.0938px"
+        },
+        "text": "35"
+      },
+      {
+        "rect": {
+          "x": 487.34,
+          "y": 468.78,
+          "width": 23.08,
+          "height": 22
+        },
+        "style": {
+          "backgroundColor": "rgb(140, 29, 24)",
+          "border": "0px none rgb(251, 233, 231)",
+          "borderRadius": "0px",
+          "color": "rgb(251, 233, 231)",
+          "display": "flex",
+          "fontFamily": "\"JetBrains Mono\", ui-monospace, Menlo, monospace",
+          "fontSize": "9px",
+          "fontWeight": "700",
+          "gap": "normal",
+          "height": "22px",
+          "lineHeight": "normal",
+          "marginTop": "0px",
+          "overflow": "visible",
+          "padding": "0px",
+          "width": "23.0781px"
+        },
+        "text": "40"
+      },
+      {
+        "rect": {
+          "x": 510.42,
+          "y": 468.78,
+          "width": 23.08,
+          "height": 22
+        },
+        "style": {
+          "backgroundColor": "rgb(90, 18, 18)",
+          "border": "0px none rgb(255, 227, 220)",
+          "borderRadius": "0px",
+          "color": "rgb(255, 227, 220)",
+          "display": "flex",
+          "fontFamily": "\"JetBrains Mono\", ui-monospace, Menlo, monospace",
+          "fontSize": "9px",
+          "fontWeight": "700",
+          "gap": "normal",
+          "height": "22px",
+          "lineHeight": "normal",
+          "marginTop": "0px",
+          "overflow": "visible",
+          "padding": "0px",
+          "width": "23.0781px"
+        },
+        "text": "≥45"
+      }
+    ]
+  },
+  "egfr": {
+    "chart": {
+      "rect": {
+        "x": 367,
+        "y": 527.78,
+        "width": 167.5,
+        "height": 44
+      },
+      "style": {
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "border": "0px none rgb(92, 99, 112)",
+        "borderRadius": "0px",
+        "color": "rgb(92, 99, 112)",
+        "display": "block",
+        "fontFamily": "\"JetBrains Mono\", ui-monospace, Menlo, monospace",
+        "fontSize": "11px",
+        "fontWeight": "500",
+        "gap": "normal",
+        "height": "44px",
+        "lineHeight": "normal",
+        "marginTop": "8px",
+        "overflow": "visible",
+        "padding": "0px",
+        "width": "167.5px"
+      }
+    },
+    "scale": {
+      "rect": {
+        "x": 367,
+        "y": 527.78,
+        "width": 167.5,
+        "height": 24
+      },
+      "style": {
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "border": "1px solid rgba(60, 60, 67, 0.13)",
+        "borderRadius": "8px",
+        "color": "rgb(92, 99, 112)",
+        "display": "flex",
+        "fontFamily": "\"JetBrains Mono\", ui-monospace, Menlo, monospace",
+        "fontSize": "11px",
+        "fontWeight": "500",
+        "gap": "normal",
+        "height": "24px",
+        "lineHeight": "normal",
+        "marginTop": "0px",
+        "overflow": "hidden",
+        "padding": "0px",
+        "width": "167.5px"
+      }
+    },
+    "marker": {
+      "rect": {
+        "x": 476.06,
+        "y": 524.78,
+        "width": 2,
+        "height": 32
+      },
+      "style": {
+        "backgroundColor": "rgb(26, 28, 30)",
+        "border": "0px none rgb(92, 99, 112)",
+        "borderRadius": "0px",
+        "color": "rgb(92, 99, 112)",
+        "display": "block",
+        "fontFamily": "\"JetBrains Mono\", ui-monospace, Menlo, monospace",
+        "fontSize": "11px",
+        "fontWeight": "500",
+        "gap": "normal",
+        "height": "32px",
+        "lineHeight": "normal",
+        "marginTop": "0px",
+        "overflow": "visible",
+        "padding": "0px",
+        "width": "2px"
+      },
+      "label": "78.4"
+    },
+    "segments": [
+      {
+        "rect": {
+          "x": 368,
+          "y": 528.78,
+          "width": 20.69,
+          "height": 22
+        },
+        "style": {
+          "backgroundColor": "rgb(90, 18, 18)",
+          "border": "0px none rgb(255, 227, 220)",
+          "borderRadius": "0px",
+          "color": "rgb(255, 227, 220)",
+          "display": "flex",
+          "fontFamily": "\"JetBrains Mono\", ui-monospace, Menlo, monospace",
+          "fontSize": "9px",
+          "fontWeight": "700",
+          "gap": "normal",
+          "height": "22px",
+          "lineHeight": "normal",
+          "marginTop": "0px",
+          "overflow": "visible",
+          "padding": "0px",
+          "width": "20.6875px"
+        },
+        "text": "<15"
+      },
+      {
+        "rect": {
+          "x": 388.69,
+          "y": 528.78,
+          "width": 20.69,
+          "height": 22
+        },
+        "style": {
+          "backgroundColor": "rgb(168, 52, 27)",
+          "border": "0px none rgb(251, 233, 231)",
+          "borderRadius": "0px",
+          "color": "rgb(251, 233, 231)",
+          "display": "flex",
+          "fontFamily": "\"JetBrains Mono\", ui-monospace, Menlo, monospace",
+          "fontSize": "9px",
+          "fontWeight": "700",
+          "gap": "normal",
+          "height": "22px",
+          "lineHeight": "normal",
+          "marginTop": "0px",
+          "overflow": "visible",
+          "padding": "0px",
+          "width": "20.6875px"
+        },
+        "text": "15"
+      },
+      {
+        "rect": {
+          "x": 409.38,
+          "y": 528.78,
+          "width": 20.69,
+          "height": 22
+        },
+        "style": {
+          "backgroundColor": "rgb(194, 86, 0)",
+          "border": "0px none rgb(61, 26, 0)",
+          "borderRadius": "0px",
+          "color": "rgb(61, 26, 0)",
+          "display": "flex",
+          "fontFamily": "\"JetBrains Mono\", ui-monospace, Menlo, monospace",
+          "fontSize": "9px",
+          "fontWeight": "700",
+          "gap": "normal",
+          "height": "22px",
+          "lineHeight": "normal",
+          "marginTop": "0px",
+          "overflow": "visible",
+          "padding": "0px",
+          "width": "20.6875px"
+        },
+        "text": "30"
+      },
+      {
+        "rect": {
+          "x": 430.06,
+          "y": 528.78,
+          "width": 20.69,
+          "height": 22
+        },
+        "style": {
+          "backgroundColor": "rgb(180, 122, 0)",
+          "border": "0px none rgb(58, 39, 0)",
+          "borderRadius": "0px",
+          "color": "rgb(58, 39, 0)",
+          "display": "flex",
+          "fontFamily": "\"JetBrains Mono\", ui-monospace, Menlo, monospace",
+          "fontSize": "9px",
+          "fontWeight": "700",
+          "gap": "normal",
+          "height": "22px",
+          "lineHeight": "normal",
+          "marginTop": "0px",
+          "overflow": "visible",
+          "padding": "0px",
+          "width": "20.6875px"
+        },
+        "text": "45"
+      },
+      {
+        "rect": {
+          "x": 450.75,
+          "y": 528.78,
+          "width": 41.38,
+          "height": 22
+        },
+        "style": {
+          "backgroundColor": "rgb(92, 138, 31)",
+          "border": "0px none rgb(31, 47, 8)",
+          "borderRadius": "0px",
+          "color": "rgb(31, 47, 8)",
+          "display": "flex",
+          "fontFamily": "\"JetBrains Mono\", ui-monospace, Menlo, monospace",
+          "fontSize": "9px",
+          "fontWeight": "700",
+          "gap": "normal",
+          "height": "22px",
+          "lineHeight": "normal",
+          "marginTop": "0px",
+          "overflow": "visible",
+          "padding": "0px",
+          "width": "41.375px"
+        },
+        "text": "60"
+      },
+      {
+        "rect": {
+          "x": 492.13,
+          "y": 528.78,
+          "width": 41.38,
+          "height": 22
+        },
+        "style": {
+          "backgroundColor": "rgb(31, 122, 58)",
+          "border": "0px none rgb(10, 53, 23)",
+          "borderRadius": "0px",
+          "color": "rgb(10, 53, 23)",
+          "display": "flex",
+          "fontFamily": "\"JetBrains Mono\", ui-monospace, Menlo, monospace",
+          "fontSize": "9px",
+          "fontWeight": "700",
+          "gap": "normal",
+          "height": "22px",
+          "lineHeight": "normal",
+          "marginTop": "0px",
+          "overflow": "visible",
+          "padding": "0px",
+          "width": "41.375px"
+        },
+        "text": "≥90"
+      }
+    ]
+  },
+  "crcl": {
+    "chart": {
+      "rect": {
+        "x": 367,
+        "y": 587.78,
+        "width": 167.5,
+        "height": 74
+      },
+      "style": {
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "border": "0px none rgb(92, 99, 112)",
+        "borderRadius": "0px",
+        "color": "rgb(92, 99, 112)",
+        "display": "grid",
+        "fontFamily": "\"JetBrains Mono\", ui-monospace, Menlo, monospace",
+        "fontSize": "11px",
+        "fontWeight": "500",
+        "gap": "6px",
+        "height": "74px",
+        "lineHeight": "normal",
+        "marginTop": "8px",
+        "overflow": "visible",
+        "padding": "0px",
+        "width": "167.5px"
+      }
+    },
+    "rows": [
+      {
+        "rect": {
+          "x": 367,
+          "y": 587.78,
+          "width": 167.5,
+          "height": 14
+        },
+        "style": {
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "border": "0px none rgb(92, 99, 112)",
+          "borderRadius": "0px",
+          "color": "rgb(92, 99, 112)",
+          "display": "grid",
+          "fontFamily": "\"JetBrains Mono\", ui-monospace, Menlo, monospace",
+          "fontSize": "11px",
+          "fontWeight": "500",
+          "gap": "8px",
+          "height": "14px",
+          "lineHeight": "normal",
+          "marginTop": "0px",
+          "overflow": "visible",
+          "padding": "0px",
+          "width": "167.5px"
+        },
+        "text": "男性 18–39"
+      },
+      {
+        "rect": {
+          "x": 367,
+          "y": 607.78,
+          "width": 167.5,
+          "height": 14
+        },
+        "style": {
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "border": "0px none rgb(92, 99, 112)",
+          "borderRadius": "0px",
+          "color": "rgb(92, 99, 112)",
+          "display": "grid",
+          "fontFamily": "\"JetBrains Mono\", ui-monospace, Menlo, monospace",
+          "fontSize": "11px",
+          "fontWeight": "500",
+          "gap": "8px",
+          "height": "14px",
+          "lineHeight": "normal",
+          "marginTop": "0px",
+          "overflow": "visible",
+          "padding": "0px",
+          "width": "167.5px"
+        },
+        "text": "男性 40–59"
+      },
+      {
+        "rect": {
+          "x": 367,
+          "y": 627.78,
+          "width": 167.5,
+          "height": 14
+        },
+        "style": {
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "border": "0px none rgb(92, 99, 112)",
+          "borderRadius": "0px",
+          "color": "rgb(92, 99, 112)",
+          "display": "grid",
+          "fontFamily": "\"JetBrains Mono\", ui-monospace, Menlo, monospace",
+          "fontSize": "11px",
+          "fontWeight": "500",
+          "gap": "8px",
+          "height": "14px",
+          "lineHeight": "normal",
+          "marginTop": "0px",
+          "overflow": "visible",
+          "padding": "0px",
+          "width": "167.5px"
+        },
+        "text": "男性 60+"
+      },
+      {
+        "rect": {
+          "x": 367,
+          "y": 647.78,
+          "width": 167.5,
+          "height": 14
+        },
+        "style": {
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "border": "0px none rgb(92, 99, 112)",
+          "borderRadius": "0px",
+          "color": "rgb(92, 99, 112)",
+          "display": "grid",
+          "fontFamily": "\"JetBrains Mono\", ui-monospace, Menlo, monospace",
+          "fontSize": "11px",
+          "fontWeight": "500",
+          "gap": "8px",
+          "height": "14px",
+          "lineHeight": "normal",
+          "marginTop": "0px",
+          "overflow": "visible",
+          "padding": "0px",
+          "width": "167.5px"
+        },
+        "text": "女性 60+"
+      }
+    ],
+    "tracks": [
+      {
+        "rect": {
+          "x": 471,
+          "y": 587.78,
+          "width": 63.5,
+          "height": 14
+        },
+        "style": {
+          "backgroundColor": "rgb(239, 239, 244)",
+          "border": "0px none rgb(92, 99, 112)",
+          "borderRadius": "7px",
+          "color": "rgb(92, 99, 112)",
+          "display": "block",
+          "fontFamily": "\"JetBrains Mono\", ui-monospace, Menlo, monospace",
+          "fontSize": "11px",
+          "fontWeight": "500",
+          "gap": "normal",
+          "height": "14px",
+          "lineHeight": "normal",
+          "marginTop": "0px",
+          "overflow": "visible",
+          "padding": "0px",
+          "width": "63.5px"
+        }
+      },
+      {
+        "rect": {
+          "x": 471,
+          "y": 607.78,
+          "width": 63.5,
+          "height": 14
+        },
+        "style": {
+          "backgroundColor": "rgb(239, 239, 244)",
+          "border": "0px none rgb(92, 99, 112)",
+          "borderRadius": "7px",
+          "color": "rgb(92, 99, 112)",
+          "display": "block",
+          "fontFamily": "\"JetBrains Mono\", ui-monospace, Menlo, monospace",
+          "fontSize": "11px",
+          "fontWeight": "500",
+          "gap": "normal",
+          "height": "14px",
+          "lineHeight": "normal",
+          "marginTop": "0px",
+          "overflow": "visible",
+          "padding": "0px",
+          "width": "63.5px"
+        }
+      },
+      {
+        "rect": {
+          "x": 471,
+          "y": 627.78,
+          "width": 63.5,
+          "height": 14
+        },
+        "style": {
+          "backgroundColor": "rgb(239, 239, 244)",
+          "border": "0px none rgb(92, 99, 112)",
+          "borderRadius": "7px",
+          "color": "rgb(92, 99, 112)",
+          "display": "block",
+          "fontFamily": "\"JetBrains Mono\", ui-monospace, Menlo, monospace",
+          "fontSize": "11px",
+          "fontWeight": "500",
+          "gap": "normal",
+          "height": "14px",
+          "lineHeight": "normal",
+          "marginTop": "0px",
+          "overflow": "visible",
+          "padding": "0px",
+          "width": "63.5px"
+        }
+      },
+      {
+        "rect": {
+          "x": 471,
+          "y": 647.78,
+          "width": 63.5,
+          "height": 14
+        },
+        "style": {
+          "backgroundColor": "rgb(239, 239, 244)",
+          "border": "0px none rgb(92, 99, 112)",
+          "borderRadius": "7px",
+          "color": "rgb(92, 99, 112)",
+          "display": "block",
+          "fontFamily": "\"JetBrains Mono\", ui-monospace, Menlo, monospace",
+          "fontSize": "11px",
+          "fontWeight": "500",
+          "gap": "normal",
+          "height": "14px",
+          "lineHeight": "normal",
+          "marginTop": "0px",
+          "overflow": "visible",
+          "padding": "0px",
+          "width": "63.5px"
+        }
+      }
+    ],
+    "normals": [
+      {
+        "rect": {
+          "x": 509.09,
+          "y": 587.78,
+          "width": 22.23,
+          "height": 14
+        },
+        "style": {
+          "backgroundColor": "rgb(221, 245, 226)",
+          "border": "1px solid rgb(31, 122, 58)",
+          "borderRadius": "7px",
+          "color": "rgb(92, 99, 112)",
+          "display": "block",
+          "fontFamily": "\"JetBrains Mono\", ui-monospace, Menlo, monospace",
+          "fontSize": "11px",
+          "fontWeight": "500",
+          "gap": "normal",
+          "height": "14px",
+          "lineHeight": "normal",
+          "marginTop": "0px",
+          "overflow": "visible",
+          "padding": "0px",
+          "width": "22.2344px"
+        }
+      },
+      {
+        "rect": {
+          "x": 502.75,
+          "y": 607.78,
+          "width": 25.41,
+          "height": 14
+        },
+        "style": {
+          "backgroundColor": "rgb(221, 245, 226)",
+          "border": "1px solid rgb(31, 122, 58)",
+          "borderRadius": "7px",
+          "color": "rgb(92, 99, 112)",
+          "display": "block",
+          "fontFamily": "\"JetBrains Mono\", ui-monospace, Menlo, monospace",
+          "fontSize": "11px",
+          "fontWeight": "500",
+          "gap": "normal",
+          "height": "14px",
+          "lineHeight": "normal",
+          "marginTop": "0px",
+          "overflow": "visible",
+          "padding": "0px",
+          "width": "25.4062px"
+        }
+      },
+      {
+        "rect": {
+          "x": 493.22,
+          "y": 627.78,
+          "width": 25.41,
+          "height": 14
+        },
+        "style": {
+          "backgroundColor": "rgb(221, 245, 226)",
+          "border": "1px solid rgb(31, 122, 58)",
+          "borderRadius": "7px",
+          "color": "rgb(92, 99, 112)",
+          "display": "block",
+          "fontFamily": "\"JetBrains Mono\", ui-monospace, Menlo, monospace",
+          "fontSize": "11px",
+          "fontWeight": "500",
+          "gap": "normal",
+          "height": "14px",
+          "lineHeight": "normal",
+          "marginTop": "0px",
+          "overflow": "visible",
+          "padding": "0px",
+          "width": "25.4062px"
+        }
+      },
+      {
+        "rect": {
+          "x": 490.05,
+          "y": 647.78,
+          "width": 22.23,
+          "height": 14
+        },
+        "style": {
+          "backgroundColor": "rgb(221, 245, 226)",
+          "border": "1px solid rgb(31, 122, 58)",
+          "borderRadius": "7px",
+          "color": "rgb(92, 99, 112)",
+          "display": "block",
+          "fontFamily": "\"JetBrains Mono\", ui-monospace, Menlo, monospace",
+          "fontSize": "11px",
+          "fontWeight": "500",
+          "gap": "normal",
+          "height": "14px",
+          "lineHeight": "normal",
+          "marginTop": "0px",
+          "overflow": "visible",
+          "padding": "0px",
+          "width": "22.2344px"
+        }
+      }
+    ],
+    "points": [
+      {
+        "rect": {
+          "x": 505.92,
+          "y": 584.78,
+          "width": 14,
+          "height": 20
+        },
+        "style": {
+          "backgroundColor": "rgb(0, 122, 255)",
+          "border": "2px solid rgb(255, 255, 255)",
+          "borderRadius": "7px",
+          "color": "rgb(92, 99, 112)",
+          "display": "block",
+          "fontFamily": "\"JetBrains Mono\", ui-monospace, Menlo, monospace",
+          "fontSize": "11px",
+          "fontWeight": "500",
+          "gap": "normal",
+          "height": "20px",
+          "lineHeight": "normal",
+          "marginTop": "0px",
+          "overflow": "visible",
+          "padding": "0px",
+          "width": "14px"
+        }
+      },
+      {
+        "rect": {
+          "x": 505.92,
+          "y": 604.78,
+          "width": 14,
+          "height": 20
+        },
+        "style": {
+          "backgroundColor": "rgb(0, 122, 255)",
+          "border": "2px solid rgb(255, 255, 255)",
+          "borderRadius": "7px",
+          "color": "rgb(92, 99, 112)",
+          "display": "block",
+          "fontFamily": "\"JetBrains Mono\", ui-monospace, Menlo, monospace",
+          "fontSize": "11px",
+          "fontWeight": "500",
+          "gap": "normal",
+          "height": "20px",
+          "lineHeight": "normal",
+          "marginTop": "0px",
+          "overflow": "visible",
+          "padding": "0px",
+          "width": "14px"
+        }
+      },
+      {
+        "rect": {
+          "x": 505.92,
+          "y": 624.78,
+          "width": 14,
+          "height": 20
+        },
+        "style": {
+          "backgroundColor": "rgb(0, 122, 255)",
+          "border": "2px solid rgb(255, 255, 255)",
+          "borderRadius": "7px",
+          "color": "rgb(92, 99, 112)",
+          "display": "block",
+          "fontFamily": "\"JetBrains Mono\", ui-monospace, Menlo, monospace",
+          "fontSize": "11px",
+          "fontWeight": "500",
+          "gap": "normal",
+          "height": "20px",
+          "lineHeight": "normal",
+          "marginTop": "0px",
+          "overflow": "visible",
+          "padding": "0px",
+          "width": "14px"
+        }
+      },
+      {
+        "rect": {
+          "x": 505.92,
+          "y": 644.78,
+          "width": 14,
+          "height": 20
+        },
+        "style": {
+          "backgroundColor": "rgb(0, 122, 255)",
+          "border": "2px solid rgb(255, 255, 255)",
+          "borderRadius": "7px",
+          "color": "rgb(92, 99, 112)",
+          "display": "block",
+          "fontFamily": "\"JetBrains Mono\", ui-monospace, Menlo, monospace",
+          "fontSize": "11px",
+          "fontWeight": "500",
+          "gap": "normal",
+          "height": "20px",
+          "lineHeight": "normal",
+          "marginTop": "0px",
+          "overflow": "visible",
+          "padding": "0px",
+          "width": "14px"
+        }
+      }
+    ]
+  }
+}

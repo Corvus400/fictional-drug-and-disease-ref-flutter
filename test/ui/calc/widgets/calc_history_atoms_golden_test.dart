@@ -25,10 +25,13 @@ void main() {
                 child: Transform.scale(
                   scale: 4,
                   alignment: Alignment.topLeft,
-                  child: const SizedBox(
-                    width: 358,
-                    height: 255,
-                    child: _HistoryAtomsWideReference(),
+                  child: const UnconstrainedBox(
+                    alignment: Alignment.topLeft,
+                    child: SizedBox(
+                      width: 358,
+                      height: 255,
+                      child: _HistoryAtomsWideReference(),
+                    ),
                   ),
                 ),
               ),

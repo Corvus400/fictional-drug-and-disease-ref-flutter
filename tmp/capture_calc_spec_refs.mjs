@@ -33,6 +33,33 @@ await page.goto(pathToFileURL(specHtml).href);
 await page.waitForSelector('#atom-root .atom-card');
 await page.evaluate(() => document.fonts.ready);
 
+const screenshotWithPadding = async (locator, fileName, padding) => {
+  await locator.scrollIntoViewIfNeeded();
+  const box = await locator.boundingBox();
+  if (!box) {
+    throw new Error(`Missing bounding box for ${fileName}`);
+  }
+  const left = Math.max(0, box.x - (padding.left ?? 0));
+  const top = Math.max(0, box.y - (padding.top ?? 0));
+  const right = Math.min(
+    page.viewportSize().width,
+    box.x + box.width + (padding.right ?? 0),
+  );
+  const bottom = Math.min(
+    page.viewportSize().height,
+    box.y + box.height + (padding.bottom ?? 0),
+  );
+  await page.screenshot({
+    path: path.join(outDir, fileName),
+    clip: {
+      x: left,
+      y: top,
+      width: right - left,
+      height: bottom - top,
+    },
+  });
+};
+
 const segmentedCard = page
   .locator('#atom-root .atom-card')
   .filter({ hasText: 'Segmented control' })
@@ -329,6 +356,148 @@ await phoneHistorySwipe.screenshot({
 });
 await phoneHistoryEmpty.screenshot({
   path: path.join(outDir, 'spec_history_phone_empty.png'),
+});
+
+const chartCard = page
+  .locator('#atom-root .atom-card')
+  .filter({ hasText: 'Chart — BMI / eGFR / CrCl' })
+  .first();
+await chartCard.screenshot({
+  path: path.join(outDir, 'spec_chart_atom_card.png'),
+});
+
+const chartMetrics = await chartCard.evaluate((card) => {
+  const rect = (element) => {
+    const r = element.getBoundingClientRect();
+    return {
+      x: Math.round(r.x * 100) / 100,
+      y: Math.round(r.y * 100) / 100,
+      width: Math.round(r.width * 100) / 100,
+      height: Math.round(r.height * 100) / 100,
+    };
+  };
+  const style = (element) => {
+    const s = window.getComputedStyle(element);
+    return {
+      backgroundColor: s.backgroundColor,
+      border: s.border,
+      borderRadius: s.borderRadius,
+      color: s.color,
+      display: s.display,
+      fontFamily: s.fontFamily,
+      fontSize: s.fontSize,
+      fontWeight: s.fontWeight,
+      gap: s.gap,
+      height: s.height,
+      lineHeight: s.lineHeight,
+      marginTop: s.marginTop,
+      overflow: s.overflow,
+      padding: s.padding,
+      width: s.width,
+    };
+  };
+  const query = (selector) => {
+    const element = card.querySelector(selector);
+    if (!element) {
+      throw new Error(`Missing selector: ${selector}`);
+    }
+    return element;
+  };
+  const all = (selector) => [...card.querySelectorAll(selector)];
+
+  return {
+    bmi: {
+      chart: {
+        rect: rect(query('.chart-bmi')),
+        style: style(query('.chart-bmi')),
+      },
+      scale: {
+        rect: rect(query('.chart-bmi .scale')),
+        style: style(query('.chart-bmi .scale')),
+      },
+      marker: {
+        rect: rect(query('.chart-bmi .marker')),
+        style: style(query('.chart-bmi .marker')),
+        label: query('.chart-bmi .marker .pin-val').textContent,
+      },
+      segments: all('.chart-bmi .seg-bmi').map((segment) => ({
+        rect: rect(segment),
+        style: style(segment),
+        text: segment.textContent,
+      })),
+    },
+    egfr: {
+      chart: {
+        rect: rect(query('.chart-egfr')),
+        style: style(query('.chart-egfr')),
+      },
+      scale: {
+        rect: rect(query('.chart-egfr .scale')),
+        style: style(query('.chart-egfr .scale')),
+      },
+      marker: {
+        rect: rect(query('.chart-egfr .marker')),
+        style: style(query('.chart-egfr .marker')),
+        label: query('.chart-egfr .marker .pin-val').textContent,
+      },
+      segments: all('.chart-egfr .seg-egfr').map((segment) => ({
+        rect: rect(segment),
+        style: style(segment),
+        text: segment.textContent,
+      })),
+    },
+    crcl: {
+      chart: {
+        rect: rect(query('.chart-crcl')),
+        style: style(query('.chart-crcl')),
+      },
+      rows: all('.chart-crcl .crow').map((row) => ({
+        rect: rect(row),
+        style: style(row),
+        text: row.textContent,
+      })),
+      tracks: all('.chart-crcl .track').map((track) => ({
+        rect: rect(track),
+        style: style(track),
+      })),
+      normals: all('.chart-crcl .normal').map((normal) => ({
+        rect: rect(normal),
+        style: style(normal),
+      })),
+      points: all('.chart-crcl .pt').map((point) => ({
+        rect: rect(point),
+        style: style(point),
+      })),
+    },
+  };
+});
+
+await fs.writeFile(
+  path.join(outDir, 'spec_chart_metrics.json'),
+  `${JSON.stringify(chartMetrics, null, 2)}\n`,
+);
+
+const phoneBmiChart = page
+  .locator('[data-frame-label="iPhone × Light × result-with-classification (BMI)"] .chart-bmi')
+  .first();
+const phoneEgfrChart = page
+  .locator('[data-frame-label="iPhone × Light × result-with-classification (eGFR)"] .chart-egfr')
+  .first();
+const phoneCrclChart = page
+  .locator('[data-frame-label="iPhone × Light × result-with-classification (CrCl)"] .chart-crcl')
+  .first();
+await screenshotWithPadding(phoneBmiChart, 'spec_chart_phone_bmi.png', {
+  top: 24,
+  left: 24,
+  right: 24,
+});
+await screenshotWithPadding(phoneEgfrChart, 'spec_chart_phone_egfr.png', {
+  top: 24,
+  left: 24,
+  right: 24,
+});
+await phoneCrclChart.screenshot({
+  path: path.join(outDir, 'spec_chart_phone_crcl.png'),
 });
 
 await browser.close();
