@@ -1,11 +1,17 @@
 import 'package:fictional_drug_and_disease_ref/application/bookmarks/disease_bookmark_snapshot_codec.dart';
 import 'package:fictional_drug_and_disease_ref/application/bookmarks/drug_bookmark_snapshot_codec.dart';
 import 'package:fictional_drug_and_disease_ref/application/search/search_query_codec.dart';
+import 'package:fictional_drug_and_disease_ref/application/usecases/calculate_bmi_usecase.dart';
+import 'package:fictional_drug_and_disease_ref/application/usecases/calculate_crcl_usecase.dart';
+import 'package:fictional_drug_and_disease_ref/application/usecases/calculate_egfr_usecase.dart';
 import 'package:fictional_drug_and_disease_ref/application/usecases/clear_search_history_usecase.dart';
+import 'package:fictional_drug_and_disease_ref/application/usecases/delete_calculation_history_usecase.dart';
 import 'package:fictional_drug_and_disease_ref/application/usecases/delete_search_history_usecase.dart';
+import 'package:fictional_drug_and_disease_ref/application/usecases/list_calculation_history_usecase.dart';
 import 'package:fictional_drug_and_disease_ref/application/usecases/list_search_history_usecase.dart';
 import 'package:fictional_drug_and_disease_ref/application/usecases/load_categories_usecase.dart';
 import 'package:fictional_drug_and_disease_ref/application/usecases/observe_bookmark_state_usecase.dart';
+import 'package:fictional_drug_and_disease_ref/application/usecases/record_calculation_history_usecase.dart';
 import 'package:fictional_drug_and_disease_ref/application/usecases/search_diseases_usecase.dart';
 import 'package:fictional_drug_and_disease_ref/application/usecases/search_drugs_usecase.dart';
 import 'package:fictional_drug_and_disease_ref/application/usecases/toggle_bookmark_usecase.dart';
@@ -106,3 +112,48 @@ final clearSearchHistoryUsecaseProvider = Provider<ClearSearchHistoryUsecase>(
     searchHistoryRepository: ref.watch(searchHistoryRepositoryProvider),
   ),
 );
+
+/// Calculate-BMI use case provider.
+final calculateBmiUsecaseProvider = Provider<CalculateBmiUsecase>(
+  (ref) => const CalculateBmiUsecase(),
+);
+
+/// Calculate-eGFR use case provider.
+final calculateEgfrUsecaseProvider = Provider<CalculateEgfrUsecase>(
+  (ref) => const CalculateEgfrUsecase(),
+);
+
+/// Calculate-CrCl use case provider.
+final calculateCrClUsecaseProvider = Provider<CalculateCrClUsecase>(
+  (ref) => const CalculateCrClUsecase(),
+);
+
+/// Record-calculation-history use case provider.
+final recordCalculationHistoryUsecaseProvider =
+    Provider<RecordCalculationHistoryUsecase>(
+      (ref) => RecordCalculationHistoryUsecase(
+        calculationHistoryRepository: ref.watch(
+          calculationHistoryRepositoryProvider,
+        ),
+      ),
+    );
+
+/// List-calculation-history use case provider.
+final listCalculationHistoryUsecaseProvider =
+    Provider<ListCalculationHistoryUsecase>(
+      (ref) => ListCalculationHistoryUsecase(
+        calculationHistoryRepository: ref.watch(
+          calculationHistoryRepositoryProvider,
+        ),
+      ),
+    );
+
+/// Delete-calculation-history use case provider.
+final deleteCalculationHistoryUsecaseProvider =
+    Provider<DeleteCalculationHistoryUsecase>(
+      (ref) => DeleteCalculationHistoryUsecase(
+        calculationHistoryRepository: ref.watch(
+          calculationHistoryRepositoryProvider,
+        ),
+      ),
+    );
