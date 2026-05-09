@@ -45,6 +45,7 @@ dependencies:
   intl: ^0.20.2
   json_annotation: ^4.11.0
   logger: ^2.7.0
+  material_symbols_icons: ^4.2928.1
   path: ^1.9.1
   path_provider: ^2.1.5
   retrofit: ^4.9.2
@@ -81,10 +82,10 @@ flutter:
   fonts:
     - family: NotoSansJP
       fonts:
-        - asset: assets/fonts/NotoSansJP-Regular.otf
-          weight: 400
-        - asset: assets/fonts/NotoSansJP-Bold.otf
-          weight: 700
+        - asset: assets/fonts/NotoSansJP.ttf
+    - family: JetBrainsMono
+      fonts:
+        - asset: assets/fonts/JetBrainsMono.ttf
 
   assets:
-    - assets/fonts/OFL.txt
+    - assets/fonts/

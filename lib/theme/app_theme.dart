@@ -1,4 +1,7 @@
 import 'package:fictional_drug_and_disease_ref/theme/app_palette.dart';
+import 'package:fictional_drug_and_disease_ref/theme/app_radii.dart';
+import 'package:fictional_drug_and_disease_ref/theme/app_spacing.dart';
+import 'package:fictional_drug_and_disease_ref/theme/app_typography.dart';
 import 'package:fictional_drug_and_disease_ref/theme/detail_color_extension.dart';
 import 'package:flutter/material.dart';
 
@@ -51,6 +54,9 @@ class AppTheme {
           DetailColorExtension.light
         else
           DetailColorExtension.dark,
+        AppSpacing.tokens,
+        AppRadii.tokens,
+        AppTypography.tokens,
       ],
     );
   }

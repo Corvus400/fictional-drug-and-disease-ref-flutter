@@ -2218,6 +2218,360 @@ abstract class AppLocalizations {
   /// **'再試行'**
   String get detailRetry;
 
+  /// No description provided for @calcAppBarTitle.
+  ///
+  /// In ja, this message translates to:
+  /// **'計算ツール'**
+  String get calcAppBarTitle;
+
+  /// No description provided for @calcToolBmi.
+  ///
+  /// In ja, this message translates to:
+  /// **'BMI'**
+  String get calcToolBmi;
+
+  /// No description provided for @calcToolEgfr.
+  ///
+  /// In ja, this message translates to:
+  /// **'eGFR'**
+  String get calcToolEgfr;
+
+  /// No description provided for @calcToolCrcl.
+  ///
+  /// In ja, this message translates to:
+  /// **'CrCl'**
+  String get calcToolCrcl;
+
+  /// No description provided for @calcFormulaBmi.
+  ///
+  /// In ja, this message translates to:
+  /// **'BMI = w / h²'**
+  String get calcFormulaBmi;
+
+  /// No description provided for @calcFormulaEgfr.
+  ///
+  /// In ja, this message translates to:
+  /// **'eGFR = 194 × Cr⁻¹·⁰⁹⁴ × age⁻⁰·²⁸⁷ ×(0.739 if F)'**
+  String get calcFormulaEgfr;
+
+  /// No description provided for @calcFormulaCrcl.
+  ///
+  /// In ja, this message translates to:
+  /// **'CrCl = (140 - age) × w / (72 × Cr) ×(0.85 if F)'**
+  String get calcFormulaCrcl;
+
+  /// No description provided for @calcInputHeight.
+  ///
+  /// In ja, this message translates to:
+  /// **'身長'**
+  String get calcInputHeight;
+
+  /// No description provided for @calcInputWeight.
+  ///
+  /// In ja, this message translates to:
+  /// **'体重'**
+  String get calcInputWeight;
+
+  /// No description provided for @calcInputAge.
+  ///
+  /// In ja, this message translates to:
+  /// **'年齢'**
+  String get calcInputAge;
+
+  /// No description provided for @calcInputCreatinine.
+  ///
+  /// In ja, this message translates to:
+  /// **'血清クレアチニン'**
+  String get calcInputCreatinine;
+
+  /// No description provided for @calcInputSex.
+  ///
+  /// In ja, this message translates to:
+  /// **'性別'**
+  String get calcInputSex;
+
+  /// No description provided for @calcSexMale.
+  ///
+  /// In ja, this message translates to:
+  /// **'男性'**
+  String get calcSexMale;
+
+  /// No description provided for @calcSexFemale.
+  ///
+  /// In ja, this message translates to:
+  /// **'女性'**
+  String get calcSexFemale;
+
+  /// No description provided for @calcActionCalculate.
+  ///
+  /// In ja, this message translates to:
+  /// **'計算する'**
+  String get calcActionCalculate;
+
+  /// No description provided for @calcActionHistory.
+  ///
+  /// In ja, this message translates to:
+  /// **'履歴'**
+  String get calcActionHistory;
+
+  /// No description provided for @calcActionClear.
+  ///
+  /// In ja, this message translates to:
+  /// **'クリア'**
+  String get calcActionClear;
+
+  /// No description provided for @calcActionClose.
+  ///
+  /// In ja, this message translates to:
+  /// **'閉じる'**
+  String get calcActionClose;
+
+  /// No description provided for @calcUnitCm.
+  ///
+  /// In ja, this message translates to:
+  /// **'cm'**
+  String get calcUnitCm;
+
+  /// No description provided for @calcUnitKg.
+  ///
+  /// In ja, this message translates to:
+  /// **'kg'**
+  String get calcUnitKg;
+
+  /// No description provided for @calcUnitYear.
+  ///
+  /// In ja, this message translates to:
+  /// **'歳'**
+  String get calcUnitYear;
+
+  /// No description provided for @calcUnitMgDl.
+  ///
+  /// In ja, this message translates to:
+  /// **'mg/dL'**
+  String get calcUnitMgDl;
+
+  /// No description provided for @calcResultTitle.
+  ///
+  /// In ja, this message translates to:
+  /// **'結果'**
+  String get calcResultTitle;
+
+  /// No description provided for @calcResultClassification.
+  ///
+  /// In ja, this message translates to:
+  /// **'分類'**
+  String get calcResultClassification;
+
+  /// No description provided for @calcResultBmiUnit.
+  ///
+  /// In ja, this message translates to:
+  /// **'kg/m²'**
+  String get calcResultBmiUnit;
+
+  /// No description provided for @calcResultEgfrUnit.
+  ///
+  /// In ja, this message translates to:
+  /// **'mL/min/1.73m²'**
+  String get calcResultEgfrUnit;
+
+  /// No description provided for @calcResultCrclUnit.
+  ///
+  /// In ja, this message translates to:
+  /// **'mL/min'**
+  String get calcResultCrclUnit;
+
+  /// No description provided for @calcResultPlaceholder.
+  ///
+  /// In ja, this message translates to:
+  /// **'--'**
+  String get calcResultPlaceholder;
+
+  /// No description provided for @calcResultHint.
+  ///
+  /// In ja, this message translates to:
+  /// **'すべての項目を入力してください'**
+  String get calcResultHint;
+
+  /// No description provided for @calcRangeErrorHeight.
+  ///
+  /// In ja, this message translates to:
+  /// **'範囲外: 50.0〜250.0 cm'**
+  String get calcRangeErrorHeight;
+
+  /// No description provided for @calcRangeErrorWeight.
+  ///
+  /// In ja, this message translates to:
+  /// **'範囲外: 1.0〜300.0 kg'**
+  String get calcRangeErrorWeight;
+
+  /// No description provided for @calcRangeErrorAge.
+  ///
+  /// In ja, this message translates to:
+  /// **'範囲外: 18〜120 歳'**
+  String get calcRangeErrorAge;
+
+  /// No description provided for @calcRangeErrorCreatinine.
+  ///
+  /// In ja, this message translates to:
+  /// **'範囲外: 0.10〜20.00 mg/dL'**
+  String get calcRangeErrorCreatinine;
+
+  /// No description provided for @calcBmiCategoryUnderweight.
+  ///
+  /// In ja, this message translates to:
+  /// **'低体重'**
+  String get calcBmiCategoryUnderweight;
+
+  /// No description provided for @calcBmiCategoryNormal.
+  ///
+  /// In ja, this message translates to:
+  /// **'普通体重'**
+  String get calcBmiCategoryNormal;
+
+  /// No description provided for @calcBmiCategoryOverweight.
+  ///
+  /// In ja, this message translates to:
+  /// **'過体重'**
+  String get calcBmiCategoryOverweight;
+
+  /// No description provided for @calcBmiCategoryObese1.
+  ///
+  /// In ja, this message translates to:
+  /// **'肥満1度'**
+  String get calcBmiCategoryObese1;
+
+  /// No description provided for @calcBmiCategoryObese2.
+  ///
+  /// In ja, this message translates to:
+  /// **'肥満2度'**
+  String get calcBmiCategoryObese2;
+
+  /// No description provided for @calcBmiCategoryObese3.
+  ///
+  /// In ja, this message translates to:
+  /// **'肥満3度'**
+  String get calcBmiCategoryObese3;
+
+  /// No description provided for @calcBmiCategoryObese4.
+  ///
+  /// In ja, this message translates to:
+  /// **'肥満4度'**
+  String get calcBmiCategoryObese4;
+
+  /// No description provided for @calcCkdStageG1.
+  ///
+  /// In ja, this message translates to:
+  /// **'G1 正常'**
+  String get calcCkdStageG1;
+
+  /// No description provided for @calcCkdStageG2.
+  ///
+  /// In ja, this message translates to:
+  /// **'G2 軽度低下'**
+  String get calcCkdStageG2;
+
+  /// No description provided for @calcCkdStageG3a.
+  ///
+  /// In ja, this message translates to:
+  /// **'G3a 軽度〜中等度低下'**
+  String get calcCkdStageG3a;
+
+  /// No description provided for @calcCkdStageG3b.
+  ///
+  /// In ja, this message translates to:
+  /// **'G3b 中等度〜高度低下'**
+  String get calcCkdStageG3b;
+
+  /// No description provided for @calcCkdStageG4.
+  ///
+  /// In ja, this message translates to:
+  /// **'G4 高度低下'**
+  String get calcCkdStageG4;
+
+  /// No description provided for @calcCkdStageG5.
+  ///
+  /// In ja, this message translates to:
+  /// **'G5 末期腎不全'**
+  String get calcCkdStageG5;
+
+  /// No description provided for @calcCkdShortG1.
+  ///
+  /// In ja, this message translates to:
+  /// **'G1'**
+  String get calcCkdShortG1;
+
+  /// No description provided for @calcCkdShortG2.
+  ///
+  /// In ja, this message translates to:
+  /// **'G2'**
+  String get calcCkdShortG2;
+
+  /// No description provided for @calcCkdShortG3a.
+  ///
+  /// In ja, this message translates to:
+  /// **'G3a'**
+  String get calcCkdShortG3a;
+
+  /// No description provided for @calcCkdShortG3b.
+  ///
+  /// In ja, this message translates to:
+  /// **'G3b'**
+  String get calcCkdShortG3b;
+
+  /// No description provided for @calcCkdShortG4.
+  ///
+  /// In ja, this message translates to:
+  /// **'G4'**
+  String get calcCkdShortG4;
+
+  /// No description provided for @calcCkdShortG5.
+  ///
+  /// In ja, this message translates to:
+  /// **'G5'**
+  String get calcCkdShortG5;
+
+  /// No description provided for @calcHistoryHeader.
+  ///
+  /// In ja, this message translates to:
+  /// **'履歴'**
+  String get calcHistoryHeader;
+
+  /// No description provided for @calcHistoryEmpty.
+  ///
+  /// In ja, this message translates to:
+  /// **'履歴はありません'**
+  String get calcHistoryEmpty;
+
+  /// No description provided for @calcHistoryActionDelete.
+  ///
+  /// In ja, this message translates to:
+  /// **'削除'**
+  String get calcHistoryActionDelete;
+
+  /// No description provided for @calcHistoryActionRestore.
+  ///
+  /// In ja, this message translates to:
+  /// **'復元'**
+  String get calcHistoryActionRestore;
+
+  /// No description provided for @calcHistoryRestoring.
+  ///
+  /// In ja, this message translates to:
+  /// **'復元中…'**
+  String get calcHistoryRestoring;
+
+  /// No description provided for @calcKeyboardDone.
+  ///
+  /// In ja, this message translates to:
+  /// **'確定'**
+  String get calcKeyboardDone;
+
+  /// No description provided for @disclaimerRibbonText.
+  ///
+  /// In ja, this message translates to:
+  /// **'FICTIONAL DATA - NOT FOR MEDICAL USE / 架空データ・医療判断には使用不可'**
+  String get disclaimerRibbonText;
+
   /// No description provided for @detailDisclaimer.
   ///
   /// In ja, this message translates to:
