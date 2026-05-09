@@ -488,13 +488,13 @@ const phoneCrclChart = page
   .first();
 await screenshotWithPadding(phoneBmiChart, 'spec_chart_phone_bmi.png', {
   top: 24,
-  left: 24,
-  right: 24,
+  left: 36,
+  right: 36,
 });
 await screenshotWithPadding(phoneEgfrChart, 'spec_chart_phone_egfr.png', {
   top: 24,
-  left: 24,
-  right: 24,
+  left: 36,
+  right: 36,
 });
 await phoneCrclChart.screenshot({
   path: path.join(outDir, 'spec_chart_phone_crcl.png'),

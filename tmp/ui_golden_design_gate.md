@@ -93,6 +93,12 @@ the phase. Increase `CALC_SPEC_DEVICE_SCALE_FACTOR` or capture an additional
 state-specific crop/wider reference first, then compare against that higher
 fidelity image.
 
+For charts or any component with centered labels at the visual left/right
+edges, the crop must include enough logical side padding to prove that edge
+labels, rounded ends, markers, and borders are not clipped. Phase 4d chart
+refs use 36 px logical left/right padding (DPR 4) after the earlier 24 px crop
+looked too tight for BMI/eGFR.
+
 ## Phase 4a Reference Outputs
 
 Generated references:
