@@ -1,0 +1,143 @@
+{
+  "tool": {
+    "rect": {
+      "x": 653.5,
+      "y": 336.64,
+      "width": 161.5,
+      "height": 42
+    },
+    "style": {
+      "backgroundColor": "rgb(239, 239, 244)",
+      "borderRadius": "22px",
+      "boxShadow": "none",
+      "color": "rgb(92, 99, 112)",
+      "display": "flex",
+      "fontFamily": "\"JetBrains Mono\", ui-monospace, Menlo, monospace",
+      "fontSize": "11px",
+      "fontWeight": "500",
+      "gap": "2px",
+      "height": "42px",
+      "letterSpacing": "normal",
+      "padding": "3px"
+    },
+    "selectedRect": {
+      "x": 656.5,
+      "y": 339.64,
+      "width": 50.5,
+      "height": 36
+    },
+    "selectedStyle": {
+      "backgroundColor": "rgb(255, 255, 255)",
+      "borderRadius": "19px",
+      "boxShadow": "rgba(15, 23, 42, 0.1) 0px 1px 2px 0px",
+      "color": "rgb(0, 122, 255)",
+      "display": "flex",
+      "fontFamily": "\"Noto Sans JP\", system-ui, -apple-system, \"Hiragino Kaku Gothic ProN\", \"Yu Gothic UI\", sans-serif",
+      "fontSize": "13px",
+      "fontWeight": "700",
+      "gap": "normal",
+      "height": "36px",
+      "letterSpacing": "0.26px",
+      "padding": "0px"
+    },
+    "optionStyle": {
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "borderRadius": "19px",
+      "boxShadow": "none",
+      "color": "rgb(63, 67, 71)",
+      "display": "flex",
+      "fontFamily": "\"Noto Sans JP\", system-ui, -apple-system, \"Hiragino Kaku Gothic ProN\", \"Yu Gothic UI\", sans-serif",
+      "fontSize": "13px",
+      "fontWeight": "700",
+      "gap": "normal",
+      "height": "36px",
+      "letterSpacing": "0.26px",
+      "padding": "0px"
+    },
+    "labels": [
+      "BMI",
+      "eGFR",
+      "CrCl"
+    ]
+  },
+  "sex": {
+    "rect": {
+      "x": 650.5,
+      "y": 389.64,
+      "width": 167.5,
+      "height": 36
+    },
+    "style": {
+      "backgroundColor": "rgb(239, 239, 244)",
+      "borderRadius": "22px",
+      "boxShadow": "none",
+      "color": "rgb(92, 99, 112)",
+      "display": "flex",
+      "fontFamily": "\"JetBrains Mono\", ui-monospace, Menlo, monospace",
+      "fontSize": "11px",
+      "fontWeight": "500",
+      "gap": "normal",
+      "height": "36px",
+      "letterSpacing": "normal",
+      "padding": "2px"
+    },
+    "selectedRect": {
+      "x": 652.5,
+      "y": 391.64,
+      "width": 81.75,
+      "height": 32
+    },
+    "selectedStyle": {
+      "backgroundColor": "rgb(255, 255, 255)",
+      "borderRadius": "20px",
+      "boxShadow": "rgba(15, 23, 42, 0.08) 0px 1px 2px 0px",
+      "color": "rgb(0, 122, 255)",
+      "display": "flex",
+      "fontFamily": "\"Noto Sans JP\", system-ui, -apple-system, \"Hiragino Kaku Gothic ProN\", \"Yu Gothic UI\", sans-serif",
+      "fontSize": "13px",
+      "fontWeight": "600",
+      "gap": "4px",
+      "height": "32px",
+      "letterSpacing": "normal",
+      "padding": "0px"
+    },
+    "optionStyle": {
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "borderRadius": "20px",
+      "boxShadow": "none",
+      "color": "rgb(63, 67, 71)",
+      "display": "flex",
+      "fontFamily": "\"Noto Sans JP\", system-ui, -apple-system, \"Hiragino Kaku Gothic ProN\", \"Yu Gothic UI\", sans-serif",
+      "fontSize": "13px",
+      "fontWeight": "600",
+      "gap": "4px",
+      "height": "32px",
+      "letterSpacing": "normal",
+      "padding": "0px"
+    },
+    "iconRect": {
+      "x": 670.38,
+      "y": 399.64,
+      "width": 16,
+      "height": 16
+    },
+    "iconStyle": {
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "borderRadius": "0px",
+      "boxShadow": "none",
+      "color": "rgb(0, 122, 255)",
+      "display": "block",
+      "fontFamily": "\"Material Symbols Outlined\"",
+      "fontSize": "16px",
+      "fontWeight": "600",
+      "gap": "normal",
+      "height": "16px",
+      "letterSpacing": "normal",
+      "padding": "0px"
+    },
+    "labels": [
+      "male男性",
+      "female女性"
+    ]
+  }
+}
