@@ -1,4 +1,5 @@
 import 'package:fictional_drug_and_disease_ref/app.dart';
+import 'package:fictional_drug_and_disease_ref/ui/_common/disclaimer_ribbon.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -17,5 +18,25 @@ void main() {
 
     final material = tester.widget<MaterialApp>(find.byType(MaterialApp));
     expect(material.themeMode, ThemeMode.dark);
+  });
+
+  testWidgets('app overlays DisclaimerRibbon above the NavigationBar', (
+    tester,
+  ) async {
+    SharedPreferences.setMockInitialValues({});
+
+    await tester.pumpWidget(ProviderScope(child: App()));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(DisclaimerRibbon), findsOneWidget);
+    final positioned = tester.widget<Positioned>(
+      find.ancestor(
+        of: find.byType(DisclaimerRibbon),
+        matching: find.byType(Positioned),
+      ),
+    );
+    expect(positioned.bottom, 80);
+    expect(positioned.left, 0);
+    expect(positioned.right, 0);
   });
 }
