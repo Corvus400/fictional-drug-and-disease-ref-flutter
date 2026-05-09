@@ -9,8 +9,9 @@ void main() {
   testWidgets('BmiChart matches wide spec reference', (tester) async {
     await _pumpScaledChart(
       tester,
-      logicalSize: const Size(372, 68),
+      logicalSize: const Size(396, 68),
       contentWidth: 324,
+      horizontalPadding: 36,
       child: const BmiChart(value: 22.5, label: '22.5'),
     );
 
@@ -23,8 +24,9 @@ void main() {
   testWidgets('EgfrChart matches wide spec reference', (tester) async {
     await _pumpScaledChart(
       tester,
-      logicalSize: const Size(372, 68),
+      logicalSize: const Size(396, 68),
       contentWidth: 324,
+      horizontalPadding: 36,
       child: const EgfrChart(value: 78.4, label: '78.4'),
     );
 
@@ -54,6 +56,7 @@ Future<void> _pumpScaledChart(
   required Size logicalSize,
   required Widget child,
   double? contentWidth,
+  double horizontalPadding = 0,
   double topPadding = 24,
 }) async {
   const scale = 4.0;
@@ -86,9 +89,9 @@ Future<void> _pumpScaledChart(
                     height: logicalSize.height,
                     child: Padding(
                       padding: EdgeInsets.only(
-                        left: contentWidth == null ? 0 : 24,
+                        left: contentWidth == null ? 0 : horizontalPadding,
                         top: topPadding,
-                        right: contentWidth == null ? 0 : 24,
+                        right: contentWidth == null ? 0 : horizontalPadding,
                       ),
                       child: SizedBox(width: contentWidth, child: child),
                     ),
