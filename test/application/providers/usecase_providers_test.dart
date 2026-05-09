@@ -1,7 +1,13 @@
 import 'dart:io';
 
 import 'package:fictional_drug_and_disease_ref/application/providers/usecase_providers.dart';
+import 'package:fictional_drug_and_disease_ref/application/usecases/calculate_bmi_usecase.dart';
+import 'package:fictional_drug_and_disease_ref/application/usecases/calculate_crcl_usecase.dart';
+import 'package:fictional_drug_and_disease_ref/application/usecases/calculate_egfr_usecase.dart';
+import 'package:fictional_drug_and_disease_ref/application/usecases/delete_calculation_history_usecase.dart';
+import 'package:fictional_drug_and_disease_ref/application/usecases/list_calculation_history_usecase.dart';
 import 'package:fictional_drug_and_disease_ref/application/usecases/observe_bookmark_state_usecase.dart';
+import 'package:fictional_drug_and_disease_ref/application/usecases/record_calculation_history_usecase.dart';
 import 'package:fictional_drug_and_disease_ref/application/usecases/toggle_bookmark_usecase.dart';
 import 'package:fictional_drug_and_disease_ref/application/usecases/view_disease_detail_usecase.dart';
 import 'package:fictional_drug_and_disease_ref/application/usecases/view_drug_detail_usecase.dart';
@@ -71,6 +77,30 @@ void main() {
     expect(
       container.read(toggleBookmarkUsecaseProvider),
       isA<ToggleBookmarkUsecase>(),
+    );
+    expect(
+      container.read(calculateBmiUsecaseProvider),
+      isA<CalculateBmiUsecase>(),
+    );
+    expect(
+      container.read(calculateEgfrUsecaseProvider),
+      isA<CalculateEgfrUsecase>(),
+    );
+    expect(
+      container.read(calculateCrClUsecaseProvider),
+      isA<CalculateCrClUsecase>(),
+    );
+    expect(
+      container.read(recordCalculationHistoryUsecaseProvider),
+      isA<RecordCalculationHistoryUsecase>(),
+    );
+    expect(
+      container.read(listCalculationHistoryUsecaseProvider),
+      isA<ListCalculationHistoryUsecase>(),
+    );
+    expect(
+      container.read(deleteCalculationHistoryUsecaseProvider),
+      isA<DeleteCalculationHistoryUsecase>(),
     );
   });
 

@@ -103,40 +103,40 @@ void main() {
     test('AppPalette calc category palettes match the design SSOT', () {
       _expectCategoryPalette(
         AppPalette.light.calcBmiCategoryPalette,
-        <CalcBmiCategoryToken, _CategorySpec>{
+        const <CalcBmiCategoryToken, _CategorySpec>{
           CalcBmiCategoryToken.underweight: _CategorySpec(
-            bg: const Color(0xFF3F8AE0),
-            fg: const Color(0xFF06294F),
+            bg: Color(0xFF3F8AE0),
+            fg: Color(0xFF06294F),
             shape: Icons.circle,
           ),
           CalcBmiCategoryToken.normal: _CategorySpec(
-            bg: const Color(0xFF1F7A3A),
-            fg: const Color(0xFF0A3517),
+            bg: Color(0xFF1F7A3A),
+            fg: Color(0xFF0A3517),
             shape: Icons.change_history,
           ),
           CalcBmiCategoryToken.overweight: _CategorySpec(
-            bg: const Color(0xFFB47A00),
-            fg: const Color(0xFF3A2700),
+            bg: Color(0xFFB47A00),
+            fg: Color(0xFF3A2700),
             shape: Icons.square,
           ),
           CalcBmiCategoryToken.obese1: _CategorySpec(
-            bg: const Color(0xFFC25600),
-            fg: const Color(0xFF3D1A00),
+            bg: Color(0xFFC25600),
+            fg: Color(0xFF3D1A00),
             shape: Icons.diamond,
           ),
           CalcBmiCategoryToken.obese2: _CategorySpec(
-            bg: const Color(0xFFA8341B),
-            fg: const Color(0xFF3A0F03),
+            bg: Color(0xFFA8341B),
+            fg: Color(0xFF3A0F03),
             shape: Icons.pentagon,
           ),
           CalcBmiCategoryToken.obese3: _CategorySpec(
-            bg: const Color(0xFF8C1D18),
-            fg: const Color(0xFFFBE9E7),
+            bg: Color(0xFF8C1D18),
+            fg: Color(0xFFFBE9E7),
             shape: Icons.hexagon,
           ),
           CalcBmiCategoryToken.obese4: _CategorySpec(
-            bg: const Color(0xFF5A1212),
-            fg: const Color(0xFFFFE3DC),
+            bg: Color(0xFF5A1212),
+            fg: Color(0xFFFFE3DC),
             shape: Icons.close,
           ),
         },
@@ -144,40 +144,40 @@ void main() {
 
       _expectCategoryPalette(
         AppPalette.dark.calcBmiCategoryPalette,
-        <CalcBmiCategoryToken, _CategorySpec>{
+        const <CalcBmiCategoryToken, _CategorySpec>{
           CalcBmiCategoryToken.underweight: _CategorySpec(
-            bg: const Color(0xFF7AB5FF),
-            fg: const Color(0xFF001A41),
+            bg: Color(0xFF7AB5FF),
+            fg: Color(0xFF001A41),
             shape: Icons.circle,
           ),
           CalcBmiCategoryToken.normal: _CategorySpec(
-            bg: const Color(0xFF7BD8A0),
-            fg: const Color(0xFF0A3517),
+            bg: Color(0xFF7BD8A0),
+            fg: Color(0xFF0A3517),
             shape: Icons.change_history,
           ),
           CalcBmiCategoryToken.overweight: _CategorySpec(
-            bg: const Color(0xFFF5C56A),
-            fg: const Color(0xFF3A2700),
+            bg: Color(0xFFF5C56A),
+            fg: Color(0xFF3A2700),
             shape: Icons.square,
           ),
           CalcBmiCategoryToken.obese1: _CategorySpec(
-            bg: const Color(0xFFFF9A4A),
-            fg: const Color(0xFF3D1A00),
+            bg: Color(0xFFFF9A4A),
+            fg: Color(0xFF3D1A00),
             shape: Icons.diamond,
           ),
           CalcBmiCategoryToken.obese2: _CategorySpec(
-            bg: const Color(0xFFF08C72),
-            fg: const Color(0xFF3A0F03),
+            bg: Color(0xFFF08C72),
+            fg: Color(0xFF3A0F03),
             shape: Icons.pentagon,
           ),
           CalcBmiCategoryToken.obese3: _CategorySpec(
-            bg: const Color(0xFFF2B8B5),
-            fg: const Color(0xFF601410),
+            bg: Color(0xFFF2B8B5),
+            fg: Color(0xFF601410),
             shape: Icons.hexagon,
           ),
           CalcBmiCategoryToken.obese4: _CategorySpec(
-            bg: const Color(0xFFFFB4AB),
-            fg: const Color(0xFF5A1212),
+            bg: Color(0xFFFFB4AB),
+            fg: Color(0xFF5A1212),
             shape: Icons.close,
           ),
         },
@@ -185,35 +185,35 @@ void main() {
 
       _expectCategoryPalette(
         AppPalette.light.calcCkdStagePalette,
-        <CalcCkdStageToken, _CategorySpec>{
+        const <CalcCkdStageToken, _CategorySpec>{
           CalcCkdStageToken.g1: _CategorySpec(
-            bg: const Color(0xFF1F7A3A),
-            fg: const Color(0xFF0A3517),
+            bg: Color(0xFF1F7A3A),
+            fg: Color(0xFF0A3517),
             shape: Icons.circle,
           ),
           CalcCkdStageToken.g2: _CategorySpec(
-            bg: const Color(0xFF5C8A1F),
-            fg: const Color(0xFF1F2F08),
+            bg: Color(0xFF5C8A1F),
+            fg: Color(0xFF1F2F08),
             shape: Icons.change_history,
           ),
           CalcCkdStageToken.g3a: _CategorySpec(
-            bg: const Color(0xFFB47A00),
-            fg: const Color(0xFF3A2700),
+            bg: Color(0xFFB47A00),
+            fg: Color(0xFF3A2700),
             shape: Icons.square,
           ),
           CalcCkdStageToken.g3b: _CategorySpec(
-            bg: const Color(0xFFC25600),
-            fg: const Color(0xFF3D1A00),
+            bg: Color(0xFFC25600),
+            fg: Color(0xFF3D1A00),
             shape: Icons.diamond,
           ),
           CalcCkdStageToken.g4: _CategorySpec(
-            bg: const Color(0xFFA8341B),
-            fg: const Color(0xFFFBE9E7),
+            bg: Color(0xFFA8341B),
+            fg: Color(0xFFFBE9E7),
             shape: Icons.hexagon,
           ),
           CalcCkdStageToken.g5: _CategorySpec(
-            bg: const Color(0xFF5A1212),
-            fg: const Color(0xFFFFE3DC),
+            bg: Color(0xFF5A1212),
+            fg: Color(0xFFFFE3DC),
             shape: Icons.close,
           ),
         },
@@ -221,35 +221,35 @@ void main() {
 
       _expectCategoryPalette(
         AppPalette.dark.calcCkdStagePalette,
-        <CalcCkdStageToken, _CategorySpec>{
+        const <CalcCkdStageToken, _CategorySpec>{
           CalcCkdStageToken.g1: _CategorySpec(
-            bg: const Color(0xFF7BD8A0),
-            fg: const Color(0xFF0A3517),
+            bg: Color(0xFF7BD8A0),
+            fg: Color(0xFF0A3517),
             shape: Icons.circle,
           ),
           CalcCkdStageToken.g2: _CategorySpec(
-            bg: const Color(0xFFBFD96E),
-            fg: const Color(0xFF1F2F08),
+            bg: Color(0xFFBFD96E),
+            fg: Color(0xFF1F2F08),
             shape: Icons.change_history,
           ),
           CalcCkdStageToken.g3a: _CategorySpec(
-            bg: const Color(0xFFF5C56A),
-            fg: const Color(0xFF3A2700),
+            bg: Color(0xFFF5C56A),
+            fg: Color(0xFF3A2700),
             shape: Icons.square,
           ),
           CalcCkdStageToken.g3b: _CategorySpec(
-            bg: const Color(0xFFFF9A4A),
-            fg: const Color(0xFF3D1A00),
+            bg: Color(0xFFFF9A4A),
+            fg: Color(0xFF3D1A00),
             shape: Icons.diamond,
           ),
           CalcCkdStageToken.g4: _CategorySpec(
-            bg: const Color(0xFFF08C72),
-            fg: const Color(0xFF3A0F03),
+            bg: Color(0xFFF08C72),
+            fg: Color(0xFF3A0F03),
             shape: Icons.hexagon,
           ),
           CalcCkdStageToken.g5: _CategorySpec(
-            bg: const Color(0xFFFFB4AB),
-            fg: const Color(0xFF5A1212),
+            bg: Color(0xFFFFB4AB),
+            fg: Color(0xFF5A1212),
             shape: Icons.close,
           ),
         },
