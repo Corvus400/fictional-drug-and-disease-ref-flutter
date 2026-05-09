@@ -82,6 +82,17 @@ If the browser executable is missing:
 npx playwright install chromium
 ```
 
+Use the original Playwright screenshot as the primary visual reference. The
+current helper defaults to `deviceScaleFactor: 4`, so atom-card references are
+typically 4x PNGs (for example 1080 px wide for a 270 CSS px card). Downscaled
+or resized copies may be kept only as secondary overview images; do not use
+them as the primary evidence for typography, icon, border, or spacing judgment.
+
+If a reference still looks too narrow for judging details, do not proceed with
+the phase. Increase `CALC_SPEC_DEVICE_SCALE_FACTOR` or capture an additional
+state-specific crop/wider reference first, then compare against that higher
+fidelity image.
+
 ## Phase 4a Reference Outputs
 
 Generated references:

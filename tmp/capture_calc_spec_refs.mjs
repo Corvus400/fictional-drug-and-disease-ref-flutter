@@ -5,11 +5,18 @@ import { pathToFileURL } from 'node:url';
 const specHtml = process.env.CALC_SPEC_HTML;
 const outDir = process.env.CALC_SPEC_REF_DIR;
 const playwrightIndex = process.env.PLAYWRIGHT_INDEX_MJS;
+const deviceScaleFactor = Number.parseFloat(
+  process.env.CALC_SPEC_DEVICE_SCALE_FACTOR ?? '4',
+);
 
 if (!specHtml || !outDir || !playwrightIndex) {
   throw new Error(
     'Set CALC_SPEC_HTML, CALC_SPEC_REF_DIR, and PLAYWRIGHT_INDEX_MJS.',
   );
+}
+
+if (!Number.isFinite(deviceScaleFactor) || deviceScaleFactor < 1) {
+  throw new Error('CALC_SPEC_DEVICE_SCALE_FACTOR must be a number >= 1.');
 }
 
 const { chromium } = await import(pathToFileURL(playwrightIndex).href);
@@ -19,7 +26,7 @@ await fs.mkdir(outDir, { recursive: true });
 const browser = await chromium.launch();
 const page = await browser.newPage({
   viewport: { width: 1440, height: 1100 },
-  deviceScaleFactor: 2,
+  deviceScaleFactor,
 });
 
 await page.goto(pathToFileURL(specHtml).href);
@@ -185,5 +192,143 @@ await fs.writeFile(
   path.join(outDir, 'spec_result_card_metrics.json'),
   `${JSON.stringify(resultMetrics, null, 2)}\n`,
 );
+
+const historyCard = page
+  .locator('#atom-root .atom-card')
+  .filter({ hasText: 'History row' })
+  .first();
+await historyCard.screenshot({
+  path: path.join(outDir, 'spec_history_atom_card.png'),
+});
+
+const historyMetrics = await historyCard.evaluate((card) => {
+  const rect = (element) => {
+    const r = element.getBoundingClientRect();
+    return {
+      x: Math.round(r.x * 100) / 100,
+      y: Math.round(r.y * 100) / 100,
+      width: Math.round(r.width * 100) / 100,
+      height: Math.round(r.height * 100) / 100,
+    };
+  };
+  const style = (element) => {
+    const s = window.getComputedStyle(element);
+    return {
+      backgroundColor: s.backgroundColor,
+      border: s.border,
+      borderBottom: s.borderBottom,
+      borderRadius: s.borderRadius,
+      color: s.color,
+      display: s.display,
+      fontFamily: s.fontFamily,
+      fontSize: s.fontSize,
+      fontWeight: s.fontWeight,
+      gap: s.gap,
+      gridTemplateColumns: s.gridTemplateColumns,
+      height: s.height,
+      lineHeight: s.lineHeight,
+      marginBottom: s.marginBottom,
+      marginRight: s.marginRight,
+      overflow: s.overflow,
+      padding: s.padding,
+      position: s.position,
+      transform: s.transform,
+      width: s.width,
+    };
+  };
+  const query = (selector) => {
+    const element = card.querySelector(selector);
+    if (!element) {
+      throw new Error(`Missing selector: ${selector}`);
+    }
+    return element;
+  };
+  const defaultRow = query('.history .list .row');
+  const defaultWhen = query('.history .list .row .when');
+  const defaultRes = query('.history .list .row .res');
+  const defaultIcon = query('.history .list .row .ico');
+  const swipeContainer = query('.history .list .swipe-row');
+  const swipeRow = query('.history .list .swipe-row .row');
+  const deleteAction = query('.history .list .swipe-row .delete');
+  const deleteIcon = query('.history .list .swipe-row .delete .ico');
+  const empty = query('.history .list.empty');
+  const emptyIcon = query('.history .list.empty .ico');
+
+  return {
+    defaultRow: {
+      rect: rect(defaultRow),
+      style: style(defaultRow),
+      text: defaultRow.textContent,
+    },
+    defaultWhen: {
+      rect: rect(defaultWhen),
+      style: style(defaultWhen),
+      text: defaultWhen.textContent,
+    },
+    defaultResult: {
+      rect: rect(defaultRes),
+      style: style(defaultRes),
+      text: defaultRes.textContent,
+    },
+    defaultIcon: {
+      rect: rect(defaultIcon),
+      style: style(defaultIcon),
+      text: defaultIcon.textContent,
+    },
+    swipeContainer: {
+      rect: rect(swipeContainer),
+      style: style(swipeContainer),
+    },
+    swipeRow: {
+      rect: rect(swipeRow),
+      style: style(swipeRow),
+    },
+    deleteAction: {
+      rect: rect(deleteAction),
+      style: style(deleteAction),
+      text: deleteAction.textContent,
+    },
+    deleteIcon: {
+      rect: rect(deleteIcon),
+      style: style(deleteIcon),
+      text: deleteIcon.textContent,
+    },
+    empty: {
+      rect: rect(empty),
+      style: style(empty),
+      text: empty.textContent,
+    },
+    emptyIcon: {
+      rect: rect(emptyIcon),
+      style: style(emptyIcon),
+      text: emptyIcon.textContent,
+    },
+  };
+});
+
+await fs.writeFile(
+  path.join(outDir, 'spec_history_metrics.json'),
+  `${JSON.stringify(historyMetrics, null, 2)}\n`,
+);
+
+const phoneHistoryExpanded = page
+  .locator('[data-frame-label="iPhone × Light × history-expanded (BMI)"] .history')
+  .first();
+const phoneHistorySwipe = page
+  .locator('[data-frame-label="iPhone × Light × swipe-to-delete (BMI)"] .history')
+  .first();
+const phoneHistoryEmpty = page
+  .locator('[data-frame-label="iPhone × Light × history-empty (BMI)"] .history')
+  .first();
+
+await phoneHistoryExpanded.screenshot({
+  path: path.join(outDir, 'spec_history_phone_expanded.png'),
+});
+await phoneHistorySwipe.screenshot({
+  path: path.join(outDir, 'spec_history_phone_swipe.png'),
+});
+await phoneHistoryEmpty.screenshot({
+  path: path.join(outDir, 'spec_history_phone_empty.png'),
+});
 
 await browser.close();
