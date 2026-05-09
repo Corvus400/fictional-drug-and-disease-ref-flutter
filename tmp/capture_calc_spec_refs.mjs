@@ -113,4 +113,77 @@ await fs.writeFile(
   `${JSON.stringify(metrics, null, 2)}\n`,
 );
 
+const resultCard = page
+  .locator('#atom-root .atom-card')
+  .filter({ hasText: 'Result card' })
+  .first();
+await resultCard.screenshot({
+  path: path.join(outDir, 'spec_result_card_atom_card.png'),
+});
+
+const resultMetrics = await resultCard.evaluate((card) => {
+  const rect = (element) => {
+    const r = element.getBoundingClientRect();
+    return {
+      x: Math.round(r.x * 100) / 100,
+      y: Math.round(r.y * 100) / 100,
+      width: Math.round(r.width * 100) / 100,
+      height: Math.round(r.height * 100) / 100,
+    };
+  };
+  const style = (element) => {
+    const s = window.getComputedStyle(element);
+    return {
+      backgroundColor: s.backgroundColor,
+      border: s.border,
+      borderRadius: s.borderRadius,
+      boxShadow: s.boxShadow,
+      color: s.color,
+      display: s.display,
+      fontFamily: s.fontFamily,
+      fontSize: s.fontSize,
+      fontWeight: s.fontWeight,
+      gap: s.gap,
+      height: s.height,
+      letterSpacing: s.letterSpacing,
+      lineHeight: s.lineHeight,
+      padding: s.padding,
+    };
+  };
+  const query = (selector) => {
+    const element = card.querySelector(selector);
+    if (!element) {
+      throw new Error(`Missing selector: ${selector}`);
+    }
+    return element;
+  };
+
+  const result = query('.result');
+  const title = query('.result .ttl');
+  const formula = query('.result .formula-tag');
+  const value = query('.result .value');
+  const unit = query('.result .value .unit');
+  const badge = query('.result .cbadge');
+  const badgeShape = query('.result .cbadge .shape');
+
+  return {
+    result: { rect: rect(result), style: style(result) },
+    title: { rect: rect(title), style: style(title), text: title.textContent },
+    formula: {
+      rect: rect(formula),
+      style: style(formula),
+      text: formula.textContent,
+    },
+    value: { rect: rect(value), style: style(value), text: value.textContent },
+    unit: { rect: rect(unit), style: style(unit), text: unit.textContent },
+    badge: { rect: rect(badge), style: style(badge), text: badge.textContent },
+    badgeShape: { rect: rect(badgeShape), style: style(badgeShape) },
+  };
+});
+
+await fs.writeFile(
+  path.join(outDir, 'spec_result_card_metrics.json'),
+  `${JSON.stringify(resultMetrics, null, 2)}\n`,
+);
+
 await browser.close();
