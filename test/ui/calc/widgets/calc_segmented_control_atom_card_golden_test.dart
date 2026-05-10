@@ -2,7 +2,6 @@ import 'package:fictional_drug_and_disease_ref/theme/app_theme.dart';
 import 'package:fictional_drug_and_disease_ref/ui/calc/widgets/calc_segmented_control.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:material_symbols_icons/symbols.dart';
 
 void main() {
   testWidgets(
@@ -99,12 +98,12 @@ class _SegmentedControlAtomCard extends StatelessWidget {
                     CalcSegmentedControlItem(
                       value: 'male',
                       label: '男性',
-                      icon: Symbols.male,
+                      leadingGlyph: '♂',
                     ),
                     CalcSegmentedControlItem(
                       value: 'female',
                       label: '女性',
-                      icon: Symbols.female,
+                      leadingGlyph: '♀',
                     ),
                   ],
                   onChanged: (_) {},
@@ -123,12 +122,12 @@ class _SegmentedControlAtomCard extends StatelessWidget {
                     CalcSegmentedControlItem(
                       value: 'male',
                       label: '男性',
-                      icon: Symbols.male,
+                      leadingGlyph: '♂',
                     ),
                     CalcSegmentedControlItem(
                       value: 'female',
                       label: '女性',
-                      icon: Symbols.female,
+                      leadingGlyph: '♀',
                     ),
                   ],
                   onChanged: (_) {},

@@ -122,7 +122,7 @@ void main() {
       expect(label.style?.letterSpacing, 0.26);
     });
 
-    testWidgets('sex segmented dimensions and icons match the design spec', (
+    testWidgets('sex segmented dimensions and glyphs match the design spec', (
       tester,
     ) async {
       await tester.pumpWidget(
@@ -135,12 +135,12 @@ void main() {
                 CalcSegmentedControlItem(
                   value: 'male',
                   label: '男性',
-                  icon: Symbols.male,
+                  leadingGlyph: '♂',
                 ),
                 CalcSegmentedControlItem(
                   value: 'female',
                   label: '女性',
-                  icon: Symbols.female,
+                  leadingGlyph: '♀',
                 ),
               ],
               onChanged: (_) {},
@@ -157,8 +157,12 @@ void main() {
         tester.getSize(find.byKey(const ValueKey<String>('calc-segment-male'))),
         const Size(177, 32),
       );
-      final icon = tester.widget<Icon>(find.byIcon(Symbols.male));
-      expect(icon.size, 16);
+      final glyph = tester.widget<Text>(find.text('♂'));
+      expect(glyph.style?.fontSize, 16);
+      final femaleGlyph = tester.widget<Text>(find.text('♀'));
+      expect(femaleGlyph.style?.fontSize, 16);
+      expect(find.byIcon(Symbols.male), findsNothing);
+      expect(find.byIcon(Symbols.female), findsNothing);
       final label = tester.widget<Text>(find.text('男性'));
       expect(label.style?.fontWeight, FontWeight.w600);
       expect(label.style?.letterSpacing, isNull);

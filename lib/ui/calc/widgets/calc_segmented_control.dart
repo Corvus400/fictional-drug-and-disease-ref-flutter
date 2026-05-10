@@ -11,6 +11,7 @@ class CalcSegmentedControlItem<T> {
     required this.value,
     required this.label,
     this.icon,
+    this.leadingGlyph,
   });
 
   /// Item value.
@@ -21,6 +22,9 @@ class CalcSegmentedControlItem<T> {
 
   /// Optional icon.
   final IconData? icon;
+
+  /// Optional tree-shake-safe decorative glyph shown before the label.
+  final String? leadingGlyph;
 }
 
 /// Calc segmented control atom.
@@ -224,7 +228,19 @@ class _Segment<T> extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              if (item.icon != null) ...[
+              if (item.leadingGlyph != null) ...[
+                ExcludeSemantics(
+                  child: Text(
+                    item.leadingGlyph!,
+                    style: typography.bodyS.copyWith(
+                      color: selected ? palette.calcPrimary : palette.calcInk2,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ),
+                SizedBox(width: spacing.s1),
+              ] else if (item.icon != null) ...[
                 Icon(
                   item.icon,
                   size: 16,
