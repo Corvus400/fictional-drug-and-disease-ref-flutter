@@ -54,6 +54,147 @@ void main() {
       expect(find.text('履歴はありません'), findsOneWidget);
     });
 
+    testWidgets('renders input range placeholders from field specs', (
+      tester,
+    ) async {
+      await tester.pumpWidget(_testApp(db));
+      await tester.pump();
+
+      expect(find.text('50.0〜250.0'), findsOneWidget);
+      expect(find.text('1.0〜300.0'), findsOneWidget);
+
+      await tester.tap(find.text('eGFR'), warnIfMissed: false);
+      await tester.pumpAndSettle();
+
+      expect(find.text('18〜120'), findsOneWidget);
+      expect(find.text('0.10〜20.00'), findsOneWidget);
+
+      await tester.tap(find.text('CrCl'), warnIfMissed: false);
+      await tester.pumpAndSettle();
+
+      expect(find.text('18〜120'), findsOneWidget);
+      expect(find.text('1.0〜300.0'), findsOneWidget);
+      expect(find.text('0.10〜20.00'), findsOneWidget);
+    });
+
+    testWidgets('filters calc inputs by each field numeric grammar', (
+      tester,
+    ) async {
+      await tester.pumpWidget(_testApp(db));
+      await tester.pump();
+
+      await tester.enterText(_inputField('calc-input-heightCm'), '170.5');
+      await tester.pump();
+      expect(_inputText(tester, 'calc-input-heightCm'), '170.5');
+
+      await tester.enterText(_inputField('calc-input-heightCm'), '170.55');
+      await tester.pump();
+      expect(_inputText(tester, 'calc-input-heightCm'), '170.5');
+
+      await tester.enterText(_inputField('calc-input-weightKg'), '.5');
+      await tester.pump();
+      expect(_inputText(tester, 'calc-input-weightKg'), isEmpty);
+
+      await tester.enterText(_inputField('calc-input-weightKg'), '1..5');
+      await tester.pump();
+      expect(_inputText(tester, 'calc-input-weightKg'), isEmpty);
+
+      await tester.tap(find.text('eGFR'), warnIfMissed: false);
+      await tester.pumpAndSettle();
+
+      await tester.enterText(_inputField('calc-input-ageYears'), '1.5');
+      await tester.pump();
+      expect(_inputText(tester, 'calc-input-ageYears'), isEmpty);
+
+      await tester.enterText(_inputField('calc-input-ageYears'), '120');
+      await tester.pump();
+      expect(_inputText(tester, 'calc-input-ageYears'), '120');
+
+      await tester.enterText(
+        _inputField('calc-input-serumCreatinineMgDl'),
+        '1.23',
+      );
+      await tester.pump();
+      expect(_inputText(tester, 'calc-input-serumCreatinineMgDl'), '1.23');
+
+      await tester.enterText(
+        _inputField('calc-input-serumCreatinineMgDl'),
+        '1.234',
+      );
+      await tester.pump();
+      expect(_inputText(tester, 'calc-input-serumCreatinineMgDl'), '1.23');
+
+      await tester.enterText(
+        _inputField('calc-input-serumCreatinineMgDl'),
+        '%@#',
+      );
+      await tester.pump();
+      expect(_inputText(tester, 'calc-input-serumCreatinineMgDl'), '1.23');
+    });
+
+    testWidgets('uses next actions before the last field and done at the end', (
+      tester,
+    ) async {
+      await tester.pumpWidget(_testApp(db));
+      await tester.pump();
+
+      expect(
+        _editableText(tester, 'calc-input-heightCm').textInputAction,
+        TextInputAction.next,
+      );
+      expect(
+        _editableText(tester, 'calc-input-weightKg').textInputAction,
+        TextInputAction.done,
+      );
+
+      await tester.tap(find.text('CrCl'), warnIfMissed: false);
+      await tester.pumpAndSettle();
+
+      expect(
+        _editableText(tester, 'calc-input-ageYears').textInputAction,
+        TextInputAction.next,
+      );
+      expect(
+        _editableText(tester, 'calc-input-weightKg').textInputAction,
+        TextInputAction.next,
+      );
+      expect(
+        _editableText(
+          tester,
+          'calc-input-serumCreatinineMgDl',
+        ).textInputAction,
+        TextInputAction.done,
+      );
+    });
+
+    testWidgets('moves focus through calc fields with keyboard actions', (
+      tester,
+    ) async {
+      await tester.pumpWidget(_testApp(db));
+      await tester.pump();
+
+      await tester.tap(_inputField('calc-input-heightCm'));
+      await tester.pump();
+      expect(
+        _editableText(tester, 'calc-input-heightCm').focusNode.hasFocus,
+        isTrue,
+      );
+
+      await tester.testTextInput.receiveAction(TextInputAction.next);
+      await tester.pump();
+      expect(
+        _editableText(tester, 'calc-input-weightKg').focusNode.hasFocus,
+        isTrue,
+      );
+
+      await tester.testTextInput.receiveAction(TextInputAction.done);
+      await tester.pump();
+      expect(
+        _editableText(tester, 'calc-input-weightKg').focusNode.hasFocus,
+        isFalse,
+      );
+    });
+
     testWidgets('does not render undefined app bar action buttons', (
       tester,
     ) async {
@@ -366,7 +507,7 @@ void main() {
       await tester.enterText(_inputField('calc-input-ageYears'), '-');
       await tester.pump();
 
-      expect(_inputText(tester, 'calc-input-ageYears'), '-');
+      expect(_inputText(tester, 'calc-input-ageYears'), '1');
       expect(_inputText(tester, 'calc-input-weightKg'), '1');
       expect(_inputText(tester, 'calc-input-serumCreatinineMgDl'), '1');
     });
@@ -930,6 +1071,15 @@ Finder _inputField(String key) {
 
 String _inputText(WidgetTester tester, String key) {
   return tester.widget<TextFormField>(_inputField(key)).controller!.text;
+}
+
+EditableText _editableText(WidgetTester tester, String key) {
+  return tester.widget<EditableText>(
+    find.descendant(
+      of: find.byKey(ValueKey<String>(key)),
+      matching: find.byType(EditableText),
+    ),
+  );
 }
 
 Finder _richTextContaining(String text) {

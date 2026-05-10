@@ -1,5 +1,7 @@
 import 'dart:math' as math;
 
+import 'package:fictional_drug_and_disease_ref/domain/calc/calc_input_field_spec.dart';
+
 import 'package:flutter/foundation.dart';
 
 /// BMI input values.
@@ -25,11 +27,13 @@ final class BmiInputs {
   /// Validates canonical BMI input ranges.
   BmiValidation validate() {
     final errors = <String, String>{};
-    if (heightCm < 50 || heightCm > 250) {
-      errors['heightCm'] = '50.0-250.0 cm';
+    if (CalcInputFieldSpecs.heightCm.isOutOfRange(heightCm)) {
+      errors[CalcInputFieldSpecs.heightCm.fieldName] =
+          CalcInputFieldSpecs.heightCm.rangeText;
     }
-    if (weightKg < 1 || weightKg > 300) {
-      errors['weightKg'] = '1.0-300.0 kg';
+    if (CalcInputFieldSpecs.weightKg.isOutOfRange(weightKg)) {
+      errors[CalcInputFieldSpecs.weightKg.fieldName] =
+          CalcInputFieldSpecs.weightKg.rangeText;
     }
     if (errors.isNotEmpty) {
       return BmiInvalid(errors: errors);

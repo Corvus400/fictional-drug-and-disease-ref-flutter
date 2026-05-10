@@ -17,8 +17,11 @@ class CalcInputField extends StatefulWidget {
     this.focused = false,
     this.onChanged,
     this.onTap,
+    this.focusNode,
     this.keyboardType = const TextInputType.numberWithOptions(decimal: true),
     this.inputFormatters,
+    this.textInputAction = TextInputAction.done,
+    this.onFieldSubmitted,
     super.key,
   });
 
@@ -46,11 +49,20 @@ class CalcInputField extends StatefulWidget {
   /// Tap callback.
   final VoidCallback? onTap;
 
+  /// Optional focus node used by parent forms to control field traversal.
+  final FocusNode? focusNode;
+
   /// Platform keyboard type.
   final TextInputType keyboardType;
 
   /// Optional input formatters.
   final List<TextInputFormatter>? inputFormatters;
+
+  /// Platform keyboard action.
+  final TextInputAction textInputAction;
+
+  /// Callback invoked when the keyboard action is submitted.
+  final ValueChanged<String>? onFieldSubmitted;
 
   @override
   State<CalcInputField> createState() => _CalcInputFieldState();
@@ -124,11 +136,13 @@ class _CalcInputFieldState extends State<CalcInputField> {
           height: inputHeight,
           child: TextFormField(
             controller: _controller,
+            focusNode: widget.focusNode,
             keyboardType: widget.keyboardType,
             inputFormatters: widget.inputFormatters,
             onChanged: widget.onChanged,
             onTap: widget.onTap,
-            textInputAction: TextInputAction.done,
+            textInputAction: widget.textInputAction,
+            onFieldSubmitted: widget.onFieldSubmitted,
             style: inputTextStyle,
             decoration: InputDecoration(
               isDense: true,

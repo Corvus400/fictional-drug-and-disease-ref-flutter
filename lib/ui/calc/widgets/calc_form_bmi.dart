@@ -1,10 +1,12 @@
+import 'package:fictional_drug_and_disease_ref/domain/calc/calc_input_field_spec.dart';
 import 'package:fictional_drug_and_disease_ref/l10n/app_localizations.dart';
 import 'package:fictional_drug_and_disease_ref/ui/calc/calc_screen_state.dart';
 import 'package:fictional_drug_and_disease_ref/ui/calc/widgets/calc_input_field.dart';
+import 'package:fictional_drug_and_disease_ref/ui/calc/widgets/calc_input_field_config.dart';
 import 'package:flutter/material.dart';
 
 /// BMI form composite.
-class CalcFormBmi extends StatelessWidget {
+class CalcFormBmi extends StatefulWidget {
   /// Creates a BMI form.
   const CalcFormBmi({
     required this.draft,
@@ -23,27 +25,64 @@ class CalcFormBmi extends StatelessWidget {
   final void Function(CalcInputFieldKey field, String value) onChanged;
 
   @override
+  State<CalcFormBmi> createState() => _CalcFormBmiState();
+}
+
+class _CalcFormBmiState extends State<CalcFormBmi> {
+  late final FocusNode _heightFocusNode;
+  late final FocusNode _weightFocusNode;
+
+  @override
+  void initState() {
+    super.initState();
+    _heightFocusNode = FocusNode();
+    _weightFocusNode = FocusNode();
+  }
+
+  @override
+  void dispose() {
+    _heightFocusNode.dispose();
+    _weightFocusNode.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    const heightSpec = CalcInputFieldSpecs.heightCm;
+    const weightSpec = CalcInputFieldSpecs.weightKg;
 
     return Column(
       children: [
         CalcInputField(
           key: const ValueKey<String>('calc-input-heightCm'),
           label: l10n.calcInputHeight,
-          valueText: draft.valueOf(CalcInputFieldKey.heightCm),
+          valueText: widget.draft.valueOf(CalcInputFieldKey.heightCm),
+          placeholder: heightSpec.placeholderText,
           unit: l10n.calcUnitCm,
-          errorText: errors['heightCm'],
-          onChanged: (value) => onChanged(CalcInputFieldKey.heightCm, value),
+          errorText: widget.errors[heightSpec.fieldName],
+          focusNode: _heightFocusNode,
+          keyboardType: calcKeyboardType(heightSpec),
+          inputFormatters: calcInputFormatters(heightSpec),
+          textInputAction: TextInputAction.next,
+          onFieldSubmitted: (_) => _weightFocusNode.requestFocus(),
+          onChanged: (value) =>
+              widget.onChanged(CalcInputFieldKey.heightCm, value),
         ),
         const SizedBox(height: 12),
         CalcInputField(
           key: const ValueKey<String>('calc-input-weightKg'),
           label: l10n.calcInputWeight,
-          valueText: draft.valueOf(CalcInputFieldKey.weightKg),
+          valueText: widget.draft.valueOf(CalcInputFieldKey.weightKg),
+          placeholder: weightSpec.placeholderText,
           unit: l10n.calcUnitKg,
-          errorText: errors['weightKg'],
-          onChanged: (value) => onChanged(CalcInputFieldKey.weightKg, value),
+          errorText: widget.errors[weightSpec.fieldName],
+          focusNode: _weightFocusNode,
+          keyboardType: calcKeyboardType(weightSpec),
+          inputFormatters: calcInputFormatters(weightSpec),
+          onFieldSubmitted: (_) => _weightFocusNode.unfocus(),
+          onChanged: (value) =>
+              widget.onChanged(CalcInputFieldKey.weightKg, value),
         ),
       ],
     );
