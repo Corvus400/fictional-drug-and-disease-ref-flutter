@@ -1,5 +1,7 @@
+import 'package:fictional_drug_and_disease_ref/application/usecases/record_calculation_history_usecase.dart';
 import 'package:fictional_drug_and_disease_ref/data/local/app_database.dart';
 import 'package:fictional_drug_and_disease_ref/data/providers/local_providers.dart';
+import 'package:fictional_drug_and_disease_ref/data/repositories/calculation_history_repository.dart';
 import 'package:fictional_drug_and_disease_ref/domain/calc/bmi.dart';
 import 'package:fictional_drug_and_disease_ref/domain/calc/calc_type.dart';
 import 'package:fictional_drug_and_disease_ref/domain/calc/codecs/calc_inputs_codec.dart';
@@ -1221,6 +1223,50 @@ void main() {
       expect(lastRadius.bottomLeft, Radius.zero);
     });
 
+    testWidgets(
+      'keeps other revealed delete actions visible after deleting one row',
+      (
+        tester,
+      ) async {
+        await _seedBmiHistory(db, count: 3);
+        await tester.pumpWidget(_testApp(db));
+        await tester.pumpAndSettle();
+
+        await tester.tap(find.text('履歴 (3)'));
+        await tester.pumpAndSettle();
+
+        await tester.drag(
+          find.byKey(const ValueKey<String>('calc-history-bmi-history-0')),
+          const Offset(-140, 0),
+        );
+        await tester.pumpAndSettle();
+        await tester.drag(
+          find.byKey(const ValueKey<String>('calc-history-bmi-history-1')),
+          const Offset(-140, 0),
+        );
+        await tester.pumpAndSettle();
+
+        expect(_deleteRevealWidthAt(tester, 0), 72);
+        expect(_deleteRevealWidthAt(tester, 1), 72);
+
+        await tester.tap(
+          find.byKey(const ValueKey<String>('history-delete')).first,
+        );
+        await tester.pumpAndSettle();
+
+        expect(find.text('履歴 (2)'), findsOneWidget);
+        expect(
+          find.byKey(const ValueKey<String>('calc-history-bmi-history-0')),
+          findsNothing,
+        );
+        expect(
+          find.byKey(const ValueKey<String>('calc-history-bmi-history-1')),
+          findsOneWidget,
+        );
+        expect(_deleteRevealWidthAt(tester, 0), 72);
+      },
+    );
+
     testWidgets('keeps history content alive while collapse animation runs', (
       tester,
     ) async {
@@ -1414,6 +1460,14 @@ BorderRadius _borderRadiusAt(WidgetTester tester, Finder finder, int index) {
       as BorderRadius;
 }
 
+double _deleteRevealWidthAt(WidgetTester tester, int index) {
+  return tester
+      .getSize(
+        find.byKey(const ValueKey<String>('history-delete-reveal')).at(index),
+      )
+      .width;
+}
+
 CalcScreenState _historyStateForRows(int count) {
   return CalcScreenState.initial().copyWith(
     historyExpanded: true,
@@ -1438,6 +1492,35 @@ CalculationHistoryEntry _bmiHistoryEntry(int index) {
     resultJson: resultCodec.encode(result),
     calculatedAt: DateTime.utc(2026, 5, 10 - index),
   );
+}
+
+Future<void> _seedBmiHistory(AppDatabase db, {required int count}) async {
+  final repository = CalculationHistoryRepository(db.calculationHistoriesDao);
+  final samples = <({double heightCm, double weightKg, BmiCategory category})>[
+    (heightCm: 170, weightKg: 65, category: BmiCategory.normal),
+    (heightCm: 172, weightKg: 72, category: BmiCategory.normal),
+    (heightCm: 168, weightKg: 74, category: BmiCategory.overweight),
+  ];
+
+  for (var index = 0; index < count; index += 1) {
+    final sample = samples[index % samples.length];
+    final inputs = BmiInputs(
+      heightCm: sample.heightCm,
+      weightKg: sample.weightKg,
+    );
+    final bmi =
+        sample.weightKg / ((sample.heightCm / 100) * (sample.heightCm / 100));
+    final usecase = RecordCalculationHistoryUsecase(
+      calculationHistoryRepository: repository,
+      clock: () => DateTime.utc(2026, 5, 10 - index),
+      idFactory: () => 'bmi-history-$index',
+    );
+    await usecase.execute(
+      CalcType.bmi,
+      inputs,
+      BmiResult(bmi: bmi, category: sample.category),
+    );
+  }
 }
 
 Future<void> _tapSex(WidgetTester tester, String label) async {

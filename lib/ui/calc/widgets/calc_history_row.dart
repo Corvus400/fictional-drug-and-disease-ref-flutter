@@ -18,6 +18,7 @@ class CalcHistoryRow extends StatefulWidget {
     this.borderRadius = BorderRadius.zero,
     this.onRestore,
     this.onDelete,
+    this.onDeleteRevealedChanged,
     super.key,
   }) : assert(
          !deleteRevealed || deleteLabel != null,
@@ -50,6 +51,9 @@ class CalcHistoryRow extends StatefulWidget {
 
   /// Delete callback.
   final VoidCallback? onDelete;
+
+  /// Called when the user opens or closes the delete action.
+  final ValueChanged<bool>? onDeleteRevealedChanged;
 
   @override
   State<CalcHistoryRow> createState() => _CalcHistoryRowState();
@@ -92,6 +96,17 @@ class _CalcHistoryRowState extends State<CalcHistoryRow>
     super.dispose();
   }
 
+  void _settleDeleteReveal() {
+    final shouldReveal = _controller.value >= 0.4;
+    widget.onDeleteRevealedChanged?.call(shouldReveal);
+    unawaited(
+      _controller.animateTo(
+        shouldReveal ? 1 : 0,
+        curve: Curves.easeOutCubic,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final hasDeleteAction = widget.deleteLabel != null;
@@ -116,23 +131,7 @@ class _CalcHistoryRowState extends State<CalcHistoryRow>
                     }
                   : null,
               onHorizontalDragEnd: canDrag
-                  ? (_) {
-                      if (_controller.value >= 0.4) {
-                        unawaited(
-                          _controller.animateTo(
-                            1,
-                            curve: Curves.easeOutCubic,
-                          ),
-                        );
-                      } else {
-                        unawaited(
-                          _controller.animateTo(
-                            0,
-                            curve: Curves.easeOutCubic,
-                          ),
-                        );
-                      }
-                    }
+                  ? (_) => _settleDeleteReveal()
                   : null,
               child: AnimatedBuilder(
                 animation: _controller,
@@ -177,7 +176,9 @@ class _CalcHistoryRowState extends State<CalcHistoryRow>
                               summaryText: widget.summaryText,
                               showBottomBorder: widget.showBottomBorder,
                               borderRadius: widget.borderRadius,
-                              onTap: widget.onRestore,
+                              onTap: revealValue <= 0.001
+                                  ? widget.onRestore
+                                  : null,
                             ),
                           ),
                         ),
@@ -220,62 +221,69 @@ class _HistoryRowContent extends StatelessWidget {
     return ClipRRect(
       key: const ValueKey<String>('history-row-clip'),
       borderRadius: borderRadius,
-      child: InkWell(
-        onTap: onTap,
-        child: Stack(
-          fit: StackFit.expand,
-          children: [
-            DecoratedBox(
-              key: const ValueKey<String>('history-row-surface'),
-              decoration: BoxDecoration(color: palette.calcSurface),
-            ),
-            Padding(
-              padding: EdgeInsetsDirectional.only(
-                start: spacing.s3,
-                end: spacing.s3,
-                top: spacing.s2,
-                bottom: spacing.s2,
+      child: Material(
+        key: const ValueKey<String>('history-row-material'),
+        type: MaterialType.transparency,
+        borderRadius: borderRadius,
+        clipBehavior: Clip.antiAlias,
+        child: InkWell(
+          borderRadius: borderRadius,
+          onTap: onTap,
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              Ink(
+                key: const ValueKey<String>('history-row-surface'),
+                decoration: BoxDecoration(color: palette.calcSurface),
               ),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: RichText(
-                      text: TextSpan(
-                        style: typography.labelM
-                            .copyWith(color: palette.calcInk)
-                            .withVariableWeight(FontWeight.w500),
-                        children: [
-                          TextSpan(
-                            text: dateText,
-                            style: typography.monoS
-                                .copyWith(color: palette.calcMuted)
-                                .withVariableWeight(FontWeight.w600),
-                          ),
-                          TextSpan(
-                            text: '  $resultText',
-                            style: const TextStyle().withVariableWeight(
-                              FontWeight.w700,
+              Padding(
+                padding: EdgeInsetsDirectional.only(
+                  start: spacing.s3,
+                  end: spacing.s3,
+                  top: spacing.s2,
+                  bottom: spacing.s2,
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: RichText(
+                        text: TextSpan(
+                          style: typography.labelM
+                              .copyWith(color: palette.calcInk)
+                              .withVariableWeight(FontWeight.w500),
+                          children: [
+                            TextSpan(
+                              text: dateText,
+                              style: typography.monoS
+                                  .copyWith(color: palette.calcMuted)
+                                  .withVariableWeight(FontWeight.w600),
                             ),
-                          ),
-                          TextSpan(text: ' · $summaryText'),
-                        ],
+                            TextSpan(
+                              text: '  $resultText',
+                              style: const TextStyle().withVariableWeight(
+                                FontWeight.w700,
+                              ),
+                            ),
+                            TextSpan(text: ' · $summaryText'),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                  SizedBox(width: spacing.s2),
-                  Icon(Icons.refresh, size: 18, color: palette.calcMuted),
-                ],
+                    SizedBox(width: spacing.s2),
+                    Icon(Icons.refresh, size: 18, color: palette.calcMuted),
+                  ],
+                ),
               ),
-            ),
-            if (showBottomBorder)
-              Positioned(
-                left: 0,
-                right: 0,
-                bottom: 0,
-                height: 1,
-                child: ColoredBox(color: palette.calcHairline2),
-              ),
-          ],
+              if (showBottomBorder)
+                Positioned(
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  height: 1,
+                  child: ColoredBox(color: palette.calcHairline2),
+                ),
+            ],
+          ),
         ),
       ),
     );
