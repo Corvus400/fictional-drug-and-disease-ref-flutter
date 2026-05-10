@@ -13,7 +13,6 @@ import 'package:fictional_drug_and_disease_ref/ui/calc/calc_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:material_symbols_icons/symbols.dart';
 
 import '../../helpers/test_app_database.dart';
 
@@ -296,8 +295,21 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.text('計算ツール'), findsOneWidget);
-      expect(find.byIcon(Symbols.menu), findsNothing);
-      expect(find.byIcon(Symbols.history), findsNothing);
+      expect(find.byIcon(Icons.menu), findsNothing);
+      expect(find.byIcon(Icons.history), findsNothing);
+    });
+
+    testWidgets('aligns the calc title to the same leading edge as search', (
+      tester,
+    ) async {
+      await tester.binding.setSurfaceSize(const Size(1194, 834));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+
+      await tester.pumpWidget(_testApp(db));
+      await tester.pumpAndSettle();
+
+      final titleTopLeft = tester.getTopLeft(find.text('計算ツール'));
+      expect(titleTopLeft.dx, lessThan(80));
     });
 
     testWidgets('does not toggle history when there are no rows', (
@@ -308,16 +320,16 @@ void main() {
 
       expect(find.text('履歴 (0)'), findsOneWidget);
       expect(find.text('履歴はありません'), findsOneWidget);
-      expect(_historyHeaderIcon(Symbols.history_toggle_off), findsOneWidget);
-      expect(find.byIcon(Symbols.expand_less), findsNothing);
-      expect(find.byIcon(Symbols.expand_more), findsNothing);
+      expect(_historyHeaderIcon(Icons.history_toggle_off), findsOneWidget);
+      expect(find.byIcon(Icons.expand_less), findsNothing);
+      expect(find.byIcon(Icons.expand_more), findsNothing);
 
       await tester.tap(find.text('履歴 (0)'));
       await tester.pumpAndSettle();
 
       expect(find.text('履歴 (0)'), findsOneWidget);
       expect(find.text('履歴はありません'), findsOneWidget);
-      expect(_historyHeaderIcon(Symbols.history_toggle_off), findsOneWidget);
+      expect(_historyHeaderIcon(Icons.history_toggle_off), findsOneWidget);
       expect(_richTextContaining('BMI 22.5'), findsNothing);
     });
 
@@ -1028,6 +1040,33 @@ void main() {
 
       expect(_richTextContaining('BMI 22.5 (普通体重)'), findsOneWidget);
       expect(_richTextContaining('H170/W65'), findsOneWidget);
+    });
+
+    testWidgets('keeps history content alive while collapse animation runs', (
+      tester,
+    ) async {
+      await tester.pumpWidget(_testApp(db));
+      await tester.pump();
+
+      await tester.enterText(_inputField('calc-input-heightCm'), '170');
+      await tester.pump();
+      await tester.enterText(_inputField('calc-input-weightKg'), '65');
+      await tester.pump(const Duration(milliseconds: 250));
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('履歴 (1)'));
+      await tester.pumpAndSettle();
+      expect(_richTextContaining('BMI 22.5 (普通体重)'), findsOneWidget);
+
+      await tester.tap(find.text('履歴 (1)'));
+      await tester.pump();
+      expect(_richTextContaining('BMI 22.5 (普通体重)'), findsOneWidget);
+
+      await tester.pump(const Duration(milliseconds: 160));
+      expect(_richTextContaining('BMI 22.5 (普通体重)'), findsOneWidget);
+
+      await tester.pumpAndSettle();
+      expect(_richTextContaining('BMI 22.5 (普通体重)'), findsNothing);
     });
 
     testWidgets('restores a history row without artificial delay', (

@@ -7,17 +7,17 @@ state, and history expansion animation.
 
 | Target | Spec value | Flutter implementation | Evidence | Status |
 |---|---|---|---|---|
-| Swipe direction | History row exposes delete on left swipe | `Dismissible.direction = endToStart` | `test/ui/calc/widgets/calc_history_row_test.dart` | pass |
-| Swipe threshold | Reveal after 40% swipe | `dismissThresholds: {endToStart: 0.4}` | Widget test asserts threshold and reveal | pass |
-| Delete action size/color | Exposed delete rail, destructive color | `deleteRevealed` row uses 72px rail and `calcError` | `calc_swipe_to_delete_{light,dark}.png` | pass |
+| Swipe direction | History row exposes delete on left swipe | `GestureDetector` horizontal drag updates the reveal controller from end to start; no `Dismissible` dependency | `test/ui/calc/widgets/calc_history_row_test.dart` | pass |
+| Swipe threshold | Reveal after 40% swipe | Drag end snaps open when controller value is `>= 0.4` | Widget test asserts no `Dismissible`, then drags and verifies the delete action appears | pass |
+| Delete action size/color | Exposed delete rail, destructive color, no visible lower-edge gap, and restore icon remains unobscured | Visible action rail is 72px; red rail bleeds 6px vertically only, and the row separator is suppressed while revealed | `calc_swipe_to_delete_{light,dark}.png`; `calc_history_atoms_light.png` visual read | pass |
 | Restore work timing | Lock only during actual restore processing | `_restoreFromHistory` uses `try/finally` with no artificial delay | `restores a history row without artificial delay` | pass |
 | Restore visual placement | Indicator appears inline near result chart, not as modal | `CalcHistoryRestoringIndicator` is rendered in `CalcResultCard` visualization slot | `calc_history_restoring_after_{light,dark}.png` | pass |
 | Restore disabled state | Screen content is disabled/dimmed while restoring | `IgnorePointer` wraps the responsive body; form/history/tool controls and result content are dimmed | `disables calc tool switching while history is restoring` and restoring goldens | pass |
 | Restore unmount safety | No state update after the view is removed | `finally` checks `mounted` before clearing the flag | `does not call setState after unmount during history restore` | pass |
 | Tool coverage | BMI, eGFR, and CrCl show the indicator in the same result-card slot | State-injected widget test covers all three tools | `places restoring indicator in the result card for every tool` | pass |
 | Device/theme coverage | iPhone/iPad, portrait/landscape, light/dark, all tools | 3 tools x 2 devices x 2 orientations x 2 themes | `calc_history_restoring_matrix.png` (24 cells) | pass |
-| History expansion duration | 320ms | `AnimatedSize(duration: Duration(milliseconds: 320))` | `lib/ui/calc/calc_history_section.dart` | pass |
-| History expansion easing | cubic-bezier(.2,0,0,1) | `Cubic(0.2, 0, 0, 1)` | `lib/ui/calc/calc_history_section.dart` | pass |
+| History expansion duration | 320ms open and close | `AnimatedSwitcher(duration/reverseDuration: Duration(milliseconds: 320))` keeps the outgoing body alive during collapse | `keeps history content alive while collapse animation runs` | pass |
+| History expansion easing | cubic-bezier(.2,0,0,1) | `switchInCurve` and `switchOutCurve` use `Cubic(0.2, 0, 0, 1)` | `lib/ui/calc/calc_history_section.dart` | pass |
 | Existing screen retention | Existing calc screen states remain stable after input controller sync | Updated goldens reflect normalized input text (`1`, not `1.0`) consistent with SSOT references | `flutter test --tags golden test/ui/calc/` | pass |
 
 ## Commands
@@ -37,6 +37,7 @@ git diff --check
 |---|---|---|---|---|
 | Show restore overlay spinner for 200ms after tapping history row | Production code locks only during the actual restore call; golden uses `debugRestoringHistory` to render the visual state | User correction: artificial 200ms delay for visibility is not acceptable | Runtime has no artificial wait; visual state remains testable | justified-deviation |
 | Goldens include `calc_history_restoring_after_<light|dark>.png` | Those files exist, plus a 24-cell matrix `calc_history_restoring_matrix.png` | User requested tool, device, orientation, and theme coverage | Coverage is stricter than the original plan | justified-deviation |
+| Earlier implementation used Flutter `Dismissible` for swipe reveal | `CalcHistoryRow` now uses a small `GestureDetector` + `AnimationController` reveal interaction | User pointed out visible gaps and awkward swipe behavior; `Dismissible` left insufficient control over the exposed rail edges | Delete action can now cover the cell edge and suppress the row separator while revealed | justified-deviation |
 
 ## Residual Risk
 

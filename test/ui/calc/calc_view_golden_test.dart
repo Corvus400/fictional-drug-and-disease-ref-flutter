@@ -21,7 +21,6 @@ import 'package:fictional_drug_and_disease_ref/ui/calc/calc_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:material_symbols_icons/symbols.dart';
 
 import '../../golden/golden_test_config.dart';
 import '../../golden/golden_test_helpers.dart';
@@ -861,14 +860,14 @@ void _calcHistoryBoundaryEmptyGolden() {
       await _loadHistory(tester);
       expect(find.text('履歴 (0)'), findsOneWidget);
       expect(find.text('履歴はありません'), findsOneWidget);
-      expect(_historyHeaderIcon(Symbols.history_toggle_off), findsOneWidget);
+      expect(_historyHeaderIcon(Icons.history_toggle_off), findsOneWidget);
 
       await tester.tap(find.text('履歴 (0)'));
       await tester.pumpAndSettle();
 
       expect(find.text('履歴 (0)'), findsOneWidget);
       expect(find.text('履歴はありません'), findsOneWidget);
-      expect(_historyHeaderIcon(Symbols.history_toggle_off), findsOneWidget);
+      expect(_historyHeaderIcon(Icons.history_toggle_off), findsOneWidget);
       return null;
     },
   );

@@ -59,8 +59,8 @@ Reference source:
 | Sex padding | 2 px | `CalcSegmentedControl.sex.padding = EdgeInsets.all(2)` | reference JSON `sex.style.padding = 2px` | pass |
 | Sex selected pill height | 32 px | full-height child inside 36 px control minus 2 px padding top/bottom | widget test asserts selected segment height 32 | pass |
 | Sex selected radius | 20 px | `radii.pill - 2 = 20` | reference JSON `sex.selectedStyle.borderRadius = 20px` | pass |
-| Sex icon presence/type | Material Symbols `male` / `female` | `Symbols.male` / `Symbols.female` | widget test asserts both icons; golden shows icons beside labels | pass |
-| Sex icon size | 16 px | `_Segment` icon size 16 | widget test asserts male icon size 16; reference JSON `iconRect.height = 16` | pass |
+| Sex icon presence/type | Male / female symbols beside labels | Tree-shake-safe text glyphs `♂` / `♀` via `leadingGlyph`; production does not depend on Material Symbols | widget test asserts both glyphs and absence of Material Symbols icons; golden shows glyphs beside labels | pass |
+| Sex icon size | 16 px | `_Segment` leading glyph font size 16 | widget test asserts male/female glyph font size 16; reference JSON `iconRect.height = 16` | pass |
 | Disabled opacity | one 0.45 opacity layer | `enabled: false` applies one opacity layer | fixed after detecting double-opacity mismatch against Playwright reference | pass |
 
 ## 判定 B — Golden Retention

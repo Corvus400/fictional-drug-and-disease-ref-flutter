@@ -32,12 +32,35 @@ class _CalcHistorySection extends StatelessWidget {
           expanded: showBody,
           onToggle: isEmpty ? null : onToggle,
         ),
-        AnimatedSize(
+        AnimatedSwitcher(
           duration: const Duration(milliseconds: 320),
-          curve: const Cubic(.2, 0, 0, 1),
-          alignment: Alignment.topCenter,
+          reverseDuration: const Duration(milliseconds: 320),
+          switchInCurve: const Cubic(.2, 0, 0, 1),
+          switchOutCurve: const Cubic(.2, 0, 0, 1),
+          layoutBuilder: (currentChild, previousChildren) {
+            return Stack(
+              alignment: Alignment.topCenter,
+              children: [
+                ...previousChildren,
+                ?currentChild,
+              ],
+            );
+          },
+          transitionBuilder: (child, animation) {
+            return ClipRect(
+              child: SizeTransition(
+                sizeFactor: animation,
+                axisAlignment: -1,
+                child: FadeTransition(opacity: animation, child: child),
+              ),
+            );
+          },
           child: showBody
               ? Column(
+                  key: ValueKey<String>(
+                    'calc-history-body-${isEmpty ? 'empty' : 'list'}-'
+                    '${state.history.length}',
+                  ),
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     SizedBox(height: spacing.s2 - 2),
@@ -62,7 +85,9 @@ class _CalcHistorySection extends StatelessWidget {
                       ),
                   ],
                 )
-              : const SizedBox.shrink(),
+              : const SizedBox.shrink(
+                  key: ValueKey<String>('calc-history-body-collapsed'),
+                ),
         ),
       ],
     );
@@ -109,19 +134,18 @@ class _CalcHistoryHeader extends StatelessWidget {
                 Expanded(
                   child: Text(
                     '${l10n.calcHistoryHeader} ($count)',
-                    style: typography.labelM.copyWith(
-                      color: palette.calcInk,
-                      fontWeight: FontWeight.w700,
-                    ),
+                    style: typography.labelM
+                        .copyWith(color: palette.calcInk)
+                        .withVariableWeight(FontWeight.w700),
                   ),
                 ),
                 Icon(
                   key: const ValueKey<String>('calc-history-header-icon'),
                   count == 0
-                      ? Symbols.history_toggle_off
+                      ? Icons.history_toggle_off
                       : expanded
-                      ? Symbols.expand_less
-                      : Symbols.expand_more,
+                      ? Icons.expand_less
+                      : Icons.expand_more,
                   size: 18,
                   color: count == 0 ? palette.calcMuted2 : palette.calcMuted,
                 ),

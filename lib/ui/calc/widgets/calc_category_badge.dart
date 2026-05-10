@@ -56,11 +56,9 @@ class CalcCategoryBadge extends StatelessWidget {
               SizedBox(width: spacing.s1 + 2),
               Text(
                 label,
-                style: typography.labelS.copyWith(
-                  color: colors.fg,
-                  fontWeight: FontWeight.w700,
-                  letterSpacing: 0.22,
-                ),
+                style: typography.labelS
+                    .copyWith(color: colors.fg, letterSpacing: 0.22)
+                    .withVariableWeight(FontWeight.w700),
               ),
             ],
           ),

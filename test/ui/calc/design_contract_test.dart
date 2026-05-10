@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:fictional_drug_and_disease_ref/theme/app_palette.dart';
 import 'package:fictional_drug_and_disease_ref/theme/app_radii.dart';
 import 'package:fictional_drug_and_disease_ref/theme/app_spacing.dart';
@@ -355,6 +357,24 @@ void main() {
       expect(dark.extension<AppRadii>(), AppRadii.tokens);
       expect(light.extension<AppTypography>(), AppTypography.tokens);
       expect(dark.extension<AppTypography>(), AppTypography.tokens);
+    });
+
+    test('Calc production UI does not depend on Material Symbols package', () {
+      final calcFiles = Directory('lib/ui/calc')
+          .listSync(recursive: true)
+          .whereType<File>()
+          .where((file) => file.path.endsWith('.dart'));
+
+      final offenders = <String>[];
+      for (final file in calcFiles) {
+        final source = file.readAsStringSync();
+        if (source.contains('package:material_symbols_icons') ||
+            source.contains('Symbols.')) {
+          offenders.add(file.path);
+        }
+      }
+
+      expect(offenders, isEmpty);
     });
   });
 }

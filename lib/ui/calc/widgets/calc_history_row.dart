@@ -1,8 +1,9 @@
+import 'dart:async';
+
 import 'package:fictional_drug_and_disease_ref/theme/app_palette.dart';
 import 'package:fictional_drug_and_disease_ref/theme/app_spacing.dart';
 import 'package:fictional_drug_and_disease_ref/theme/app_typography.dart';
 import 'package:flutter/material.dart';
-import 'package:material_symbols_icons/symbols.dart';
 
 /// History row atom for calculation history.
 class CalcHistoryRow extends StatefulWidget {
@@ -50,86 +51,120 @@ class CalcHistoryRow extends StatefulWidget {
   State<CalcHistoryRow> createState() => _CalcHistoryRowState();
 }
 
-class _CalcHistoryRowState extends State<CalcHistoryRow> {
-  bool _deleteRevealed = false;
+class _CalcHistoryRowState extends State<CalcHistoryRow>
+    with SingleTickerProviderStateMixin {
+  static const _deleteWidth = 72.0;
+  static const _deleteVerticalBleed = 6.0;
+  static const _rowHeight = 38.0;
+
+  late final AnimationController _controller;
+  late final Animation<double> _offset;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 180),
+      value: widget.deleteRevealed ? 1 : 0,
+    );
+    _offset = Tween<double>(
+      begin: 0,
+      end: -_deleteWidth,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic));
+  }
+
+  @override
+  void didUpdateWidget(covariant CalcHistoryRow oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.deleteRevealed == oldWidget.deleteRevealed) {
+      return;
+    }
+    if (widget.deleteRevealed) {
+      _controller.value = 1;
+    } else {
+      _controller.value = 0;
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final revealed = widget.deleteRevealed || _deleteRevealed;
-    if (!revealed) {
-      final content = _HistoryRowContent(
-        dateText: widget.dateText,
-        resultText: widget.resultText,
-        summaryText: widget.summaryText,
-        showBottomBorder: widget.showBottomBorder,
-        onTap: widget.onRestore,
-      );
-
-      if (widget.deleteLabel == null || widget.onDelete == null) {
-        return content;
-      }
-
-      return Dismissible(
-        key: ValueKey<String>(
-          'history-dismissible-${widget.dateText}-'
-          '${widget.resultText}-${widget.summaryText}',
-        ),
-        direction: DismissDirection.endToStart,
-        dismissThresholds: const {DismissDirection.endToStart: 0.4},
-        movementDuration: const Duration(milliseconds: 120),
-        confirmDismiss: (_) async {
-          setState(() => _deleteRevealed = true);
-          return false;
-        },
-        background: Align(
-          alignment: Alignment.centerRight,
-          child: _DeleteAction(
-            label: widget.deleteLabel!,
-            onDelete: widget.onDelete,
-          ),
-        ),
-        child: content,
-      );
-    }
+    final hasDeleteAction = widget.deleteLabel != null;
+    final canDrag = hasDeleteAction && widget.onDelete != null;
 
     return LayoutBuilder(
       builder: (context, constraints) {
-        return ClipRect(
-          child: SizedBox(
-            height: 38,
-            child: OverflowBox(
-              alignment: Alignment.topCenter,
-              minHeight: 0,
-              maxHeight: double.infinity,
-              child: SizedBox(
-                width: constraints.maxWidth,
-                child: Stack(
-                  clipBehavior: Clip.none,
-                  children: [
-                    Positioned(
-                      top: 0,
-                      right: 0,
-                      bottom: 0,
-                      child: _DeleteAction(
-                        label: widget.deleteLabel!,
-                        onDelete: widget.onDelete,
-                      ),
-                    ),
-                    Transform.translate(
-                      offset: const Offset(-72, 0),
-                      child: SizedBox(
-                        width: constraints.maxWidth,
-                        child: _HistoryRowContent(
-                          dateText: widget.dateText,
-                          resultText: widget.resultText,
-                          summaryText: widget.summaryText,
-                          showBottomBorder: widget.showBottomBorder,
-                          onTap: widget.onRestore,
+        return SizedBox(
+          height: _rowHeight,
+          child: ClipRect(
+            clipBehavior: Clip.none,
+            child: GestureDetector(
+              behavior: HitTestBehavior.translucent,
+              onHorizontalDragUpdate: canDrag
+                  ? (details) {
+                      final delta = details.primaryDelta ?? 0;
+                      final nextValue =
+                          (_controller.value - delta / _deleteWidth).clamp(
+                            0.0,
+                            1.0,
+                          );
+                      _controller.value = nextValue;
+                    }
+                  : null,
+              onHorizontalDragEnd: canDrag
+                  ? (_) {
+                      if (_controller.value >= 0.4) {
+                        unawaited(_controller.forward());
+                      } else {
+                        unawaited(_controller.reverse());
+                      }
+                    }
+                  : null,
+              child: AnimatedBuilder(
+                animation: _offset,
+                builder: (context, _) {
+                  final revealed = hasDeleteAction && _controller.value > 0;
+                  return Stack(
+                    clipBehavior: Clip.none,
+                    children: [
+                      Transform.translate(
+                        offset: Offset(hasDeleteAction ? _offset.value : 0, 0),
+                        child: SizedBox(
+                          width: constraints.maxWidth,
+                          child: _HistoryRowContent(
+                            dateText: widget.dateText,
+                            resultText: widget.resultText,
+                            summaryText: widget.summaryText,
+                            trailingPaddingFactor: hasDeleteAction
+                                ? 1 - _controller.value
+                                : 1,
+                            showBottomBorder:
+                                widget.showBottomBorder &&
+                                _controller.value == 0,
+                            onTap: widget.onRestore,
+                          ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
+                      if (revealed)
+                        Positioned(
+                          top: 0,
+                          right: 0,
+                          bottom: -_deleteVerticalBleed,
+                          child: _DeleteAction(
+                            label: widget.deleteLabel!,
+                            onDelete: widget.onDelete,
+                            width: _deleteWidth,
+                          ),
+                        ),
+                    ],
+                  );
+                },
               ),
             ),
           ),
@@ -144,6 +179,7 @@ class _HistoryRowContent extends StatelessWidget {
     required this.dateText,
     required this.resultText,
     required this.summaryText,
+    required this.trailingPaddingFactor,
     required this.showBottomBorder,
     this.onTap,
   });
@@ -151,6 +187,7 @@ class _HistoryRowContent extends StatelessWidget {
   final String dateText;
   final String resultText;
   final String summaryText;
+  final double trailingPaddingFactor;
   final bool showBottomBorder;
   final VoidCallback? onTap;
 
@@ -170,30 +207,32 @@ class _HistoryRowContent extends StatelessWidget {
               : null,
         ),
         child: Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: spacing.s3,
-            vertical: spacing.s2,
+          padding: EdgeInsetsDirectional.only(
+            start: spacing.s3,
+            end: spacing.s3 * trailingPaddingFactor,
+            top: spacing.s2,
+            bottom: spacing.s2,
           ),
           child: Row(
             children: [
               Expanded(
                 child: RichText(
                   text: TextSpan(
-                    style: typography.labelM.copyWith(
-                      color: palette.calcInk,
-                      fontWeight: FontWeight.w500,
-                    ),
+                    style: typography.labelM
+                        .copyWith(color: palette.calcInk)
+                        .withVariableWeight(FontWeight.w500),
                     children: [
                       TextSpan(
                         text: dateText,
-                        style: typography.monoS.copyWith(
-                          color: palette.calcMuted,
-                          fontWeight: FontWeight.w600,
-                        ),
+                        style: typography.monoS
+                            .copyWith(color: palette.calcMuted)
+                            .withVariableWeight(FontWeight.w600),
                       ),
                       TextSpan(
                         text: '  $resultText',
-                        style: const TextStyle(fontWeight: FontWeight.w700),
+                        style: const TextStyle().withVariableWeight(
+                          FontWeight.w700,
+                        ),
                       ),
                       TextSpan(text: ' · $summaryText'),
                     ],
@@ -201,7 +240,7 @@ class _HistoryRowContent extends StatelessWidget {
                 ),
               ),
               SizedBox(width: spacing.s2),
-              Icon(Symbols.refresh, size: 18, color: palette.calcMuted),
+              Icon(Icons.refresh, size: 18, color: palette.calcMuted),
             ],
           ),
         ),
@@ -211,10 +250,15 @@ class _HistoryRowContent extends StatelessWidget {
 }
 
 class _DeleteAction extends StatelessWidget {
-  const _DeleteAction({required this.label, this.onDelete});
+  const _DeleteAction({
+    required this.label,
+    required this.width,
+    this.onDelete,
+  });
 
   final String label;
   final VoidCallback? onDelete;
+  final double width;
 
   @override
   Widget build(BuildContext context) {
@@ -222,7 +266,7 @@ class _DeleteAction extends StatelessWidget {
 
     return SizedBox(
       key: const ValueKey<String>('history-delete'),
-      width: 72,
+      width: width,
       height: 38,
       child: GestureDetector(
         onTap: onDelete,
@@ -231,7 +275,7 @@ class _DeleteAction extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(Symbols.delete, color: Colors.white, size: 18),
+              const Icon(Icons.delete_outline, color: Colors.white, size: 18),
               const SizedBox(width: 4),
               Text(
                 label,

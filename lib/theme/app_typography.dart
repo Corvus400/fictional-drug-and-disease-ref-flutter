@@ -156,3 +156,14 @@ final class AppTypography extends ThemeExtension<AppTypography> {
     );
   }
 }
+
+/// Keeps variable-font weight axes aligned with [TextStyle.fontWeight].
+extension AppTextStyleWeight on TextStyle {
+  /// Returns this style with a matching `wght` font variation.
+  TextStyle withVariableWeight(FontWeight weight) {
+    return copyWith(
+      fontWeight: weight,
+      fontVariations: [FontVariation('wght', weight.value.toDouble())],
+    );
+  }
+}

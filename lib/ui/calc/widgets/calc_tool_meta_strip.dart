@@ -26,11 +26,9 @@ class CalcToolMetaStrip extends StatelessWidget {
       children: [
         Text(
           label.toUpperCase(),
-          style: typography.monoS.copyWith(
-            color: palette.calcMuted,
-            fontWeight: FontWeight.w600,
-            letterSpacing: 0.44,
-          ),
+          style: typography.monoS
+              .copyWith(color: palette.calcMuted, letterSpacing: 0.44)
+              .withVariableWeight(FontWeight.w600),
         ),
         const Spacer(),
         Flexible(
@@ -40,11 +38,9 @@ class CalcToolMetaStrip extends StatelessWidget {
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             textAlign: TextAlign.end,
-            style: typography.monoS.copyWith(
-              color: palette.calcInk2,
-              fontWeight: FontWeight.w500,
-              letterSpacing: 0,
-            ),
+            style: typography.monoS
+                .copyWith(color: palette.calcInk2, letterSpacing: 0)
+                .withVariableWeight(FontWeight.w500),
           ),
         ),
       ],
