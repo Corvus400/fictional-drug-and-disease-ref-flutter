@@ -1,12 +1,14 @@
+import 'package:fictional_drug_and_disease_ref/domain/calc/calc_input_field_spec.dart';
 import 'package:fictional_drug_and_disease_ref/domain/calc/sex.dart';
 import 'package:fictional_drug_and_disease_ref/l10n/app_localizations.dart';
 import 'package:fictional_drug_and_disease_ref/ui/calc/calc_screen_state.dart';
 import 'package:fictional_drug_and_disease_ref/ui/calc/widgets/calc_input_field.dart';
+import 'package:fictional_drug_and_disease_ref/ui/calc/widgets/calc_input_field_config.dart';
 import 'package:fictional_drug_and_disease_ref/ui/calc/widgets/calc_segmented_control.dart';
 import 'package:flutter/material.dart';
 
 /// CrCl form composite.
-class CalcFormCrCl extends StatelessWidget {
+class CalcFormCrCl extends StatefulWidget {
   /// Creates a CrCl form.
   const CalcFormCrCl({
     required this.draft,
@@ -29,42 +31,91 @@ class CalcFormCrCl extends StatelessWidget {
   final ValueChanged<Sex> onSexChanged;
 
   @override
+  State<CalcFormCrCl> createState() => _CalcFormCrClState();
+}
+
+class _CalcFormCrClState extends State<CalcFormCrCl> {
+  late final FocusNode _ageFocusNode;
+  late final FocusNode _weightFocusNode;
+  late final FocusNode _creatinineFocusNode;
+
+  @override
+  void initState() {
+    super.initState();
+    _ageFocusNode = FocusNode();
+    _weightFocusNode = FocusNode();
+    _creatinineFocusNode = FocusNode();
+  }
+
+  @override
+  void dispose() {
+    _ageFocusNode.dispose();
+    _weightFocusNode.dispose();
+    _creatinineFocusNode.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    const ageSpec = CalcInputFieldSpecs.ageYears;
+    const weightSpec = CalcInputFieldSpecs.weightKg;
+    const creatinineSpec = CalcInputFieldSpecs.serumCreatinineMgDl;
 
     return Column(
       children: [
         CalcInputField(
           key: const ValueKey<String>('calc-input-ageYears'),
           label: l10n.calcInputAge,
-          valueText: draft.valueOf(CalcInputFieldKey.ageYears),
+          valueText: widget.draft.valueOf(CalcInputFieldKey.ageYears),
+          placeholder: ageSpec.placeholderText,
           unit: l10n.calcUnitYear,
-          errorText: errors['ageYears'],
-          onChanged: (value) => onChanged(CalcInputFieldKey.ageYears, value),
+          errorText: widget.errors[ageSpec.fieldName],
+          focusNode: _ageFocusNode,
+          keyboardType: calcKeyboardType(ageSpec),
+          inputFormatters: calcInputFormatters(ageSpec),
+          textInputAction: TextInputAction.next,
+          onFieldSubmitted: (_) => _weightFocusNode.requestFocus(),
+          onChanged: (value) =>
+              widget.onChanged(CalcInputFieldKey.ageYears, value),
         ),
         const SizedBox(height: 12),
         CalcInputField(
           key: const ValueKey<String>('calc-input-weightKg'),
           label: l10n.calcInputWeight,
-          valueText: draft.valueOf(CalcInputFieldKey.weightKg),
+          valueText: widget.draft.valueOf(CalcInputFieldKey.weightKg),
+          placeholder: weightSpec.placeholderText,
           unit: l10n.calcUnitKg,
-          errorText: errors['weightKg'],
-          onChanged: (value) => onChanged(CalcInputFieldKey.weightKg, value),
+          errorText: widget.errors[weightSpec.fieldName],
+          focusNode: _weightFocusNode,
+          keyboardType: calcKeyboardType(weightSpec),
+          inputFormatters: calcInputFormatters(weightSpec),
+          textInputAction: TextInputAction.next,
+          onFieldSubmitted: (_) => _creatinineFocusNode.requestFocus(),
+          onChanged: (value) =>
+              widget.onChanged(CalcInputFieldKey.weightKg, value),
         ),
         const SizedBox(height: 12),
         CalcInputField(
           key: const ValueKey<String>('calc-input-serumCreatinineMgDl'),
           label: l10n.calcInputCreatinine,
-          valueText: draft.valueOf(CalcInputFieldKey.serumCreatinineMgDl),
+          valueText: widget.draft.valueOf(
+            CalcInputFieldKey.serumCreatinineMgDl,
+          ),
+          placeholder: creatinineSpec.placeholderText,
           unit: l10n.calcUnitMgDl,
-          errorText: errors['serumCreatinineMgDl'],
+          errorText: widget.errors[creatinineSpec.fieldName],
+          focusNode: _creatinineFocusNode,
+          keyboardType: calcKeyboardType(creatinineSpec),
+          inputFormatters: calcInputFormatters(creatinineSpec),
+          onFieldSubmitted: (_) => _creatinineFocusNode.unfocus(),
           onChanged: (value) =>
-              onChanged(CalcInputFieldKey.serumCreatinineMgDl, value),
+              widget.onChanged(CalcInputFieldKey.serumCreatinineMgDl, value),
         ),
         const SizedBox(height: 12),
         CalcSegmentedControl<Sex>.sex(
-          selectedValue: draft.sex,
-          onChanged: onSexChanged,
+          selectedValue: widget.draft.sex,
+          onChanged: widget.onSexChanged,
           items: [
             CalcSegmentedControlItem<Sex>(
               value: Sex.male,

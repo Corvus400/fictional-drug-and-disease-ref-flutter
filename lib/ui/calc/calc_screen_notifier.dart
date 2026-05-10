@@ -7,6 +7,7 @@ import 'package:fictional_drug_and_disease_ref/application/usecases/calculate_eg
 import 'package:fictional_drug_and_disease_ref/application/usecases/delete_calculation_history_usecase.dart';
 import 'package:fictional_drug_and_disease_ref/application/usecases/list_calculation_history_usecase.dart';
 import 'package:fictional_drug_and_disease_ref/domain/calc/bmi.dart';
+import 'package:fictional_drug_and_disease_ref/domain/calc/calc_input_field_spec.dart';
 import 'package:fictional_drug_and_disease_ref/domain/calc/calc_type.dart';
 import 'package:fictional_drug_and_disease_ref/domain/calc/codecs/calc_inputs_codec.dart';
 import 'package:fictional_drug_and_disease_ref/domain/calc/codecs/calc_result_codec.dart';
@@ -214,8 +215,14 @@ final class CalcScreenNotifier extends Notifier<CalcScreenState> {
   }
 
   CalcPhase _bmiPhase(CalcInputDraft draft) {
-    final heightCm = double.tryParse(draft.valueOf(CalcInputFieldKey.heightCm));
-    final weightKg = double.tryParse(draft.valueOf(CalcInputFieldKey.weightKg));
+    final heightCm = _parseDouble(
+      CalcInputFieldSpecs.heightCm,
+      draft.valueOf(CalcInputFieldKey.heightCm),
+    );
+    final weightKg = _parseDouble(
+      CalcInputFieldSpecs.weightKg,
+      draft.valueOf(CalcInputFieldKey.weightKg),
+    );
     if (heightCm == null || weightKg == null) {
       return CalcPhase.partialInput(CalcType.bmi, draft);
     }
@@ -241,8 +248,12 @@ final class CalcScreenNotifier extends Notifier<CalcScreenState> {
   }
 
   CalcPhase _egfrPhase(CalcInputDraft draft) {
-    final ageYears = int.tryParse(draft.valueOf(CalcInputFieldKey.ageYears));
-    final serumCreatinineMgDl = double.tryParse(
+    final ageYears = _parseInt(
+      CalcInputFieldSpecs.ageYears,
+      draft.valueOf(CalcInputFieldKey.ageYears),
+    );
+    final serumCreatinineMgDl = _parseDouble(
+      CalcInputFieldSpecs.serumCreatinineMgDl,
       draft.valueOf(CalcInputFieldKey.serumCreatinineMgDl),
     );
     if (ageYears == null || serumCreatinineMgDl == null) {
@@ -274,9 +285,16 @@ final class CalcScreenNotifier extends Notifier<CalcScreenState> {
   }
 
   CalcPhase _crClPhase(CalcInputDraft draft) {
-    final ageYears = int.tryParse(draft.valueOf(CalcInputFieldKey.ageYears));
-    final weightKg = double.tryParse(draft.valueOf(CalcInputFieldKey.weightKg));
-    final serumCreatinineMgDl = double.tryParse(
+    final ageYears = _parseInt(
+      CalcInputFieldSpecs.ageYears,
+      draft.valueOf(CalcInputFieldKey.ageYears),
+    );
+    final weightKg = _parseDouble(
+      CalcInputFieldSpecs.weightKg,
+      draft.valueOf(CalcInputFieldKey.weightKg),
+    );
+    final serumCreatinineMgDl = _parseDouble(
+      CalcInputFieldSpecs.serumCreatinineMgDl,
       draft.valueOf(CalcInputFieldKey.serumCreatinineMgDl),
     );
     if (ageYears == null || weightKg == null || serumCreatinineMgDl == null) {
@@ -316,6 +334,14 @@ final class CalcScreenNotifier extends Notifier<CalcScreenState> {
       ),
       _ => CalcPhase.empty(calcType),
     };
+  }
+
+  double? _parseDouble(CalcInputFieldSpec spec, String value) {
+    return spec.isCompleteText(value) ? double.tryParse(value) : null;
+  }
+
+  int? _parseInt(CalcInputFieldSpec spec, String value) {
+    return spec.isCompleteText(value) ? int.tryParse(value) : null;
   }
 
   void _scheduleRecord(CalcType calcType, Object inputs, Object result) {

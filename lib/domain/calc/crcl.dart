@@ -1,3 +1,4 @@
+import 'package:fictional_drug_and_disease_ref/domain/calc/calc_input_field_spec.dart';
 import 'package:fictional_drug_and_disease_ref/domain/calc/sex.dart';
 import 'package:flutter/foundation.dart';
 
@@ -42,14 +43,19 @@ final class CrClInputs {
   /// Validates canonical CrCl input ranges.
   CrClValidation validate() {
     final errors = <String, String>{};
-    if (ageYears < 18 || ageYears > 120) {
-      errors['ageYears'] = '18-120 years';
+    if (CalcInputFieldSpecs.ageYears.isOutOfRange(ageYears)) {
+      errors[CalcInputFieldSpecs.ageYears.fieldName] =
+          CalcInputFieldSpecs.ageYears.rangeText;
     }
-    if (weightKg < 1 || weightKg > 300) {
-      errors['weightKg'] = '1.0-300.0 kg';
+    if (CalcInputFieldSpecs.weightKg.isOutOfRange(weightKg)) {
+      errors[CalcInputFieldSpecs.weightKg.fieldName] =
+          CalcInputFieldSpecs.weightKg.rangeText;
     }
-    if (serumCreatinineMgDl < 0.10 || serumCreatinineMgDl > 20) {
-      errors['serumCreatinineMgDl'] = '0.10-20.00 mg/dL';
+    if (CalcInputFieldSpecs.serumCreatinineMgDl.isOutOfRange(
+      serumCreatinineMgDl,
+    )) {
+      errors[CalcInputFieldSpecs.serumCreatinineMgDl.fieldName] =
+          CalcInputFieldSpecs.serumCreatinineMgDl.rangeText;
     }
     if (errors.isNotEmpty) {
       return CrClInvalid(errors: errors);
