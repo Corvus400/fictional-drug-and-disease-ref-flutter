@@ -59,6 +59,16 @@ class CalcInputField extends StatelessWidget {
     final spacing = Theme.of(context).extension<AppSpacing>()!;
     final typography = Theme.of(context).extension<AppTypography>()!;
     final hasError = errorText != null;
+    final largeText = MediaQuery.textScalerOf(context).scale(16) >= 20.8;
+    final inputHeight = largeText ? 56.0 : 44.0;
+    final inputTextStyle =
+        (largeText
+                ? typography.titleL.copyWith(fontSize: 24)
+                : typography.titleM)
+            .copyWith(
+              color: palette.calcInk,
+              fontWeight: FontWeight.w600,
+            );
     final borderColor = hasError
         ? palette.calcError
         : focused
@@ -79,7 +89,8 @@ class CalcInputField extends StatelessWidget {
         ),
         SizedBox(height: spacing.s1),
         SizedBox(
-          height: 44,
+          key: _inputBoxKey,
+          height: inputHeight,
           child: TextFormField(
             initialValue: valueText,
             keyboardType: keyboardType,
@@ -87,10 +98,7 @@ class CalcInputField extends StatelessWidget {
             onChanged: onChanged,
             onTap: onTap,
             textInputAction: TextInputAction.done,
-            style: typography.titleM.copyWith(
-              color: palette.calcInk,
-              fontWeight: FontWeight.w600,
-            ),
+            style: inputTextStyle,
             decoration: InputDecoration(
               isDense: true,
               filled: true,
@@ -98,7 +106,7 @@ class CalcInputField extends StatelessWidget {
                   ? palette.calcErrorContainer
                   : palette.calcSurface,
               hintText: placeholder,
-              hintStyle: typography.titleM.copyWith(
+              hintStyle: inputTextStyle.copyWith(
                 color: palette.calcMuted2,
                 fontWeight: FontWeight.w400,
               ),
@@ -122,7 +130,7 @@ class CalcInputField extends StatelessWidget {
               ),
               contentPadding: EdgeInsets.symmetric(
                 horizontal: spacing.s3,
-                vertical: 11,
+                vertical: largeText ? 14 : 11,
               ),
               border: _inputBorder(radii.tile, borderColor, borderWidth),
               enabledBorder: _inputBorder(radii.tile, borderColor, borderWidth),
@@ -171,5 +179,13 @@ class CalcInputField extends StatelessWidget {
       borderRadius: BorderRadius.circular(radius),
       borderSide: BorderSide(color: color, width: width),
     );
+  }
+
+  Key? get _inputBoxKey {
+    final widgetKey = key;
+    if (widgetKey is ValueKey<String>) {
+      return ValueKey<String>('${widgetKey.value}-box');
+    }
+    return null;
   }
 }

@@ -239,8 +239,7 @@ void main() {
 
       await tester.tap(find.text('eGFR'));
       await tester.pumpAndSettle();
-      await tester.tap(find.text('女性'));
-      await tester.pumpAndSettle();
+      await _tapSex(tester, '女性');
       await tester.enterText(_inputField('calc-input-ageYears'), '50');
       await tester.pump();
       await tester.enterText(
@@ -508,14 +507,168 @@ void main() {
       }
     });
 
+    testWidgets('uses two-pane layout in iPhone landscape', (tester) async {
+      await tester.binding.setSurfaceSize(const Size(844, 390));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+
+      await tester.pumpWidget(_testApp(db));
+      await tester.pumpAndSettle();
+
+      expect(
+        find.byKey(const ValueKey<String>('calc-layout-landscape-phone')),
+        findsOneWidget,
+      );
+      expect(
+        find.byKey(const ValueKey<String>('calc-tool-selector-landscape')),
+        findsOneWidget,
+      );
+      expect(
+        find.byKey(const ValueKey<String>('calc-tool-selector-bottom')),
+        findsNothing,
+      );
+
+      final formLeft = tester
+          .getTopLeft(find.byKey(const ValueKey<String>('calc-form-pane')))
+          .dx;
+      final resultLeft = tester
+          .getTopLeft(find.byKey(const ValueKey<String>('calc-result-pane')))
+          .dx;
+      expect(formLeft, lessThan(resultLeft));
+    });
+
+    testWidgets('uses two-pane tool-list layout on iPad portrait', (
+      tester,
+    ) async {
+      await tester.binding.setSurfaceSize(const Size(834, 1194));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+
+      await tester.pumpWidget(_testApp(db));
+      await tester.pumpAndSettle();
+
+      expect(
+        find.byKey(const ValueKey<String>('calc-layout-ipad-portrait')),
+        findsOneWidget,
+      );
+      expect(
+        find.byKey(const ValueKey<String>('calc-tool-list')),
+        findsOneWidget,
+      );
+      expect(
+        find.byKey(const ValueKey<String>('calc-tool-selector-bottom')),
+        findsNothing,
+      );
+
+      final formLeft = tester
+          .getTopLeft(find.byKey(const ValueKey<String>('calc-form-pane')))
+          .dx;
+      final resultLeft = tester
+          .getTopLeft(find.byKey(const ValueKey<String>('calc-result-pane')))
+          .dx;
+      expect(formLeft, lessThan(resultLeft));
+    });
+
+    testWidgets('stacks tool list above form on iPad landscape', (
+      tester,
+    ) async {
+      await tester.binding.setSurfaceSize(const Size(1194, 834));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+
+      await tester.pumpWidget(_testApp(db));
+      await tester.pumpAndSettle();
+
+      expect(
+        find.byKey(const ValueKey<String>('calc-layout-ipad-landscape')),
+        findsOneWidget,
+      );
+
+      final toolListFinder = find.byKey(
+        const ValueKey<String>('calc-tool-list'),
+      );
+      final formFinder = find.byKey(const ValueKey<String>('calc-form-pane'));
+      final resultFinder = find.byKey(
+        const ValueKey<String>('calc-result-pane'),
+      );
+      final toolListLeft = tester.getTopLeft(toolListFinder).dx;
+      final formLeft = tester.getTopLeft(formFinder).dx;
+      final resultLeft = tester.getTopLeft(resultFinder).dx;
+      final toolListBottom = tester.getBottomLeft(toolListFinder).dy;
+      final formTop = tester.getTopLeft(formFinder).dy;
+      final toolListHeight = tester
+          .getSize(find.byKey(const ValueKey<String>('calc-tool-list')))
+          .height;
+      final toolListWidth = tester.getSize(toolListFinder).width;
+      final egfrFormula = tester.widget<Text>(
+        find.descendant(
+          of: toolListFinder,
+          matching: find.text(
+            'eGFR = 194 × Cr⁻¹·⁰⁹⁴ × age⁻⁰·²⁸⁷ ×(0.739 if F)',
+          ),
+        ),
+      );
+
+      expect(toolListLeft, formLeft);
+      expect(toolListBottom, lessThan(formTop));
+      expect(formLeft, lessThan(resultLeft));
+      expect(toolListHeight, lessThan(260));
+      expect(toolListWidth, greaterThanOrEqualTo(400));
+      expect(egfrFormula.overflow, isNot(TextOverflow.ellipsis));
+    });
+
+    testWidgets('falls back to compact layout at split-view width', (
+      tester,
+    ) async {
+      await tester.binding.setSurfaceSize(const Size(480, 900));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+
+      await tester.pumpWidget(_testApp(db));
+      await tester.pumpAndSettle();
+
+      expect(
+        find.byKey(const ValueKey<String>('calc-layout-compact')),
+        findsOneWidget,
+      );
+      expect(
+        find.byKey(const ValueKey<String>('calc-tool-selector-bottom')),
+        findsOneWidget,
+      );
+      expect(
+        find.byKey(const ValueKey<String>('calc-tool-list')),
+        findsNothing,
+      );
+    });
+
+    testWidgets('uses large text dimensions when text scaler is large', (
+      tester,
+    ) async {
+      await tester.binding.setSurfaceSize(const Size(390, 844));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+
+      await tester.pumpWidget(
+        _testApp(db, textScaler: const TextScaler.linear(2)),
+      );
+      await tester.pumpAndSettle();
+
+      expect(
+        tester
+            .getSize(
+              find.byKey(const ValueKey<String>('calc-input-heightCm-box')),
+            )
+            .height,
+        56,
+      );
+      final resultValue = tester.widget<Text>(
+        find.byKey(const ValueKey<String>('calc-result-value')),
+      );
+      expect(resultValue.style?.fontSize, 54);
+    });
+
     testWidgets('renders female CrCl result with selected sex', (tester) async {
       await tester.pumpWidget(_testApp(db));
       await tester.pump();
 
       await tester.tap(find.text('CrCl'));
       await tester.pumpAndSettle();
-      await tester.tap(find.text('女性'));
-      await tester.pumpAndSettle();
+      await _tapSex(tester, '女性');
       await tester.enterText(_inputField('calc-input-ageYears'), '50');
       await tester.pump();
       await tester.enterText(_inputField('calc-input-weightKg'), '65');
@@ -575,13 +728,27 @@ Finder _historyHeaderIcon(IconData icon) {
   );
 }
 
-Widget _testApp(AppDatabase db) {
+Future<void> _tapSex(WidgetTester tester, String label) async {
+  final finder = find.text(label);
+  await tester.ensureVisible(finder);
+  await tester.pumpAndSettle();
+  await tester.tap(finder);
+  await tester.pumpAndSettle();
+}
+
+Widget _testApp(AppDatabase db, {TextScaler? textScaler}) {
   return ProviderScope(
     overrides: [appDatabaseProvider.overrideWithValue(db)],
     child: MaterialApp(
       theme: AppTheme.light(),
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
+      builder: textScaler == null
+          ? null
+          : (context, child) => MediaQuery(
+              data: MediaQuery.of(context).copyWith(textScaler: textScaler),
+              child: child!,
+            ),
       home: const CalcView(),
     ),
   );
