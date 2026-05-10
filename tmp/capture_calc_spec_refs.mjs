@@ -545,4 +545,168 @@ await fs.writeFile(
   `${JSON.stringify(phase5Frames, null, 2)}\n`,
 );
 
+const createIPadLandscapeReference = async (modeLabel, modeKey) => {
+  const label = `iPad × ${modeLabel} × valid-input (BMI)`;
+  const selector = `[data-frame-label="${label}"]`;
+  const refLabel = `Spec Reference × ${modeLabel} × valid-input-iPad-landscape (BMI)`;
+  await page.evaluate(
+    ({ selector, refLabel }) => {
+      const wrap = document.querySelector(selector);
+      if (!wrap) {
+        throw new Error(`Missing source frame: ${selector}`);
+      }
+      const sourceFrame = wrap.querySelector('.frame');
+      const device = sourceFrame?.querySelector('.device');
+      const body = sourceFrame?.querySelector('.body');
+      const toolList = body?.querySelector('.tool-list');
+      const form = body?.querySelector('.form');
+      const result = body?.querySelector('.result');
+      const history = body?.querySelector('.history');
+      if (!sourceFrame || !device || !toolList || !form || !result || !history) {
+        throw new Error('Missing iPad landscape source fragments.');
+      }
+
+      const sourceClasses = [...sourceFrame.classList].filter(
+        (className) => className !== 'splitview',
+      );
+      const frame = document.createElement('div');
+      frame.className = [...new Set([...sourceClasses, 'tablet', 'landscape'])]
+        .join(' ');
+
+      const landscapeDevice = document.createElement('div');
+      landscapeDevice.className = 'device';
+
+      for (const selector of ['.status', '.appbar']) {
+        const node = device.querySelector(selector);
+        if (node) landscapeDevice.appendChild(node.cloneNode(true));
+      }
+
+      const landscapeBody = document.createElement('div');
+      landscapeBody.className = 'body';
+      const threepane = document.createElement('div');
+      threepane.className = 'threepane';
+      threepane.style.gridTemplateColumns = '440px 1fr';
+      threepane.style.alignItems = 'start';
+
+      const leftPane = document.createElement('div');
+      leftPane.className = 'pane scroll';
+      leftPane.appendChild(toolList.cloneNode(true));
+      leftPane.appendChild(form.cloneNode(true));
+      threepane.appendChild(leftPane);
+
+      const rightPane = document.createElement('div');
+      rightPane.className = 'pane scroll';
+      rightPane.appendChild(result.cloneNode(true));
+      rightPane.appendChild(history.cloneNode(true));
+      threepane.appendChild(rightPane);
+
+      landscapeBody.appendChild(threepane);
+      landscapeDevice.appendChild(landscapeBody);
+
+      for (const selector of ['.ribbon', '.bottom-nav']) {
+        const node = device.querySelector(selector);
+        if (node) landscapeDevice.appendChild(node.cloneNode(true));
+      }
+
+      frame.appendChild(landscapeDevice);
+
+      const refWrap = document.createElement('div');
+      refWrap.className = 'mock-wrap';
+      refWrap.setAttribute('data-frame-label', refLabel);
+      refWrap.appendChild(frame);
+      document.querySelector('#mocks-root')?.appendChild(refWrap);
+    },
+    { selector, refLabel },
+  );
+
+  const locator = page.locator(`[data-frame-label="${refLabel}"]`).first();
+  await locator.screenshot({
+    path: path.join(outDir, `spec_calc_ipad_landscape_${modeKey}.png`),
+  });
+  return {
+    label: refLabel,
+    fileName: `spec_calc_ipad_landscape_${modeKey}.png`,
+    source:
+      'Generated from SSOT fragments with user-directed two-pane landscape stack.',
+  };
+};
+
+const phase6FrameSpecs = [
+  {
+    key: 'iphone_portrait',
+    fileBase: 'spec_calc_iphone_portrait',
+    locator: (modeLabel) =>
+      page
+        .locator(`[data-frame-label="iPhone × ${modeLabel} × valid-input (BMI)"]`)
+        .first(),
+  },
+  {
+    key: 'iphone_landscape',
+    fileBase: 'spec_calc_iphone_landscape',
+    locator: (modeLabel) =>
+      page
+        .locator('.mock-block')
+        .filter({ hasText: '5.4 landscape-iphone' })
+        .locator(
+          `[data-frame-label="iPhone × ${modeLabel} × valid-input (BMI)"]`,
+        )
+        .first(),
+  },
+  {
+    key: 'ipad_portrait',
+    fileBase: 'spec_calc_ipad_portrait',
+    locator: (modeLabel) =>
+      page
+        .locator(`[data-frame-label="iPad × ${modeLabel} × valid-input (BMI)"]`)
+        .first(),
+  },
+  {
+    key: 'split_view_compact',
+    fileBase: 'spec_calc_split_view_compact',
+    locator: (modeLabel) =>
+      page
+        .locator(
+          `[data-frame-label="iPad × ${modeLabel} × valid-input-splitview (BMI)"]`,
+        )
+        .first(),
+  },
+  {
+    key: 'large_text',
+    fileBase: 'spec_calc_large_text',
+    locator: (modeLabel) =>
+      page
+        .locator(
+          `[data-frame-label="iPhone × ${modeLabel} × accessibility-large-text (BMI)"]`,
+        )
+        .first(),
+  },
+];
+
+const phase6Frames = [];
+for (const [modeLabel, modeKey] of phase5Modes) {
+  for (const frameSpec of phase6FrameSpecs) {
+    const locator = frameSpec.locator(modeLabel);
+    await locator.scrollIntoViewIfNeeded();
+    const box = await locator.boundingBox();
+    if (!box) {
+      throw new Error(`Missing Phase 6 frame: ${frameSpec.key} ${modeLabel}`);
+    }
+    const fileName = `${frameSpec.fileBase}_${modeKey}.png`;
+    await locator.screenshot({ path: path.join(outDir, fileName) });
+    phase6Frames.push({
+      key: frameSpec.key,
+      mode: modeKey,
+      fileName,
+      width: Math.round(box.width * deviceScaleFactor),
+      height: Math.round(box.height * deviceScaleFactor),
+    });
+  }
+  phase6Frames.push(await createIPadLandscapeReference(modeLabel, modeKey));
+}
+
+await fs.writeFile(
+  path.join(outDir, 'spec_calc_phase6_frames.json'),
+  `${JSON.stringify(phase6Frames, null, 2)}\n`,
+);
+
 await browser.close();

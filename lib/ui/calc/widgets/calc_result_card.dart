@@ -50,6 +50,14 @@ class CalcResultCard extends StatelessWidget {
     final spacing = Theme.of(context).extension<AppSpacing>()!;
     final typography = Theme.of(context).extension<AppTypography>()!;
     final valueColor = placeholder ? palette.calcMuted2 : palette.calcInk;
+    final largeText = MediaQuery.textScalerOf(context).scale(16) >= 20.8;
+    final valueFontSize = largeText ? 54.0 : 36.0;
+    final titleStyle = typography.labelM.copyWith(
+      color: palette.calcMuted,
+      fontSize: largeText ? 18 : null,
+      fontWeight: FontWeight.w700,
+      letterSpacing: 0.48,
+    );
 
     return DecoratedBox(
       decoration: BoxDecoration(
@@ -79,11 +87,7 @@ class CalcResultCard extends StatelessWidget {
                   Expanded(
                     child: Text(
                       title,
-                      style: typography.labelM.copyWith(
-                        color: palette.calcMuted,
-                        fontWeight: FontWeight.w700,
-                        letterSpacing: 0.48,
-                      ),
+                      style: titleStyle,
                     ),
                   ),
                   Text(
@@ -103,10 +107,11 @@ class CalcResultCard extends StatelessWidget {
                 textBaseline: TextBaseline.alphabetic,
                 children: [
                   Text(
+                    key: const ValueKey<String>('calc-result-value'),
                     valueText,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontFamily: 'JetBrainsMono',
-                      fontSize: 36,
+                      fontSize: valueFontSize,
                       fontWeight: FontWeight.w700,
                       height: 1,
                     ).copyWith(color: valueColor),

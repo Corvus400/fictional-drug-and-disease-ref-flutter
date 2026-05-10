@@ -78,6 +78,7 @@ final class AppTypography extends ThemeExtension<AppTypography> {
     ),
     monoS: TextStyle(
       fontFamily: _jetBrainsMono,
+      fontFamilyFallback: [_notoSansJp],
       fontSize: 11,
       fontWeight: FontWeight.w400,
       fontVariations: [FontVariation('wght', 400)],

@@ -29,8 +29,15 @@ void runGoldenMatrix({
   Iterable<String>? themes,
   Iterable<String>? sizes,
   Iterable<String>? textScalers,
+  Map<String, Size>? customSizes,
+  Map<String, TextScaler>? customTextScalers,
   GoldenInteraction? whilePerforming,
 }) {
+  final sizeMap = {...GoldenMatrix.sizes, ...?customSizes};
+  final textScalerMap = {
+    ...GoldenMatrix.textScalers,
+    ...?customTextScalers,
+  };
   final selectedThemes = (themes ?? GoldenMatrix.themes.keys).toList();
   final selectedSizes = (sizes ?? GoldenMatrix.sizes.keys).toList();
   final selectedScalers = (textScalers ?? GoldenMatrix.textScalers.keys)
@@ -57,22 +64,22 @@ void runGoldenMatrix({
                 GoldenTestScenario(
                   name: '${sizeName}_$scalerName',
                   constraints: BoxConstraints.tightFor(
-                    width: GoldenMatrix.sizes[sizeName]!.width,
-                    height: GoldenMatrix.sizes[sizeName]!.height,
+                    width: sizeMap[sizeName]!.width,
+                    height: sizeMap[sizeName]!.height,
                   ),
                   child: MediaQuery(
                     data: MediaQueryData(
-                      size: GoldenMatrix.sizes[sizeName]!,
+                      size: sizeMap[sizeName]!,
                       devicePixelRatio: GoldenMatrix.devicePixelRatio,
-                      textScaler: GoldenMatrix.textScalers[scalerName]!,
+                      textScaler: textScalerMap[scalerName]!,
                     ),
                     child: SizedBox(
-                      width: GoldenMatrix.sizes[sizeName]!.width,
-                      height: GoldenMatrix.sizes[sizeName]!.height,
+                      width: sizeMap[sizeName]!.width,
+                      height: sizeMap[sizeName]!.height,
                       child: builder(
                         themeData,
-                        GoldenMatrix.sizes[sizeName]!,
-                        GoldenMatrix.textScalers[scalerName]!,
+                        sizeMap[sizeName]!,
+                        textScalerMap[scalerName]!,
                       ),
                     ),
                   ),

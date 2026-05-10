@@ -169,6 +169,53 @@ The Phase 4a verdict records the current spec comparison table:
 
 - `tmp/calc_phase_4a_verdict.md`
 
+## Phase 6 Reference Outputs
+
+Generated references:
+
+- `tmp/calc_spec_refs/spec_calc_phase6_frames.json`
+- `tmp/calc_spec_refs/spec_calc_iphone_portrait_{light,dark}.png`
+- `tmp/calc_spec_refs/spec_calc_iphone_landscape_{light,dark}.png`
+- `tmp/calc_spec_refs/spec_calc_ipad_portrait_{light,dark}.png`
+- `tmp/calc_spec_refs/spec_calc_ipad_landscape_{light,dark}.png`
+- `tmp/calc_spec_refs/spec_calc_split_view_compact_{light,dark}.png`
+- `tmp/calc_spec_refs/spec_calc_large_text_{light,dark}.png`
+
+Flutter screen goldens:
+
+- `test/ui/calc/goldens/macos/calc_iphone_portrait_{light,dark}.png`
+- `test/ui/calc/goldens/macos/calc_iphone_landscape_{light,dark}.png`
+- `test/ui/calc/goldens/macos/calc_ipad_portrait_{light,dark}.png`
+- `test/ui/calc/goldens/macos/calc_ipad_landscape_{light,dark}.png`
+- `test/ui/calc/goldens/macos/calc_split_view_compact_{light,dark}.png`
+- `test/ui/calc/goldens/macos/calc_large_text_{light,dark}.png`
+
+The Phase 6 verdict records the current spec comparison table:
+
+- `tmp/calc_phase_6_verdict.md`
+
+User correction on 2026-05-10: iPad landscape's left BMI/eGFR/CrCl tool-list
+must not stretch to the bottom of the pane. Even if SSOT CSS grid stretching
+would allow a full-height left card, Flutter must keep the tool-list card at
+content height and record this as a justified deviation.
+
+User correction on 2026-05-10: iPad landscape must not keep the tool-list and
+form side-by-side when that causes formula truncation. Use a two-pane layout:
+left column stacks tool-list above form; right column stacks result and
+history. The tool-list formulas must not use ellipsis in this layout, and the
+mono formula style must include a fallback that renders superscript glyphs
+without tofu boxes.
+
+Responsive matrix coverage for CalcView belongs to Phase 6 and must include at
+minimum:
+
+- iPhone portrait Light/Dark: `calc_iphone_portrait_{light,dark}.png`
+- iPhone landscape Light/Dark: `calc_iphone_landscape_{light,dark}.png`
+- iPad portrait Light/Dark: `calc_ipad_portrait_{light,dark}.png`
+- iPad landscape Light/Dark: `calc_ipad_landscape_{light,dark}.png`
+- Split View compact Light/Dark: `calc_split_view_compact_{light,dark}.png`
+- Large text Light/Dark: `calc_large_text_{light,dark}.png`
+
 ## Continuing The Plan
 
 Before each remaining UI/golden phase:

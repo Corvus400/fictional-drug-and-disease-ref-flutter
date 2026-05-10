@@ -56,6 +56,7 @@ void main() {
     _calcHistoryBoundaryGolden(count: 50, expectedCount: 50, mode: mode);
     _calcHistoryBoundaryGolden(count: 51, expectedCount: 50, mode: mode);
   }
+  _calcResponsiveGoldens();
 }
 
 void _calcInputBoundaryGoldens() {
@@ -686,6 +687,114 @@ void _calcHistoryBoundaryGolden({
   );
 }
 
+void _calcResponsiveGoldens() {
+  const responsiveSizes = <String, Size>{
+    'iphone_portrait': Size(390, 844),
+    'iphone_landscape': Size(844, 390),
+    'ipad_portrait': Size(834, 1194),
+    'ipad_landscape': Size(1194, 834),
+    'split_view_compact': Size(480, 900),
+  };
+  final cases =
+      <
+        ({
+          String fileNamePrefix,
+          String description,
+          String sizeKey,
+          String layoutKey,
+          bool expandHistory,
+        })
+      >[
+        (
+          fileNamePrefix: 'calc_iphone_portrait',
+          description: 'Calc iPhone portrait',
+          sizeKey: 'iphone_portrait',
+          layoutKey: 'calc-layout-compact',
+          expandHistory: false,
+        ),
+        (
+          fileNamePrefix: 'calc_iphone_landscape',
+          description: 'Calc iPhone landscape',
+          sizeKey: 'iphone_landscape',
+          layoutKey: 'calc-layout-landscape-phone',
+          expandHistory: false,
+        ),
+        (
+          fileNamePrefix: 'calc_ipad_portrait',
+          description: 'Calc iPad portrait',
+          sizeKey: 'ipad_portrait',
+          layoutKey: 'calc-layout-ipad-portrait',
+          expandHistory: true,
+        ),
+        (
+          fileNamePrefix: 'calc_ipad_landscape',
+          description: 'Calc iPad landscape',
+          sizeKey: 'ipad_landscape',
+          layoutKey: 'calc-layout-ipad-landscape',
+          expandHistory: true,
+        ),
+        (
+          fileNamePrefix: 'calc_split_view_compact',
+          description: 'Calc split view compact',
+          sizeKey: 'split_view_compact',
+          layoutKey: 'calc-layout-compact',
+          expandHistory: false,
+        ),
+      ];
+
+  for (final responsiveCase in cases) {
+    runGoldenMatrix(
+      fileNamePrefix: responsiveCase.fileNamePrefix,
+      description: responsiveCase.description,
+      sizes: [responsiveCase.sizeKey],
+      customSizes: responsiveSizes,
+      textScalers: const ['normal'],
+      builder: _calcViewBuilder,
+      whilePerforming: (tester) async {
+        await _enterValid(tester, _CalcGoldenTool.bmi);
+        await tester.pump(const Duration(milliseconds: 250));
+        await clearTestAppDatabase(_db);
+        await _seedBmiHistory();
+        await _loadHistory(tester);
+        if (responsiveCase.expandHistory) {
+          await _expandHistory(tester);
+        }
+        await tester.pump();
+        expect(
+          find.byKey(ValueKey<String>(responsiveCase.layoutKey)),
+          findsOneWidget,
+        );
+        return null;
+      },
+    );
+  }
+
+  runGoldenMatrix(
+    fileNamePrefix: 'calc_large_text',
+    description: 'Calc large text',
+    sizes: const ['phone'],
+    textScalers: const ['large'],
+    builder: _calcViewBuilder,
+    whilePerforming: (tester) async {
+      await _enterValid(tester, _CalcGoldenTool.bmi);
+      await tester.pump(const Duration(milliseconds: 250));
+      await clearTestAppDatabase(_db);
+      await _seedBmiHistory();
+      await _loadHistory(tester);
+      await tester.pump();
+      expect(
+        tester
+            .getSize(
+              find.byKey(const ValueKey<String>('calc-input-heightCm-box')),
+            )
+            .height,
+        56,
+      );
+      return null;
+    },
+  );
+}
+
 Widget _calcViewBuilder(ThemeData theme, Size size, TextScaler scaler) {
   return ProviderScope(
     overrides: [appDatabaseProvider.overrideWithValue(_db)],
@@ -704,6 +813,14 @@ Future<void> _loadHistory(WidgetTester tester) async {
     tester.element(find.byType(CalcView)),
   );
   await container.read(calcScreenProvider.notifier).loadHistory();
+  await tester.pumpAndSettle();
+}
+
+Future<void> _expandHistory(WidgetTester tester) async {
+  final container = ProviderScope.containerOf(
+    tester.element(find.byType(CalcView)),
+  );
+  container.read(calcScreenProvider.notifier).toggleHistory();
   await tester.pumpAndSettle();
 }
 

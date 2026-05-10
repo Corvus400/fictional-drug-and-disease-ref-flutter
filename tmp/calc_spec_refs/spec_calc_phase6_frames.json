@@ -1,0 +1,82 @@
+[
+  {
+    "key": "iphone_portrait",
+    "mode": "light",
+    "fileName": "spec_calc_iphone_portrait_light.png",
+    "width": 1680,
+    "height": 3214
+  },
+  {
+    "key": "iphone_landscape",
+    "mode": "light",
+    "fileName": "spec_calc_iphone_landscape_light.png",
+    "width": 3280,
+    "height": 1694
+  },
+  {
+    "key": "ipad_portrait",
+    "mode": "light",
+    "fileName": "spec_calc_ipad_portrait_light.png",
+    "width": 3440,
+    "height": 3854
+  },
+  {
+    "key": "split_view_compact",
+    "mode": "light",
+    "fileName": "spec_calc_split_view_compact_light.png",
+    "width": 4960,
+    "height": 3214
+  },
+  {
+    "key": "large_text",
+    "mode": "light",
+    "fileName": "spec_calc_large_text_light.png",
+    "width": 1680,
+    "height": 3694
+  },
+  {
+    "label": "Spec Reference × Light × valid-input-iPad-landscape (BMI)",
+    "fileName": "spec_calc_ipad_landscape_light.png",
+    "source": "Generated from SSOT fragments with user-directed two-pane landscape stack."
+  },
+  {
+    "key": "iphone_portrait",
+    "mode": "dark",
+    "fileName": "spec_calc_iphone_portrait_dark.png",
+    "width": 1680,
+    "height": 3214
+  },
+  {
+    "key": "iphone_landscape",
+    "mode": "dark",
+    "fileName": "spec_calc_iphone_landscape_dark.png",
+    "width": 3280,
+    "height": 1694
+  },
+  {
+    "key": "ipad_portrait",
+    "mode": "dark",
+    "fileName": "spec_calc_ipad_portrait_dark.png",
+    "width": 3440,
+    "height": 3854
+  },
+  {
+    "key": "split_view_compact",
+    "mode": "dark",
+    "fileName": "spec_calc_split_view_compact_dark.png",
+    "width": 4960,
+    "height": 3214
+  },
+  {
+    "key": "large_text",
+    "mode": "dark",
+    "fileName": "spec_calc_large_text_dark.png",
+    "width": 1680,
+    "height": 3694
+  },
+  {
+    "label": "Spec Reference × Dark × valid-input-iPad-landscape (BMI)",
+    "fileName": "spec_calc_ipad_landscape_dark.png",
+    "source": "Generated from SSOT fragments with user-directed two-pane landscape stack."
+  }
+]
