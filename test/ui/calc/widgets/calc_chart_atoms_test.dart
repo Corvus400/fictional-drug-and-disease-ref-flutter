@@ -35,6 +35,44 @@ void main() {
       expect(find.text('22.5'), findsOneWidget);
     });
 
+    testWidgets('BmiChart clamps edge marker labels inside the chart bounds', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        _widgetTestApp(
+          child: const KeyedSubtree(
+            key: ValueKey<String>('bmi-edge-chart-boundary'),
+            child: SizedBox(
+              width: 280,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  BmiChart(value: 10, label: '10.0'),
+                  SizedBox(height: 16),
+                  BmiChart(value: 50, label: '50.0'),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+
+      final chartRect = tester.getRect(
+        find.byKey(const ValueKey<String>('bmi-edge-chart-boundary')),
+      );
+      final leftLabelRect = tester.getRect(
+        find.byKey(const ValueKey<String>('bmi-chart-marker-label-10.0')),
+      );
+      final rightLabelRect = tester.getRect(
+        find.byKey(const ValueKey<String>('bmi-chart-marker-label-50.0')),
+      );
+
+      expect(leftLabelRect.left, greaterThanOrEqualTo(chartRect.left));
+      expect(rightLabelRect.right, lessThanOrEqualTo(chartRect.right));
+      expect(tester.getSize(find.text('10.0')).height, lessThanOrEqualTo(13));
+      expect(tester.getSize(find.text('50.0')).height, lessThanOrEqualTo(13));
+    });
+
     testWidgets('EgfrChart renders CKD stage bands and marker', (tester) async {
       await tester.pumpWidget(
         _widgetTestApp(
@@ -58,6 +96,44 @@ void main() {
         const Size(2, 32),
       );
       expect(find.text('78.4'), findsOneWidget);
+    });
+
+    testWidgets('EgfrChart clamps edge marker labels inside the chart bounds', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        _widgetTestApp(
+          child: const KeyedSubtree(
+            key: ValueKey<String>('egfr-edge-chart-boundary'),
+            child: SizedBox(
+              width: 280,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  EgfrChart(value: 0, label: '0.0'),
+                  SizedBox(height: 16),
+                  EgfrChart(value: 140, label: '140.0'),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+
+      final chartRect = tester.getRect(
+        find.byKey(const ValueKey<String>('egfr-edge-chart-boundary')),
+      );
+      final leftLabelRect = tester.getRect(
+        find.byKey(const ValueKey<String>('egfr-chart-marker-label-0.0')),
+      );
+      final rightLabelRect = tester.getRect(
+        find.byKey(const ValueKey<String>('egfr-chart-marker-label-140.0')),
+      );
+
+      expect(leftLabelRect.left, greaterThanOrEqualTo(chartRect.left));
+      expect(rightLabelRect.right, lessThanOrEqualTo(chartRect.right));
+      expect(tester.getSize(find.text('0.0')).height, lessThanOrEqualTo(13));
+      expect(tester.getSize(find.text('140.0')).height, lessThanOrEqualTo(13));
     });
 
     testWidgets('CrClChart renders age bands and patient markers', (
@@ -89,6 +165,43 @@ void main() {
         );
       }
     });
+
+    testWidgets(
+      'CrClChart clamps low and high patient markers to track edges',
+      (
+        tester,
+      ) async {
+        await tester.pumpWidget(
+          _widgetTestApp(
+            child: const SizedBox(width: 280, child: CrClChart(value: 0)),
+          ),
+        );
+
+        final lowTrackRect = tester.getRect(
+          find.byKey(const ValueKey<String>('crcl-chart-track-male-18-39')),
+        );
+        final lowMarkerRect = tester.getRect(
+          find.byKey(const ValueKey<String>('crcl-chart-marker-male-18-39')),
+        );
+
+        expect(lowMarkerRect.left, closeTo(lowTrackRect.left, 1));
+
+        await tester.pumpWidget(
+          _widgetTestApp(
+            child: const SizedBox(width: 280, child: CrClChart(value: 200)),
+          ),
+        );
+
+        final highTrackRect = tester.getRect(
+          find.byKey(const ValueKey<String>('crcl-chart-track-male-18-39')),
+        );
+        final highMarkerRect = tester.getRect(
+          find.byKey(const ValueKey<String>('crcl-chart-marker-male-18-39')),
+        );
+
+        expect(highMarkerRect.right, closeTo(highTrackRect.right, 1));
+      },
+    );
   });
 }
 

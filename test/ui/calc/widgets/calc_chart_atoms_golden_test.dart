@@ -21,6 +21,30 @@ void main() {
     );
   }, tags: const ['golden']);
 
+  testWidgets('BmiChart edge labels stay inside the chart crop', (
+    tester,
+  ) async {
+    await _pumpScaledChart(
+      tester,
+      logicalSize: const Size(396, 136),
+      contentWidth: 324,
+      horizontalPadding: 36,
+      topPadding: 32,
+      child: const Column(
+        children: [
+          BmiChart(value: 10, label: '10.0'),
+          SizedBox(height: 16),
+          BmiChart(value: 50, label: '50.0'),
+        ],
+      ),
+    );
+
+    await expectLater(
+      find.byKey(const ValueKey<String>('chart-reference-boundary')),
+      matchesGoldenFile('goldens/macos/calc_chart_bmi_edges_light.png'),
+    );
+  }, tags: const ['golden']);
+
   testWidgets('EgfrChart matches wide spec reference', (tester) async {
     await _pumpScaledChart(
       tester,
@@ -36,6 +60,30 @@ void main() {
     );
   }, tags: const ['golden']);
 
+  testWidgets('EgfrChart edge labels stay inside the chart crop', (
+    tester,
+  ) async {
+    await _pumpScaledChart(
+      tester,
+      logicalSize: const Size(396, 136),
+      contentWidth: 324,
+      horizontalPadding: 36,
+      topPadding: 32,
+      child: const Column(
+        children: [
+          EgfrChart(value: 0, label: '0.0'),
+          SizedBox(height: 16),
+          EgfrChart(value: 140, label: '140.0'),
+        ],
+      ),
+    );
+
+    await expectLater(
+      find.byKey(const ValueKey<String>('chart-reference-boundary')),
+      matchesGoldenFile('goldens/macos/calc_chart_egfr_edges_light.png'),
+    );
+  }, tags: const ['golden']);
+
   testWidgets('CrClChart matches wide spec reference', (tester) async {
     await _pumpScaledChart(
       tester,
@@ -47,6 +95,30 @@ void main() {
     await expectLater(
       find.byKey(const ValueKey<String>('chart-reference-boundary')),
       matchesGoldenFile('goldens/macos/calc_chart_crcl_light.png'),
+    );
+  }, tags: const ['golden']);
+
+  testWidgets('CrClChart edge markers stay inside the track crop', (
+    tester,
+  ) async {
+    await _pumpScaledChart(
+      tester,
+      logicalSize: const Size(356, 164),
+      contentWidth: 324,
+      horizontalPadding: 16,
+      child: const Column(
+        children: [
+          CrClChart(value: 0),
+          SizedBox(height: 16),
+          CrClChart(value: 200),
+        ],
+      ),
+      topPadding: 0,
+    );
+
+    await expectLater(
+      find.byKey(const ValueKey<String>('chart-reference-boundary')),
+      matchesGoldenFile('goldens/macos/calc_chart_crcl_edges_light.png'),
     );
   }, tags: const ['golden']);
 }

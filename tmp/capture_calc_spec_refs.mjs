@@ -500,4 +500,49 @@ await phoneCrclChart.screenshot({
   path: path.join(outDir, 'spec_chart_phone_crcl.png'),
 });
 
+const phase5States = [
+  'empty',
+  'partial-input',
+  'valid-input',
+  'out-of-range',
+  'result-with-classification',
+];
+const phase5Tools = [
+  ['BMI', 'bmi'],
+  ['eGFR', 'egfr'],
+  ['CrCl', 'crcl'],
+];
+const phase5Modes = [
+  ['Light', 'light'],
+  ['Dark', 'dark'],
+];
+const phase5Frames = [];
+
+for (const [modeLabel, modeKey] of phase5Modes) {
+  for (const [toolLabel, toolKey] of phase5Tools) {
+    for (const state of phase5States) {
+      const label = `iPhone × ${modeLabel} × ${state} (${toolLabel})`;
+      const locator = page.locator(`[data-frame-label="${label}"]`).first();
+      await locator.scrollIntoViewIfNeeded();
+      const box = await locator.boundingBox();
+      if (!box) {
+        throw new Error(`Missing Phase 5 frame: ${label}`);
+      }
+      const fileName = `spec_calc_${toolKey}_${state}_${modeKey}.png`;
+      await locator.screenshot({ path: path.join(outDir, fileName) });
+      phase5Frames.push({
+        label,
+        fileName,
+        width: Math.round(box.width * deviceScaleFactor),
+        height: Math.round(box.height * deviceScaleFactor),
+      });
+    }
+  }
+}
+
+await fs.writeFile(
+  path.join(outDir, 'spec_calc_phase5_frames.json'),
+  `${JSON.stringify(phase5Frames, null, 2)}\n`,
+);
+
 await browser.close();

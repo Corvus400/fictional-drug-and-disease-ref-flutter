@@ -1,0 +1,182 @@
+[
+  {
+    "label": "iPhone × Light × empty (BMI)",
+    "fileName": "spec_calc_bmi_empty_light.png",
+    "width": 1680,
+    "height": 3214
+  },
+  {
+    "label": "iPhone × Light × partial-input (BMI)",
+    "fileName": "spec_calc_bmi_partial-input_light.png",
+    "width": 1680,
+    "height": 3214
+  },
+  {
+    "label": "iPhone × Light × valid-input (BMI)",
+    "fileName": "spec_calc_bmi_valid-input_light.png",
+    "width": 1680,
+    "height": 3214
+  },
+  {
+    "label": "iPhone × Light × out-of-range (BMI)",
+    "fileName": "spec_calc_bmi_out-of-range_light.png",
+    "width": 1680,
+    "height": 3214
+  },
+  {
+    "label": "iPhone × Light × result-with-classification (BMI)",
+    "fileName": "spec_calc_bmi_result-with-classification_light.png",
+    "width": 1680,
+    "height": 3214
+  },
+  {
+    "label": "iPhone × Light × empty (eGFR)",
+    "fileName": "spec_calc_egfr_empty_light.png",
+    "width": 1680,
+    "height": 3214
+  },
+  {
+    "label": "iPhone × Light × partial-input (eGFR)",
+    "fileName": "spec_calc_egfr_partial-input_light.png",
+    "width": 1680,
+    "height": 3214
+  },
+  {
+    "label": "iPhone × Light × valid-input (eGFR)",
+    "fileName": "spec_calc_egfr_valid-input_light.png",
+    "width": 1680,
+    "height": 3214
+  },
+  {
+    "label": "iPhone × Light × out-of-range (eGFR)",
+    "fileName": "spec_calc_egfr_out-of-range_light.png",
+    "width": 1680,
+    "height": 3214
+  },
+  {
+    "label": "iPhone × Light × result-with-classification (eGFR)",
+    "fileName": "spec_calc_egfr_result-with-classification_light.png",
+    "width": 1680,
+    "height": 3214
+  },
+  {
+    "label": "iPhone × Light × empty (CrCl)",
+    "fileName": "spec_calc_crcl_empty_light.png",
+    "width": 1680,
+    "height": 3214
+  },
+  {
+    "label": "iPhone × Light × partial-input (CrCl)",
+    "fileName": "spec_calc_crcl_partial-input_light.png",
+    "width": 1680,
+    "height": 3214
+  },
+  {
+    "label": "iPhone × Light × valid-input (CrCl)",
+    "fileName": "spec_calc_crcl_valid-input_light.png",
+    "width": 1680,
+    "height": 3214
+  },
+  {
+    "label": "iPhone × Light × out-of-range (CrCl)",
+    "fileName": "spec_calc_crcl_out-of-range_light.png",
+    "width": 1680,
+    "height": 3214
+  },
+  {
+    "label": "iPhone × Light × result-with-classification (CrCl)",
+    "fileName": "spec_calc_crcl_result-with-classification_light.png",
+    "width": 1680,
+    "height": 3214
+  },
+  {
+    "label": "iPhone × Dark × empty (BMI)",
+    "fileName": "spec_calc_bmi_empty_dark.png",
+    "width": 1680,
+    "height": 3214
+  },
+  {
+    "label": "iPhone × Dark × partial-input (BMI)",
+    "fileName": "spec_calc_bmi_partial-input_dark.png",
+    "width": 1680,
+    "height": 3214
+  },
+  {
+    "label": "iPhone × Dark × valid-input (BMI)",
+    "fileName": "spec_calc_bmi_valid-input_dark.png",
+    "width": 1680,
+    "height": 3214
+  },
+  {
+    "label": "iPhone × Dark × out-of-range (BMI)",
+    "fileName": "spec_calc_bmi_out-of-range_dark.png",
+    "width": 1680,
+    "height": 3214
+  },
+  {
+    "label": "iPhone × Dark × result-with-classification (BMI)",
+    "fileName": "spec_calc_bmi_result-with-classification_dark.png",
+    "width": 1680,
+    "height": 3214
+  },
+  {
+    "label": "iPhone × Dark × empty (eGFR)",
+    "fileName": "spec_calc_egfr_empty_dark.png",
+    "width": 1680,
+    "height": 3214
+  },
+  {
+    "label": "iPhone × Dark × partial-input (eGFR)",
+    "fileName": "spec_calc_egfr_partial-input_dark.png",
+    "width": 1680,
+    "height": 3214
+  },
+  {
+    "label": "iPhone × Dark × valid-input (eGFR)",
+    "fileName": "spec_calc_egfr_valid-input_dark.png",
+    "width": 1680,
+    "height": 3214
+  },
+  {
+    "label": "iPhone × Dark × out-of-range (eGFR)",
+    "fileName": "spec_calc_egfr_out-of-range_dark.png",
+    "width": 1680,
+    "height": 3214
+  },
+  {
+    "label": "iPhone × Dark × result-with-classification (eGFR)",
+    "fileName": "spec_calc_egfr_result-with-classification_dark.png",
+    "width": 1680,
+    "height": 3214
+  },
+  {
+    "label": "iPhone × Dark × empty (CrCl)",
+    "fileName": "spec_calc_crcl_empty_dark.png",
+    "width": 1680,
+    "height": 3214
+  },
+  {
+    "label": "iPhone × Dark × partial-input (CrCl)",
+    "fileName": "spec_calc_crcl_partial-input_dark.png",
+    "width": 1680,
+    "height": 3214
+  },
+  {
+    "label": "iPhone × Dark × valid-input (CrCl)",
+    "fileName": "spec_calc_crcl_valid-input_dark.png",
+    "width": 1680,
+    "height": 3214
+  },
+  {
+    "label": "iPhone × Dark × out-of-range (CrCl)",
+    "fileName": "spec_calc_crcl_out-of-range_dark.png",
+    "width": 1680,
+    "height": 3214
+  },
+  {
+    "label": "iPhone × Dark × result-with-classification (CrCl)",
+    "fileName": "spec_calc_crcl_result-with-classification_dark.png",
+    "width": 1680,
+    "height": 3214
+  }
+]

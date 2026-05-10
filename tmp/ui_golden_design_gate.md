@@ -99,6 +99,52 @@ labels, rounded ends, markers, and borders are not clipped. Phase 4d chart
 refs use 36 px logical left/right padding (DPR 4) after the earlier 24 px crop
 looked too tight for BMI/eGFR.
 
+For result screens that combine a classification badge with a chart marker
+label, add at least one edge-case golden and a widget geometry assertion for a
+minimum 12 px vertical gap. The original SSOT chart CSS places the pin label
+above the scale, so the screen-level implementation must reserve extra space
+when a badge is present. User correction on 2026-05-10 explicitly overrides
+the too-tight badge/chart spacing. Current required Phase 5 edge cases:
+
+- BMI underweight / BMI < 18.5 (`calc_bmi_underweight-edge_*`)
+- eGFR low / eGFR <= 30 (`calc_egfr_low-edge_*`)
+- BMI chart endpoints (`calc_bmi_min-edge_*`, `calc_bmi_max-edge_*`, and
+  focused `calc_chart_bmi_edges_light.png`)
+- eGFR chart endpoints. `eGFR = 0` is not reachable from valid screen inputs,
+  so it is covered by focused chart atom golden
+  `calc_chart_egfr_edges_light.png`; the screen covers the nearest valid lower
+  edge (`calc_egfr_min-edge_*`) and right-clamped high value
+  (`calc_egfr_max-edge_*`).
+- CrCl has no classification badge, but must still cover value-dependent
+  patient marker endpoints with `calc_chart_crcl_edges_light.png`,
+  `calc_crcl_min-edge_*`, and `calc_crcl_max-edge_*`.
+- eGFR and CrCl must include female selected-state screen goldens because sex
+  affects both UI state and calculation coefficient:
+  `calc_egfr_female_*`, `calc_crcl_female_*`. BMI has no sex input.
+- All BMI/eGFR classification badge label patterns must be covered by focused
+  atom goldens in light and dark:
+  `calc_category_badges_all_light.png` and
+  `calc_category_badges_all_dark.png`.
+- Phase 5 history states must include `calc_history_collapsed_*`,
+  `calc_history_expanded_*`, and `calc_history_empty_*`. A `履歴 (0)` header
+  must not appear alone; when the count is zero the `履歴はありません` empty
+  state must be visible in screen goldens.
+- History boundary screen goldens must cover count `0` as a fixed empty state
+  with no open/close interaction, plus counts `1`, `50`, and `51` in both
+  closed and open states. The `51` case must assert the persisted cap and
+  render as `履歴 (50)`, not as `履歴 (51)`.
+- Partial-input screen goldens must cover every non-empty incomplete numeric
+  input subset:
+  BMI `height-only` / `weight-only`; eGFR `age-only` / `creatinine-only`;
+  CrCl `age-only` / `weight-only` / `creatinine-only` / `age-weight` /
+  `age-creatinine` / `weight-creatinine`. Sex is not part of partial coverage
+  because it always has a selected value; sex-specific calculation coverage is
+  handled by the eGFR/CrCl female screen goldens.
+- Input field boundary error screen goldens must cover every numeric field's
+  lower and upper invalid edge:
+  BMI height/weight (4); eGFR age/serum creatinine (4); CrCl age/weight/serum
+  creatinine (6). Each golden must assert the matching range label appears.
+
 ## Phase 4a Reference Outputs
 
 Generated references:
