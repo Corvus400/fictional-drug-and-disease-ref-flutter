@@ -58,8 +58,7 @@ class _CalcHistorySection extends StatelessWidget {
           child: showBody
               ? Column(
                   key: ValueKey<String>(
-                    'calc-history-body-${isEmpty ? 'empty' : 'list'}-'
-                    '${state.history.length}',
+                    'calc-history-body-${isEmpty ? 'empty' : 'list'}',
                   ),
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
@@ -158,7 +157,7 @@ class _CalcHistoryHeader extends StatelessWidget {
   }
 }
 
-class _CalcHistoryList extends StatelessWidget {
+class _CalcHistoryList extends StatefulWidget {
   const _CalcHistoryList({
     required this.deleteLabel,
     required this.rows,
@@ -172,10 +171,34 @@ class _CalcHistoryList extends StatelessWidget {
   final Future<void> Function(String id) onDelete;
 
   @override
+  State<_CalcHistoryList> createState() => _CalcHistoryListState();
+}
+
+class _CalcHistoryListState extends State<_CalcHistoryList> {
+  final Set<String> _revealedDeleteIds = <String>{};
+
+  @override
+  void didUpdateWidget(covariant _CalcHistoryList oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    final rowIds = widget.rows.map((row) => row.entry.id).toSet();
+    _revealedDeleteIds.removeWhere((id) => !rowIds.contains(id));
+  }
+
+  void _setDeleteRevealed(String id, bool revealed) {
+    setState(() {
+      if (revealed) {
+        _revealedDeleteIds.add(id);
+      } else {
+        _revealedDeleteIds.remove(id);
+      }
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     final palette = Theme.of(context).extension<AppPalette>()!;
     final radii = Theme.of(context).extension<AppRadii>()!;
-    final showScrollHint = rows.length > 5;
+    final showScrollHint = widget.rows.length > 5;
 
     return DecoratedBox(
       decoration: BoxDecoration(
@@ -193,7 +216,7 @@ class _CalcHistoryList extends StatelessWidget {
                 physics: const ClampingScrollPhysics(),
                 child: Column(
                   children: [
-                    for (final indexed in rows.indexed)
+                    for (final indexed in widget.rows.indexed)
                       CalcHistoryRow(
                         key: ValueKey<String>(
                           'calc-history-${indexed.$2.entry.id}',
@@ -201,15 +224,20 @@ class _CalcHistoryList extends StatelessWidget {
                         dateText: indexed.$2.dateText,
                         resultText: indexed.$2.resultText,
                         summaryText: indexed.$2.summaryText,
-                        deleteLabel: deleteLabel,
+                        deleteLabel: widget.deleteLabel,
+                        deleteRevealed: _revealedDeleteIds.contains(
+                          indexed.$2.entry.id,
+                        ),
                         showBottomBorder: indexed.$2.showBottomBorder,
                         borderRadius: _historyRowRightRadius(
                           index: indexed.$1,
-                          count: rows.length,
+                          count: widget.rows.length,
                           radius: radii.card,
                         ),
-                        onRestore: () => onRestore(indexed.$2.entry),
-                        onDelete: () => onDelete(indexed.$2.entry.id),
+                        onRestore: () => widget.onRestore(indexed.$2.entry),
+                        onDelete: () => widget.onDelete(indexed.$2.entry.id),
+                        onDeleteRevealedChanged: (revealed) =>
+                            _setDeleteRevealed(indexed.$2.entry.id, revealed),
                       ),
                   ],
                 ),

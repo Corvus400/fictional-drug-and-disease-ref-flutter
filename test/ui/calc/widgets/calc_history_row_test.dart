@@ -223,6 +223,62 @@ void main() {
         expect(deleteClip.borderRadius, borderRadius);
       },
     );
+
+    testWidgets('clips the row ripple to the exposed-edge radius', (
+      tester,
+    ) async {
+      const borderRadius = BorderRadius.only(
+        topRight: Radius.circular(10),
+        bottomRight: Radius.circular(10),
+      );
+
+      await tester.pumpWidget(
+        _widgetTestApp(
+          child: const SizedBox(
+            width: 240,
+            child: CalcHistoryRow(
+              dateText: '2026/05/10',
+              resultText: 'BMI 22.5 (普通体重)',
+              summaryText: 'H170/W65',
+              deleteLabel: '削除',
+              deleteRevealed: true,
+              borderRadius: borderRadius,
+            ),
+          ),
+        ),
+      );
+
+      final inkWell = tester.widget<InkWell>(find.byType(InkWell));
+      expect(inkWell.borderRadius, borderRadius);
+    });
+
+    testWidgets('does not restore the row while delete is revealed', (
+      tester,
+    ) async {
+      var restored = false;
+
+      await tester.pumpWidget(
+        _widgetTestApp(
+          child: SizedBox(
+            width: 240,
+            child: CalcHistoryRow(
+              dateText: '2026/05/10',
+              resultText: 'BMI 22.5 (普通体重)',
+              summaryText: 'H170/W65',
+              deleteLabel: '削除',
+              deleteRevealed: true,
+              onRestore: () => restored = true,
+            ),
+          ),
+        ),
+      );
+
+      final rowTopLeft = tester.getTopLeft(find.byType(CalcHistoryRow));
+      await tester.tapAt(rowTopLeft + const Offset(24, 19));
+      await tester.pump();
+
+      expect(restored, isFalse);
+    });
   });
 }
 
