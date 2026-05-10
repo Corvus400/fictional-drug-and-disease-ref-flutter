@@ -256,6 +256,51 @@ switching is outside `CalcView`, but restore currently mutates local screen
 state synchronously and has no delayed write after navigation, backgrounding,
 or process termination.
 
+## Phase 8 Reference Outputs
+
+Flutter goldens:
+
+- `test/ui/_common/goldens/macos/disclaimer_shell_search_{light,dark}.png`
+- `test/ui/_common/goldens/macos/disclaimer_shell_drug_detail_{light,dark}.png`
+- `test/ui/_common/goldens/macos/disclaimer_shell_disease_detail_{light,dark}.png`
+
+The Phase 8 verdict records the current final verification table:
+
+- `tmp/calc_phase_8_verdict.md`
+
+User correction on 2026-05-10: disclaimer UI must not be implemented as a
+global overlay because it can cover other UI. It must live in normal layout
+above `NavigationBar`, and search/drug detail/disease detail shell goldens
+must prove it is visible without covering the screen body or bottom navigation.
+
+Integration tests that need persistent-state assertions must run with an
+ephemeral database. Current `calc_tool_e2e_test.dart` starts `App` with
+`AppDatabase(NativeDatabase.memory())` through `appDatabaseProvider` override,
+so history starts at zero on every run.
+
+Existing integration smoke tests must follow the same rule. Current
+`app_smoke_test.dart` also starts `App` with `AppDatabase(NativeDatabase.memory())`
+through `appDatabaseProvider` override instead of calling `main_dev.dart`.
+
+Integration tests must not rely on long `pumpAndSettle()` waits where a bounded
+state wait is enough. Current `calc_tool_e2e_test.dart` uses short bounded pumps
+plus state-specific `_pumpUntil*` helpers, and both integration tests have a
+2 minute per-test timeout so failures converge instead of appearing to hang.
+
+Final integration verification should be repeated on both iPhone and iPad
+simulators. Current Phase 8 evidence is two full `integration_test/` passes on
+iPhone 17 simulator and two full `integration_test/` passes on iPad Pro 11-inch
+simulator after the bounded-wait fix.
+
+After all validation has passed, device install evidence is recorded with the
+local wrapper command:
+
+- `install-fddr-flutter-dev-all-devices`
+- Pixel 7 Pro: installed
+- RYOMAのiPad: installed
+- iPhone 17 simulator: installed
+- iPad Pro 11-inch (M5) simulator: installed
+
 ## Continuing The Plan
 
 Before each remaining UI/golden phase:
