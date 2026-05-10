@@ -112,6 +112,34 @@ void main() {
       expect(phase.errors, containsPair('weightKg', '1.0-300.0 kg'));
     });
 
+    test(
+      'out-of-range BMI keeps previous draft when another field changes',
+      () {
+        final notifier = container.read(calcScreenProvider.notifier);
+
+        for (final update in const [
+          (field: CalcInputFieldKey.heightCm, value: '170'),
+          (field: CalcInputFieldKey.weightKg, value: '400'),
+          (field: CalcInputFieldKey.heightCm, value: '171'),
+        ]) {
+          notifier.updateField(update.field, update.value);
+        }
+
+        final phase =
+            container.read(calcScreenProvider).phase as CalcPhaseOutOfRange;
+        expect(
+          phase.inputs,
+          const CalcInputDraft(
+            values: {
+              CalcInputFieldKey.heightCm: '171',
+              CalcInputFieldKey.weightKg: '400',
+            },
+          ),
+        );
+        expect(phase.errors, containsPair('weightKg', '1.0-300.0 kg'));
+      },
+    );
+
     test('valid eGFR inputs calculate with CKD stage classification', () async {
       final notifier = container.read(calcScreenProvider.notifier);
       await notifier.selectTool(CalcType.egfr);
@@ -143,6 +171,30 @@ void main() {
       final result = phase.result as EgfrResult;
       expect(result.eGfrMlMin173m2, closeTo(46.6, 0.1));
       expect(result.stage, CkdStage.g3a);
+    });
+
+    test('out-of-range eGFR keeps draft and sex when sex changes', () async {
+      final notifier = container.read(calcScreenProvider.notifier);
+      await notifier.selectTool(CalcType.egfr);
+
+      notifier
+        ..updateField(CalcInputFieldKey.ageYears, '17')
+        ..updateField(CalcInputFieldKey.serumCreatinineMgDl, '1.0')
+        ..updateSex(Sex.female);
+
+      final phase =
+          container.read(calcScreenProvider).phase as CalcPhaseOutOfRange;
+      expect(
+        phase.inputs,
+        const CalcInputDraft(
+          values: {
+            CalcInputFieldKey.ageYears: '17',
+            CalcInputFieldKey.serumCreatinineMgDl: '1.0',
+          },
+          sex: Sex.female,
+        ),
+      );
+      expect(phase.errors, containsPair('ageYears', '18-120 years'));
     });
 
     test('valid CrCl inputs calculate without classification', () async {
@@ -177,6 +229,33 @@ void main() {
       final result = phase.result as CrClResult;
       expect(result.crClMlMin, closeTo(69.1, 0.1));
     });
+
+    test(
+      'out-of-range CrCl keeps other fields when edited to partial input',
+      () async {
+        final notifier = container.read(calcScreenProvider.notifier);
+        await notifier.selectTool(CalcType.crcl);
+
+        notifier
+          ..updateField(CalcInputFieldKey.ageYears, '1')
+          ..updateField(CalcInputFieldKey.weightKg, '1')
+          ..updateField(CalcInputFieldKey.serumCreatinineMgDl, '1')
+          ..updateField(CalcInputFieldKey.ageYears, '-');
+
+        final phase =
+            container.read(calcScreenProvider).phase as CalcPhasePartialInput;
+        expect(
+          phase.partialInputs,
+          const CalcInputDraft(
+            values: {
+              CalcInputFieldKey.ageYears: '-',
+              CalcInputFieldKey.weightKg: '1',
+              CalcInputFieldKey.serumCreatinineMgDl: '1',
+            },
+          ),
+        );
+      },
+    );
 
     test('restoreFromHistory restores typed BMI inputs and result', () async {
       final notifier = container.read(calcScreenProvider.notifier);
