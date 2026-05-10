@@ -26,5 +26,20 @@ void main() {
       expect((result as CalculateBmiInvalid).field, 'heightCm');
       expect(result.range, '50.0-250.0 cm');
     });
+
+    test('returns all field errors for multiple out-of-range inputs', () {
+      final result = usecase.execute(
+        const BmiInputs(heightCm: 49.9999, weightKg: 300.0001),
+      );
+
+      expect(result, isA<CalculateBmiInvalid>());
+      expect(
+        (result as dynamic).errors,
+        const {
+          'heightCm': '50.0-250.0 cm',
+          'weightKg': '1.0-300.0 kg',
+        },
+      );
+    });
   });
 }

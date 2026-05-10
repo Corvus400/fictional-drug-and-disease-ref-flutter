@@ -49,6 +49,22 @@ void main() {
       expect(invalidWeight.range, '1.0-300.0 kg');
     });
 
+    test('collects all input range errors', () {
+      final invalid = const BmiInputs(
+        heightCm: 49.9999,
+        weightKg: 300.0001,
+      ).validate();
+
+      expect(invalid, isA<BmiInvalid>());
+      expect(
+        (invalid as dynamic).errors,
+        const {
+          'heightCm': '50.0-250.0 cm',
+          'weightKg': '1.0-300.0 kg',
+        },
+      );
+    });
+
     test('supports value equality and copyWith', () {
       const inputs = BmiInputs(heightCm: 170, weightKg: 65);
 
