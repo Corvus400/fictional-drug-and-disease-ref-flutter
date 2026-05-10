@@ -132,6 +132,7 @@ class CalcResultCard extends StatelessWidget {
                   hintText!,
                   style: typography.monoS.copyWith(
                     color: palette.calcMuted,
+                    fontFamilyFallback: const ['NotoSansJP'],
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -145,7 +146,7 @@ class CalcResultCard extends StatelessWidget {
                 ),
               ],
               if (visualization != null) ...[
-                SizedBox(height: spacing.s2),
+                SizedBox(height: badges.isEmpty ? spacing.s2 : spacing.s8),
                 visualization!,
               ],
             ],

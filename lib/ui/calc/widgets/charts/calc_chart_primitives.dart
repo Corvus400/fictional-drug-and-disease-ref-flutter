@@ -81,10 +81,28 @@ class CalcBandChart extends StatelessWidget {
         builder: (context, constraints) {
           final width = constraints.maxWidth;
           final markerLeft = width * markerPosition.clamp(0, 1);
+          final labelWidth = math.max<double>(
+            44,
+            markerLabel.length * 9 + 12,
+          );
+          final maxLabelLeft = math.max<double>(0, width - labelWidth);
+          final labelLeft = math.min<double>(
+            math.max<double>(0, markerLeft - labelWidth / 2),
+            maxLabelLeft,
+          );
 
           return Stack(
             clipBehavior: Clip.none,
             children: [
+              Positioned(
+                left: labelLeft,
+                top: -26,
+                child: _ChartMarkerLabel(
+                  keyPrefix: chartKeyPrefix,
+                  label: markerLabel,
+                  width: labelWidth,
+                ),
+              ),
               Positioned(
                 left: 0,
                 right: 0,
@@ -96,10 +114,16 @@ class CalcBandChart extends StatelessWidget {
               ),
               Positioned(
                 left: markerLeft,
-                top: -4,
-                child: _ChartMarker(
+                top: -10,
+                child: _ChartMarkerDot(
                   keyPrefix: chartKeyPrefix,
-                  label: markerLabel,
+                ),
+              ),
+              Positioned(
+                left: markerLeft,
+                top: -4,
+                child: _ChartMarkerLine(
+                  keyPrefix: chartKeyPrefix,
                 ),
               ),
               Positioned(
@@ -170,71 +194,92 @@ class _ScaleBand extends StatelessWidget {
   }
 }
 
-class _ChartMarker extends StatelessWidget {
-  const _ChartMarker({required this.keyPrefix, required this.label});
+class _ChartMarkerLabel extends StatelessWidget {
+  const _ChartMarkerLabel({
+    required this.keyPrefix,
+    required this.label,
+    required this.width,
+  });
 
   final String keyPrefix;
   final String label;
+  final double width;
 
   @override
   Widget build(BuildContext context) {
     final palette = Theme.of(context).extension<AppPalette>()!;
     final typography = Theme.of(context).extension<AppTypography>()!;
 
+    return SizedBox(
+      key: ValueKey<String>('$keyPrefix-chart-marker-label-$label'),
+      width: width,
+      child: Align(
+        alignment: Alignment.topCenter,
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            color: palette.calcInk,
+            borderRadius: BorderRadius.circular(3),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 5,
+              vertical: 1,
+            ),
+            child: Text(
+              label,
+              style: typography.monoS.copyWith(
+                color: palette.calcSurface,
+                fontSize: 10,
+                fontWeight: FontWeight.w700,
+                height: 1.1,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _ChartMarkerDot extends StatelessWidget {
+  const _ChartMarkerDot({required this.keyPrefix});
+
+  final String keyPrefix;
+
+  @override
+  Widget build(BuildContext context) {
+    final palette = Theme.of(context).extension<AppPalette>()!;
+
     return FractionalTranslation(
       translation: const Offset(-0.5, 0),
-      child: SizedBox(
-        width: math.max(34, label.length * 8),
-        height: 54,
-        child: Stack(
-          clipBehavior: Clip.none,
-          alignment: Alignment.topCenter,
-          children: [
-            Positioned(
-              top: -22,
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                  color: palette.calcInk,
-                  borderRadius: BorderRadius.circular(3),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 5,
-                    vertical: 1,
-                  ),
-                  child: Text(
-                    label,
-                    style: typography.monoS.copyWith(
-                      color: palette.calcSurface,
-                      fontSize: 10,
-                      fontWeight: FontWeight.w700,
-                      height: 1.1,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            Positioned(
-              top: -6,
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                  color: palette.calcInk,
-                  border: Border.all(color: palette.calcSurface, width: 2),
-                  shape: BoxShape.circle,
-                ),
-                child: const SizedBox(width: 10, height: 10),
-              ),
-            ),
-            Positioned(
-              top: 0,
-              child: ColoredBox(
-                key: ValueKey<String>('$keyPrefix-chart-marker'),
-                color: palette.calcInk,
-                child: const SizedBox(width: 2, height: 32),
-              ),
-            ),
-          ],
+      child: DecoratedBox(
+        key: ValueKey<String>('$keyPrefix-chart-marker-dot'),
+        decoration: BoxDecoration(
+          color: palette.calcInk,
+          border: Border.all(color: palette.calcSurface, width: 2),
+          shape: BoxShape.circle,
         ),
+        child: const SizedBox(width: 10, height: 10),
+      ),
+    );
+  }
+}
+
+class _ChartMarkerLine extends StatelessWidget {
+  const _ChartMarkerLine({required this.keyPrefix});
+
+  final String keyPrefix;
+
+  @override
+  Widget build(BuildContext context) {
+    final palette = Theme.of(context).extension<AppPalette>()!;
+
+    return FractionalTranslation(
+      translation: const Offset(-0.5, 0),
+      child: ColoredBox(
+        key: ValueKey<String>('$keyPrefix-chart-marker'),
+        color: palette.calcInk,
+        child: const SizedBox(width: 2, height: 32),
       ),
     );
   }
@@ -341,6 +386,13 @@ class CalcCrClRow extends StatelessWidget {
                 height: 14,
                 child: LayoutBuilder(
                   builder: (context, constraints) {
+                    final markerVisualLeft = math.min<double>(
+                      math.max<double>(
+                        0,
+                        constraints.maxWidth * markerLeft.clamp(0, 1) - 7,
+                      ),
+                      math.max<double>(0, constraints.maxWidth - 14),
+                    );
                     return Stack(
                       clipBehavior: Clip.none,
                       children: [
@@ -349,6 +401,7 @@ class CalcCrClRow extends StatelessWidget {
                           right: 0,
                           top: 0,
                           child: DecoratedBox(
+                            key: ValueKey<String>('crcl-chart-track-$groupKey'),
                             decoration: BoxDecoration(
                               color: palette.calcSurface3,
                               borderRadius: BorderRadius.circular(7),
@@ -371,22 +424,21 @@ class CalcCrClRow extends StatelessWidget {
                           ),
                         ),
                         Positioned(
-                          key: ValueKey<String>('crcl-chart-marker-$groupKey'),
-                          left: constraints.maxWidth * markerLeft.clamp(0, 1),
+                          left: markerVisualLeft,
                           top: -3,
-                          child: FractionalTranslation(
-                            translation: const Offset(-0.5, 0),
-                            child: DecoratedBox(
-                              decoration: BoxDecoration(
-                                color: palette.calcPrimary,
-                                border: Border.all(
-                                  color: palette.calcSurface,
-                                  width: 2,
-                                ),
-                                borderRadius: BorderRadius.circular(7),
-                              ),
-                              child: const SizedBox(width: 14, height: 20),
+                          child: DecoratedBox(
+                            key: ValueKey<String>(
+                              'crcl-chart-marker-$groupKey',
                             ),
+                            decoration: BoxDecoration(
+                              color: palette.calcPrimary,
+                              border: Border.all(
+                                color: palette.calcSurface,
+                                width: 2,
+                              ),
+                              borderRadius: BorderRadius.circular(7),
+                            ),
+                            child: const SizedBox(width: 14, height: 20),
                           ),
                         ),
                       ],

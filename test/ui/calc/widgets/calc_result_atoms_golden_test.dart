@@ -1,4 +1,5 @@
 import 'package:fictional_drug_and_disease_ref/domain/calc/bmi.dart';
+import 'package:fictional_drug_and_disease_ref/domain/calc/egfr.dart';
 import 'package:fictional_drug_and_disease_ref/theme/app_theme.dart';
 import 'package:fictional_drug_and_disease_ref/ui/calc/widgets/calc_category_badge.dart';
 import 'package:fictional_drug_and_disease_ref/ui/calc/widgets/calc_result_card.dart';
@@ -7,6 +8,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
+  _badgePatternGolden(
+    description: 'Calc category badge patterns match light spec',
+    theme: AppTheme.light(),
+    fileName: 'goldens/macos/calc_category_badges_all_light.png',
+  );
+  _badgePatternGolden(
+    description: 'Calc category badge patterns match dark spec',
+    theme: AppTheme.dark(),
+    fileName: 'goldens/macos/calc_category_badges_all_dark.png',
+  );
+
   testWidgets('Calc result atoms match spec reference card', (tester) async {
     await tester.binding.setSurfaceSize(const Size(270, 524));
     addTearDown(() => tester.binding.setSurfaceSize(null));
@@ -66,6 +78,133 @@ void main() {
       matchesGoldenFile('goldens/macos/calc_tool_meta_strip_light.png'),
     );
   }, tags: const ['golden']);
+}
+
+void _badgePatternGolden({
+  required String description,
+  required ThemeData theme,
+  required String fileName,
+}) {
+  testWidgets(description, (tester) async {
+    await tester.binding.setSurfaceSize(const Size(390, 280));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: theme,
+        home: const Material(
+          child: RepaintBoundary(
+            key: ValueKey<String>('category-badges-boundary'),
+            child: SizedBox(
+              width: 390,
+              height: 280,
+              child: _BadgePatternCard(),
+            ),
+          ),
+        ),
+      ),
+    );
+
+    await expectLater(
+      find.byKey(const ValueKey<String>('category-badges-boundary')),
+      matchesGoldenFile(fileName),
+    );
+  }, tags: const ['golden']);
+}
+
+class _BadgePatternCard extends StatelessWidget {
+  const _BadgePatternCard();
+
+  @override
+  Widget build(BuildContext context) {
+    final surface = Theme.of(context).scaffoldBackgroundColor;
+    final textColor = Theme.of(context).textTheme.bodyMedium?.color;
+
+    return ColoredBox(
+      color: surface,
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'BMI labels',
+              style: TextStyle(
+                fontFamily: 'NotoSansJP',
+                fontSize: 12,
+                fontWeight: FontWeight.w700,
+                color: textColor,
+              ),
+            ),
+            const SizedBox(height: 8),
+            const Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                CalcCategoryBadge.bmi(
+                  category: BmiCategory.underweight,
+                  label: '低体重',
+                ),
+                CalcCategoryBadge.bmi(
+                  category: BmiCategory.normal,
+                  label: '普通体重',
+                ),
+                CalcCategoryBadge.bmi(
+                  category: BmiCategory.overweight,
+                  label: '過体重',
+                ),
+                CalcCategoryBadge.bmi(
+                  category: BmiCategory.obese1,
+                  label: '肥満1度',
+                ),
+                CalcCategoryBadge.bmi(
+                  category: BmiCategory.obese2,
+                  label: '肥満2度',
+                ),
+                CalcCategoryBadge.bmi(
+                  category: BmiCategory.obese3,
+                  label: '肥満3度',
+                ),
+                CalcCategoryBadge.bmi(
+                  category: BmiCategory.obese4,
+                  label: '肥満4度',
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            Text(
+              'eGFR labels',
+              style: TextStyle(
+                fontFamily: 'NotoSansJP',
+                fontSize: 12,
+                fontWeight: FontWeight.w700,
+                color: textColor,
+              ),
+            ),
+            const SizedBox(height: 8),
+            const Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                CalcCategoryBadge.ckd(stage: CkdStage.g1, label: 'G1 正常'),
+                CalcCategoryBadge.ckd(stage: CkdStage.g2, label: 'G2 軽度低下'),
+                CalcCategoryBadge.ckd(
+                  stage: CkdStage.g3a,
+                  label: 'G3a 軽度〜中等度低下',
+                ),
+                CalcCategoryBadge.ckd(
+                  stage: CkdStage.g3b,
+                  label: 'G3b 中等度〜高度低下',
+                ),
+                CalcCategoryBadge.ckd(stage: CkdStage.g4, label: 'G4 高度低下'),
+                CalcCategoryBadge.ckd(stage: CkdStage.g5, label: 'G5 末期腎不全'),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }
 
 class _ResultAtomsCard extends StatelessWidget {

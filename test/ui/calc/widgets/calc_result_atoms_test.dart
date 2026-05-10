@@ -139,6 +139,108 @@ void main() {
       expect(badgeSize.height, 26);
     });
 
+    testWidgets('CalcCategoryBadge renders every BMI and CKD label pattern', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        _widgetTestApp(
+          child: const Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: [
+              CalcCategoryBadge.bmi(
+                category: BmiCategory.underweight,
+                label: '低体重',
+              ),
+              CalcCategoryBadge.bmi(
+                category: BmiCategory.normal,
+                label: '普通体重',
+              ),
+              CalcCategoryBadge.bmi(
+                category: BmiCategory.overweight,
+                label: '過体重',
+              ),
+              CalcCategoryBadge.bmi(
+                category: BmiCategory.obese1,
+                label: '肥満1度',
+              ),
+              CalcCategoryBadge.bmi(
+                category: BmiCategory.obese2,
+                label: '肥満2度',
+              ),
+              CalcCategoryBadge.bmi(
+                category: BmiCategory.obese3,
+                label: '肥満3度',
+              ),
+              CalcCategoryBadge.bmi(
+                category: BmiCategory.obese4,
+                label: '肥満4度',
+              ),
+              CalcCategoryBadge.ckd(stage: CkdStage.g1, label: 'G1 正常'),
+              CalcCategoryBadge.ckd(stage: CkdStage.g2, label: 'G2 軽度低下'),
+              CalcCategoryBadge.ckd(
+                stage: CkdStage.g3a,
+                label: 'G3a 軽度〜中等度低下',
+              ),
+              CalcCategoryBadge.ckd(
+                stage: CkdStage.g3b,
+                label: 'G3b 中等度〜高度低下',
+              ),
+              CalcCategoryBadge.ckd(stage: CkdStage.g4, label: 'G4 高度低下'),
+              CalcCategoryBadge.ckd(stage: CkdStage.g5, label: 'G5 末期腎不全'),
+            ],
+          ),
+        ),
+      );
+
+      for (final label in [
+        '低体重',
+        '普通体重',
+        '過体重',
+        '肥満1度',
+        '肥満2度',
+        '肥満3度',
+        '肥満4度',
+        'G1 正常',
+        'G2 軽度低下',
+        'G3a 軽度〜中等度低下',
+        'G3b 中等度〜高度低下',
+        'G4 高度低下',
+        'G5 末期腎不全',
+      ]) {
+        expect(find.text(label), findsOneWidget);
+      }
+      expect(find.byType(CalcCategoryBadge), findsNWidgets(13));
+      expect(
+        find.byKey(const ValueKey<String>('calc-badge-shape-dot')),
+        findsNWidgets(2),
+      );
+      expect(
+        find.byKey(const ValueKey<String>('calc-badge-shape-triangle')),
+        findsNWidgets(2),
+      );
+      expect(
+        find.byKey(const ValueKey<String>('calc-badge-shape-square')),
+        findsNWidgets(2),
+      );
+      expect(
+        find.byKey(const ValueKey<String>('calc-badge-shape-diamond')),
+        findsNWidgets(2),
+      );
+      expect(
+        find.byKey(const ValueKey<String>('calc-badge-shape-pentagon')),
+        findsOneWidget,
+      );
+      expect(
+        find.byKey(const ValueKey<String>('calc-badge-shape-hexagon')),
+        findsNWidgets(2),
+      );
+      expect(
+        find.byKey(const ValueKey<String>('calc-badge-shape-x')),
+        findsNWidgets(2),
+      );
+    });
+
     testWidgets('CalcToolMetaStrip renders uppercase meta and formula', (
       tester,
     ) async {

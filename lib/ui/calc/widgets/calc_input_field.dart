@@ -111,6 +111,7 @@ class CalcInputField extends StatelessWidget {
                     style: typography.labelM.copyWith(
                       color: hasError ? palette.calcError : palette.calcMuted,
                       fontFamily: 'JetBrainsMono',
+                      fontFamilyFallback: const ['NotoSansJP'],
                     ),
                   ),
                 ),
