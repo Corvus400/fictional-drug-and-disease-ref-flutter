@@ -13,6 +13,7 @@ Gate source: `tmp/ui_golden_design_gate.md`.
   - `tmp/calc_spec_refs/spec_calc_split_view_compact_{light,dark}.png`
   - `tmp/calc_spec_refs/spec_calc_large_text_{light,dark}.png`
 - Flutter screen goldens:
+  - `test/ui/calc/goldens/macos/calc_responsive_matrix.png`
   - `test/ui/calc/goldens/macos/calc_iphone_portrait_{light,dark}.png`
   - `test/ui/calc/goldens/macos/calc_iphone_landscape_{light,dark}.png`
   - `test/ui/calc/goldens/macos/calc_ipad_portrait_{light,dark}.png`
@@ -27,6 +28,7 @@ Gate source: `tmp/ui_golden_design_gate.md`.
 | Item | Spec value | Flutter implementation value | Golden / test confirmation | Status |
 |---|---|---|---|---|
 | iPhone portrait | `390 x 844` style phone portrait uses compact 1-pane, bottom segmented control, no tool-list side rail | `_CalcResponsiveMode.compact`; `calc-layout-compact`; bottom selector key `calc-tool-selector-bottom` | Goldens `calc_iphone_portrait_*`; Playwright refs `spec_calc_iphone_portrait_*`; visual inspection confirms compact content and bottom selector | pass |
+| Responsive composite matrix | One review image must contain all 8 combinations: iPhone portrait/landscape and iPad portrait/landscape, each Light/Dark | `calc_responsive_matrix.png` uses the real `CalcView` with provider-fixed valid BMI state and history rows; matrix columns are Light/Dark, rows are iPhone portrait, iPhone landscape, iPad portrait, iPad landscape | `flutter test --update-goldens --tags golden test/ui/calc/calc_view_golden_test.dart --plain-name 'Calc responsive 8-state matrix'` passed; visual inspection confirms all 8 cells are in one PNG | pass |
 | Compact fallback | `< 600dp` uses 1-pane with bottom segmented control | `_CalcResponsiveMode.compact`; `calc-layout-compact`; bottom selector key `calc-tool-selector-bottom` | Widget test at `480 x 900`; goldens `calc_split_view_compact_*` show vertical form/result/history and bottom segmented control | pass |
 | iPhone landscape | `>= 600dp && height < 480dp`: 2-pane, left form, right result + history; tool segmented near top | `_CalcLandscapePhoneLayout` at `844 x 390`; left pane contains segmented + form, right pane contains result + collapsed history | Widget geometry asserts form left < result left; goldens `calc_iphone_landscape_*`; Playwright refs `spec_calc_iphone_landscape_*` | pass |
 | iPad portrait | `>= 768dp && < 1024dp`: 2-pane, left tool-list + form, right result + chart + history | `_CalcIPadPortraitLayout` at `834 x 1194`; left width 280, gap 24, right `Expanded` result/history pane | Widget geometry asserts form left < result left and tool-list present; goldens `calc_ipad_portrait_*`; Playwright refs `spec_calc_ipad_portrait_*` | pass |
@@ -65,7 +67,9 @@ Gate source: `tmp/ui_golden_design_gate.md`.
 - Latest user-correction verification: `flutter test test/ui/calc/calc_view_test.dart --plain-name 'stacks tool list above form on iPad landscape'` failed before the two-pane stack fix, then passed after changing iPad landscape to left-column vertical stack.
 - `CALC_SPEC_HTML=... PLAYWRIGHT_INDEX_MJS=... node tmp/capture_calc_spec_refs.mjs` passed again and generated Phase 6 reference PNGs including `spec_calc_iphone_portrait_*` and two-pane iPad landscape refs.
 - `flutter test --update-goldens --tags golden test/ui/calc/` passed 146 variants after adding `calc_iphone_portrait_*`, updating iPad landscape, and adding monospace fallback for formula superscripts.
+- `flutter test --update-goldens --tags golden test/ui/calc/calc_view_golden_test.dart --plain-name 'Calc responsive 8-state matrix'` passed and created `calc_responsive_matrix.png`.
 - Visual inspection:
+  - `calc_responsive_matrix.png` contains all 8 required combinations in one image: iPhone portrait/landscape and iPad portrait/landscape, each Light/Dark.
   - `calc_iphone_portrait_light.png` shows compact portrait layout with bottom segmented control.
   - `calc_iphone_landscape_light.png` shows 2-pane form/result layout and collapsed history.
   - `calc_ipad_portrait_light.png` shows left tool-list+form and right result+expanded history.

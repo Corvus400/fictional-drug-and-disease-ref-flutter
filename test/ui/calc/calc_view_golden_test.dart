@@ -1,17 +1,26 @@
+import 'dart:async';
+
+import 'package:alchemist/alchemist.dart';
 import 'package:fictional_drug_and_disease_ref/application/usecases/record_calculation_history_usecase.dart';
 import 'package:fictional_drug_and_disease_ref/data/local/app_database.dart';
 import 'package:fictional_drug_and_disease_ref/data/providers/local_providers.dart';
 import 'package:fictional_drug_and_disease_ref/data/repositories/calculation_history_repository.dart';
 import 'package:fictional_drug_and_disease_ref/domain/calc/bmi.dart';
 import 'package:fictional_drug_and_disease_ref/domain/calc/calc_type.dart';
+import 'package:fictional_drug_and_disease_ref/domain/calc/codecs/calc_inputs_codec.dart';
+import 'package:fictional_drug_and_disease_ref/domain/calc/codecs/calc_result_codec.dart';
+import 'package:fictional_drug_and_disease_ref/domain/calculation_history/calculation_history_entry.dart';
 import 'package:fictional_drug_and_disease_ref/l10n/app_localizations.dart';
+import 'package:fictional_drug_and_disease_ref/theme/app_theme.dart';
 import 'package:fictional_drug_and_disease_ref/ui/calc/calc_screen_notifier.dart';
+import 'package:fictional_drug_and_disease_ref/ui/calc/calc_screen_state.dart';
 import 'package:fictional_drug_and_disease_ref/ui/calc/calc_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
+import '../../golden/golden_test_config.dart';
 import '../../golden/golden_test_helpers.dart';
 import '../../helpers/test_app_database.dart';
 
@@ -57,6 +66,7 @@ void main() {
     _calcHistoryBoundaryGolden(count: 51, expectedCount: 50, mode: mode);
   }
   _calcResponsiveGoldens();
+  _calcResponsiveMatrixGolden();
 }
 
 void _calcInputBoundaryGoldens() {
@@ -793,6 +803,159 @@ void _calcResponsiveGoldens() {
       return null;
     },
   );
+}
+
+void _calcResponsiveMatrixGolden() {
+  const devices =
+      <
+        ({
+          String label,
+          Size size,
+          bool expandHistory,
+        })
+      >[
+        (
+          label: 'iPhone portrait',
+          size: Size(390, 844),
+          expandHistory: false,
+        ),
+        (
+          label: 'iPhone landscape',
+          size: Size(844, 390),
+          expandHistory: false,
+        ),
+        (
+          label: 'iPad portrait',
+          size: Size(834, 1194),
+          expandHistory: true,
+        ),
+        (
+          label: 'iPad landscape',
+          size: Size(1194, 834),
+          expandHistory: true,
+        ),
+      ];
+  const modes = <({String label, Brightness brightness})>[
+    (label: 'Light', brightness: Brightness.light),
+    (label: 'Dark', brightness: Brightness.dark),
+  ];
+
+  unawaited(
+    goldenTest(
+      'Calc responsive 8-state matrix',
+      fileName: 'calc_responsive_matrix',
+      builder: () => GoldenTestGroup(
+        columns: 2,
+        children: [
+          for (final device in devices)
+            for (final mode in modes)
+              GoldenTestScenario(
+                name: '${device.label} / ${mode.label}',
+                constraints: BoxConstraints.tight(device.size),
+                child: _calcResponsiveMatrixCell(
+                  theme: mode.brightness == Brightness.light
+                      ? AppTheme.light()
+                      : AppTheme.dark(),
+                  size: device.size,
+                  expandHistory: device.expandHistory,
+                ),
+              ),
+        ],
+      ),
+    ),
+  );
+}
+
+Widget _calcResponsiveMatrixCell({
+  required ThemeData theme,
+  required Size size,
+  required bool expandHistory,
+}) {
+  final state = _calcResponsiveMatrixState(expandHistory: expandHistory);
+
+  return MediaQuery(
+    data: MediaQueryData(
+      size: size,
+      devicePixelRatio: GoldenMatrix.devicePixelRatio,
+      textScaler: TextScaler.noScaling,
+    ),
+    child: SizedBox(
+      width: size.width,
+      height: size.height,
+      child: ProviderScope(
+        overrides: [
+          appDatabaseProvider.overrideWithValue(_db),
+          calcScreenProvider.overrideWithBuild((ref, notifier) => state),
+        ],
+        child: MaterialApp(
+          theme: theme,
+          darkTheme: theme,
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: const CalcView(),
+        ),
+      ),
+    ),
+  );
+}
+
+CalcScreenState _calcResponsiveMatrixState({required bool expandHistory}) {
+  const inputs = BmiInputs(heightCm: 170, weightKg: 65);
+  final result = BmiResult(
+    bmi: inputs.weightKg / ((inputs.heightCm / 100) * (inputs.heightCm / 100)),
+    category: BmiCategory.normal,
+  );
+
+  return CalcScreenState(
+    activeTool: CalcType.bmi,
+    phase: CalcPhase.resultWithClassification(
+      CalcType.bmi,
+      inputs,
+      result,
+      result.category,
+    ),
+    historyExpanded: expandHistory,
+    history: _matrixBmiHistory(),
+    historyPhase: CalcHistoryPhase.loaded,
+  );
+}
+
+List<CalculationHistoryEntry> _matrixBmiHistory() {
+  const inputsCodec = CalculationInputsCodec();
+  const resultCodec = CalculationResultCodec();
+  final samples = <({double heightCm, double weightKg, BmiCategory category})>[
+    (heightCm: 170, weightKg: 65, category: BmiCategory.normal),
+    (heightCm: 172, weightKg: 72, category: BmiCategory.normal),
+    (heightCm: 168, weightKg: 74, category: BmiCategory.overweight),
+    (heightCm: 175, weightKg: 67, category: BmiCategory.normal),
+    (heightCm: 170, weightKg: 84, category: BmiCategory.overweight),
+    (heightCm: 180, weightKg: 62, category: BmiCategory.normal),
+    (heightCm: 165, weightKg: 85, category: BmiCategory.obese1),
+  ];
+
+  return [
+    for (var index = 0; index < samples.length; index += 1)
+      () {
+        final sample = samples[index];
+        final inputs = BmiInputs(
+          heightCm: sample.heightCm,
+          weightKg: sample.weightKg,
+        );
+        final result = BmiResult(
+          bmi:
+              sample.weightKg /
+              ((sample.heightCm / 100) * (sample.heightCm / 100)),
+          category: sample.category,
+        );
+        return CalculationHistoryEntry(
+          id: 'matrix-bmi-history-$index',
+          calcType: CalcType.bmi.storageKey,
+          inputsJson: inputsCodec.encode(inputs),
+          resultJson: resultCodec.encode(result),
+          calculatedAt: DateTime.utc(2026, 5, 10 - index),
+        );
+      }(),
+  ];
 }
 
 Widget _calcViewBuilder(ThemeData theme, Size size, TextScaler scaler) {

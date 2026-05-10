@@ -183,6 +183,7 @@ Generated references:
 
 Flutter screen goldens:
 
+- `test/ui/calc/goldens/macos/calc_responsive_matrix.png`
 - `test/ui/calc/goldens/macos/calc_iphone_portrait_{light,dark}.png`
 - `test/ui/calc/goldens/macos/calc_iphone_landscape_{light,dark}.png`
 - `test/ui/calc/goldens/macos/calc_ipad_portrait_{light,dark}.png`
@@ -209,6 +210,8 @@ without tofu boxes.
 Responsive matrix coverage for CalcView belongs to Phase 6 and must include at
 minimum:
 
+- A composite review image containing all 8 required cells in one PNG:
+  `calc_responsive_matrix.png`
 - iPhone portrait Light/Dark: `calc_iphone_portrait_{light,dark}.png`
 - iPhone landscape Light/Dark: `calc_iphone_landscape_{light,dark}.png`
 - iPad portrait Light/Dark: `calc_ipad_portrait_{light,dark}.png`
