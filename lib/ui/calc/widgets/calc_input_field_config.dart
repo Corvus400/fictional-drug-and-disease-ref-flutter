@@ -12,7 +12,7 @@ List<TextInputFormatter> calcInputFormatters(CalcInputFieldSpec spec) {
 TextInputType calcKeyboardType(BuildContext context, CalcInputFieldSpec spec) {
   if (Theme.of(context).platform == TargetPlatform.iOS &&
       MediaQuery.sizeOf(context).shortestSide >= 600) {
-    return TextInputType.text;
+    return TextInputType.datetime;
   }
   return spec.fractionDigits == 0
       ? TextInputType.number
