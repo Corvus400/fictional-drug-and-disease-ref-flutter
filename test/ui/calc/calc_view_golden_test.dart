@@ -369,31 +369,29 @@ void _calcPartialSubsetGoldens() {
 }
 
 void _calcIosInputToolbarGolden() {
-  for (final size in const ['phone', 'tablet']) {
-    runGoldenMatrix(
-      fileNamePrefix: 'calc_ios_input_toolbar_$size',
-      description: 'Calc iOS input toolbar $size',
-      sizes: [size],
-      textScalers: const ['normal'],
-      builder: _calcIosViewBuilder,
-      whilePerforming: (tester) async {
-        await tester.tap(
-          find
-              .descendant(
-                of: find.byKey(const ValueKey<String>('calc-input-heightCm')),
-                matching: find.byType(TextFormField),
-              )
-              .first,
-        );
-        await tester.pumpAndSettle();
-        expect(
-          find.byKey(const ValueKey<String>('calc-input-toolbar')),
-          findsOneWidget,
-        );
-        return null;
-      },
-    );
-  }
+  runGoldenMatrix(
+    fileNamePrefix: 'calc_ios_input_toolbar_phone',
+    description: 'Calc iOS input toolbar phone',
+    sizes: const ['phone'],
+    textScalers: const ['normal'],
+    builder: _calcIosViewBuilder,
+    whilePerforming: (tester) async {
+      await tester.tap(
+        find
+            .descendant(
+              of: find.byKey(const ValueKey<String>('calc-input-heightCm')),
+              matching: find.byType(TextFormField),
+            )
+            .first,
+      );
+      await tester.pumpAndSettle();
+      expect(
+        find.byKey(const ValueKey<String>('calc-input-toolbar')),
+        findsOneWidget,
+      );
+      return null;
+    },
+  );
 }
 
 void _calcGolden({

@@ -219,10 +219,85 @@ void main() {
       );
     });
 
+    testWidgets(
+      'keeps iPad landscape layout when the shell body is keyboard-reduced',
+      (tester) async {
+        await tester.binding.setSurfaceSize(const Size(1194, 834));
+        addTearDown(() => tester.binding.setSurfaceSize(null));
+
+        await tester.pumpWidget(
+          _testApp(
+            db,
+            platform: TargetPlatform.iOS,
+            home: const MediaQuery(
+              data: MediaQueryData(
+                size: Size(1194, 834),
+                viewInsets: EdgeInsets.only(bottom: 414),
+              ),
+              child: Scaffold(
+                body: CalcView(),
+                bottomNavigationBar: SizedBox(height: 114),
+              ),
+            ),
+          ),
+        );
+        await tester.pump();
+
+        expect(
+          find.byKey(const ValueKey<String>('calc-layout-ipad-landscape')),
+          findsOneWidget,
+        );
+        expect(
+          find.byKey(const ValueKey<String>('calc-layout-landscape-phone')),
+          findsNothing,
+        );
+      },
+    );
+
+    testWidgets('uses full-size text keyboard for numeric fields on iPad iOS', (
+      tester,
+    ) async {
+      await tester.binding.setSurfaceSize(const Size(834, 1194));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+
+      await tester.pumpWidget(
+        _testApp(
+          db,
+          platform: TargetPlatform.iOS,
+          home: const MediaQuery(
+            data: MediaQueryData(size: Size(834, 1194)),
+            child: CalcView(),
+          ),
+        ),
+      );
+      await tester.pump();
+
+      expect(
+        _editableText(tester, 'calc-input-heightCm').keyboardType,
+        TextInputType.text,
+      );
+      expect(
+        _editableText(tester, 'calc-input-weightKg').keyboardType,
+        TextInputType.text,
+      );
+    });
+
     testWidgets('shows iOS input toolbar and moves focus with it', (
       tester,
     ) async {
-      await tester.pumpWidget(_testApp(db, platform: TargetPlatform.iOS));
+      await tester.binding.setSurfaceSize(const Size(390, 844));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+
+      await tester.pumpWidget(
+        _testApp(
+          db,
+          platform: TargetPlatform.iOS,
+          home: const MediaQuery(
+            data: MediaQueryData(size: Size(390, 844)),
+            child: CalcView(),
+          ),
+        ),
+      );
       await tester.pump();
 
       await tester.tap(_inputField('calc-input-heightCm'));
@@ -257,6 +332,60 @@ void main() {
       expect(
         _editableText(tester, 'calc-input-weightKg').focusNode.hasFocus,
         isFalse,
+      );
+    });
+
+    testWidgets('does not show custom input toolbar on iPad landscape', (
+      tester,
+    ) async {
+      await tester.binding.setSurfaceSize(const Size(1194, 834));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+
+      await tester.pumpWidget(
+        _testApp(
+          db,
+          platform: TargetPlatform.iOS,
+          home: const MediaQuery(
+            data: MediaQueryData(size: Size(1194, 834)),
+            child: CalcView(),
+          ),
+        ),
+      );
+      await tester.pump();
+
+      await tester.tap(_inputField('calc-input-heightCm'));
+      await tester.pumpAndSettle();
+
+      expect(
+        find.byKey(const ValueKey<String>('calc-input-toolbar')),
+        findsNothing,
+      );
+    });
+
+    testWidgets('does not show custom input toolbar on iPad portrait', (
+      tester,
+    ) async {
+      await tester.binding.setSurfaceSize(const Size(834, 1194));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+
+      await tester.pumpWidget(
+        _testApp(
+          db,
+          platform: TargetPlatform.iOS,
+          home: const MediaQuery(
+            data: MediaQueryData(size: Size(834, 1194)),
+            child: CalcView(),
+          ),
+        ),
+      );
+      await tester.pump();
+
+      await tester.tap(_inputField('calc-input-heightCm'));
+      await tester.pumpAndSettle();
+
+      expect(
+        find.byKey(const ValueKey<String>('calc-input-toolbar')),
+        findsNothing,
       );
     });
 

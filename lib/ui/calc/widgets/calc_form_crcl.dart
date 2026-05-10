@@ -51,7 +51,7 @@ class CalcFormCrCl extends StatelessWidget {
           unit: l10n.calcUnitYear,
           errorText: errors[ageSpec.fieldName],
           focusNode: focusNodes[CalcInputFieldKey.ageYears],
-          keyboardType: calcKeyboardType(ageSpec),
+          keyboardType: calcKeyboardType(context, ageSpec),
           inputFormatters: calcInputFormatters(ageSpec),
           textInputAction: TextInputAction.next,
           onFieldSubmitted: (_) =>
@@ -67,7 +67,7 @@ class CalcFormCrCl extends StatelessWidget {
           unit: l10n.calcUnitKg,
           errorText: errors[weightSpec.fieldName],
           focusNode: focusNodes[CalcInputFieldKey.weightKg],
-          keyboardType: calcKeyboardType(weightSpec),
+          keyboardType: calcKeyboardType(context, weightSpec),
           inputFormatters: calcInputFormatters(weightSpec),
           textInputAction: TextInputAction.next,
           onFieldSubmitted: (_) =>
@@ -85,7 +85,7 @@ class CalcFormCrCl extends StatelessWidget {
           unit: l10n.calcUnitMgDl,
           errorText: errors[creatinineSpec.fieldName],
           focusNode: focusNodes[CalcInputFieldKey.serumCreatinineMgDl],
-          keyboardType: calcKeyboardType(creatinineSpec),
+          keyboardType: calcKeyboardType(context, creatinineSpec),
           inputFormatters: calcInputFormatters(creatinineSpec),
           onFieldSubmitted: (_) =>
               focusNodes[CalcInputFieldKey.serumCreatinineMgDl]?.unfocus(),
