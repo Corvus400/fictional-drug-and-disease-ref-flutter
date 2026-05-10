@@ -109,10 +109,16 @@ class _CalcViewState extends ConsumerState<CalcView> {
           children: [
             LayoutBuilder(
               builder: (context, constraints) {
+                final viewportSize = MediaQuery.sizeOf(context);
                 return IgnorePointer(
                   ignoring: _restoringHistory,
                   child: _CalcResponsiveBody(
-                    mode: _CalcResponsiveMode.fromSize(constraints.biggest),
+                    mode: _CalcResponsiveMode.fromSize(
+                      _responsiveModeSize(
+                        constraints.biggest,
+                        viewportSize,
+                      ),
+                    ),
                     state: state,
                     restoringHistory: _restoringHistory,
                     restoringProgressValue: widget.debugRestoringProgressValue,
@@ -152,7 +158,10 @@ class _CalcViewState extends ConsumerState<CalcView> {
   }
 
   bool _showsInputToolbar(BuildContext context, CalcScreenState state) {
+    final size = MediaQuery.sizeOf(context);
+    final isTablet = size.shortestSide >= 600;
     return Theme.of(context).platform == TargetPlatform.iOS &&
+        !isTablet &&
         _focusedField != null &&
         _fieldOrder(state.activeTool).contains(_focusedField);
   }
@@ -244,6 +253,17 @@ class _CalcViewState extends ConsumerState<CalcView> {
       ],
     };
   }
+}
+
+Size _responsiveModeSize(Size layoutSize, Size viewportSize) {
+  final keyboardReducedTabletHeight =
+      layoutSize.width >= 768 &&
+      viewportSize.width >= layoutSize.width &&
+      viewportSize.height > layoutSize.height;
+  if (keyboardReducedTabletHeight) {
+    return Size(layoutSize.width, viewportSize.height);
+  }
+  return layoutSize;
 }
 
 class _CalcInputToolbar extends StatelessWidget {

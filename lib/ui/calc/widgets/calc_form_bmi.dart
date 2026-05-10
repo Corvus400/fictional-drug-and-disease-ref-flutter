@@ -44,7 +44,7 @@ class CalcFormBmi extends StatelessWidget {
           unit: l10n.calcUnitCm,
           errorText: errors[heightSpec.fieldName],
           focusNode: focusNodes[CalcInputFieldKey.heightCm],
-          keyboardType: calcKeyboardType(heightSpec),
+          keyboardType: calcKeyboardType(context, heightSpec),
           inputFormatters: calcInputFormatters(heightSpec),
           textInputAction: TextInputAction.next,
           onFieldSubmitted: (_) =>
@@ -60,7 +60,7 @@ class CalcFormBmi extends StatelessWidget {
           unit: l10n.calcUnitKg,
           errorText: errors[weightSpec.fieldName],
           focusNode: focusNodes[CalcInputFieldKey.weightKg],
-          keyboardType: calcKeyboardType(weightSpec),
+          keyboardType: calcKeyboardType(context, weightSpec),
           inputFormatters: calcInputFormatters(weightSpec),
           onFieldSubmitted: (_) =>
               focusNodes[CalcInputFieldKey.weightKg]?.unfocus(),
