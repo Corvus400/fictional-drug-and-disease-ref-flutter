@@ -301,6 +301,29 @@ local wrapper command:
 - iPhone 17 simulator: installed
 - iPad Pro 11-inch (M5) simulator: installed
 
+## iPad Device Sex Icon Regression
+
+User correction on 2026-05-10: iPad physical-device profile install did not
+show the male/female icons in the eGFR/CrCl sex selector, while simulator and
+goldens showed them.
+
+Root cause evidence:
+
+- The installed iOS device app is built in `profile` mode by
+  `install-fddr-flutter-dev-all-devices`.
+- `MaterialSymbolsOutlined.ttf` in the iOS profile device artifact was
+  tree-shaken from the original ~10 MB font to ~17 KB.
+- The simulator/debug artifacts kept the full ~10 MB font, explaining why
+  simulator and golden output still showed the icons.
+
+Decision:
+
+- Do not disable icon tree-shaking globally.
+- Do not keep sex selector on `Symbols.male` / `Symbols.female`.
+- Render sex selector icons as decorative text glyphs `♂` and `♀` so the
+  visible UI is stable in debug, profile, and release builds.
+- Keep the accessible labels as the existing localized `男性` / `女性` text.
+
 ## Continuing The Plan
 
 Before each remaining UI/golden phase:

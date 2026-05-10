@@ -4,7 +4,6 @@ import 'package:fictional_drug_and_disease_ref/ui/calc/calc_screen_state.dart';
 import 'package:fictional_drug_and_disease_ref/ui/calc/widgets/calc_input_field.dart';
 import 'package:fictional_drug_and_disease_ref/ui/calc/widgets/calc_segmented_control.dart';
 import 'package:flutter/material.dart';
-import 'package:material_symbols_icons/symbols.dart';
 
 /// eGFR form composite.
 class CalcFormEgfr extends StatelessWidget {
@@ -61,12 +60,12 @@ class CalcFormEgfr extends StatelessWidget {
             CalcSegmentedControlItem<Sex>(
               value: Sex.male,
               label: l10n.calcSexMale,
-              icon: Symbols.male,
+              leadingGlyph: '♂',
             ),
             CalcSegmentedControlItem<Sex>(
               value: Sex.female,
               label: l10n.calcSexFemale,
-              icon: Symbols.female,
+              leadingGlyph: '♀',
             ),
           ],
         ),
