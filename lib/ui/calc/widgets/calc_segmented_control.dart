@@ -232,11 +232,14 @@ class _Segment<T> extends StatelessWidget {
                 ExcludeSemantics(
                   child: Text(
                     item.leadingGlyph!,
-                    style: typography.bodyS.copyWith(
-                      color: selected ? palette.calcPrimary : palette.calcInk2,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w700,
-                    ),
+                    style: typography.bodyS
+                        .copyWith(
+                          color: selected
+                              ? palette.calcPrimary
+                              : palette.calcInk2,
+                          fontSize: 16,
+                        )
+                        .withVariableWeight(FontWeight.w700),
                   ),
                 ),
                 SizedBox(width: spacing.s1),
@@ -253,13 +256,16 @@ class _Segment<T> extends StatelessWidget {
                   item.label,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: typography.bodyS.copyWith(
-                    color: selected ? palette.calcPrimary : palette.calcInk2,
-                    fontWeight: selected
-                        ? selectedFontWeight
-                        : unselectedFontWeight,
-                    letterSpacing: letterSpacing,
-                  ),
+                  style: typography.bodyS
+                      .copyWith(
+                        color: selected
+                            ? palette.calcPrimary
+                            : palette.calcInk2,
+                        letterSpacing: letterSpacing,
+                      )
+                      .withVariableWeight(
+                        selected ? selectedFontWeight : unselectedFontWeight,
+                      ),
                 ),
               ),
             ],

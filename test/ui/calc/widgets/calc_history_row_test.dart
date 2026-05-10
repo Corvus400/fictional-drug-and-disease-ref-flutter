@@ -25,13 +25,7 @@ void main() {
         ),
       );
 
-      final dismissible = tester.widget<Dismissible>(
-        find.byType(Dismissible),
-      );
-      expect(
-        dismissible.dismissThresholds[DismissDirection.endToStart],
-        0.4,
-      );
+      expect(find.byType(Dismissible), findsNothing);
 
       await tester.drag(find.byType(CalcHistoryRow), const Offset(-140, 0));
       await tester.pumpAndSettle();

@@ -604,19 +604,19 @@ class _CalcToolList extends StatelessWidget {
         type: CalcType.bmi,
         label: l10n.calcToolBmi,
         formula: l10n.calcFormulaBmi,
-        icon: Symbols.monitor_weight,
+        icon: Icons.monitor_weight,
       ),
       (
         type: CalcType.egfr,
         label: l10n.calcToolEgfr,
         formula: l10n.calcFormulaEgfr,
-        icon: Symbols.water_drop,
+        icon: Icons.water_drop,
       ),
       (
         type: CalcType.crcl,
         label: l10n.calcToolCrcl,
         formula: l10n.calcFormulaCrcl,
-        icon: Symbols.science,
+        icon: Icons.science,
       ),
     ];
 
@@ -720,17 +720,15 @@ class _CalcToolListItem extends StatelessWidget {
                   children: [
                     Text(
                       label,
-                      style: typography.bodyM.copyWith(
-                        color: foreground,
-                        fontWeight: FontWeight.w700,
-                      ),
+                      style: typography.bodyM
+                          .copyWith(color: foreground)
+                          .withVariableWeight(FontWeight.w700),
                     ),
                     Text(
                       formula,
-                      style: typography.monoS.copyWith(
-                        color: muted,
-                        fontWeight: FontWeight.w500,
-                      ),
+                      style: typography.monoS
+                          .copyWith(color: muted)
+                          .withVariableWeight(FontWeight.w500),
                     ),
                   ],
                 ),

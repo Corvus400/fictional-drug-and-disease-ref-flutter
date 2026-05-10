@@ -2,7 +2,6 @@ import 'package:fictional_drug_and_disease_ref/theme/app_palette.dart';
 import 'package:fictional_drug_and_disease_ref/theme/app_radii.dart';
 import 'package:fictional_drug_and_disease_ref/theme/app_typography.dart';
 import 'package:flutter/material.dart';
-import 'package:material_symbols_icons/symbols.dart';
 
 /// Empty history list atom.
 class CalcHistoryEmptyState extends StatelessWidget {
@@ -30,7 +29,7 @@ class CalcHistoryEmptyState extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Icon(
-              Symbols.history_toggle_off,
+              Icons.history_toggle_off,
               size: 36,
               color: palette.calcMuted2,
             ),

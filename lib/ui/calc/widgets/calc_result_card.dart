@@ -62,12 +62,13 @@ class CalcResultCard extends StatelessWidget {
     final largeText = MediaQuery.textScalerOf(context).scale(16) >= 20.8;
     final valueFontSize = largeText ? 54.0 : 36.0;
     final contentOpacity = restoringMessage == null ? 1.0 : 0.42;
-    final titleStyle = typography.labelM.copyWith(
-      color: palette.calcMuted,
-      fontSize: largeText ? 18 : null,
-      fontWeight: FontWeight.w700,
-      letterSpacing: 0.48,
-    );
+    final titleStyle = typography.labelM
+        .copyWith(
+          color: palette.calcMuted,
+          fontSize: largeText ? 18 : null,
+          letterSpacing: 0.48,
+        )
+        .withVariableWeight(FontWeight.w700);
 
     return DecoratedBox(
       decoration: BoxDecoration(
@@ -108,11 +109,9 @@ class CalcResultCard extends StatelessWidget {
                         Text(
                           formula,
                           textAlign: TextAlign.end,
-                          style: typography.monoS.copyWith(
-                            color: palette.calcMuted,
-                            fontSize: 10,
-                            fontWeight: FontWeight.w500,
-                          ),
+                          style: typography.monoS
+                              .copyWith(color: palette.calcMuted, fontSize: 10)
+                              .withVariableWeight(FontWeight.w500),
                         ),
                       ],
                     ),
@@ -128,6 +127,9 @@ class CalcResultCard extends StatelessWidget {
                             fontFamily: 'JetBrainsMono',
                             fontSize: valueFontSize,
                             fontWeight: FontWeight.w700,
+                            fontVariations: const [
+                              FontVariation('wght', 700),
+                            ],
                             height: 1,
                           ).copyWith(color: valueColor),
                         ),
@@ -141,6 +143,7 @@ class CalcResultCard extends StatelessWidget {
                               fontFamily: 'JetBrainsMono',
                               fontSize: 13,
                               fontWeight: FontWeight.w500,
+                              fontVariations: [FontVariation('wght', 500)],
                             ).copyWith(color: palette.calcMuted),
                           ),
                         ),
@@ -150,11 +153,12 @@ class CalcResultCard extends StatelessWidget {
                       SizedBox(height: spacing.s2),
                       Text(
                         hintText!,
-                        style: typography.monoS.copyWith(
-                          color: palette.calcMuted,
-                          fontFamilyFallback: const ['NotoSansJP'],
-                          fontWeight: FontWeight.w500,
-                        ),
+                        style: typography.monoS
+                            .copyWith(
+                              color: palette.calcMuted,
+                              fontFamilyFallback: const ['NotoSansJP'],
+                            )
+                            .withVariableWeight(FontWeight.w500),
                       ),
                     ],
                     if (badges.isNotEmpty) ...[

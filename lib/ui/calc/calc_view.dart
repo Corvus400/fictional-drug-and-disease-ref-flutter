@@ -28,7 +28,6 @@ import 'package:fictional_drug_and_disease_ref/ui/calc/widgets/charts/crcl_chart
 import 'package:fictional_drug_and_disease_ref/ui/calc/widgets/charts/egfr_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:material_symbols_icons/symbols.dart';
 
 part 'calc_responsive_layout.dart';
 part 'calc_history_section.dart';
@@ -85,6 +84,8 @@ class _CalcViewState extends ConsumerState<CalcView> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final palette = Theme.of(context).extension<AppPalette>()!;
+    final theme = Theme.of(context);
+    final isTablet = MediaQuery.sizeOf(context).shortestSide >= 600;
     final state = ref.watch(calcScreenProvider);
     final notifier = ref.read(calcScreenProvider.notifier);
 
@@ -92,7 +93,15 @@ class _CalcViewState extends ConsumerState<CalcView> {
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: Text(l10n.calcAppBarTitle),
+        centerTitle: false,
+        titleSpacing: isTablet ? 44 : 16,
+        title: Text(
+          l10n.calcAppBarTitle,
+          style: theme.textTheme.titleLarge?.copyWith(
+            fontSize: isTablet ? 26 : 22,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
       ),
       backgroundColor: palette.calcBg,
       body: SafeArea(
@@ -196,6 +205,9 @@ class _CalcViewState extends ConsumerState<CalcView> {
   }
 
   void _ensureVisible(CalcInputFieldKey field) {
+    if (MediaQuery.sizeOf(context).shortestSide >= 600) {
+      return;
+    }
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) {
         return;

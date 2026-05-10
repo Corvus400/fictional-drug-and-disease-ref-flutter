@@ -4,7 +4,6 @@ import 'package:fictional_drug_and_disease_ref/ui/calc/widgets/calc_history_empt
 import 'package:fictional_drug_and_disease_ref/ui/calc/widgets/calc_history_row.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:material_symbols_icons/symbols.dart';
 
 void main() {
   group('Calc history atoms', () {
@@ -34,7 +33,7 @@ void main() {
       expect(richText.text.toPlainText(), contains('2026/05/10'));
       expect(richText.text.toPlainText(), contains('BMI 22.5 (普通体重)'));
       expect(richText.text.toPlainText(), contains('H170/W65'));
-      expect(find.byIcon(Symbols.refresh), findsOneWidget);
+      expect(find.byIcon(Icons.refresh), findsOneWidget);
 
       await tester.tap(find.byType(CalcHistoryRow));
       expect(restored, isTrue);
@@ -97,7 +96,7 @@ void main() {
         ),
       );
 
-      expect(find.byIcon(Symbols.history_toggle_off), findsOneWidget);
+      expect(find.byIcon(Icons.history_toggle_off), findsOneWidget);
       expect(find.text('履歴はありません'), findsOneWidget);
       expect(
         tester.getSize(find.byType(CalcHistoryEmptyState)),

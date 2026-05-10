@@ -70,16 +70,23 @@ class CalcInputField extends StatefulWidget {
 
 class _CalcInputFieldState extends State<CalcInputField> {
   late final TextEditingController _controller;
+  FocusNode? _attachedFocusNode;
+  bool _focusNodeFocused = false;
 
   @override
   void initState() {
     super.initState();
     _controller = TextEditingController(text: widget.valueText);
+    _attachFocusNode(widget.focusNode);
   }
 
   @override
   void didUpdateWidget(CalcInputField oldWidget) {
     super.didUpdateWidget(oldWidget);
+    if (widget.focusNode != oldWidget.focusNode) {
+      _detachFocusNode(oldWidget.focusNode);
+      _attachFocusNode(widget.focusNode);
+    }
     final nextText = widget.valueText ?? '';
     if (_controller.text != nextText) {
       _controller.value = TextEditingValue(
@@ -91,6 +98,7 @@ class _CalcInputFieldState extends State<CalcInputField> {
 
   @override
   void dispose() {
+    _detachFocusNode(widget.focusNode);
     _controller.dispose();
     super.dispose();
   }
@@ -102,6 +110,7 @@ class _CalcInputFieldState extends State<CalcInputField> {
     final spacing = Theme.of(context).extension<AppSpacing>()!;
     final typography = Theme.of(context).extension<AppTypography>()!;
     final hasError = widget.errorText != null;
+    final focused = widget.focused || _focusNodeFocused;
     final largeText = MediaQuery.textScalerOf(context).scale(16) >= 20.8;
     final inputHeight = largeText ? 56.0 : 44.0;
     final inputTextStyle =
@@ -110,14 +119,14 @@ class _CalcInputFieldState extends State<CalcInputField> {
                 : typography.titleM)
             .copyWith(
               color: palette.calcInk,
-              fontWeight: FontWeight.w600,
-            );
+            )
+            .withVariableWeight(FontWeight.w600);
     final borderColor = hasError
         ? palette.calcError
-        : widget.focused
+        : focused
         ? palette.calcPrimary
         : palette.calcHairline;
-    final borderWidth = widget.focused
+    final borderWidth = focused
         ? 2.0
         : hasError
         ? 1.5
@@ -128,7 +137,9 @@ class _CalcInputFieldState extends State<CalcInputField> {
       children: [
         Text(
           widget.label,
-          style: typography.labelS.copyWith(color: palette.calcMuted),
+          style: typography.labelS
+              .copyWith(color: palette.calcMuted)
+              .withVariableWeight(FontWeight.w500),
         ),
         SizedBox(height: spacing.s1),
         SizedBox(
@@ -140,9 +151,13 @@ class _CalcInputFieldState extends State<CalcInputField> {
             keyboardType: widget.keyboardType,
             inputFormatters: widget.inputFormatters,
             onChanged: widget.onChanged,
-            onTap: widget.onTap,
+            onTap: () {
+              widget.focusNode?.requestFocus();
+              widget.onTap?.call();
+            },
             textInputAction: widget.textInputAction,
             onFieldSubmitted: widget.onFieldSubmitted,
+            scrollPadding: EdgeInsets.zero,
             style: inputTextStyle,
             decoration: InputDecoration(
               isDense: true,
@@ -151,10 +166,11 @@ class _CalcInputFieldState extends State<CalcInputField> {
                   ? palette.calcErrorContainer
                   : palette.calcSurface,
               hintText: widget.placeholder,
-              hintStyle: inputTextStyle.copyWith(
-                color: palette.calcMuted2,
-                fontWeight: FontWeight.w400,
-              ),
+              hintStyle: inputTextStyle
+                  .copyWith(
+                    color: palette.calcMuted2,
+                  )
+                  .withVariableWeight(FontWeight.w400),
               suffixIcon: Padding(
                 padding: EdgeInsets.only(right: spacing.s3),
                 child: Center(
@@ -202,10 +218,11 @@ class _CalcInputFieldState extends State<CalcInputField> {
               Expanded(
                 child: Text(
                   widget.errorText!,
-                  style: typography.labelS.copyWith(
-                    color: palette.calcError,
-                    fontWeight: FontWeight.w600,
-                  ),
+                  style: typography.labelS
+                      .copyWith(
+                        color: palette.calcError,
+                      )
+                      .withVariableWeight(FontWeight.w600),
                 ),
               ),
             ],
@@ -213,6 +230,27 @@ class _CalcInputFieldState extends State<CalcInputField> {
         ],
       ],
     );
+  }
+
+  void _attachFocusNode(FocusNode? focusNode) {
+    _attachedFocusNode = focusNode;
+    _focusNodeFocused = focusNode?.hasFocus ?? false;
+    focusNode?.addListener(_handleFocusChanged);
+  }
+
+  void _detachFocusNode(FocusNode? focusNode) {
+    focusNode?.removeListener(_handleFocusChanged);
+    if (_attachedFocusNode == focusNode) {
+      _attachedFocusNode = null;
+    }
+  }
+
+  void _handleFocusChanged() {
+    final focused = _attachedFocusNode?.hasFocus ?? false;
+    if (focused == _focusNodeFocused || !mounted) {
+      return;
+    }
+    setState(() => _focusNodeFocused = focused);
   }
 
   OutlineInputBorder _inputBorder(
