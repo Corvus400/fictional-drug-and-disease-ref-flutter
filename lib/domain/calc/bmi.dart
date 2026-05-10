@@ -24,11 +24,15 @@ final class BmiInputs {
 
   /// Validates canonical BMI input ranges.
   BmiValidation validate() {
+    final errors = <String, String>{};
     if (heightCm < 50 || heightCm > 250) {
-      return const BmiInvalid(field: 'heightCm', range: '50.0-250.0 cm');
+      errors['heightCm'] = '50.0-250.0 cm';
     }
     if (weightKg < 1 || weightKg > 300) {
-      return const BmiInvalid(field: 'weightKg', range: '1.0-300.0 kg');
+      errors['weightKg'] = '1.0-300.0 kg';
+    }
+    if (errors.isNotEmpty) {
+      return BmiInvalid(errors: errors);
     }
     return const BmiValid();
   }
@@ -150,13 +154,16 @@ final class BmiValid extends BmiValidation {
 /// Invalid BMI input.
 final class BmiInvalid extends BmiValidation {
   /// Creates an invalid result.
-  const BmiInvalid({required this.field, required this.range});
+  const BmiInvalid({required this.errors});
+
+  /// Field-level accepted range labels.
+  final Map<String, String> errors;
 
   /// Invalid field name.
-  final String field;
+  String get field => errors.keys.first;
 
   /// Accepted range label.
-  final String range;
+  String get range => errors[field]!;
 }
 
 /// Pure BMI calculator.

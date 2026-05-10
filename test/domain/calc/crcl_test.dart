@@ -56,5 +56,24 @@ void main() {
       expect((invalidWeight as CrClInvalid).field, 'weightKg');
       expect(invalidWeight.range, '1.0-300.0 kg');
     });
+
+    test('collects all input range errors', () {
+      final invalid = const CrClInputs(
+        ageYears: 17,
+        sex: Sex.male,
+        weightKg: 0.9999,
+        serumCreatinineMgDl: 20.0001,
+      ).validate();
+
+      expect(invalid, isA<CrClInvalid>());
+      expect(
+        (invalid as dynamic).errors,
+        const {
+          'ageYears': '18-120 years',
+          'weightKg': '1.0-300.0 kg',
+          'serumCreatinineMgDl': '0.10-20.00 mg/dL',
+        },
+      );
+    });
   });
 }

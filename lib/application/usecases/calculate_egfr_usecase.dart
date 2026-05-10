@@ -9,10 +9,7 @@ final class CalculateEgfrUsecase {
   CalculateEgfrResult execute(EgfrInputs inputs) {
     final validation = inputs.validate();
     if (validation is EgfrInvalid) {
-      return CalculateEgfrInvalid(
-        field: validation.field,
-        range: validation.range,
-      );
+      return CalculateEgfrInvalid(errors: validation.errors);
     }
     return CalculateEgfrSuccess(Egfr.calculate(inputs));
   }
@@ -35,11 +32,14 @@ final class CalculateEgfrSuccess extends CalculateEgfrResult {
 /// Invalid eGFR calculation input.
 final class CalculateEgfrInvalid extends CalculateEgfrResult {
   /// Creates an invalid result.
-  const CalculateEgfrInvalid({required this.field, required this.range});
+  const CalculateEgfrInvalid({required this.errors});
+
+  /// Field-level accepted range labels.
+  final Map<String, String> errors;
 
   /// Invalid field name.
-  final String field;
+  String get field => errors.keys.first;
 
   /// Accepted range label.
-  final String range;
+  String get range => errors[field]!;
 }

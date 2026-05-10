@@ -9,10 +9,7 @@ final class CalculateCrClUsecase {
   CalculateCrClResult execute(CrClInputs inputs) {
     final validation = inputs.validate();
     if (validation is CrClInvalid) {
-      return CalculateCrClInvalid(
-        field: validation.field,
-        range: validation.range,
-      );
+      return CalculateCrClInvalid(errors: validation.errors);
     }
     return CalculateCrClSuccess(CrCl.calculate(inputs));
   }
@@ -35,11 +32,14 @@ final class CalculateCrClSuccess extends CalculateCrClResult {
 /// Invalid CrCl calculation input.
 final class CalculateCrClInvalid extends CalculateCrClResult {
   /// Creates an invalid result.
-  const CalculateCrClInvalid({required this.field, required this.range});
+  const CalculateCrClInvalid({required this.errors});
+
+  /// Field-level accepted range labels.
+  final Map<String, String> errors;
 
   /// Invalid field name.
-  final String field;
+  String get field => errors.keys.first;
 
   /// Accepted range label.
-  final String range;
+  String get range => errors[field]!;
 }

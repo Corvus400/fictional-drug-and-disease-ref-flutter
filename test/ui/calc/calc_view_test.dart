@@ -371,6 +371,61 @@ void main() {
       expect(_inputText(tester, 'calc-input-serumCreatinineMgDl'), '1');
     });
 
+    testWidgets('renders every simultaneous BMI field error', (tester) async {
+      await tester.pumpWidget(_testApp(db));
+      await tester.pump();
+
+      await tester.enterText(_inputField('calc-input-heightCm'), '49.9');
+      await tester.pump();
+      await tester.enterText(_inputField('calc-input-weightKg'), '300.1');
+      await tester.pump();
+
+      expect(find.text('50.0-250.0 cm'), findsOneWidget);
+      expect(find.text('1.0-300.0 kg'), findsOneWidget);
+      expect(find.text('22.5'), findsNothing);
+    });
+
+    testWidgets('renders every simultaneous eGFR field error', (tester) async {
+      await tester.pumpWidget(_testApp(db));
+      await tester.pump();
+
+      await tester.tap(find.text('eGFR'), warnIfMissed: false);
+      await tester.pumpAndSettle();
+      await tester.enterText(_inputField('calc-input-ageYears'), '17');
+      await tester.pump();
+      await tester.enterText(
+        _inputField('calc-input-serumCreatinineMgDl'),
+        '20.1',
+      );
+      await tester.pump();
+
+      expect(find.text('18-120 years'), findsOneWidget);
+      expect(find.text('0.10-20.00 mg/dL'), findsOneWidget);
+      expect(find.text('63.1'), findsNothing);
+    });
+
+    testWidgets('renders every simultaneous CrCl field error', (tester) async {
+      await tester.pumpWidget(_testApp(db));
+      await tester.pump();
+
+      await tester.tap(find.text('CrCl'), warnIfMissed: false);
+      await tester.pumpAndSettle();
+      await tester.enterText(_inputField('calc-input-ageYears'), '17');
+      await tester.pump();
+      await tester.enterText(_inputField('calc-input-weightKg'), '0.9');
+      await tester.pump();
+      await tester.enterText(
+        _inputField('calc-input-serumCreatinineMgDl'),
+        '20.1',
+      );
+      await tester.pump();
+
+      expect(find.text('18-120 years'), findsOneWidget);
+      expect(find.text('1.0-300.0 kg'), findsOneWidget);
+      expect(find.text('0.10-20.00 mg/dL'), findsOneWidget);
+      expect(find.text('81.3'), findsNothing);
+    });
+
     testWidgets('renders every input lower and upper boundary error', (
       tester,
     ) async {

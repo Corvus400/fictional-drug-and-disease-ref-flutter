@@ -49,6 +49,7 @@ void main() {
   }
   _calcPartialSubsetGoldens();
   _calcInputBoundaryGoldens();
+  _calcMultiErrorGoldens();
   _calcBmiUnderweightEdgeGolden();
   _calcEgfrLowEdgeGolden();
   _calcBmiMinEdgeGolden();
@@ -397,6 +398,73 @@ Future<void> _enterValid(WidgetTester tester, _CalcGoldenTool tool) async {
       await _enterText(tester, 'calc-input-ageYears', '50');
       await _enterText(tester, 'calc-input-weightKg', '65');
       await _enterText(tester, 'calc-input-serumCreatinineMgDl', '1.0');
+  }
+}
+
+void _calcMultiErrorGoldens() {
+  final cases =
+      <
+        ({
+          _CalcGoldenTool tool,
+          String key,
+          Map<String, String> fields,
+          List<String> errorTexts,
+        })
+      >[
+        (
+          tool: _CalcGoldenTool.bmi,
+          key: 'height-weight',
+          fields: {
+            'calc-input-heightCm': '49.9',
+            'calc-input-weightKg': '300.1',
+          },
+          errorTexts: ['50.0-250.0 cm', '1.0-300.0 kg'],
+        ),
+        (
+          tool: _CalcGoldenTool.egfr,
+          key: 'age-creatinine',
+          fields: {
+            'calc-input-ageYears': '17',
+            'calc-input-serumCreatinineMgDl': '20.1',
+          },
+          errorTexts: ['18-120 years', '0.10-20.00 mg/dL'],
+        ),
+        (
+          tool: _CalcGoldenTool.crcl,
+          key: 'age-weight-creatinine',
+          fields: {
+            'calc-input-ageYears': '17',
+            'calc-input-weightKg': '0.9',
+            'calc-input-serumCreatinineMgDl': '20.1',
+          },
+          errorTexts: [
+            '18-120 years',
+            '1.0-300.0 kg',
+            '0.10-20.00 mg/dL',
+          ],
+        ),
+      ];
+
+  for (final multiErrorCase in cases) {
+    runGoldenMatrix(
+      fileNamePrefix:
+          'calc_multi_error_${multiErrorCase.tool.key}_${multiErrorCase.key}',
+      description:
+          'Calc multi error ${multiErrorCase.tool.key} ${multiErrorCase.key}',
+      sizes: const ['phone'],
+      textScalers: const ['normal'],
+      builder: _calcViewBuilder,
+      whilePerforming: (tester) async {
+        await _selectTool(tester, multiErrorCase.tool);
+        for (final entry in multiErrorCase.fields.entries) {
+          await _enterText(tester, entry.key, entry.value);
+        }
+        for (final errorText in multiErrorCase.errorTexts) {
+          expect(find.text(errorText), findsOneWidget);
+        }
+        return null;
+      },
+    );
   }
 }
 

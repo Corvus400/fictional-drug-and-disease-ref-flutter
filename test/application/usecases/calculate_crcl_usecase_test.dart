@@ -36,5 +36,26 @@ void main() {
       expect((result as CalculateCrClInvalid).field, 'weightKg');
       expect(result.range, '1.0-300.0 kg');
     });
+
+    test('returns all field errors for multiple out-of-range inputs', () {
+      final result = usecase.execute(
+        const CrClInputs(
+          ageYears: 17,
+          sex: Sex.male,
+          weightKg: 0.9999,
+          serumCreatinineMgDl: 20.0001,
+        ),
+      );
+
+      expect(result, isA<CalculateCrClInvalid>());
+      expect(
+        (result as dynamic).errors,
+        const {
+          'ageYears': '18-120 years',
+          'weightKg': '1.0-300.0 kg',
+          'serumCreatinineMgDl': '0.10-20.00 mg/dL',
+        },
+      );
+    });
   });
 }

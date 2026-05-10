@@ -140,6 +140,22 @@ void main() {
       },
     );
 
+    test('out-of-range BMI exposes every field error independently', () {
+      container.read(calcScreenProvider.notifier)
+        ..updateField(CalcInputFieldKey.heightCm, '49.9')
+        ..updateField(CalcInputFieldKey.weightKg, '300.1');
+
+      final phase =
+          container.read(calcScreenProvider).phase as CalcPhaseOutOfRange;
+      expect(
+        phase.errors,
+        const {
+          'heightCm': '50.0-250.0 cm',
+          'weightKg': '1.0-300.0 kg',
+        },
+      );
+    });
+
     test('valid eGFR inputs calculate with CKD stage classification', () async {
       final notifier = container.read(calcScreenProvider.notifier);
       await notifier.selectTool(CalcType.egfr);
@@ -195,6 +211,25 @@ void main() {
         ),
       );
       expect(phase.errors, containsPair('ageYears', '18-120 years'));
+    });
+
+    test('out-of-range eGFR exposes every field error independently', () async {
+      final notifier = container.read(calcScreenProvider.notifier);
+      await notifier.selectTool(CalcType.egfr);
+
+      notifier
+        ..updateField(CalcInputFieldKey.ageYears, '17')
+        ..updateField(CalcInputFieldKey.serumCreatinineMgDl, '20.1');
+
+      final phase =
+          container.read(calcScreenProvider).phase as CalcPhaseOutOfRange;
+      expect(
+        phase.errors,
+        const {
+          'ageYears': '18-120 years',
+          'serumCreatinineMgDl': '0.10-20.00 mg/dL',
+        },
+      );
     });
 
     test('valid CrCl inputs calculate without classification', () async {
@@ -256,6 +291,27 @@ void main() {
         );
       },
     );
+
+    test('out-of-range CrCl exposes every field error independently', () async {
+      final notifier = container.read(calcScreenProvider.notifier);
+      await notifier.selectTool(CalcType.crcl);
+
+      notifier
+        ..updateField(CalcInputFieldKey.ageYears, '17')
+        ..updateField(CalcInputFieldKey.weightKg, '0.9')
+        ..updateField(CalcInputFieldKey.serumCreatinineMgDl, '20.1');
+
+      final phase =
+          container.read(calcScreenProvider).phase as CalcPhaseOutOfRange;
+      expect(
+        phase.errors,
+        const {
+          'ageYears': '18-120 years',
+          'weightKg': '1.0-300.0 kg',
+          'serumCreatinineMgDl': '0.10-20.00 mg/dL',
+        },
+      );
+    });
 
     test('restoreFromHistory restores typed BMI inputs and result', () async {
       final notifier = container.read(calcScreenProvider.notifier);

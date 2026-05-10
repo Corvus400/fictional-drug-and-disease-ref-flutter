@@ -41,17 +41,18 @@ final class CrClInputs {
 
   /// Validates canonical CrCl input ranges.
   CrClValidation validate() {
+    final errors = <String, String>{};
     if (ageYears < 18 || ageYears > 120) {
-      return const CrClInvalid(field: 'ageYears', range: '18-120 years');
+      errors['ageYears'] = '18-120 years';
     }
     if (weightKg < 1 || weightKg > 300) {
-      return const CrClInvalid(field: 'weightKg', range: '1.0-300.0 kg');
+      errors['weightKg'] = '1.0-300.0 kg';
     }
     if (serumCreatinineMgDl < 0.10 || serumCreatinineMgDl > 20) {
-      return const CrClInvalid(
-        field: 'serumCreatinineMgDl',
-        range: '0.10-20.00 mg/dL',
-      );
+      errors['serumCreatinineMgDl'] = '0.10-20.00 mg/dL';
+    }
+    if (errors.isNotEmpty) {
+      return CrClInvalid(errors: errors);
     }
     return const CrClValid();
   }
@@ -111,13 +112,16 @@ final class CrClValid extends CrClValidation {
 /// Invalid CrCl input.
 final class CrClInvalid extends CrClValidation {
   /// Creates an invalid result.
-  const CrClInvalid({required this.field, required this.range});
+  const CrClInvalid({required this.errors});
+
+  /// Field-level accepted range labels.
+  final Map<String, String> errors;
 
   /// Invalid field name.
-  final String field;
+  String get field => errors.keys.first;
 
   /// Accepted range label.
-  final String range;
+  String get range => errors[field]!;
 }
 
 /// Pure Cockcroft-Gault calculator.

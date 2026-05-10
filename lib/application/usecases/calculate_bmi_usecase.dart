@@ -9,10 +9,7 @@ final class CalculateBmiUsecase {
   CalculateBmiResult execute(BmiInputs inputs) {
     final validation = inputs.validate();
     if (validation is BmiInvalid) {
-      return CalculateBmiInvalid(
-        field: validation.field,
-        range: validation.range,
-      );
+      return CalculateBmiInvalid(errors: validation.errors);
     }
     return CalculateBmiSuccess(Bmi.calculate(inputs));
   }
@@ -35,11 +32,14 @@ final class CalculateBmiSuccess extends CalculateBmiResult {
 /// Invalid BMI calculation input.
 final class CalculateBmiInvalid extends CalculateBmiResult {
   /// Creates an invalid result.
-  const CalculateBmiInvalid({required this.field, required this.range});
+  const CalculateBmiInvalid({required this.errors});
+
+  /// Field-level accepted range labels.
+  final Map<String, String> errors;
 
   /// Invalid field name.
-  final String field;
+  String get field => errors.keys.first;
 
   /// Accepted range label.
-  final String range;
+  String get range => errors[field]!;
 }

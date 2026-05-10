@@ -79,5 +79,22 @@ void main() {
       expect((invalidCreatinine as EgfrInvalid).field, 'serumCreatinineMgDl');
       expect(invalidCreatinine.range, '0.10-20.00 mg/dL');
     });
+
+    test('collects all input range errors', () {
+      final invalid = const EgfrInputs(
+        ageYears: 17,
+        sex: Sex.male,
+        serumCreatinineMgDl: 20.0001,
+      ).validate();
+
+      expect(invalid, isA<EgfrInvalid>());
+      expect(
+        (invalid as dynamic).errors,
+        const {
+          'ageYears': '18-120 years',
+          'serumCreatinineMgDl': '0.10-20.00 mg/dL',
+        },
+      );
+    });
   });
 }

@@ -35,5 +35,24 @@ void main() {
       expect((result as CalculateEgfrInvalid).field, 'ageYears');
       expect(result.range, '18-120 years');
     });
+
+    test('returns all field errors for multiple out-of-range inputs', () {
+      final result = usecase.execute(
+        const EgfrInputs(
+          ageYears: 17,
+          sex: Sex.male,
+          serumCreatinineMgDl: 20.0001,
+        ),
+      );
+
+      expect(result, isA<CalculateEgfrInvalid>());
+      expect(
+        (result as dynamic).errors,
+        const {
+          'ageYears': '18-120 years',
+          'serumCreatinineMgDl': '0.10-20.00 mg/dL',
+        },
+      );
+    });
   });
 }

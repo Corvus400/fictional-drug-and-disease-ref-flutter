@@ -222,10 +222,10 @@ final class CalcScreenNotifier extends Notifier<CalcScreenState> {
     final inputs = BmiInputs(heightCm: heightCm, weightKg: weightKg);
     return switch (ref.read(calculateBmiUsecaseProvider).execute(inputs)) {
       CalculateBmiSuccess(:final result) => _classifiedBmi(inputs, result),
-      CalculateBmiInvalid(:final field, :final range) => CalcPhase.outOfRange(
+      CalculateBmiInvalid(:final errors) => CalcPhase.outOfRange(
         CalcType.bmi,
         draft,
-        errors: {field: range},
+        errors: errors,
       ),
     };
   }
@@ -255,10 +255,10 @@ final class CalcScreenNotifier extends Notifier<CalcScreenState> {
     );
     return switch (ref.read(calculateEgfrUsecaseProvider).execute(inputs)) {
       CalculateEgfrSuccess(:final result) => _classifiedEgfr(inputs, result),
-      CalculateEgfrInvalid(:final field, :final range) => CalcPhase.outOfRange(
+      CalculateEgfrInvalid(:final errors) => CalcPhase.outOfRange(
         CalcType.egfr,
         draft,
-        errors: {field: range},
+        errors: errors,
       ),
     };
   }
@@ -290,10 +290,10 @@ final class CalcScreenNotifier extends Notifier<CalcScreenState> {
     );
     return switch (ref.read(calculateCrClUsecaseProvider).execute(inputs)) {
       CalculateCrClSuccess(:final result) => _validCrCl(inputs, result),
-      CalculateCrClInvalid(:final field, :final range) => CalcPhase.outOfRange(
+      CalculateCrClInvalid(:final errors) => CalcPhase.outOfRange(
         CalcType.crcl,
         draft,
-        errors: {field: range},
+        errors: errors,
       ),
     };
   }
