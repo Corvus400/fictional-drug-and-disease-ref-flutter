@@ -254,33 +254,34 @@ void main() {
       },
     );
 
-    testWidgets('uses full-size text keyboard for numeric fields on iPad iOS', (
-      tester,
-    ) async {
-      await tester.binding.setSurfaceSize(const Size(834, 1194));
-      addTearDown(() => tester.binding.setSurfaceSize(null));
+    testWidgets(
+      'uses numbers-first full keyboard for numeric fields on iPad iOS',
+      (tester) async {
+        await tester.binding.setSurfaceSize(const Size(834, 1194));
+        addTearDown(() => tester.binding.setSurfaceSize(null));
 
-      await tester.pumpWidget(
-        _testApp(
-          db,
-          platform: TargetPlatform.iOS,
-          home: const MediaQuery(
-            data: MediaQueryData(size: Size(834, 1194)),
-            child: CalcView(),
+        await tester.pumpWidget(
+          _testApp(
+            db,
+            platform: TargetPlatform.iOS,
+            home: const MediaQuery(
+              data: MediaQueryData(size: Size(834, 1194)),
+              child: CalcView(),
+            ),
           ),
-        ),
-      );
-      await tester.pump();
+        );
+        await tester.pump();
 
-      expect(
-        _editableText(tester, 'calc-input-heightCm').keyboardType,
-        TextInputType.text,
-      );
-      expect(
-        _editableText(tester, 'calc-input-weightKg').keyboardType,
-        TextInputType.text,
-      );
-    });
+        expect(
+          _editableText(tester, 'calc-input-heightCm').keyboardType,
+          TextInputType.datetime,
+        );
+        expect(
+          _editableText(tester, 'calc-input-weightKg').keyboardType,
+          TextInputType.datetime,
+        );
+      },
+    );
 
     testWidgets('shows iOS input toolbar and moves focus with it', (
       tester,
