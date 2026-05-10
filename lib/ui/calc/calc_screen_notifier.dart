@@ -199,12 +199,6 @@ final class CalcScreenNotifier extends Notifier<CalcScreenState> {
     if (!hasAnyInput) {
       return CalcPhase.empty(calcType, draft);
     }
-    final hasAllInputs = requiredFields.every(
-      (field) => draft.valueOf(field).trim().isNotEmpty,
-    );
-    if (!hasAllInputs) {
-      return CalcPhase.partialInput(calcType, draft);
-    }
     if (calcType == CalcType.bmi) {
       return _bmiPhase(draft);
     }
@@ -215,18 +209,25 @@ final class CalcScreenNotifier extends Notifier<CalcScreenState> {
   }
 
   CalcPhase _bmiPhase(CalcInputDraft draft) {
-    final heightCm = _parseDouble(
+    final heightCm = _readDouble(
       CalcInputFieldSpecs.heightCm,
       draft.valueOf(CalcInputFieldKey.heightCm),
     );
-    final weightKg = _parseDouble(
+    final weightKg = _readDouble(
       CalcInputFieldSpecs.weightKg,
       draft.valueOf(CalcInputFieldKey.weightKg),
     );
-    if (heightCm == null || weightKg == null) {
+    final errors = _errorsFor([heightCm, weightKg]);
+    if (errors.isNotEmpty) {
+      return CalcPhase.outOfRange(CalcType.bmi, draft, errors: errors);
+    }
+    if (heightCm.value == null || weightKg.value == null) {
       return CalcPhase.partialInput(CalcType.bmi, draft);
     }
-    final inputs = BmiInputs(heightCm: heightCm, weightKg: weightKg);
+    final inputs = BmiInputs(
+      heightCm: heightCm.value!.toDouble(),
+      weightKg: weightKg.value!.toDouble(),
+    );
     return switch (ref.read(calculateBmiUsecaseProvider).execute(inputs)) {
       CalculateBmiSuccess(:final result) => _classifiedBmi(inputs, result),
       CalculateBmiInvalid(:final errors) => CalcPhase.outOfRange(
@@ -248,21 +249,25 @@ final class CalcScreenNotifier extends Notifier<CalcScreenState> {
   }
 
   CalcPhase _egfrPhase(CalcInputDraft draft) {
-    final ageYears = _parseInt(
+    final ageYears = _readInt(
       CalcInputFieldSpecs.ageYears,
       draft.valueOf(CalcInputFieldKey.ageYears),
     );
-    final serumCreatinineMgDl = _parseDouble(
+    final serumCreatinineMgDl = _readDouble(
       CalcInputFieldSpecs.serumCreatinineMgDl,
       draft.valueOf(CalcInputFieldKey.serumCreatinineMgDl),
     );
-    if (ageYears == null || serumCreatinineMgDl == null) {
+    final errors = _errorsFor([ageYears, serumCreatinineMgDl]);
+    if (errors.isNotEmpty) {
+      return CalcPhase.outOfRange(CalcType.egfr, draft, errors: errors);
+    }
+    if (ageYears.value == null || serumCreatinineMgDl.value == null) {
       return CalcPhase.partialInput(CalcType.egfr, draft);
     }
     final inputs = EgfrInputs(
-      ageYears: ageYears,
+      ageYears: ageYears.value!.toInt(),
       sex: draft.sex,
-      serumCreatinineMgDl: serumCreatinineMgDl,
+      serumCreatinineMgDl: serumCreatinineMgDl.value!.toDouble(),
     );
     return switch (ref.read(calculateEgfrUsecaseProvider).execute(inputs)) {
       CalculateEgfrSuccess(:final result) => _classifiedEgfr(inputs, result),
@@ -285,26 +290,32 @@ final class CalcScreenNotifier extends Notifier<CalcScreenState> {
   }
 
   CalcPhase _crClPhase(CalcInputDraft draft) {
-    final ageYears = _parseInt(
+    final ageYears = _readInt(
       CalcInputFieldSpecs.ageYears,
       draft.valueOf(CalcInputFieldKey.ageYears),
     );
-    final weightKg = _parseDouble(
+    final weightKg = _readDouble(
       CalcInputFieldSpecs.weightKg,
       draft.valueOf(CalcInputFieldKey.weightKg),
     );
-    final serumCreatinineMgDl = _parseDouble(
+    final serumCreatinineMgDl = _readDouble(
       CalcInputFieldSpecs.serumCreatinineMgDl,
       draft.valueOf(CalcInputFieldKey.serumCreatinineMgDl),
     );
-    if (ageYears == null || weightKg == null || serumCreatinineMgDl == null) {
+    final errors = _errorsFor([ageYears, weightKg, serumCreatinineMgDl]);
+    if (errors.isNotEmpty) {
+      return CalcPhase.outOfRange(CalcType.crcl, draft, errors: errors);
+    }
+    if (ageYears.value == null ||
+        weightKg.value == null ||
+        serumCreatinineMgDl.value == null) {
       return CalcPhase.partialInput(CalcType.crcl, draft);
     }
     final inputs = CrClInputs(
-      ageYears: ageYears,
+      ageYears: ageYears.value!.toInt(),
       sex: draft.sex,
-      weightKg: weightKg,
-      serumCreatinineMgDl: serumCreatinineMgDl,
+      weightKg: weightKg.value!.toDouble(),
+      serumCreatinineMgDl: serumCreatinineMgDl.value!.toDouble(),
     );
     return switch (ref.read(calculateCrClUsecaseProvider).execute(inputs)) {
       CalculateCrClSuccess(:final result) => _validCrCl(inputs, result),
@@ -336,12 +347,43 @@ final class CalcScreenNotifier extends Notifier<CalcScreenState> {
     };
   }
 
-  double? _parseDouble(CalcInputFieldSpec spec, String value) {
-    return spec.isCompleteText(value) ? double.tryParse(value) : null;
+  _FieldRead _readDouble(CalcInputFieldSpec spec, String value) {
+    final text = value.trim();
+    if (!spec.isCompleteText(text)) {
+      return _FieldRead(spec);
+    }
+    final parsed = double.tryParse(text);
+    if (parsed == null) {
+      return _FieldRead(spec);
+    }
+    return _FieldRead(
+      spec,
+      value: parsed,
+      errorText: spec.isOutOfRange(parsed) ? spec.rangeText : null,
+    );
   }
 
-  int? _parseInt(CalcInputFieldSpec spec, String value) {
-    return spec.isCompleteText(value) ? int.tryParse(value) : null;
+  _FieldRead _readInt(CalcInputFieldSpec spec, String value) {
+    final text = value.trim();
+    if (!spec.isCompleteText(text)) {
+      return _FieldRead(spec);
+    }
+    final parsed = int.tryParse(text);
+    if (parsed == null) {
+      return _FieldRead(spec);
+    }
+    return _FieldRead(
+      spec,
+      value: parsed,
+      errorText: spec.isOutOfRange(parsed) ? spec.rangeText : null,
+    );
+  }
+
+  Map<String, String> _errorsFor(Iterable<_FieldRead> fields) {
+    return {
+      for (final field in fields)
+        if (field.errorText != null) field.spec.fieldName: field.errorText!,
+    };
   }
 
   void _scheduleRecord(CalcType calcType, Object inputs, Object result) {
@@ -353,4 +395,12 @@ final class CalcScreenNotifier extends Notifier<CalcScreenState> {
       await loadHistory();
     });
   }
+}
+
+final class _FieldRead {
+  const _FieldRead(this.spec, {this.value, this.errorText});
+
+  final CalcInputFieldSpec spec;
+  final num? value;
+  final String? errorText;
 }

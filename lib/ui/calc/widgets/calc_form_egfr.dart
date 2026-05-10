@@ -8,11 +8,12 @@ import 'package:fictional_drug_and_disease_ref/ui/calc/widgets/calc_segmented_co
 import 'package:flutter/material.dart';
 
 /// eGFR form composite.
-class CalcFormEgfr extends StatefulWidget {
+class CalcFormEgfr extends StatelessWidget {
   /// Creates an eGFR form.
   const CalcFormEgfr({
     required this.draft,
     required this.errors,
+    required this.focusNodes,
     required this.onChanged,
     required this.onSexChanged,
     super.key,
@@ -24,33 +25,14 @@ class CalcFormEgfr extends StatefulWidget {
   /// Field errors.
   final Map<String, String> errors;
 
+  /// Shared focus nodes keyed by input field.
+  final Map<CalcInputFieldKey, FocusNode> focusNodes;
+
   /// Field change callback.
   final void Function(CalcInputFieldKey field, String value) onChanged;
 
   /// Sex change callback.
   final ValueChanged<Sex> onSexChanged;
-
-  @override
-  State<CalcFormEgfr> createState() => _CalcFormEgfrState();
-}
-
-class _CalcFormEgfrState extends State<CalcFormEgfr> {
-  late final FocusNode _ageFocusNode;
-  late final FocusNode _creatinineFocusNode;
-
-  @override
-  void initState() {
-    super.initState();
-    _ageFocusNode = FocusNode();
-    _creatinineFocusNode = FocusNode();
-  }
-
-  @override
-  void dispose() {
-    _ageFocusNode.dispose();
-    _creatinineFocusNode.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -63,39 +45,40 @@ class _CalcFormEgfrState extends State<CalcFormEgfr> {
         CalcInputField(
           key: const ValueKey<String>('calc-input-ageYears'),
           label: l10n.calcInputAge,
-          valueText: widget.draft.valueOf(CalcInputFieldKey.ageYears),
+          valueText: draft.valueOf(CalcInputFieldKey.ageYears),
           placeholder: ageSpec.placeholderText,
           unit: l10n.calcUnitYear,
-          errorText: widget.errors[ageSpec.fieldName],
-          focusNode: _ageFocusNode,
+          errorText: errors[ageSpec.fieldName],
+          focusNode: focusNodes[CalcInputFieldKey.ageYears],
           keyboardType: calcKeyboardType(ageSpec),
           inputFormatters: calcInputFormatters(ageSpec),
           textInputAction: TextInputAction.next,
-          onFieldSubmitted: (_) => _creatinineFocusNode.requestFocus(),
-          onChanged: (value) =>
-              widget.onChanged(CalcInputFieldKey.ageYears, value),
+          onFieldSubmitted: (_) =>
+              focusNodes[CalcInputFieldKey.serumCreatinineMgDl]?.requestFocus(),
+          onChanged: (value) => onChanged(CalcInputFieldKey.ageYears, value),
         ),
         const SizedBox(height: 12),
         CalcInputField(
           key: const ValueKey<String>('calc-input-serumCreatinineMgDl'),
           label: l10n.calcInputCreatinine,
-          valueText: widget.draft.valueOf(
+          valueText: draft.valueOf(
             CalcInputFieldKey.serumCreatinineMgDl,
           ),
           placeholder: creatinineSpec.placeholderText,
           unit: l10n.calcUnitMgDl,
-          errorText: widget.errors[creatinineSpec.fieldName],
-          focusNode: _creatinineFocusNode,
+          errorText: errors[creatinineSpec.fieldName],
+          focusNode: focusNodes[CalcInputFieldKey.serumCreatinineMgDl],
           keyboardType: calcKeyboardType(creatinineSpec),
           inputFormatters: calcInputFormatters(creatinineSpec),
-          onFieldSubmitted: (_) => _creatinineFocusNode.unfocus(),
+          onFieldSubmitted: (_) =>
+              focusNodes[CalcInputFieldKey.serumCreatinineMgDl]?.unfocus(),
           onChanged: (value) =>
-              widget.onChanged(CalcInputFieldKey.serumCreatinineMgDl, value),
+              onChanged(CalcInputFieldKey.serumCreatinineMgDl, value),
         ),
         const SizedBox(height: 12),
         CalcSegmentedControl<Sex>.sex(
-          selectedValue: widget.draft.sex,
-          onChanged: widget.onSexChanged,
+          selectedValue: draft.sex,
+          onChanged: onSexChanged,
           items: [
             CalcSegmentedControlItem<Sex>(
               value: Sex.male,

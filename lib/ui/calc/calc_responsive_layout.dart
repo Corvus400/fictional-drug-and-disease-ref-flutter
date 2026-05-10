@@ -30,6 +30,7 @@ class _CalcResponsiveBody extends StatelessWidget {
     required this.state,
     required this.restoringHistory,
     required this.restoringProgressValue,
+    required this.focusNodes,
     required this.onToolChanged,
     required this.onFieldChanged,
     required this.onSexChanged,
@@ -42,6 +43,7 @@ class _CalcResponsiveBody extends StatelessWidget {
   final CalcScreenState state;
   final bool restoringHistory;
   final double? restoringProgressValue;
+  final Map<CalcInputFieldKey, FocusNode> focusNodes;
   final ValueChanged<CalcType> onToolChanged;
   final void Function(CalcInputFieldKey field, String value) onFieldChanged;
   final ValueChanged<Sex> onSexChanged;
@@ -56,6 +58,7 @@ class _CalcResponsiveBody extends StatelessWidget {
         state: state,
         restoringHistory: restoringHistory,
         restoringProgressValue: restoringProgressValue,
+        focusNodes: focusNodes,
         onToolChanged: onToolChanged,
         onFieldChanged: onFieldChanged,
         onSexChanged: onSexChanged,
@@ -67,6 +70,7 @@ class _CalcResponsiveBody extends StatelessWidget {
         state: state,
         restoringHistory: restoringHistory,
         restoringProgressValue: restoringProgressValue,
+        focusNodes: focusNodes,
         onToolChanged: onToolChanged,
         onFieldChanged: onFieldChanged,
         onSexChanged: onSexChanged,
@@ -78,6 +82,7 @@ class _CalcResponsiveBody extends StatelessWidget {
         state: state,
         restoringHistory: restoringHistory,
         restoringProgressValue: restoringProgressValue,
+        focusNodes: focusNodes,
         onToolChanged: onToolChanged,
         onFieldChanged: onFieldChanged,
         onSexChanged: onSexChanged,
@@ -89,6 +94,7 @@ class _CalcResponsiveBody extends StatelessWidget {
         state: state,
         restoringHistory: restoringHistory,
         restoringProgressValue: restoringProgressValue,
+        focusNodes: focusNodes,
         onToolChanged: onToolChanged,
         onFieldChanged: onFieldChanged,
         onSexChanged: onSexChanged,
@@ -105,6 +111,7 @@ class _CalcCompactLayout extends StatelessWidget {
     required this.state,
     required this.restoringHistory,
     required this.restoringProgressValue,
+    required this.focusNodes,
     required this.onToolChanged,
     required this.onFieldChanged,
     required this.onSexChanged,
@@ -116,6 +123,7 @@ class _CalcCompactLayout extends StatelessWidget {
   final CalcScreenState state;
   final bool restoringHistory;
   final double? restoringProgressValue;
+  final Map<CalcInputFieldKey, FocusNode> focusNodes;
   final ValueChanged<CalcType> onToolChanged;
   final void Function(CalcInputFieldKey field, String value) onFieldChanged;
   final ValueChanged<Sex> onSexChanged;
@@ -140,6 +148,7 @@ class _CalcCompactLayout extends StatelessWidget {
           children: [
             _CalcFormPane(
               state: state,
+              focusNodes: focusNodes,
               onChanged: onFieldChanged,
               onSexChanged: onSexChanged,
               dimmed: restoringHistory,
@@ -181,6 +190,7 @@ class _CalcLandscapePhoneLayout extends StatelessWidget {
     required this.state,
     required this.restoringHistory,
     required this.restoringProgressValue,
+    required this.focusNodes,
     required this.onToolChanged,
     required this.onFieldChanged,
     required this.onSexChanged,
@@ -192,6 +202,7 @@ class _CalcLandscapePhoneLayout extends StatelessWidget {
   final CalcScreenState state;
   final bool restoringHistory;
   final double? restoringProgressValue;
+  final Map<CalcInputFieldKey, FocusNode> focusNodes;
   final ValueChanged<CalcType> onToolChanged;
   final void Function(CalcInputFieldKey field, String value) onFieldChanged;
   final ValueChanged<Sex> onSexChanged;
@@ -231,6 +242,7 @@ class _CalcLandscapePhoneLayout extends StatelessWidget {
                 SizedBox(height: spacing.s4),
                 _CalcFormPane(
                   state: state,
+                  focusNodes: focusNodes,
                   onChanged: onFieldChanged,
                   onSexChanged: onSexChanged,
                   dimmed: restoringHistory,
@@ -270,6 +282,7 @@ class _CalcIPadPortraitLayout extends StatelessWidget {
     required this.state,
     required this.restoringHistory,
     required this.restoringProgressValue,
+    required this.focusNodes,
     required this.onToolChanged,
     required this.onFieldChanged,
     required this.onSexChanged,
@@ -281,6 +294,7 @@ class _CalcIPadPortraitLayout extends StatelessWidget {
   final CalcScreenState state;
   final bool restoringHistory;
   final double? restoringProgressValue;
+  final Map<CalcInputFieldKey, FocusNode> focusNodes;
   final ValueChanged<CalcType> onToolChanged;
   final void Function(CalcInputFieldKey field, String value) onFieldChanged;
   final ValueChanged<Sex> onSexChanged;
@@ -311,6 +325,7 @@ class _CalcIPadPortraitLayout extends StatelessWidget {
                 SizedBox(height: spacing.s6),
                 _CalcFormPane(
                   state: state,
+                  focusNodes: focusNodes,
                   onChanged: onFieldChanged,
                   onSexChanged: onSexChanged,
                   dimmed: restoringHistory,
@@ -350,6 +365,7 @@ class _CalcIPadLandscapeLayout extends StatelessWidget {
     required this.state,
     required this.restoringHistory,
     required this.restoringProgressValue,
+    required this.focusNodes,
     required this.onToolChanged,
     required this.onFieldChanged,
     required this.onSexChanged,
@@ -361,6 +377,7 @@ class _CalcIPadLandscapeLayout extends StatelessWidget {
   final CalcScreenState state;
   final bool restoringHistory;
   final double? restoringProgressValue;
+  final Map<CalcInputFieldKey, FocusNode> focusNodes;
   final ValueChanged<CalcType> onToolChanged;
   final void Function(CalcInputFieldKey field, String value) onFieldChanged;
   final ValueChanged<Sex> onSexChanged;
@@ -391,6 +408,7 @@ class _CalcIPadLandscapeLayout extends StatelessWidget {
                 SizedBox(height: spacing.s6),
                 _CalcFormPane(
                   state: state,
+                  focusNodes: focusNodes,
                   onChanged: onFieldChanged,
                   onSexChanged: onSexChanged,
                   dimmed: restoringHistory,
@@ -428,12 +446,14 @@ class _CalcIPadLandscapeLayout extends StatelessWidget {
 class _CalcFormPane extends StatelessWidget {
   const _CalcFormPane({
     required this.state,
+    required this.focusNodes,
     required this.onChanged,
     required this.onSexChanged,
     required this.dimmed,
   });
 
   final CalcScreenState state;
+  final Map<CalcInputFieldKey, FocusNode> focusNodes;
   final void Function(CalcInputFieldKey field, String value) onChanged;
   final ValueChanged<Sex> onSexChanged;
   final bool dimmed;
@@ -446,6 +466,7 @@ class _CalcFormPane extends StatelessWidget {
         key: const ValueKey<String>('calc-form-pane'),
         child: _CalcForm(
           state: state,
+          focusNodes: focusNodes,
           onChanged: onChanged,
           onSexChanged: onSexChanged,
         ),

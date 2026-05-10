@@ -1309,7 +1309,10 @@ class AppLocalizationsJa extends AppLocalizations {
   String get calcHistoryRestoring => '復元中…';
 
   @override
-  String get calcKeyboardDone => '確定';
+  String get calcKeyboardNext => '次へ';
+
+  @override
+  String get calcKeyboardDone => '完了';
 
   @override
   String get disclaimerRibbonText =>

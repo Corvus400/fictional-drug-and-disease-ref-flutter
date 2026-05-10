@@ -2560,10 +2560,16 @@ abstract class AppLocalizations {
   /// **'復元中…'**
   String get calcHistoryRestoring;
 
+  /// No description provided for @calcKeyboardNext.
+  ///
+  /// In ja, this message translates to:
+  /// **'次へ'**
+  String get calcKeyboardNext;
+
   /// No description provided for @calcKeyboardDone.
   ///
   /// In ja, this message translates to:
-  /// **'確定'**
+  /// **'完了'**
   String get calcKeyboardDone;
 
   /// No description provided for @disclaimerRibbonText.
