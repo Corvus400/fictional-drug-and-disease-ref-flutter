@@ -9,6 +9,9 @@ import 'package:fictional_drug_and_disease_ref/domain/calc/bmi.dart';
 import 'package:fictional_drug_and_disease_ref/domain/calc/calc_type.dart';
 import 'package:fictional_drug_and_disease_ref/domain/calc/codecs/calc_inputs_codec.dart';
 import 'package:fictional_drug_and_disease_ref/domain/calc/codecs/calc_result_codec.dart';
+import 'package:fictional_drug_and_disease_ref/domain/calc/crcl.dart';
+import 'package:fictional_drug_and_disease_ref/domain/calc/egfr.dart';
+import 'package:fictional_drug_and_disease_ref/domain/calc/sex.dart';
 import 'package:fictional_drug_and_disease_ref/domain/calculation_history/calculation_history_entry.dart';
 import 'package:fictional_drug_and_disease_ref/l10n/app_localizations.dart';
 import 'package:fictional_drug_and_disease_ref/theme/app_theme.dart';
@@ -59,6 +62,8 @@ void main() {
   _calcHistoryCollapsedGolden();
   _calcHistoryExpandedGolden();
   _calcHistoryEmptyGolden();
+  _calcHistoryRestoringGolden();
+  _calcHistoryRestoringMatrixGolden();
   _calcHistoryBoundaryEmptyGolden();
   for (final mode in _CalcHistoryBoundaryMode.values) {
     _calcHistoryBoundaryGolden(count: 1, expectedCount: 1, mode: mode);
@@ -623,6 +628,62 @@ void _calcHistoryExpandedGolden() {
   );
 }
 
+void _calcHistoryRestoringGolden() {
+  runGoldenMatrix(
+    fileNamePrefix: 'calc_history_restoring_after',
+    description: 'Calc history restoring after',
+    sizes: const ['phone'],
+    textScalers: const ['normal'],
+    builder: _calcRestoringOverlayBuilder,
+  );
+}
+
+void _calcHistoryRestoringMatrixGolden() {
+  const tools = _CalcGoldenTool.values;
+  const devices =
+      <
+        ({
+          String label,
+          Size size,
+        })
+      >[
+        (label: 'iPhone portrait', size: Size(390, 844)),
+        (label: 'iPhone landscape', size: Size(844, 390)),
+        (label: 'iPad portrait', size: Size(834, 1194)),
+        (label: 'iPad landscape', size: Size(1194, 834)),
+      ];
+  const modes = <({String label, Brightness brightness})>[
+    (label: 'light', brightness: Brightness.light),
+    (label: 'dark', brightness: Brightness.dark),
+  ];
+
+  unawaited(
+    goldenTest(
+      'Calc history restoring 24-state matrix',
+      fileName: 'calc_history_restoring_matrix',
+      builder: () => GoldenTestGroup(
+        columns: 3,
+        children: [
+          for (final mode in modes)
+            for (final device in devices)
+              for (final tool in tools)
+                GoldenTestScenario(
+                  name: '${tool.key} / ${device.label} / ${mode.label}',
+                  constraints: BoxConstraints.tight(device.size),
+                  child: _calcRestoringMatrixCell(
+                    tool: tool,
+                    theme: mode.brightness == Brightness.light
+                        ? AppTheme.light()
+                        : AppTheme.dark(),
+                    size: device.size,
+                  ),
+                ),
+        ],
+      ),
+    ),
+  );
+}
+
 void _calcHistoryEmptyGolden() {
   runGoldenMatrix(
     fileNamePrefix: 'calc_history_empty',
@@ -968,6 +1029,130 @@ Widget _calcViewBuilder(ThemeData theme, Size size, TextScaler scaler) {
       supportedLocales: AppLocalizations.supportedLocales,
       home: const CalcView(),
     ),
+  );
+}
+
+Widget _calcRestoringOverlayBuilder(
+  ThemeData theme,
+  Size size,
+  TextScaler scaler,
+) {
+  return MediaQuery(
+    data: MediaQueryData(
+      size: size,
+      devicePixelRatio: GoldenMatrix.devicePixelRatio,
+      textScaler: scaler,
+    ),
+    child: SizedBox(
+      width: size.width,
+      height: size.height,
+      child: ProviderScope(
+        overrides: [
+          appDatabaseProvider.overrideWithValue(_db),
+          calcScreenProvider.overrideWithBuild(
+            (ref, notifier) => _calcResponsiveMatrixState(
+              expandHistory: true,
+            ),
+          ),
+        ],
+        child: MaterialApp(
+          theme: theme,
+          darkTheme: theme,
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: const CalcView(
+            debugRestoringHistory: true,
+            debugRestoringProgressValue: 0.65,
+          ),
+        ),
+      ),
+    ),
+  );
+}
+
+Widget _calcRestoringMatrixCell({
+  required _CalcGoldenTool tool,
+  required ThemeData theme,
+  required Size size,
+}) {
+  return MediaQuery(
+    data: MediaQueryData(
+      size: size,
+      devicePixelRatio: GoldenMatrix.devicePixelRatio,
+      textScaler: TextScaler.noScaling,
+    ),
+    child: SizedBox(
+      width: size.width,
+      height: size.height,
+      child: ProviderScope(
+        overrides: [
+          appDatabaseProvider.overrideWithValue(_db),
+          calcScreenProvider.overrideWithBuild(
+            (ref, notifier) => _calcRestoringState(tool),
+          ),
+        ],
+        child: MaterialApp(
+          theme: theme,
+          darkTheme: theme,
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: const CalcView(
+            debugRestoringHistory: true,
+            debugRestoringProgressValue: 0.65,
+          ),
+        ),
+      ),
+    ),
+  );
+}
+
+CalcScreenState _calcRestoringState(_CalcGoldenTool tool) {
+  return switch (tool) {
+    _CalcGoldenTool.bmi => _calcResponsiveMatrixState(expandHistory: false),
+    _CalcGoldenTool.egfr => _egfrRestoringState(),
+    _CalcGoldenTool.crcl => _crclRestoringState(),
+  };
+}
+
+CalcScreenState _egfrRestoringState() {
+  const inputs = EgfrInputs(
+    ageYears: 50,
+    sex: Sex.male,
+    serumCreatinineMgDl: 1,
+  );
+  const result = EgfrResult(eGfrMlMin173m2: 63.1, stage: CkdStage.g2);
+  return CalcScreenState(
+    activeTool: CalcType.egfr,
+    phase: CalcPhase.resultWithClassification(
+      CalcType.egfr,
+      inputs,
+      result,
+      result.stage,
+    ),
+    historyExpanded: false,
+    history: _matrixBmiHistory(),
+    historyPhase: CalcHistoryPhase.loaded,
+  );
+}
+
+CalcScreenState _crclRestoringState() {
+  const inputs = CrClInputs(
+    ageYears: 50,
+    sex: Sex.male,
+    weightKg: 65,
+    serumCreatinineMgDl: 1,
+  );
+  const result = CrClResult(crClMlMin: 81.3);
+  return CalcScreenState(
+    activeTool: CalcType.crcl,
+    phase: const CalcPhase.validInput(
+      CalcType.crcl,
+      inputs,
+      result,
+    ),
+    historyExpanded: false,
+    history: _matrixBmiHistory(),
+    historyPhase: CalcHistoryPhase.loaded,
   );
 }
 

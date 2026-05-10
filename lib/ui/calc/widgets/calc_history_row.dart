@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
 /// History row atom for calculation history.
-class CalcHistoryRow extends StatelessWidget {
+class CalcHistoryRow extends StatefulWidget {
   /// Creates a history row.
   const CalcHistoryRow({
     required this.dateText,
@@ -47,14 +47,48 @@ class CalcHistoryRow extends StatelessWidget {
   final VoidCallback? onDelete;
 
   @override
+  State<CalcHistoryRow> createState() => _CalcHistoryRowState();
+}
+
+class _CalcHistoryRowState extends State<CalcHistoryRow> {
+  bool _deleteRevealed = false;
+
+  @override
   Widget build(BuildContext context) {
-    if (!deleteRevealed) {
-      return _HistoryRowContent(
-        dateText: dateText,
-        resultText: resultText,
-        summaryText: summaryText,
-        showBottomBorder: showBottomBorder,
-        onTap: onRestore,
+    final revealed = widget.deleteRevealed || _deleteRevealed;
+    if (!revealed) {
+      final content = _HistoryRowContent(
+        dateText: widget.dateText,
+        resultText: widget.resultText,
+        summaryText: widget.summaryText,
+        showBottomBorder: widget.showBottomBorder,
+        onTap: widget.onRestore,
+      );
+
+      if (widget.deleteLabel == null || widget.onDelete == null) {
+        return content;
+      }
+
+      return Dismissible(
+        key: ValueKey<String>(
+          'history-dismissible-${widget.dateText}-'
+          '${widget.resultText}-${widget.summaryText}',
+        ),
+        direction: DismissDirection.endToStart,
+        dismissThresholds: const {DismissDirection.endToStart: 0.4},
+        movementDuration: const Duration(milliseconds: 120),
+        confirmDismiss: (_) async {
+          setState(() => _deleteRevealed = true);
+          return false;
+        },
+        background: Align(
+          alignment: Alignment.centerRight,
+          child: _DeleteAction(
+            label: widget.deleteLabel!,
+            onDelete: widget.onDelete,
+          ),
+        ),
+        child: content,
       );
     }
 
@@ -77,8 +111,8 @@ class CalcHistoryRow extends StatelessWidget {
                       right: 0,
                       bottom: 0,
                       child: _DeleteAction(
-                        label: deleteLabel!,
-                        onDelete: onDelete,
+                        label: widget.deleteLabel!,
+                        onDelete: widget.onDelete,
                       ),
                     ),
                     Transform.translate(
@@ -86,11 +120,11 @@ class CalcHistoryRow extends StatelessWidget {
                       child: SizedBox(
                         width: constraints.maxWidth,
                         child: _HistoryRowContent(
-                          dateText: dateText,
-                          resultText: resultText,
-                          summaryText: summaryText,
-                          showBottomBorder: showBottomBorder,
-                          onTap: onRestore,
+                          dateText: widget.dateText,
+                          resultText: widget.resultText,
+                          summaryText: widget.summaryText,
+                          showBottomBorder: widget.showBottomBorder,
+                          onTap: widget.onRestore,
                         ),
                       ),
                     ),

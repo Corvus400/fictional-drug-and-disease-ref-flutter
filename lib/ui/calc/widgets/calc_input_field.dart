@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 /// Calc form input atom backed by the platform text input.
-class CalcInputField extends StatelessWidget {
+class CalcInputField extends StatefulWidget {
   /// Creates a calc input field.
   const CalcInputField({
     required this.label,
@@ -53,12 +53,43 @@ class CalcInputField extends StatelessWidget {
   final List<TextInputFormatter>? inputFormatters;
 
   @override
+  State<CalcInputField> createState() => _CalcInputFieldState();
+}
+
+class _CalcInputFieldState extends State<CalcInputField> {
+  late final TextEditingController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController(text: widget.valueText);
+  }
+
+  @override
+  void didUpdateWidget(CalcInputField oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    final nextText = widget.valueText ?? '';
+    if (_controller.text != nextText) {
+      _controller.value = TextEditingValue(
+        text: nextText,
+        selection: TextSelection.collapsed(offset: nextText.length),
+      );
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final palette = Theme.of(context).extension<AppPalette>()!;
     final radii = Theme.of(context).extension<AppRadii>()!;
     final spacing = Theme.of(context).extension<AppSpacing>()!;
     final typography = Theme.of(context).extension<AppTypography>()!;
-    final hasError = errorText != null;
+    final hasError = widget.errorText != null;
     final largeText = MediaQuery.textScalerOf(context).scale(16) >= 20.8;
     final inputHeight = largeText ? 56.0 : 44.0;
     final inputTextStyle =
@@ -71,10 +102,10 @@ class CalcInputField extends StatelessWidget {
             );
     final borderColor = hasError
         ? palette.calcError
-        : focused
+        : widget.focused
         ? palette.calcPrimary
         : palette.calcHairline;
-    final borderWidth = focused
+    final borderWidth = widget.focused
         ? 2.0
         : hasError
         ? 1.5
@@ -84,7 +115,7 @@ class CalcInputField extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          label,
+          widget.label,
           style: typography.labelS.copyWith(color: palette.calcMuted),
         ),
         SizedBox(height: spacing.s1),
@@ -92,11 +123,11 @@ class CalcInputField extends StatelessWidget {
           key: _inputBoxKey,
           height: inputHeight,
           child: TextFormField(
-            initialValue: valueText,
-            keyboardType: keyboardType,
-            inputFormatters: inputFormatters,
-            onChanged: onChanged,
-            onTap: onTap,
+            controller: _controller,
+            keyboardType: widget.keyboardType,
+            inputFormatters: widget.inputFormatters,
+            onChanged: widget.onChanged,
+            onTap: widget.onTap,
             textInputAction: TextInputAction.done,
             style: inputTextStyle,
             decoration: InputDecoration(
@@ -105,7 +136,7 @@ class CalcInputField extends StatelessWidget {
               fillColor: hasError
                   ? palette.calcErrorContainer
                   : palette.calcSurface,
-              hintText: placeholder,
+              hintText: widget.placeholder,
               hintStyle: inputTextStyle.copyWith(
                 color: palette.calcMuted2,
                 fontWeight: FontWeight.w400,
@@ -115,7 +146,7 @@ class CalcInputField extends StatelessWidget {
                 child: Center(
                   widthFactor: 1,
                   child: Text(
-                    unit,
+                    widget.unit,
                     style: typography.labelM.copyWith(
                       color: hasError ? palette.calcError : palette.calcMuted,
                       fontFamily: 'JetBrainsMono',
@@ -156,7 +187,7 @@ class CalcInputField extends StatelessWidget {
               SizedBox(width: spacing.s1),
               Expanded(
                 child: Text(
-                  errorText!,
+                  widget.errorText!,
                   style: typography.labelS.copyWith(
                     color: palette.calcError,
                     fontWeight: FontWeight.w600,
@@ -182,7 +213,7 @@ class CalcInputField extends StatelessWidget {
   }
 
   Key? get _inputBoxKey {
-    final widgetKey = key;
+    final widgetKey = widget.key;
     if (widgetKey is ValueKey<String>) {
       return ValueKey<String>('${widgetKey.value}-box');
     }

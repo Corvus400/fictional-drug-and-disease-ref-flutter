@@ -34,13 +34,33 @@ part 'calc_history_section.dart';
 /// Calculation tools tab.
 class CalcView extends ConsumerStatefulWidget {
   /// Creates a calculation tools view.
-  const CalcView({super.key});
+  const CalcView({
+    @visibleForTesting this.debugRestoringHistory = false,
+    @visibleForTesting this.debugRestoringProgressValue,
+    super.key,
+  });
+
+  /// Forces the restoring state for deterministic visual tests.
+  @visibleForTesting
+  final bool debugRestoringHistory;
+
+  /// Forces a deterministic progress arc for visual tests.
+  @visibleForTesting
+  final double? debugRestoringProgressValue;
 
   @override
   ConsumerState<CalcView> createState() => _CalcViewState();
 }
 
 class _CalcViewState extends ConsumerState<CalcView> {
+  bool _restoringHistory = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _restoringHistory = widget.debugRestoringHistory;
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
@@ -55,22 +75,42 @@ class _CalcViewState extends ConsumerState<CalcView> {
       ),
       backgroundColor: palette.calcBg,
       body: SafeArea(
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            return _CalcResponsiveBody(
-              mode: _CalcResponsiveMode.fromSize(constraints.biggest),
-              state: state,
-              onToolChanged: notifier.selectTool,
-              onFieldChanged: notifier.updateField,
-              onSexChanged: notifier.updateSex,
-              onHistoryToggle: notifier.toggleHistory,
-              onHistoryRestore: notifier.restoreFromHistory,
-              onHistoryDelete: notifier.deleteHistory,
-            );
-          },
+        child: Stack(
+          children: [
+            LayoutBuilder(
+              builder: (context, constraints) {
+                return IgnorePointer(
+                  ignoring: _restoringHistory,
+                  child: _CalcResponsiveBody(
+                    mode: _CalcResponsiveMode.fromSize(constraints.biggest),
+                    state: state,
+                    restoringHistory: _restoringHistory,
+                    restoringProgressValue: widget.debugRestoringProgressValue,
+                    onToolChanged: notifier.selectTool,
+                    onFieldChanged: notifier.updateField,
+                    onSexChanged: notifier.updateSex,
+                    onHistoryToggle: notifier.toggleHistory,
+                    onHistoryRestore: _restoreFromHistory,
+                    onHistoryDelete: notifier.deleteHistory,
+                  ),
+                );
+              },
+            ),
+          ],
         ),
       ),
     );
+  }
+
+  Future<void> _restoreFromHistory(CalculationHistoryEntry entry) async {
+    setState(() => _restoringHistory = true);
+    try {
+      ref.read(calcScreenProvider.notifier).restoreFromHistory(entry);
+    } finally {
+      if (mounted) {
+        setState(() => _restoringHistory = false);
+      }
+    }
   }
 }
 
@@ -175,9 +215,15 @@ class _CalcForm extends StatelessWidget {
 }
 
 class _CalcResult extends StatelessWidget {
-  const _CalcResult({required this.state});
+  const _CalcResult({
+    required this.state,
+    required this.restoringHistory,
+    required this.restoringProgressValue,
+  });
 
   final CalcScreenState state;
+  final bool restoringHistory;
+  final double? restoringProgressValue;
 
   @override
   Widget build(BuildContext context) {
@@ -196,6 +242,8 @@ class _CalcResult extends StatelessWidget {
       hintText: placeholder ? l10n.calcResultHint : null,
       badges: _badges(context, phase),
       visualization: _visualization(phase),
+      restoringMessage: restoringHistory ? l10n.calcHistoryRestoring : null,
+      restoringProgressValue: restoringProgressValue,
     );
   }
 

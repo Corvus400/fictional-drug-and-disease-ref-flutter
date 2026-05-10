@@ -6,6 +6,8 @@ import 'package:fictional_drug_and_disease_ref/ui/calc/widgets/calc_history_row.
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import '../../../golden/golden_test_helpers.dart';
+
 void main() {
   testWidgets('Calc history atoms match wide spec references', (tester) async {
     await tester.binding.setSurfaceSize(const Size(1432, 1020));
@@ -46,6 +48,34 @@ void main() {
       matchesGoldenFile('goldens/macos/calc_history_atoms_light.png'),
     );
   }, tags: const ['golden']);
+
+  runGoldenMatrix(
+    fileNamePrefix: 'calc_swipe_to_delete',
+    description: 'Calc swipe to delete',
+    sizes: const ['history_row'],
+    customSizes: const {'history_row': Size(320, 80)},
+    textScalers: const ['normal'],
+    builder: (theme, size, scaler) => MaterialApp(
+      theme: theme,
+      darkTheme: theme,
+      home: const Material(
+        child: Align(
+          alignment: Alignment.topLeft,
+          child: SizedBox(
+            width: 320,
+            child: CalcHistoryRow(
+              dateText: '2026/05/10',
+              resultText: 'BMI 22.5 (普通体重)',
+              summaryText: 'H170/W65',
+              deleteLabel: '削除',
+              deleteRevealed: true,
+              showBottomBorder: false,
+            ),
+          ),
+        ),
+      ),
+    ),
+  );
 }
 
 class _HistoryAtomsWideReference extends StatelessWidget {

@@ -219,6 +219,43 @@ minimum:
 - Split View compact Light/Dark: `calc_split_view_compact_{light,dark}.png`
 - Large text Light/Dark: `calc_large_text_{light,dark}.png`
 
+## Phase 7 Reference Outputs
+
+Generated references:
+
+- `tmp/calc_spec_refs/spec_history_phone_swipe_dark.png`
+- `tmp/calc_spec_refs/spec_history_restoring_after_{light,dark}.png`
+
+Flutter goldens:
+
+- `test/ui/calc/widgets/goldens/macos/calc_swipe_to_delete_{light,dark}.png`
+- `test/ui/calc/goldens/macos/calc_history_restoring_after_{light,dark}.png`
+- `test/ui/calc/goldens/macos/calc_history_restoring_matrix.png`
+
+The Phase 7 verdict records the current spec comparison table:
+
+- `tmp/calc_phase_7_verdict.md`
+
+User correction on 2026-05-10: restore must not add an artificial 200ms delay
+only to make the indicator visible. Production restore locks the screen only
+while the actual restore call is executing. The static restoring visual state
+is covered through `CalcView.debugRestoringHistory` in widget/golden tests.
+
+User correction on 2026-05-10: restoring coverage must include all 24 required
+cells in one matrix golden:
+
+- BMI, eGFR, and CrCl
+- iPhone and iPad
+- portrait and landscape
+- light and dark
+
+During restoring, Calc screen content must be disabled and visually dimmed, and
+the restoring indicator must remain readable in the result-card visualization
+slot. Calc-internal tool switching is blocked while restoring; app-level tab
+switching is outside `CalcView`, but restore currently mutates local screen
+state synchronously and has no delayed write after navigation, backgrounding,
+or process termination.
+
 ## Continuing The Plan
 
 Before each remaining UI/golden phase:

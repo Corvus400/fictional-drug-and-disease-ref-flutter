@@ -344,8 +344,21 @@ const phoneHistoryExpanded = page
 const phoneHistorySwipe = page
   .locator('[data-frame-label="iPhone × Light × swipe-to-delete (BMI)"] .history')
   .first();
+const phoneHistorySwipeDark = page
+  .locator('[data-frame-label="iPhone × Dark × swipe-to-delete (BMI)"] .history')
+  .first();
 const phoneHistoryEmpty = page
   .locator('[data-frame-label="iPhone × Light × history-empty (BMI)"] .history')
+  .first();
+const phoneHistoryRestoringAfter = page
+  .locator(
+    '[data-frame-label="iPhone × Light × history-restoring-after (BMI)"]',
+  )
+  .first();
+const phoneHistoryRestoringAfterDark = page
+  .locator(
+    '[data-frame-label="iPhone × Dark × history-restoring-after (BMI)"]',
+  )
   .first();
 
 await phoneHistoryExpanded.screenshot({
@@ -354,8 +367,17 @@ await phoneHistoryExpanded.screenshot({
 await phoneHistorySwipe.screenshot({
   path: path.join(outDir, 'spec_history_phone_swipe.png'),
 });
+await phoneHistorySwipeDark.screenshot({
+  path: path.join(outDir, 'spec_history_phone_swipe_dark.png'),
+});
 await phoneHistoryEmpty.screenshot({
   path: path.join(outDir, 'spec_history_phone_empty.png'),
+});
+await phoneHistoryRestoringAfter.screenshot({
+  path: path.join(outDir, 'spec_history_restoring_after_light.png'),
+});
+await phoneHistoryRestoringAfterDark.screenshot({
+  path: path.join(outDir, 'spec_history_restoring_after_dark.png'),
 });
 
 const chartCard = page
