@@ -342,6 +342,35 @@ void main() {
       expect(find.text('--'), findsWidgets);
     });
 
+    testWidgets('keeps CrCl form values when editing after an error', (
+      tester,
+    ) async {
+      await tester.pumpWidget(_testApp(db));
+      await tester.pump();
+
+      await tester.tap(find.text('CrCl'), warnIfMissed: false);
+      await tester.pumpAndSettle();
+
+      await tester.enterText(_inputField('calc-input-ageYears'), '1');
+      await tester.pump();
+      await tester.enterText(_inputField('calc-input-weightKg'), '1');
+      await tester.pump();
+      await tester.enterText(
+        _inputField('calc-input-serumCreatinineMgDl'),
+        '1',
+      );
+      await tester.pump();
+
+      expect(find.text('18-120 years'), findsOneWidget);
+
+      await tester.enterText(_inputField('calc-input-ageYears'), '-');
+      await tester.pump();
+
+      expect(_inputText(tester, 'calc-input-ageYears'), '-');
+      expect(_inputText(tester, 'calc-input-weightKg'), '1');
+      expect(_inputText(tester, 'calc-input-serumCreatinineMgDl'), '1');
+    });
+
     testWidgets('renders every input lower and upper boundary error', (
       tester,
     ) async {
@@ -842,6 +871,10 @@ Finder _inputField(String key) {
     of: find.byKey(ValueKey<String>(key)),
     matching: find.byType(TextFormField),
   );
+}
+
+String _inputText(WidgetTester tester, String key) {
+  return tester.widget<TextFormField>(_inputField(key)).controller!.text;
 }
 
 Finder _richTextContaining(String text) {

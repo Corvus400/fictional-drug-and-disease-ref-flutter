@@ -117,11 +117,12 @@ final class CalcScreenNotifier extends Notifier<CalcScreenState> {
     return switch (state.phase) {
       CalcPhaseEmpty(:final partialInputs) => partialInputs,
       CalcPhasePartialInput(:final partialInputs) => partialInputs,
+      CalcPhaseOutOfRange(:final inputs) =>
+        inputs is CalcInputDraft ? inputs : _draftFromInputs(inputs),
       CalcPhaseValidInput(:final inputs) => _draftFromInputs(inputs),
       CalcPhaseResultWithClassification(:final inputs) => _draftFromInputs(
         inputs,
       ),
-      _ => const CalcInputDraft(),
     };
   }
 
