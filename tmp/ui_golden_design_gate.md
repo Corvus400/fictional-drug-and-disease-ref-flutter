@@ -144,6 +144,12 @@ the too-tight badge/chart spacing. Current required Phase 5 edge cases:
   lower and upper invalid edge:
   BMI height/weight (4); eGFR age/serum creatinine (4); CrCl age/weight/serum
   creatinine (6). Each golden must assert the matching range label appears.
+- CalcView AppBar must not keep decorative or undefined action buttons. The
+  original design frame showed a left menu icon and a right history icon, but
+  the plan defines no menu behavior and the in-screen history header is the
+  canonical history expand/collapse control. User correction on 2026-05-10:
+  remove both top AppBar icons and record the difference as a justified
+  deviation from the static mock.
 
 ## Phase 4a Reference Outputs
 

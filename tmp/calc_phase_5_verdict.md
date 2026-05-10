@@ -42,7 +42,7 @@ Gate source: `tmp/ui_golden_design_gate.md`.
 | Female sex patterns | eGFR and CrCl require female selected-state because sex changes result; BMI has no sex input | Sex segmented control updates state and recalculates formulas with female coefficient | Notifier tests cover female eGFR and CrCl; widget tests assert `46.6 / G3a` and `69.1`; screen goldens `calc_egfr_female_*`, `calc_crcl_female_*` show female selected | pass |
 | All classification badge patterns | BMI 7 labels and CKD 6 labels must all be covered | `CalcCategoryBadge` renders every label with its non-color shape cue | Widget test finds 13 labels and shape keys; `calc_category_badges_all_{light,dark}.png` show all patterns | pass |
 | Badge/chart overlap | User correction: classification badge and marker value must not visually collide | `CalcResultCard` uses `spacing.s8` when badge and chart coexist | Widget geometry tests require marker label top minus badge bottom >= 12 px for G2, G4, and BMI low | pass |
-| App bar | SSOT appbar with menu, centered `計算ツール`, history icon | `CalcView` `AppBar` with `Symbols.menu`, `calcAppBarTitle`, `Symbols.history` | Screen goldens show appbar in all states | pass |
+| App bar | Updated user requirement: remove decorative left menu and duplicate right history icon because neither has a distinct specified behavior | `CalcView` `AppBar` uses `automaticallyImplyLeading: false` and title-only `calcAppBarTitle`; history interaction remains in the in-screen history header | Widget test asserts `Symbols.menu` and `Symbols.history` are absent; updated screen goldens show title-only appbar in all states | pass |
 | Input fields | BMI: height/weight; eGFR: age/creatinine/sex; CrCl: age/weight/creatinine/sex | Separate form composites `CalcFormBmi`, `CalcFormEgfr`, `CalcFormCrCl` | Widget tests find the expected field keys and tool switching behavior | pass |
 | Numeric input | User override: system default numeric input, no custom keyboard | `CalcInputField` remains `TextFormField` with numeric keyboard; no `CalcKeyboardPanel` implementation | No keyboard panel appears in screen goldens; plan keyboard-open image is intentionally skipped | justified-deviation |
 | Result labels | Japanese labels must render, not tofu | Added NotoSansJP fallback to result hint and retained field unit fallback | Goldens show `すべての項目を入力してください`, `歳`, `G2 軽度低下`, `G4 高度低下` readable | pass |
@@ -64,10 +64,12 @@ Gate source: `tmp/ui_golden_design_gate.md`.
 | Mock `RecordCalculationHistoryUsecase` with mocktail in notifier tests | Tests use real in-memory Drift database with provider override | Usecase classes are `final`; in-memory integration gives stronger coverage without changing production types | Slightly broader test than pure unit, but deterministic and clears DB between tests | justified-deviation |
 | Keyboard-open golden | Not implemented | User explicitly changed numeric input requirement to system default numeric input and no custom keyboard | No custom keyboard visual exists to capture | justified-deviation |
 | SSOT result card has `gap: s2` and chart `margin-top: s2` | Flutter uses `s8` when badge and chart coexist | User reported the SSOT-equivalent spacing caused visually poor badge/value-label crowding; geometry test now requires >= 12 px gap | Intentional screen-level correction; atom chart dimensions remain spec-matched | justified-deviation |
+| SSOT appbar shows a left menu icon and right history icon | Flutter AppBar now renders title only | User confirmed both top buttons are unnecessary; the menu had no behavior and the right history icon duplicated the in-screen history header | Red/Green widget test locks both icons absent; history expand/collapse remains available in the history section | justified-deviation |
 
 ## Verification
 
 - `flutter test test/ui/calc/calc_view_test.dart` passed.
+- `flutter test test/ui/calc/calc_view_test.dart --plain-name 'does not render undefined app bar action buttons'` failed before the fix with one `Symbols.menu`, then passed after removing the top AppBar icons.
 - `flutter test --update-goldens --tags golden test/ui/calc/calc_view_golden_test.dart` passed 118 variants.
 - `flutter test test/ui/calc/widgets/calc_chart_atoms_test.dart` passed.
 - `flutter test test/ui/calc/widgets/calc_result_atoms_test.dart` passed.
@@ -96,6 +98,7 @@ Gate source: `tmp/ui_golden_design_gate.md`.
   - `calc_history_boundary_open_50_light.png` shows `履歴 (50)` with capped list and bottom fade.
   - `calc_history_boundary_open_51_light.png` also shows `履歴 (50)`, proving the 51st insert is not rendered as an extra row.
   - `calc_category_badges_all_light.png` and `calc_category_badges_all_dark.png` show all BMI/CKD labels without tofu or clipping.
+  - Updated `calc_bmi_empty_light.png` and the other CalcView screen goldens show a title-only AppBar with no left menu icon and no right history icon.
 
 ## Gate Result
 

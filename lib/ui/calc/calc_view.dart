@@ -48,18 +48,8 @@ class _CalcViewState extends ConsumerState<CalcView> {
 
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Symbols.menu),
-          onPressed: () {},
-        ),
+        automaticallyImplyLeading: false,
         title: Text(l10n.calcAppBarTitle),
-        actions: [
-          IconButton(
-            icon: const Icon(Symbols.history),
-            tooltip: l10n.calcActionHistory,
-            onPressed: notifier.toggleHistory,
-          ),
-        ],
       ),
       backgroundColor: palette.calcBg,
       body: SafeArea(

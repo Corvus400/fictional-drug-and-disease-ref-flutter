@@ -47,6 +47,17 @@ void main() {
       expect(find.text('履歴はありません'), findsOneWidget);
     });
 
+    testWidgets('does not render undefined app bar action buttons', (
+      tester,
+    ) async {
+      await tester.pumpWidget(_testApp(db));
+      await tester.pumpAndSettle();
+
+      expect(find.text('計算ツール'), findsOneWidget);
+      expect(find.byIcon(Symbols.menu), findsNothing);
+      expect(find.byIcon(Symbols.history), findsNothing);
+    });
+
     testWidgets('does not toggle history when there are no rows', (
       tester,
     ) async {
