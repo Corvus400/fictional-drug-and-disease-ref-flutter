@@ -2,9 +2,12 @@ import 'package:fictional_drug_and_disease_ref/data/local/app_database.dart';
 import 'package:fictional_drug_and_disease_ref/data/providers/local_providers.dart';
 import 'package:fictional_drug_and_disease_ref/domain/calc/bmi.dart';
 import 'package:fictional_drug_and_disease_ref/domain/calc/calc_type.dart';
+import 'package:fictional_drug_and_disease_ref/domain/calc/codecs/calc_inputs_codec.dart';
+import 'package:fictional_drug_and_disease_ref/domain/calc/codecs/calc_result_codec.dart';
 import 'package:fictional_drug_and_disease_ref/domain/calc/crcl.dart';
 import 'package:fictional_drug_and_disease_ref/domain/calc/egfr.dart';
 import 'package:fictional_drug_and_disease_ref/domain/calc/sex.dart';
+import 'package:fictional_drug_and_disease_ref/domain/calculation_history/calculation_history_entry.dart';
 import 'package:fictional_drug_and_disease_ref/l10n/app_localizations.dart';
 import 'package:fictional_drug_and_disease_ref/theme/app_theme.dart';
 import 'package:fictional_drug_and_disease_ref/ui/calc/calc_screen_notifier.dart';
@@ -1172,6 +1175,52 @@ void main() {
       expect(_richTextContaining('H170/W65'), findsOneWidget);
     });
 
+    testWidgets('rounds only exposed right edges in history rows', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        _testApp(db, calcState: _historyStateForRows(1)),
+      );
+      await tester.pumpAndSettle();
+
+      final singleRadius = _borderRadiusAt(
+        tester,
+        find.byKey(const ValueKey<String>('history-row-clip')),
+        0,
+      );
+      expect(singleRadius.topRight.x, greaterThan(0));
+      expect(singleRadius.bottomRight.x, greaterThan(0));
+      expect(singleRadius.topLeft, Radius.zero);
+      expect(singleRadius.bottomLeft, Radius.zero);
+
+      await tester.pumpWidget(const SizedBox.shrink());
+      await tester.pump();
+
+      await tester.pumpWidget(
+        _testApp(db, calcState: _historyStateForRows(3)),
+      );
+      await tester.pumpAndSettle();
+
+      final rowClips = find.byKey(const ValueKey<String>('history-row-clip'));
+      expect(rowClips, findsNWidgets(3));
+
+      final firstRadius = _borderRadiusAt(tester, rowClips, 0);
+      final middleRadius = _borderRadiusAt(tester, rowClips, 1);
+      final lastRadius = _borderRadiusAt(tester, rowClips, 2);
+
+      expect(firstRadius.topRight.x, greaterThan(0));
+      expect(firstRadius.bottomRight, Radius.zero);
+      expect(firstRadius.topLeft, Radius.zero);
+      expect(firstRadius.bottomLeft, Radius.zero);
+
+      expect(middleRadius, BorderRadius.zero);
+
+      expect(lastRadius.topRight, Radius.zero);
+      expect(lastRadius.bottomRight.x, greaterThan(0));
+      expect(lastRadius.topLeft, Radius.zero);
+      expect(lastRadius.bottomLeft, Radius.zero);
+    });
+
     testWidgets('keeps history content alive while collapse animation runs', (
       tester,
     ) async {
@@ -1357,6 +1406,37 @@ Finder _historyHeaderIcon(IconData icon) {
         widget is Icon &&
         widget.key == const ValueKey<String>('calc-history-header-icon') &&
         widget.icon == icon,
+  );
+}
+
+BorderRadius _borderRadiusAt(WidgetTester tester, Finder finder, int index) {
+  return tester.widget<ClipRRect>(finder.at(index)).borderRadius
+      as BorderRadius;
+}
+
+CalcScreenState _historyStateForRows(int count) {
+  return CalcScreenState.initial().copyWith(
+    historyExpanded: true,
+    historyPhase: CalcHistoryPhase.loaded,
+    history: List<CalculationHistoryEntry>.generate(count, _bmiHistoryEntry),
+  );
+}
+
+CalculationHistoryEntry _bmiHistoryEntry(int index) {
+  const inputsCodec = CalculationInputsCodec();
+  const resultCodec = CalculationResultCodec();
+  final inputs = BmiInputs(
+    heightCm: 170.0 + index,
+    weightKg: 65.0 + index,
+  );
+  final result = Bmi.calculate(inputs);
+
+  return CalculationHistoryEntry(
+    id: 'history-radius-$index',
+    calcType: CalcType.bmi.storageKey,
+    inputsJson: inputsCodec.encode(inputs),
+    resultJson: resultCodec.encode(result),
+    calculatedAt: DateTime.utc(2026, 5, 10 - index),
   );
 }
 

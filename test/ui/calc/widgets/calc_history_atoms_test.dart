@@ -69,6 +69,14 @@ void main() {
             .width,
         72,
       );
+      expect(
+        tester
+            .getSize(
+              find.byKey(const ValueKey<String>('history-delete')),
+            )
+            .height,
+        38,
+      );
       final deleteBox = tester.widget<DecoratedBox>(
         find
             .descendant(
@@ -81,7 +89,8 @@ void main() {
         tester.element(find.byType(CalcHistoryRow)),
       ).extension<AppPalette>()!;
       final decoration = deleteBox.decoration as BoxDecoration;
-      expect(decoration.color, palette.calcError);
+      expect(decoration.color, const Color(0xFFB3261E));
+      expect(decoration.color, isNot(palette.calcErrorContainer));
     });
 
     testWidgets('CalcHistoryEmptyState renders icon and message', (

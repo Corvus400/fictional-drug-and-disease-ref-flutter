@@ -70,6 +70,10 @@ void main() {
               deleteLabel: '削除',
               deleteRevealed: true,
               showBottomBorder: false,
+              borderRadius: BorderRadius.only(
+                topRight: Radius.circular(10),
+                bottomRight: Radius.circular(10),
+              ),
             ),
           ),
         ),
@@ -92,6 +96,10 @@ class _HistoryAtomsWideReference extends StatelessWidget {
             resultText: 'BMI 22.5 (普通体重)',
             summaryText: 'H170/W65',
             showBottomBorder: false,
+            borderRadius: BorderRadius.only(
+              topRight: Radius.circular(10),
+              bottomRight: Radius.circular(10),
+            ),
           ),
         ),
         SizedBox(height: 16),
@@ -103,6 +111,11 @@ class _HistoryAtomsWideReference extends StatelessWidget {
             summaryText: 'H170/W65',
             deleteLabel: '削除',
             deleteRevealed: true,
+            showBottomBorder: false,
+            borderRadius: BorderRadius.only(
+              topRight: Radius.circular(10),
+              bottomRight: Radius.circular(10),
+            ),
           ),
         ),
         SizedBox(height: 16),

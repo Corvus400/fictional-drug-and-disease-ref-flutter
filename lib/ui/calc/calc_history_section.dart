@@ -193,16 +193,23 @@ class _CalcHistoryList extends StatelessWidget {
                 physics: const ClampingScrollPhysics(),
                 child: Column(
                   children: [
-                    for (final row in rows)
+                    for (final indexed in rows.indexed)
                       CalcHistoryRow(
-                        key: ValueKey<String>('calc-history-${row.entry.id}'),
-                        dateText: row.dateText,
-                        resultText: row.resultText,
-                        summaryText: row.summaryText,
+                        key: ValueKey<String>(
+                          'calc-history-${indexed.$2.entry.id}',
+                        ),
+                        dateText: indexed.$2.dateText,
+                        resultText: indexed.$2.resultText,
+                        summaryText: indexed.$2.summaryText,
                         deleteLabel: deleteLabel,
-                        showBottomBorder: row.showBottomBorder,
-                        onRestore: () => onRestore(row.entry),
-                        onDelete: () => onDelete(row.entry.id),
+                        showBottomBorder: indexed.$2.showBottomBorder,
+                        borderRadius: _historyRowRightRadius(
+                          index: indexed.$1,
+                          count: rows.length,
+                          radius: radii.card,
+                        ),
+                        onRestore: () => onRestore(indexed.$2.entry),
+                        onDelete: () => onDelete(indexed.$2.entry.id),
                       ),
                   ],
                 ),
@@ -234,6 +241,23 @@ class _CalcHistoryList extends StatelessWidget {
       ),
     );
   }
+}
+
+BorderRadius _historyRowRightRadius({
+  required int index,
+  required int count,
+  required double radius,
+}) {
+  if (count <= 0) {
+    return BorderRadius.zero;
+  }
+
+  final isFirst = index == 0;
+  final isLast = index == count - 1;
+  return BorderRadius.only(
+    topRight: isFirst ? Radius.circular(radius) : Radius.zero,
+    bottomRight: isLast ? Radius.circular(radius) : Radius.zero,
+  );
 }
 
 class _CalcHistoryRowData {
