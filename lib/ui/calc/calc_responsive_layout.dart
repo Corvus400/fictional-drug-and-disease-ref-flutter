@@ -28,6 +28,8 @@ class _CalcResponsiveBody extends StatelessWidget {
   const _CalcResponsiveBody({
     required this.mode,
     required this.state,
+    required this.restoringHistory,
+    required this.restoringProgressValue,
     required this.onToolChanged,
     required this.onFieldChanged,
     required this.onSexChanged,
@@ -38,6 +40,8 @@ class _CalcResponsiveBody extends StatelessWidget {
 
   final _CalcResponsiveMode mode;
   final CalcScreenState state;
+  final bool restoringHistory;
+  final double? restoringProgressValue;
   final ValueChanged<CalcType> onToolChanged;
   final void Function(CalcInputFieldKey field, String value) onFieldChanged;
   final ValueChanged<Sex> onSexChanged;
@@ -50,6 +54,8 @@ class _CalcResponsiveBody extends StatelessWidget {
     return switch (mode) {
       _CalcResponsiveMode.compact => _CalcCompactLayout(
         state: state,
+        restoringHistory: restoringHistory,
+        restoringProgressValue: restoringProgressValue,
         onToolChanged: onToolChanged,
         onFieldChanged: onFieldChanged,
         onSexChanged: onSexChanged,
@@ -59,6 +65,8 @@ class _CalcResponsiveBody extends StatelessWidget {
       ),
       _CalcResponsiveMode.landscapePhone => _CalcLandscapePhoneLayout(
         state: state,
+        restoringHistory: restoringHistory,
+        restoringProgressValue: restoringProgressValue,
         onToolChanged: onToolChanged,
         onFieldChanged: onFieldChanged,
         onSexChanged: onSexChanged,
@@ -68,6 +76,8 @@ class _CalcResponsiveBody extends StatelessWidget {
       ),
       _CalcResponsiveMode.iPadPortrait => _CalcIPadPortraitLayout(
         state: state,
+        restoringHistory: restoringHistory,
+        restoringProgressValue: restoringProgressValue,
         onToolChanged: onToolChanged,
         onFieldChanged: onFieldChanged,
         onSexChanged: onSexChanged,
@@ -77,6 +87,8 @@ class _CalcResponsiveBody extends StatelessWidget {
       ),
       _CalcResponsiveMode.iPadLandscape => _CalcIPadLandscapeLayout(
         state: state,
+        restoringHistory: restoringHistory,
+        restoringProgressValue: restoringProgressValue,
         onToolChanged: onToolChanged,
         onFieldChanged: onFieldChanged,
         onSexChanged: onSexChanged,
@@ -91,6 +103,8 @@ class _CalcResponsiveBody extends StatelessWidget {
 class _CalcCompactLayout extends StatelessWidget {
   const _CalcCompactLayout({
     required this.state,
+    required this.restoringHistory,
+    required this.restoringProgressValue,
     required this.onToolChanged,
     required this.onFieldChanged,
     required this.onSexChanged,
@@ -100,6 +114,8 @@ class _CalcCompactLayout extends StatelessWidget {
   });
 
   final CalcScreenState state;
+  final bool restoringHistory;
+  final double? restoringProgressValue;
   final ValueChanged<CalcType> onToolChanged;
   final void Function(CalcInputFieldKey field, String value) onFieldChanged;
   final ValueChanged<Sex> onSexChanged;
@@ -126,15 +142,21 @@ class _CalcCompactLayout extends StatelessWidget {
               state: state,
               onChanged: onFieldChanged,
               onSexChanged: onSexChanged,
+              dimmed: restoringHistory,
             ),
             SizedBox(height: spacing.s4),
-            _CalcResultPane(state: state),
+            _CalcResultPane(
+              state: state,
+              restoringHistory: restoringHistory,
+              restoringProgressValue: restoringProgressValue,
+            ),
             SizedBox(height: spacing.s4),
             _CalcHistoryPane(
               state: state,
               onToggle: onHistoryToggle,
               onRestore: onHistoryRestore,
               onDelete: onHistoryDelete,
+              dimmed: restoringHistory,
             ),
           ],
         ),
@@ -146,6 +168,7 @@ class _CalcCompactLayout extends StatelessWidget {
             key: const ValueKey<String>('calc-tool-selector-bottom'),
             state: state,
             onChanged: onToolChanged,
+            dimmed: restoringHistory,
           ),
         ),
       ],
@@ -156,6 +179,8 @@ class _CalcCompactLayout extends StatelessWidget {
 class _CalcLandscapePhoneLayout extends StatelessWidget {
   const _CalcLandscapePhoneLayout({
     required this.state,
+    required this.restoringHistory,
+    required this.restoringProgressValue,
     required this.onToolChanged,
     required this.onFieldChanged,
     required this.onSexChanged,
@@ -165,6 +190,8 @@ class _CalcLandscapePhoneLayout extends StatelessWidget {
   });
 
   final CalcScreenState state;
+  final bool restoringHistory;
+  final double? restoringProgressValue;
   final ValueChanged<CalcType> onToolChanged;
   final void Function(CalcInputFieldKey field, String value) onFieldChanged;
   final ValueChanged<Sex> onSexChanged;
@@ -197,6 +224,7 @@ class _CalcLandscapePhoneLayout extends StatelessWidget {
                       state: state,
                       onChanged: onToolChanged,
                       height: 36,
+                      dimmed: restoringHistory,
                     ),
                   ),
                 ),
@@ -205,6 +233,7 @@ class _CalcLandscapePhoneLayout extends StatelessWidget {
                   state: state,
                   onChanged: onFieldChanged,
                   onSexChanged: onSexChanged,
+                  dimmed: restoringHistory,
                 ),
               ],
             ),
@@ -214,13 +243,18 @@ class _CalcLandscapePhoneLayout extends StatelessWidget {
             child: ListView(
               padding: EdgeInsets.zero,
               children: [
-                _CalcResultPane(state: state),
+                _CalcResultPane(
+                  state: state,
+                  restoringHistory: restoringHistory,
+                  restoringProgressValue: restoringProgressValue,
+                ),
                 SizedBox(height: spacing.s3),
                 _CalcHistoryPane(
                   state: state,
                   onToggle: onHistoryToggle,
                   onRestore: onHistoryRestore,
                   onDelete: onHistoryDelete,
+                  dimmed: restoringHistory,
                 ),
               ],
             ),
@@ -234,6 +268,8 @@ class _CalcLandscapePhoneLayout extends StatelessWidget {
 class _CalcIPadPortraitLayout extends StatelessWidget {
   const _CalcIPadPortraitLayout({
     required this.state,
+    required this.restoringHistory,
+    required this.restoringProgressValue,
     required this.onToolChanged,
     required this.onFieldChanged,
     required this.onSexChanged,
@@ -243,6 +279,8 @@ class _CalcIPadPortraitLayout extends StatelessWidget {
   });
 
   final CalcScreenState state;
+  final bool restoringHistory;
+  final double? restoringProgressValue;
   final ValueChanged<CalcType> onToolChanged;
   final void Function(CalcInputFieldKey field, String value) onFieldChanged;
   final ValueChanged<Sex> onSexChanged;
@@ -265,12 +303,17 @@ class _CalcIPadPortraitLayout extends StatelessWidget {
             child: ListView(
               padding: EdgeInsets.zero,
               children: [
-                _CalcToolList(state: state, onChanged: onToolChanged),
+                _CalcToolList(
+                  state: state,
+                  onChanged: onToolChanged,
+                  dimmed: restoringHistory,
+                ),
                 SizedBox(height: spacing.s6),
                 _CalcFormPane(
                   state: state,
                   onChanged: onFieldChanged,
                   onSexChanged: onSexChanged,
+                  dimmed: restoringHistory,
                 ),
               ],
             ),
@@ -280,13 +323,18 @@ class _CalcIPadPortraitLayout extends StatelessWidget {
             child: ListView(
               padding: EdgeInsets.zero,
               children: [
-                _CalcResultPane(state: state),
+                _CalcResultPane(
+                  state: state,
+                  restoringHistory: restoringHistory,
+                  restoringProgressValue: restoringProgressValue,
+                ),
                 SizedBox(height: spacing.s3),
                 _CalcHistoryPane(
                   state: state,
                   onToggle: onHistoryToggle,
                   onRestore: onHistoryRestore,
                   onDelete: onHistoryDelete,
+                  dimmed: restoringHistory,
                 ),
               ],
             ),
@@ -300,6 +348,8 @@ class _CalcIPadPortraitLayout extends StatelessWidget {
 class _CalcIPadLandscapeLayout extends StatelessWidget {
   const _CalcIPadLandscapeLayout({
     required this.state,
+    required this.restoringHistory,
+    required this.restoringProgressValue,
     required this.onToolChanged,
     required this.onFieldChanged,
     required this.onSexChanged,
@@ -309,6 +359,8 @@ class _CalcIPadLandscapeLayout extends StatelessWidget {
   });
 
   final CalcScreenState state;
+  final bool restoringHistory;
+  final double? restoringProgressValue;
   final ValueChanged<CalcType> onToolChanged;
   final void Function(CalcInputFieldKey field, String value) onFieldChanged;
   final ValueChanged<Sex> onSexChanged;
@@ -331,12 +383,17 @@ class _CalcIPadLandscapeLayout extends StatelessWidget {
             child: ListView(
               padding: EdgeInsets.zero,
               children: [
-                _CalcToolList(state: state, onChanged: onToolChanged),
+                _CalcToolList(
+                  state: state,
+                  onChanged: onToolChanged,
+                  dimmed: restoringHistory,
+                ),
                 SizedBox(height: spacing.s6),
                 _CalcFormPane(
                   state: state,
                   onChanged: onFieldChanged,
                   onSexChanged: onSexChanged,
+                  dimmed: restoringHistory,
                 ),
               ],
             ),
@@ -346,13 +403,18 @@ class _CalcIPadLandscapeLayout extends StatelessWidget {
             child: ListView(
               padding: EdgeInsets.zero,
               children: [
-                _CalcResultPane(state: state),
+                _CalcResultPane(
+                  state: state,
+                  restoringHistory: restoringHistory,
+                  restoringProgressValue: restoringProgressValue,
+                ),
                 SizedBox(height: spacing.s3),
                 _CalcHistoryPane(
                   state: state,
                   onToggle: onHistoryToggle,
                   onRestore: onHistoryRestore,
                   onDelete: onHistoryDelete,
+                  dimmed: restoringHistory,
                 ),
               ],
             ),
@@ -368,35 +430,50 @@ class _CalcFormPane extends StatelessWidget {
     required this.state,
     required this.onChanged,
     required this.onSexChanged,
+    required this.dimmed,
   });
 
   final CalcScreenState state;
   final void Function(CalcInputFieldKey field, String value) onChanged;
   final ValueChanged<Sex> onSexChanged;
+  final bool dimmed;
 
   @override
   Widget build(BuildContext context) {
-    return KeyedSubtree(
-      key: const ValueKey<String>('calc-form-pane'),
-      child: _CalcForm(
-        state: state,
-        onChanged: onChanged,
-        onSexChanged: onSexChanged,
+    return _RestoringDim(
+      dimmed: dimmed,
+      child: KeyedSubtree(
+        key: const ValueKey<String>('calc-form-pane'),
+        child: _CalcForm(
+          state: state,
+          onChanged: onChanged,
+          onSexChanged: onSexChanged,
+        ),
       ),
     );
   }
 }
 
 class _CalcResultPane extends StatelessWidget {
-  const _CalcResultPane({required this.state});
+  const _CalcResultPane({
+    required this.state,
+    required this.restoringHistory,
+    required this.restoringProgressValue,
+  });
 
   final CalcScreenState state;
+  final bool restoringHistory;
+  final double? restoringProgressValue;
 
   @override
   Widget build(BuildContext context) {
     return KeyedSubtree(
       key: const ValueKey<String>('calc-result-pane'),
-      child: _CalcResult(state: state),
+      child: _CalcResult(
+        state: state,
+        restoringHistory: restoringHistory,
+        restoringProgressValue: restoringProgressValue,
+      ),
     );
   }
 }
@@ -407,22 +484,27 @@ class _CalcHistoryPane extends StatelessWidget {
     required this.onToggle,
     required this.onRestore,
     required this.onDelete,
+    required this.dimmed,
   });
 
   final CalcScreenState state;
   final VoidCallback onToggle;
   final ValueChanged<CalculationHistoryEntry> onRestore;
   final Future<void> Function(String id) onDelete;
+  final bool dimmed;
 
   @override
   Widget build(BuildContext context) {
-    return KeyedSubtree(
-      key: const ValueKey<String>('calc-history-pane'),
-      child: _CalcHistorySection(
-        state: state,
-        onToggle: onToggle,
-        onRestore: onRestore,
-        onDelete: onDelete,
+    return _RestoringDim(
+      dimmed: dimmed,
+      child: KeyedSubtree(
+        key: const ValueKey<String>('calc-history-pane'),
+        child: _CalcHistorySection(
+          state: state,
+          onToggle: onToggle,
+          onRestore: onRestore,
+          onDelete: onDelete,
+        ),
       ),
     );
   }
@@ -432,12 +514,14 @@ class _CalcToolSegmentedControl extends StatelessWidget {
   const _CalcToolSegmentedControl({
     required this.state,
     required this.onChanged,
+    this.dimmed = false,
     this.height,
     super.key,
   });
 
   final CalcScreenState state;
   final ValueChanged<CalcType> onChanged;
+  final bool dimmed;
   final double? height;
 
   @override
@@ -445,31 +529,34 @@ class _CalcToolSegmentedControl extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
     final largeText = MediaQuery.textScalerOf(context).scale(16) >= 20.8;
 
-    return CalcSegmentedControl<CalcType>(
-      selectedValue: state.activeTool,
-      onChanged: onChanged,
-      height: height ?? (largeText ? 56 : 42),
-      padding: const EdgeInsets.all(3),
-      gap: 2,
-      selectedRadiusInset: 3,
-      selectedFontWeight: FontWeight.w700,
-      unselectedFontWeight: FontWeight.w700,
-      letterSpacing: 0.26,
-      selectedShadowOpacity: 0.10,
-      items: [
-        CalcSegmentedControlItem<CalcType>(
-          value: CalcType.bmi,
-          label: l10n.calcToolBmi,
-        ),
-        CalcSegmentedControlItem<CalcType>(
-          value: CalcType.egfr,
-          label: l10n.calcToolEgfr,
-        ),
-        CalcSegmentedControlItem<CalcType>(
-          value: CalcType.crcl,
-          label: l10n.calcToolCrcl,
-        ),
-      ],
+    return _RestoringDim(
+      dimmed: dimmed,
+      child: CalcSegmentedControl<CalcType>(
+        selectedValue: state.activeTool,
+        onChanged: onChanged,
+        height: height ?? (largeText ? 56 : 42),
+        padding: const EdgeInsets.all(3),
+        gap: 2,
+        selectedRadiusInset: 3,
+        selectedFontWeight: FontWeight.w700,
+        unselectedFontWeight: FontWeight.w700,
+        letterSpacing: 0.26,
+        selectedShadowOpacity: 0.10,
+        items: [
+          CalcSegmentedControlItem<CalcType>(
+            value: CalcType.bmi,
+            label: l10n.calcToolBmi,
+          ),
+          CalcSegmentedControlItem<CalcType>(
+            value: CalcType.egfr,
+            label: l10n.calcToolEgfr,
+          ),
+          CalcSegmentedControlItem<CalcType>(
+            value: CalcType.crcl,
+            label: l10n.calcToolCrcl,
+          ),
+        ],
+      ),
     );
   }
 }
@@ -478,10 +565,12 @@ class _CalcToolList extends StatelessWidget {
   const _CalcToolList({
     required this.state,
     required this.onChanged,
+    required this.dimmed,
   });
 
   final CalcScreenState state;
   final ValueChanged<CalcType> onChanged;
+  final bool dimmed;
 
   @override
   Widget build(BuildContext context) {
@@ -510,29 +599,52 @@ class _CalcToolList extends StatelessWidget {
       ),
     ];
 
-    return DecoratedBox(
-      key: const ValueKey<String>('calc-tool-list'),
-      decoration: BoxDecoration(
-        color: palette.calcSurface,
-        border: Border.all(color: palette.calcHairline),
-        borderRadius: BorderRadius.circular(radii.card),
-      ),
-      child: Padding(
-        padding: EdgeInsets.all(spacing.s2),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          spacing: 6,
-          children: [
-            for (final item in items)
-              _CalcToolListItem(
-                active: item.type == state.activeTool,
-                label: item.label,
-                formula: item.formula,
-                icon: item.icon,
-                onTap: () => onChanged(item.type),
-              ),
-          ],
+    return _RestoringDim(
+      dimmed: dimmed,
+      child: DecoratedBox(
+        key: const ValueKey<String>('calc-tool-list'),
+        decoration: BoxDecoration(
+          color: palette.calcSurface,
+          border: Border.all(color: palette.calcHairline),
+          borderRadius: BorderRadius.circular(radii.card),
         ),
+        child: Padding(
+          padding: EdgeInsets.all(spacing.s2),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            spacing: 6,
+            children: [
+              for (final item in items)
+                _CalcToolListItem(
+                  active: item.type == state.activeTool,
+                  label: item.label,
+                  formula: item.formula,
+                  icon: item.icon,
+                  onTap: () => onChanged(item.type),
+                ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _RestoringDim extends StatelessWidget {
+  const _RestoringDim({required this.dimmed, required this.child});
+
+  final bool dimmed;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    if (!dimmed) {
+      return child;
+    }
+    return IgnorePointer(
+      child: Opacity(
+        opacity: 0.42,
+        child: child,
       ),
     );
   }

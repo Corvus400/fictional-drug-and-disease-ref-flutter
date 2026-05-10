@@ -32,26 +32,38 @@ class _CalcHistorySection extends StatelessWidget {
           expanded: showBody,
           onToggle: isEmpty ? null : onToggle,
         ),
-        if (showBody) ...[
-          SizedBox(height: spacing.s2 - 2),
-          if (isEmpty)
-            CalcHistoryEmptyState(message: l10n.calcHistoryEmpty)
-          else
-            _CalcHistoryList(
-              rows: [
-                for (final indexed in state.history.indexed)
-                  _CalcHistoryRowData.fromEntry(
-                    entry: indexed.$2,
-                    l10n: l10n,
-                    inputsCodec: _inputsCodec,
-                    resultCodec: _resultCodec,
-                    showBottomBorder: indexed.$1 != state.history.length - 1,
-                  ),
-              ],
-              onRestore: onRestore,
-              onDelete: onDelete,
-            ),
-        ],
+        AnimatedSize(
+          duration: const Duration(milliseconds: 320),
+          curve: const Cubic(.2, 0, 0, 1),
+          alignment: Alignment.topCenter,
+          child: showBody
+              ? Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    SizedBox(height: spacing.s2 - 2),
+                    if (isEmpty)
+                      CalcHistoryEmptyState(message: l10n.calcHistoryEmpty)
+                    else
+                      _CalcHistoryList(
+                        deleteLabel: l10n.calcHistoryActionDelete,
+                        rows: [
+                          for (final indexed in state.history.indexed)
+                            _CalcHistoryRowData.fromEntry(
+                              entry: indexed.$2,
+                              l10n: l10n,
+                              inputsCodec: _inputsCodec,
+                              resultCodec: _resultCodec,
+                              showBottomBorder:
+                                  indexed.$1 != state.history.length - 1,
+                            ),
+                        ],
+                        onRestore: onRestore,
+                        onDelete: onDelete,
+                      ),
+                  ],
+                )
+              : const SizedBox.shrink(),
+        ),
       ],
     );
   }
@@ -124,11 +136,13 @@ class _CalcHistoryHeader extends StatelessWidget {
 
 class _CalcHistoryList extends StatelessWidget {
   const _CalcHistoryList({
+    required this.deleteLabel,
     required this.rows,
     required this.onRestore,
     required this.onDelete,
   });
 
+  final String deleteLabel;
   final List<_CalcHistoryRowData> rows;
   final ValueChanged<CalculationHistoryEntry> onRestore;
   final Future<void> Function(String id) onDelete;
@@ -161,6 +175,7 @@ class _CalcHistoryList extends StatelessWidget {
                         dateText: row.dateText,
                         resultText: row.resultText,
                         summaryText: row.summaryText,
+                        deleteLabel: deleteLabel,
                         showBottomBorder: row.showBottomBorder,
                         onRestore: () => onRestore(row.entry),
                         onDelete: () => onDelete(row.entry.id),

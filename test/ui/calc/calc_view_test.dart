@@ -1,7 +1,14 @@
 import 'package:fictional_drug_and_disease_ref/data/local/app_database.dart';
 import 'package:fictional_drug_and_disease_ref/data/providers/local_providers.dart';
+import 'package:fictional_drug_and_disease_ref/domain/calc/bmi.dart';
+import 'package:fictional_drug_and_disease_ref/domain/calc/calc_type.dart';
+import 'package:fictional_drug_and_disease_ref/domain/calc/crcl.dart';
+import 'package:fictional_drug_and_disease_ref/domain/calc/egfr.dart';
+import 'package:fictional_drug_and_disease_ref/domain/calc/sex.dart';
 import 'package:fictional_drug_and_disease_ref/l10n/app_localizations.dart';
 import 'package:fictional_drug_and_disease_ref/theme/app_theme.dart';
+import 'package:fictional_drug_and_disease_ref/ui/calc/calc_screen_notifier.dart';
+import 'package:fictional_drug_and_disease_ref/ui/calc/calc_screen_state.dart';
 import 'package:fictional_drug_and_disease_ref/ui/calc/calc_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -97,7 +104,7 @@ void main() {
       await tester.pumpWidget(_testApp(db));
       await tester.pump();
 
-      await tester.tap(find.text('eGFR'));
+      await tester.tap(find.text('eGFR'), warnIfMissed: false);
       await tester.pumpAndSettle();
 
       expect(
@@ -220,7 +227,7 @@ void main() {
       await tester.pumpWidget(_testApp(db));
       await tester.pump();
 
-      await tester.tap(find.text('eGFR'));
+      await tester.tap(find.text('eGFR'), warnIfMissed: false);
       await tester.pumpAndSettle();
       await tester.enterText(_inputField('calc-input-ageYears'), '50');
       await tester.pump();
@@ -703,6 +710,130 @@ void main() {
       expect(_richTextContaining('BMI 22.5 (普通体重)'), findsOneWidget);
       expect(_richTextContaining('H170/W65'), findsOneWidget);
     });
+
+    testWidgets('restores a history row without artificial delay', (
+      tester,
+    ) async {
+      await tester.pumpWidget(_testApp(db));
+      await tester.pump();
+
+      await tester.enterText(_inputField('calc-input-heightCm'), '170');
+      await tester.pump();
+      await tester.enterText(_inputField('calc-input-weightKg'), '65');
+      await tester.pump(const Duration(milliseconds: 250));
+      await tester.pumpAndSettle();
+
+      await tester.enterText(_inputField('calc-input-heightCm'), '180');
+      await tester.pump();
+      expect(find.text('20.1'), findsWidgets);
+
+      await tester.tap(find.text('履歴 (1)'));
+      await tester.pumpAndSettle();
+      await tester.tap(_richTextContaining('BMI 22.5 (普通体重)'));
+      await tester.pump();
+
+      expect(find.text('復元中…'), findsNothing);
+      final resultValue = tester.widget<Text>(
+        find.byKey(const ValueKey<String>('calc-result-value')),
+      );
+      expect(resultValue.data, '22.5');
+      final heightInput = tester.widget<EditableText>(
+        find.descendant(
+          of: _inputField('calc-input-heightCm'),
+          matching: find.byType(EditableText),
+        ),
+      );
+      expect(heightInput.controller.text, '170');
+    });
+
+    testWidgets('disables calc tool switching while history is restoring', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        _testApp(
+          db,
+          home: const CalcView(
+            debugRestoringHistory: true,
+            debugRestoringProgressValue: 0.65,
+          ),
+        ),
+      );
+      await tester.pump();
+
+      await tester.tap(find.text('eGFR'), warnIfMissed: false);
+      await tester.pump();
+
+      expect(
+        find.byKey(const ValueKey<String>('calc-input-heightCm')),
+        findsOneWidget,
+      );
+      expect(
+        find.byKey(const ValueKey<String>('calc-input-ageYears')),
+        findsNothing,
+      );
+    });
+
+    testWidgets('does not call setState after unmount during history restore', (
+      tester,
+    ) async {
+      await tester.pumpWidget(_testApp(db));
+      await tester.pump();
+
+      await tester.enterText(_inputField('calc-input-heightCm'), '170');
+      await tester.pump();
+      await tester.enterText(_inputField('calc-input-weightKg'), '65');
+      await tester.pump(const Duration(milliseconds: 250));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('履歴 (1)'));
+      await tester.pumpAndSettle();
+
+      await tester.tap(_richTextContaining('BMI 22.5 (普通体重)'));
+      await tester.pump();
+      expect(find.text('復元中…'), findsNothing);
+
+      await tester.pumpWidget(_testApp(db, home: const SizedBox.shrink()));
+      await tester.pump();
+
+      expect(tester.takeException(), isNull);
+    });
+
+    testWidgets(
+      'places restoring indicator in the result card for every tool',
+      (
+        tester,
+      ) async {
+        const tools = [CalcType.bmi, CalcType.egfr, CalcType.crcl];
+
+        for (final tool in tools) {
+          await tester.pumpWidget(
+            _testApp(
+              db,
+              calcState: _restoringState(tool),
+              home: const CalcView(
+                debugRestoringHistory: true,
+                debugRestoringProgressValue: 0.65,
+              ),
+            ),
+          );
+          await tester.pump();
+
+          final resultPane = tester.getRect(
+            find.byKey(const ValueKey<String>('calc-result-pane')),
+          );
+          final indicator = tester.getRect(
+            find.byKey(
+              const ValueKey<String>('calc-history-restoring-indicator'),
+            ),
+          );
+
+          expect(resultPane.contains(indicator.center), isTrue);
+          expect(
+            (indicator.center.dx - resultPane.center.dx).abs(),
+            lessThan(2),
+          );
+        }
+      },
+    );
   });
 }
 
@@ -736,9 +867,18 @@ Future<void> _tapSex(WidgetTester tester, String label) async {
   await tester.pumpAndSettle();
 }
 
-Widget _testApp(AppDatabase db, {TextScaler? textScaler}) {
+Widget _testApp(
+  AppDatabase db, {
+  TextScaler? textScaler,
+  CalcScreenState? calcState,
+  Widget home = const CalcView(),
+}) {
   return ProviderScope(
-    overrides: [appDatabaseProvider.overrideWithValue(db)],
+    overrides: [
+      appDatabaseProvider.overrideWithValue(db),
+      if (calcState != null)
+        calcScreenProvider.overrideWithBuild((ref, notifier) => calcState),
+    ],
     child: MaterialApp(
       theme: AppTheme.light(),
       localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -749,7 +889,73 @@ Widget _testApp(AppDatabase db, {TextScaler? textScaler}) {
               data: MediaQuery.of(context).copyWith(textScaler: textScaler),
               child: child!,
             ),
-      home: const CalcView(),
+      home: home,
     ),
+  );
+}
+
+CalcScreenState _restoringState(CalcType tool) {
+  return switch (tool) {
+    CalcType.bmi => _bmiRestoringState(),
+    CalcType.egfr => _egfrRestoringState(),
+    CalcType.crcl => _crclRestoringState(),
+  };
+}
+
+CalcScreenState _bmiRestoringState() {
+  const inputs = BmiInputs(heightCm: 170, weightKg: 65);
+  final result = BmiResult(
+    bmi: inputs.weightKg / ((inputs.heightCm / 100) * (inputs.heightCm / 100)),
+    category: BmiCategory.normal,
+  );
+  return CalcScreenState(
+    activeTool: CalcType.bmi,
+    phase: CalcPhase.resultWithClassification(
+      CalcType.bmi,
+      inputs,
+      result,
+      result.category,
+    ),
+    historyExpanded: false,
+    history: const [],
+    historyPhase: CalcHistoryPhase.loaded,
+  );
+}
+
+CalcScreenState _egfrRestoringState() {
+  const inputs = EgfrInputs(
+    ageYears: 50,
+    sex: Sex.male,
+    serumCreatinineMgDl: 1,
+  );
+  const result = EgfrResult(eGfrMlMin173m2: 63.1, stage: CkdStage.g2);
+  return CalcScreenState(
+    activeTool: CalcType.egfr,
+    phase: CalcPhase.resultWithClassification(
+      CalcType.egfr,
+      inputs,
+      result,
+      result.stage,
+    ),
+    historyExpanded: false,
+    history: const [],
+    historyPhase: CalcHistoryPhase.loaded,
+  );
+}
+
+CalcScreenState _crclRestoringState() {
+  const inputs = CrClInputs(
+    ageYears: 50,
+    sex: Sex.male,
+    weightKg: 65,
+    serumCreatinineMgDl: 1,
+  );
+  const result = CrClResult(crClMlMin: 81.3);
+  return const CalcScreenState(
+    activeTool: CalcType.crcl,
+    phase: CalcPhase.validInput(CalcType.crcl, inputs, result),
+    historyExpanded: false,
+    history: [],
+    historyPhase: CalcHistoryPhase.loaded,
   );
 }
