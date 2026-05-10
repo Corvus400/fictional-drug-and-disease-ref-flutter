@@ -132,6 +132,29 @@ void main() {
       expect(_inputText(tester, 'calc-input-serumCreatinineMgDl'), '1.23');
     });
 
+    testWidgets(
+      'shows a field range error as soon as one value is out of range',
+      (
+        tester,
+      ) async {
+        await tester.pumpWidget(_testApp(db));
+        await tester.pump();
+
+        await tester.tap(_inputField('calc-input-heightCm'));
+        await tester.pump();
+        await tester.enterText(_inputField('calc-input-heightCm'), '9');
+        await tester.pump();
+
+        expect(find.text('50.0-250.0 cm'), findsOneWidget);
+        expect(
+          _editableText(tester, 'calc-input-heightCm').focusNode.hasFocus,
+          isTrue,
+        );
+        expect(find.text('すべての項目を入力してください'), findsOneWidget);
+        expect(find.text('22.5'), findsNothing);
+      },
+    );
+
     testWidgets('uses next actions before the last field and done at the end', (
       tester,
     ) async {
@@ -164,6 +187,77 @@ void main() {
           'calc-input-serumCreatinineMgDl',
         ).textInputAction,
         TextInputAction.done,
+      );
+    });
+
+    testWidgets('keeps iPad layout when the software keyboard reduces height', (
+      tester,
+    ) async {
+      await tester.binding.setSurfaceSize(const Size(834, 1194));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+
+      await tester.pumpWidget(
+        _testApp(
+          db,
+          home: const MediaQuery(
+            data: MediaQueryData(
+              size: Size(834, 1194),
+              viewInsets: EdgeInsets.only(bottom: 804),
+            ),
+            child: CalcView(),
+          ),
+        ),
+      );
+      await tester.pump();
+
+      expect(
+        find.byKey(const ValueKey<String>('calc-layout-ipad-portrait')),
+        findsOneWidget,
+      );
+      expect(
+        find.byKey(const ValueKey<String>('calc-layout-landscape-phone')),
+        findsNothing,
+      );
+    });
+
+    testWidgets('shows iOS input toolbar and moves focus with it', (
+      tester,
+    ) async {
+      await tester.pumpWidget(_testApp(db, platform: TargetPlatform.iOS));
+      await tester.pump();
+
+      await tester.tap(_inputField('calc-input-heightCm'));
+      await tester.pumpAndSettle();
+
+      expect(
+        find.byKey(const ValueKey<String>('calc-input-toolbar')),
+        findsOneWidget,
+      );
+      expect(
+        find.byKey(const ValueKey<String>('calc-input-toolbar-next')),
+        findsOneWidget,
+      );
+      expect(
+        find.byKey(const ValueKey<String>('calc-input-toolbar-done')),
+        findsOneWidget,
+      );
+
+      await tester.tap(
+        find.byKey(const ValueKey<String>('calc-input-toolbar-next')),
+      );
+      await tester.pumpAndSettle();
+      expect(
+        _editableText(tester, 'calc-input-weightKg').focusNode.hasFocus,
+        isTrue,
+      );
+
+      await tester.tap(
+        find.byKey(const ValueKey<String>('calc-input-toolbar-done')),
+      );
+      await tester.pumpAndSettle();
+      expect(
+        _editableText(tester, 'calc-input-weightKg').focusNode.hasFocus,
+        isFalse,
       );
     });
 
@@ -1108,9 +1202,11 @@ Future<void> _tapSex(WidgetTester tester, String label) async {
 Widget _testApp(
   AppDatabase db, {
   TextScaler? textScaler,
+  TargetPlatform? platform,
   CalcScreenState? calcState,
   Widget home = const CalcView(),
 }) {
+  final theme = AppTheme.light();
   return ProviderScope(
     overrides: [
       appDatabaseProvider.overrideWithValue(db),
@@ -1118,7 +1214,7 @@ Widget _testApp(
         calcScreenProvider.overrideWithBuild((ref, notifier) => calcState),
     ],
     child: MaterialApp(
-      theme: AppTheme.light(),
+      theme: platform == null ? theme : theme.copyWith(platform: platform),
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       builder: textScaler == null

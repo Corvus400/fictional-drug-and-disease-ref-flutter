@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:fictional_drug_and_disease_ref/domain/calc/bmi.dart';
 import 'package:fictional_drug_and_disease_ref/domain/calc/calc_type.dart';
 import 'package:fictional_drug_and_disease_ref/domain/calc/codecs/calc_inputs_codec.dart';
@@ -54,11 +56,29 @@ class CalcView extends ConsumerStatefulWidget {
 
 class _CalcViewState extends ConsumerState<CalcView> {
   bool _restoringHistory = false;
+  CalcInputFieldKey? _focusedField;
+  late final Map<CalcInputFieldKey, FocusNode> _focusNodes = {
+    for (final field in CalcInputFieldKey.values)
+      field: FocusNode(debugLabel: 'calc-${field.name}'),
+  };
 
   @override
   void initState() {
     super.initState();
     _restoringHistory = widget.debugRestoringHistory;
+    for (final node in _focusNodes.values) {
+      node.addListener(_syncFocusedField);
+    }
+  }
+
+  @override
+  void dispose() {
+    for (final node in _focusNodes.values) {
+      node
+        ..removeListener(_syncFocusedField)
+        ..dispose();
+    }
+    super.dispose();
   }
 
   @override
@@ -69,6 +89,7 @@ class _CalcViewState extends ConsumerState<CalcView> {
     final notifier = ref.read(calcScreenProvider.notifier);
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: Text(l10n.calcAppBarTitle),
@@ -86,6 +107,7 @@ class _CalcViewState extends ConsumerState<CalcView> {
                     state: state,
                     restoringHistory: _restoringHistory,
                     restoringProgressValue: widget.debugRestoringProgressValue,
+                    focusNodes: _focusNodes,
                     onToolChanged: notifier.selectTool,
                     onFieldChanged: notifier.updateField,
                     onSexChanged: notifier.updateSex,
@@ -96,6 +118,13 @@ class _CalcViewState extends ConsumerState<CalcView> {
                 );
               },
             ),
+            if (_showsInputToolbar(context, state))
+              _CalcInputToolbar(
+                bottomInset: MediaQuery.viewInsetsOf(context).bottom,
+                onNext: () => _focusNext(state.activeTool),
+                onDone: _finishInput,
+                showNext: _nextField(state.activeTool) != null,
+              ),
           ],
         ),
       ),
@@ -112,16 +141,178 @@ class _CalcViewState extends ConsumerState<CalcView> {
       }
     }
   }
+
+  bool _showsInputToolbar(BuildContext context, CalcScreenState state) {
+    return Theme.of(context).platform == TargetPlatform.iOS &&
+        _focusedField != null &&
+        _fieldOrder(state.activeTool).contains(_focusedField);
+  }
+
+  void _syncFocusedField() {
+    if (!mounted) {
+      return;
+    }
+    CalcInputFieldKey? nextField;
+    for (final entry in _focusNodes.entries) {
+      if (entry.value.hasFocus) {
+        nextField = entry.key;
+        break;
+      }
+    }
+    if (nextField == _focusedField) {
+      return;
+    }
+    setState(() => _focusedField = nextField);
+    if (nextField != null) {
+      _ensureVisible(nextField);
+    }
+  }
+
+  void _focusNext(CalcType calcType) {
+    final nextField = _nextField(calcType);
+    if (nextField == null) {
+      _finishInput();
+      return;
+    }
+    _focusNodes[nextField]?.requestFocus();
+    _ensureVisible(nextField);
+  }
+
+  CalcInputFieldKey? _nextField(CalcType calcType) {
+    final focusedField = _focusedField;
+    if (focusedField == null) {
+      return null;
+    }
+    final order = _fieldOrder(calcType);
+    final index = order.indexOf(focusedField);
+    if (index < 0 || index == order.length - 1) {
+      return null;
+    }
+    return order[index + 1];
+  }
+
+  void _finishInput() {
+    FocusManager.instance.primaryFocus?.unfocus();
+  }
+
+  void _ensureVisible(CalcInputFieldKey field) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) {
+        return;
+      }
+      final context = _focusNodes[field]?.context;
+      if (context == null) {
+        return;
+      }
+      unawaited(
+        Scrollable.ensureVisible(
+          context,
+          duration: const Duration(milliseconds: 160),
+          curve: Curves.easeOutCubic,
+          alignmentPolicy: ScrollPositionAlignmentPolicy.keepVisibleAtEnd,
+        ),
+      );
+    });
+  }
+
+  List<CalcInputFieldKey> _fieldOrder(CalcType calcType) {
+    return switch (calcType) {
+      CalcType.bmi => const [
+        CalcInputFieldKey.heightCm,
+        CalcInputFieldKey.weightKg,
+      ],
+      CalcType.egfr => const [
+        CalcInputFieldKey.ageYears,
+        CalcInputFieldKey.serumCreatinineMgDl,
+      ],
+      CalcType.crcl => const [
+        CalcInputFieldKey.ageYears,
+        CalcInputFieldKey.weightKg,
+        CalcInputFieldKey.serumCreatinineMgDl,
+      ],
+    };
+  }
+}
+
+class _CalcInputToolbar extends StatelessWidget {
+  const _CalcInputToolbar({
+    required this.bottomInset,
+    required this.onNext,
+    required this.onDone,
+    required this.showNext,
+  });
+
+  final double bottomInset;
+  final VoidCallback onNext;
+  final VoidCallback onDone;
+  final bool showNext;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final palette = Theme.of(context).extension<AppPalette>()!;
+    final typography = Theme.of(context).extension<AppTypography>()!;
+
+    return Positioned(
+      left: 0,
+      right: 0,
+      bottom: bottomInset,
+      child: SafeArea(
+        top: false,
+        child: Material(
+          key: const ValueKey<String>('calc-input-toolbar'),
+          color: palette.calcSurface,
+          elevation: 8,
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              border: Border(top: BorderSide(color: palette.calcHairline)),
+            ),
+            child: SizedBox(
+              height: 44,
+              child: Row(
+                children: [
+                  const Spacer(),
+                  TextButton(
+                    key: const ValueKey<String>('calc-input-toolbar-next'),
+                    onPressed: showNext ? onNext : null,
+                    child: Text(
+                      l10n.calcKeyboardNext,
+                      style: typography.labelM.copyWith(
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                  TextButton(
+                    key: const ValueKey<String>('calc-input-toolbar-done'),
+                    onPressed: onDone,
+                    child: Text(
+                      l10n.calcKeyboardDone,
+                      style: typography.labelM.copyWith(
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 }
 
 class _CalcForm extends StatelessWidget {
   const _CalcForm({
     required this.state,
+    required this.focusNodes,
     required this.onChanged,
     required this.onSexChanged,
   });
 
   final CalcScreenState state;
+  final Map<CalcInputFieldKey, FocusNode> focusNodes;
   final void Function(CalcInputFieldKey field, String value) onChanged;
   final ValueChanged<Sex> onSexChanged;
 
@@ -133,17 +324,20 @@ class _CalcForm extends StatelessWidget {
       CalcType.bmi => CalcFormBmi(
         draft: draft,
         errors: errors,
+        focusNodes: focusNodes,
         onChanged: onChanged,
       ),
       CalcType.egfr => CalcFormEgfr(
         draft: draft,
         errors: errors,
+        focusNodes: focusNodes,
         onChanged: onChanged,
         onSexChanged: onSexChanged,
       ),
       CalcType.crcl => CalcFormCrCl(
         draft: draft,
         errors: errors,
+        focusNodes: focusNodes,
         onChanged: onChanged,
         onSexChanged: onSexChanged,
       ),
@@ -231,7 +425,9 @@ class _CalcResult extends StatelessWidget {
     final phase = state.phase;
     final value = _valueText(phase);
     final placeholder =
-        phase is CalcPhaseEmpty || phase is CalcPhasePartialInput;
+        phase is CalcPhaseEmpty ||
+        phase is CalcPhasePartialInput ||
+        phase is CalcPhaseOutOfRange;
 
     return CalcResultCard(
       title: l10n.calcResultTitle,

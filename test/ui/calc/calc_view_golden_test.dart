@@ -48,8 +48,10 @@ void main() {
     }
   }
   _calcPartialSubsetGoldens();
+  _calcImmediateErrorGoldens();
   _calcInputBoundaryGoldens();
   _calcMultiErrorGoldens();
+  _calcIosInputToolbarGolden();
   _calcBmiUnderweightEdgeGolden();
   _calcEgfrLowEdgeGolden();
   _calcBmiMinEdgeGolden();
@@ -230,6 +232,57 @@ void _calcInputBoundaryGoldens() {
   }
 }
 
+void _calcImmediateErrorGoldens() {
+  final cases =
+      <
+        ({
+          _CalcGoldenTool tool,
+          String key,
+          Map<String, String> fields,
+          String errorText,
+        })
+      >[
+        (
+          tool: _CalcGoldenTool.bmi,
+          key: 'height-low-single',
+          fields: {'calc-input-heightCm': '9'},
+          errorText: '50.0-250.0 cm',
+        ),
+        (
+          tool: _CalcGoldenTool.egfr,
+          key: 'age-low-single',
+          fields: {'calc-input-ageYears': '17'},
+          errorText: '18-120 years',
+        ),
+        (
+          tool: _CalcGoldenTool.crcl,
+          key: 'weight-low-single',
+          fields: {'calc-input-weightKg': '0.9'},
+          errorText: '1.0-300.0 kg',
+        ),
+      ];
+
+  for (final immediateCase in cases) {
+    runGoldenMatrix(
+      fileNamePrefix:
+          'calc_immediate_error_${immediateCase.tool.key}_${immediateCase.key}',
+      description:
+          'Calc immediate error ${immediateCase.tool.key} ${immediateCase.key}',
+      sizes: const ['phone'],
+      textScalers: const ['normal'],
+      builder: _calcViewBuilder,
+      whilePerforming: (tester) async {
+        await _selectTool(tester, immediateCase.tool);
+        for (final entry in immediateCase.fields.entries) {
+          await _enterText(tester, entry.key, entry.value);
+        }
+        expect(find.text(immediateCase.errorText), findsOneWidget);
+        return null;
+      },
+    );
+  }
+}
+
 void _calcPartialSubsetGoldens() {
   final cases =
       <
@@ -310,6 +363,34 @@ void _calcPartialSubsetGoldens() {
           await _enterText(tester, entry.key, entry.value);
         }
         expect(find.text('すべての項目を入力してください'), findsOneWidget);
+        return null;
+      },
+    );
+  }
+}
+
+void _calcIosInputToolbarGolden() {
+  for (final size in const ['phone', 'tablet']) {
+    runGoldenMatrix(
+      fileNamePrefix: 'calc_ios_input_toolbar_$size',
+      description: 'Calc iOS input toolbar $size',
+      sizes: [size],
+      textScalers: const ['normal'],
+      builder: _calcIosViewBuilder,
+      whilePerforming: (tester) async {
+        await tester.tap(
+          find
+              .descendant(
+                of: find.byKey(const ValueKey<String>('calc-input-heightCm')),
+                matching: find.byType(TextFormField),
+              )
+              .first,
+        );
+        await tester.pumpAndSettle();
+        expect(
+          find.byKey(const ValueKey<String>('calc-input-toolbar')),
+          findsOneWidget,
+        );
         return null;
       },
     );
@@ -1093,6 +1174,20 @@ Widget _calcViewBuilder(ThemeData theme, Size size, TextScaler scaler) {
     child: MaterialApp(
       theme: theme,
       darkTheme: theme,
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
+      home: const CalcView(),
+    ),
+  );
+}
+
+Widget _calcIosViewBuilder(ThemeData theme, Size size, TextScaler scaler) {
+  final iosTheme = theme.copyWith(platform: TargetPlatform.iOS);
+  return ProviderScope(
+    overrides: [appDatabaseProvider.overrideWithValue(_db)],
+    child: MaterialApp(
+      theme: iosTheme,
+      darkTheme: iosTheme,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       home: const CalcView(),

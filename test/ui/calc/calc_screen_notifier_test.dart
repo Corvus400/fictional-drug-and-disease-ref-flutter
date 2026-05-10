@@ -112,6 +112,45 @@ void main() {
       expect(phase.errors, containsPair('weightKg', '1.0-300.0 kg'));
     });
 
+    test('complete out-of-range fields expose errors immediately', () async {
+      final notifier = container.read(calcScreenProvider.notifier);
+
+      container
+          .read(calcScreenProvider.notifier)
+          .updateField(CalcInputFieldKey.heightCm, '9');
+      var phase =
+          container.read(calcScreenProvider).phase as CalcPhaseOutOfRange;
+      expect(
+        phase.inputs,
+        const CalcInputDraft(
+          values: {CalcInputFieldKey.heightCm: '9'},
+        ),
+      );
+      expect(phase.errors, const {'heightCm': '50.0-250.0 cm'});
+
+      await notifier.selectTool(CalcType.egfr);
+      notifier.updateField(CalcInputFieldKey.ageYears, '17');
+      phase = container.read(calcScreenProvider).phase as CalcPhaseOutOfRange;
+      expect(
+        phase.inputs,
+        const CalcInputDraft(
+          values: {CalcInputFieldKey.ageYears: '17'},
+        ),
+      );
+      expect(phase.errors, const {'ageYears': '18-120 years'});
+
+      await notifier.selectTool(CalcType.crcl);
+      notifier.updateField(CalcInputFieldKey.weightKg, '0.9');
+      phase = container.read(calcScreenProvider).phase as CalcPhaseOutOfRange;
+      expect(
+        phase.inputs,
+        const CalcInputDraft(
+          values: {CalcInputFieldKey.weightKg: '0.9'},
+        ),
+      );
+      expect(phase.errors, const {'weightKg': '1.0-300.0 kg'});
+    });
+
     test(
       'out-of-range BMI keeps previous draft when another field changes',
       () {

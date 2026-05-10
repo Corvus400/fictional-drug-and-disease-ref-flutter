@@ -616,7 +616,8 @@
   "calcHistoryActionDelete": "削除",
   "calcHistoryActionRestore": "復元",
   "calcHistoryRestoring": "復元中…",
-  "calcKeyboardDone": "確定",
+  "calcKeyboardNext": "次へ",
+  "calcKeyboardDone": "完了",
   "disclaimerRibbonText": "FICTIONAL DATA - NOT FOR MEDICAL USE / 架空データ・医療判断には使用不可",
   "detailDisclaimer": "FICTIONAL DATA - NOT FOR MEDICAL USE / 架空データ・医療判断には使用不可"
 }
