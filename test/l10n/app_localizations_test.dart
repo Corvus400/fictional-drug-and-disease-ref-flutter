@@ -41,15 +41,26 @@ void main() {
     expect(ja.historyRelativeAbsoluteDate('2026/04/28'), '2026/04/28');
   });
 
-  test(
-    'history placeholder is removed while bookmarks placeholder remains',
-    () {
-      final arb =
-          jsonDecode(File('lib/l10n/app_ja.arb').readAsStringSync())
-              as Map<String, dynamic>;
+  test('history and bookmarks placeholders are removed', () {
+    final arb =
+        jsonDecode(File('lib/l10n/app_ja.arb').readAsStringSync())
+            as Map<String, dynamic>;
 
-      expect(arb, isNot(contains('historyPlaceholder')));
-      expect(arb['bookmarksPlaceholder'], 'ブックマーク画面（プレースホルダー）');
-    },
-  );
+    expect(arb, isNot(contains('historyPlaceholder')));
+    expect(arb, isNot(contains('bookmarksPlaceholder')));
+  });
+
+  test('bookmarks strings match the design contract', () {
+    final ja = AppLocalizationsJa();
+
+    expect(ja.bookmarksTabAll, 'すべて');
+    expect(ja.bookmarksTabDrug, '医薬品');
+    expect(ja.bookmarksTabDisease, '疾患');
+    expect(ja.bookmarksSearchHint, '名前で検索');
+    expect(ja.bookmarksResultCount(6), '6件');
+    expect(ja.bookmarksResultCountUnknown, '-');
+    expect(ja.bookmarksRowSavedAt('2026/05/10'), '保存 2026/05/10');
+    expect(ja.bookmarksRowDrugSemantics, '薬品のブックマーク');
+    expect(ja.bookmarksRowDiseaseSemantics, '疾患のブックマーク');
+  });
 }
