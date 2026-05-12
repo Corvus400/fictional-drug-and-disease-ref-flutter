@@ -4,8 +4,12 @@ import 'package:fictional_drug_and_disease_ref/application/providers/usecase_pro
 import 'package:fictional_drug_and_disease_ref/application/usecases/calculate_bmi_usecase.dart';
 import 'package:fictional_drug_and_disease_ref/application/usecases/calculate_crcl_usecase.dart';
 import 'package:fictional_drug_and_disease_ref/application/usecases/calculate_egfr_usecase.dart';
+import 'package:fictional_drug_and_disease_ref/application/usecases/clear_browsing_history_usecase.dart';
 import 'package:fictional_drug_and_disease_ref/application/usecases/delete_calculation_history_usecase.dart';
+import 'package:fictional_drug_and_disease_ref/application/usecases/delete_browsing_history_usecase.dart';
 import 'package:fictional_drug_and_disease_ref/application/usecases/list_calculation_history_usecase.dart';
+import 'package:fictional_drug_and_disease_ref/application/usecases/list_browsing_history_usecase.dart';
+import 'package:fictional_drug_and_disease_ref/application/usecases/observe_browsing_history_usecase.dart';
 import 'package:fictional_drug_and_disease_ref/application/usecases/observe_bookmark_state_usecase.dart';
 import 'package:fictional_drug_and_disease_ref/application/usecases/record_calculation_history_usecase.dart';
 import 'package:fictional_drug_and_disease_ref/application/usecases/toggle_bookmark_usecase.dart';
@@ -102,6 +106,22 @@ void main() {
       container.read(deleteCalculationHistoryUsecaseProvider),
       isA<DeleteCalculationHistoryUsecase>(),
     );
+    expect(
+      container.read(listBrowsingHistoryUsecaseProvider),
+      isA<ListBrowsingHistoryUsecase>(),
+    );
+    expect(
+      container.read(deleteBrowsingHistoryUsecaseProvider),
+      isA<DeleteBrowsingHistoryUsecase>(),
+    );
+    expect(
+      container.read(clearBrowsingHistoryUsecaseProvider),
+      isA<ClearBrowsingHistoryUsecase>(),
+    );
+    expect(
+      container.read(observeBrowsingHistoryUsecaseProvider),
+      isA<ObserveBrowsingHistoryUsecase>(),
+    );
   });
 
   test('streamBookmarkStateProvider exposes bookmark state by id', () async {
@@ -123,6 +143,21 @@ void main() {
     expect(
       streamBookmarkStateProvider('drug_001'),
       streamBookmarkStateProvider('drug_001'),
+    );
+  });
+
+  test('browsingHistoryStreamProvider exposes observed history rows', () async {
+    final container = ProviderContainer();
+    addTearDown(container.dispose);
+    final subscription = container.listen(
+      browsingHistoryStreamProvider,
+      (_, _) {},
+    );
+    addTearDown(subscription.close);
+
+    await expectLater(
+      container.read(browsingHistoryStreamProvider.future),
+      completion(isEmpty),
     );
   });
 }
