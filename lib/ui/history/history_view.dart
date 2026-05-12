@@ -3,6 +3,7 @@ import 'package:fictional_drug_and_disease_ref/router/app_router.dart';
 import 'package:fictional_drug_and_disease_ref/theme/app_palette.dart';
 import 'package:fictional_drug_and_disease_ref/ui/history/history_screen_notifier.dart';
 import 'package:fictional_drug_and_disease_ref/ui/history/history_screen_state.dart';
+import 'package:fictional_drug_and_disease_ref/ui/history/widgets/bulk_delete_confirm_dialog.dart';
 import 'package:fictional_drug_and_disease_ref/ui/history/widgets/history_row.dart';
 import 'package:fictional_drug_and_disease_ref/ui/search/providers/drug_card_image_cache_manager_provider.dart';
 import 'package:flutter/material.dart';
@@ -29,6 +30,10 @@ class HistoryView extends ConsumerWidget {
     final selectedTab = switch (state) {
       HistoryLoaded(:final selectedTab) => selectedTab,
       _ => HistoryTab.all,
+    };
+    final bulkDeleteCount = switch (state) {
+      HistoryLoaded(:final totalCount) => totalCount,
+      _ => 0,
     };
     final body = switch (state) {
       HistoryEmpty() => const _HistoryEmptyState(),
@@ -70,6 +75,20 @@ class HistoryView extends ConsumerWidget {
                   child: body,
                 )
               : body,
+          floatingActionButton: bulkDeleteCount > 0
+              ? _HistoryBulkDeleteFab(
+                  count: bulkDeleteCount,
+                  onPressed: () async {
+                    final confirmed = await showBulkDeleteConfirmDialog(
+                      context: context,
+                      count: bulkDeleteCount,
+                    );
+                    if (confirmed ?? false) {
+                      await notifier.clearAll();
+                    }
+                  },
+                )
+              : null,
         );
       },
     );
@@ -401,6 +420,81 @@ class _HistoryRowsList extends StatelessWidget {
           drugImageCacheManager: drugImageCacheManager,
         );
       },
+    );
+  }
+}
+
+class _HistoryBulkDeleteFab extends StatelessWidget {
+  const _HistoryBulkDeleteFab({required this.count, required this.onPressed});
+
+  final int count;
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final palette = Theme.of(context).extension<AppPalette>()!;
+    return Semantics(
+      button: true,
+      label: l10n.historyBulkDeleteFabSemantics,
+      child: SizedBox.square(
+        dimension: 56,
+        child: FloatingActionButton(
+          key: const ValueKey('history-bulk-delete-fab'),
+          heroTag: 'history-bulk-delete-fab',
+          tooltip: l10n.historyBulkDeleteFabSemantics,
+          elevation: 2,
+          backgroundColor: palette.danger,
+          foregroundColor: palette.brightness == Brightness.light
+              ? Colors.white
+              : Colors.black,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(18),
+          ),
+          onPressed: onPressed,
+          child: Stack(
+            clipBehavior: Clip.none,
+            alignment: Alignment.center,
+            children: [
+              const Icon(Icons.delete_outline),
+              Positioned(
+                top: -6,
+                right: -8,
+                child: _HistoryBulkDeleteBadge(count: count),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _HistoryBulkDeleteBadge extends StatelessWidget {
+  const _HistoryBulkDeleteBadge({required this.count});
+
+  final int count;
+
+  @override
+  Widget build(BuildContext context) {
+    final palette = Theme.of(context).extension<AppPalette>()!;
+    return Container(
+      key: const ValueKey('history-bulk-delete-count-badge'),
+      constraints: const BoxConstraints(minWidth: 20, minHeight: 20),
+      padding: const EdgeInsets.symmetric(horizontal: 4),
+      decoration: BoxDecoration(
+        color: palette.surface,
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: palette.danger),
+      ),
+      alignment: Alignment.center,
+      child: Text(
+        count > 99 ? '99+' : '$count',
+        style: Theme.of(context).textTheme.labelSmall?.copyWith(
+          color: palette.danger,
+          fontWeight: FontWeight.w700,
+        ),
+      ),
     );
   }
 }

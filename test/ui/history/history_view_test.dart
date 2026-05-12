@@ -181,6 +181,51 @@ void main() {
         find.byKey(const ValueKey('history-loading-skeleton-row')),
         findsNothing,
       );
+      expect(
+        find.byKey(const ValueKey('history-bulk-delete-fab')),
+        findsOneWidget,
+      );
+      expect(
+        find.byKey(const ValueKey('history-bulk-delete-count-badge')),
+        findsOneWidget,
+      );
+
+      await tester.tap(find.byKey(const ValueKey('history-bulk-delete-fab')));
+      await tester.pumpAndSettle();
+
+      expect(
+        find.byKey(const ValueKey('history-bulk-delete-confirm-dialog')),
+        findsOneWidget,
+      );
+      expect(
+        find.text('すべての閲覧履歴 (2件) を削除しますか？'),
+        findsOneWidget,
+      );
+      expect(find.text('この操作は取り消せません'), findsOneWidget);
+      expect(find.text('キャンセル'), findsOneWidget);
+      expect(find.text('すべて削除'), findsOneWidget);
+
+      await tester.tap(
+        find.byKey(const ValueKey('history-bulk-delete-confirm-cancel')),
+      );
+      await tester.pumpAndSettle();
+      expect(
+        find.byKey(const ValueKey('history-bulk-delete-confirm-dialog')),
+        findsNothing,
+      );
+
+      await tester.tap(find.byKey(const ValueKey('history-bulk-delete-fab')));
+      await tester.pumpAndSettle();
+      await tester.tap(
+        find.byKey(const ValueKey('history-bulk-delete-confirm-delete')),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.text('閲覧履歴がありません'), findsOneWidget);
+      expect(
+        find.byKey(const ValueKey('history-bulk-delete-fab')),
+        findsNothing,
+      );
     });
   });
 }

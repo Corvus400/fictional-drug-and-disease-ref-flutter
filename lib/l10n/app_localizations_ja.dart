@@ -51,6 +51,23 @@ class AppLocalizationsJa extends AppLocalizations {
   String get historyEmptyCta => '検索画面へ';
 
   @override
+  String get historyBulkDeleteFabSemantics => 'すべての閲覧履歴を削除';
+
+  @override
+  String historyBulkDeleteConfirmTitle(int count) {
+    return 'すべての閲覧履歴 ($count件) を削除しますか？';
+  }
+
+  @override
+  String get historyBulkDeleteConfirmBody => 'この操作は取り消せません';
+
+  @override
+  String get historyBulkDeleteConfirmCancel => 'キャンセル';
+
+  @override
+  String get historyBulkDeleteConfirmDelete => 'すべて削除';
+
+  @override
   String get calcPlaceholder => '計算ツール画面（プレースホルダー）';
 
   @override
