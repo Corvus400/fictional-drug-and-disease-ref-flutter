@@ -62,5 +62,16 @@ void main() {
     expect(ja.bookmarksRowSavedAt('2026/05/10'), '保存 2026/05/10');
     expect(ja.bookmarksRowDrugSemantics, '薬品のブックマーク');
     expect(ja.bookmarksRowDiseaseSemantics, '疾患のブックマーク');
+    expect(ja.bookmarksEmptyTitle, 'ブックマークがありません');
+    expect(
+      ja.bookmarksEmptyBody,
+      '医薬品・疾患の詳細画面でブックマークを追加すると、ここに一覧表示されます。',
+    );
+    expect(ja.bookmarksEmptyCta, '検索画面へ');
+    expect(ja.bookmarksSearchZeroTitle, '一致するブックマークがありません');
+    expect(
+      ja.bookmarksSearchZeroBody,
+      'キーワードを短くするか、タブを「すべて」に戻してください。',
+    );
   });
 }

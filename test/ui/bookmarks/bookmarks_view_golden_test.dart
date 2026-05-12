@@ -32,40 +32,121 @@ void main() {
     fileNamePrefix: 'bookmarks_normal',
     description: 'Bookmarks normal state',
     builder: (theme, size, deviceName, textScaler, textScalerName) {
-      return ProviderScope(
-        overrides: [
-          bookmarksStreamProvider.overrideWith(
-            (ref) => Stream.value(_normalEntries),
-          ),
-          drugCardImageCacheManagerProvider.overrideWithValue(
-            _fallbackImageCacheManager(),
-          ),
-        ],
-        child: MaterialApp(
-          debugShowCheckedModeBanner: false,
-          theme: theme,
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
-          supportedLocales: AppLocalizations.supportedLocales,
-          home: Scaffold(
-            body: const BookmarksView(),
-            bottomNavigationBar: AppShellBottomNavigation(
-              selectedIndex: 1,
-              onDestinationSelected: (_) {},
-            ),
-          ),
-        ),
+      return _BookmarksGoldenApp(
+        theme: theme,
+        stream: Stream.value(_normalEntries),
       );
     },
-    whilePerforming: (tester) async {
-      await tester.pump(const Duration(milliseconds: 100));
-      addTearDown(() async {
-        await tester.pumpWidget(const SizedBox.shrink());
-        await tester.pump();
-        await tester.pump(const Duration(milliseconds: 1));
-      });
-      return null;
-    },
+    whilePerforming: _settleBookmarksGolden,
   );
+
+  runHistoryGoldenMatrix(
+    fileNamePrefix: 'bookmarks_empty',
+    description: 'Bookmarks empty state',
+    builder: (theme, size, deviceName, textScaler, textScalerName) {
+      return _BookmarksGoldenApp(
+        theme: theme,
+        stream: Stream<List<BookmarkEntry>>.value(const []),
+      );
+    },
+    whilePerforming: _settleBookmarksGolden,
+  );
+
+  runHistoryGoldenMatrix(
+    fileNamePrefix: 'bookmarks_loading',
+    description: 'Bookmarks loading state',
+    builder: (theme, size, deviceName, textScaler, textScalerName) {
+      return _BookmarksGoldenApp(
+        theme: theme,
+        stream: const Stream<List<BookmarkEntry>>.empty(),
+      );
+    },
+    whilePerforming: _settleBookmarksGolden,
+  );
+
+  runHistoryGoldenMatrix(
+    fileNamePrefix: 'bookmarks_search_zero',
+    description: 'Bookmarks search zero state',
+    builder: (theme, size, deviceName, textScaler, textScalerName) {
+      return _BookmarksGoldenApp(
+        theme: theme,
+        stream: Stream.value(_normalEntries),
+      );
+    },
+    whilePerforming: _enterSearchZeroQuery,
+  );
+}
+
+class _BookmarksGoldenApp extends StatelessWidget {
+  const _BookmarksGoldenApp({
+    required this.theme,
+    required this.stream,
+  });
+
+  final ThemeData theme;
+  final Stream<List<BookmarkEntry>> stream;
+
+  @override
+  Widget build(BuildContext context) {
+    return ProviderScope(
+      overrides: [
+        bookmarksStreamProvider.overrideWith((ref) => stream),
+        drugCardImageCacheManagerProvider.overrideWithValue(
+          _fallbackImageCacheManager(),
+        ),
+      ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: theme,
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        home: Scaffold(
+          body: const BookmarksView(),
+          bottomNavigationBar: AppShellBottomNavigation(
+            selectedIndex: 1,
+            onDestinationSelected: (_) {},
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+Future<Future<void> Function()?> _settleBookmarksGolden(
+  WidgetTester tester,
+) async {
+  await tester.pump(const Duration(milliseconds: 100));
+  addTearDown(() async {
+    await tester.pumpWidget(const SizedBox.shrink());
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 1));
+  });
+  return null;
+}
+
+Future<Future<void> Function()?> _enterSearchZeroQuery(
+  WidgetTester tester,
+) async {
+  await tester.pump(const Duration(milliseconds: 100));
+  final searchBoxCount = find
+      .byKey(const ValueKey('bookmarks-search-box'))
+      .evaluate()
+      .length;
+  for (var index = 0; index < searchBoxCount; index += 1) {
+    await tester.enterText(
+      find.byKey(const ValueKey('bookmarks-search-box')).at(index),
+      'アムロキ',
+    );
+    await tester.pump();
+  }
+  FocusManager.instance.primaryFocus?.unfocus();
+  await tester.pump();
+  addTearDown(() async {
+    await tester.pumpWidget(const SizedBox.shrink());
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 1));
+  });
+  return null;
 }
 
 _MockBaseCacheManager _fallbackImageCacheManager() {

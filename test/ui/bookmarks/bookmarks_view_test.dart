@@ -43,6 +43,80 @@ void main() {
     expect(find.text('保存 2026/05/10'), findsOneWidget);
   });
 
+  testWidgets('empty stream shows empty UI with search CTA', (tester) async {
+    await tester.binding.setSurfaceSize(const Size(390, 800));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+
+    await tester.pumpWidget(_App(entries: const []));
+    await _pumpBookmarks(tester);
+
+    expect(find.text('0件'), findsOneWidget);
+    expect(find.text('ブックマークがありません'), findsOneWidget);
+    expect(
+      find.text('医薬品・疾患の詳細画面でブックマークを追加すると、ここに一覧表示されます。'),
+      findsOneWidget,
+    );
+    expect(find.byKey(const ValueKey('bookmarks-empty-cta')), findsOneWidget);
+  });
+
+  testWidgets('loading state shows five skeleton rows and unknown count', (
+    tester,
+  ) async {
+    await tester.binding.setSurfaceSize(const Size(390, 800));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+
+    await tester.pumpWidget(_App(stream: const Stream.empty()));
+    await tester.pump();
+
+    expect(find.text('-'), findsOneWidget);
+    expect(
+      find.byKey(const ValueKey('bookmarks-skeleton-row')),
+      findsNWidgets(5),
+    );
+    expect(find.text('読み込み中'), findsNothing);
+  });
+
+  testWidgets('search box filters rows case-insensitively', (tester) async {
+    await tester.binding.setSurfaceSize(const Size(390, 800));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+
+    await tester.pumpWidget(_App(entries: _bookmarkEntries));
+    await _pumpBookmarks(tester);
+
+    await tester.enterText(
+      find.byKey(const ValueKey('bookmarks-search-box')),
+      'AMLO',
+    );
+    await tester.pump();
+
+    expect(find.text('1件'), findsOneWidget);
+    expect(find.text('Amlodipine'), findsOneWidget);
+    expect(find.text('高血圧症'), findsNothing);
+  });
+
+  testWidgets('search miss shows search zero UI', (tester) async {
+    await tester.binding.setSurfaceSize(const Size(390, 800));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+
+    await tester.pumpWidget(_App(entries: _bookmarkEntries));
+    await _pumpBookmarks(tester);
+
+    await tester.enterText(
+      find.byKey(const ValueKey('bookmarks-search-box')),
+      'マッチしないキーワード',
+    );
+    await tester.pump();
+
+    expect(find.text('0件'), findsOneWidget);
+    expect(find.text('一致するブックマークがありません'), findsOneWidget);
+    expect(
+      find.text('キーワードを短くするか、タブを「すべて」に戻してください。'),
+      findsOneWidget,
+    );
+    expect(find.text('Amlodipine'), findsNothing);
+    expect(find.text('高血圧症'), findsNothing);
+  });
+
   testWidgets('row taps navigate to detail routes', (tester) async {
     await tester.binding.setSurfaceSize(const Size(390, 800));
     addTearDown(() => tester.binding.setSurfaceSize(null));
@@ -71,10 +145,14 @@ Future<void> _pumpBookmarks(WidgetTester tester) async {
 }
 
 class _App extends StatelessWidget {
-  _App({required this.entries, this.useRouter = false})
-    : cacheManager = _fallbackImageCacheManager();
+  _App({
+    List<BookmarkEntry>? entries,
+    Stream<List<BookmarkEntry>>? stream,
+    this.useRouter = false,
+  }) : stream = stream ?? Stream.value(entries ?? _bookmarkEntries),
+       cacheManager = _fallbackImageCacheManager();
 
-  final List<BookmarkEntry> entries;
+  final Stream<List<BookmarkEntry>> stream;
   final bool useRouter;
   final BaseCacheManager cacheManager;
 
@@ -116,7 +194,7 @@ class _App extends StatelessWidget {
 
     return ProviderScope(
       overrides: [
-        bookmarksStreamProvider.overrideWith((ref) => Stream.value(entries)),
+        bookmarksStreamProvider.overrideWith((ref) => stream),
         drugCardImageCacheManagerProvider.overrideWithValue(cacheManager),
       ],
       child: child,

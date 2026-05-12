@@ -193,7 +193,7 @@ abstract class AppLocalizations {
   /// No description provided for @bookmarksEmptyBody.
   ///
   /// In ja, this message translates to:
-  /// **'検索画面で薬品・疾患をブックマークすると、ここに一覧表示されます'**
+  /// **'医薬品・疾患の詳細画面でブックマークを追加すると、ここに一覧表示されます。'**
   String get bookmarksEmptyBody;
 
   /// No description provided for @bookmarksEmptyCta.
@@ -207,6 +207,12 @@ abstract class AppLocalizations {
   /// In ja, this message translates to:
   /// **'一致するブックマークがありません'**
   String get bookmarksSearchZeroTitle;
+
+  /// No description provided for @bookmarksSearchZeroBody.
+  ///
+  /// In ja, this message translates to:
+  /// **'キーワードを短くするか、タブを「すべて」に戻してください。'**
+  String get bookmarksSearchZeroBody;
 
   /// No description provided for @bookmarksSwipeDeleteAction.
   ///
