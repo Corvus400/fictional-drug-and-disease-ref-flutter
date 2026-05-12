@@ -42,6 +42,10 @@ class HistoryView extends ConsumerWidget {
       HistoryLoaded(:final totalCount) => totalCount,
       _ => 0,
     };
+    final showRetryFab = switch (state) {
+      HistoryLoaded(:final hasNameFailure) => hasNameFailure,
+      _ => false,
+    };
     final body = switch (state) {
       HistoryEmpty() => const _HistoryEmptyState(),
       HistoryLoaded(:final rows) when rows.isEmpty =>
@@ -77,27 +81,42 @@ class HistoryView extends ConsumerWidget {
                     ),
                   ),
           ),
-          body: usePaneLayout
-              ? _HistoryPaneBody(
-                  selectedTab: selectedTab,
-                  onSelect: notifier.selectTab,
-                  child: body,
-                )
-              : body,
-          floatingActionButton: bulkDeleteCount > 0
-              ? _HistoryBulkDeleteFab(
-                  count: bulkDeleteCount,
-                  onPressed: () async {
-                    final confirmed = await showBulkDeleteConfirmDialog(
-                      context: context,
-                      count: bulkDeleteCount,
-                    );
-                    if (confirmed ?? false) {
-                      await notifier.clearAll();
-                    }
-                  },
-                )
-              : null,
+          body: Stack(
+            children: [
+              Positioned.fill(
+                child: usePaneLayout
+                    ? _HistoryPaneBody(
+                        selectedTab: selectedTab,
+                        onSelect: notifier.selectTab,
+                        child: body,
+                      )
+                    : body,
+              ),
+              if (showRetryFab)
+                Positioned(
+                  left: 16,
+                  bottom: 16,
+                  child: _HistoryRetryFab(onPressed: notifier.retryFailedNames),
+                ),
+              if (bulkDeleteCount > 0)
+                Positioned(
+                  right: 16,
+                  bottom: 16,
+                  child: _HistoryBulkDeleteFab(
+                    count: bulkDeleteCount,
+                    onPressed: () async {
+                      final confirmed = await showBulkDeleteConfirmDialog(
+                        context: context,
+                        count: bulkDeleteCount,
+                      );
+                      if (confirmed ?? false) {
+                        await notifier.clearAll();
+                      }
+                    },
+                  ),
+                ),
+            ],
+          ),
         );
       },
     );
@@ -437,6 +456,38 @@ class _HistoryRowsList extends StatelessWidget {
           revealForTesting: row.id == debugSwipeRevealRowId,
         );
       },
+    );
+  }
+}
+
+class _HistoryRetryFab extends StatelessWidget {
+  const _HistoryRetryFab({required this.onPressed});
+
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final palette = Theme.of(context).extension<AppPalette>()!;
+    return Semantics(
+      button: true,
+      label: l10n.historyRetryFabSemantics,
+      child: SizedBox.square(
+        dimension: 56,
+        child: FloatingActionButton(
+          key: const ValueKey('history-retry-fab'),
+          heroTag: 'history-retry-fab',
+          tooltip: l10n.historyRetryFabSemantics,
+          elevation: 2,
+          backgroundColor: palette.filterFabBg,
+          foregroundColor: palette.filterFabFg,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(18),
+          ),
+          onPressed: onPressed,
+          child: const Icon(Icons.refresh),
+        ),
+      ),
     );
   }
 }

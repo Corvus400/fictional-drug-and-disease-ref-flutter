@@ -214,6 +214,18 @@ abstract class AppLocalizations {
   /// **'削除'**
   String get historySwipeDeleteAction;
 
+  /// No description provided for @historyNameFetchFailed.
+  ///
+  /// In ja, this message translates to:
+  /// **'名前取得失敗'**
+  String get historyNameFetchFailed;
+
+  /// No description provided for @historyRetryFabSemantics.
+  ///
+  /// In ja, this message translates to:
+  /// **'閲覧履歴の名前を再取得'**
+  String get historyRetryFabSemantics;
+
   /// No description provided for @calcPlaceholder.
   ///
   /// In ja, this message translates to:

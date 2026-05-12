@@ -4,9 +4,12 @@ import 'package:fictional_drug_and_disease_ref/application/providers/usecase_pro
 import 'package:fictional_drug_and_disease_ref/config/api_config.dart';
 import 'package:fictional_drug_and_disease_ref/config/flavor.dart';
 import 'package:fictional_drug_and_disease_ref/data/local/app_database.dart';
+import 'package:fictional_drug_and_disease_ref/data/providers/api_providers.dart';
 import 'package:fictional_drug_and_disease_ref/data/providers/local_providers.dart';
 import 'package:fictional_drug_and_disease_ref/data/repositories/bookmark_repository.dart';
 import 'package:fictional_drug_and_disease_ref/data/repositories/browsing_history_repository.dart';
+import 'package:fictional_drug_and_disease_ref/data/services/api/disease_api_client.dart';
+import 'package:fictional_drug_and_disease_ref/data/services/api/drug_api_client.dart';
 import 'package:fictional_drug_and_disease_ref/domain/browsing_history/browsing_history_entry.dart';
 import 'package:fictional_drug_and_disease_ref/domain/disease/disease_summary.dart';
 import 'package:fictional_drug_and_disease_ref/domain/drug/drug_summary.dart';
@@ -298,6 +301,66 @@ void main() {
       return null;
     },
   );
+
+  runHistoryGoldenMatrix(
+    fileNamePrefix: 'history_name_fetch_fail',
+    description: 'History name fetch failure with retry',
+    builder: (theme, size, deviceName, textScaler, textScalerName) {
+      final now = _normalNow;
+      return ProviderScope(
+        overrides: [
+          appDatabaseProvider.overrideWithValue(_db),
+          drugApiClientProvider.overrideWithValue(_failingDrugApiClient()),
+          diseaseApiClientProvider.overrideWithValue(
+            _failingDiseaseApiClient(),
+          ),
+          drugCardImageCacheManagerProvider.overrideWithValue(
+            _fallbackImageCacheManager(),
+          ),
+          browsingHistoryStreamProvider.overrideWith(
+            (ref) => Stream<List<BrowsingHistoryEntry>>.value([
+              BrowsingHistoryEntry(
+                id: 'drug_0080',
+                viewedAt: now.subtract(const Duration(minutes: 5)),
+              ),
+              BrowsingHistoryEntry(
+                id: 'disease_0080',
+                viewedAt: now.subtract(const Duration(minutes: 17)),
+              ),
+              BrowsingHistoryEntry(
+                id: _diseaseSummary.id,
+                viewedAt: now.subtract(const Duration(hours: 2)),
+              ),
+            ]),
+          ),
+        ],
+        child: MaterialApp(
+          debugShowCheckedModeBanner: false,
+          theme: theme,
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: Scaffold(
+            body: HistoryView(currentTime: now),
+            bottomNavigationBar: AppShellBottomNavigation(
+              selectedIndex: 2,
+              onDestinationSelected: (_) {},
+            ),
+          ),
+        ),
+      );
+    },
+    whilePerforming: (tester) async {
+      for (var i = 0; i < 5; i += 1) {
+        await tester.pump(const Duration(milliseconds: 100));
+      }
+      addTearDown(() async {
+        await tester.pumpWidget(const SizedBox.shrink());
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 1));
+      });
+      return null;
+    },
+  );
 }
 
 Future<void> _seedNormalRows(AppDatabase db) async {
@@ -357,6 +420,24 @@ _MockBaseCacheManager _fallbackImageCacheManager() {
 }
 
 final class _MockBaseCacheManager extends Mock implements BaseCacheManager {}
+
+final class _MockDrugApiClient extends Mock implements DrugApiClient {}
+
+final class _MockDiseaseApiClient extends Mock implements DiseaseApiClient {}
+
+DrugApiClient _failingDrugApiClient() {
+  final client = _MockDrugApiClient();
+  when(() => client.getDrug(any())).thenThrow(Exception('name unavailable'));
+  return client;
+}
+
+DiseaseApiClient _failingDiseaseApiClient() {
+  final client = _MockDiseaseApiClient();
+  when(() => client.getDisease(any())).thenThrow(
+    Exception('name unavailable'),
+  );
+  return client;
+}
 
 final _normalNow = DateTime(2026, 5, 12, 12);
 

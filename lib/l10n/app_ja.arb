@@ -30,6 +30,8 @@
   "historyBulkDeleteConfirmCancel": "キャンセル",
   "historyBulkDeleteConfirmDelete": "すべて削除",
   "historySwipeDeleteAction": "削除",
+  "historyNameFetchFailed": "名前取得失敗",
+  "historyRetryFabSemantics": "閲覧履歴の名前を再取得",
   "calcPlaceholder": "計算ツール画面（プレースホルダー）",
   "drugDetailTitle": "医薬品詳細",
   "diseaseDetailTitle": "疾患詳細",
