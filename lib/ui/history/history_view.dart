@@ -66,7 +66,20 @@ class HistoryView extends ConsumerWidget {
         return Scaffold(
           backgroundColor: palette.background,
           appBar: AppBar(
-            title: Text(l10n.tabHistory),
+            automaticallyImplyLeading: false,
+            centerTitle: false,
+            titleSpacing: 16,
+            toolbarHeight: usePaneLayout ? 64 : 56,
+            title: Text(
+              l10n.tabHistory,
+              textAlign: TextAlign.left,
+              style: TextStyle(
+                color: palette.ink,
+                fontSize: 17,
+                fontWeight: FontWeight.w700,
+                height: 1.25,
+              ),
+            ),
             backgroundColor: palette.surface,
             surfaceTintColor: Colors.transparent,
             elevation: 0,
