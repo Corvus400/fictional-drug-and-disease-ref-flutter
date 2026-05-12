@@ -15,9 +15,9 @@ void main() {
         File(
           'lib/ui/search/widgets/search_result_toolbar.dart',
         ).readAsStringSync(),
-        File('lib/ui/search/widgets/drug_result_card.dart').readAsStringSync(),
+        File('lib/ui/_common/widgets/drug_result_card.dart').readAsStringSync(),
         File(
-          'lib/ui/search/widgets/disease_result_card.dart',
+          'lib/ui/_common/widgets/disease_result_card.dart',
         ).readAsStringSync(),
         File(
           'lib/ui/search/widgets/search_history_dropdown.dart',
@@ -71,7 +71,7 @@ void main() {
 
   test('drug_card_image_uses_cache_(T14)', () {
     final source = File(
-      'lib/ui/search/widgets/drug_result_card.dart',
+      'lib/ui/_common/widgets/drug_result_card.dart',
     ).readAsStringSync();
     final pubspec = File('pubspec.yaml').readAsStringSync();
 
@@ -85,7 +85,7 @@ void main() {
 
   test('drug regulatory badge colors come from AppPalette', () {
     final source = File(
-      'lib/ui/search/widgets/drug_result_card.dart',
+      'lib/ui/_common/widgets/drug_result_card.dart',
     ).readAsStringSync();
 
     expect(source, isNot(contains('_regulatoryBadgeColors')));
