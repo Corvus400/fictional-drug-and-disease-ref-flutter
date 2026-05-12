@@ -11,7 +11,6 @@ class AppTheme {
 
   static const _seedColor = Color(0xFF007AFF);
   static const _cardRadius = 10.0;
-  static const _navigationIndicatorAlpha = 0.12;
 
   /// Light theme.
   static ThemeData light() => _build(Brightness.light);
@@ -24,6 +23,9 @@ class AppTheme {
       seedColor: _seedColor,
       brightness: brightness,
     );
+    final palette = brightness == Brightness.light
+        ? AppPalette.light
+        : AppPalette.dark;
     return ThemeData(
       useMaterial3: true,
       colorScheme: colorScheme,
@@ -40,16 +42,32 @@ class AppTheme {
         elevation: 0,
       ),
       navigationBarTheme: NavigationBarThemeData(
-        backgroundColor: colorScheme.surface,
-        indicatorColor: colorScheme.primary.withValues(
-          alpha: _navigationIndicatorAlpha,
+        height: 64,
+        backgroundColor: palette.surface,
+        indicatorColor: palette.primarySoft,
+        indicatorShape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(22),
         ),
+        labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
+        iconTheme: WidgetStateProperty.resolveWith((states) {
+          final selected = states.contains(WidgetState.selected);
+          return IconThemeData(
+            color: selected ? palette.primary : palette.muted,
+            size: 24,
+          );
+        }),
+        labelTextStyle: WidgetStateProperty.resolveWith((states) {
+          final selected = states.contains(WidgetState.selected);
+          return TextStyle(
+            color: selected ? palette.primary : palette.muted,
+            fontSize: 10,
+            fontWeight: FontWeight.w600,
+            height: 1.2,
+          );
+        }),
       ),
       extensions: [
-        if (brightness == Brightness.light)
-          AppPalette.light
-        else
-          AppPalette.dark,
+        palette,
         if (brightness == Brightness.light)
           DetailColorExtension.light
         else
