@@ -281,7 +281,7 @@ class _UnresolvedHistoryCard extends StatelessWidget {
             : AppPalette.light);
     final isDrug = row.id.startsWith('drug_');
     return Semantics(
-      label: l10n.historyNameFetchFailed,
+      label: l10n.historyNameResolutionFailedPlaceholder,
       child: Card(
         key: ValueKey('history-unresolved-card-${row.id}'),
         margin: const EdgeInsets.only(top: _historyCardTopMargin),
@@ -304,7 +304,7 @@ class _UnresolvedHistoryCard extends StatelessWidget {
                   children: [
                     Expanded(
                       child: Text(
-                        l10n.historyNameFetchFailed,
+                        l10n.historyNameResolutionFailedPlaceholder,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: theme.textTheme.titleSmall?.copyWith(

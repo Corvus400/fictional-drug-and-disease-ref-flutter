@@ -10,10 +10,9 @@
   "tabCalc": "計算ツール",
   "searchPlaceholder": "検索画面（プレースホルダー）",
   "bookmarksPlaceholder": "ブックマーク画面（プレースホルダー）",
-  "historyPlaceholder": "閲覧履歴画面（プレースホルダー）",
   "historyTabAll": "すべて",
-  "historyTabDrugs": "医薬品",
-  "historyTabDiseases": "疾患",
+  "historyTabDrug": "医薬品",
+  "historyTabDisease": "疾患",
   "historyEmptyTitle": "閲覧履歴がありません",
   "historyEmptyBody": "検索して薬品・疾患を閲覧すると、ここに履歴が表示されます",
   "historyEmptyCta": "検索画面へ",
@@ -30,8 +29,49 @@
   "historyBulkDeleteConfirmCancel": "キャンセル",
   "historyBulkDeleteConfirmDelete": "すべて削除",
   "historySwipeDeleteAction": "削除",
-  "historyNameFetchFailed": "名前取得失敗",
+  "historyNameResolutionFailedPlaceholder": "名前取得失敗",
   "historyRetryFabSemantics": "閲覧履歴の名前を再取得",
+  "historyRelativeJustNow": "たった今",
+  "historyRelativeMinutesAgo": "{minutes}分前",
+  "@historyRelativeMinutesAgo": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "historyRelativeHoursAgo": "{hours}時間前",
+  "@historyRelativeHoursAgo": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
+  },
+  "historyRelativeYesterdayAt": "昨日 {time}",
+  "@historyRelativeYesterdayAt": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "historyRelativeDaysAgo": "{days}日前",
+  "@historyRelativeDaysAgo": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "historyRelativeAbsoluteDate": "{date}",
+  "@historyRelativeAbsoluteDate": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
   "calcPlaceholder": "計算ツール画面（プレースホルダー）",
   "drugDetailTitle": "医薬品詳細",
   "diseaseDetailTitle": "疾患詳細",

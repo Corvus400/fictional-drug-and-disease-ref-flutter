@@ -196,14 +196,14 @@ class _HistorySideTabBar extends StatelessWidget {
               compact: compact,
             ),
             _HistorySideTabButton(
-              label: l10n.historyTabDrugs,
+              label: l10n.historyTabDrug,
               tab: HistoryTab.drug,
               selectedTab: selectedTab,
               onSelect: onSelect,
               compact: compact,
             ),
             _HistorySideTabButton(
-              label: l10n.historyTabDiseases,
+              label: l10n.historyTabDisease,
               tab: HistoryTab.disease,
               selectedTab: selectedTab,
               onSelect: onSelect,
@@ -295,13 +295,13 @@ class _HistoryTabBar extends StatelessWidget {
             onSelect: onSelect,
           ),
           _HistoryTabButton(
-            label: l10n.historyTabDrugs,
+            label: l10n.historyTabDrug,
             tab: HistoryTab.drug,
             selectedTab: selectedTab,
             onSelect: onSelect,
           ),
           _HistoryTabButton(
-            label: l10n.historyTabDiseases,
+            label: l10n.historyTabDisease,
             tab: HistoryTab.disease,
             selectedTab: selectedTab,
             onSelect: onSelect,
