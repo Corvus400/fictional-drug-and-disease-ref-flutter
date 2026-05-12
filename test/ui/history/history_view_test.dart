@@ -436,6 +436,77 @@ void main() {
       expect(deletedId, _diseaseSummary.id);
     });
 
+    testWidgets(
+      'keeps other revealed delete actions visible after deleting one row',
+      (
+        tester,
+      ) async {
+        tester.view.devicePixelRatio = 2;
+        tester.view.physicalSize = const Size(780, 1688);
+        addTearDown(() {
+          tester.view.resetPhysicalSize();
+          tester.view.resetDevicePixelRatio();
+        });
+
+        final now = DateTime(2026, 5, 12, 12);
+        final drugViewedAt = now.subtract(const Duration(minutes: 5));
+        final diseaseViewedAt = now.subtract(const Duration(hours: 2));
+        await _seedDrug(db, _drugSummary, drugViewedAt);
+        await _seedDisease(db, _diseaseSummary, diseaseViewedAt);
+
+        await tester.pumpWidget(
+          _App(
+            db: db,
+            historyStream: Stream.value([
+              BrowsingHistoryEntry(id: _drugSummary.id, viewedAt: drugViewedAt),
+              BrowsingHistoryEntry(
+                id: _diseaseSummary.id,
+                viewedAt: diseaseViewedAt,
+              ),
+            ]),
+            currentTime: now,
+          ),
+        );
+        for (var i = 0; i < 5; i += 1) {
+          await tester.pump(const Duration(milliseconds: 100));
+        }
+        addTearDown(() async {
+          await tester.pumpWidget(const SizedBox.shrink());
+          await tester.pump();
+          await tester.pump(const Duration(milliseconds: 1));
+        });
+
+        await tester.drag(
+          find.byKey(ValueKey('history-row-${_drugSummary.id}')),
+          const Offset(-140, 0),
+        );
+        await tester.pumpAndSettle();
+        await tester.drag(
+          find.byKey(ValueKey('history-row-${_diseaseSummary.id}')),
+          const Offset(-140, 0),
+        );
+        await tester.pumpAndSettle();
+
+        expect(_historyRevealWidthAt(tester, _drugSummary.id), 72);
+        expect(_historyRevealWidthAt(tester, _diseaseSummary.id), 72);
+
+        await tester.tap(
+          find.byKey(ValueKey('history-row-swipe-action-${_drugSummary.id}')),
+        );
+        await tester.pumpAndSettle();
+
+        expect(
+          find.byKey(ValueKey('history-row-${_drugSummary.id}')),
+          findsNothing,
+        );
+        expect(
+          find.byKey(ValueKey('history-row-${_diseaseSummary.id}')),
+          findsOneWidget,
+        );
+        expect(_historyRevealWidthAt(tester, _diseaseSummary.id), 72);
+      },
+    );
+
     testWidgets('renders unresolved rows with a screen-level retry FAB', (
       tester,
     ) async {
@@ -604,6 +675,12 @@ final class _MockBaseCacheManager extends Mock implements BaseCacheManager {}
 final class _MockDrugApiClient extends Mock implements DrugApiClient {}
 
 final class _MockDiseaseApiClient extends Mock implements DiseaseApiClient {}
+
+double _historyRevealWidthAt(WidgetTester tester, String id) {
+  return tester
+      .getSize(find.byKey(ValueKey('history-row-swipe-reveal-$id')))
+      .width;
+}
 
 const _drugSummary = DrugSummary(
   id: 'drug_001',

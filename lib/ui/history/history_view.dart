@@ -445,6 +445,7 @@ class _HistoryRowsList extends StatelessWidget {
     return ListView.builder(
       padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
       itemCount: rows.length,
+      findChildIndexCallback: (key) => _historyRowIndexForKey(rows, key),
       itemBuilder: (context, index) {
         final row = rows[index];
         return SwipeDeleteHistoryRow(
@@ -458,6 +459,20 @@ class _HistoryRowsList extends StatelessWidget {
       },
     );
   }
+}
+
+int? _historyRowIndexForKey(List<HistoryRow> rows, Key key) {
+  if (key is! ValueKey<String>) {
+    return null;
+  }
+  final value = key.value;
+  const prefix = 'history-row-';
+  if (!value.startsWith(prefix)) {
+    return null;
+  }
+  final id = value.substring(prefix.length);
+  final index = rows.indexWhere((row) => row.id == id);
+  return index == -1 ? null : index;
 }
 
 class _HistoryRetryFab extends StatelessWidget {
