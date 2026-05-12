@@ -4,12 +4,16 @@ import 'package:fictional_drug_and_disease_ref/application/search/search_query_c
 import 'package:fictional_drug_and_disease_ref/application/usecases/calculate_bmi_usecase.dart';
 import 'package:fictional_drug_and_disease_ref/application/usecases/calculate_crcl_usecase.dart';
 import 'package:fictional_drug_and_disease_ref/application/usecases/calculate_egfr_usecase.dart';
+import 'package:fictional_drug_and_disease_ref/application/usecases/clear_browsing_history_usecase.dart';
 import 'package:fictional_drug_and_disease_ref/application/usecases/clear_search_history_usecase.dart';
+import 'package:fictional_drug_and_disease_ref/application/usecases/delete_browsing_history_usecase.dart';
 import 'package:fictional_drug_and_disease_ref/application/usecases/delete_calculation_history_usecase.dart';
 import 'package:fictional_drug_and_disease_ref/application/usecases/delete_search_history_usecase.dart';
+import 'package:fictional_drug_and_disease_ref/application/usecases/list_browsing_history_usecase.dart';
 import 'package:fictional_drug_and_disease_ref/application/usecases/list_calculation_history_usecase.dart';
 import 'package:fictional_drug_and_disease_ref/application/usecases/list_search_history_usecase.dart';
 import 'package:fictional_drug_and_disease_ref/application/usecases/load_categories_usecase.dart';
+import 'package:fictional_drug_and_disease_ref/application/usecases/observe_browsing_history_usecase.dart';
 import 'package:fictional_drug_and_disease_ref/application/usecases/observe_bookmark_state_usecase.dart';
 import 'package:fictional_drug_and_disease_ref/application/usecases/record_calculation_history_usecase.dart';
 import 'package:fictional_drug_and_disease_ref/application/usecases/search_diseases_usecase.dart';
@@ -19,6 +23,7 @@ import 'package:fictional_drug_and_disease_ref/application/usecases/view_disease
 import 'package:fictional_drug_and_disease_ref/application/usecases/view_drug_detail_usecase.dart';
 import 'package:fictional_drug_and_disease_ref/data/providers/api_providers.dart';
 import 'package:fictional_drug_and_disease_ref/data/providers/local_providers.dart';
+import 'package:fictional_drug_and_disease_ref/domain/browsing_history/browsing_history_entry.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/misc.dart';
 
@@ -112,6 +117,43 @@ final clearSearchHistoryUsecaseProvider = Provider<ClearSearchHistoryUsecase>(
     searchHistoryRepository: ref.watch(searchHistoryRepositoryProvider),
   ),
 );
+
+/// List-browsing-history use case provider.
+final listBrowsingHistoryUsecaseProvider = Provider<ListBrowsingHistoryUsecase>(
+  (ref) => ListBrowsingHistoryUsecase(
+    repository: ref.watch(browsingHistoryRepositoryProvider),
+  ),
+);
+
+/// Delete-browsing-history use case provider.
+final deleteBrowsingHistoryUsecaseProvider =
+    Provider<DeleteBrowsingHistoryUsecase>(
+      (ref) => DeleteBrowsingHistoryUsecase(
+        repository: ref.watch(browsingHistoryRepositoryProvider),
+      ),
+    );
+
+/// Clear-browsing-history use case provider.
+final clearBrowsingHistoryUsecaseProvider =
+    Provider<ClearBrowsingHistoryUsecase>(
+      (ref) => ClearBrowsingHistoryUsecase(
+        repository: ref.watch(browsingHistoryRepositoryProvider),
+      ),
+    );
+
+/// Observe-browsing-history use case provider.
+final observeBrowsingHistoryUsecaseProvider =
+    Provider<ObserveBrowsingHistoryUsecase>(
+      (ref) => ObserveBrowsingHistoryUsecase(
+        repository: ref.watch(browsingHistoryRepositoryProvider),
+      ),
+    );
+
+/// Browsing history stream provider.
+final browsingHistoryStreamProvider =
+    StreamProvider.autoDispose<List<BrowsingHistoryEntry>>(
+      (ref) => ref.watch(observeBrowsingHistoryUsecaseProvider).execute(),
+    );
 
 /// Calculate-BMI use case provider.
 final calculateBmiUsecaseProvider = Provider<CalculateBmiUsecase>(
