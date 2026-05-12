@@ -6,6 +6,8 @@ import 'package:fictional_drug_and_disease_ref/ui/history/history_screen_state.d
 import 'package:fictional_drug_and_disease_ref/ui/history/widgets/bulk_delete_confirm_dialog.dart';
 import 'package:fictional_drug_and_disease_ref/ui/history/widgets/history_row.dart';
 import 'package:fictional_drug_and_disease_ref/ui/search/providers/drug_card_image_cache_manager_provider.dart';
+import 'package:fictional_drug_and_disease_ref/ui/shell/app_shell_tab.dart';
+import 'package:fictional_drug_and_disease_ref/ui/shell/app_tab_header.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -28,7 +30,6 @@ class HistoryView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final l10n = AppLocalizations.of(context)!;
     final palette = Theme.of(context).extension<AppPalette>()!;
     final state = ref.watch(historyScreenProvider);
     final notifier = ref.read(historyScreenProvider.notifier);
@@ -65,25 +66,9 @@ class HistoryView extends ConsumerWidget {
         final usePaneLayout = _usesPaneLayout(constraints.biggest);
         return Scaffold(
           backgroundColor: palette.background,
-          appBar: AppBar(
-            automaticallyImplyLeading: false,
-            centerTitle: false,
-            titleSpacing: 16,
+          appBar: AppTabHeader(
+            tab: AppShellTab.history,
             toolbarHeight: usePaneLayout ? 64 : 56,
-            title: Text(
-              l10n.tabHistory,
-              textAlign: TextAlign.left,
-              style: TextStyle(
-                color: palette.ink,
-                fontSize: 17,
-                fontWeight: FontWeight.w700,
-                height: 1.25,
-              ),
-            ),
-            backgroundColor: palette.surface,
-            surfaceTintColor: Colors.transparent,
-            elevation: 0,
-            scrolledUnderElevation: 0,
             bottom: usePaneLayout
                 ? null
                 : PreferredSize(

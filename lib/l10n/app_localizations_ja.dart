@@ -1205,9 +1205,6 @@ class AppLocalizationsJa extends AppLocalizations {
   String get detailRetry => '再試行';
 
   @override
-  String get calcAppBarTitle => '計算ツール';
-
-  @override
   String get calcToolBmi => 'BMI';
 
   @override

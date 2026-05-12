@@ -16,6 +16,8 @@ import 'package:fictional_drug_and_disease_ref/ui/search/format/relative_time_fo
 import 'package:fictional_drug_and_disease_ref/ui/search/providers/drug_card_image_cache_manager_provider.dart';
 import 'package:fictional_drug_and_disease_ref/ui/search/search_screen_notifier.dart';
 import 'package:fictional_drug_and_disease_ref/ui/search/search_screen_state.dart';
+import 'package:fictional_drug_and_disease_ref/ui/shell/app_shell_tab.dart';
+import 'package:fictional_drug_and_disease_ref/ui/shell/app_tab_header.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -121,6 +123,10 @@ class _SearchViewState extends ConsumerState<SearchView> with RouteAware {
 
     return Scaffold(
       backgroundColor: palette.background,
+      appBar: AppTabHeader(
+        tab: AppShellTab.search,
+        toolbarHeight: MediaQuery.sizeOf(context).shortestSide >= 600 ? 64 : 56,
+      ),
       floatingActionButton: Stack(
         clipBehavior: Clip.none,
         children: [
@@ -163,66 +169,64 @@ class _SearchViewState extends ConsumerState<SearchView> with RouteAware {
             ),
         ],
       ),
-      body: SafeArea(
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            final isTablet =
-                constraints.maxWidth >= SearchConstants.searchTabletBreakpoint;
-            final gutter = isTablet
-                ? SearchConstants.searchTabletGutter
-                : SearchConstants.searchPhoneGutter;
-            final historyTapRegionGroupId = Object();
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                _SearchTopChrome(
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          final isTablet =
+              constraints.maxWidth >= SearchConstants.searchTabletBreakpoint;
+          final gutter = isTablet
+              ? SearchConstants.searchTabletGutter
+              : SearchConstants.searchPhoneGutter;
+          final historyTapRegionGroupId = Object();
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              _SearchTopChrome(
+                state: state,
+                palette: palette,
+                gutter: gutter,
+                isTablet: isTablet,
+                historyTapRegionGroupId: historyTapRegionGroupId,
+                onChangeTab: notifier.changeTab,
+                onOpenHistory: () {
+                  notifier.openHistoryDropdown();
+                  unawaited(notifier.loadHistory());
+                },
+                onChangeQuery: notifier.changeQueryText,
+                onClearQuery: notifier.clearQueryText,
+                onSubmit: notifier.performSearch,
+                onCancel: notifier.closeHistoryDropdown,
+              ),
+              if (state.historyDropdownOpen)
+                Flexible(
+                  child: _SearchHistoryDropdown(
+                    tapRegionGroupId: historyTapRegionGroupId,
+                    entries: state.historyForTab,
+                    currentTime: widget.currentTime ?? DateTime.now(),
+                    onSelect: notifier.selectHistory,
+                    onDelete: notifier.deleteHistory,
+                    onClearAll: notifier.clearAllHistory,
+                  ),
+                ),
+              Expanded(
+                child: _SearchPhaseSection(
                   state: state,
-                  palette: palette,
                   gutter: gutter,
-                  isTablet: isTablet,
-                  historyTapRegionGroupId: historyTapRegionGroupId,
-                  onChangeTab: notifier.changeTab,
-                  onOpenHistory: () {
-                    notifier.openHistoryDropdown();
-                    unawaited(notifier.loadHistory());
-                  },
-                  onChangeQuery: notifier.changeQueryText,
-                  onClearQuery: notifier.clearQueryText,
-                  onSubmit: notifier.performSearch,
-                  onCancel: notifier.closeHistoryDropdown,
+                  drugCardImageCacheManager: drugCardImageCacheManager,
+                  resultScrollController: state.tab == SearchTab.drugs
+                      ? _drugSearchResultsScrollController
+                      : _diseaseSearchResultsScrollController,
+                  onRetry: notifier.performSearch,
+                  onResetFilter: notifier.resetFilter,
+                  onRemoveOneChip: notifier.removeOneChip,
+                  onRemoveChipAt: notifier.removeChipAt,
+                  onChangeDrugSort: notifier.changeDrugSort,
+                  onChangeDiseaseSort: notifier.changeDiseaseSort,
+                  onLoadMore: notifier.loadMore,
                 ),
-                if (state.historyDropdownOpen)
-                  Flexible(
-                    child: _SearchHistoryDropdown(
-                      tapRegionGroupId: historyTapRegionGroupId,
-                      entries: state.historyForTab,
-                      currentTime: widget.currentTime ?? DateTime.now(),
-                      onSelect: notifier.selectHistory,
-                      onDelete: notifier.deleteHistory,
-                      onClearAll: notifier.clearAllHistory,
-                    ),
-                  ),
-                Expanded(
-                  child: _SearchPhaseSection(
-                    state: state,
-                    gutter: gutter,
-                    drugCardImageCacheManager: drugCardImageCacheManager,
-                    resultScrollController: state.tab == SearchTab.drugs
-                        ? _drugSearchResultsScrollController
-                        : _diseaseSearchResultsScrollController,
-                    onRetry: notifier.performSearch,
-                    onResetFilter: notifier.resetFilter,
-                    onRemoveOneChip: notifier.removeOneChip,
-                    onRemoveChipAt: notifier.removeChipAt,
-                    onChangeDrugSort: notifier.changeDrugSort,
-                    onChangeDiseaseSort: notifier.changeDiseaseSort,
-                    onLoadMore: notifier.loadMore,
-                  ),
-                ),
-              ],
-            );
-          },
-        ),
+              ),
+            ],
+          );
+        },
       ),
     );
   }

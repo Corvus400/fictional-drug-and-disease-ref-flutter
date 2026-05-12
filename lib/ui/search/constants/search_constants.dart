@@ -15,9 +15,6 @@ abstract final class SearchConstants {
   /// Phone horizontal gutter.
   static const searchPhoneGutter = 16.0;
 
-  /// Round6 phone top chrome status-area padding.
-  static const searchPhoneTopChromeStatusPadding = 47.0;
-
   /// Tablet layout breakpoint.
   static const searchTabletBreakpoint = 600.0;
 
@@ -32,12 +29,6 @@ abstract final class SearchConstants {
 
   /// Tablet search field height.
   static const searchTabletFieldHeight = 44.0;
-
-  /// Round6 top chrome title font size on phone.
-  static const searchPhoneTitleFontSize = 22.0;
-
-  /// Round6 top chrome title font size on tablet.
-  static const searchTabletTitleFontSize = 26.0;
 
   /// Round6 segmented control radius.
   static const searchSegmentedRadius = 9.0;
