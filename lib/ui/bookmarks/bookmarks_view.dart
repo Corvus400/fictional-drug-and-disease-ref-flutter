@@ -37,6 +37,9 @@ class BookmarksView extends ConsumerWidget {
       )!.bookmarksResultCount(visibleCount),
     };
     final body = switch (state) {
+      BookmarksEmpty() => const _BookmarksEmptyState(),
+      BookmarksLoaded(:final isSearchZero) when isSearchZero =>
+        const _BookmarksSearchZeroState(),
       BookmarksLoaded(:final visibleRows) => _BookmarksRowsList(
         rows: visibleRows,
         drugImageCacheManager: drugImageCacheManager,
@@ -58,7 +61,7 @@ class BookmarksView extends ConsumerWidget {
                   selectedTab: selectedTab,
                   countLabel: countLabel,
                   onSelect: notifier.selectTab,
-                  onSearchChanged: (_) {},
+                  onSearchChanged: notifier.setSearchQuery,
                   child: body,
                 )
               : Column(
@@ -69,7 +72,7 @@ class BookmarksView extends ConsumerWidget {
                     ),
                     _BookmarksSearchPanel(
                       countLabel: countLabel,
-                      onChanged: (_) {},
+                      onChanged: notifier.setSearchQuery,
                     ),
                     Expanded(child: body),
                   ],
@@ -419,6 +422,173 @@ class _BookmarksRowsList extends StatelessWidget {
   }
 }
 
+class _BookmarksEmptyState extends StatelessWidget {
+  const _BookmarksEmptyState();
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return _BookmarksEmptyMessage(
+      title: l10n.bookmarksEmptyTitle,
+      body: l10n.bookmarksEmptyBody,
+      ctaKey: const ValueKey('bookmarks-empty-cta'),
+    );
+  }
+}
+
+class _BookmarksSearchZeroState extends StatelessWidget {
+  const _BookmarksSearchZeroState();
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return _BookmarksEmptyMessage(
+      title: l10n.bookmarksSearchZeroTitle,
+      body: l10n.bookmarksSearchZeroBody,
+      ctaKey: const ValueKey('bookmarks-search-zero-cta'),
+    );
+  }
+}
+
+class _BookmarksEmptyMessage extends StatelessWidget {
+  const _BookmarksEmptyMessage({
+    required this.title,
+    required this.body,
+    required this.ctaKey,
+  });
+
+  final String title;
+  final String body;
+  final Key ctaKey;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final palette = Theme.of(context).extension<AppPalette>()!;
+    final theme = Theme.of(context);
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final padding = constraints.maxHeight < 320 ? 24.0 : 48.0;
+        return SingleChildScrollView(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(minHeight: constraints.maxHeight),
+            child: Center(
+              child: Padding(
+                padding: EdgeInsets.all(padding),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    _BookmarksEmptyArt(palette: palette),
+                    const SizedBox(height: 16),
+                    Text(
+                      title,
+                      textAlign: TextAlign.center,
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        color: palette.ink,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    ConstrainedBox(
+                      constraints: const BoxConstraints(maxWidth: 280),
+                      child: Text(
+                        body,
+                        textAlign: TextAlign.center,
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: palette.ink2,
+                          height: 1.6,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    FilledButton(
+                      key: ctaKey,
+                      style: FilledButton.styleFrom(
+                        minimumSize: const Size(0, 44),
+                        padding: const EdgeInsets.symmetric(horizontal: 24),
+                        shape: const StadiumBorder(),
+                        backgroundColor: palette.searchPrimaryActionBg,
+                        foregroundColor: palette.searchPrimaryActionFg,
+                      ),
+                      onPressed: () => context.go(AppRoutes.search),
+                      child: Text(l10n.bookmarksEmptyCta),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+
+class _BookmarksEmptyArt extends StatelessWidget {
+  const _BookmarksEmptyArt({required this.palette});
+
+  final AppPalette palette;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      key: const ValueKey('bookmarks-empty-art'),
+      width: 96,
+      height: 96,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: palette.surface,
+        border: Border.all(color: palette.hairline2),
+      ),
+      child: CustomPaint(
+        size: const Size.square(56),
+        painter: _BookmarksEmptyArtPainter(color: palette.ink2),
+      ),
+    );
+  }
+}
+
+class _BookmarksEmptyArtPainter extends CustomPainter {
+  const _BookmarksEmptyArtPainter({required this.color});
+
+  final Color color;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final scale = size.shortestSide / 64;
+    canvas
+      ..save()
+      ..translate((size.width - size.shortestSide) / 2, 0)
+      ..scale(scale);
+    final paint = Paint()
+      ..color = color
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 2
+      ..strokeCap = StrokeCap.round
+      ..strokeJoin = StrokeJoin.round;
+    final bookmark = Path()
+      ..moveTo(20, 12)
+      ..lineTo(44, 12)
+      ..quadraticBezierTo(48, 12, 48, 16)
+      ..lineTo(48, 52)
+      ..lineTo(32, 42)
+      ..lineTo(16, 52)
+      ..lineTo(16, 16)
+      ..quadraticBezierTo(16, 12, 20, 12)
+      ..close();
+    canvas
+      ..drawPath(bookmark, paint)
+      ..drawLine(const Offset(25, 24), const Offset(39, 24), paint)
+      ..drawLine(const Offset(25, 32), const Offset(35, 32), paint)
+      ..restore();
+  }
+
+  @override
+  bool shouldRepaint(_BookmarksEmptyArtPainter oldDelegate) {
+    return color != oldDelegate.color;
+  }
+}
+
 class _BookmarkRowTile extends StatelessWidget {
   const _BookmarkRowTile({
     required this.row,
@@ -496,13 +666,15 @@ class _BookmarksSkeletonRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final palette = Theme.of(context).extension<AppPalette>()!;
-    return Container(
-      height: 88,
+    return DecoratedBox(
+      key: const ValueKey('bookmarks-skeleton-row'),
       decoration: BoxDecoration(
-        color: palette.surface,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: palette.hairline),
+        borderRadius: BorderRadius.circular(10),
+        gradient: LinearGradient(
+          colors: [palette.surface3, palette.surface4, palette.surface3],
+        ),
       ),
+      child: const SizedBox(height: 80, width: double.infinity),
     );
   }
 }

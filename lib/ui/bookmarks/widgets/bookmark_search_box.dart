@@ -54,7 +54,7 @@ class BookmarkSearchBox extends StatelessWidget {
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: borderRadius,
-            borderSide: BorderSide(color: palette.primary),
+            borderSide: BorderSide.none,
           ),
         ),
       ),

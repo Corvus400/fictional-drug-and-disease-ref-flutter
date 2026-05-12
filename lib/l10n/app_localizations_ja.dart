@@ -61,13 +61,16 @@ class AppLocalizationsJa extends AppLocalizations {
   String get bookmarksEmptyTitle => 'ブックマークがありません';
 
   @override
-  String get bookmarksEmptyBody => '検索画面で薬品・疾患をブックマークすると、ここに一覧表示されます';
+  String get bookmarksEmptyBody => '医薬品・疾患の詳細画面でブックマークを追加すると、ここに一覧表示されます。';
 
   @override
   String get bookmarksEmptyCta => '検索画面へ';
 
   @override
   String get bookmarksSearchZeroTitle => '一致するブックマークがありません';
+
+  @override
+  String get bookmarksSearchZeroBody => 'キーワードを短くするか、タブを「すべて」に戻してください。';
 
   @override
   String get bookmarksSwipeDeleteAction => '削除';
