@@ -70,6 +70,13 @@ final class BookmarkRepository {
     }
   }
 
+  /// Watches all bookmarks ordered by newest first.
+  Stream<List<BookmarkEntry>> watchAll() {
+    return _dao.watchAll().map(
+      (rows) => rows.map(_toDomain).toList(growable: false),
+    );
+  }
+
   /// Returns whether a bookmark exists.
   Future<Result<bool>> existsById(String id) async {
     try {
