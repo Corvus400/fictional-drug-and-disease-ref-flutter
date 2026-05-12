@@ -22,6 +22,7 @@ import 'package:fictional_drug_and_disease_ref/l10n/app_localizations.dart';
 import 'package:fictional_drug_and_disease_ref/router/app_router.dart';
 import 'package:fictional_drug_and_disease_ref/theme/app_palette.dart';
 import 'package:fictional_drug_and_disease_ref/theme/app_theme.dart';
+import 'package:fictional_drug_and_disease_ref/ui/_common/widgets/drug_result_card.dart';
 import 'package:fictional_drug_and_disease_ref/ui/search/constants/search_constants.dart';
 import 'package:fictional_drug_and_disease_ref/ui/search/search_screen_notifier.dart';
 import 'package:fictional_drug_and_disease_ref/ui/search/search_screen_state.dart';
@@ -2599,6 +2600,68 @@ void main() {
     };
     expect(colors, hasLength(4));
   });
+
+  testWidgets(
+    'SearchView drug result cards do not render history-only affordances',
+    (
+      tester,
+    ) async {
+      final drugApiClient = _MockDrugApiClient();
+      when(
+        () => drugApiClient.getDrugs(
+          page: any(named: 'page'),
+          pageSize: any(named: 'pageSize'),
+          keyword: any(named: 'keyword'),
+        ),
+      ).thenAnswer((_) async => _drugListFixture());
+      final imageCacheManager = _MockBaseCacheManager();
+      when(
+        () => imageCacheManager.getSingleFile(
+          any(),
+          key: any(named: 'key'),
+          headers: any(named: 'headers'),
+        ),
+      ).thenThrow(StateError('widget tests render the fallback image'));
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            appDatabaseProvider.overrideWithValue(db),
+            drugApiClientProvider.overrideWithValue(drugApiClient),
+            drugCardImageCacheManagerProvider.overrideWithValue(
+              imageCacheManager,
+            ),
+          ],
+          child: const MaterialApp(
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: SearchView(),
+          ),
+        ),
+      );
+
+      await tester.tap(find.byType(FilledButton).first);
+      await tester.pumpAndSettle();
+
+      expect(find.byType(DrugResultCard), findsWidgets);
+      expect(find.byType(Dismissible), findsNothing);
+      expect(
+        find.byKey(const ValueKey('drug-card-trailing-time')),
+        findsNothing,
+      );
+      expect(find.text('たった今'), findsNothing);
+      expect(find.text('5分前'), findsNothing);
+      expect(find.textContaining('昨日 '), findsNothing);
+      expect(
+        find.byWidgetPredicate((widget) {
+          final key = widget.key;
+          return key is ValueKey<String> &&
+              key.value.startsWith('delete-history-');
+        }),
+        findsNothing,
+      );
+    },
+  );
 
   testWidgets('SearchView opens drug sort sheet from results toolbar', (
     tester,

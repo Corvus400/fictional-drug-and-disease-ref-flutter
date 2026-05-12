@@ -1,10 +1,36 @@
-part of '../search_view.dart';
+import 'dart:io';
 
-class _DrugResultCard extends StatelessWidget {
-  const _DrugResultCard({required this.item, required this.cacheManager});
+import 'package:fictional_drug_and_disease_ref/config/api_config.dart';
+import 'package:fictional_drug_and_disease_ref/core/logging/app_logger.dart';
+import 'package:fictional_drug_and_disease_ref/domain/drug/drug_summary.dart';
+import 'package:fictional_drug_and_disease_ref/l10n/app_localizations.dart';
+import 'package:fictional_drug_and_disease_ref/theme/app_palette.dart';
+import 'package:fictional_drug_and_disease_ref/ui/search/constants/search_constants.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 
+/// Shared drug result card used by search, bookmarks, and browsing history.
+class DrugResultCard extends StatelessWidget {
+  /// Creates a drug result card.
+  const DrugResultCard({
+    required this.item,
+    required this.cacheManager,
+    super.key,
+    this.onTap,
+    this.trailingTime,
+  });
+
+  /// Drug summary to render.
   final DrugSummary item;
+
+  /// Cache manager for the drug image.
   final BaseCacheManager cacheManager;
+
+  /// Optional tap handler.
+  final VoidCallback? onTap;
+
+  /// Optional inline trailing time widget for browsing history rows.
+  final Widget? trailingTime;
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +58,7 @@ class _DrugResultCard extends StatelessWidget {
         side: BorderSide(color: palette.hairline),
       ),
       child: InkWell(
-        onTap: () => context.push(AppRoutes.drugDetail(item.id)),
+        onTap: onTap,
         borderRadius: BorderRadius.circular(SearchConstants.searchCardRadius),
         child: Padding(
           padding: const EdgeInsets.all(12),
@@ -58,6 +84,7 @@ class _DrugResultCard extends StatelessWidget {
               const SizedBox(width: 12),
               Expanded(
                 child: Column(
+                  mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Wrap(
@@ -73,14 +100,7 @@ class _DrugResultCard extends StatelessWidget {
                       ],
                     ),
                     const SizedBox(height: 4),
-                    Text(
-                      item.brandName,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: theme.textTheme.titleSmall?.copyWith(
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
+                    _DrugCardTitleRow(item: item, trailingTime: trailingTime),
                     const SizedBox(height: 2),
                     Text(
                       item.genericName,
@@ -113,6 +133,36 @@ class _DrugResultCard extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class _DrugCardTitleRow extends StatelessWidget {
+  const _DrugCardTitleRow({required this.item, required this.trailingTime});
+
+  final DrugSummary item;
+  final Widget? trailingTime;
+
+  @override
+  Widget build(BuildContext context) {
+    final title = Text(
+      item.brandName,
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
+      style: Theme.of(
+        context,
+      ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w700),
+    );
+    final trailing = trailingTime;
+    if (trailing == null) {
+      return title;
+    }
+    return Row(
+      children: [
+        Expanded(child: title),
+        const SizedBox(width: 8),
+        trailing,
+      ],
     );
   }
 }
@@ -280,4 +330,49 @@ class _DrugBadge extends StatelessWidget {
       ),
     );
   }
+}
+
+const _drugCardImageCacheKeyVersion = 'v2';
+
+String _drugCardImageUrl(String imageUrl) {
+  final base = Uri.parse(ApiConfig.current.apiBaseUrl);
+  final resolved = base.resolve(imageUrl);
+  return resolved
+      .replace(
+        queryParameters: {
+          ...resolved.queryParameters,
+          'size': SearchConstants.searchDrugCardImageApiSize,
+        },
+      )
+      .toString();
+}
+
+String _drugCardImageCacheKey(String imageUrl) {
+  return 'drug-card-image-$_drugCardImageCacheKeyVersion::'
+      '${_drugCardImageUrl(imageUrl)}';
+}
+
+String _regulatoryClassLabel(AppLocalizations l10n, String value) {
+  return switch (value) {
+    'poison' => l10n.searchDrugRegulatoryPoison,
+    'potent' => l10n.searchDrugRegulatoryPotent,
+    'ordinary' => l10n.searchDrugRegulatoryOrdinary,
+    'psychotropic_1' => l10n.searchDrugRegulatoryPsychotropic1,
+    'psychotropic_2' => l10n.searchDrugRegulatoryPsychotropic2,
+    'psychotropic_3' => l10n.searchDrugRegulatoryPsychotropic3,
+    'narcotic' => l10n.searchDrugRegulatoryNarcotic,
+    'stimulant_precursor' => l10n.searchDrugRegulatoryStimulantPrecursor,
+    'biological' => l10n.searchDrugRegulatoryBiological,
+    'specified_biological' => l10n.searchDrugRegulatorySpecifiedBiological,
+    'prescription_required' => l10n.searchDrugRegulatoryPrescriptionRequired,
+    _ => value,
+  };
+}
+
+String _formatRevisionDate(String value) {
+  final parts = value.split('-');
+  if (parts.length != 3) {
+    return value;
+  }
+  return '${parts[0]}/${parts[1]}/${parts[2]}';
 }
