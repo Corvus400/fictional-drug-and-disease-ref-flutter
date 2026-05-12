@@ -43,6 +43,13 @@ class BookmarksDao extends DatabaseAccessor<AppDatabase>
     return query.get();
   }
 
+  /// Watches all bookmark rows ordered by newest first.
+  Stream<List<BookmarksTableData>> watchAll() {
+    return (select(
+      bookmarksTable,
+    )..orderBy([(table) => OrderingTerm.desc(table.bookmarkedAt)])).watch();
+  }
+
   /// Returns whether a bookmark row exists.
   Future<bool> existsById(String id) async {
     final row = await findById(id);
