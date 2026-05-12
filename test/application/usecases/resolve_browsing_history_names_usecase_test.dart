@@ -28,10 +28,12 @@ void main() {
     late _MockDrugApiClient drugApiClient;
     late _MockDiseaseApiClient diseaseApiClient;
     late ResolveBrowsingHistoryNamesUsecase usecase;
+    var databaseBroken = false;
     const drugCodec = DrugBookmarkSnapshotCodec();
     const diseaseCodec = DiseaseBookmarkSnapshotCodec();
 
     setUp(() {
+      databaseBroken = false;
       db = createTestAppDatabase();
       bookmarkRepository = BookmarkRepository(db.bookmarksDao);
       drugApiClient = _MockDrugApiClient();
@@ -47,7 +49,9 @@ void main() {
     });
 
     tearDown(() async {
-      await clearTestAppDatabase(db);
+      if (!databaseBroken) {
+        await clearTestAppDatabase(db);
+      }
       await db.close();
     });
 
@@ -134,6 +138,66 @@ void main() {
         verify(() => diseaseApiClient.getDisease('disease_0079')).called(1);
       },
     );
+
+    test(
+      'execute returns failure when bookmark lookup fails',
+      () async {
+        await db.customStatement('DROP TABLE bookmarks');
+        databaseBroken = true;
+
+        final result = await usecase.execute([
+          BrowsingHistoryEntry(
+            id: _drugSummary.id,
+            viewedAt: DateTime.utc(2026, 5, 11),
+          ),
+        ]);
+
+        expect(result[_drugSummary.id], isA<NameResolutionFailed>());
+        expect(
+          (result[_drugSummary.id]! as NameResolutionFailed).id,
+          _drugSummary.id,
+        );
+      },
+    );
+
+    test(
+      'execute returns failure for API errors and does not cache failures',
+      () async {
+        when(
+          () => drugApiClient.getDrug('drug_0080'),
+        ).thenThrow(Exception('network down'));
+
+        final failed = await usecase.execute([
+          BrowsingHistoryEntry(
+            id: 'drug_0080',
+            viewedAt: DateTime.utc(2026, 5, 11),
+          ),
+        ]);
+
+        expect(failed['drug_0080'], isA<NameResolutionFailed>());
+        expect((failed['drug_0080']! as NameResolutionFailed).id, 'drug_0080');
+        verify(() => drugApiClient.getDrug('drug_0080')).called(1);
+
+        await bookmarkRepository.insert(
+          id: _drug0080Summary.id,
+          snapshotJson: drugCodec.encode(_drug0080Summary),
+          bookmarkedAt: DateTime.utc(2026, 5, 12),
+        );
+
+        final resolved = await usecase.execute([
+          BrowsingHistoryEntry(
+            id: 'drug_0080',
+            viewedAt: DateTime.utc(2026, 5, 12),
+          ),
+        ]);
+
+        expect(resolved['drug_0080'], isA<NameResolvedDrug>());
+        expect(
+          (resolved['drug_0080']! as NameResolvedDrug).summary.brandName,
+          _drug0080Summary.brandName,
+        );
+      },
+    );
   });
 }
 
@@ -159,6 +223,19 @@ const _diseaseSummary = DiseaseSummary(
   infectious: false,
   nameKana: 'ホンタイセイコウケツアツショウ',
   revisedAt: '2026-05-10',
+);
+
+const _drug0080Summary = DrugSummary(
+  id: 'drug_0080',
+  brandName: '失敗後解決確認薬',
+  genericName: 'キャッシュ失敗非保持確認成分',
+  therapeuticCategoryName: 'テスト用薬効分類',
+  regulatoryClass: ['prescription_required'],
+  dosageForm: 'tablet',
+  brandNameKana: 'シッパイゴカイケツカクニンヤク',
+  atcCode: 'C08CA01',
+  revisedAt: '2026-05-12',
+  imageUrl: '/v1/images/drugs/drug_0080',
 );
 
 final class _MockDrugApiClient extends Mock implements DrugApiClient {}
