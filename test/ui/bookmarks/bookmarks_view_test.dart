@@ -3,6 +3,9 @@ import 'package:fictional_drug_and_disease_ref/application/bookmarks/drug_bookma
 import 'package:fictional_drug_and_disease_ref/application/providers/usecase_providers.dart';
 import 'package:fictional_drug_and_disease_ref/config/api_config.dart';
 import 'package:fictional_drug_and_disease_ref/config/flavor.dart';
+import 'package:fictional_drug_and_disease_ref/data/local/app_database.dart';
+import 'package:fictional_drug_and_disease_ref/data/providers/local_providers.dart';
+import 'package:fictional_drug_and_disease_ref/data/repositories/bookmark_repository.dart';
 import 'package:fictional_drug_and_disease_ref/domain/bookmark/bookmark_entry.dart';
 import 'package:fictional_drug_and_disease_ref/domain/disease/disease_summary.dart';
 import 'package:fictional_drug_and_disease_ref/domain/drug/drug_summary.dart';
@@ -17,6 +20,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mocktail/mocktail.dart';
+
+import '../../helpers/test_app_database.dart';
 
 void main() {
   setUpAll(() {
@@ -57,6 +62,17 @@ void main() {
       findsOneWidget,
     );
     expect(find.byKey(const ValueKey('bookmarks-empty-cta')), findsOneWidget);
+    expect(
+      tester
+          .getSize(
+            find.descendant(
+              of: find.byKey(const ValueKey('bookmarks-empty-art')),
+              matching: find.byType(CustomPaint),
+            ),
+          )
+          .shortestSide,
+      56,
+    );
   });
 
   testWidgets('loading state shows five skeleton rows and unknown count', (
@@ -115,6 +131,40 @@ void main() {
     );
     expect(find.text('Amlodipine'), findsNothing);
     expect(find.text('高血圧症'), findsNothing);
+    expect(
+      tester
+          .getSize(
+            find.descendant(
+              of: find.byKey(const ValueKey('bookmarks-empty-art')),
+              matching: find.byType(CustomPaint),
+            ),
+          )
+          .shortestSide,
+      56,
+    );
+  });
+
+  testWidgets('pane rail tabs and separator extend to both horizontal edges', (
+    tester,
+  ) async {
+    await tester.binding.setSurfaceSize(const Size(1024, 768));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+
+    await tester.pumpWidget(_App(entries: _bookmarkEntries));
+    await _pumpBookmarks(tester);
+
+    final dividerRect = tester.getRect(find.byType(VerticalDivider));
+    final searchPanelRect = tester.getRect(
+      find.byKey(const ValueKey('bookmarks-search-panel')),
+    );
+    final selectedTabRect = tester.getRect(
+      find.ancestor(of: find.text('すべて'), matching: find.byType(InkWell)).first,
+    );
+
+    expect(searchPanelRect.left, 0);
+    expect(searchPanelRect.right, moreOrLessEquals(dividerRect.left));
+    expect(selectedTabRect.left, 0);
+    expect(selectedTabRect.right, moreOrLessEquals(dividerRect.left));
   });
 
   testWidgets('error state keeps chrome and retries the stream', (
@@ -171,6 +221,111 @@ void main() {
     await tester.pump(const Duration(milliseconds: 300));
     expect(find.text('disease detail: disease_001'), findsOneWidget);
   });
+
+  testWidgets(
+    'does not scroll rows to top from the primary scroll controller',
+    (
+      tester,
+    ) async {
+      await tester.binding.setSurfaceSize(const Size(390, 800));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+
+      await tester.pumpWidget(_App(entries: _manyBookmarkEntries()));
+      await _pumpBookmarks(tester);
+
+      final listFinder = find.byType(ListView).last;
+      final scrollableFinder = find.descendant(
+        of: listFinder,
+        matching: find.byType(Scrollable),
+      );
+      await tester.drag(listFinder, const Offset(0, -900));
+      await tester.pumpAndSettle();
+
+      final beforePrimaryScrollToTop = tester
+          .state<ScrollableState>(scrollableFinder)
+          .position
+          .pixels;
+      expect(beforePrimaryScrollToTop, greaterThan(0));
+
+      final primaryController = PrimaryScrollController.maybeOf(
+        tester.element(listFinder),
+      );
+      if (primaryController != null && primaryController.hasClients) {
+        primaryController.jumpTo(0);
+        await tester.pump();
+      }
+
+      final afterPrimaryScrollToTop = tester
+          .state<ScrollableState>(scrollableFinder)
+          .position
+          .pixels;
+      expect(afterPrimaryScrollToTop, closeTo(beforePrimaryScrollToTop, 1));
+    },
+  );
+
+  group('delete reveal regression', () {
+    late AppDatabase db;
+
+    setUpAll(() {
+      db = createTestAppDatabase();
+    });
+
+    tearDown(() async {
+      await clearTestAppDatabase(db);
+    });
+
+    tearDownAll(() async {
+      await db.close();
+    });
+
+    testWidgets(
+      'keeps other revealed delete actions visible after deleting one row',
+      (
+        tester,
+      ) async {
+        await tester.binding.setSurfaceSize(const Size(390, 800));
+        addTearDown(() => tester.binding.setSurfaceSize(null));
+
+        for (final entry in _bookmarkEntries) {
+          await _seedBookmark(db, entry);
+        }
+
+        await tester.pumpWidget(_App(entries: _bookmarkEntries, db: db));
+        await _pumpBookmarks(tester);
+
+        await tester.drag(
+          find.byKey(ValueKey('bookmarks-row-${_drugSummary.id}')),
+          const Offset(-140, 0),
+        );
+        await tester.pumpAndSettle();
+        await tester.drag(
+          find.byKey(ValueKey('bookmarks-row-${_diseaseSummary.id}')),
+          const Offset(-140, 0),
+        );
+        await tester.pumpAndSettle();
+
+        expect(_bookmarksRevealWidthAt(tester, _drugSummary.id), 72);
+        expect(_bookmarksRevealWidthAt(tester, _diseaseSummary.id), 72);
+
+        await tester.tap(
+          find.byKey(
+            ValueKey('bookmarks-row-swipe-action-${_drugSummary.id}'),
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        expect(
+          find.byKey(ValueKey('bookmarks-row-${_drugSummary.id}')),
+          findsNothing,
+        );
+        expect(
+          find.byKey(ValueKey('bookmarks-row-${_diseaseSummary.id}')),
+          findsOneWidget,
+        );
+        expect(_bookmarksRevealWidthAt(tester, _diseaseSummary.id), 72);
+      },
+    );
+  });
 }
 
 Future<void> _pumpBookmarks(WidgetTester tester) async {
@@ -184,6 +339,7 @@ class _App extends StatelessWidget {
     List<BookmarkEntry>? entries,
     Stream<List<BookmarkEntry>>? stream,
     Stream<List<BookmarkEntry>> Function()? streamFactory,
+    this.db,
     this.useRouter = false,
   }) : streamFactory =
            streamFactory ??
@@ -191,6 +347,7 @@ class _App extends StatelessWidget {
        cacheManager = _fallbackImageCacheManager();
 
   final Stream<List<BookmarkEntry>> Function() streamFactory;
+  final AppDatabase? db;
   final bool useRouter;
   final BaseCacheManager cacheManager;
 
@@ -232,6 +389,7 @@ class _App extends StatelessWidget {
 
     return ProviderScope(
       overrides: [
+        if (db != null) appDatabaseProvider.overrideWithValue(db!),
         bookmarksStreamProvider.overrideWith((ref) => streamFactory()),
         drugCardImageCacheManagerProvider.overrideWithValue(cacheManager),
       ],
@@ -253,6 +411,48 @@ _MockBaseCacheManager _fallbackImageCacheManager() {
 }
 
 final class _MockBaseCacheManager extends Mock implements BaseCacheManager {}
+
+Future<void> _seedBookmark(AppDatabase db, BookmarkEntry entry) async {
+  await BookmarkRepository(db.bookmarksDao).insert(
+    id: entry.id,
+    snapshotJson: entry.snapshotJson,
+    bookmarkedAt: entry.bookmarkedAt,
+  );
+}
+
+double _bookmarksRevealWidthAt(WidgetTester tester, String id) {
+  return tester
+      .getSize(find.byKey(ValueKey('bookmarks-row-swipe-reveal-$id')))
+      .width;
+}
+
+List<BookmarkEntry> _manyBookmarkEntries() {
+  return List<BookmarkEntry>.generate(24, (index) {
+    final summary = _drugSummaryFor(index);
+    return BookmarkEntry(
+      id: summary.id,
+      snapshotJson: const DrugBookmarkSnapshotCodec().encode(summary),
+      bookmarkedAt: DateTime.utc(2026, 5, 10).subtract(
+        Duration(minutes: index),
+      ),
+    );
+  });
+}
+
+DrugSummary _drugSummaryFor(int index) {
+  return DrugSummary(
+    id: 'drug_scroll_$index',
+    brandName: 'Amlodipine $index',
+    genericName: 'amlodipine besilate',
+    therapeuticCategoryName: 'Ca拮抗薬',
+    regulatoryClass: const ['prescription_required'],
+    dosageForm: 'tablet',
+    brandNameKana: 'アムロジピン',
+    atcCode: 'C08CA01',
+    revisedAt: '2026-01-01',
+    imageUrl: '/v1/images/drugs/drug_scroll_$index',
+  );
+}
 
 final _bookmarkEntries = [
   BookmarkEntry(

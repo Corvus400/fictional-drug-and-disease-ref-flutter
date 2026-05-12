@@ -128,21 +128,23 @@ class _BookmarksPaneBody extends StatelessWidget {
             child: ColoredBox(
               color: palette.surface,
               child: SingleChildScrollView(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  children: [
-                    _BookmarksSearchPanel(
-                      countLabel: countLabel,
-                      onChanged: onSearchChanged,
-                      compact: true,
-                    ),
-                    const SizedBox(height: 12),
-                    _BookmarksSideTabBar(
-                      selectedTab: selectedTab,
-                      onSelect: onSelect,
-                      compact: railWidth < 240,
-                    ),
-                  ],
+                child: SizedBox(
+                  width: railWidth,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      _BookmarksSearchPanel(
+                        countLabel: countLabel,
+                        onChanged: onSearchChanged,
+                        compact: true,
+                      ),
+                      _BookmarksSideTabBar(
+                        selectedTab: selectedTab,
+                        onSelect: onSelect,
+                        compact: railWidth < 240,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -421,7 +423,9 @@ class _BookmarksRowsList extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView.builder(
       padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
+      primary: false,
       itemCount: rows.length,
+      findChildIndexCallback: (key) => _bookmarksRowIndexForKey(rows, key),
       itemBuilder: (context, index) {
         final row = rows[index];
         return SwipeDeleteBookmarkRow(
@@ -434,6 +438,20 @@ class _BookmarksRowsList extends StatelessWidget {
       },
     );
   }
+}
+
+int? _bookmarksRowIndexForKey(List<BookmarksRow> rows, Key key) {
+  if (key is! ValueKey<String>) {
+    return null;
+  }
+  final value = key.value;
+  const prefix = 'bookmarks-row-';
+  if (!value.startsWith(prefix)) {
+    return null;
+  }
+  final id = value.substring(prefix.length);
+  final index = rows.indexWhere((row) => row.id == id);
+  return index == -1 ? null : index;
 }
 
 class _BookmarksEmptyState extends StatelessWidget {
@@ -582,9 +600,13 @@ class _BookmarksEmptyArt extends StatelessWidget {
         color: palette.surface,
         border: Border.all(color: palette.hairline2),
       ),
-      child: CustomPaint(
-        size: const Size.square(56),
-        painter: _BookmarksEmptyArtPainter(color: palette.ink2),
+      child: Center(
+        child: SizedBox.square(
+          dimension: 56,
+          child: CustomPaint(
+            painter: _BookmarksEmptyArtPainter(color: palette.ink2),
+          ),
+        ),
       ),
     );
   }
@@ -646,9 +668,13 @@ class _BookmarksErrorArt extends StatelessWidget {
         color: palette.surface,
         border: Border.all(color: palette.hairline2),
       ),
-      child: CustomPaint(
-        size: const Size.square(56),
-        painter: _BookmarksErrorArtPainter(color: palette.ink2),
+      child: Center(
+        child: SizedBox.square(
+          dimension: 56,
+          child: CustomPaint(
+            painter: _BookmarksErrorArtPainter(color: palette.ink2),
+          ),
+        ),
       ),
     );
   }
