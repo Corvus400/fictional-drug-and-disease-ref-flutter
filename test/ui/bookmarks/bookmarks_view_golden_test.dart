@@ -75,16 +75,31 @@ void main() {
     },
     whilePerforming: _enterSearchZeroQuery,
   );
+
+  runHistoryGoldenMatrix(
+    fileNamePrefix: 'bookmarks_swipe_delete',
+    description: 'Bookmarks swipe delete reveal',
+    builder: (theme, size, deviceName, textScaler, textScalerName) {
+      return _BookmarksGoldenApp(
+        theme: theme,
+        stream: Stream.value(_normalEntries),
+        debugSwipeRevealRowId: 'disease_0079',
+      );
+    },
+    whilePerforming: _settleBookmarksGolden,
+  );
 }
 
 class _BookmarksGoldenApp extends StatelessWidget {
   const _BookmarksGoldenApp({
     required this.theme,
     required this.stream,
+    this.debugSwipeRevealRowId,
   });
 
   final ThemeData theme;
   final Stream<List<BookmarkEntry>> stream;
+  final String? debugSwipeRevealRowId;
 
   @override
   Widget build(BuildContext context) {
@@ -101,7 +116,7 @@ class _BookmarksGoldenApp extends StatelessWidget {
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         home: Scaffold(
-          body: const BookmarksView(),
+          body: BookmarksView(debugSwipeRevealRowId: debugSwipeRevealRowId),
           bottomNavigationBar: AppShellBottomNavigation(
             selectedIndex: 1,
             onDestinationSelected: (_) {},
