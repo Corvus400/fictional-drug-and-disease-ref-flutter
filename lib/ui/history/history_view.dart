@@ -3,14 +3,20 @@ import 'package:fictional_drug_and_disease_ref/router/app_router.dart';
 import 'package:fictional_drug_and_disease_ref/theme/app_palette.dart';
 import 'package:fictional_drug_and_disease_ref/ui/history/history_screen_notifier.dart';
 import 'package:fictional_drug_and_disease_ref/ui/history/history_screen_state.dart';
+import 'package:fictional_drug_and_disease_ref/ui/history/widgets/history_row.dart';
+import 'package:fictional_drug_and_disease_ref/ui/search/providers/drug_card_image_cache_manager_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 /// Browsing history tab.
 class HistoryView extends ConsumerWidget {
   /// Creates a history view.
-  const HistoryView({super.key});
+  const HistoryView({super.key, this.currentTime});
+
+  /// Fixed time for deterministic tests; defaults to the current local time.
+  final DateTime? currentTime;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -18,6 +24,8 @@ class HistoryView extends ConsumerWidget {
     final palette = Theme.of(context).extension<AppPalette>()!;
     final state = ref.watch(historyScreenProvider);
     final notifier = ref.read(historyScreenProvider.notifier);
+    final drugImageCacheManager = ref.watch(drugCardImageCacheManagerProvider);
+    final now = currentTime ?? DateTime.now();
     final selectedTab = switch (state) {
       HistoryLoaded(:final selectedTab) => selectedTab,
       _ => HistoryTab.all,
@@ -26,6 +34,11 @@ class HistoryView extends ConsumerWidget {
       HistoryEmpty() => const _HistoryEmptyState(),
       HistoryLoaded(:final rows) when rows.isEmpty =>
         const _HistoryEmptyState(),
+      HistoryLoaded(:final rows) => _HistoryRowsList(
+        rows: rows,
+        now: now,
+        drugImageCacheManager: drugImageCacheManager,
+      ),
       _ => const _HistoryLoadingState(),
     };
 
@@ -359,6 +372,33 @@ class _HistoryEmptyState extends StatelessWidget {
               ),
             ),
           ),
+        );
+      },
+    );
+  }
+}
+
+class _HistoryRowsList extends StatelessWidget {
+  const _HistoryRowsList({
+    required this.rows,
+    required this.now,
+    required this.drugImageCacheManager,
+  });
+
+  final List<HistoryRow> rows;
+  final DateTime now;
+  final BaseCacheManager drugImageCacheManager;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
+      itemCount: rows.length,
+      itemBuilder: (context, index) {
+        return HistoryRowTile(
+          row: rows[index],
+          now: now,
+          drugImageCacheManager: drugImageCacheManager,
         );
       },
     );
