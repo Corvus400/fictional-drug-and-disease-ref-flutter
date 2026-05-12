@@ -117,6 +117,41 @@ void main() {
     expect(find.text('高血圧症'), findsNothing);
   });
 
+  testWidgets('error state keeps chrome and retries the stream', (
+    tester,
+  ) async {
+    await tester.binding.setSurfaceSize(const Size(390, 800));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+    var streamBuilds = 0;
+
+    await tester.pumpWidget(
+      _App(
+        streamFactory: () {
+          streamBuilds += 1;
+          return streamBuilds == 1
+              ? Stream<List<BookmarkEntry>>.value(_brokenBookmarkEntries)
+              : Stream<List<BookmarkEntry>>.value(_bookmarkEntries);
+        },
+      ),
+    );
+    await _pumpBookmarks(tester);
+
+    expect(find.byKey(const ValueKey('bookmarks-tabbar')), findsOneWidget);
+    expect(find.byKey(const ValueKey('bookmarks-search-box')), findsOneWidget);
+    expect(find.text('2件'), findsOneWidget);
+    expect(find.text('ブックマークを読み込めません'), findsOneWidget);
+    expect(
+      find.text('端末内の保存データを読み取れませんでした。時間をおいて再度お試しください。'),
+      findsOneWidget,
+    );
+
+    await tester.tap(find.byKey(const ValueKey('bookmarks-error-retry')));
+    await _pumpBookmarks(tester);
+
+    expect(streamBuilds, 2);
+    expect(find.text('Amlodipine'), findsOneWidget);
+  });
+
   testWidgets('row taps navigate to detail routes', (tester) async {
     await tester.binding.setSurfaceSize(const Size(390, 800));
     addTearDown(() => tester.binding.setSurfaceSize(null));
@@ -148,11 +183,14 @@ class _App extends StatelessWidget {
   _App({
     List<BookmarkEntry>? entries,
     Stream<List<BookmarkEntry>>? stream,
+    Stream<List<BookmarkEntry>> Function()? streamFactory,
     this.useRouter = false,
-  }) : stream = stream ?? Stream.value(entries ?? _bookmarkEntries),
+  }) : streamFactory =
+           streamFactory ??
+           (() => stream ?? Stream.value(entries ?? _bookmarkEntries)),
        cacheManager = _fallbackImageCacheManager();
 
-  final Stream<List<BookmarkEntry>> stream;
+  final Stream<List<BookmarkEntry>> Function() streamFactory;
   final bool useRouter;
   final BaseCacheManager cacheManager;
 
@@ -194,7 +232,7 @@ class _App extends StatelessWidget {
 
     return ProviderScope(
       overrides: [
-        bookmarksStreamProvider.overrideWith((ref) => stream),
+        bookmarksStreamProvider.overrideWith((ref) => streamFactory()),
         drugCardImageCacheManagerProvider.overrideWithValue(cacheManager),
       ],
       child: child,
@@ -227,6 +265,15 @@ final _bookmarkEntries = [
     snapshotJson: const DiseaseBookmarkSnapshotCodec().encode(_diseaseSummary),
     bookmarkedAt: DateTime.utc(2026, 5, 9),
   ),
+];
+
+final List<BookmarkEntry> _brokenBookmarkEntries = [
+  BookmarkEntry(
+    id: 'drug_broken',
+    snapshotJson: '{"id":"drug_broken"}',
+    bookmarkedAt: DateTime.utc(2026, 5, 10),
+  ),
+  _bookmarkEntries.last,
 ];
 
 const _drugSummary = DrugSummary(

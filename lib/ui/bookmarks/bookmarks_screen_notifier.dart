@@ -134,6 +134,7 @@ final class BookmarksScreenNotifier extends Notifier<BookmarksScreenState> {
         state = BookmarksError(
           selectedTab: _selectedTab,
           searchQuery: _searchQuery,
+          visibleCount: entries.length,
           cause: error,
         );
     }

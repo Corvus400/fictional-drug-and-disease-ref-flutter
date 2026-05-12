@@ -72,8 +72,12 @@ final class BookmarksError extends BookmarksScreenState {
   const BookmarksError({
     required super.selectedTab,
     required super.searchQuery,
+    this.visibleCount,
     this.cause,
   });
+
+  /// Number of rows when the failed load had a known entry count.
+  final int? visibleCount;
 
   /// Underlying error.
   final Object? cause;
