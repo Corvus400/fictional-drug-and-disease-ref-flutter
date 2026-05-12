@@ -25,3 +25,22 @@ class GoldenMatrix {
   /// Golden capture device pixel ratio.
   static const devicePixelRatio = 2.0;
 }
+
+/// Browsing-history design matrix SSOT.
+class HistoryGoldenMatrix {
+  const HistoryGoldenMatrix._();
+
+  /// Theme axis required by the browsing-history design contract.
+  static const Map<String, Brightness> themes = GoldenMatrix.themes;
+
+  /// Device and orientation axis required by the browsing-history design.
+  static const devices = <String, Size>{
+    'iphone_portrait': Size(390, 844),
+    'iphone_landscape': Size(844, 390),
+    'ipad_portrait': Size(834, 1194),
+    'ipad_landscape': Size(1194, 834),
+  };
+
+  /// Golden capture device pixel ratio.
+  static const double devicePixelRatio = GoldenMatrix.devicePixelRatio;
+}
