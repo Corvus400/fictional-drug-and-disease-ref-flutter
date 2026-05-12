@@ -1,5 +1,6 @@
 import 'package:fictional_drug_and_disease_ref/application/bookmarks/disease_bookmark_snapshot_codec.dart';
 import 'package:fictional_drug_and_disease_ref/application/bookmarks/drug_bookmark_snapshot_codec.dart';
+import 'package:fictional_drug_and_disease_ref/application/browsing_history/name_resolution_cache.dart';
 import 'package:fictional_drug_and_disease_ref/application/search/search_query_codec.dart';
 import 'package:fictional_drug_and_disease_ref/application/usecases/calculate_bmi_usecase.dart';
 import 'package:fictional_drug_and_disease_ref/application/usecases/calculate_crcl_usecase.dart';
@@ -13,9 +14,10 @@ import 'package:fictional_drug_and_disease_ref/application/usecases/list_browsin
 import 'package:fictional_drug_and_disease_ref/application/usecases/list_calculation_history_usecase.dart';
 import 'package:fictional_drug_and_disease_ref/application/usecases/list_search_history_usecase.dart';
 import 'package:fictional_drug_and_disease_ref/application/usecases/load_categories_usecase.dart';
-import 'package:fictional_drug_and_disease_ref/application/usecases/observe_browsing_history_usecase.dart';
 import 'package:fictional_drug_and_disease_ref/application/usecases/observe_bookmark_state_usecase.dart';
+import 'package:fictional_drug_and_disease_ref/application/usecases/observe_browsing_history_usecase.dart';
 import 'package:fictional_drug_and_disease_ref/application/usecases/record_calculation_history_usecase.dart';
+import 'package:fictional_drug_and_disease_ref/application/usecases/resolve_browsing_history_names_usecase.dart';
 import 'package:fictional_drug_and_disease_ref/application/usecases/search_diseases_usecase.dart';
 import 'package:fictional_drug_and_disease_ref/application/usecases/search_drugs_usecase.dart';
 import 'package:fictional_drug_and_disease_ref/application/usecases/toggle_bookmark_usecase.dart';
@@ -150,9 +152,30 @@ final observeBrowsingHistoryUsecaseProvider =
     );
 
 /// Browsing history stream provider.
+// ignore: specify_nonobvious_property_types
 final browsingHistoryStreamProvider =
     StreamProvider.autoDispose<List<BrowsingHistoryEntry>>(
       (ref) => ref.watch(observeBrowsingHistoryUsecaseProvider).execute(),
+    );
+
+/// Browsing history name resolution cache provider.
+final Provider<NameResolutionCache> nameResolutionCacheProvider =
+    Provider<NameResolutionCache>(
+      (ref) => NameResolutionCache(),
+    );
+
+/// Resolve-browsing-history-names use case provider.
+final Provider<ResolveBrowsingHistoryNamesUsecase>
+resolveBrowsingHistoryNamesUsecaseProvider =
+    Provider<ResolveBrowsingHistoryNamesUsecase>(
+      (ref) => ResolveBrowsingHistoryNamesUsecase(
+        bookmarkRepository: ref.watch(bookmarkRepositoryProvider),
+        drugRepository: ref.watch(drugRepositoryProvider),
+        diseaseRepository: ref.watch(diseaseRepositoryProvider),
+        drugCodec: const DrugBookmarkSnapshotCodec(),
+        diseaseCodec: const DiseaseBookmarkSnapshotCodec(),
+        cache: ref.watch(nameResolutionCacheProvider),
+      ),
     );
 
 /// Calculate-BMI use case provider.

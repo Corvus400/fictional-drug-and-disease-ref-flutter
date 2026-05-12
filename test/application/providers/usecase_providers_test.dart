@@ -1,17 +1,19 @@
 import 'dart:io';
 
+import 'package:fictional_drug_and_disease_ref/application/browsing_history/name_resolution_cache.dart';
 import 'package:fictional_drug_and_disease_ref/application/providers/usecase_providers.dart';
 import 'package:fictional_drug_and_disease_ref/application/usecases/calculate_bmi_usecase.dart';
 import 'package:fictional_drug_and_disease_ref/application/usecases/calculate_crcl_usecase.dart';
 import 'package:fictional_drug_and_disease_ref/application/usecases/calculate_egfr_usecase.dart';
 import 'package:fictional_drug_and_disease_ref/application/usecases/clear_browsing_history_usecase.dart';
-import 'package:fictional_drug_and_disease_ref/application/usecases/delete_calculation_history_usecase.dart';
 import 'package:fictional_drug_and_disease_ref/application/usecases/delete_browsing_history_usecase.dart';
-import 'package:fictional_drug_and_disease_ref/application/usecases/list_calculation_history_usecase.dart';
+import 'package:fictional_drug_and_disease_ref/application/usecases/delete_calculation_history_usecase.dart';
 import 'package:fictional_drug_and_disease_ref/application/usecases/list_browsing_history_usecase.dart';
-import 'package:fictional_drug_and_disease_ref/application/usecases/observe_browsing_history_usecase.dart';
+import 'package:fictional_drug_and_disease_ref/application/usecases/list_calculation_history_usecase.dart';
 import 'package:fictional_drug_and_disease_ref/application/usecases/observe_bookmark_state_usecase.dart';
+import 'package:fictional_drug_and_disease_ref/application/usecases/observe_browsing_history_usecase.dart';
 import 'package:fictional_drug_and_disease_ref/application/usecases/record_calculation_history_usecase.dart';
+import 'package:fictional_drug_and_disease_ref/application/usecases/resolve_browsing_history_names_usecase.dart';
 import 'package:fictional_drug_and_disease_ref/application/usecases/toggle_bookmark_usecase.dart';
 import 'package:fictional_drug_and_disease_ref/application/usecases/view_disease_detail_usecase.dart';
 import 'package:fictional_drug_and_disease_ref/application/usecases/view_drug_detail_usecase.dart';
@@ -121,6 +123,14 @@ void main() {
     expect(
       container.read(observeBrowsingHistoryUsecaseProvider),
       isA<ObserveBrowsingHistoryUsecase>(),
+    );
+    expect(
+      container.read(nameResolutionCacheProvider),
+      isA<NameResolutionCache>(),
+    );
+    expect(
+      container.read(resolveBrowsingHistoryNamesUsecaseProvider),
+      isA<ResolveBrowsingHistoryNamesUsecase>(),
     );
   });
 
