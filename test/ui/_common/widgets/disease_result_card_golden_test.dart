@@ -1,5 +1,7 @@
 import 'package:fictional_drug_and_disease_ref/domain/disease/disease_summary.dart';
 import 'package:fictional_drug_and_disease_ref/l10n/app_localizations.dart';
+import 'package:fictional_drug_and_disease_ref/theme/app_palette.dart';
+import 'package:fictional_drug_and_disease_ref/theme/app_typography.dart';
 import 'package:fictional_drug_and_disease_ref/ui/_common/widgets/disease_result_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -19,6 +21,39 @@ void main() {
         home: const Scaffold(
           body: _CardGoldenFrame(
             child: DiseaseResultCard(item: _diseaseSummary),
+          ),
+        ),
+      );
+    },
+  );
+
+  runGoldenMatrix(
+    fileNamePrefix: 'disease_result_card_trailing_time',
+    description: 'DiseaseResultCard trailing time layout',
+    builder: (theme, size, scaler) {
+      final palette =
+          theme.extension<AppPalette>() ??
+          (theme.brightness == Brightness.dark
+              ? AppPalette.dark
+              : AppPalette.light);
+      final typography =
+          theme.extension<AppTypography>() ?? AppTypography.tokens;
+
+      return MaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: theme,
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        home: Scaffold(
+          body: _CardGoldenFrame(
+            child: DiseaseResultCard(
+              item: _diseaseSummary,
+              trailingTime: Text(
+                '5分前',
+                key: const ValueKey('disease-card-trailing-time'),
+                style: typography.labelM.copyWith(color: palette.muted),
+              ),
+            ),
           ),
         ),
       );

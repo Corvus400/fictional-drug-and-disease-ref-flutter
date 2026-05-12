@@ -22,6 +22,7 @@ import 'package:fictional_drug_and_disease_ref/l10n/app_localizations.dart';
 import 'package:fictional_drug_and_disease_ref/router/app_router.dart';
 import 'package:fictional_drug_and_disease_ref/theme/app_palette.dart';
 import 'package:fictional_drug_and_disease_ref/theme/app_theme.dart';
+import 'package:fictional_drug_and_disease_ref/ui/_common/widgets/disease_result_card.dart';
 import 'package:fictional_drug_and_disease_ref/ui/_common/widgets/drug_result_card.dart';
 import 'package:fictional_drug_and_disease_ref/ui/search/constants/search_constants.dart';
 import 'package:fictional_drug_and_disease_ref/ui/search/search_screen_notifier.dart';
@@ -2547,6 +2548,59 @@ void main() {
       listRect.width - SearchConstants.searchTabletGutter * 2,
     );
   });
+
+  testWidgets(
+    'SearchView disease result cards do not render history-only affordances',
+    (
+      tester,
+    ) async {
+      final diseaseApiClient = _MockDiseaseApiClient();
+      when(
+        () => diseaseApiClient.getDiseases(
+          page: any(named: 'page'),
+          pageSize: any(named: 'pageSize'),
+          keyword: any(named: 'keyword'),
+        ),
+      ).thenAnswer((_) async => _diseaseListFixture());
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            appDatabaseProvider.overrideWithValue(db),
+            diseaseApiClientProvider.overrideWithValue(diseaseApiClient),
+          ],
+          child: const MaterialApp(
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: SearchView(),
+          ),
+        ),
+      );
+
+      await tester.tap(find.text('疾患'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byType(FilledButton).first);
+      await tester.pumpAndSettle();
+
+      expect(find.byType(DiseaseResultCard), findsWidgets);
+      expect(find.byType(Dismissible), findsNothing);
+      expect(
+        find.byKey(const ValueKey('disease-card-trailing-time')),
+        findsNothing,
+      );
+      expect(find.text('たった今'), findsNothing);
+      expect(find.text('5分前'), findsNothing);
+      expect(find.textContaining('昨日 '), findsNothing);
+      expect(
+        find.byWidgetPredicate((widget) {
+          final key = widget.key;
+          return key is ValueKey<String> &&
+              key.value.startsWith('delete-history-');
+        }),
+        findsNothing,
+      );
+    },
+  );
 
   testWidgets('SearchView colors drug regulatory badges by classification', (
     tester,
