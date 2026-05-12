@@ -208,6 +208,12 @@ abstract class AppLocalizations {
   /// **'すべて削除'**
   String get historyBulkDeleteConfirmDelete;
 
+  /// No description provided for @historySwipeDeleteAction.
+  ///
+  /// In ja, this message translates to:
+  /// **'削除'**
+  String get historySwipeDeleteAction;
+
   /// No description provided for @calcPlaceholder.
   ///
   /// In ja, this message translates to:

@@ -182,6 +182,60 @@ void main() {
   );
 
   runHistoryGoldenMatrix(
+    fileNamePrefix: 'history_swipe_delete',
+    description: 'History swipe delete reveal',
+    builder: (theme, size, deviceName, textScaler, textScalerName) {
+      final now = _normalNow;
+      final drugViewedAt = now.subtract(const Duration(minutes: 5));
+      final diseaseViewedAt = now.subtract(const Duration(hours: 2));
+      return ProviderScope(
+        overrides: [
+          appDatabaseProvider.overrideWithValue(_db),
+          drugCardImageCacheManagerProvider.overrideWithValue(
+            _fallbackImageCacheManager(),
+          ),
+          browsingHistoryStreamProvider.overrideWith(
+            (ref) => Stream<List<BrowsingHistoryEntry>>.value([
+              BrowsingHistoryEntry(id: _drugSummary.id, viewedAt: drugViewedAt),
+              BrowsingHistoryEntry(
+                id: _diseaseSummary.id,
+                viewedAt: diseaseViewedAt,
+              ),
+            ]),
+          ),
+        ],
+        child: MaterialApp(
+          debugShowCheckedModeBanner: false,
+          theme: theme,
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: Scaffold(
+            body: HistoryView(
+              currentTime: now,
+              debugSwipeRevealRowId: _diseaseSummary.id,
+            ),
+            bottomNavigationBar: AppShellBottomNavigation(
+              selectedIndex: 2,
+              onDestinationSelected: (_) {},
+            ),
+          ),
+        ),
+      );
+    },
+    whilePerforming: (tester) async {
+      for (var i = 0; i < 5; i += 1) {
+        await tester.pump(const Duration(milliseconds: 100));
+      }
+      addTearDown(() async {
+        await tester.pumpWidget(const SizedBox.shrink());
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 1));
+      });
+      return null;
+    },
+  );
+
+  runHistoryGoldenMatrix(
     fileNamePrefix: 'history_bulk_delete_confirm',
     description: 'History bulk delete confirm',
     builder: (theme, size, deviceName, textScaler, textScalerName) {
