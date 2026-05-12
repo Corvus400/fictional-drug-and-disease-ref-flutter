@@ -178,6 +178,36 @@ abstract class AppLocalizations {
   /// **'検索画面へ'**
   String get historyEmptyCta;
 
+  /// No description provided for @historyBulkDeleteFabSemantics.
+  ///
+  /// In ja, this message translates to:
+  /// **'すべての閲覧履歴を削除'**
+  String get historyBulkDeleteFabSemantics;
+
+  /// No description provided for @historyBulkDeleteConfirmTitle.
+  ///
+  /// In ja, this message translates to:
+  /// **'すべての閲覧履歴 ({count}件) を削除しますか？'**
+  String historyBulkDeleteConfirmTitle(int count);
+
+  /// No description provided for @historyBulkDeleteConfirmBody.
+  ///
+  /// In ja, this message translates to:
+  /// **'この操作は取り消せません'**
+  String get historyBulkDeleteConfirmBody;
+
+  /// No description provided for @historyBulkDeleteConfirmCancel.
+  ///
+  /// In ja, this message translates to:
+  /// **'キャンセル'**
+  String get historyBulkDeleteConfirmCancel;
+
+  /// No description provided for @historyBulkDeleteConfirmDelete.
+  ///
+  /// In ja, this message translates to:
+  /// **'すべて削除'**
+  String get historyBulkDeleteConfirmDelete;
+
   /// No description provided for @calcPlaceholder.
   ///
   /// In ja, this message translates to:

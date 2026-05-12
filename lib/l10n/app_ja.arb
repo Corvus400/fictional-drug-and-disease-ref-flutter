@@ -17,6 +17,18 @@
   "historyEmptyTitle": "閲覧履歴がありません",
   "historyEmptyBody": "検索して薬品・疾患を閲覧すると、ここに履歴が表示されます",
   "historyEmptyCta": "検索画面へ",
+  "historyBulkDeleteFabSemantics": "すべての閲覧履歴を削除",
+  "historyBulkDeleteConfirmTitle": "すべての閲覧履歴 ({count}件) を削除しますか？",
+  "@historyBulkDeleteConfirmTitle": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "historyBulkDeleteConfirmBody": "この操作は取り消せません",
+  "historyBulkDeleteConfirmCancel": "キャンセル",
+  "historyBulkDeleteConfirmDelete": "すべて削除",
   "calcPlaceholder": "計算ツール画面（プレースホルダー）",
   "drugDetailTitle": "医薬品詳細",
   "diseaseDetailTitle": "疾患詳細",

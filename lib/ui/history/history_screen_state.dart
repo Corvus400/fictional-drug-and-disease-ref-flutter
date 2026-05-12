@@ -31,6 +31,7 @@ final class HistoryLoaded extends HistoryScreenState {
     required this.rows,
     required this.selectedTab,
     required this.hasNameFailure,
+    required this.totalCount,
   });
 
   /// Visible rows after tab filtering.
@@ -41,6 +42,9 @@ final class HistoryLoaded extends HistoryScreenState {
 
   /// Whether any loaded row failed name resolution.
   final bool hasNameFailure;
+
+  /// Number of all loaded history rows before tab filtering.
+  final int totalCount;
 }
 
 /// No history rows exist.

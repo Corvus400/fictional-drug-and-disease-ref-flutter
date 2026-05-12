@@ -125,6 +125,7 @@ final class HistoryScreenNotifier extends Notifier<HistoryScreenState> {
       rows: visibleRows,
       selectedTab: _selectedTab,
       hasNameFailure: rows.any((row) => row is HistoryUnresolvedRow),
+      totalCount: rows.length,
     );
   }
 

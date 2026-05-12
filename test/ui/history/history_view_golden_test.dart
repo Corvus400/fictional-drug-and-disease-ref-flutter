@@ -11,7 +11,9 @@ import 'package:fictional_drug_and_disease_ref/domain/browsing_history/browsing_
 import 'package:fictional_drug_and_disease_ref/domain/disease/disease_summary.dart';
 import 'package:fictional_drug_and_disease_ref/domain/drug/drug_summary.dart';
 import 'package:fictional_drug_and_disease_ref/l10n/app_localizations.dart';
+import 'package:fictional_drug_and_disease_ref/theme/app_palette.dart';
 import 'package:fictional_drug_and_disease_ref/ui/history/history_view.dart';
+import 'package:fictional_drug_and_disease_ref/ui/history/widgets/bulk_delete_confirm_dialog.dart';
 import 'package:fictional_drug_and_disease_ref/ui/search/providers/drug_card_image_cache_manager_provider.dart';
 import 'package:fictional_drug_and_disease_ref/ui/shell/app_shell.dart';
 import 'package:flutter/material.dart';
@@ -162,6 +164,70 @@ void main() {
               selectedIndex: 2,
               onDestinationSelected: (_) {},
             ),
+          ),
+        ),
+      );
+    },
+    whilePerforming: (tester) async {
+      for (var i = 0; i < 5; i += 1) {
+        await tester.pump(const Duration(milliseconds: 100));
+      }
+      addTearDown(() async {
+        await tester.pumpWidget(const SizedBox.shrink());
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 1));
+      });
+      return null;
+    },
+  );
+
+  runHistoryGoldenMatrix(
+    fileNamePrefix: 'history_bulk_delete_confirm',
+    description: 'History bulk delete confirm',
+    builder: (theme, size, deviceName, textScaler, textScalerName) {
+      final now = _normalNow;
+      final drugViewedAt = now.subtract(const Duration(minutes: 5));
+      final diseaseViewedAt = now.subtract(const Duration(hours: 2));
+      return ProviderScope(
+        overrides: [
+          appDatabaseProvider.overrideWithValue(_db),
+          drugCardImageCacheManagerProvider.overrideWithValue(
+            _fallbackImageCacheManager(),
+          ),
+          browsingHistoryStreamProvider.overrideWith(
+            (ref) => Stream<List<BrowsingHistoryEntry>>.value([
+              BrowsingHistoryEntry(id: _drugSummary.id, viewedAt: drugViewedAt),
+              BrowsingHistoryEntry(
+                id: _diseaseSummary.id,
+                viewedAt: diseaseViewedAt,
+              ),
+            ]),
+          ),
+        ],
+        child: MaterialApp(
+          debugShowCheckedModeBanner: false,
+          theme: theme,
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: Builder(
+            builder: (context) {
+              final palette = theme.extension<AppPalette>()!;
+              return Scaffold(
+                body: Stack(
+                  children: [
+                    HistoryView(currentTime: now),
+                    Positioned.fill(child: ColoredBox(color: palette.scrim)),
+                    const Center(
+                      child: BulkDeleteConfirmDialogCard(count: 2),
+                    ),
+                  ],
+                ),
+                bottomNavigationBar: AppShellBottomNavigation(
+                  selectedIndex: 2,
+                  onDestinationSelected: (_) {},
+                ),
+              );
+            },
           ),
         ),
       );
