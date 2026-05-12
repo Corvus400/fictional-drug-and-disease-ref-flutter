@@ -1,9 +1,23 @@
-part of '../search_view.dart';
+import 'package:fictional_drug_and_disease_ref/domain/disease/disease_summary.dart';
+import 'package:fictional_drug_and_disease_ref/l10n/app_localizations.dart';
+import 'package:fictional_drug_and_disease_ref/theme/app_palette.dart';
+import 'package:fictional_drug_and_disease_ref/ui/search/constants/search_constants.dart';
+import 'package:flutter/material.dart';
 
-class _DiseaseResultCard extends StatelessWidget {
-  const _DiseaseResultCard({required this.item});
+/// Shared disease result card used by search, bookmarks, and browsing history.
+class DiseaseResultCard extends StatelessWidget {
+  /// Creates a disease result card.
+  const DiseaseResultCard({
+    required this.item,
+    super.key,
+    this.onTap,
+  });
 
+  /// Disease summary to render.
   final DiseaseSummary item;
+
+  /// Optional tap handler.
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -22,11 +36,12 @@ class _DiseaseResultCard extends StatelessWidget {
         side: BorderSide(color: palette.hairline),
       ),
       child: InkWell(
-        onTap: () => context.push(AppRoutes.diseaseDetail(item.id)),
+        onTap: onTap,
         borderRadius: BorderRadius.circular(SearchConstants.searchCardRadius),
         child: Padding(
           padding: const EdgeInsets.all(12),
           child: Column(
+            mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Wrap(
@@ -134,3 +149,65 @@ class _DiseaseBadge extends StatelessWidget {
     );
   }
 }
+
+String _diseaseIcd10ChapterLabel(AppLocalizations l10n, String value) {
+  return switch (value) {
+    'chapter_i' => l10n.searchDiseaseIcd10ChapterI,
+    'chapter_ii' => l10n.searchDiseaseIcd10ChapterII,
+    'chapter_iii' => l10n.searchDiseaseIcd10ChapterIII,
+    'chapter_iv' => l10n.searchDiseaseIcd10ChapterIV,
+    'chapter_v' => l10n.searchDiseaseIcd10ChapterV,
+    'chapter_vi' => l10n.searchDiseaseIcd10ChapterVI,
+    'chapter_vii' => l10n.searchDiseaseIcd10ChapterVII,
+    'chapter_viii' => l10n.searchDiseaseIcd10ChapterVIII,
+    'chapter_ix' => l10n.searchDiseaseIcd10ChapterIX,
+    'chapter_x' => l10n.searchDiseaseIcd10ChapterX,
+    'chapter_xi' => l10n.searchDiseaseIcd10ChapterXI,
+    'chapter_xii' => l10n.searchDiseaseIcd10ChapterXII,
+    'chapter_xiii' => l10n.searchDiseaseIcd10ChapterXIII,
+    'chapter_xiv' => l10n.searchDiseaseIcd10ChapterXIV,
+    'chapter_xv' => l10n.searchDiseaseIcd10ChapterXV,
+    'chapter_xvi' => l10n.searchDiseaseIcd10ChapterXVI,
+    'chapter_xvii' => l10n.searchDiseaseIcd10ChapterXVII,
+    'chapter_xviii' => l10n.searchDiseaseIcd10ChapterXVIII,
+    'chapter_xix' => l10n.searchDiseaseIcd10ChapterXIX,
+    'chapter_xx' => l10n.searchDiseaseIcd10ChapterXX,
+    'chapter_xxi' => l10n.searchDiseaseIcd10ChapterXXI,
+    'chapter_xxii' => l10n.searchDiseaseIcd10ChapterXXII,
+    _ => value,
+  };
+}
+
+String _departmentLabel(AppLocalizations l10n, String value) {
+  return switch (value) {
+    'internal_medicine' => l10n.searchDiseaseDepartmentInternalMedicine,
+    'cardiology' => l10n.searchDiseaseDepartmentCardiology,
+    'gastroenterology' => l10n.searchDiseaseDepartmentGastroenterology,
+    'endocrinology' => l10n.searchDiseaseDepartmentEndocrinology,
+    'neurology' => l10n.searchDiseaseDepartmentNeurology,
+    'psychiatry' => l10n.searchDiseaseDepartmentPsychiatry,
+    'surgery' => l10n.searchDiseaseDepartmentSurgery,
+    'orthopedics' => l10n.searchDiseaseDepartmentOrthopedics,
+    'dermatology' => l10n.searchDiseaseDepartmentDermatology,
+    'ophthalmology' => l10n.searchDiseaseDepartmentOphthalmology,
+    'otolaryngology' => l10n.searchDiseaseDepartmentOtolaryngology,
+    'urology' => l10n.searchDiseaseDepartmentUrology,
+    'gynecology' => l10n.searchDiseaseDepartmentGynecology,
+    'pediatrics' => l10n.searchDiseaseDepartmentPediatrics,
+    'emergency' => l10n.searchDiseaseDepartmentEmergency,
+    'infectious_disease' => l10n.searchDiseaseDepartmentInfectiousDisease,
+    _ => value,
+  };
+}
+
+String _chronicityLabel(AppLocalizations l10n, String value) {
+  return switch (value) {
+    'acute' => l10n.searchDiseaseChronicityAcute,
+    'subacute' => l10n.searchDiseaseChronicitySubacute,
+    'chronic' => l10n.searchDiseaseChronicityChronic,
+    'relapsing' => l10n.searchDiseaseChronicityRelapsing,
+    _ => value,
+  };
+}
+
+String _formatRevisionDate(String value) => value.replaceAll('-', '/');

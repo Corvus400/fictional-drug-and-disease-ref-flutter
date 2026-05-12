@@ -385,7 +385,12 @@ class _SearchPhaseSection extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  for (final item in items) _DiseaseResultCard(item: item),
+                  for (final item in items)
+                    DiseaseResultCard(
+                      item: item,
+                      onTap: () =>
+                          context.push(AppRoutes.diseaseDetail(item.id)),
+                    ),
                 ],
               ),
             ),
