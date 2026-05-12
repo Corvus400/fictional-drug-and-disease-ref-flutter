@@ -11,6 +11,7 @@ class DiseaseResultCard extends StatelessWidget {
     required this.item,
     super.key,
     this.onTap,
+    this.trailingTime,
   });
 
   /// Disease summary to render.
@@ -18,6 +19,9 @@ class DiseaseResultCard extends StatelessWidget {
 
   /// Optional tap handler.
   final VoidCallback? onTap;
+
+  /// Optional inline trailing time widget for browsing history rows.
+  final Widget? trailingTime;
 
   @override
   Widget build(BuildContext context) {
@@ -72,13 +76,9 @@ class DiseaseResultCard extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 4),
-              Text(
-                item.name,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: theme.textTheme.titleSmall?.copyWith(
-                  fontWeight: FontWeight.w700,
-                ),
+              _DiseaseCardTitleRow(
+                item: item,
+                trailingTime: trailingTime,
               ),
               const SizedBox(height: 2),
               Text(
@@ -111,6 +111,39 @@ class DiseaseResultCard extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class _DiseaseCardTitleRow extends StatelessWidget {
+  const _DiseaseCardTitleRow({
+    required this.item,
+    required this.trailingTime,
+  });
+
+  final DiseaseSummary item;
+  final Widget? trailingTime;
+
+  @override
+  Widget build(BuildContext context) {
+    final title = Text(
+      item.name,
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
+      style: Theme.of(
+        context,
+      ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w700),
+    );
+    final trailing = trailingTime;
+    if (trailing == null) {
+      return title;
+    }
+    return Row(
+      children: [
+        Expanded(child: title),
+        const SizedBox(width: 8),
+        trailing,
+      ],
     );
   }
 }
