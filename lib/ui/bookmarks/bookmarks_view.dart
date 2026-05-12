@@ -29,9 +29,13 @@ class BookmarksView extends ConsumerWidget {
     final drugImageCacheManager = ref.watch(drugCardImageCacheManagerProvider);
     final selectedTab = state.selectedTab;
     final countLabel = switch (state) {
-      BookmarksLoading() || BookmarksError() => AppLocalizations.of(
+      BookmarksLoading() => AppLocalizations.of(
         context,
       )!.bookmarksResultCountUnknown,
+      BookmarksError(:final visibleCount) =>
+        visibleCount == null
+            ? AppLocalizations.of(context)!.bookmarksResultCountUnknown
+            : AppLocalizations.of(context)!.bookmarksResultCount(visibleCount),
       BookmarksEmpty() => AppLocalizations.of(context)!.bookmarksResultCount(0),
       BookmarksLoaded(:final visibleCount) => AppLocalizations.of(
         context,
@@ -39,6 +43,7 @@ class BookmarksView extends ConsumerWidget {
     };
     final body = switch (state) {
       BookmarksEmpty() => const _BookmarksEmptyState(),
+      BookmarksError() => _BookmarksErrorState(onRetry: notifier.retry),
       BookmarksLoaded(:final isSearchZero) when isSearchZero =>
         const _BookmarksSearchZeroState(),
       BookmarksLoaded(:final visibleRows) => _BookmarksRowsList(
@@ -440,7 +445,9 @@ class _BookmarksEmptyState extends StatelessWidget {
     return _BookmarksEmptyMessage(
       title: l10n.bookmarksEmptyTitle,
       body: l10n.bookmarksEmptyBody,
+      ctaLabel: l10n.bookmarksEmptyCta,
       ctaKey: const ValueKey('bookmarks-empty-cta'),
+      onPressed: () => context.go(AppRoutes.search),
     );
   }
 }
@@ -454,7 +461,28 @@ class _BookmarksSearchZeroState extends StatelessWidget {
     return _BookmarksEmptyMessage(
       title: l10n.bookmarksSearchZeroTitle,
       body: l10n.bookmarksSearchZeroBody,
+      ctaLabel: l10n.bookmarksEmptyCta,
       ctaKey: const ValueKey('bookmarks-search-zero-cta'),
+      onPressed: () => context.go(AppRoutes.search),
+    );
+  }
+}
+
+class _BookmarksErrorState extends StatelessWidget {
+  const _BookmarksErrorState({required this.onRetry});
+
+  final VoidCallback onRetry;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return _BookmarksEmptyMessage(
+      title: l10n.bookmarksErrorTitle,
+      body: l10n.bookmarksErrorBody,
+      ctaLabel: l10n.bookmarksErrorRetry,
+      ctaKey: const ValueKey('bookmarks-error-retry'),
+      onPressed: onRetry,
+      art: const _BookmarksErrorArt(),
     );
   }
 }
@@ -463,16 +491,21 @@ class _BookmarksEmptyMessage extends StatelessWidget {
   const _BookmarksEmptyMessage({
     required this.title,
     required this.body,
+    required this.ctaLabel,
     required this.ctaKey,
+    required this.onPressed,
+    this.art,
   });
 
   final String title;
   final String body;
+  final String ctaLabel;
   final Key ctaKey;
+  final VoidCallback onPressed;
+  final Widget? art;
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
     final palette = Theme.of(context).extension<AppPalette>()!;
     final theme = Theme.of(context);
     return LayoutBuilder(
@@ -487,7 +520,7 @@ class _BookmarksEmptyMessage extends StatelessWidget {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    _BookmarksEmptyArt(palette: palette),
+                    art ?? _BookmarksEmptyArt(palette: palette),
                     const SizedBox(height: 16),
                     Text(
                       title,
@@ -519,8 +552,8 @@ class _BookmarksEmptyMessage extends StatelessWidget {
                         backgroundColor: palette.searchPrimaryActionBg,
                         foregroundColor: palette.searchPrimaryActionFg,
                       ),
-                      onPressed: () => context.go(AppRoutes.search),
-                      child: Text(l10n.bookmarksEmptyCta),
+                      onPressed: onPressed,
+                      child: Text(ctaLabel),
                     ),
                   ],
                 ),
@@ -594,6 +627,60 @@ class _BookmarksEmptyArtPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(_BookmarksEmptyArtPainter oldDelegate) {
+    return color != oldDelegate.color;
+  }
+}
+
+class _BookmarksErrorArt extends StatelessWidget {
+  const _BookmarksErrorArt();
+
+  @override
+  Widget build(BuildContext context) {
+    final palette = Theme.of(context).extension<AppPalette>()!;
+    return Container(
+      key: const ValueKey('bookmarks-error-art'),
+      width: 96,
+      height: 96,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: palette.surface,
+        border: Border.all(color: palette.hairline2),
+      ),
+      child: CustomPaint(
+        size: const Size.square(56),
+        painter: _BookmarksErrorArtPainter(color: palette.ink2),
+      ),
+    );
+  }
+}
+
+class _BookmarksErrorArtPainter extends CustomPainter {
+  const _BookmarksErrorArtPainter({required this.color});
+
+  final Color color;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final scale = size.shortestSide / 64;
+    canvas
+      ..save()
+      ..translate((size.width - size.shortestSide) / 2, 0)
+      ..scale(scale);
+    final paint = Paint()
+      ..color = color
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 2
+      ..strokeCap = StrokeCap.round
+      ..strokeJoin = StrokeJoin.round;
+    canvas
+      ..drawCircle(const Offset(32, 32), 22, paint)
+      ..drawLine(const Offset(32, 18), const Offset(32, 36), paint)
+      ..drawCircle(const Offset(32, 45), 0.5, paint)
+      ..restore();
+  }
+
+  @override
+  bool shouldRepaint(_BookmarksErrorArtPainter oldDelegate) {
     return color != oldDelegate.color;
   }
 }

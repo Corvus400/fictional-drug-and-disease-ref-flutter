@@ -88,6 +88,18 @@ void main() {
     },
     whilePerforming: _settleBookmarksGolden,
   );
+
+  runHistoryGoldenMatrix(
+    fileNamePrefix: 'bookmarks_error',
+    description: 'Bookmarks error state',
+    builder: (theme, size, deviceName, textScaler, textScalerName) {
+      return _BookmarksGoldenApp(
+        theme: theme,
+        stream: Stream<List<BookmarkEntry>>.value(_brokenEntries),
+      );
+    },
+    whilePerforming: _settleBookmarksGolden,
+  );
 }
 
 class _BookmarksGoldenApp extends StatelessWidget {
@@ -263,6 +275,15 @@ final _normalEntries = <BookmarkEntry>[
     ),
     DateTime.utc(2026, 4, 30, 5, 20),
   ),
+];
+
+final _brokenEntries = <BookmarkEntry>[
+  BookmarkEntry(
+    id: 'drug_broken',
+    snapshotJson: '{"id":"drug_broken"}',
+    bookmarkedAt: DateTime.utc(2026, 5, 10),
+  ),
+  ..._normalEntries.take(5),
 ];
 
 BookmarkEntry _drugEntry(DrugSummary summary, DateTime bookmarkedAt) {
