@@ -96,39 +96,42 @@ void main() {
       expect(find.text('閲覧履歴画面（プレースホルダー）'), findsNothing);
     });
 
-    testWidgets('renders the app bar title as a leading 17dp bold heading', (
-      tester,
-    ) async {
-      tester.view.devicePixelRatio = 2;
-      tester.view.physicalSize = const Size(2048, 2732);
-      addTearDown(() {
-        tester.view.resetPhysicalSize();
-        tester.view.resetDevicePixelRatio();
-      });
+    testWidgets(
+      'renders the shared tab header as a leading 20dp bold heading',
+      (
+        tester,
+      ) async {
+        tester.view.devicePixelRatio = 2;
+        tester.view.physicalSize = const Size(2048, 2732);
+        addTearDown(() {
+          tester.view.resetPhysicalSize();
+          tester.view.resetDevicePixelRatio();
+        });
 
-      await tester.pumpWidget(
-        _App(db: db, historyStream: Stream.value(const [])),
-      );
-      await tester.pump(const Duration(milliseconds: 100));
-      addTearDown(() async {
-        await tester.pumpWidget(const SizedBox.shrink());
-        await tester.pump();
-        await tester.pump(const Duration(milliseconds: 1));
-      });
+        await tester.pumpWidget(
+          _App(db: db, historyStream: Stream.value(const [])),
+        );
+        await tester.pump(const Duration(milliseconds: 100));
+        addTearDown(() async {
+          await tester.pumpWidget(const SizedBox.shrink());
+          await tester.pump();
+          await tester.pump(const Duration(milliseconds: 1));
+        });
 
-      final appBarTitle = find.descendant(
-        of: find.byType(AppBar),
-        matching: find.text('閲覧履歴'),
-      );
-      final titleText = tester.widget<Text>(appBarTitle);
-      final titleRect = tester.getRect(appBarTitle);
+        final appBarTitle = find.descendant(
+          of: find.byType(AppBar),
+          matching: find.text('閲覧履歴'),
+        );
+        final titleText = tester.widget<Text>(appBarTitle);
+        final titleRect = tester.getRect(appBarTitle);
 
-      expect(appBarTitle, findsOneWidget);
-      expect(titleText.textAlign, TextAlign.left);
-      expect(titleText.style?.fontSize, 17);
-      expect(titleText.style?.fontWeight, FontWeight.w700);
-      expect(titleRect.left, moreOrLessEquals(16));
-    });
+        expect(appBarTitle, findsOneWidget);
+        expect(titleText.textAlign, TextAlign.left);
+        expect(titleText.style?.fontSize, 20);
+        expect(titleText.style?.fontWeight, FontWeight.w700);
+        expect(titleRect.left, moreOrLessEquals(16));
+      },
+    );
 
     testWidgets('renders five loading skeleton rows', (tester) async {
       tester.view.devicePixelRatio = 2;

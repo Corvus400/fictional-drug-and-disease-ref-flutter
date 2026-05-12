@@ -1,6 +1,6 @@
 import 'package:fictional_drug_and_disease_ref/bootstrap.dart';
-import 'package:fictional_drug_and_disease_ref/l10n/app_localizations.dart';
 import 'package:fictional_drug_and_disease_ref/ui/_common/disclaimer_ribbon.dart';
+import 'package:fictional_drug_and_disease_ref/ui/shell/app_shell_tab.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -47,7 +47,6 @@ class AppShellBottomNavigation extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -56,22 +55,11 @@ class AppShellBottomNavigation extends StatelessWidget {
           selectedIndex: selectedIndex,
           onDestinationSelected: onDestinationSelected,
           destinations: [
-            NavigationDestination(
-              icon: const Icon(Icons.search),
-              label: l10n.tabSearch,
-            ),
-            NavigationDestination(
-              icon: const Icon(Icons.bookmark_outline),
-              label: l10n.tabBookmarks,
-            ),
-            NavigationDestination(
-              icon: const Icon(Icons.history),
-              label: l10n.tabHistory,
-            ),
-            NavigationDestination(
-              icon: const Icon(Icons.calculate_outlined),
-              label: l10n.tabCalc,
-            ),
+            for (final tab in AppShellTab.values)
+              NavigationDestination(
+                icon: Icon(tab.icon),
+                label: tab.label(context),
+              ),
           ],
         ),
       ],

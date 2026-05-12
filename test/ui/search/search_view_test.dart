@@ -249,7 +249,7 @@ void main() {
     expect(editableText.focusNode.hasFocus, isFalse);
   });
 
-  testWidgets('SearchView uses Round6 custom top chrome instead of AppBar', (
+  testWidgets('SearchView uses shared tab header plus Round6 search chrome', (
     tester,
   ) async {
     await tester.pumpWidget(
@@ -263,7 +263,11 @@ void main() {
       ),
     );
 
-    expect(find.byType(AppBar), findsNothing);
+    expect(find.byType(AppBar), findsOneWidget);
+    expect(
+      find.byKey(const ValueKey<String>('app-tab-header-title')),
+      findsOneWidget,
+    );
     expect(
       find.byKey(const ValueKey('search-round6-top-chrome')),
       findsOneWidget,

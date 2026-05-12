@@ -53,10 +53,10 @@ void main() {
   });
 
   // Design source:
-  // Round6/round6-screens.jsx TopChrome phone metrics.
-  // Round6/Search - Round 6 (Light|Dark).html phone state 01.
+  // Round6/round6-screens.jsx TopChrome phone metrics, with the tab title now
+  // owned by AppTabHeader.
   testWidgets(
-    'SearchView initial phone chrome follows Round6 vertical metrics',
+    'SearchView initial phone chrome follows common header and Round6 metrics',
     (
       tester,
     ) async {
@@ -78,6 +78,12 @@ void main() {
       final topChrome = tester.getRect(
         find.byKey(const ValueKey('search-round6-top-chrome')),
       );
+      final header = tester.getRect(
+        find.byKey(const ValueKey('app-tab-header')),
+      );
+      final headerTitle = tester.getRect(
+        find.byKey(const ValueKey('app-tab-header-title')),
+      );
       final segmented = tester.getRect(
         find.byKey(const ValueKey('search-round6-segmented')),
       );
@@ -86,7 +92,10 @@ void main() {
       );
 
       expect(topChrome.width, 390);
-      expect(topChrome.height, 191);
+      expect(header.top, 0);
+      expect(headerTitle.left, 16);
+      expect(topChrome.top, header.bottom);
+      expect(topChrome.height, 108);
       expect(segmented.left, 16);
       expect(segmented.width, 358);
       expect(inputRow.height, 40);

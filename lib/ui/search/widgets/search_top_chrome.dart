@@ -42,26 +42,10 @@ class _SearchTopChrome extends StatelessWidget {
           border: Border(bottom: BorderSide(color: palette.hairline)),
         ),
         child: Padding(
-          padding: EdgeInsets.fromLTRB(
-            gutter,
-            (isTablet ? 0 : SearchConstants.searchPhoneTopChromeStatusPadding) +
-                10,
-            gutter,
-            10,
-          ),
+          padding: EdgeInsets.fromLTRB(gutter, 10, gutter, 10),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                l10n.tabSearch,
-                style: theme.textTheme.titleLarge?.copyWith(
-                  fontSize: isTablet
-                      ? SearchConstants.searchTabletTitleFontSize
-                      : SearchConstants.searchPhoneTitleFontSize,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-              const SizedBox(height: 8),
               _Round6SegmentedControl(
                 selected: state.tab,
                 palette: palette,

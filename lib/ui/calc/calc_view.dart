@@ -26,6 +26,8 @@ import 'package:fictional_drug_and_disease_ref/ui/calc/widgets/calc_segmented_co
 import 'package:fictional_drug_and_disease_ref/ui/calc/widgets/charts/bmi_chart.dart';
 import 'package:fictional_drug_and_disease_ref/ui/calc/widgets/charts/crcl_chart.dart';
 import 'package:fictional_drug_and_disease_ref/ui/calc/widgets/charts/egfr_chart.dart';
+import 'package:fictional_drug_and_disease_ref/ui/shell/app_shell_tab.dart';
+import 'package:fictional_drug_and_disease_ref/ui/shell/app_tab_header.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -82,26 +84,16 @@ class _CalcViewState extends ConsumerState<CalcView> {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
     final palette = Theme.of(context).extension<AppPalette>()!;
-    final theme = Theme.of(context);
     final isTablet = MediaQuery.sizeOf(context).shortestSide >= 600;
     final state = ref.watch(calcScreenProvider);
     final notifier = ref.read(calcScreenProvider.notifier);
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        centerTitle: false,
-        titleSpacing: isTablet ? 44 : 16,
-        title: Text(
-          l10n.calcAppBarTitle,
-          style: theme.textTheme.titleLarge?.copyWith(
-            fontSize: isTablet ? 26 : 22,
-            fontWeight: FontWeight.w700,
-          ),
-        ),
+      appBar: AppTabHeader(
+        tab: AppShellTab.calc,
+        toolbarHeight: isTablet ? 64 : 56,
       ),
       backgroundColor: palette.calcBg,
       body: SafeArea(

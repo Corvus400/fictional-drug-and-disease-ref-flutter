@@ -2332,12 +2332,6 @@ abstract class AppLocalizations {
   /// **'再試行'**
   String get detailRetry;
 
-  /// No description provided for @calcAppBarTitle.
-  ///
-  /// In ja, this message translates to:
-  /// **'計算ツール'**
-  String get calcAppBarTitle;
-
   /// No description provided for @calcToolBmi.
   ///
   /// In ja, this message translates to:
