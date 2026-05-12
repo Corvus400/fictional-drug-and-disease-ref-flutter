@@ -27,7 +27,59 @@ class AppLocalizationsJa extends AppLocalizations {
   String get searchPlaceholder => '検索画面（プレースホルダー）';
 
   @override
-  String get bookmarksPlaceholder => 'ブックマーク画面（プレースホルダー）';
+  String get bookmarksTabAll => 'すべて';
+
+  @override
+  String get bookmarksTabDrug => '医薬品';
+
+  @override
+  String get bookmarksTabDisease => '疾患';
+
+  @override
+  String get bookmarksSearchHint => '名前で検索';
+
+  @override
+  String bookmarksResultCount(int count) {
+    return '$count件';
+  }
+
+  @override
+  String get bookmarksResultCountUnknown => '-';
+
+  @override
+  String bookmarksRowSavedAt(String date) {
+    return '保存 $date';
+  }
+
+  @override
+  String get bookmarksRowDrugSemantics => '薬品のブックマーク';
+
+  @override
+  String get bookmarksRowDiseaseSemantics => '疾患のブックマーク';
+
+  @override
+  String get bookmarksEmptyTitle => 'ブックマークがありません';
+
+  @override
+  String get bookmarksEmptyBody => '検索画面で薬品・疾患をブックマークすると、ここに一覧表示されます';
+
+  @override
+  String get bookmarksEmptyCta => '検索画面へ';
+
+  @override
+  String get bookmarksSearchZeroTitle => '一致するブックマークがありません';
+
+  @override
+  String get bookmarksSwipeDeleteAction => '削除';
+
+  @override
+  String get bookmarksErrorTitle => 'ブックマークを読み込めません';
+
+  @override
+  String get bookmarksErrorBody => '端末内の保存データを読み取れませんでした。時間をおいて再度お試しください。';
+
+  @override
+  String get bookmarksErrorRetry => '再試行';
 
   @override
   String get historyTabAll => 'すべて';

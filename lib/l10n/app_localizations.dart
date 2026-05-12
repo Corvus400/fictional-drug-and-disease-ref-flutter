@@ -130,11 +130,107 @@ abstract class AppLocalizations {
   /// **'検索画面（プレースホルダー）'**
   String get searchPlaceholder;
 
-  /// No description provided for @bookmarksPlaceholder.
+  /// No description provided for @bookmarksTabAll.
   ///
   /// In ja, this message translates to:
-  /// **'ブックマーク画面（プレースホルダー）'**
-  String get bookmarksPlaceholder;
+  /// **'すべて'**
+  String get bookmarksTabAll;
+
+  /// No description provided for @bookmarksTabDrug.
+  ///
+  /// In ja, this message translates to:
+  /// **'医薬品'**
+  String get bookmarksTabDrug;
+
+  /// No description provided for @bookmarksTabDisease.
+  ///
+  /// In ja, this message translates to:
+  /// **'疾患'**
+  String get bookmarksTabDisease;
+
+  /// No description provided for @bookmarksSearchHint.
+  ///
+  /// In ja, this message translates to:
+  /// **'名前で検索'**
+  String get bookmarksSearchHint;
+
+  /// No description provided for @bookmarksResultCount.
+  ///
+  /// In ja, this message translates to:
+  /// **'{count}件'**
+  String bookmarksResultCount(int count);
+
+  /// No description provided for @bookmarksResultCountUnknown.
+  ///
+  /// In ja, this message translates to:
+  /// **'-'**
+  String get bookmarksResultCountUnknown;
+
+  /// No description provided for @bookmarksRowSavedAt.
+  ///
+  /// In ja, this message translates to:
+  /// **'保存 {date}'**
+  String bookmarksRowSavedAt(String date);
+
+  /// No description provided for @bookmarksRowDrugSemantics.
+  ///
+  /// In ja, this message translates to:
+  /// **'薬品のブックマーク'**
+  String get bookmarksRowDrugSemantics;
+
+  /// No description provided for @bookmarksRowDiseaseSemantics.
+  ///
+  /// In ja, this message translates to:
+  /// **'疾患のブックマーク'**
+  String get bookmarksRowDiseaseSemantics;
+
+  /// No description provided for @bookmarksEmptyTitle.
+  ///
+  /// In ja, this message translates to:
+  /// **'ブックマークがありません'**
+  String get bookmarksEmptyTitle;
+
+  /// No description provided for @bookmarksEmptyBody.
+  ///
+  /// In ja, this message translates to:
+  /// **'検索画面で薬品・疾患をブックマークすると、ここに一覧表示されます'**
+  String get bookmarksEmptyBody;
+
+  /// No description provided for @bookmarksEmptyCta.
+  ///
+  /// In ja, this message translates to:
+  /// **'検索画面へ'**
+  String get bookmarksEmptyCta;
+
+  /// No description provided for @bookmarksSearchZeroTitle.
+  ///
+  /// In ja, this message translates to:
+  /// **'一致するブックマークがありません'**
+  String get bookmarksSearchZeroTitle;
+
+  /// No description provided for @bookmarksSwipeDeleteAction.
+  ///
+  /// In ja, this message translates to:
+  /// **'削除'**
+  String get bookmarksSwipeDeleteAction;
+
+  /// No description provided for @bookmarksErrorTitle.
+  ///
+  /// In ja, this message translates to:
+  /// **'ブックマークを読み込めません'**
+  String get bookmarksErrorTitle;
+
+  /// No description provided for @bookmarksErrorBody.
+  ///
+  /// In ja, this message translates to:
+  /// **'端末内の保存データを読み取れませんでした。時間をおいて再度お試しください。'**
+  String get bookmarksErrorBody;
+
+  /// No description provided for @bookmarksErrorRetry.
+  ///
+  /// In ja, this message translates to:
+  /// **'再試行'**
+  String get bookmarksErrorRetry;
 
   /// No description provided for @historyTabAll.
   ///

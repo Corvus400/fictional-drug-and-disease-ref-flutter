@@ -9,7 +9,37 @@
   "tabHistory": "閲覧履歴",
   "tabCalc": "計算ツール",
   "searchPlaceholder": "検索画面（プレースホルダー）",
-  "bookmarksPlaceholder": "ブックマーク画面（プレースホルダー）",
+  "bookmarksTabAll": "すべて",
+  "bookmarksTabDrug": "医薬品",
+  "bookmarksTabDisease": "疾患",
+  "bookmarksSearchHint": "名前で検索",
+  "bookmarksResultCount": "{count}件",
+  "@bookmarksResultCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "bookmarksResultCountUnknown": "-",
+  "bookmarksRowSavedAt": "保存 {date}",
+  "@bookmarksRowSavedAt": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "bookmarksRowDrugSemantics": "薬品のブックマーク",
+  "bookmarksRowDiseaseSemantics": "疾患のブックマーク",
+  "bookmarksEmptyTitle": "ブックマークがありません",
+  "bookmarksEmptyBody": "検索画面で薬品・疾患をブックマークすると、ここに一覧表示されます",
+  "bookmarksEmptyCta": "検索画面へ",
+  "bookmarksSearchZeroTitle": "一致するブックマークがありません",
+  "bookmarksSwipeDeleteAction": "削除",
+  "bookmarksErrorTitle": "ブックマークを読み込めません",
+  "bookmarksErrorBody": "端末内の保存データを読み取れませんでした。時間をおいて再度お試しください。",
+  "bookmarksErrorRetry": "再試行",
   "historyTabAll": "すべて",
   "historyTabDrug": "医薬品",
   "historyTabDisease": "疾患",

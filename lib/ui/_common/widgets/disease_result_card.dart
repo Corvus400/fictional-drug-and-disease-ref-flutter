@@ -13,6 +13,7 @@ class DiseaseResultCard extends StatelessWidget {
     this.onTap,
     this.trailingTime,
     this.borderRadius,
+    this.showNonInfectiousBadge = true,
   });
 
   /// Disease summary to render.
@@ -27,6 +28,9 @@ class DiseaseResultCard extends StatelessWidget {
   /// Card corner radius. Browsing history overrides this while swipe-delete is
   /// revealed so the front card joins the delete action without a rounded seam.
   final BorderRadius? borderRadius;
+
+  /// Whether to show the explicit non-infectious badge.
+  final bool showNonInfectiousBadge;
 
   @override
   Widget build(BuildContext context) {
@@ -65,14 +69,15 @@ class DiseaseResultCard extends StatelessWidget {
                     label: _chronicityLabel(l10n, item.chronicity),
                     palette: palette,
                   ),
-                  _DiseaseBadge(
-                    category: DiseaseBadgeCategory.infectious,
-                    value: item.infectious.toString(),
-                    label: item.infectious
-                        ? l10n.searchDiseaseInfectiousTrue
-                        : l10n.searchDiseaseInfectiousFalse,
-                    palette: palette,
-                  ),
+                  if (item.infectious || showNonInfectiousBadge)
+                    _DiseaseBadge(
+                      category: DiseaseBadgeCategory.infectious,
+                      value: item.infectious.toString(),
+                      label: item.infectious
+                          ? l10n.searchDiseaseInfectiousTrue
+                          : l10n.searchDiseaseInfectiousFalse,
+                      palette: palette,
+                    ),
                   for (final department in item.medicalDepartment)
                     _DiseaseBadge(
                       category: DiseaseBadgeCategory.department,
