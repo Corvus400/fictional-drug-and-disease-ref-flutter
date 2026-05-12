@@ -71,6 +71,12 @@ class AppLocalizationsJa extends AppLocalizations {
   String get historySwipeDeleteAction => '削除';
 
   @override
+  String get historyNameFetchFailed => '名前取得失敗';
+
+  @override
+  String get historyRetryFabSemantics => '閲覧履歴の名前を再取得';
+
+  @override
   String get calcPlaceholder => '計算ツール画面（プレースホルダー）';
 
   @override

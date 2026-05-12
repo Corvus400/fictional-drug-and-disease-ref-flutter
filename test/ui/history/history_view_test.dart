@@ -14,6 +14,7 @@ import 'package:fictional_drug_and_disease_ref/domain/browsing_history/browsing_
 import 'package:fictional_drug_and_disease_ref/domain/disease/disease_summary.dart';
 import 'package:fictional_drug_and_disease_ref/domain/drug/drug_summary.dart';
 import 'package:fictional_drug_and_disease_ref/l10n/app_localizations.dart';
+import 'package:fictional_drug_and_disease_ref/theme/app_palette.dart';
 import 'package:fictional_drug_and_disease_ref/theme/app_theme.dart';
 import 'package:fictional_drug_and_disease_ref/ui/history/history_screen_state.dart';
 import 'package:fictional_drug_and_disease_ref/ui/history/history_view.dart';
@@ -433,6 +434,84 @@ void main() {
       await tester.pump();
 
       expect(deletedId, _diseaseSummary.id);
+    });
+
+    testWidgets('renders unresolved rows with a screen-level retry FAB', (
+      tester,
+    ) async {
+      tester.view.devicePixelRatio = 2;
+      tester.view.physicalSize = const Size(780, 1688);
+      addTearDown(() {
+        tester.view.resetPhysicalSize();
+        tester.view.resetDevicePixelRatio();
+      });
+
+      final now = DateTime(2026, 5, 12, 12);
+      final drugViewedAt = now.subtract(const Duration(minutes: 5));
+      final diseaseViewedAt = now.subtract(const Duration(minutes: 17));
+
+      await tester.pumpWidget(
+        _App(
+          db: db,
+          historyStream: Stream.value([
+            BrowsingHistoryEntry(id: 'drug_0080', viewedAt: drugViewedAt),
+            BrowsingHistoryEntry(
+              id: 'disease_0080',
+              viewedAt: diseaseViewedAt,
+            ),
+          ]),
+          currentTime: now,
+        ),
+      );
+      for (var i = 0; i < 5; i += 1) {
+        await tester.pump(const Duration(milliseconds: 100));
+      }
+      addTearDown(() async {
+        await tester.pumpWidget(const SizedBox.shrink());
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 1));
+      });
+
+      expect(find.text('名前取得失敗'), findsNWidgets(2));
+      expect(find.text('5分前'), findsOneWidget);
+      expect(find.text('17分前'), findsOneWidget);
+      expect(find.text(_drugSummary.brandName), findsNothing);
+      expect(find.text(_diseaseSummary.name), findsNothing);
+      expect(
+        find.byKey(const ValueKey('history-row-retry-button')),
+        findsNothing,
+      );
+      expect(
+        find.byKey(const ValueKey('history-bulk-delete-fab')),
+        findsOneWidget,
+      );
+
+      final retryFab = find.byKey(const ValueKey('history-retry-fab'));
+      expect(retryFab, findsOneWidget);
+      expect(find.byTooltip('閲覧履歴の名前を再取得'), findsOneWidget);
+
+      final retryRect = tester.getRect(retryFab);
+      final bulkRect = tester.getRect(
+        find.byKey(const ValueKey('history-bulk-delete-fab')),
+      );
+      final retryButton = tester.widget<FloatingActionButton>(retryFab);
+      final retryShape = retryButton.shape! as RoundedRectangleBorder;
+
+      expect(retryRect.size, const Size(56, 56));
+      expect(retryRect.left, 16);
+      expect(retryRect.bottom, moreOrLessEquals(bulkRect.bottom));
+      expect(
+        retryShape.borderRadius,
+        BorderRadius.circular(18),
+      );
+      expect(
+        retryButton.backgroundColor,
+        AppTheme.light().extension<AppPalette>()!.filterFabBg,
+      );
+      expect(
+        retryButton.foregroundColor,
+        AppTheme.light().extension<AppPalette>()!.filterFabFg,
+      );
     });
   });
 }

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -227,6 +228,55 @@ void main() {
           (recovered.rows.single as HistoryDrugRow).summary.brandName,
           _drug0080Summary.brandName,
         );
+      },
+    );
+
+    test(
+      'retryFailedNames emits loading while unresolved rows are reloaded',
+      () async {
+        await BrowsingHistoryRepository(
+          db.browsingHistoriesDao,
+        ).upsert('drug_0080', viewedAt: DateTime.utc(2026, 5, 11, 9));
+        var attempt = 0;
+        final retryCompleter = Completer<DrugDto>();
+        when(() => drugApiClient.getDrug('drug_0080')).thenAnswer((_) {
+          attempt += 1;
+          if (attempt == 1) {
+            throw Exception('network down');
+          }
+          return retryCompleter.future;
+        });
+        final container = _createContainer(
+          db,
+          drugApiClient: drugApiClient,
+          diseaseApiClient: diseaseApiClient,
+        );
+        addTearDown(container.dispose);
+        final states = <HistoryScreenState>[];
+        final subscription = container.listen(
+          historyScreenProvider,
+          (_, next) => states.add(next),
+        );
+        addTearDown(subscription.close);
+
+        final failed = await _settleHistory(container) as HistoryLoaded;
+        expect(failed.hasNameFailure, isTrue);
+        expect(failed.rows.single, isA<HistoryUnresolvedRow>());
+
+        final retryFuture = container
+            .read(historyScreenProvider.notifier)
+            .retryFailedNames();
+        await pumpEventQueue();
+
+        expect(container.read(historyScreenProvider), isA<HistoryLoading>());
+
+        retryCompleter.complete(_drugDtoFixture());
+        await retryFuture;
+
+        final recovered =
+            container.read(historyScreenProvider) as HistoryLoaded;
+        expect(recovered.hasNameFailure, isFalse);
+        expect(states.any((state) => state is HistoryLoading), isTrue);
       },
     );
   });

@@ -256,8 +256,103 @@ class HistoryRowTile extends StatelessWidget {
               : null,
         ),
       ),
-      HistoryUnresolvedRow() => const SizedBox.shrink(),
+      HistoryUnresolvedRow() => _UnresolvedHistoryCard(
+        row: row as HistoryUnresolvedRow,
+        now: now,
+      ),
     };
+  }
+}
+
+class _UnresolvedHistoryCard extends StatelessWidget {
+  const _UnresolvedHistoryCard({required this.row, required this.now});
+
+  final HistoryUnresolvedRow row;
+  final DateTime now;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
+    final palette =
+        theme.extension<AppPalette>() ??
+        (theme.brightness == Brightness.dark
+            ? AppPalette.dark
+            : AppPalette.light);
+    final isDrug = row.id.startsWith('drug_');
+    return Semantics(
+      label: l10n.historyNameFetchFailed,
+      child: Card(
+        key: ValueKey('history-unresolved-card-${row.id}'),
+        margin: const EdgeInsets.only(top: _historyCardTopMargin),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(
+            SearchConstants.searchCardRadius,
+          ),
+          side: BorderSide(color: palette.hairline),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Row(
+            children: [
+              if (isDrug) ...[
+                _UnresolvedDrugImage(palette: palette),
+                const SizedBox(width: 12),
+              ],
+              Expanded(
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        l10n.historyNameFetchFailed,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: theme.textTheme.titleSmall?.copyWith(
+                          color: palette.muted,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    _HistoryRowTime(now: now, row: row),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _UnresolvedDrugImage extends StatelessWidget {
+  const _UnresolvedDrugImage({required this.palette});
+
+  final AppPalette palette;
+
+  @override
+  Widget build(BuildContext context) {
+    final imageSize =
+        MediaQuery.sizeOf(context).width >=
+            SearchConstants.searchTabletBreakpoint
+        ? SearchConstants.searchTabletDrugImageSize
+        : SearchConstants.searchPhoneDrugImageSize;
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(8),
+      child: SizedBox(
+        width: imageSize,
+        height: imageSize / SearchConstants.searchDrugCardImageAspectRatio,
+        child: DecoratedBox(
+          decoration: BoxDecoration(color: palette.surface2),
+          child: Icon(
+            Icons.medication_outlined,
+            color: palette.muted,
+            size: 22,
+          ),
+        ),
+      ),
+    );
   }
 }
 

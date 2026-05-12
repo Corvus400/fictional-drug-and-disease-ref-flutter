@@ -94,6 +94,7 @@ final class HistoryScreenNotifier extends Notifier<HistoryScreenState> {
     final unresolvedEntries = _entries
         .where((entry) => unresolvedIds.contains(entry.id))
         .toList(growable: false);
+    state = const HistoryLoading();
     final resolutions = await ref
         .read(resolveBrowsingHistoryNamesUsecaseProvider)
         .execute(unresolvedEntries);
