@@ -11,9 +11,15 @@ import 'golden_test_config.dart';
 typedef GoldenSceneBuilder =
     Widget Function(ThemeData theme, Size size, TextScaler textScaler);
 
-/// Builds a browsing-history golden scene for one device matrix cell.
+/// Builds a browsing-history golden scene for one matrix cell.
 typedef HistoryGoldenSceneBuilder =
-    Widget Function(ThemeData theme, Size size, String deviceName);
+    Widget Function(
+      ThemeData theme,
+      Size size,
+      String deviceName,
+      TextScaler textScaler,
+      String textScalerName,
+    );
 
 /// Alchemist interaction callback used before the golden assertion.
 typedef GoldenInteraction = Interaction;
@@ -98,8 +104,8 @@ void runGoldenMatrix({
 
 /// Expands the browsing-history design matrix into theme-separated PNGs.
 ///
-/// Each light/dark PNG contains all required device/orientation cells:
-/// iphone_portrait, iphone_landscape, ipad_portrait, ipad_landscape.
+/// Each light/dark PNG contains all required device/orientation/text-scale
+/// cells: 4 device/orientation variants × 3 text scales = 12 scenarios.
 @isTest
 void runHistoryGoldenMatrix({
   required String fileNamePrefix,
@@ -107,10 +113,13 @@ void runHistoryGoldenMatrix({
   String? description,
   Iterable<String>? themes,
   Iterable<String>? devices,
+  Iterable<String>? textScalers,
   GoldenInteraction? whilePerforming,
 }) {
   final selectedThemes = (themes ?? HistoryGoldenMatrix.themes.keys).toList();
   final selectedDevices = (devices ?? HistoryGoldenMatrix.devices.keys)
+      .toList();
+  final selectedScalers = (textScalers ?? HistoryGoldenMatrix.textScalers.keys)
       .toList();
 
   for (final themeName in selectedThemes) {
@@ -130,28 +139,32 @@ void runHistoryGoldenMatrix({
         builder: () => GoldenTestGroup(
           children: [
             for (final deviceName in selectedDevices)
-              GoldenTestScenario(
-                name: deviceName,
-                constraints: BoxConstraints.tightFor(
-                  width: HistoryGoldenMatrix.devices[deviceName]!.width,
-                  height: HistoryGoldenMatrix.devices[deviceName]!.height,
-                ),
-                child: MediaQuery(
-                  data: MediaQueryData(
-                    size: HistoryGoldenMatrix.devices[deviceName]!,
-                    devicePixelRatio: HistoryGoldenMatrix.devicePixelRatio,
-                  ),
-                  child: SizedBox(
+              for (final scalerName in selectedScalers)
+                GoldenTestScenario(
+                  name: '${deviceName}_$scalerName',
+                  constraints: BoxConstraints.tightFor(
                     width: HistoryGoldenMatrix.devices[deviceName]!.width,
                     height: HistoryGoldenMatrix.devices[deviceName]!.height,
-                    child: builder(
-                      themeData,
-                      HistoryGoldenMatrix.devices[deviceName]!,
-                      deviceName,
+                  ),
+                  child: MediaQuery(
+                    data: MediaQueryData(
+                      size: HistoryGoldenMatrix.devices[deviceName]!,
+                      devicePixelRatio: HistoryGoldenMatrix.devicePixelRatio,
+                      textScaler: HistoryGoldenMatrix.textScalers[scalerName]!,
+                    ),
+                    child: SizedBox(
+                      width: HistoryGoldenMatrix.devices[deviceName]!.width,
+                      height: HistoryGoldenMatrix.devices[deviceName]!.height,
+                      child: builder(
+                        themeData,
+                        HistoryGoldenMatrix.devices[deviceName]!,
+                        deviceName,
+                        HistoryGoldenMatrix.textScalers[scalerName]!,
+                        scalerName,
+                      ),
                     ),
                   ),
                 ),
-              ),
           ],
         ),
         whilePerforming: whilePerforming,
