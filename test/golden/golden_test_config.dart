@@ -41,6 +41,12 @@ class HistoryGoldenMatrix {
     'ipad_landscape': Size(1194, 834),
   };
 
+  /// Text scale axis required for Phase 4 browsing-history goldens.
+  static const textScalers = <String, TextScaler>{
+    ...GoldenMatrix.textScalers,
+    'accessibility': TextScaler.linear(2),
+  };
+
   /// Golden capture device pixel ratio.
   static const double devicePixelRatio = GoldenMatrix.devicePixelRatio;
 }
