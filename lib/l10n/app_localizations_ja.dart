@@ -33,6 +33,24 @@ class AppLocalizationsJa extends AppLocalizations {
   String get historyPlaceholder => '閲覧履歴画面（プレースホルダー）';
 
   @override
+  String get historyTabAll => 'すべて';
+
+  @override
+  String get historyTabDrugs => '医薬品';
+
+  @override
+  String get historyTabDiseases => '疾患';
+
+  @override
+  String get historyEmptyTitle => '閲覧履歴がありません';
+
+  @override
+  String get historyEmptyBody => '検索して薬品・疾患を閲覧すると、ここに履歴が表示されます';
+
+  @override
+  String get historyEmptyCta => '検索画面へ';
+
+  @override
   String get calcPlaceholder => '計算ツール画面（プレースホルダー）';
 
   @override

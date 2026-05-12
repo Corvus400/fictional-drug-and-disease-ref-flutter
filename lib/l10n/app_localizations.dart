@@ -142,6 +142,42 @@ abstract class AppLocalizations {
   /// **'閲覧履歴画面（プレースホルダー）'**
   String get historyPlaceholder;
 
+  /// No description provided for @historyTabAll.
+  ///
+  /// In ja, this message translates to:
+  /// **'すべて'**
+  String get historyTabAll;
+
+  /// No description provided for @historyTabDrugs.
+  ///
+  /// In ja, this message translates to:
+  /// **'医薬品'**
+  String get historyTabDrugs;
+
+  /// No description provided for @historyTabDiseases.
+  ///
+  /// In ja, this message translates to:
+  /// **'疾患'**
+  String get historyTabDiseases;
+
+  /// No description provided for @historyEmptyTitle.
+  ///
+  /// In ja, this message translates to:
+  /// **'閲覧履歴がありません'**
+  String get historyEmptyTitle;
+
+  /// No description provided for @historyEmptyBody.
+  ///
+  /// In ja, this message translates to:
+  /// **'検索して薬品・疾患を閲覧すると、ここに履歴が表示されます'**
+  String get historyEmptyBody;
+
+  /// No description provided for @historyEmptyCta.
+  ///
+  /// In ja, this message translates to:
+  /// **'検索画面へ'**
+  String get historyEmptyCta;
+
   /// No description provided for @calcPlaceholder.
   ///
   /// In ja, this message translates to:
