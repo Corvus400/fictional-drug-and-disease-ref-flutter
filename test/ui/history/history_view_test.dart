@@ -35,7 +35,9 @@ void main() {
         tester.view.resetDevicePixelRatio();
       });
 
-      await tester.pumpWidget(_App(db: db));
+      await tester.pumpWidget(
+        _App(db: db, historyStream: Stream.value(const [])),
+      );
       await tester.pump(const Duration(milliseconds: 100));
       addTearDown(() async {
         await tester.pumpWidget(const SizedBox.shrink());
@@ -68,21 +70,54 @@ void main() {
       expect(tabBarRect.height, greaterThanOrEqualTo(44));
       expect(find.text('閲覧履歴画面（プレースホルダー）'), findsNothing);
     });
+
+    testWidgets('renders five loading skeleton rows', (tester) async {
+      tester.view.devicePixelRatio = 2;
+      tester.view.physicalSize = const Size(780, 1688);
+      addTearDown(() {
+        tester.view.resetPhysicalSize();
+        tester.view.resetDevicePixelRatio();
+      });
+
+      await tester.pumpWidget(
+        const _App(
+          db: null,
+          historyStream: Stream<List<BrowsingHistoryEntry>>.empty(),
+        ),
+      );
+      await tester.pump(const Duration(milliseconds: 100));
+      addTearDown(() async {
+        await tester.pumpWidget(const SizedBox.shrink());
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 1));
+      });
+
+      final rows = find.byKey(const ValueKey('history-loading-skeleton-row'));
+      expect(rows, findsNWidgets(5));
+      expect(find.text('閲覧履歴がありません'), findsNothing);
+      expect(find.text('検索画面へ'), findsNothing);
+
+      for (final element in rows.evaluate()) {
+        final rect = tester.getRect(find.byWidget(element.widget));
+        expect(rect.height, 80);
+      }
+    });
   });
 }
 
 class _App extends StatelessWidget {
-  const _App({required this.db});
+  const _App({required this.db, required this.historyStream});
 
-  final AppDatabase db;
+  final AppDatabase? db;
+  final Stream<List<BrowsingHistoryEntry>> historyStream;
 
   @override
   Widget build(BuildContext context) {
     return ProviderScope(
       overrides: [
-        appDatabaseProvider.overrideWithValue(db),
+        if (db != null) appDatabaseProvider.overrideWithValue(db!),
         browsingHistoryStreamProvider.overrideWith(
-          (ref) => Stream<List<BrowsingHistoryEntry>>.value(const []),
+          (ref) => historyStream,
         ),
       ],
       child: MaterialApp(

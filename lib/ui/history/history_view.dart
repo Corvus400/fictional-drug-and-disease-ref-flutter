@@ -391,6 +391,30 @@ class _HistoryLoadingState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const SizedBox.expand();
+    return ListView.separated(
+      padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
+      itemCount: 5,
+      separatorBuilder: (context, index) => const SizedBox(height: 8),
+      itemBuilder: (context, index) => const _HistorySkeletonRow(),
+    );
+  }
+}
+
+class _HistorySkeletonRow extends StatelessWidget {
+  const _HistorySkeletonRow();
+
+  @override
+  Widget build(BuildContext context) {
+    final palette = Theme.of(context).extension<AppPalette>()!;
+    return DecoratedBox(
+      key: const ValueKey('history-loading-skeleton-row'),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        gradient: LinearGradient(
+          colors: [palette.surface3, palette.surface4, palette.surface3],
+        ),
+      ),
+      child: const SizedBox(height: 80, width: double.infinity),
+    );
   }
 }

@@ -63,4 +63,41 @@ void main() {
       return null;
     },
   );
+
+  runHistoryGoldenMatrix(
+    fileNamePrefix: 'history_loading',
+    description: 'History loading state',
+    builder: (theme, size, deviceName, textScaler, textScalerName) {
+      return ProviderScope(
+        overrides: [
+          appDatabaseProvider.overrideWithValue(_db),
+          browsingHistoryStreamProvider.overrideWith(
+            (ref) => const Stream<List<BrowsingHistoryEntry>>.empty(),
+          ),
+        ],
+        child: MaterialApp(
+          debugShowCheckedModeBanner: false,
+          theme: theme,
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: Scaffold(
+            body: const HistoryView(),
+            bottomNavigationBar: AppShellBottomNavigation(
+              selectedIndex: 2,
+              onDestinationSelected: (_) {},
+            ),
+          ),
+        ),
+      );
+    },
+    whilePerforming: (tester) async {
+      await tester.pump(const Duration(milliseconds: 100));
+      addTearDown(() async {
+        await tester.pumpWidget(const SizedBox.shrink());
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 1));
+      });
+      return null;
+    },
+  );
 }
