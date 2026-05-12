@@ -6,13 +6,16 @@ import 'package:fictional_drug_and_disease_ref/application/usecases/calculate_bm
 import 'package:fictional_drug_and_disease_ref/application/usecases/calculate_crcl_usecase.dart';
 import 'package:fictional_drug_and_disease_ref/application/usecases/calculate_egfr_usecase.dart';
 import 'package:fictional_drug_and_disease_ref/application/usecases/clear_browsing_history_usecase.dart';
+import 'package:fictional_drug_and_disease_ref/application/usecases/delete_bookmark_usecase.dart';
 import 'package:fictional_drug_and_disease_ref/application/usecases/delete_browsing_history_usecase.dart';
 import 'package:fictional_drug_and_disease_ref/application/usecases/delete_calculation_history_usecase.dart';
 import 'package:fictional_drug_and_disease_ref/application/usecases/list_browsing_history_usecase.dart';
 import 'package:fictional_drug_and_disease_ref/application/usecases/list_calculation_history_usecase.dart';
 import 'package:fictional_drug_and_disease_ref/application/usecases/observe_bookmark_state_usecase.dart';
+import 'package:fictional_drug_and_disease_ref/application/usecases/observe_bookmarks_usecase.dart';
 import 'package:fictional_drug_and_disease_ref/application/usecases/observe_browsing_history_usecase.dart';
 import 'package:fictional_drug_and_disease_ref/application/usecases/record_calculation_history_usecase.dart';
+import 'package:fictional_drug_and_disease_ref/application/usecases/resolve_bookmark_rows_usecase.dart';
 import 'package:fictional_drug_and_disease_ref/application/usecases/resolve_browsing_history_names_usecase.dart';
 import 'package:fictional_drug_and_disease_ref/application/usecases/toggle_bookmark_usecase.dart';
 import 'package:fictional_drug_and_disease_ref/application/usecases/view_disease_detail_usecase.dart';
@@ -79,6 +82,18 @@ void main() {
     expect(
       container.read(observeBookmarkStateUsecaseProvider),
       isA<ObserveBookmarkStateUsecase>(),
+    );
+    expect(
+      container.read(observeBookmarksUsecaseProvider),
+      isA<ObserveBookmarksUsecase>(),
+    );
+    expect(
+      container.read(deleteBookmarkUsecaseProvider),
+      isA<DeleteBookmarkUsecase>(),
+    );
+    expect(
+      container.read(resolveBookmarkRowsUsecaseProvider),
+      isA<ResolveBookmarkRowsUsecase>(),
     );
     expect(
       container.read(toggleBookmarkUsecaseProvider),
@@ -167,6 +182,21 @@ void main() {
 
     await expectLater(
       container.read(browsingHistoryStreamProvider.future),
+      completion(isEmpty),
+    );
+  });
+
+  test('bookmarksStreamProvider exposes observed bookmark rows', () async {
+    final container = ProviderContainer();
+    addTearDown(container.dispose);
+    final subscription = container.listen(
+      bookmarksStreamProvider,
+      (_, _) {},
+    );
+    addTearDown(subscription.close);
+
+    await expectLater(
+      container.read(bookmarksStreamProvider.future),
       completion(isEmpty),
     );
   });

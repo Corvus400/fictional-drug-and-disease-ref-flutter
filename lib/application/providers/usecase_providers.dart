@@ -7,6 +7,7 @@ import 'package:fictional_drug_and_disease_ref/application/usecases/calculate_cr
 import 'package:fictional_drug_and_disease_ref/application/usecases/calculate_egfr_usecase.dart';
 import 'package:fictional_drug_and_disease_ref/application/usecases/clear_browsing_history_usecase.dart';
 import 'package:fictional_drug_and_disease_ref/application/usecases/clear_search_history_usecase.dart';
+import 'package:fictional_drug_and_disease_ref/application/usecases/delete_bookmark_usecase.dart';
 import 'package:fictional_drug_and_disease_ref/application/usecases/delete_browsing_history_usecase.dart';
 import 'package:fictional_drug_and_disease_ref/application/usecases/delete_calculation_history_usecase.dart';
 import 'package:fictional_drug_and_disease_ref/application/usecases/delete_search_history_usecase.dart';
@@ -15,8 +16,10 @@ import 'package:fictional_drug_and_disease_ref/application/usecases/list_calcula
 import 'package:fictional_drug_and_disease_ref/application/usecases/list_search_history_usecase.dart';
 import 'package:fictional_drug_and_disease_ref/application/usecases/load_categories_usecase.dart';
 import 'package:fictional_drug_and_disease_ref/application/usecases/observe_bookmark_state_usecase.dart';
+import 'package:fictional_drug_and_disease_ref/application/usecases/observe_bookmarks_usecase.dart';
 import 'package:fictional_drug_and_disease_ref/application/usecases/observe_browsing_history_usecase.dart';
 import 'package:fictional_drug_and_disease_ref/application/usecases/record_calculation_history_usecase.dart';
+import 'package:fictional_drug_and_disease_ref/application/usecases/resolve_bookmark_rows_usecase.dart';
 import 'package:fictional_drug_and_disease_ref/application/usecases/resolve_browsing_history_names_usecase.dart';
 import 'package:fictional_drug_and_disease_ref/application/usecases/search_diseases_usecase.dart';
 import 'package:fictional_drug_and_disease_ref/application/usecases/search_drugs_usecase.dart';
@@ -25,6 +28,7 @@ import 'package:fictional_drug_and_disease_ref/application/usecases/view_disease
 import 'package:fictional_drug_and_disease_ref/application/usecases/view_drug_detail_usecase.dart';
 import 'package:fictional_drug_and_disease_ref/data/providers/api_providers.dart';
 import 'package:fictional_drug_and_disease_ref/data/providers/local_providers.dart';
+import 'package:fictional_drug_and_disease_ref/domain/bookmark/bookmark_entry.dart';
 import 'package:fictional_drug_and_disease_ref/domain/browsing_history/browsing_history_entry.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/misc.dart';
@@ -55,6 +59,28 @@ final observeBookmarkStateUsecaseProvider =
       ),
     );
 
+/// Observe-bookmarks use case provider.
+final observeBookmarksUsecaseProvider = Provider<ObserveBookmarksUsecase>(
+  (ref) => ObserveBookmarksUsecase(
+    repository: ref.watch(bookmarkRepositoryProvider),
+  ),
+);
+
+/// Delete-bookmark use case provider.
+final deleteBookmarkUsecaseProvider = Provider<DeleteBookmarkUsecase>(
+  (ref) => DeleteBookmarkUsecase(
+    repository: ref.watch(bookmarkRepositoryProvider),
+  ),
+);
+
+/// Resolve-bookmark-rows use case provider.
+final resolveBookmarkRowsUsecaseProvider = Provider<ResolveBookmarkRowsUsecase>(
+  (ref) => const ResolveBookmarkRowsUsecase(
+    drugCodec: DrugBookmarkSnapshotCodec(),
+    diseaseCodec: DiseaseBookmarkSnapshotCodec(),
+  ),
+);
+
 /// Toggle-bookmark use case provider.
 final toggleBookmarkUsecaseProvider = Provider<ToggleBookmarkUsecase>(
   (ref) => ToggleBookmarkUsecase(
@@ -69,6 +95,12 @@ final StreamProviderFamily<bool, String> streamBookmarkStateProvider =
     StreamProvider.autoDispose.family<bool, String>(
       (ref, id) => ref.watch(observeBookmarkStateUsecaseProvider).execute(id),
     );
+
+/// Bookmarks stream provider for the bookmarks screen.
+// ignore: specify_nonobvious_property_types
+final bookmarksStreamProvider = StreamProvider.autoDispose<List<BookmarkEntry>>(
+  (ref) => ref.watch(observeBookmarksUsecaseProvider).execute(),
+);
 
 /// Search query codec provider.
 final searchQueryCodecProvider = Provider<SearchQueryCodec>(
