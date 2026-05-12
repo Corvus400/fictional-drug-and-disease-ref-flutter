@@ -1,12 +1,10 @@
 import 'package:fictional_drug_and_disease_ref/l10n/app_localizations.dart';
 import 'package:fictional_drug_and_disease_ref/router/app_router.dart';
 import 'package:fictional_drug_and_disease_ref/theme/app_palette.dart';
-import 'package:fictional_drug_and_disease_ref/ui/_common/widgets/disease_result_card.dart';
-import 'package:fictional_drug_and_disease_ref/ui/_common/widgets/drug_result_card.dart';
 import 'package:fictional_drug_and_disease_ref/ui/bookmarks/bookmarks_screen_notifier.dart';
 import 'package:fictional_drug_and_disease_ref/ui/bookmarks/bookmarks_screen_state.dart';
-import 'package:fictional_drug_and_disease_ref/ui/bookmarks/format/bookmark_saved_at.dart';
 import 'package:fictional_drug_and_disease_ref/ui/bookmarks/widgets/bookmark_search_box.dart';
+import 'package:fictional_drug_and_disease_ref/ui/bookmarks/widgets/swipe_delete_bookmark_row.dart';
 import 'package:fictional_drug_and_disease_ref/ui/search/providers/drug_card_image_cache_manager_provider.dart';
 import 'package:fictional_drug_and_disease_ref/ui/shell/app_shell_tab.dart';
 import 'package:fictional_drug_and_disease_ref/ui/shell/app_tab_header.dart';
@@ -18,7 +16,10 @@ import 'package:go_router/go_router.dart';
 /// Bookmarks tab.
 class BookmarksView extends ConsumerWidget {
   /// Creates a bookmarks view.
-  const BookmarksView({super.key});
+  const BookmarksView({super.key, this.debugSwipeRevealRowId});
+
+  /// Forces one row into the 72dp swipe reveal state for golden tests.
+  final String? debugSwipeRevealRowId;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -43,6 +44,8 @@ class BookmarksView extends ConsumerWidget {
       BookmarksLoaded(:final visibleRows) => _BookmarksRowsList(
         rows: visibleRows,
         drugImageCacheManager: drugImageCacheManager,
+        onDelete: notifier.deleteRow,
+        debugSwipeRevealRowId: debugSwipeRevealRowId,
       ),
       _ => const _BookmarksLoadingState(),
     };
@@ -400,10 +403,14 @@ class _BookmarksRowsList extends StatelessWidget {
   const _BookmarksRowsList({
     required this.rows,
     required this.drugImageCacheManager,
+    required this.onDelete,
+    required this.debugSwipeRevealRowId,
   });
 
   final List<BookmarksRow> rows;
   final BaseCacheManager drugImageCacheManager;
+  final Future<void> Function(String id) onDelete;
+  final String? debugSwipeRevealRowId;
 
   @override
   Widget build(BuildContext context) {
@@ -412,10 +419,12 @@ class _BookmarksRowsList extends StatelessWidget {
       itemCount: rows.length,
       itemBuilder: (context, index) {
         final row = rows[index];
-        return _BookmarkRowTile(
-          key: ValueKey('bookmark-row-${row.id}'),
+        return SwipeDeleteBookmarkRow(
+          key: ValueKey('bookmarks-row-${row.id}'),
           row: row,
           drugImageCacheManager: drugImageCacheManager,
+          onDelete: onDelete,
+          revealForTesting: row.id == debugSwipeRevealRowId,
         );
       },
     );
@@ -586,63 +595,6 @@ class _BookmarksEmptyArtPainter extends CustomPainter {
   @override
   bool shouldRepaint(_BookmarksEmptyArtPainter oldDelegate) {
     return color != oldDelegate.color;
-  }
-}
-
-class _BookmarkRowTile extends StatelessWidget {
-  const _BookmarkRowTile({
-    required this.row,
-    required this.drugImageCacheManager,
-    super.key,
-  });
-
-  final BookmarksRow row;
-  final BaseCacheManager drugImageCacheManager;
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-    return switch (row) {
-      BookmarksDrugRow(:final summary) => Semantics(
-        label: l10n.bookmarksRowDrugSemantics,
-        child: DrugResultCard(
-          item: summary,
-          cacheManager: drugImageCacheManager,
-          trailingTime: _BookmarksSavedAt(bookmarkedAt: row.bookmarkedAt),
-          onTap: () => context.push(AppRoutes.drugDetail(row.id)),
-        ),
-      ),
-      BookmarksDiseaseRow(:final summary) => Semantics(
-        label: l10n.bookmarksRowDiseaseSemantics,
-        child: DiseaseResultCard(
-          item: summary,
-          trailingTime: _BookmarksSavedAt(bookmarkedAt: row.bookmarkedAt),
-          showNonInfectiousBadge: false,
-          onTap: () => context.push(AppRoutes.diseaseDetail(row.id)),
-        ),
-      ),
-    };
-  }
-}
-
-class _BookmarksSavedAt extends StatelessWidget {
-  const _BookmarksSavedAt({required this.bookmarkedAt});
-
-  final DateTime bookmarkedAt;
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-    final palette = Theme.of(context).extension<AppPalette>()!;
-    return Text(
-      l10n.bookmarksRowSavedAt(formatBookmarkSavedAt(bookmarkedAt)),
-      key: ValueKey('bookmark-saved-at-${bookmarkedAt.toIso8601String()}'),
-      maxLines: 1,
-      style: Theme.of(context).textTheme.labelSmall?.copyWith(
-        color: palette.muted,
-        fontWeight: FontWeight.w700,
-      ),
-    );
   }
 }
 
