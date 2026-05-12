@@ -20,11 +20,23 @@ final class HistoryScreenNotifier extends Notifier<HistoryScreenState> {
   int _generation = 0;
   List<BrowsingHistoryEntry> _entries = const [];
   List<HistoryRow> _allRows = const [];
+  List<BrowsingHistoryEntry>? _pendingLocalEntries;
+  bool _hasLoadedEntries = false;
 
   @override
   HistoryScreenState build() {
     ref.listen(browsingHistoryStreamProvider, (_, next) {
       if (next case AsyncData<List<BrowsingHistoryEntry>>(:final value)) {
+        final pendingLocalEntries = _pendingLocalEntries;
+        if (pendingLocalEntries != null &&
+            _sameEntries(value, pendingLocalEntries)) {
+          _pendingLocalEntries = null;
+          _applyEntriesWithoutResolving(value);
+          return;
+        }
+        if (_hasLoadedEntries && _sameEntries(value, _entries)) {
+          return;
+        }
         unawaited(_loadRows(value));
       }
     });
@@ -39,15 +51,24 @@ final class HistoryScreenNotifier extends Notifier<HistoryScreenState> {
 
   /// Deletes a single history row.
   Future<void> deleteRow(String id) async {
+    final nextEntries = _entries
+        .where((entry) => entry.id != id)
+        .toList(growable: false);
+    _pendingLocalEntries = nextEntries;
     final result = await ref
         .read(deleteBrowsingHistoryUsecaseProvider)
         .execute(
           id,
         );
-    if (result is Err<void> || !ref.mounted) {
+    if (result is Err<void>) {
+      _pendingLocalEntries = null;
       return;
     }
-    await _loadRows(_entries.where((entry) => entry.id != id).toList());
+    if (!ref.mounted) {
+      return;
+    }
+    _pendingLocalEntries = null;
+    _applyEntriesWithoutResolving(nextEntries);
   }
 
   /// Clears all history rows.
@@ -95,6 +116,7 @@ final class HistoryScreenNotifier extends Notifier<HistoryScreenState> {
     final generation = _generation + 1;
     _generation = generation;
     _entries = entries;
+    _hasLoadedEntries = true;
     if (entries.isEmpty) {
       _allRows = const [];
       if (ref.mounted && generation == _generation) {
@@ -112,6 +134,17 @@ final class HistoryScreenNotifier extends Notifier<HistoryScreenState> {
         .map(
           (entry) => _rowFor(entry.id, entry.viewedAt, resolutions[entry.id]),
         )
+        .toList(growable: false);
+    state = _stateForRows(_allRows);
+  }
+
+  void _applyEntriesWithoutResolving(List<BrowsingHistoryEntry> entries) {
+    _generation += 1;
+    _entries = entries;
+    _hasLoadedEntries = true;
+    final ids = entries.map((entry) => entry.id).toSet();
+    _allRows = _allRows
+        .where((row) => ids.contains(row.id))
         .toList(growable: false);
     state = _stateForRows(_allRows);
   }
@@ -156,4 +189,22 @@ HistoryRow _rowFor(
     ),
     _ => HistoryUnresolvedRow(id: id, viewedAt: viewedAt),
   };
+}
+
+bool _sameEntries(
+  List<BrowsingHistoryEntry> left,
+  List<BrowsingHistoryEntry> right,
+) {
+  if (left.length != right.length) {
+    return false;
+  }
+  for (var index = 0; index < left.length; index += 1) {
+    final leftEntry = left[index];
+    final rightEntry = right[index];
+    if (leftEntry.id != rightEntry.id ||
+        leftEntry.viewedAt != rightEntry.viewedAt) {
+      return false;
+    }
+  }
+  return true;
 }

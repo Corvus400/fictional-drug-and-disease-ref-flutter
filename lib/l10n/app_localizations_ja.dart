@@ -68,6 +68,9 @@ class AppLocalizationsJa extends AppLocalizations {
   String get historyBulkDeleteConfirmDelete => 'すべて削除';
 
   @override
+  String get historySwipeDeleteAction => '削除';
+
+  @override
   String get calcPlaceholder => '計算ツール画面（プレースホルダー）';
 
   @override

@@ -85,7 +85,7 @@ void main() {
       expect(loaded.hasNameFailure, isFalse);
     });
 
-    test('deleteRow removes a row and reloads visible rows', () async {
+    test('deleteRow removes a row and preserves remaining rows', () async {
       await _seedDrug(db, _drugSummary, DateTime.utc(2026, 5, 11, 9));
       await _seedDisease(db, _diseaseSummary, DateTime.utc(2026, 5, 11, 10));
       final container = _createContainer(
@@ -108,6 +108,42 @@ void main() {
       final state = container.read(historyScreenProvider) as HistoryLoaded;
       expect(state.rows, hasLength(1));
       expect(state.rows.single.id, _drugSummary.id);
+    });
+
+    test('deleteRow does not resolve untouched rows again', () async {
+      await BrowsingHistoryRepository(
+        db.browsingHistoriesDao,
+      ).upsert('drug_0080', viewedAt: DateTime.utc(2026, 5, 11, 9));
+      await _seedDisease(db, _diseaseSummary, DateTime.utc(2026, 5, 11, 10));
+      var drugResolutionAttempts = 0;
+      when(() => drugApiClient.getDrug('drug_0080')).thenAnswer((_) async {
+        drugResolutionAttempts += 1;
+        throw Exception('network down');
+      });
+      final container = _createContainer(
+        db,
+        drugApiClient: drugApiClient,
+        diseaseApiClient: diseaseApiClient,
+      );
+      addTearDown(container.dispose);
+      final subscription = container.listen(historyScreenProvider, (_, _) {});
+      addTearDown(subscription.close);
+
+      final initial = await _settleHistory(container) as HistoryLoaded;
+      expect(initial.rows, hasLength(2));
+      expect(initial.rows.any((row) => row is HistoryUnresolvedRow), isTrue);
+      expect(drugResolutionAttempts, 1);
+
+      await container
+          .read(historyScreenProvider.notifier)
+          .deleteRow(_diseaseSummary.id);
+      await _settleHistory(container);
+
+      final afterDelete =
+          container.read(historyScreenProvider) as HistoryLoaded;
+      expect(afterDelete.rows, hasLength(1));
+      expect(afterDelete.rows.single, isA<HistoryUnresolvedRow>());
+      expect(drugResolutionAttempts, 1);
     });
 
     test('clearAll maps an empty stream emission to HistoryEmpty', () async {

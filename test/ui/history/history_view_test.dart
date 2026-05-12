@@ -15,7 +15,10 @@ import 'package:fictional_drug_and_disease_ref/domain/disease/disease_summary.da
 import 'package:fictional_drug_and_disease_ref/domain/drug/drug_summary.dart';
 import 'package:fictional_drug_and_disease_ref/l10n/app_localizations.dart';
 import 'package:fictional_drug_and_disease_ref/theme/app_theme.dart';
+import 'package:fictional_drug_and_disease_ref/ui/history/history_screen_state.dart';
 import 'package:fictional_drug_and_disease_ref/ui/history/history_view.dart';
+import 'package:fictional_drug_and_disease_ref/ui/history/widgets/history_row.dart';
+import 'package:fictional_drug_and_disease_ref/ui/search/constants/search_constants.dart';
 import 'package:fictional_drug_and_disease_ref/ui/search/providers/drug_card_image_cache_manager_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
@@ -189,6 +192,16 @@ void main() {
         find.byKey(const ValueKey('history-bulk-delete-count-badge')),
         findsOneWidget,
       );
+      final fabRect = tester.getRect(
+        find.byKey(const ValueKey('history-bulk-delete-fab')),
+      );
+      final badgeRect = tester.getRect(
+        find.byKey(const ValueKey('history-bulk-delete-count-badge')),
+      );
+      expect(badgeRect.height, 20);
+      expect(badgeRect.width, greaterThanOrEqualTo(20));
+      expect(badgeRect.top, moreOrLessEquals(fabRect.top - 2));
+      expect(badgeRect.right, moreOrLessEquals(fabRect.right + 2));
 
       await tester.tap(find.byKey(const ValueKey('history-bulk-delete-fab')));
       await tester.pumpAndSettle();
@@ -227,6 +240,200 @@ void main() {
         findsNothing,
       );
     });
+
+    testWidgets('renders swipe delete reveal as a 72dp destructive action', (
+      tester,
+    ) async {
+      tester.view.devicePixelRatio = 2;
+      tester.view.physicalSize = const Size(780, 1688);
+      addTearDown(() {
+        tester.view.resetPhysicalSize();
+        tester.view.resetDevicePixelRatio();
+      });
+
+      final now = DateTime(2026, 5, 12, 12);
+      final drugViewedAt = now.subtract(const Duration(minutes: 5));
+      final diseaseViewedAt = now.subtract(const Duration(hours: 2));
+      await _seedDrug(db, _drugSummary, drugViewedAt);
+      await _seedDisease(db, _diseaseSummary, diseaseViewedAt);
+
+      await tester.pumpWidget(
+        _App(
+          db: db,
+          historyStream: Stream.value([
+            BrowsingHistoryEntry(id: _drugSummary.id, viewedAt: drugViewedAt),
+            BrowsingHistoryEntry(
+              id: _diseaseSummary.id,
+              viewedAt: diseaseViewedAt,
+            ),
+          ]),
+          currentTime: now,
+          debugSwipeRevealRowId: _diseaseSummary.id,
+        ),
+      );
+      for (var i = 0; i < 5; i += 1) {
+        await tester.pump(const Duration(milliseconds: 100));
+      }
+      addTearDown(() async {
+        await tester.pumpWidget(const SizedBox.shrink());
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 1));
+      });
+
+      expect(find.byType(Dismissible), findsNothing);
+      expect(find.text('削除'), findsWidgets);
+
+      final actionFinder = find.byKey(
+        ValueKey('history-row-swipe-action-${_diseaseSummary.id}'),
+      );
+      final actionRect = tester.getRect(actionFinder);
+      final rowRect = tester.getRect(
+        find.byKey(ValueKey('disease-card-${_diseaseSummary.id}')),
+      );
+      final actionBox = tester.widget<DecoratedBox>(actionFinder);
+      final decoration = actionBox.decoration as BoxDecoration;
+      final actionClip = tester.widget<ClipRRect>(
+        find.byKey(
+          ValueKey('history-row-swipe-action-clip-${_diseaseSummary.id}'),
+        ),
+      );
+      final actionMaterial = tester.widget<Material>(
+        find.byKey(
+          ValueKey('history-row-swipe-action-material-${_diseaseSummary.id}'),
+        ),
+      );
+
+      expect(actionRect.width, 72);
+      expect(rowRect.right, moreOrLessEquals(actionRect.left));
+      expect(actionRect.top, moreOrLessEquals(rowRect.top + 8));
+      expect(actionRect.height, moreOrLessEquals(rowRect.height - 8));
+      expect(actionClip.clipBehavior, Clip.antiAlias);
+      expect(
+        actionClip.borderRadius,
+        BorderRadius.circular(SearchConstants.searchCardRadius),
+      );
+      expect(actionMaterial.clipBehavior, Clip.antiAlias);
+      expect(
+        actionMaterial.borderRadius,
+        BorderRadius.circular(SearchConstants.searchCardRadius),
+      );
+      expect(decoration.color, const Color(0xFFD62A2A));
+    });
+
+    testWidgets('disables row tap while swipe delete is revealed', (
+      tester,
+    ) async {
+      tester.view.devicePixelRatio = 2;
+      tester.view.physicalSize = const Size(780, 1688);
+      addTearDown(() {
+        tester.view.resetPhysicalSize();
+        tester.view.resetDevicePixelRatio();
+      });
+
+      final now = DateTime(2026, 5, 12, 12);
+      final diseaseViewedAt = now.subtract(const Duration(hours: 2));
+      await _seedDisease(db, _diseaseSummary, diseaseViewedAt);
+
+      await tester.pumpWidget(
+        _App(
+          db: db,
+          historyStream: Stream.value([
+            BrowsingHistoryEntry(
+              id: _diseaseSummary.id,
+              viewedAt: diseaseViewedAt,
+            ),
+          ]),
+          currentTime: now,
+          debugSwipeRevealRowId: _diseaseSummary.id,
+        ),
+      );
+      for (var i = 0; i < 5; i += 1) {
+        await tester.pump(const Duration(milliseconds: 100));
+      }
+      addTearDown(() async {
+        await tester.pumpWidget(const SizedBox.shrink());
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 1));
+      });
+
+      await tester.tap(
+        find.byKey(ValueKey('disease-card-${_diseaseSummary.id}')),
+      );
+      await tester.pump();
+
+      expect(tester.takeException(), isNull);
+    });
+
+    testWidgets('reveals delete action by dragging like calculation history', (
+      tester,
+    ) async {
+      String? deletedId;
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: AppTheme.light(),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: Scaffold(
+            body: Align(
+              alignment: Alignment.topLeft,
+              child: SizedBox(
+                width: 320,
+                child: SwipeDeleteHistoryRow(
+                  row: HistoryDiseaseRow(
+                    id: _diseaseSummary.id,
+                    viewedAt: DateTime(2026, 5, 12, 10),
+                    summary: _diseaseSummary,
+                  ),
+                  now: DateTime(2026, 5, 12, 12),
+                  drugImageCacheManager: _fallbackImageCacheManager(),
+                  onDelete: (id) async {
+                    deletedId = id;
+                  },
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+
+      expect(find.byType(Dismissible), findsNothing);
+      expect(
+        tester
+            .getSize(
+              find.byKey(
+                ValueKey('history-row-swipe-reveal-${_diseaseSummary.id}'),
+              ),
+            )
+            .width,
+        0,
+      );
+
+      await tester.drag(
+        find.byType(SwipeDeleteHistoryRow),
+        const Offset(-140, 0),
+      );
+      await tester.pumpAndSettle();
+
+      final actionFinder = find.byKey(
+        ValueKey('history-row-swipe-action-${_diseaseSummary.id}'),
+      );
+      expect(tester.getSize(actionFinder).width, 72);
+      expect(
+        tester
+            .getSize(
+              find.byKey(
+                ValueKey('history-row-swipe-reveal-${_diseaseSummary.id}'),
+              ),
+            )
+            .width,
+        72,
+      );
+
+      await tester.tap(actionFinder);
+      await tester.pump();
+
+      expect(deletedId, _diseaseSummary.id);
+    });
   });
 }
 
@@ -235,11 +442,13 @@ class _App extends StatelessWidget {
     required this.db,
     required this.historyStream,
     this.currentTime,
+    this.debugSwipeRevealRowId,
   }) : cacheManager = _fallbackImageCacheManager();
 
   final AppDatabase? db;
   final Stream<List<BrowsingHistoryEntry>> historyStream;
   final DateTime? currentTime;
+  final String? debugSwipeRevealRowId;
   final BaseCacheManager cacheManager;
   final DrugApiClient drugApiClient = _MockDrugApiClient();
   final DiseaseApiClient diseaseApiClient = _MockDiseaseApiClient();
@@ -260,7 +469,10 @@ class _App extends StatelessWidget {
         theme: AppTheme.light(),
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
-        home: HistoryView(currentTime: currentTime),
+        home: HistoryView(
+          currentTime: currentTime,
+          debugSwipeRevealRowId: debugSwipeRevealRowId,
+        ),
       ),
     );
   }

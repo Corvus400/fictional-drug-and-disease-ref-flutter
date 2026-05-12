@@ -11,13 +11,20 @@ import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+const _historyDestructiveBg = Color(0xFFD62A2A);
+const _historyDestructiveFg = Color(0xFFFFFFFF);
+
 /// Browsing history tab.
 class HistoryView extends ConsumerWidget {
   /// Creates a history view.
-  const HistoryView({super.key, this.currentTime});
+  const HistoryView({super.key, this.currentTime, this.debugSwipeRevealRowId});
 
   /// Fixed time for deterministic tests; defaults to the current local time.
   final DateTime? currentTime;
+
+  /// Forces one row into the 72dp swipe reveal state for golden tests.
+  @visibleForTesting
+  final String? debugSwipeRevealRowId;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -43,6 +50,8 @@ class HistoryView extends ConsumerWidget {
         rows: rows,
         now: now,
         drugImageCacheManager: drugImageCacheManager,
+        onDelete: notifier.deleteRow,
+        debugSwipeRevealRowId: debugSwipeRevealRowId,
       ),
       _ => const _HistoryLoadingState(),
     };
@@ -402,11 +411,15 @@ class _HistoryRowsList extends StatelessWidget {
     required this.rows,
     required this.now,
     required this.drugImageCacheManager,
+    required this.onDelete,
+    required this.debugSwipeRevealRowId,
   });
 
   final List<HistoryRow> rows;
   final DateTime now;
   final BaseCacheManager drugImageCacheManager;
+  final Future<void> Function(String id) onDelete;
+  final String? debugSwipeRevealRowId;
 
   @override
   Widget build(BuildContext context) {
@@ -414,10 +427,14 @@ class _HistoryRowsList extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
       itemCount: rows.length,
       itemBuilder: (context, index) {
-        return HistoryRowTile(
-          row: rows[index],
+        final row = rows[index];
+        return SwipeDeleteHistoryRow(
+          key: ValueKey('history-row-${row.id}'),
+          row: row,
           now: now,
           drugImageCacheManager: drugImageCacheManager,
+          onDelete: onDelete,
+          revealForTesting: row.id == debugSwipeRevealRowId,
         );
       },
     );
@@ -433,7 +450,6 @@ class _HistoryBulkDeleteFab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final palette = Theme.of(context).extension<AppPalette>()!;
     return Semantics(
       button: true,
       label: l10n.historyBulkDeleteFabSemantics,
@@ -444,25 +460,25 @@ class _HistoryBulkDeleteFab extends StatelessWidget {
           heroTag: 'history-bulk-delete-fab',
           tooltip: l10n.historyBulkDeleteFabSemantics,
           elevation: 2,
-          backgroundColor: palette.danger,
-          foregroundColor: palette.brightness == Brightness.light
-              ? Colors.white
-              : Colors.black,
+          backgroundColor: _historyDestructiveBg,
+          foregroundColor: _historyDestructiveFg,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(18),
           ),
           onPressed: onPressed,
-          child: Stack(
-            clipBehavior: Clip.none,
-            alignment: Alignment.center,
-            children: [
-              const Icon(Icons.delete_outline),
-              Positioned(
-                top: -6,
-                right: -8,
-                child: _HistoryBulkDeleteBadge(count: count),
-              ),
-            ],
+          child: SizedBox.expand(
+            child: Stack(
+              clipBehavior: Clip.none,
+              alignment: Alignment.center,
+              children: [
+                const Icon(Icons.delete_outline),
+                Positioned(
+                  top: -2,
+                  right: -2,
+                  child: _HistoryBulkDeleteBadge(count: count),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -480,19 +496,23 @@ class _HistoryBulkDeleteBadge extends StatelessWidget {
     final palette = Theme.of(context).extension<AppPalette>()!;
     return Container(
       key: const ValueKey('history-bulk-delete-count-badge'),
-      constraints: const BoxConstraints(minWidth: 20, minHeight: 20),
-      padding: const EdgeInsets.symmetric(horizontal: 4),
+      constraints: const BoxConstraints(minWidth: 20),
+      height: 20,
+      padding: const EdgeInsets.symmetric(horizontal: 6),
       decoration: BoxDecoration(
-        color: palette.surface,
+        color: _historyDestructiveFg,
         borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: palette.danger),
+        border: Border.all(color: palette.surface, width: 2),
       ),
       alignment: Alignment.center,
       child: Text(
         count > 99 ? '99+' : '$count',
         style: Theme.of(context).textTheme.labelSmall?.copyWith(
-          color: palette.danger,
+          color: _historyDestructiveBg,
+          fontSize: 10,
+          height: 1,
           fontWeight: FontWeight.w700,
+          fontFeatures: const [FontFeature.tabularFigures()],
         ),
       ),
     );

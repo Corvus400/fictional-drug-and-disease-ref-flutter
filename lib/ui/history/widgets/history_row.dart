@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:fictional_drug_and_disease_ref/l10n/app_localizations.dart';
 import 'package:fictional_drug_and_disease_ref/router/app_router.dart';
 import 'package:fictional_drug_and_disease_ref/theme/app_palette.dart';
@@ -5,18 +7,26 @@ import 'package:fictional_drug_and_disease_ref/ui/_common/widgets/disease_result
 import 'package:fictional_drug_and_disease_ref/ui/_common/widgets/drug_result_card.dart';
 import 'package:fictional_drug_and_disease_ref/ui/history/format/relative_viewed_at.dart';
 import 'package:fictional_drug_and_disease_ref/ui/history/history_screen_state.dart';
+import 'package:fictional_drug_and_disease_ref/ui/search/constants/search_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:go_router/go_router.dart';
 
-/// Browsing-history row rendered with the shared result-card visuals.
-class HistoryRowTile extends StatelessWidget {
-  /// Creates a history row tile.
-  const HistoryRowTile({
+const _historySwipeDeleteExtent = 72.0;
+const _historySwipeDeleteBg = Color(0xFFD62A2A);
+const _historySwipeDeleteFg = Color(0xFFFFFFFF);
+const _historyCardTopMargin = 8.0;
+
+/// Swipe-delete wrapper for a browsing-history row.
+class SwipeDeleteHistoryRow extends StatefulWidget {
+  /// Creates a swipe-delete history row.
+  const SwipeDeleteHistoryRow({
     required this.row,
     required this.now,
     required this.drugImageCacheManager,
+    required this.onDelete,
     super.key,
+    this.revealForTesting = false,
   });
 
   /// Row view model.
@@ -28,6 +38,200 @@ class HistoryRowTile extends StatelessWidget {
   /// Cache manager for drug card images.
   final BaseCacheManager drugImageCacheManager;
 
+  /// Deletes the row.
+  final Future<void> Function(String id) onDelete;
+
+  /// Forces the 72dp reveal state for golden tests.
+  final bool revealForTesting;
+
+  @override
+  State<SwipeDeleteHistoryRow> createState() => _SwipeDeleteHistoryRowState();
+}
+
+class _SwipeDeleteHistoryRowState extends State<SwipeDeleteHistoryRow>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 180),
+      value: widget.revealForTesting ? 1 : 0,
+    );
+  }
+
+  @override
+  void didUpdateWidget(covariant SwipeDeleteHistoryRow oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.revealForTesting == oldWidget.revealForTesting) {
+      return;
+    }
+    _controller.value = widget.revealForTesting ? 1 : 0;
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  void _settleDeleteReveal() {
+    final shouldReveal = _controller.value >= 0.4;
+    unawaited(
+      _controller.animateTo(
+        shouldReveal ? 1 : 0,
+        curve: Curves.easeOutCubic,
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      behavior: HitTestBehavior.translucent,
+      onHorizontalDragUpdate: (details) {
+        final delta = details.primaryDelta ?? 0;
+        final nextValue =
+            (_controller.value - delta / _historySwipeDeleteExtent).clamp(
+              0.0,
+              1.0,
+            );
+        _controller.value = nextValue;
+      },
+      onHorizontalDragEnd: (_) => _settleDeleteReveal(),
+      child: AnimatedBuilder(
+        animation: _controller,
+        builder: (context, _) {
+          final revealValue = _controller.value;
+          return _RevealedSwipeDeleteRow(
+            row: widget.row,
+            revealValue: revealValue,
+            onDelete: () => unawaited(widget.onDelete(widget.row.id)),
+            child: HistoryRowTile(
+              row: widget.row,
+              now: widget.now,
+              drugImageCacheManager: widget.drugImageCacheManager,
+              tapEnabled: revealValue <= 0.001,
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+
+class _RevealedSwipeDeleteRow extends StatelessWidget {
+  const _RevealedSwipeDeleteRow({
+    required this.row,
+    required this.revealValue,
+    required this.onDelete,
+    required this.child,
+  });
+
+  final HistoryRow row;
+  final double revealValue;
+  final VoidCallback onDelete;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return ClipRect(
+      child: Stack(
+        children: [
+          Positioned(
+            top: _historyCardTopMargin,
+            right: 0,
+            bottom: 0,
+            child: ClipRect(
+              key: ValueKey('history-row-swipe-reveal-${row.id}'),
+              child: Align(
+                alignment: Alignment.centerRight,
+                widthFactor: revealValue,
+                child: _SwipeDeleteAction(row: row, onDelete: onDelete),
+              ),
+            ),
+          ),
+          Transform.translate(
+            offset: Offset(-_historySwipeDeleteExtent * revealValue, 0),
+            child: child,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _SwipeDeleteAction extends StatelessWidget {
+  const _SwipeDeleteAction({required this.row, required this.onDelete});
+
+  final HistoryRow row;
+  final VoidCallback onDelete;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return Semantics(
+      button: true,
+      label: '${_rowLabel(row)} を削除',
+      child: ClipRRect(
+        key: ValueKey('history-row-swipe-action-clip-${row.id}'),
+        borderRadius: BorderRadius.circular(SearchConstants.searchCardRadius),
+        child: Material(
+          key: ValueKey('history-row-swipe-action-material-${row.id}'),
+          type: MaterialType.transparency,
+          borderRadius: BorderRadius.circular(SearchConstants.searchCardRadius),
+          clipBehavior: Clip.antiAlias,
+          child: SizedBox(
+            width: _historySwipeDeleteExtent,
+            child: GestureDetector(
+              onTap: onDelete,
+              child: DecoratedBox(
+                key: ValueKey('history-row-swipe-action-${row.id}'),
+                decoration: const BoxDecoration(color: _historySwipeDeleteBg),
+                child: Center(
+                  child: Text(
+                    l10n.historySwipeDeleteAction,
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      color: _historySwipeDeleteFg,
+                      fontSize: 13,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Browsing-history row rendered with the shared result-card visuals.
+class HistoryRowTile extends StatelessWidget {
+  /// Creates a history row tile.
+  const HistoryRowTile({
+    required this.row,
+    required this.now,
+    required this.drugImageCacheManager,
+    super.key,
+    this.tapEnabled = true,
+  });
+
+  /// Row view model.
+  final HistoryRow row;
+
+  /// Reference time used to format [HistoryRow.viewedAt].
+  final DateTime now;
+
+  /// Cache manager for drug card images.
+  final BaseCacheManager drugImageCacheManager;
+
+  /// Whether tapping the row should navigate to detail.
+  final bool tapEnabled;
+
   @override
   Widget build(BuildContext context) {
     return switch (row) {
@@ -37,7 +241,9 @@ class HistoryRowTile extends StatelessWidget {
           item: summary,
           cacheManager: drugImageCacheManager,
           trailingTime: _HistoryRowTime(now: now, row: row),
-          onTap: () => context.push(AppRoutes.drugDetail(row.id)),
+          onTap: tapEnabled
+              ? () => context.push(AppRoutes.drugDetail(row.id))
+              : null,
         ),
       ),
       HistoryDiseaseRow(:final summary) => Semantics(
@@ -45,12 +251,22 @@ class HistoryRowTile extends StatelessWidget {
         child: DiseaseResultCard(
           item: summary,
           trailingTime: _HistoryRowTime(now: now, row: row),
-          onTap: () => context.push(AppRoutes.diseaseDetail(row.id)),
+          onTap: tapEnabled
+              ? () => context.push(AppRoutes.diseaseDetail(row.id))
+              : null,
         ),
       ),
       HistoryUnresolvedRow() => const SizedBox.shrink(),
     };
   }
+}
+
+String _rowLabel(HistoryRow row) {
+  return switch (row) {
+    HistoryDrugRow(:final summary) => summary.brandName,
+    HistoryDiseaseRow(:final summary) => summary.name,
+    HistoryUnresolvedRow(:final id) => id,
+  };
 }
 
 class _HistoryRowTime extends StatelessWidget {

@@ -29,6 +29,7 @@
   "historyBulkDeleteConfirmBody": "この操作は取り消せません",
   "historyBulkDeleteConfirmCancel": "キャンセル",
   "historyBulkDeleteConfirmDelete": "すべて削除",
+  "historySwipeDeleteAction": "削除",
   "calcPlaceholder": "計算ツール画面（プレースホルダー）",
   "drugDetailTitle": "医薬品詳細",
   "diseaseDetailTitle": "疾患詳細",
