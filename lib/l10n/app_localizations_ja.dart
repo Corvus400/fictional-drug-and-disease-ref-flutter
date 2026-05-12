@@ -30,16 +30,13 @@ class AppLocalizationsJa extends AppLocalizations {
   String get bookmarksPlaceholder => 'ブックマーク画面（プレースホルダー）';
 
   @override
-  String get historyPlaceholder => '閲覧履歴画面（プレースホルダー）';
-
-  @override
   String get historyTabAll => 'すべて';
 
   @override
-  String get historyTabDrugs => '医薬品';
+  String get historyTabDrug => '医薬品';
 
   @override
-  String get historyTabDiseases => '疾患';
+  String get historyTabDisease => '疾患';
 
   @override
   String get historyEmptyTitle => '閲覧履歴がありません';
@@ -71,10 +68,38 @@ class AppLocalizationsJa extends AppLocalizations {
   String get historySwipeDeleteAction => '削除';
 
   @override
-  String get historyNameFetchFailed => '名前取得失敗';
+  String get historyNameResolutionFailedPlaceholder => '名前取得失敗';
 
   @override
   String get historyRetryFabSemantics => '閲覧履歴の名前を再取得';
+
+  @override
+  String get historyRelativeJustNow => 'たった今';
+
+  @override
+  String historyRelativeMinutesAgo(int minutes) {
+    return '$minutes分前';
+  }
+
+  @override
+  String historyRelativeHoursAgo(int hours) {
+    return '$hours時間前';
+  }
+
+  @override
+  String historyRelativeYesterdayAt(String time) {
+    return '昨日 $time';
+  }
+
+  @override
+  String historyRelativeDaysAgo(int days) {
+    return '$days日前';
+  }
+
+  @override
+  String historyRelativeAbsoluteDate(String date) {
+    return '$date';
+  }
 
   @override
   String get calcPlaceholder => '計算ツール画面（プレースホルダー）';

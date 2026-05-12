@@ -136,29 +136,23 @@ abstract class AppLocalizations {
   /// **'ブックマーク画面（プレースホルダー）'**
   String get bookmarksPlaceholder;
 
-  /// No description provided for @historyPlaceholder.
-  ///
-  /// In ja, this message translates to:
-  /// **'閲覧履歴画面（プレースホルダー）'**
-  String get historyPlaceholder;
-
   /// No description provided for @historyTabAll.
   ///
   /// In ja, this message translates to:
   /// **'すべて'**
   String get historyTabAll;
 
-  /// No description provided for @historyTabDrugs.
+  /// No description provided for @historyTabDrug.
   ///
   /// In ja, this message translates to:
   /// **'医薬品'**
-  String get historyTabDrugs;
+  String get historyTabDrug;
 
-  /// No description provided for @historyTabDiseases.
+  /// No description provided for @historyTabDisease.
   ///
   /// In ja, this message translates to:
   /// **'疾患'**
-  String get historyTabDiseases;
+  String get historyTabDisease;
 
   /// No description provided for @historyEmptyTitle.
   ///
@@ -214,17 +208,53 @@ abstract class AppLocalizations {
   /// **'削除'**
   String get historySwipeDeleteAction;
 
-  /// No description provided for @historyNameFetchFailed.
+  /// No description provided for @historyNameResolutionFailedPlaceholder.
   ///
   /// In ja, this message translates to:
   /// **'名前取得失敗'**
-  String get historyNameFetchFailed;
+  String get historyNameResolutionFailedPlaceholder;
 
   /// No description provided for @historyRetryFabSemantics.
   ///
   /// In ja, this message translates to:
   /// **'閲覧履歴の名前を再取得'**
   String get historyRetryFabSemantics;
+
+  /// No description provided for @historyRelativeJustNow.
+  ///
+  /// In ja, this message translates to:
+  /// **'たった今'**
+  String get historyRelativeJustNow;
+
+  /// No description provided for @historyRelativeMinutesAgo.
+  ///
+  /// In ja, this message translates to:
+  /// **'{minutes}分前'**
+  String historyRelativeMinutesAgo(int minutes);
+
+  /// No description provided for @historyRelativeHoursAgo.
+  ///
+  /// In ja, this message translates to:
+  /// **'{hours}時間前'**
+  String historyRelativeHoursAgo(int hours);
+
+  /// No description provided for @historyRelativeYesterdayAt.
+  ///
+  /// In ja, this message translates to:
+  /// **'昨日 {time}'**
+  String historyRelativeYesterdayAt(String time);
+
+  /// No description provided for @historyRelativeDaysAgo.
+  ///
+  /// In ja, this message translates to:
+  /// **'{days}日前'**
+  String historyRelativeDaysAgo(int days);
+
+  /// No description provided for @historyRelativeAbsoluteDate.
+  ///
+  /// In ja, this message translates to:
+  /// **'{date}'**
+  String historyRelativeAbsoluteDate(String date);
 
   /// No description provided for @calcPlaceholder.
   ///
