@@ -1,7 +1,12 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:fictional_drug_and_disease_ref/application/bookmarks/disease_bookmark_snapshot_codec.dart';
 import 'package:fictional_drug_and_disease_ref/application/bookmarks/drug_bookmark_snapshot_codec.dart';
 import 'package:fictional_drug_and_disease_ref/application/browsing_history/name_resolution_cache.dart';
 import 'package:fictional_drug_and_disease_ref/application/usecases/resolve_browsing_history_names_usecase.dart';
+import 'package:fictional_drug_and_disease_ref/data/dto/disease/disease_dto.dart';
+import 'package:fictional_drug_and_disease_ref/data/dto/drug/drug_dto.dart';
 import 'package:fictional_drug_and_disease_ref/data/local/app_database.dart';
 import 'package:fictional_drug_and_disease_ref/data/repositories/bookmark_repository.dart';
 import 'package:fictional_drug_and_disease_ref/data/repositories/disease_repository.dart';
@@ -20,6 +25,8 @@ void main() {
   group('ResolveBrowsingHistoryNamesUsecase', () {
     late AppDatabase db;
     late BookmarkRepository bookmarkRepository;
+    late _MockDrugApiClient drugApiClient;
+    late _MockDiseaseApiClient diseaseApiClient;
     late ResolveBrowsingHistoryNamesUsecase usecase;
     const drugCodec = DrugBookmarkSnapshotCodec();
     const diseaseCodec = DiseaseBookmarkSnapshotCodec();
@@ -27,10 +34,12 @@ void main() {
     setUp(() {
       db = createTestAppDatabase();
       bookmarkRepository = BookmarkRepository(db.bookmarksDao);
+      drugApiClient = _MockDrugApiClient();
+      diseaseApiClient = _MockDiseaseApiClient();
       usecase = ResolveBrowsingHistoryNamesUsecase(
         bookmarkRepository: bookmarkRepository,
-        drugRepository: DrugRepository(_MockDrugApiClient()),
-        diseaseRepository: DiseaseRepository(_MockDiseaseApiClient()),
+        drugRepository: DrugRepository(drugApiClient),
+        diseaseRepository: DiseaseRepository(diseaseApiClient),
         drugCodec: drugCodec,
         diseaseCodec: diseaseCodec,
         cache: NameResolutionCache(capacity: 4),
@@ -89,6 +98,42 @@ void main() {
         );
       },
     );
+
+    test(
+      'execute resolves names from API when bookmark snapshot is absent',
+      () async {
+        when(
+          () => drugApiClient.getDrug('drug_0080'),
+        ).thenAnswer((_) async => _drugDtoFixture());
+        when(
+          () => diseaseApiClient.getDisease('disease_0079'),
+        ).thenAnswer((_) async => _diseaseDtoFixture());
+
+        final result = await usecase.execute([
+          BrowsingHistoryEntry(
+            id: 'drug_0080',
+            viewedAt: DateTime.utc(2026, 5, 11),
+          ),
+          BrowsingHistoryEntry(
+            id: 'disease_0079',
+            viewedAt: DateTime.utc(2026, 5, 11),
+          ),
+        ]);
+
+        expect(result['drug_0080'], isA<NameResolvedDrug>());
+        expect(
+          (result['drug_0080']! as NameResolvedDrug).summary.id,
+          'drug_0080',
+        );
+        expect(result['disease_0079'], isA<NameResolvedDisease>());
+        expect(
+          (result['disease_0079']! as NameResolvedDisease).summary.id,
+          'disease_0079',
+        );
+        verify(() => drugApiClient.getDrug('drug_0080')).called(1);
+        verify(() => diseaseApiClient.getDisease('disease_0079')).called(1);
+      },
+    );
   });
 }
 
@@ -119,3 +164,19 @@ const _diseaseSummary = DiseaseSummary(
 final class _MockDrugApiClient extends Mock implements DrugApiClient {}
 
 final class _MockDiseaseApiClient extends Mock implements DiseaseApiClient {}
+
+DrugDto _drugDtoFixture() {
+  final fixture = File(
+    'test/fixtures/swagger/get_v1_drugs__id_.json',
+  ).readAsStringSync();
+  final json = jsonDecode(fixture) as Map<String, dynamic>;
+  return DrugDto.fromJson(json);
+}
+
+DiseaseDto _diseaseDtoFixture() {
+  final fixture = File(
+    'test/fixtures/swagger/get_v1_diseases__id_.json',
+  ).readAsStringSync();
+  final json = jsonDecode(fixture) as Map<String, dynamic>;
+  return DiseaseDto.fromJson(json);
+}

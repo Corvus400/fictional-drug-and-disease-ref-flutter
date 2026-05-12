@@ -7,7 +7,9 @@ import 'package:fictional_drug_and_disease_ref/data/repositories/disease_reposit
 import 'package:fictional_drug_and_disease_ref/data/repositories/drug_repository.dart';
 import 'package:fictional_drug_and_disease_ref/domain/bookmark/bookmark_entry.dart';
 import 'package:fictional_drug_and_disease_ref/domain/browsing_history/browsing_history_entry.dart';
+import 'package:fictional_drug_and_disease_ref/domain/disease/disease.dart';
 import 'package:fictional_drug_and_disease_ref/domain/disease/disease_summary.dart';
+import 'package:fictional_drug_and_disease_ref/domain/drug/drug.dart';
 import 'package:fictional_drug_and_disease_ref/domain/drug/drug_summary.dart';
 
 const _drugPrefix = 'drug_';
@@ -24,11 +26,15 @@ final class ResolveBrowsingHistoryNamesUsecase {
     required DiseaseBookmarkSnapshotCodec diseaseCodec,
     required NameResolutionCache cache,
   }) : _bookmarkRepository = bookmarkRepository,
+       _drugRepository = drugRepository,
+       _diseaseRepository = diseaseRepository,
        _drugCodec = drugCodec,
        _diseaseCodec = diseaseCodec,
        _cache = cache;
 
   final BookmarkRepository _bookmarkRepository;
+  final DrugRepository _drugRepository;
+  final DiseaseRepository _diseaseRepository;
   final DrugBookmarkSnapshotCodec _drugCodec;
   final DiseaseBookmarkSnapshotCodec _diseaseCodec;
   final NameResolutionCache _cache;
@@ -69,7 +75,13 @@ final class ResolveBrowsingHistoryNamesUsecase {
     final bookmark = await _bookmarkRepository.findById(id);
     if (bookmark case Ok<BookmarkEntry?>(:final value)) {
       if (value == null) {
-        return NameResolutionFailed(id: id);
+        final drug = await _drugRepository.getDrug(id);
+        return switch (drug) {
+          Ok<Drug>(:final value) => NameResolvedDrug(
+            summary: _drugCodec.fromDrug(value),
+          ),
+          Err<Drug>() => NameResolutionFailed(id: id),
+        };
       }
       try {
         return NameResolvedDrug(summary: _drugCodec.decode(value.snapshotJson));
@@ -84,7 +96,13 @@ final class ResolveBrowsingHistoryNamesUsecase {
     final bookmark = await _bookmarkRepository.findById(id);
     if (bookmark case Ok<BookmarkEntry?>(:final value)) {
       if (value == null) {
-        return NameResolutionFailed(id: id);
+        final disease = await _diseaseRepository.getDisease(id);
+        return switch (disease) {
+          Ok<Disease>(:final value) => NameResolvedDisease(
+            summary: _diseaseCodec.fromDisease(value),
+          ),
+          Err<Disease>() => NameResolutionFailed(id: id),
+        };
       }
       try {
         return NameResolvedDisease(
