@@ -1,5 +1,3 @@
-import 'dart:collection';
-
 /// Small in-memory LRU cache for browsing-history name resolution results.
 final class NameResolutionCache {
   /// Creates the cache.
@@ -9,7 +7,7 @@ final class NameResolutionCache {
   /// Maximum number of cached entries.
   final int capacity;
 
-  final _values = LinkedHashMap<String, Object>();
+  final _values = <String, Object>{};
 
   /// Reads a cached value and promotes it to most-recently used.
   Object? get(String id) {
