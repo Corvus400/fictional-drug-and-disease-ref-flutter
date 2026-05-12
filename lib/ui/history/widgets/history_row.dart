@@ -114,6 +114,7 @@ class _SwipeDeleteHistoryRowState extends State<SwipeDeleteHistoryRow>
               now: widget.now,
               drugImageCacheManager: widget.drugImageCacheManager,
               tapEnabled: revealValue <= 0.001,
+              swipeRevealed: revealValue > 0.001,
             ),
           );
         },
@@ -138,7 +139,9 @@ class _RevealedSwipeDeleteRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ClipRect(
+      clipper: const _HistorySwipeClipper(),
       child: Stack(
+        clipBehavior: Clip.none,
         children: [
           Positioned(
             top: _historyCardTopMargin,
@@ -172,16 +175,20 @@ class _SwipeDeleteAction extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    const actionBorderRadius = BorderRadius.only(
+      topRight: Radius.circular(SearchConstants.searchCardRadius),
+      bottomRight: Radius.circular(SearchConstants.searchCardRadius),
+    );
     return Semantics(
       button: true,
       label: '${_rowLabel(row)} を削除',
       child: ClipRRect(
         key: ValueKey('history-row-swipe-action-clip-${row.id}'),
-        borderRadius: BorderRadius.circular(SearchConstants.searchCardRadius),
+        borderRadius: actionBorderRadius,
         child: Material(
           key: ValueKey('history-row-swipe-action-material-${row.id}'),
           type: MaterialType.transparency,
-          borderRadius: BorderRadius.circular(SearchConstants.searchCardRadius),
+          borderRadius: actionBorderRadius,
           clipBehavior: Clip.antiAlias,
           child: SizedBox(
             width: _historySwipeDeleteExtent,
@@ -218,6 +225,7 @@ class HistoryRowTile extends StatelessWidget {
     required this.drugImageCacheManager,
     super.key,
     this.tapEnabled = true,
+    this.swipeRevealed = false,
   });
 
   /// Row view model.
@@ -232,8 +240,12 @@ class HistoryRowTile extends StatelessWidget {
   /// Whether tapping the row should navigate to detail.
   final bool tapEnabled;
 
+  /// Whether the row is currently translated to reveal the delete action.
+  final bool swipeRevealed;
+
   @override
   Widget build(BuildContext context) {
+    final cardBorderRadius = _historyRowCardRadius(swipeRevealed);
     return switch (row) {
       HistoryDrugRow(:final summary) => Semantics(
         label: '薬品の閲覧履歴',
@@ -241,6 +253,7 @@ class HistoryRowTile extends StatelessWidget {
           item: summary,
           cacheManager: drugImageCacheManager,
           trailingTime: _HistoryRowTime(now: now, row: row),
+          borderRadius: cardBorderRadius,
           onTap: tapEnabled
               ? () => context.push(AppRoutes.drugDetail(row.id))
               : null,
@@ -251,6 +264,7 @@ class HistoryRowTile extends StatelessWidget {
         child: DiseaseResultCard(
           item: summary,
           trailingTime: _HistoryRowTime(now: now, row: row),
+          borderRadius: cardBorderRadius,
           onTap: tapEnabled
               ? () => context.push(AppRoutes.diseaseDetail(row.id))
               : null,
@@ -259,16 +273,22 @@ class HistoryRowTile extends StatelessWidget {
       HistoryUnresolvedRow() => _UnresolvedHistoryCard(
         row: row as HistoryUnresolvedRow,
         now: now,
+        borderRadius: cardBorderRadius,
       ),
     };
   }
 }
 
 class _UnresolvedHistoryCard extends StatelessWidget {
-  const _UnresolvedHistoryCard({required this.row, required this.now});
+  const _UnresolvedHistoryCard({
+    required this.row,
+    required this.now,
+    required this.borderRadius,
+  });
 
   final HistoryUnresolvedRow row;
   final DateTime now;
+  final BorderRadius borderRadius;
 
   @override
   Widget build(BuildContext context) {
@@ -286,9 +306,7 @@ class _UnresolvedHistoryCard extends StatelessWidget {
         key: ValueKey('history-unresolved-card-${row.id}'),
         margin: const EdgeInsets.only(top: _historyCardTopMargin),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(
-            SearchConstants.searchCardRadius,
-          ),
+          borderRadius: borderRadius,
           side: BorderSide(color: palette.hairline),
         ),
         child: Padding(
@@ -354,6 +372,26 @@ class _UnresolvedDrugImage extends StatelessWidget {
       ),
     );
   }
+}
+
+class _HistorySwipeClipper extends CustomClipper<Rect> {
+  const _HistorySwipeClipper();
+
+  @override
+  Rect getClip(Size size) {
+    return Rect.fromLTRB(0, -8, size.width, size.height + 8);
+  }
+
+  @override
+  bool shouldReclip(covariant _HistorySwipeClipper oldClipper) => false;
+}
+
+BorderRadius _historyRowCardRadius(bool swipeRevealed) {
+  const radius = Radius.circular(SearchConstants.searchCardRadius);
+  if (!swipeRevealed) {
+    return const BorderRadius.all(radius);
+  }
+  return const BorderRadius.only(topLeft: radius, bottomLeft: radius);
 }
 
 String _rowLabel(HistoryRow row) {
