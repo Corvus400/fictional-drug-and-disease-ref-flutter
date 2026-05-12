@@ -372,9 +372,10 @@ class _SearchPhaseSection extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   for (final item in items)
-                    _DrugResultCard(
+                    DrugResultCard(
                       item: item,
                       cacheManager: drugCardImageCacheManager,
+                      onTap: () => context.push(AppRoutes.drugDetail(item.id)),
                     ),
                 ],
               ),

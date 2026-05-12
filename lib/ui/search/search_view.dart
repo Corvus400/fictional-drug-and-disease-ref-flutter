@@ -1,19 +1,16 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:fictional_drug_and_disease_ref/application/search/search_history_envelope.dart';
-import 'package:fictional_drug_and_disease_ref/config/api_config.dart';
 import 'package:fictional_drug_and_disease_ref/core/error/app_exception.dart';
 import 'package:fictional_drug_and_disease_ref/core/error/error_message_mapper.dart';
-import 'package:fictional_drug_and_disease_ref/core/logging/app_logger.dart';
 import 'package:fictional_drug_and_disease_ref/domain/category/categories.dart';
 import 'package:fictional_drug_and_disease_ref/domain/disease/disease_search_params.dart';
 import 'package:fictional_drug_and_disease_ref/domain/disease/disease_summary.dart';
 import 'package:fictional_drug_and_disease_ref/domain/drug/drug_search_params.dart';
-import 'package:fictional_drug_and_disease_ref/domain/drug/drug_summary.dart';
 import 'package:fictional_drug_and_disease_ref/l10n/app_localizations.dart';
 import 'package:fictional_drug_and_disease_ref/router/app_router.dart';
 import 'package:fictional_drug_and_disease_ref/theme/app_palette.dart';
+import 'package:fictional_drug_and_disease_ref/ui/_common/widgets/drug_result_card.dart';
 import 'package:fictional_drug_and_disease_ref/ui/search/constants/search_constants.dart';
 import 'package:fictional_drug_and_disease_ref/ui/search/format/relative_time_formatter.dart';
 import 'package:fictional_drug_and_disease_ref/ui/search/providers/drug_card_image_cache_manager_provider.dart';
@@ -30,13 +27,11 @@ export 'package:fictional_drug_and_disease_ref/ui/search/providers/drug_card_ima
 part 'widgets/search_top_chrome.dart';
 part 'widgets/search_phase_section.dart';
 part 'widgets/search_result_toolbar.dart';
-part 'widgets/drug_result_card.dart';
 part 'widgets/disease_result_card.dart';
 part 'widgets/search_history_dropdown.dart';
 part 'widgets/filter/drug_filter_sheet.dart';
 part 'widgets/filter/disease_filter_sheet.dart';
 part 'widgets/filter/round6_filter_sheet_scaffold.dart';
-part 'format/drug_card_image_url.dart';
 part 'format/search_label_formatters.dart';
 part 'format/search_sort_sheet.dart';
 
