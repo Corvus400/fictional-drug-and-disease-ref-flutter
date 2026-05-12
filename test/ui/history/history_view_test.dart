@@ -293,6 +293,10 @@ void main() {
       );
       final actionBox = tester.widget<DecoratedBox>(actionFinder);
       final decoration = actionBox.decoration as BoxDecoration;
+      final rowCard = tester.widget<Card>(
+        find.byKey(ValueKey('disease-card-${_diseaseSummary.id}')),
+      );
+      final rowShape = rowCard.shape! as RoundedRectangleBorder;
       final actionClip = tester.widget<ClipRRect>(
         find.byKey(
           ValueKey('history-row-swipe-action-clip-${_diseaseSummary.id}'),
@@ -311,12 +315,25 @@ void main() {
       expect(actionClip.clipBehavior, Clip.antiAlias);
       expect(
         actionClip.borderRadius,
-        BorderRadius.circular(SearchConstants.searchCardRadius),
+        const BorderRadius.only(
+          topRight: Radius.circular(SearchConstants.searchCardRadius),
+          bottomRight: Radius.circular(SearchConstants.searchCardRadius),
+        ),
       );
       expect(actionMaterial.clipBehavior, Clip.antiAlias);
       expect(
         actionMaterial.borderRadius,
-        BorderRadius.circular(SearchConstants.searchCardRadius),
+        const BorderRadius.only(
+          topRight: Radius.circular(SearchConstants.searchCardRadius),
+          bottomRight: Radius.circular(SearchConstants.searchCardRadius),
+        ),
+      );
+      expect(
+        rowShape.borderRadius,
+        const BorderRadius.only(
+          topLeft: Radius.circular(SearchConstants.searchCardRadius),
+          bottomLeft: Radius.circular(SearchConstants.searchCardRadius),
+        ),
       );
       expect(decoration.color, const Color(0xFFD62A2A));
     });

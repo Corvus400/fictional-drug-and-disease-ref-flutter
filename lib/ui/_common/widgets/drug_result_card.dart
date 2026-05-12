@@ -18,6 +18,7 @@ class DrugResultCard extends StatelessWidget {
     super.key,
     this.onTap,
     this.trailingTime,
+    this.borderRadius,
   });
 
   /// Drug summary to render.
@@ -31,6 +32,10 @@ class DrugResultCard extends StatelessWidget {
 
   /// Optional inline trailing time widget for browsing history rows.
   final Widget? trailingTime;
+
+  /// Card corner radius. Browsing history overrides this while swipe-delete is
+  /// revealed so the front card joins the delete action without a rounded seam.
+  final BorderRadius? borderRadius;
 
   @override
   Widget build(BuildContext context) {
@@ -50,16 +55,18 @@ class DrugResultCard extends StatelessWidget {
         .round();
     final imageUrl = _drugCardImageUrl(item.imageUrl);
     final imageCacheKey = _drugCardImageCacheKey(item.imageUrl);
+    final cardBorderRadius =
+        borderRadius ?? BorderRadius.circular(SearchConstants.searchCardRadius);
     return Card(
       key: ValueKey('drug-card-${item.id}'),
       margin: const EdgeInsets.only(top: 8),
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(SearchConstants.searchCardRadius),
+        borderRadius: cardBorderRadius,
         side: BorderSide(color: palette.hairline),
       ),
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(SearchConstants.searchCardRadius),
+        borderRadius: cardBorderRadius,
         child: Padding(
           padding: const EdgeInsets.all(12),
           child: Row(
