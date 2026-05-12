@@ -279,6 +279,69 @@ void main() {
       );
     });
 
+    testWidgets(
+      'does not scroll rows to top from the primary scroll controller',
+      (
+        tester,
+      ) async {
+        tester.view.devicePixelRatio = 2;
+        tester.view.physicalSize = const Size(780, 1688);
+        addTearDown(() {
+          tester.view.resetPhysicalSize();
+          tester.view.resetDevicePixelRatio();
+        });
+
+        final now = DateTime(2026, 5, 12, 12);
+        final entries = <BrowsingHistoryEntry>[];
+        for (var index = 0; index < 24; index += 1) {
+          final summary = _scrollDrugSummary(index);
+          final viewedAt = now.subtract(Duration(minutes: index + 1));
+          await _seedDrug(db, summary, viewedAt);
+          entries.add(BrowsingHistoryEntry(id: summary.id, viewedAt: viewedAt));
+        }
+
+        await tester.pumpWidget(
+          _App(db: db, historyStream: Stream.value(entries), currentTime: now),
+        );
+        for (var i = 0; i < 5; i += 1) {
+          await tester.pump(const Duration(milliseconds: 100));
+        }
+        addTearDown(() async {
+          await tester.pumpWidget(const SizedBox.shrink());
+          await tester.pump();
+          await tester.pump(const Duration(milliseconds: 1));
+        });
+
+        final listFinder = find.byType(ListView).last;
+        final scrollableFinder = find.descendant(
+          of: listFinder,
+          matching: find.byType(Scrollable),
+        );
+        await tester.drag(listFinder, const Offset(0, -900));
+        await tester.pumpAndSettle();
+
+        final beforePrimaryScrollToTop = tester
+            .state<ScrollableState>(scrollableFinder)
+            .position
+            .pixels;
+        expect(beforePrimaryScrollToTop, greaterThan(0));
+
+        final primaryController = PrimaryScrollController.maybeOf(
+          tester.element(listFinder),
+        );
+        if (primaryController != null && primaryController.hasClients) {
+          primaryController.jumpTo(0);
+          await tester.pump();
+        }
+
+        final afterPrimaryScrollToTop = tester
+            .state<ScrollableState>(scrollableFinder)
+            .position
+            .pixels;
+        expect(afterPrimaryScrollToTop, closeTo(beforePrimaryScrollToTop, 1));
+      },
+    );
+
     testWidgets('renders swipe delete reveal as a 72dp destructive action', (
       tester,
     ) async {
@@ -748,6 +811,21 @@ const _drugSummary = DrugSummary(
   revisedAt: '2026-05-10',
   imageUrl: '/v1/images/drugs/drug_001',
 );
+
+DrugSummary _scrollDrugSummary(int index) {
+  return DrugSummary(
+    id: 'drug_scroll_$index',
+    brandName: 'History Drug $index',
+    genericName: 'history generic',
+    therapeuticCategoryName: 'Ca拮抗薬',
+    regulatoryClass: const ['prescription_required'],
+    dosageForm: 'tablet',
+    brandNameKana: 'ヒストリードラッグ',
+    atcCode: 'C08CA01',
+    revisedAt: '2026-01-01',
+    imageUrl: '/v1/images/drugs/drug_scroll_$index',
+  );
+}
 
 const _diseaseSummary = DiseaseSummary(
   id: 'disease_001',

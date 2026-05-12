@@ -442,6 +442,7 @@ class _HistoryRowsList extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView.builder(
       padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
+      primary: false,
       itemCount: rows.length,
       findChildIndexCallback: (key) => _historyRowIndexForKey(rows, key),
       itemBuilder: (context, index) {
