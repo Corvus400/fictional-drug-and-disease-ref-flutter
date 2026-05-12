@@ -271,5 +271,3 @@ int _resultCount(SearchPhase phase) {
     _ => 0,
   };
 }
-
-String _formatRevisionDate(String value) => value.replaceAll('-', '/');
