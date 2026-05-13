@@ -739,6 +739,7 @@ class _App extends StatelessWidget {
         home: HistoryView(
           currentTime: currentTime,
           debugSwipeRevealRowId: debugSwipeRevealRowId,
+          debugLogDrugImageErrors: false,
         ),
       ),
     );
