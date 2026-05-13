@@ -174,7 +174,63 @@ void main() {
       },
     );
   }
+
+  final bookmarkControllers = <StreamController<bool>>[];
+  runGoldenMatrix(
+    fileNamePrefix: 'disease_overview_bookmarked',
+    description: 'Disease detail bookmarked overview',
+    builder: (theme, size, scaler) {
+      final dto = _diseaseFixture();
+      final apiClient = _MockDiseaseApiClient();
+      final imageCacheManager = _mockCacheManagerWithImage(
+        'disease-detail-bookmarked-overview.png',
+      );
+      final bookmarkController = StreamController<bool>();
+      bookmarkControllers.add(bookmarkController);
+      when(() => apiClient.getDisease(dto.id)).thenAnswer((_) async => dto);
+      return ProviderScope(
+        overrides: [
+          appDatabaseProvider.overrideWithValue(_db),
+          diseaseApiClientProvider.overrideWithValue(apiClient),
+          drugCardImageCacheManagerProvider.overrideWithValue(
+            imageCacheManager,
+          ),
+          streamBookmarkStateProvider(
+            dto.id,
+          ).overrideWith((ref) => bookmarkController.stream),
+        ],
+        child: MaterialApp(
+          debugShowCheckedModeBanner: false,
+          theme: theme,
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: DiseaseDetailView(id: dto.id),
+        ),
+      );
+    },
+    whilePerforming: (tester) async {
+      await tester.pump();
+      await tester.pumpAndSettle();
+      for (final controller in bookmarkControllers) {
+        controller.add(true);
+      }
+      await tester.pumpAndSettle();
+      expect(find.text('ブックマーク'), findsNothing);
+      expect(
+        find.text('ブックマーク済み'),
+        findsNWidgets(_goldenMatrixScenarioCount),
+      );
+      for (final controller in bookmarkControllers) {
+        await controller.close();
+      }
+      bookmarkControllers.clear();
+      return null;
+    },
+  );
 }
+
+int get _goldenMatrixScenarioCount =>
+    GoldenMatrix.sizes.length * GoldenMatrix.textScalers.length;
 
 void _detailStateGolden({
   required String fileNamePrefix,

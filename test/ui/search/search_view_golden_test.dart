@@ -15,6 +15,7 @@ import 'package:fictional_drug_and_disease_ref/data/providers/local_providers.da
 import 'package:fictional_drug_and_disease_ref/data/services/api/category_api_client.dart';
 import 'package:fictional_drug_and_disease_ref/data/services/api/disease_api_client.dart';
 import 'package:fictional_drug_and_disease_ref/data/services/api/drug_api_client.dart';
+import 'package:fictional_drug_and_disease_ref/domain/disease/disease_search_params.dart';
 import 'package:fictional_drug_and_disease_ref/domain/drug/drug_search_params.dart';
 import 'package:fictional_drug_and_disease_ref/l10n/app_localizations.dart';
 import 'package:fictional_drug_and_disease_ref/ui/search/search_screen_notifier.dart';
@@ -52,10 +53,22 @@ void main() {
   });
 
   _searchGoldenMatrix(name: 's1_idle');
+  _searchGoldenMatrix(
+    name: 's22_disease_idle',
+    whilePerforming: _selectDiseaseTabOnly,
+  );
   _searchGoldenMatrix(name: 's2_history', whilePerforming: _openHistory);
+  _searchGoldenMatrix(
+    name: 's23_disease_history',
+    whilePerforming: _openDiseaseHistory,
+  );
   _searchGoldenMatrix(
     name: 's16_empty_history',
     whilePerforming: _openEmptyHistory,
+  );
+  _searchGoldenMatrix(
+    name: 's24_disease_empty_history',
+    whilePerforming: _openDiseaseEmptyHistory,
   );
   _searchGoldenMatrix(
     name: 's3_loading',
@@ -306,6 +319,13 @@ void _searchGoldenMatrix({
   );
 }
 
+Future<Future<void> Function()?> _selectDiseaseTabOnly(
+  WidgetTester tester,
+) async {
+  await _selectDiseaseTab(tester);
+  return null;
+}
+
 Future<Future<void> Function()?> _openHistory(WidgetTester tester) async {
   final context = tester.element(find.byType(SearchView).first);
   final container = ProviderScope.containerOf(context);
@@ -330,7 +350,43 @@ Future<Future<void> Function()?> _openHistory(WidgetTester tester) async {
   return null;
 }
 
+Future<Future<void> Function()?> _openDiseaseHistory(
+  WidgetTester tester,
+) async {
+  final context = tester.element(find.byType(SearchView).first);
+  final container = ProviderScope.containerOf(context);
+  final repository = container.read(searchHistoryRepositoryProvider);
+  final codec = container.read(searchQueryCodecProvider);
+  await repository.insertWithDedup(
+    id: 'golden_disease_history_1',
+    target: 'disease',
+    queryJson: codec.encode(const DiseaseSearchParams(keyword: '高血圧')),
+    searchedAt: DateTime.utc(2026, 5, 5, 8, 40),
+    totalCount: 14,
+  );
+  await repository.insertWithDedup(
+    id: 'golden_disease_history_2',
+    target: 'disease',
+    queryJson: codec.encode(const DiseaseSearchParams(keyword: '糖尿病')),
+    searchedAt: DateTime.utc(2026, 5, 4, 21, 10),
+    totalCount: 6,
+  );
+  await _selectDiseaseTab(tester);
+  await _tapAll(tester, find.byKey(const ValueKey('search-field')));
+  await tester.pumpAndSettle();
+  return null;
+}
+
 Future<Future<void> Function()?> _openEmptyHistory(WidgetTester tester) async {
+  await _tapAll(tester, find.byKey(const ValueKey('search-field')));
+  await tester.pumpAndSettle();
+  return null;
+}
+
+Future<Future<void> Function()?> _openDiseaseEmptyHistory(
+  WidgetTester tester,
+) async {
+  await _selectDiseaseTab(tester);
   await _tapAll(tester, find.byKey(const ValueKey('search-field')));
   await tester.pumpAndSettle();
   return null;
