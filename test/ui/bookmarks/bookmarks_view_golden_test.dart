@@ -41,6 +41,30 @@ void main() {
   );
 
   runHistoryGoldenMatrix(
+    fileNamePrefix: 'bookmarks_drug_tab',
+    description: 'Bookmarks drug tab state',
+    builder: (theme, size, deviceName, textScaler, textScalerName) {
+      return _BookmarksGoldenApp(
+        theme: theme,
+        stream: Stream.value(_normalEntries),
+      );
+    },
+    whilePerforming: _selectBookmarksDrugTab,
+  );
+
+  runHistoryGoldenMatrix(
+    fileNamePrefix: 'bookmarks_disease_tab',
+    description: 'Bookmarks disease tab state',
+    builder: (theme, size, deviceName, textScaler, textScalerName) {
+      return _BookmarksGoldenApp(
+        theme: theme,
+        stream: Stream.value(_normalEntries),
+      );
+    },
+    whilePerforming: _selectBookmarksDiseaseTab,
+  );
+
+  runHistoryGoldenMatrix(
     fileNamePrefix: 'bookmarks_empty',
     description: 'Bookmarks empty state',
     builder: (theme, size, deviceName, textScaler, textScalerName) {
@@ -154,6 +178,24 @@ Future<Future<void> Function()?> _settleBookmarksGolden(
   return null;
 }
 
+Future<Future<void> Function()?> _selectBookmarksDrugTab(
+  WidgetTester tester,
+) async {
+  await _settleBookmarksGolden(tester);
+  await _tapAll(tester, find.text('医薬品'));
+  await tester.pumpAndSettle();
+  return null;
+}
+
+Future<Future<void> Function()?> _selectBookmarksDiseaseTab(
+  WidgetTester tester,
+) async {
+  await _settleBookmarksGolden(tester);
+  await _tapAll(tester, find.text('疾患'));
+  await tester.pumpAndSettle();
+  return null;
+}
+
 Future<Future<void> Function()?> _enterSearchZeroQuery(
   WidgetTester tester,
 ) async {
@@ -177,6 +219,14 @@ Future<Future<void> Function()?> _enterSearchZeroQuery(
     await tester.pump(const Duration(milliseconds: 1));
   });
   return null;
+}
+
+Future<void> _tapAll(WidgetTester tester, Finder finder) async {
+  final count = finder.evaluate().length;
+  for (var index = count - 1; index >= 0; index--) {
+    await tester.tap(finder.at(index), warnIfMissed: false);
+    await tester.pump();
+  }
 }
 
 _MockBaseCacheManager _fallbackImageCacheManager() {

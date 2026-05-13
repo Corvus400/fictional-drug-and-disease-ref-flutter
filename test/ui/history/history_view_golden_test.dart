@@ -137,42 +137,7 @@ void main() {
     fileNamePrefix: 'history_normal',
     description: 'History normal rows',
     builder: (theme, size, deviceName, textScaler, textScalerName) {
-      final now = _normalNow;
-      final drugViewedAt = now.subtract(const Duration(minutes: 5));
-      final diseaseViewedAt = now.subtract(const Duration(hours: 2));
-      return ProviderScope(
-        overrides: [
-          appDatabaseProvider.overrideWithValue(_db),
-          drugCardImageCacheManagerProvider.overrideWithValue(
-            _fallbackImageCacheManager(),
-          ),
-          browsingHistoryStreamProvider.overrideWith(
-            (ref) => Stream<List<BrowsingHistoryEntry>>.value([
-              BrowsingHistoryEntry(id: _drugSummary.id, viewedAt: drugViewedAt),
-              BrowsingHistoryEntry(
-                id: _diseaseSummary.id,
-                viewedAt: diseaseViewedAt,
-              ),
-            ]),
-          ),
-        ],
-        child: MaterialApp(
-          debugShowCheckedModeBanner: false,
-          theme: theme,
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
-          supportedLocales: AppLocalizations.supportedLocales,
-          home: Scaffold(
-            body: HistoryView(
-              currentTime: now,
-              debugLogDrugImageErrors: false,
-            ),
-            bottomNavigationBar: AppShellBottomNavigation(
-              selectedIndex: 2,
-              onDestinationSelected: (_) {},
-            ),
-          ),
-        ),
-      );
+      return _normalHistoryGoldenApp(theme);
     },
     whilePerforming: (tester) async {
       for (var i = 0; i < 5; i += 1) {
@@ -185,6 +150,24 @@ void main() {
       });
       return null;
     },
+  );
+
+  runHistoryGoldenMatrix(
+    fileNamePrefix: 'history_drug_tab',
+    description: 'History drug tab rows',
+    builder: (theme, size, deviceName, textScaler, textScalerName) {
+      return _normalHistoryGoldenApp(theme);
+    },
+    whilePerforming: _selectHistoryDrugTab,
+  );
+
+  runHistoryGoldenMatrix(
+    fileNamePrefix: 'history_disease_tab',
+    description: 'History disease tab rows',
+    builder: (theme, size, deviceName, textScaler, textScalerName) {
+      return _normalHistoryGoldenApp(theme);
+    },
+    whilePerforming: _selectHistoryDiseaseTab,
   );
 
   runHistoryGoldenMatrix(
@@ -371,6 +354,82 @@ void main() {
       return null;
     },
   );
+}
+
+Widget _normalHistoryGoldenApp(ThemeData theme) {
+  final now = _normalNow;
+  final drugViewedAt = now.subtract(const Duration(minutes: 5));
+  final diseaseViewedAt = now.subtract(const Duration(hours: 2));
+  return ProviderScope(
+    overrides: [
+      appDatabaseProvider.overrideWithValue(_db),
+      drugCardImageCacheManagerProvider.overrideWithValue(
+        _fallbackImageCacheManager(),
+      ),
+      browsingHistoryStreamProvider.overrideWith(
+        (ref) => Stream<List<BrowsingHistoryEntry>>.value([
+          BrowsingHistoryEntry(id: _drugSummary.id, viewedAt: drugViewedAt),
+          BrowsingHistoryEntry(
+            id: _diseaseSummary.id,
+            viewedAt: diseaseViewedAt,
+          ),
+        ]),
+      ),
+    ],
+    child: MaterialApp(
+      debugShowCheckedModeBanner: false,
+      theme: theme,
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
+      home: Scaffold(
+        body: HistoryView(
+          currentTime: now,
+          debugLogDrugImageErrors: false,
+        ),
+        bottomNavigationBar: AppShellBottomNavigation(
+          selectedIndex: 2,
+          onDestinationSelected: (_) {},
+        ),
+      ),
+    ),
+  );
+}
+
+Future<Future<void> Function()?> _selectHistoryDrugTab(
+  WidgetTester tester,
+) async {
+  await _settleHistoryGolden(tester);
+  await _tapAll(tester, find.text('医薬品'));
+  await tester.pumpAndSettle();
+  return null;
+}
+
+Future<Future<void> Function()?> _selectHistoryDiseaseTab(
+  WidgetTester tester,
+) async {
+  await _settleHistoryGolden(tester);
+  await _tapAll(tester, find.text('疾患'));
+  await tester.pumpAndSettle();
+  return null;
+}
+
+Future<void> _settleHistoryGolden(WidgetTester tester) async {
+  for (var i = 0; i < 5; i += 1) {
+    await tester.pump(const Duration(milliseconds: 100));
+  }
+  addTearDown(() async {
+    await tester.pumpWidget(const SizedBox.shrink());
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 1));
+  });
+}
+
+Future<void> _tapAll(WidgetTester tester, Finder finder) async {
+  final count = finder.evaluate().length;
+  for (var index = count - 1; index >= 0; index--) {
+    await tester.tap(finder.at(index), warnIfMissed: false);
+    await tester.pump();
+  }
 }
 
 Future<void> _seedNormalRows(AppDatabase db) async {

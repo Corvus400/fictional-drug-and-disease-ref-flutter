@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -12,6 +13,7 @@ import 'package:fictional_drug_and_disease_ref/data/providers/local_providers.da
 import 'package:fictional_drug_and_disease_ref/data/services/api/disease_api_client.dart';
 import 'package:fictional_drug_and_disease_ref/data/services/api/drug_api_client.dart';
 import 'package:fictional_drug_and_disease_ref/l10n/app_localizations.dart';
+import 'package:fictional_drug_and_disease_ref/theme/app_theme.dart';
 import 'package:fictional_drug_and_disease_ref/ui/drug/drug_detail_screen_notifier.dart';
 import 'package:fictional_drug_and_disease_ref/ui/drug/drug_detail_screen_state.dart';
 import 'package:fictional_drug_and_disease_ref/ui/drug/drug_detail_view.dart';
@@ -23,6 +25,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
+import '../../golden/golden_test_config.dart';
 import '../../golden/golden_test_helpers.dart';
 import '../../helpers/test_app_database.dart';
 
@@ -46,6 +49,72 @@ void main() {
   tearDownAll(() async {
     await _db.close();
   });
+
+  _detailStateGolden(
+    fileNamePrefix: 'drug_loading',
+    description: 'Drug detail loading',
+    builder: (theme, size, scaler) {
+      final apiClient = _MockDrugApiClient();
+      final pending = Completer<DrugDto>();
+      when(() => apiClient.getDrug('drug_001')).thenAnswer(
+        (_) => pending.future,
+      );
+      return ProviderScope(
+        overrides: [
+          appDatabaseProvider.overrideWithValue(_db),
+          drugApiClientProvider.overrideWithValue(apiClient),
+          drugDetailHeroImageCacheManagerProvider.overrideWithValue(
+            _mockCacheManagerWithImage('drug-detail-loading.png'),
+          ),
+          streamBookmarkStateProvider(
+            'drug_001',
+          ).overrideWith((ref) => const Stream<bool>.empty()),
+        ],
+        child: MaterialApp(
+          debugShowCheckedModeBanner: false,
+          theme: theme,
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: const DrugDetailView(id: 'drug_001'),
+        ),
+      );
+    },
+    whilePerforming: (tester) async => tester.pump(),
+  );
+
+  _detailStateGolden(
+    fileNamePrefix: 'drug_error',
+    description: 'Drug detail error',
+    builder: (theme, size, scaler) {
+      final apiClient = _MockDrugApiClient();
+      when(() => apiClient.getDrug('drug_001')).thenThrow(
+        const SocketException('offline'),
+      );
+      return ProviderScope(
+        overrides: [
+          appDatabaseProvider.overrideWithValue(_db),
+          drugApiClientProvider.overrideWithValue(apiClient),
+          drugDetailHeroImageCacheManagerProvider.overrideWithValue(
+            _mockCacheManagerWithImage('drug-detail-error.png'),
+          ),
+          streamBookmarkStateProvider(
+            'drug_001',
+          ).overrideWith((ref) => const Stream<bool>.empty()),
+        ],
+        child: MaterialApp(
+          debugShowCheckedModeBanner: false,
+          theme: theme,
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: const DrugDetailView(id: 'drug_001'),
+        ),
+      );
+    },
+    whilePerforming: (tester) async {
+      await tester.pump();
+      await tester.pump();
+    },
+  );
 
   const tabs = <String, DrugDetailTab>{
     'overview': DrugDetailTab.overview,
@@ -110,6 +179,57 @@ void main() {
         await tester.pumpAndSettle();
         return null;
       },
+    );
+  }
+}
+
+void _detailStateGolden({
+  required String fileNamePrefix,
+  required String description,
+  required Widget Function(ThemeData theme, Size size, TextScaler scaler)
+  builder,
+  required Future<void> Function(WidgetTester tester) whilePerforming,
+}) {
+  const size = Size(390, 844);
+  for (final MapEntry(key: themeName, value: theme) in {
+    'light': AppTheme.light(),
+    'dark': AppTheme.dark(),
+  }.entries) {
+    testWidgets(
+      '$description / $themeName',
+      (tester) async {
+        await tester.binding.setSurfaceSize(size);
+        addTearDown(() => tester.binding.setSurfaceSize(null));
+        final rootKey = ValueKey<String>('$fileNamePrefix-$themeName-root');
+
+        await tester.pumpWidget(
+          RepaintBoundary(
+            key: rootKey,
+            child: MediaQuery(
+              data: const MediaQueryData(
+                size: size,
+                devicePixelRatio: GoldenMatrix.devicePixelRatio,
+                textScaler: TextScaler.noScaling,
+              ),
+              child: SizedBox(
+                width: size.width,
+                height: size.height,
+                child: builder(theme, size, TextScaler.noScaling),
+              ),
+            ),
+          ),
+        );
+        await whilePerforming(tester);
+
+        await expectLater(
+          find.byKey(rootKey),
+          matchesGoldenFile('goldens/macos/${fileNamePrefix}_$themeName.png'),
+        );
+
+        await tester.pumpWidget(const SizedBox.shrink());
+        await tester.pump();
+      },
+      tags: const ['golden'],
     );
   }
 }
