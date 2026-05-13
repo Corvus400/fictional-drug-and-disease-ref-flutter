@@ -18,6 +18,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 import '../../helpers/test_app_database.dart';
 
@@ -41,7 +42,7 @@ void main() {
     await db.close();
   });
 
-  testWidgets('DiseaseDetailView shows progress indicator while loading', (
+  testWidgets('DiseaseDetailView shows shimmer skeleton while loading', (
     tester,
   ) async {
     final pending = Completer<DiseaseDto>();
@@ -67,13 +68,53 @@ void main() {
       ),
     );
 
-    expect(find.byType(CircularProgressIndicator), findsOneWidget);
+    expect(
+      find.byWidgetPredicate(
+        (widget) => widget is Skeletonizer && widget.enabled,
+      ),
+      findsOneWidget,
+    );
 
     pending.complete(_diseaseFixture());
     await tester.pump();
     await tester.pumpWidget(const SizedBox.shrink());
     await tester.pump();
   });
+
+  testWidgets(
+    'DiseaseDetailView does not show visible loading copy while loading',
+    (tester) async {
+      final pending = Completer<DiseaseDto>();
+      when(
+        () => apiClient.getDisease('disease_001'),
+      ).thenAnswer((_) => pending.future);
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            appDatabaseProvider.overrideWithValue(db),
+            diseaseApiClientProvider.overrideWithValue(apiClient),
+            streamBookmarkStateProvider(
+              'disease_001',
+            ).overrideWith((ref) => const Stream<bool>.empty()),
+          ],
+          child: MaterialApp(
+            theme: AppTheme.light(),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: const DiseaseDetailView(id: 'disease_001'),
+          ),
+        ),
+      );
+
+      expect(find.text('読み込み中'), findsNothing);
+
+      pending.complete(_diseaseFixture());
+      await tester.pump();
+      await tester.pumpWidget(const SizedBox.shrink());
+      await tester.pump();
+    },
+  );
 
   testWidgets(
     'DiseaseDetailView shows network error message and retry action',
