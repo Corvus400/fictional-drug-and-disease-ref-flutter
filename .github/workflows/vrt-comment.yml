@@ -25,6 +25,7 @@ jobs:
     permissions:
       actions: read
       contents: write
+      issues: write
       pull-requests: write
 
     runs-on: ubuntu-latest
@@ -133,11 +134,34 @@ jobs:
       - name: Find Comment
         uses: peter-evans/find-comment@3eae4d37986fb5a8592848f6a574fdf654e61f9e # v3.1.0
         id: fc
-        if: steps.generate-diff-reports.outputs.reports != ''
         with:
           issue-number: ${{ steps.get-pull-request-number.outputs.pull_request_number }}
           comment-author: 'github-actions[bot]'
           body-includes: Snapshot diff report
+
+      - name: Delete outdated comment on PR
+        if: >
+          steps.check-if-there-are-valid-files.outputs.exist_valid_files == 'false' &&
+          steps.fc.outputs.comment-id != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          gh api \
+            --method DELETE \
+            "repos/${{ github.repository }}/issues/comments/${{ steps.fc.outputs.comment-id }}"
+
+      - name: Delete outdated companion branch
+        if: steps.check-if-there-are-valid-files.outputs.exist_valid_files == 'false'
+        env:
+          BRANCH_NAME: companion_${{ github.event.workflow_run.head_branch }}
+        shell: bash
+        run: |
+          if git ls-remote --exit-code --heads origin "$BRANCH_NAME" > /dev/null; then
+            git push origin --delete "$BRANCH_NAME"
+          else
+            echo "No companion branch to delete: $BRANCH_NAME"
+          fi
 
       - name: Add or update comment on PR
         uses: peter-evans/create-or-update-comment@71345be0265236311c031f5c7866368bd1eff043 # v4.0.0
