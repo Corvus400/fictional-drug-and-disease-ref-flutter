@@ -30,7 +30,7 @@ jobs:
       - uses: ./.github/actions/setup-flutter
 
       - name: Run golden tests
-        run: flutter test --tags golden
+        run: flutter test --fail-fast --tags golden
 
       - name: Upload golden diff reports
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
