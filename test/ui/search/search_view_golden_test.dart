@@ -17,6 +17,8 @@ import 'package:fictional_drug_and_disease_ref/data/services/api/disease_api_cli
 import 'package:fictional_drug_and_disease_ref/data/services/api/drug_api_client.dart';
 import 'package:fictional_drug_and_disease_ref/domain/drug/drug_search_params.dart';
 import 'package:fictional_drug_and_disease_ref/l10n/app_localizations.dart';
+import 'package:fictional_drug_and_disease_ref/ui/search/search_screen_notifier.dart';
+import 'package:fictional_drug_and_disease_ref/ui/search/search_screen_state.dart';
 import 'package:fictional_drug_and_disease_ref/ui/search/search_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
@@ -51,6 +53,10 @@ void main() {
 
   _searchGoldenMatrix(name: 's1_idle');
   _searchGoldenMatrix(name: 's2_history', whilePerforming: _openHistory);
+  _searchGoldenMatrix(
+    name: 's16_empty_history',
+    whilePerforming: _openEmptyHistory,
+  );
   _searchGoldenMatrix(
     name: 's3_loading',
     responseCompleter: Completer<DrugListResponseDto>(),
@@ -94,6 +100,11 @@ void main() {
     whilePerforming: _openSort,
   );
   _searchGoldenMatrix(
+    name: 's17_disease_loading',
+    diseaseResponseCompleter: Completer<DiseaseListResponseDto>(),
+    whilePerforming: _performPendingDiseaseSearch,
+  );
+  _searchGoldenMatrix(
     name: 's11_disease_results',
     diseaseResponse: _diseaseListFixture(),
     whilePerforming: _performDiseaseSearch,
@@ -121,6 +132,26 @@ void main() {
     name: 's15_disease_sort',
     diseaseResponse: _diseaseListFixture(),
     whilePerforming: _openDiseaseSort,
+  );
+  _searchGoldenMatrix(
+    name: 's18_drug_filtered_results',
+    response: _drugListFixture(),
+    whilePerforming: _applyDrugFilter,
+  );
+  _searchGoldenMatrix(
+    name: 's19_drug_filtered_empty',
+    response: _drugListFixture().copyWith(items: [], totalCount: 0),
+    whilePerforming: _applyDrugFilter,
+  );
+  _searchGoldenMatrix(
+    name: 's20_disease_filtered_results',
+    diseaseResponse: _diseaseListFixture(),
+    whilePerforming: _applyDiseaseFilter,
+  );
+  _searchGoldenMatrix(
+    name: 's21_disease_filtered_empty',
+    diseaseResponse: _diseaseListFixture().copyWith(items: [], totalCount: 0),
+    whilePerforming: _applyDiseaseFilter,
   );
 }
 
@@ -248,14 +279,7 @@ void _searchGoldenMatrix({
         });
       }
 
-      final imageCacheManager = _MockBaseCacheManager();
-      when(
-        () => imageCacheManager.getSingleFile(
-          any(),
-          key: any(named: 'key'),
-          headers: any(named: 'headers'),
-        ),
-      ).thenThrow(StateError('golden tests render the fallback image'));
+      final imageCacheManager = _fallbackImageCacheManager();
 
       return ProviderScope(
         overrides: [
@@ -301,6 +325,12 @@ Future<Future<void> Function()?> _openHistory(WidgetTester tester) async {
     searchedAt: DateTime.utc(2026, 5, 4, 22, 15),
     totalCount: 8,
   );
+  await _tapAll(tester, find.byKey(const ValueKey('search-field')));
+  await tester.pumpAndSettle();
+  return null;
+}
+
+Future<Future<void> Function()?> _openEmptyHistory(WidgetTester tester) async {
   await _tapAll(tester, find.byKey(const ValueKey('search-field')));
   await tester.pumpAndSettle();
   return null;
@@ -357,6 +387,20 @@ Future<Future<void> Function()?> _performDiseaseSearch(
   return null;
 }
 
+Future<Future<void> Function()?> _performPendingDiseaseSearch(
+  WidgetTester tester,
+) async {
+  await _selectDiseaseTab(tester);
+  await _enterTextAll(
+    tester,
+    find.byKey(const ValueKey('search-field')),
+    '高血圧',
+  );
+  await _tapAll(tester, find.byType(FilledButton));
+  await tester.pump();
+  return null;
+}
+
 Future<Future<void> Function()?> _triggerDiseaseLoadingMore(
   WidgetTester tester,
 ) async {
@@ -407,6 +451,45 @@ Future<Future<void> Function()?> _openDiseaseSort(WidgetTester tester) async {
   return null;
 }
 
+Future<Future<void> Function()?> _applyDrugFilter(WidgetTester tester) async {
+  final elements = find.byType(SearchView).evaluate().toList();
+  for (final element in elements) {
+    final container = ProviderScope.containerOf(element);
+    await container
+        .read(searchScreenProvider.notifier)
+        .applyDrugFilter(
+          regulatoryClass: ['poison'],
+          dosageForm: ['tablet'],
+        );
+  }
+  await tester.pumpAndSettle();
+  return null;
+}
+
+Future<Future<void> Function()?> _applyDiseaseFilter(
+  WidgetTester tester,
+) async {
+  final elements = find.byType(SearchView).evaluate().toList();
+  for (final element in elements) {
+    final container = ProviderScope.containerOf(element);
+    await container
+        .read(searchScreenProvider.notifier)
+        .changeTab(
+          SearchTab.diseases,
+        );
+    await container
+        .read(searchScreenProvider.notifier)
+        .applyDiseaseFilter(
+          department: ['infectious_disease'],
+          chronicity: ['relapsing'],
+          onsetPattern: ['intermittent'],
+          examCategory: ['blood_test'],
+        );
+  }
+  await tester.pumpAndSettle();
+  return null;
+}
+
 Future<void> _selectDiseaseTab(WidgetTester tester) async {
   await _tapAll(tester, find.text('疾患'));
   await tester.pumpAndSettle();
@@ -450,6 +533,18 @@ final class _MockDiseaseApiClient extends Mock implements DiseaseApiClient {}
 final class _MockCategoryApiClient extends Mock implements CategoryApiClient {}
 
 final class _MockBaseCacheManager extends Mock implements BaseCacheManager {}
+
+_MockBaseCacheManager _fallbackImageCacheManager() {
+  final cacheManager = _MockBaseCacheManager();
+  when(
+    () => cacheManager.getSingleFile(
+      any(),
+      key: any(named: 'key'),
+      headers: any(named: 'headers'),
+    ),
+  ).thenThrow(StateError('golden tests render the fallback image'));
+  return cacheManager;
+}
 
 DrugListResponseDto _drugListFixture() {
   final fixture = File(

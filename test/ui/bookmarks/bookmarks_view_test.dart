@@ -144,6 +144,58 @@ void main() {
     );
   });
 
+  testWidgets('search miss on drug tab keeps search zero UI', (tester) async {
+    await tester.binding.setSurfaceSize(const Size(390, 800));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+
+    await tester.pumpWidget(_App(entries: _bookmarkEntries));
+    await _pumpBookmarks(tester);
+
+    await tester.tap(find.text('医薬品'));
+    await tester.pump();
+    await tester.enterText(
+      find.byKey(const ValueKey('bookmarks-search-box')),
+      'アムロキ',
+    );
+    await tester.pump();
+
+    expect(find.text('0件'), findsOneWidget);
+    expect(find.text('一致するブックマークがありません'), findsOneWidget);
+    expect(
+      find.text('キーワードを短くするか、タブを「すべて」に戻してください。'),
+      findsOneWidget,
+    );
+    expect(find.text('Amlodipine'), findsNothing);
+    expect(find.text('高血圧症'), findsNothing);
+  });
+
+  testWidgets('search miss on disease tab keeps search zero UI', (
+    tester,
+  ) async {
+    await tester.binding.setSurfaceSize(const Size(390, 800));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+
+    await tester.pumpWidget(_App(entries: _bookmarkEntries));
+    await _pumpBookmarks(tester);
+
+    await tester.tap(find.text('疾患'));
+    await tester.pump();
+    await tester.enterText(
+      find.byKey(const ValueKey('bookmarks-search-box')),
+      'アムロキ',
+    );
+    await tester.pump();
+
+    expect(find.text('0件'), findsOneWidget);
+    expect(find.text('一致するブックマークがありません'), findsOneWidget);
+    expect(
+      find.text('キーワードを短くするか、タブを「すべて」に戻してください。'),
+      findsOneWidget,
+    );
+    expect(find.text('Amlodipine'), findsNothing);
+    expect(find.text('高血圧症'), findsNothing);
+  });
+
   testWidgets('pane rail tabs and separator extend to both horizontal edges', (
     tester,
   ) async {
