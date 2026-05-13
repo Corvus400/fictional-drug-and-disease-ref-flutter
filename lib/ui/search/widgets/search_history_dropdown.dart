@@ -29,6 +29,9 @@ class _SearchHistoryDropdown extends StatelessWidget {
             ? AppPalette.dark
             : AppPalette.light);
     final keyboardVisible = MediaQuery.viewInsetsOf(context).bottom > 0;
+    final textScaleFactor = MediaQuery.textScalerOf(context).scale(1);
+    final emptyHistoryMaxHeight =
+        150 + ((textScaleFactor - 1) * 200).clamp(0, 130);
     return TapRegion(
       groupId: tapRegionGroupId,
       child: ConstrainedBox(
@@ -79,7 +82,7 @@ class _SearchHistoryDropdown extends StatelessWidget {
                 child: ConstrainedBox(
                   constraints: BoxConstraints(
                     maxHeight: entries.isEmpty
-                        ? 150
+                        ? emptyHistoryMaxHeight.toDouble()
                         : entries.length * _maxHistoryRowExtent,
                   ),
                   child: entries.isEmpty
