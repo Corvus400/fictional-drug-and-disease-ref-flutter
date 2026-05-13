@@ -27,6 +27,7 @@ import 'package:mocktail/mocktail.dart';
 import '../../golden/golden_test_helpers.dart';
 import '../../helpers/test_app_database.dart';
 
+// No-op change used to verify VRT cleanup when rendered output is unchanged.
 late AppDatabase _db;
 
 void main() {
