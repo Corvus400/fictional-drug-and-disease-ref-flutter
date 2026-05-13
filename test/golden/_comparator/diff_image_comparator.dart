@@ -59,10 +59,12 @@ class DiffImageComparator extends LocalFileComparator {
       actualBytes: imageBytes,
       goldenPath: goldenFile.absolute.path,
       timestampNs: timestampNs,
+      changedPixelRatioTolerance:
+          CompareImageWriter.defaultChangedPixelRatioTolerance,
     );
 
     await _writeJson(result);
-    return false;
+    return result is CaptureResultUnchanged;
   }
 
   @override
