@@ -11,6 +11,56 @@ concurrency:
 permissions: { }
 
 jobs:
+  detect-ci-scope:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    permissions:
+      contents: read
+
+    outputs:
+      golden_vrt_required: ${{ steps.changed.outputs.golden_vrt_required }}
+
+    steps:
+      - name: Checkout pull-request branch
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          fetch-depth: 0
+
+      - id: changed
+        name: Detect golden VRT scope
+        shell: bash
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+
+          git diff --name-only "$BASE_SHA" "$HEAD_SHA" > changed-files.txt
+
+          golden_vrt_required="false"
+          while IFS= read -r file; do
+            case "$file" in
+              .github/actions/setup-flutter/*|\
+              .github/workflows/ci.yml|\
+              .github/workflows/vrt-comment.yml|\
+              analysis_options.yaml|\
+              assets/*|\
+              fonts/*|\
+              lib/*|\
+              l10n.yaml|\
+              pubspec.lock|\
+              pubspec.yaml|\
+              test/*)
+                golden_vrt_required="true"
+                break
+                ;;
+            esac
+          done < changed-files.txt
+
+          echo "golden_vrt_required=$golden_vrt_required" >> "$GITHUB_OUTPUT"
+          echo "golden_vrt_required=$golden_vrt_required"
+
   non-golden-tests:
     runs-on: ubuntu-latest
     timeout-minutes: 30
@@ -35,7 +85,8 @@ jobs:
           test
 
   golden-vrt:
-    needs: non-golden-tests
+    needs: [detect-ci-scope, non-golden-tests]
+    if: needs.detect-ci-scope.outputs.golden_vrt_required == 'true'
     runs-on: macos-26
     timeout-minutes: 45
 
@@ -118,7 +169,7 @@ jobs:
           path: pr/
 
   ci-gate:
-    needs: [non-golden-tests, golden-vrt]
+    needs: [detect-ci-scope, non-golden-tests, golden-vrt]
     if: always()
     runs-on: ubuntu-latest
     timeout-minutes: 5
@@ -126,16 +177,26 @@ jobs:
     steps:
       - name: Check required CI jobs
         env:
+          DETECT_SCOPE_RESULT: ${{ needs.detect-ci-scope.result }}
+          GOLDEN_VRT_REQUIRED: ${{ needs.detect-ci-scope.outputs.golden_vrt_required }}
           NON_GOLDEN_RESULT: ${{ needs.non-golden-tests.result }}
           GOLDEN_VRT_RESULT: ${{ needs.golden-vrt.result }}
         run: |
           set -euo pipefail
+          if [ "$DETECT_SCOPE_RESULT" != "success" ]; then
+            echo "::error::detect-ci-scope result is $DETECT_SCOPE_RESULT"
+            exit 1
+          fi
           if [ "$NON_GOLDEN_RESULT" != "success" ]; then
             echo "::error::non-golden-tests result is $NON_GOLDEN_RESULT"
             exit 1
           fi
-          if [ "$GOLDEN_VRT_RESULT" != "success" ]; then
+          if [ "$GOLDEN_VRT_REQUIRED" = "true" ] && [ "$GOLDEN_VRT_RESULT" != "success" ]; then
             echo "::error::golden-vrt result is $GOLDEN_VRT_RESULT"
+            exit 1
+          fi
+          if [ "$GOLDEN_VRT_REQUIRED" != "true" ] && [ "$GOLDEN_VRT_RESULT" != "skipped" ]; then
+            echo "::error::golden-vrt should be skipped for this PR scope, but result is $GOLDEN_VRT_RESULT"
             exit 1
           fi
           echo "All required CI jobs passed."
