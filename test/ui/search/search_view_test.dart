@@ -2860,8 +2860,8 @@ void main() {
         AppPalette.light.surface3,
         AppPalette.light.surface2,
       ]);
-      expect(find.text('合計 — 件'), findsOneWidget);
-      expect(find.text('検索中…'), findsOneWidget);
+      expect(find.text('合計 — 件'), findsNothing);
+      expect(find.text('検索中…'), findsNothing);
       expect(
         find.byKey(const ValueKey('search-loading-skeleton-card')),
         findsNWidgets(5),

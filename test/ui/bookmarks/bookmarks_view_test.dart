@@ -20,6 +20,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 import '../../helpers/test_app_database.dart';
 
@@ -88,6 +89,12 @@ void main() {
     expect(
       find.byKey(const ValueKey('bookmarks-skeleton-row')),
       findsNWidgets(5),
+    );
+    expect(
+      find.byWidgetPredicate(
+        (widget) => widget is Skeletonizer && widget.enabled,
+      ),
+      findsOneWidget,
     );
     expect(find.text('読み込み中'), findsNothing);
   });

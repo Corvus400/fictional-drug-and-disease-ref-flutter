@@ -3,6 +3,7 @@ import 'package:fictional_drug_and_disease_ref/core/error/error_message_mapper.d
 import 'package:fictional_drug_and_disease_ref/domain/drug/drug.dart';
 import 'package:fictional_drug_and_disease_ref/l10n/app_localizations.dart';
 import 'package:fictional_drug_and_disease_ref/router/app_router.dart';
+import 'package:fictional_drug_and_disease_ref/ui/common/loading/shimmer_skeleton.dart';
 import 'package:fictional_drug_and_disease_ref/ui/detail/constants/detail_constants.dart';
 import 'package:fictional_drug_and_disease_ref/ui/detail/widgets/detail_bookmark_footer.dart';
 import 'package:fictional_drug_and_disease_ref/ui/detail/widgets/detail_dose_calc_button.dart';
@@ -53,9 +54,7 @@ class DrugDetailView extends ConsumerWidget {
         ),
       ),
       body: switch (state.phase) {
-        DrugDetailLoadingPhase() => const Center(
-          child: CircularProgressIndicator(),
-        ),
+        DrugDetailLoadingPhase() => const _DrugDetailLoadingView(),
         DrugDetailErrorPhase(:final error) => _DetailErrorView(
           error: error,
           onRetry: notifier.retry,
@@ -69,6 +68,58 @@ class DrugDetailView extends ConsumerWidget {
           onClearBookmarkError: notifier.clearBookmarkError,
         ),
       },
+    );
+  }
+}
+
+class _DrugDetailLoadingView extends StatelessWidget {
+  const _DrugDetailLoadingView();
+
+  @override
+  Widget build(BuildContext context) {
+    return ShimmerSkeleton(
+      child: DetailResponsiveLayout(
+        tabs: [
+          for (var index = 0; index < DrugDetailTab.values.length; index++)
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: DetailConstants.loadingTabPaddingHorizontal,
+                vertical: DetailConstants.loadingTabPaddingVertical,
+              ),
+              child: ShimmerSkeletonShapes.compactBar(
+                width: DetailConstants.loadingTabPlaceholderWidth,
+                height: DetailConstants.loadingTabPlaceholderHeight,
+              ),
+            ),
+        ],
+        activeBody: Padding(
+          padding: const EdgeInsets.all(DetailConstants.contentPadding),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              ShimmerSkeletonShapes.detailBlock(
+                height: DetailConstants.loadingPrimaryBlockHeight,
+              ),
+              const SizedBox(height: DetailConstants.loadingBlockGap),
+              ShimmerSkeletonShapes.detailBlock(),
+              const SizedBox(height: DetailConstants.loadingBlockGap),
+              ShimmerSkeletonShapes.detailBlock(),
+            ],
+          ),
+        ),
+        footer: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: DetailConstants.footerPaddingHorizontal,
+          ),
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: ShimmerSkeletonShapes.compactBar(
+              width: DetailConstants.loadingFooterPlaceholderWidth,
+              height: DetailConstants.loadingFooterPlaceholderHeight,
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

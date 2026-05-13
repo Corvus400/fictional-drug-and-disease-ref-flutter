@@ -99,6 +99,30 @@ abstract final class DetailConstants {
   /// Standard content padding inside detail views.
   static const contentPadding = 16.0;
 
+  /// Detail loading tab placeholder horizontal padding.
+  static const loadingTabPaddingHorizontal = 12.0;
+
+  /// Detail loading tab placeholder vertical padding.
+  static const loadingTabPaddingVertical = 8.0;
+
+  /// Detail loading tab placeholder width.
+  static const loadingTabPlaceholderWidth = 96.0;
+
+  /// Detail loading tab placeholder height.
+  static const loadingTabPlaceholderHeight = 18.0;
+
+  /// Detail loading first block height.
+  static const loadingPrimaryBlockHeight = 148.0;
+
+  /// Detail loading block gap.
+  static const loadingBlockGap = 12.0;
+
+  /// Detail loading footer placeholder width.
+  static const loadingFooterPlaceholderWidth = 180.0;
+
+  /// Detail loading footer placeholder height.
+  static const loadingFooterPlaceholderHeight = 20.0;
+
   /// Small gap between compact elements.
   static const gapXs = 4.0;
 

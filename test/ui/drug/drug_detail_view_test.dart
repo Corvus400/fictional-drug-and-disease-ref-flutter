@@ -25,6 +25,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 import '../../helpers/test_app_database.dart';
 
@@ -56,7 +57,7 @@ void main() {
     await db.close();
   });
 
-  testWidgets('DrugDetailView shows progress indicator while loading', (
+  testWidgets('DrugDetailView shows shimmer skeleton while loading', (
     tester,
   ) async {
     final pending = Completer<DrugDto>();
@@ -83,13 +84,58 @@ void main() {
       ),
     );
 
-    expect(find.byType(CircularProgressIndicator), findsOneWidget);
+    expect(
+      find.byWidgetPredicate(
+        (widget) => widget is Skeletonizer && widget.enabled,
+      ),
+      findsOneWidget,
+    );
 
     pending.complete(_drugFixture());
     await tester.pump();
     await tester.pumpWidget(const SizedBox.shrink());
     await tester.pump();
   });
+
+  testWidgets(
+    'DrugDetailView does not show visible loading copy while loading',
+    (
+      tester,
+    ) async {
+      final pending = Completer<DrugDto>();
+      when(
+        () => apiClient.getDrug('drug_001'),
+      ).thenAnswer((_) => pending.future);
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            appDatabaseProvider.overrideWithValue(db),
+            drugApiClientProvider.overrideWithValue(apiClient),
+            drugDetailHeroImageCacheManagerProvider.overrideWithValue(
+              cacheManager,
+            ),
+            streamBookmarkStateProvider(
+              'drug_001',
+            ).overrideWith((ref) => const Stream<bool>.empty()),
+          ],
+          child: MaterialApp(
+            theme: AppTheme.light(),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: const DrugDetailView(id: 'drug_001'),
+          ),
+        ),
+      );
+
+      expect(find.text('読み込み中'), findsNothing);
+
+      pending.complete(_drugFixture());
+      await tester.pump();
+      await tester.pumpWidget(const SizedBox.shrink());
+      await tester.pump();
+    },
+  );
 
   testWidgets('DrugDetailView shows network error message and retry action', (
     tester,

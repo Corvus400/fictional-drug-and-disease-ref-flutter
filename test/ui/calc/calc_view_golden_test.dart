@@ -1224,9 +1224,12 @@ Widget _calcRestoringOverlayBuilder(
           darkTheme: theme,
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
-          home: const CalcView(
-            debugRestoringHistory: true,
-            debugRestoringProgressValue: 0.65,
+          home: const TickerMode(
+            enabled: false,
+            child: CalcView(
+              debugRestoringHistory: true,
+              debugRestoringProgressValue: 0.65,
+            ),
           ),
         ),
       ),
@@ -1260,9 +1263,12 @@ Widget _calcRestoringMatrixCell({
           darkTheme: theme,
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
-          home: const CalcView(
-            debugRestoringHistory: true,
-            debugRestoringProgressValue: 0.65,
+          home: const TickerMode(
+            enabled: false,
+            child: CalcView(
+              debugRestoringHistory: true,
+              debugRestoringProgressValue: 0.65,
+            ),
           ),
         ),
       ),

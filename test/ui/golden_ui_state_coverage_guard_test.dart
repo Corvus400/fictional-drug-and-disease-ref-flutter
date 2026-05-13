@@ -631,6 +631,7 @@ const _goldenTestFiles = <String>[
   'test/ui/calc/widgets/calc_input_atoms_golden_test.dart',
   'test/ui/calc/widgets/calc_result_atoms_golden_test.dart',
   'test/ui/calc/widgets/calc_segmented_control_atom_card_golden_test.dart',
+  'test/ui/common/loading/shimmer_skeleton_test.dart',
   'test/ui/detail/widgets/detail_accordion_test.dart',
   'test/ui/detail/widgets/detail_badge_test.dart',
   'test/ui/detail/widgets/detail_bookmark_footer_test.dart',
