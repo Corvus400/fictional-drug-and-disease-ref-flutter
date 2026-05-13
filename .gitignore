@@ -12,6 +12,8 @@
 .swiftpm/
 migrate_working_dir/
 /tmp/
+.claude/settings.local.json
+.playwright-mcp/
 
 # IntelliJ related
 *.iml

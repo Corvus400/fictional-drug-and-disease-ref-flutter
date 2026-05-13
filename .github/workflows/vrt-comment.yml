@@ -14,8 +14,53 @@ concurrency:
 permissions: { }
 
 jobs:
+  classify-vrt-trust:
+    if: github.event.workflow_run.event == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    permissions:
+      pull-requests: read
+
+    outputs:
+      trusted: ${{ steps.classify.outputs.trusted }}
+      pull_request_number: ${{ steps.classify.outputs.pull_request_number }}
+
+    steps:
+      - id: classify
+        name: Classify workflow run trust
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.workflow_run.pull_requests[0].number }}
+          REPOSITORY: ${{ github.repository }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          trusted="false"
+          pull_request_number=""
+          if [ -n "${PR_NUMBER:-}" ] && [ "$PR_NUMBER" != "null" ]; then
+            pull_request_number="$PR_NUMBER"
+            pr_fields="$(gh api "repos/$REPOSITORY/pulls/$PR_NUMBER" --jq '[.user.login, .head.repo.full_name] | @tsv')"
+            IFS=$'\t' read -r actor head_repository <<< "$pr_fields"
+
+            case "$actor" in
+              Corvus400|renovate\[bot\])
+                if [ "$head_repository" = "$REPOSITORY" ]; then
+                  trusted="true"
+                fi
+                ;;
+            esac
+          fi
+
+          echo "trusted=$trusted" >> "$GITHUB_OUTPUT"
+          echo "pull_request_number=$pull_request_number" >> "$GITHUB_OUTPUT"
+          echo "trusted=$trusted"
+
   vrt-comment:
+    needs: [classify-vrt-trust]
     if: >
+      needs.classify-vrt-trust.outputs.trusted == 'true' &&
       github.event.workflow_run.event == 'pull_request' &&
       (github.event.workflow_run.conclusion == 'success' ||
       github.event.workflow_run.conclusion == 'failure')
@@ -46,9 +91,16 @@ jobs:
       - id: get-pull-request-number
         name: Get pull request number
         if: steps.download-pr.outcome == 'success'
+        env:
+          EXPECTED_PULL_REQUEST_NUMBER: ${{ needs.classify-vrt-trust.outputs.pull_request_number }}
         shell: bash
         run: |
-          echo "pull_request_number=$(cat NR)" >> "$GITHUB_OUTPUT"
+          artifact_pull_request_number="$(cat NR)"
+          if [ "$artifact_pull_request_number" != "$EXPECTED_PULL_REQUEST_NUMBER" ]; then
+            echo "::error::PR artifact number does not match workflow_run pull request."
+            exit 1
+          fi
+          echo "pull_request_number=$EXPECTED_PULL_REQUEST_NUMBER" >> "$GITHUB_OUTPUT"
 
       - name: main checkout
         id: checkout-main
@@ -60,7 +112,7 @@ jobs:
       - id: switch-companion-branch
         if: steps.download-pr.outcome == 'success'
         env:
-          BRANCH_NAME: companion_${{ github.event.workflow_run.head_branch }}
+          BRANCH_NAME: companion-pr-${{ needs.classify-vrt-trust.outputs.pull_request_number }}
         run: |
           # orphan means it will create no history branch
           git branch -D "$BRANCH_NAME" || true
@@ -128,7 +180,7 @@ jobs:
           steps.download-pr.outcome == 'success' &&
           steps.check-if-there-are-valid-files.outputs.exist_valid_files == 'true'
         env:
-          BRANCH_NAME: companion_${{ github.event.workflow_run.head_branch }}
+          BRANCH_NAME: companion-pr-${{ needs.classify-vrt-trust.outputs.pull_request_number }}
         run: |
           # Find all the files ending with _compare.png
           mapfile -d '' -t files_to_add < <(find . -type f -name "*_compare.png" -print0)
@@ -151,7 +203,7 @@ jobs:
           (steps.check-if-there-are-valid-files.outputs.exist_valid_files == 'true' ||
           steps.collect-golden-baseline-changes.outputs.has_baseline_changes == 'true')
         env:
-          BRANCH_NAME: companion_${{ github.event.workflow_run.head_branch }}
+          BRANCH_NAME: companion-pr-${{ needs.classify-vrt-trust.outputs.pull_request_number }}
           BASE_SHA: ${{ steps.collect-golden-baseline-changes.outputs.base_sha }}
           HEAD_SHA: ${{ steps.collect-golden-baseline-changes.outputs.head_sha }}
           BASELINE_CHANGE_COUNT: ${{ steps.collect-golden-baseline-changes.outputs.baseline_change_count }}
@@ -286,7 +338,7 @@ jobs:
           steps.download-pr.outcome == 'success' &&
           steps.check-if-there-are-valid-files.outputs.exist_valid_files == 'false'
         env:
-          BRANCH_NAME: companion_${{ github.event.workflow_run.head_branch }}
+          BRANCH_NAME: companion-pr-${{ needs.classify-vrt-trust.outputs.pull_request_number }}
         shell: bash
         run: |
           if git ls-remote --exit-code --heads origin "$BRANCH_NAME" > /dev/null; then
@@ -310,7 +362,7 @@ jobs:
         if: steps.download-pr.outcome == 'success'
         run: |
           # Find outdated companion branches with last commit date
-          git branch -r --format="%(refname:lstrip=3)" | grep companion_ | while read -r branch; do
+          git branch -r --format="%(refname:lstrip=3)" | grep '^companion-pr-' | while read -r branch; do
             last_commit_date_timestamp=$(git log -1 --format=%ct "origin/$branch")
             now_timestamp=$(date +%s)
             # Delete branch if it's older than 1 month

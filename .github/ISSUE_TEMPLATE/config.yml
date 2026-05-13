@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security policy
+    url: https://github.com/Corvus400/fictional-drug-and-disease-ref-flutter/security/policy
+    about: Report security issues through the private security policy channel.
