@@ -7,7 +7,6 @@
   "dependencyDashboard": true,
   "enabledManagers": [
     "pub",
-    "github-actions",
     "gradle",
     "cocoapods"
   ],
@@ -18,13 +17,6 @@
   "prHourlyLimit": 1,
   "automerge": false,
   "packageRules": [
-    {
-      "description": "Group GitHub Actions updates",
-      "matchManagers": [
-        "github-actions"
-      ],
-      "groupName": "GitHub Actions"
-    },
     {
       "description": "Group Dart and Flutter package updates",
       "matchManagers": [

@@ -14,6 +14,7 @@ or any other medical decision.
 ## Repository Operations
 
 - Dependency update pull requests are managed by Renovate.
+- GitHub Actions and workflow dependency updates are reviewed manually.
 - External pull requests are rejected by CI and are not reviewed.
 - General support, feature requests, and bug reports are not accepted through
   GitHub Issues.
