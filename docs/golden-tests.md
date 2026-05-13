@@ -31,6 +31,20 @@ This project uses [alchemist](https://pub.dev/packages/alchemist) for Flutter go
 - The recording host SHOULD be a single developer machine (or a fixed CI runner), not rotated.
 - `flutter_test_config.dart` warns to stderr when run on non-macOS.
 
+## CI policy
+
+Golden VRT runs in the `CI` workflow after non-golden tests pass. The VRT job is
+sharded on macOS and uses `strategy.fail-fast: true`, so a failing shard cancels
+the remaining VRT shards.
+
+The source-of-truth images under `test/**/goldens/macos/*.png` must stay tracked.
+The comparator reads those PNGs as the reference; if they are removed from the
+checkout and kept only as CI artifacts, every case is reported as `added`.
+
+`integration_test/` is intentionally excluded from CI because it depends on the
+separate mock-server repository plus emulator/simulator network setup. Run it
+manually when validating device-level flows.
+
 ## How `*_compare.png` is laid out (Roborazzi-inspired)
 
 3-pane horizontal grid:
@@ -59,12 +73,10 @@ The DIFF pane gives a quick visual hint at WHERE the change occurred. To see WHA
 
 Aggregated as `build/test-results/golden/results-summary.json` by `tool/aggregate_golden_report.dart`.
 
-## Future CI integration
+## CI integration
 
 This project's output naming and directory structure follow Roborazzi's specification so that workflows like [DroidKaigi/conference-app-2025 screenshot-comparison](https://github.com/DroidKaigi/conference-app-2025/blob/main/.github/workflows/screenshot-comparison.yml) can be adapted with minimal changes:
 
 - The artifact-upload + companion-branch-push + PR-comment **workflow logic** is portable.
-- The job's **launch command** must be rewritten from `compareRoborazziDebug` (Gradle) to `flutter test --tags golden && dart run tool/aggregate_golden_report.dart`.
-- The CI **runner OS must be macOS-latest** (not Ubuntu) due to Skia rendering host-OS dependence.
-
-CI workflow files (`.github/workflows/*.yml`) are out of scope for this plan.
+- The job's launch command is `flutter test --tags golden` with `--total-shards` / `--shard-index`.
+- The CI runner OS must be macOS because Skia rendering is host-OS dependent.

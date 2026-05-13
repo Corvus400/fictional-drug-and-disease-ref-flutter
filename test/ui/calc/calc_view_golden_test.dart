@@ -807,6 +807,8 @@ void _calcHistoryRestoringMatrixGolden() {
     goldenTest(
       'Calc history restoring 24-state matrix',
       fileName: 'calc_history_restoring_matrix',
+      // ignore: avoid_redundant_argument_values, keep the golden tag explicit.
+      tags: const ['golden'],
       builder: () => GoldenTestGroup(
         columns: 3,
         children: [
@@ -1051,6 +1053,8 @@ void _calcResponsiveMatrixGolden() {
     goldenTest(
       'Calc responsive 8-state matrix',
       fileName: 'calc_responsive_matrix',
+      // ignore: avoid_redundant_argument_values, keep the golden tag explicit.
+      tags: const ['golden'],
       builder: () => GoldenTestGroup(
         columns: 2,
         children: [
