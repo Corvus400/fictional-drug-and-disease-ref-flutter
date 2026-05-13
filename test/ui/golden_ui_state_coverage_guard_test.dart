@@ -498,9 +498,9 @@ const _expectations = <_GoldenCoverageExpectation>[
   _GoldenCoverageExpectation(
     screen: 'calc',
     state: 'history error same as empty',
-    testFile: 'test/ui/calc/calc_view_golden_test.dart',
+    testFile: 'test/ui/calc/calc_view_test.dart',
     goldenDir: 'test/ui/calc/goldens/macos',
-    sourceFragment: '_calcHistoryErrorSameAsEmptyTest();',
+    sourceFragment: 'history error renders the same empty history surface',
     goldenPrefix: 'calc_history_error',
     baselinePrefix: 'calc_history_empty',
   ),
