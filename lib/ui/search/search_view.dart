@@ -11,6 +11,7 @@ import 'package:fictional_drug_and_disease_ref/router/app_router.dart';
 import 'package:fictional_drug_and_disease_ref/theme/app_palette.dart';
 import 'package:fictional_drug_and_disease_ref/ui/_common/widgets/disease_result_card.dart';
 import 'package:fictional_drug_and_disease_ref/ui/_common/widgets/drug_result_card.dart';
+import 'package:fictional_drug_and_disease_ref/ui/common/loading/shimmer_skeleton.dart';
 import 'package:fictional_drug_and_disease_ref/ui/search/constants/search_constants.dart';
 import 'package:fictional_drug_and_disease_ref/ui/search/format/relative_time_formatter.dart';
 import 'package:fictional_drug_and_disease_ref/ui/search/providers/drug_card_image_cache_manager_provider.dart';
@@ -22,7 +23,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:skeletonizer/skeletonizer.dart';
 
 export 'package:fictional_drug_and_disease_ref/ui/search/providers/drug_card_image_cache_manager_provider.dart';
 

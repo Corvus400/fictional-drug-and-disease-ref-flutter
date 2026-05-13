@@ -34,48 +34,24 @@ class _SearchPhaseSection extends StatelessWidget {
     final phase = state.phase;
     final l10n = AppLocalizations.of(context)!;
     if (phase is SearchPhaseLoading) {
-      final theme = Theme.of(context);
-      final palette =
-          theme.extension<AppPalette>() ??
-          (theme.brightness == Brightness.dark
-              ? AppPalette.dark
-              : AppPalette.light);
       return Padding(
         padding: EdgeInsets.symmetric(horizontal: gutter),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            SizedBox(
-              key: const ValueKey('search-loading-toolbar'),
-              height: SearchConstants.searchResultToolbarHeight,
-              child: Row(
-                children: [
-                  Text(l10n.searchLoadingTotalPlaceholder),
-                  const Spacer(),
-                  TextButton(
-                    onPressed: null,
-                    child: Text(l10n.searchSortTitle),
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(bottom: 8),
-              child: Text(
-                l10n.searchLoadingCaption,
-                textAlign: TextAlign.center,
-                style: theme.textTheme.labelMedium?.copyWith(
-                  color: theme.colorScheme.onSurfaceVariant,
-                  fontWeight: FontWeight.w500,
+        child: ShimmerSkeleton(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              SizedBox(
+                key: const ValueKey('search-loading-toolbar'),
+                height: SearchConstants.searchResultToolbarHeight,
+                child: Row(
+                  children: [
+                    ShimmerSkeletonShapes.compactBar(width: 96, height: 16),
+                    const Spacer(),
+                    ShimmerSkeletonShapes.compactBar(height: 16),
+                  ],
                 ),
               ),
-            ),
-            Expanded(
-              child: Skeletonizer(
-                effect: ShimmerEffect(
-                  baseColor: palette.surface2,
-                  highlightColor: palette.surface3,
-                ),
+              Expanded(
                 child: ListView.builder(
                   key: const PageStorageKey<String>('searchResultsSkeleton'),
                   itemCount: SearchConstants.searchShimmerSkeletonCount,
@@ -85,8 +61,8 @@ class _SearchPhaseSection extends StatelessWidget {
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       );
     }
