@@ -1,8 +1,10 @@
 import 'dart:async';
+import 'dart:io' show Platform;
 
 import 'package:alchemist/alchemist.dart';
 import 'package:fictional_drug_and_disease_ref/theme/app_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:meta/meta.dart';
 
 import 'golden_test_config.dart';
@@ -23,6 +25,12 @@ typedef HistoryGoldenSceneBuilder =
 
 /// Alchemist interaction callback used before the golden assertion.
 typedef GoldenInteraction = Interaction;
+
+/// Returns whether platform golden tests should be registered on this host.
+@visibleForTesting
+bool shouldRegisterGoldenTestsForHost(String operatingSystem) {
+  return operatingSystem == 'macos';
+}
 
 /// Expands the common golden matrix into theme-separated PNGs.
 ///
@@ -54,6 +62,14 @@ void runGoldenMatrix({
       .toList();
 
   for (final themeName in selectedThemes) {
+    final testDescription = description != null
+        ? '$description / $themeName'
+        : '$fileNamePrefix / $themeName';
+    if (!shouldRegisterGoldenTestsForHost(Platform.operatingSystem)) {
+      _registerSkippedGoldenTest(testDescription);
+      continue;
+    }
+
     final brightness = GoldenMatrix.themes[themeName]!;
     final themeData = brightness == Brightness.light
         ? AppTheme.light()
@@ -61,9 +77,7 @@ void runGoldenMatrix({
 
     unawaited(
       goldenTest(
-        description != null
-            ? '$description / $themeName'
-            : '$fileNamePrefix / $themeName',
+        testDescription,
         fileName: '${fileNamePrefix}_$themeName',
         // ignore: avoid_redundant_argument_values, keep the golden tag explicit.
         tags: const ['golden'],
@@ -123,6 +137,14 @@ void runHistoryGoldenMatrix({
       .toList();
 
   for (final themeName in selectedThemes) {
+    final testDescription = description != null
+        ? '$description / $themeName'
+        : '$fileNamePrefix / $themeName';
+    if (!shouldRegisterGoldenTestsForHost(Platform.operatingSystem)) {
+      _registerSkippedGoldenTest(testDescription);
+      continue;
+    }
+
     final brightness = HistoryGoldenMatrix.themes[themeName]!;
     final themeData = brightness == Brightness.light
         ? AppTheme.light()
@@ -130,9 +152,7 @@ void runHistoryGoldenMatrix({
 
     unawaited(
       goldenTest(
-        description != null
-            ? '$description / $themeName'
-            : '$fileNamePrefix / $themeName',
+        testDescription,
         fileName: '${fileNamePrefix}_$themeName',
         // ignore: avoid_redundant_argument_values, keep the golden tag explicit.
         tags: const ['golden'],
@@ -171,4 +191,13 @@ void runHistoryGoldenMatrix({
       ),
     );
   }
+}
+
+void _registerSkippedGoldenTest(String description) {
+  testWidgets(
+    description,
+    (_) async {},
+    tags: const ['golden'],
+    skip: true,
+  );
 }
