@@ -113,7 +113,10 @@ void main() {
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: Scaffold(
-            body: const HistoryView(debugLogDrugImageErrors: false),
+            body: const TickerMode(
+              enabled: false,
+              child: HistoryView(debugLogDrugImageErrors: false),
+            ),
             bottomNavigationBar: AppShellBottomNavigation(
               selectedIndex: 2,
               onDestinationSelected: (_) {},

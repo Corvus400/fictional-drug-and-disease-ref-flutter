@@ -26,6 +26,7 @@ import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 import '../../helpers/test_app_database.dart';
 
@@ -156,6 +157,12 @@ void main() {
 
       final rows = find.byKey(const ValueKey('history-loading-skeleton-row'));
       expect(rows, findsNWidgets(5));
+      expect(
+        find.byWidgetPredicate(
+          (widget) => widget is Skeletonizer && widget.enabled,
+        ),
+        findsOneWidget,
+      );
       expect(find.text('閲覧履歴がありません'), findsNothing);
       expect(find.text('検索画面へ'), findsNothing);
 

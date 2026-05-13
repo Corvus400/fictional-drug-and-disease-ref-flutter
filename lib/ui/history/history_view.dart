@@ -1,6 +1,7 @@
 import 'package:fictional_drug_and_disease_ref/l10n/app_localizations.dart';
 import 'package:fictional_drug_and_disease_ref/router/app_router.dart';
 import 'package:fictional_drug_and_disease_ref/theme/app_palette.dart';
+import 'package:fictional_drug_and_disease_ref/ui/common/loading/shimmer_skeleton.dart';
 import 'package:fictional_drug_and_disease_ref/ui/history/history_screen_notifier.dart';
 import 'package:fictional_drug_and_disease_ref/ui/history/history_screen_state.dart';
 import 'package:fictional_drug_and_disease_ref/ui/history/widgets/bulk_delete_confirm_dialog.dart';
@@ -623,11 +624,13 @@ class _HistoryLoadingState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.separated(
-      padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
-      itemCount: 5,
-      separatorBuilder: (context, index) => const SizedBox(height: 8),
-      itemBuilder: (context, index) => const _HistorySkeletonRow(),
+    return ShimmerSkeleton(
+      child: ListView.separated(
+        padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
+        itemCount: 5,
+        separatorBuilder: (context, index) => const SizedBox(height: 8),
+        itemBuilder: (context, index) => const _HistorySkeletonRow(),
+      ),
     );
   }
 }
@@ -637,16 +640,9 @@ class _HistorySkeletonRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final palette = Theme.of(context).extension<AppPalette>()!;
-    return DecoratedBox(
+    return KeyedSubtree(
       key: const ValueKey('history-loading-skeleton-row'),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        gradient: LinearGradient(
-          colors: [palette.surface3, palette.surface4, palette.surface3],
-        ),
-      ),
-      child: const SizedBox(height: 80, width: double.infinity),
+      child: ShimmerSkeletonShapes.listRow(height: 72),
     );
   }
 }
