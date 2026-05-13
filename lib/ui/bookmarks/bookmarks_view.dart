@@ -202,7 +202,7 @@ class _BookmarksSearchPanel extends StatelessWidget {
         color: palette.surface,
         border: Border(bottom: BorderSide(color: palette.hairline)),
       ),
-      padding: EdgeInsets.all(compact ? 16 : 8).copyWith(
+      padding: EdgeInsets.all(compact ? 16 : 12).copyWith(
         left: 16,
         right: 16,
       ),
