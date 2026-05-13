@@ -205,7 +205,10 @@ void _searchGoldenMatrix({
           theme: theme,
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
-          home: SearchView(currentTime: DateTime.utc(2026, 5, 5, 9)),
+          home: SearchView(
+            currentTime: DateTime.utc(2026, 5, 5, 9),
+            debugLogDrugImageErrors: false,
+          ),
         ),
       );
     },

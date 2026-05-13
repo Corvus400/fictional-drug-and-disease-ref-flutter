@@ -13,6 +13,7 @@ class _SearchPhaseSection extends StatelessWidget {
     required this.onChangeDrugSort,
     required this.onChangeDiseaseSort,
     required this.onLoadMore,
+    required this.logDrugImageErrors,
   });
 
   final SearchScreenState state;
@@ -26,6 +27,7 @@ class _SearchPhaseSection extends StatelessWidget {
   final Future<void> Function(DrugSort sort) onChangeDrugSort;
   final Future<void> Function(DiseaseSort sort) onChangeDiseaseSort;
   final Future<void> Function() onLoadMore;
+  final bool logDrugImageErrors;
 
   @override
   Widget build(BuildContext context) {
@@ -375,6 +377,7 @@ class _SearchPhaseSection extends StatelessWidget {
                     DrugResultCard(
                       item: item,
                       cacheManager: drugCardImageCacheManager,
+                      logImageErrors: logDrugImageErrors,
                       onTap: () => context.push(AppRoutes.drugDetail(item.id)),
                     ),
                 ],
