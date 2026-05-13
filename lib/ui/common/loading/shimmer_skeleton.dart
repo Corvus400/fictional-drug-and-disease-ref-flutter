@@ -1,3 +1,4 @@
+import 'package:fictional_drug_and_disease_ref/l10n/app_localizations.dart';
 import 'package:fictional_drug_and_disease_ref/theme/app_palette.dart';
 import 'package:flutter/material.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -33,7 +34,7 @@ class ShimmerSkeleton extends StatelessWidget {
     return Semantics(
       container: true,
       excludeSemantics: true,
-      label: '読み込み中',
+      label: AppLocalizations.of(context)?.commonLoading,
       liveRegion: true,
       child: Skeletonizer(
         effect: ShimmerEffect(

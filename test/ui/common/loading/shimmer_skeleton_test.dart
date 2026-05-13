@@ -1,3 +1,4 @@
+import 'package:fictional_drug_and_disease_ref/l10n/app_localizations.dart';
 import 'package:fictional_drug_and_disease_ref/theme/app_palette.dart';
 import 'package:fictional_drug_and_disease_ref/theme/app_theme.dart';
 import 'package:fictional_drug_and_disease_ref/ui/common/loading/shimmer_skeleton.dart';
@@ -10,11 +11,8 @@ void main() {
     tester,
   ) async {
     await tester.pumpWidget(
-      MaterialApp(
-        theme: AppTheme.light(),
-        home: const Scaffold(
-          body: ShimmerSkeleton(child: Text('content')),
-        ),
+      _localizedApp(
+        child: const ShimmerSkeleton(child: Text('content')),
       ),
     );
 
@@ -30,13 +28,10 @@ void main() {
     tester,
   ) async {
     await tester.pumpWidget(
-      MaterialApp(
-        theme: AppTheme.light(),
-        home: const Scaffold(
-          body: ShimmerSkeleton(
-            enabled: false,
-            child: Text('content'),
-          ),
+      _localizedApp(
+        child: const ShimmerSkeleton(
+          enabled: false,
+          child: Text('content'),
         ),
       ),
     );
@@ -51,11 +46,8 @@ void main() {
     final semantics = tester.ensureSemantics();
 
     await tester.pumpWidget(
-      MaterialApp(
-        theme: AppTheme.light(),
-        home: const Scaffold(
-          body: ShimmerSkeleton(child: Text('content')),
-        ),
+      _localizedApp(
+        child: const ShimmerSkeleton(child: Text('content')),
       ),
     );
 
@@ -67,11 +59,8 @@ void main() {
     tester,
   ) async {
     await tester.pumpWidget(
-      MaterialApp(
-        theme: AppTheme.light(),
-        home: const Scaffold(
-          body: ShimmerSkeleton(child: Text('content')),
-        ),
+      _localizedApp(
+        child: const ShimmerSkeleton(child: Text('content')),
       ),
     );
 
@@ -84,11 +73,8 @@ void main() {
     tester,
   ) async {
     await tester.pumpWidget(
-      MaterialApp(
-        theme: AppTheme.light(),
-        home: const Scaffold(
-          body: ShimmerSkeleton(child: Text('content')),
-        ),
+      _localizedApp(
+        child: const ShimmerSkeleton(child: Text('content')),
       ),
     );
 
@@ -104,11 +90,8 @@ void main() {
     'enabled skeleton uses palette surface3 as shimmer highlight color',
     (tester) async {
       await tester.pumpWidget(
-        MaterialApp(
-          theme: AppTheme.light(),
-          home: const Scaffold(
-            body: ShimmerSkeleton(child: Text('content')),
-          ),
+        _localizedApp(
+          child: const ShimmerSkeleton(child: Text('content')),
         ),
       );
 
@@ -125,15 +108,12 @@ void main() {
     'list row skeleton shape matches the golden baseline',
     (tester) async {
       await tester.pumpWidget(
-        MaterialApp(
-          theme: AppTheme.light(),
-          home: Scaffold(
-            body: Center(
-              child: SizedBox(
-                width: 320,
-                child: ShimmerSkeleton(
-                  child: ShimmerSkeletonShapes.listRow(),
-                ),
+        _localizedApp(
+          child: Center(
+            child: SizedBox(
+              width: 320,
+              child: ShimmerSkeleton(
+                child: ShimmerSkeletonShapes.listRow(),
               ),
             ),
           ),
@@ -152,15 +132,12 @@ void main() {
     'detail block skeleton shape matches the golden baseline',
     (tester) async {
       await tester.pumpWidget(
-        MaterialApp(
-          theme: AppTheme.light(),
-          home: Scaffold(
-            body: Center(
-              child: SizedBox(
-                width: 320,
-                child: ShimmerSkeleton(
-                  child: ShimmerSkeletonShapes.detailBlock(),
-                ),
+        _localizedApp(
+          child: Center(
+            child: SizedBox(
+              width: 320,
+              child: ShimmerSkeleton(
+                child: ShimmerSkeletonShapes.detailBlock(),
               ),
             ),
           ),
@@ -173,5 +150,14 @@ void main() {
       );
     },
     tags: const ['golden'],
+  );
+}
+
+Widget _localizedApp({required Widget child}) {
+  return MaterialApp(
+    theme: AppTheme.light(),
+    localizationsDelegates: AppLocalizations.localizationsDelegates,
+    supportedLocales: AppLocalizations.supportedLocales,
+    home: Scaffold(body: child),
   );
 }

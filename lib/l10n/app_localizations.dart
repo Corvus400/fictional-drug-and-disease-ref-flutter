@@ -100,6 +100,12 @@ abstract class AppLocalizations {
   /// **'医薬品・疾患リファレンス'**
   String get appTitle;
 
+  /// No description provided for @commonLoading.
+  ///
+  /// In ja, this message translates to:
+  /// **'読み込み中'**
+  String get commonLoading;
+
   /// No description provided for @tabSearch.
   ///
   /// In ja, this message translates to:
@@ -526,12 +532,6 @@ abstract class AppLocalizations {
   /// **'さらに読み込む'**
   String get searchToolbarLoadMore;
 
-  /// No description provided for @searchToolbarLoadMoreWithProgress.
-  ///
-  /// In ja, this message translates to:
-  /// **'さらに読み込む · {currentPage} / {totalPages}'**
-  String searchToolbarLoadMoreWithProgress(int currentPage, int totalPages);
-
   /// No description provided for @searchEmptyResultTitle.
   ///
   /// In ja, this message translates to:
@@ -903,18 +903,6 @@ abstract class AppLocalizations {
   /// In ja, this message translates to:
   /// **'並び替え'**
   String get searchSortTitle;
-
-  /// No description provided for @searchLoadingTotalPlaceholder.
-  ///
-  /// In ja, this message translates to:
-  /// **'合計 — 件'**
-  String get searchLoadingTotalPlaceholder;
-
-  /// No description provided for @searchLoadingCaption.
-  ///
-  /// In ja, this message translates to:
-  /// **'検索中…'**
-  String get searchLoadingCaption;
 
   /// No description provided for @searchSortByRevised.
   ///
