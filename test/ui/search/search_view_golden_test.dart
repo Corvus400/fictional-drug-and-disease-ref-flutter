@@ -93,14 +93,47 @@ void main() {
     response: _drugListFixture(),
     whilePerforming: _openSort,
   );
+  _searchGoldenMatrix(
+    name: 's11_disease_results',
+    diseaseResponse: _diseaseListFixture(),
+    whilePerforming: _performDiseaseSearch,
+  );
+  _searchGoldenMatrix(
+    name: 's12_disease_loading_more',
+    diseaseResponse: _diseaseListFixture(),
+    diseasePage2Completer: Completer<DiseaseListResponseDto>(),
+    whilePerforming: _triggerDiseaseLoadingMore,
+  );
+  _searchGoldenMatrix(
+    name: 's13_disease_empty',
+    diseaseResponse: _diseaseListFixture().copyWith(items: [], totalCount: 0),
+    whilePerforming: _performDiseaseSearch,
+  );
+  _searchGoldenMatrix(
+    name: 's14_disease_error',
+    diseaseError: DioException(
+      requestOptions: RequestOptions(path: '/v1/diseases'),
+      type: DioExceptionType.connectionError,
+    ),
+    whilePerforming: _performDiseaseSearch,
+  );
+  _searchGoldenMatrix(
+    name: 's15_disease_sort',
+    diseaseResponse: _diseaseListFixture(),
+    whilePerforming: _openDiseaseSort,
+  );
 }
 
 void _searchGoldenMatrix({
   required String name,
   DrugListResponseDto? response,
+  DiseaseListResponseDto? diseaseResponse,
   Completer<DrugListResponseDto>? responseCompleter,
   Completer<DrugListResponseDto>? page2Completer,
+  Completer<DiseaseListResponseDto>? diseaseResponseCompleter,
+  Completer<DiseaseListResponseDto>? diseasePage2Completer,
   Object? error,
+  Object? diseaseError,
   GoldenInteraction? whilePerforming,
 }) {
   runGoldenMatrix(
@@ -113,27 +146,60 @@ void _searchGoldenMatrix({
       when(
         categoryApiClient.getCategories,
       ).thenAnswer((_) async => _categoriesFixture());
-      when(
-        () => diseaseApiClient.getDiseases(
-          page: any(named: 'page'),
-          pageSize: any(named: 'pageSize'),
-          icd10Chapter: any(named: 'icd10Chapter'),
-          department: any(named: 'department'),
-          chronicity: any(named: 'chronicity'),
-          infectious: any(named: 'infectious'),
-          keyword: any(named: 'keyword'),
-          keywordMatch: any(named: 'keywordMatch'),
-          keywordTarget: any(named: 'keywordTarget'),
-          symptomKeyword: any(named: 'symptomKeyword'),
-          onsetPattern: any(named: 'onsetPattern'),
-          examCategory: any(named: 'examCategory'),
-          hasPharmacologicalTreatment: any(
-            named: 'hasPharmacologicalTreatment',
+      if (diseaseError != null) {
+        when(
+          () => diseaseApiClient.getDiseases(
+            page: any(named: 'page'),
+            pageSize: any(named: 'pageSize'),
+            icd10Chapter: any(named: 'icd10Chapter'),
+            department: any(named: 'department'),
+            chronicity: any(named: 'chronicity'),
+            infectious: any(named: 'infectious'),
+            keyword: any(named: 'keyword'),
+            keywordMatch: any(named: 'keywordMatch'),
+            keywordTarget: any(named: 'keywordTarget'),
+            symptomKeyword: any(named: 'symptomKeyword'),
+            onsetPattern: any(named: 'onsetPattern'),
+            examCategory: any(named: 'examCategory'),
+            hasPharmacologicalTreatment: any(
+              named: 'hasPharmacologicalTreatment',
+            ),
+            hasSeverityGrading: any(named: 'hasSeverityGrading'),
+            sort: any(named: 'sort'),
           ),
-          hasSeverityGrading: any(named: 'hasSeverityGrading'),
-          sort: any(named: 'sort'),
-        ),
-      ).thenAnswer((_) async => _diseaseListFixture());
+        ).thenThrow(diseaseError);
+      } else {
+        when(
+          () => diseaseApiClient.getDiseases(
+            page: any(named: 'page'),
+            pageSize: any(named: 'pageSize'),
+            icd10Chapter: any(named: 'icd10Chapter'),
+            department: any(named: 'department'),
+            chronicity: any(named: 'chronicity'),
+            infectious: any(named: 'infectious'),
+            keyword: any(named: 'keyword'),
+            keywordMatch: any(named: 'keywordMatch'),
+            keywordTarget: any(named: 'keywordTarget'),
+            symptomKeyword: any(named: 'symptomKeyword'),
+            onsetPattern: any(named: 'onsetPattern'),
+            examCategory: any(named: 'examCategory'),
+            hasPharmacologicalTreatment: any(
+              named: 'hasPharmacologicalTreatment',
+            ),
+            hasSeverityGrading: any(named: 'hasSeverityGrading'),
+            sort: any(named: 'sort'),
+          ),
+        ).thenAnswer((invocation) {
+          final page = invocation.namedArguments[#page] as int? ?? 1;
+          if (page == 2 && diseasePage2Completer != null) {
+            return diseasePage2Completer.future;
+          }
+          if (diseaseResponseCompleter != null) {
+            return diseaseResponseCompleter.future;
+          }
+          return Future.value(diseaseResponse ?? _diseaseListFixture());
+        });
+      }
 
       if (error != null) {
         when(
@@ -277,6 +343,33 @@ Future<Future<void> Function()?> _triggerLoadingMore(
   return null;
 }
 
+Future<Future<void> Function()?> _performDiseaseSearch(
+  WidgetTester tester,
+) async {
+  await _selectDiseaseTab(tester);
+  await _enterTextAll(
+    tester,
+    find.byKey(const ValueKey('search-field')),
+    '高血圧',
+  );
+  await _tapAll(tester, find.byType(FilledButton));
+  await tester.pumpAndSettle();
+  return null;
+}
+
+Future<Future<void> Function()?> _triggerDiseaseLoadingMore(
+  WidgetTester tester,
+) async {
+  await _performDiseaseSearch(tester);
+  await _dragAll(
+    tester,
+    find.byKey(const PageStorageKey<String>('diseaseSearchResults')),
+    const Offset(0, -820),
+  );
+  await tester.pump();
+  return null;
+}
+
 Future<Future<void> Function()?> _openDrugFilter(WidgetTester tester) async {
   await _enterTextAll(
     tester,
@@ -289,8 +382,7 @@ Future<Future<void> Function()?> _openDrugFilter(WidgetTester tester) async {
 }
 
 Future<Future<void> Function()?> _openDiseaseFilter(WidgetTester tester) async {
-  await _tapAll(tester, find.text('疾患'));
-  await tester.pumpAndSettle();
+  await _selectDiseaseTab(tester);
   await _enterTextAll(
     tester,
     find.byKey(const ValueKey('search-field')),
@@ -306,6 +398,18 @@ Future<Future<void> Function()?> _openSort(WidgetTester tester) async {
   await _tapAll(tester, find.textContaining('並び替え'));
   await tester.pumpAndSettle();
   return null;
+}
+
+Future<Future<void> Function()?> _openDiseaseSort(WidgetTester tester) async {
+  await _performDiseaseSearch(tester);
+  await _tapAll(tester, find.textContaining('並び替え'));
+  await tester.pumpAndSettle();
+  return null;
+}
+
+Future<void> _selectDiseaseTab(WidgetTester tester) async {
+  await _tapAll(tester, find.text('疾患'));
+  await tester.pumpAndSettle();
 }
 
 Future<void> _enterTextAll(

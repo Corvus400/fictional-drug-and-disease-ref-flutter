@@ -25,6 +25,8 @@ jobs:
       - uses: ./.github/actions/setup-flutter
 
       - name: Run non-golden tests
+        env:
+          SUPPRESS_GOLDEN_HOST_WARNING: "true"
         run: >
           flutter test
           --exclude-tags golden

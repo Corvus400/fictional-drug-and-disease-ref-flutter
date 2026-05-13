@@ -9,7 +9,9 @@ import 'golden/_comparator/diff_image_comparator.dart';
 import 'golden/_helpers/font_loader.dart';
 
 Future<void> testExecutable(FutureOr<void> Function() testMain) async {
-  if (!Platform.isMacOS) {
+  final suppressGoldenHostWarning =
+      Platform.environment['SUPPRESS_GOLDEN_HOST_WARNING'] == 'true';
+  if (!Platform.isMacOS && !suppressGoldenHostWarning) {
     stderr.writeln(
       'WARNING: Golden tests are designed for macOS only. '
       'Generated images on this host (${Platform.operatingSystem}) '
