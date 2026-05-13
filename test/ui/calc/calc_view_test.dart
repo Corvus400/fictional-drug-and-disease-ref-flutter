@@ -18,6 +18,7 @@ import 'package:fictional_drug_and_disease_ref/ui/calc/calc_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 import '../../helpers/test_app_database.dart';
 
@@ -1430,6 +1431,14 @@ void main() {
           expect(
             (indicator.center.dx - resultPane.center.dx).abs(),
             lessThan(2),
+          );
+          expect(find.byType(CircularProgressIndicator), findsNothing);
+          expect(find.text('復元中…'), findsNothing);
+          expect(
+            find.byWidgetPredicate(
+              (widget) => widget is Skeletonizer && widget.enabled,
+            ),
+            findsOneWidget,
           );
         }
       },
