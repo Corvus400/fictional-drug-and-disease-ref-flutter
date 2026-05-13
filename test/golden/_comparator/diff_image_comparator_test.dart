@@ -83,6 +83,29 @@ void main() {
       );
     },
   );
+
+  test(
+    'writes compare image in Reference Diff New pane order',
+    () async {
+      final golden = _solidPng(width: 4, height: 4, r: 0, g: 0, b: 255);
+      final actual = _solidImage(width: 4, height: 4, r: 0, g: 255, b: 0);
+      File(p.join(tempDir.path, 'pane_order.png')).writeAsBytesSync(golden);
+
+      await comparator.compare(
+        img.encodePng(actual),
+        Uri.parse('pane_order.png'),
+      );
+
+      final compareBytes = File(
+        p.join(outputDir.path, 'pane_order_compare.png'),
+      ).readAsBytesSync();
+      final compare = img.decodePng(compareBytes)!;
+
+      expect(_rgbAt(compare, 0, 20), (0, 0, 255));
+      expect(_rgbAt(compare, 20, 20), (255, 0, 0));
+      expect(_rgbAt(compare, 40, 20), (0, 255, 0));
+    },
+  );
 }
 
 List<int> _solidPng({
@@ -104,4 +127,9 @@ img.Image _solidImage({
   final image = img.Image(width: width, height: height);
   img.fill(image, color: img.ColorRgb8(r, g, b));
   return image;
+}
+
+(int, int, int) _rgbAt(img.Image image, int x, int y) {
+  final pixel = image.getPixel(x, y);
+  return (pixel.r.toInt(), pixel.g.toInt(), pixel.b.toInt());
 }
