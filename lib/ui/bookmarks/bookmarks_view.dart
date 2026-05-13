@@ -16,10 +16,18 @@ import 'package:go_router/go_router.dart';
 /// Bookmarks tab.
 class BookmarksView extends ConsumerWidget {
   /// Creates a bookmarks view.
-  const BookmarksView({super.key, this.debugSwipeRevealRowId});
+  const BookmarksView({
+    super.key,
+    this.debugSwipeRevealRowId,
+    this.debugLogDrugImageErrors = true,
+  });
 
   /// Forces one row into the 72dp swipe reveal state for golden tests.
   final String? debugSwipeRevealRowId;
+
+  /// Keeps expected fallback-image golden tests from emitting production logs.
+  @visibleForTesting
+  final bool debugLogDrugImageErrors;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -51,6 +59,7 @@ class BookmarksView extends ConsumerWidget {
         drugImageCacheManager: drugImageCacheManager,
         onDelete: notifier.deleteRow,
         debugSwipeRevealRowId: debugSwipeRevealRowId,
+        logDrugImageErrors: debugLogDrugImageErrors,
       ),
       _ => const _BookmarksLoadingState(),
     };
@@ -412,12 +421,14 @@ class _BookmarksRowsList extends StatelessWidget {
     required this.drugImageCacheManager,
     required this.onDelete,
     required this.debugSwipeRevealRowId,
+    required this.logDrugImageErrors,
   });
 
   final List<BookmarksRow> rows;
   final BaseCacheManager drugImageCacheManager;
   final Future<void> Function(String id) onDelete;
   final String? debugSwipeRevealRowId;
+  final bool logDrugImageErrors;
 
   @override
   Widget build(BuildContext context) {
@@ -434,6 +445,7 @@ class _BookmarksRowsList extends StatelessWidget {
           drugImageCacheManager: drugImageCacheManager,
           onDelete: onDelete,
           revealForTesting: row.id == debugSwipeRevealRowId,
+          logDrugImageErrors: logDrugImageErrors,
         );
       },
     );

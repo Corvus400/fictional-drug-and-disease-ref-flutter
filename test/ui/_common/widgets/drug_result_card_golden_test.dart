@@ -45,6 +45,7 @@ void main() {
             child: DrugResultCard(
               item: _drugSummary,
               cacheManager: cacheManager,
+              logImageErrors: false,
             ),
           ),
         ),
@@ -82,6 +83,7 @@ void main() {
             child: DrugResultCard(
               item: _drugSummary,
               cacheManager: cacheManager,
+              logImageErrors: false,
               trailingTime: Text(
                 '5分前',
                 key: const ValueKey('drug-card-trailing-time'),
@@ -115,7 +117,11 @@ void main() {
           body: ListView(
             padding: const EdgeInsets.all(16),
             children: [
-              DrugResultCard(item: _drugSummary, cacheManager: cacheManager),
+              DrugResultCard(
+                item: _drugSummary,
+                cacheManager: cacheManager,
+                logImageErrors: false,
+              ),
             ],
           ),
         ),
