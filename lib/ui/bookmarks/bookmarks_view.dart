@@ -5,6 +5,7 @@ import 'package:fictional_drug_and_disease_ref/ui/bookmarks/bookmarks_screen_not
 import 'package:fictional_drug_and_disease_ref/ui/bookmarks/bookmarks_screen_state.dart';
 import 'package:fictional_drug_and_disease_ref/ui/bookmarks/widgets/bookmark_search_box.dart';
 import 'package:fictional_drug_and_disease_ref/ui/bookmarks/widgets/swipe_delete_bookmark_row.dart';
+import 'package:fictional_drug_and_disease_ref/ui/common/loading/shimmer_skeleton.dart';
 import 'package:fictional_drug_and_disease_ref/ui/search/providers/drug_card_image_cache_manager_provider.dart';
 import 'package:fictional_drug_and_disease_ref/ui/shell/app_shell_tab.dart';
 import 'package:fictional_drug_and_disease_ref/ui/shell/app_tab_header.dart';
@@ -728,11 +729,13 @@ class _BookmarksLoadingState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.separated(
-      padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
-      itemCount: 5,
-      separatorBuilder: (context, index) => const SizedBox(height: 8),
-      itemBuilder: (context, index) => const _BookmarksSkeletonRow(),
+    return ShimmerSkeleton(
+      child: ListView.separated(
+        padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
+        itemCount: 5,
+        separatorBuilder: (context, index) => const SizedBox(height: 8),
+        itemBuilder: (context, index) => const _BookmarksSkeletonRow(),
+      ),
     );
   }
 }
@@ -742,16 +745,9 @@ class _BookmarksSkeletonRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final palette = Theme.of(context).extension<AppPalette>()!;
-    return DecoratedBox(
+    return KeyedSubtree(
       key: const ValueKey('bookmarks-skeleton-row'),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        gradient: LinearGradient(
-          colors: [palette.surface3, palette.surface4, palette.surface3],
-        ),
-      ),
-      child: const SizedBox(height: 80, width: double.infinity),
+      child: ShimmerSkeletonShapes.listRow(height: 72),
     );
   }
 }

@@ -83,6 +83,7 @@ void main() {
       return _BookmarksGoldenApp(
         theme: theme,
         stream: const Stream<List<BookmarkEntry>>.empty(),
+        tickerModeEnabled: false,
       );
     },
     whilePerforming: _settleBookmarksGolden,
@@ -131,11 +132,13 @@ class _BookmarksGoldenApp extends StatelessWidget {
     required this.theme,
     required this.stream,
     this.debugSwipeRevealRowId,
+    this.tickerModeEnabled = true,
   });
 
   final ThemeData theme;
   final Stream<List<BookmarkEntry>> stream;
   final String? debugSwipeRevealRowId;
+  final bool tickerModeEnabled;
 
   @override
   Widget build(BuildContext context) {
@@ -152,9 +155,12 @@ class _BookmarksGoldenApp extends StatelessWidget {
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         home: Scaffold(
-          body: BookmarksView(
-            debugSwipeRevealRowId: debugSwipeRevealRowId,
-            debugLogDrugImageErrors: false,
+          body: TickerMode(
+            enabled: tickerModeEnabled,
+            child: BookmarksView(
+              debugSwipeRevealRowId: debugSwipeRevealRowId,
+              debugLogDrugImageErrors: false,
+            ),
           ),
           bottomNavigationBar: AppShellBottomNavigation(
             selectedIndex: 1,
