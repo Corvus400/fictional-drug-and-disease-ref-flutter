@@ -363,7 +363,8 @@ class _App extends StatelessWidget {
               routes: [
                 GoRoute(
                   path: AppRoutes.bookmarks,
-                  builder: (context, state) => const BookmarksView(),
+                  builder: (context, state) =>
+                      const BookmarksView(debugLogDrugImageErrors: false),
                 ),
                 GoRoute(
                   path: AppRoutes.drugDetail(':id'),
@@ -384,7 +385,7 @@ class _App extends StatelessWidget {
             theme: AppTheme.light(),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
-            home: const BookmarksView(),
+            home: const BookmarksView(debugLogDrugImageErrors: false),
           );
 
     return ProviderScope(

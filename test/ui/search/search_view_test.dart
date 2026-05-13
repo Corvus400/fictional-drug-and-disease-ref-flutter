@@ -71,7 +71,7 @@ void main() {
         child: const MaterialApp(
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
-          home: SearchView(),
+          home: SearchView(debugLogDrugImageErrors: false),
         ),
       ),
     );
@@ -93,7 +93,7 @@ void main() {
         child: const MaterialApp(
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
-          home: SearchView(),
+          home: SearchView(debugLogDrugImageErrors: false),
         ),
       ),
     );
@@ -122,7 +122,7 @@ void main() {
           child: const MaterialApp(
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
-            home: SearchView(),
+            home: SearchView(debugLogDrugImageErrors: false),
           ),
         ),
       );
@@ -148,7 +148,7 @@ void main() {
         child: const MaterialApp(
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
-          home: SearchView(),
+          home: SearchView(debugLogDrugImageErrors: false),
         ),
       ),
     );
@@ -171,7 +171,7 @@ void main() {
         child: const MaterialApp(
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
-          home: SearchView(),
+          home: SearchView(debugLogDrugImageErrors: false),
         ),
       ),
     );
@@ -196,7 +196,7 @@ void main() {
         child: const MaterialApp(
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
-          home: SearchView(),
+          home: SearchView(debugLogDrugImageErrors: false),
         ),
       ),
     );
@@ -220,7 +220,7 @@ void main() {
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           navigatorObservers: [appRouteObserver],
-          home: const SearchView(),
+          home: const SearchView(debugLogDrugImageErrors: false),
         ),
       ),
     );
@@ -258,7 +258,7 @@ void main() {
         child: const MaterialApp(
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
-          home: SearchView(),
+          home: SearchView(debugLogDrugImageErrors: false),
         ),
       ),
     );
@@ -290,7 +290,7 @@ void main() {
           theme: AppTheme.light(),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
-          home: const SearchView(),
+          home: const SearchView(debugLogDrugImageErrors: false),
         ),
       ),
     );
@@ -326,7 +326,7 @@ void main() {
         child: const MaterialApp(
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
-          home: SearchView(),
+          home: SearchView(debugLogDrugImageErrors: false),
         ),
       ),
     );
@@ -387,7 +387,7 @@ void main() {
         child: const MaterialApp(
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
-          home: SearchView(),
+          home: SearchView(debugLogDrugImageErrors: false),
         ),
       ),
     );
@@ -421,7 +421,7 @@ void main() {
         child: const MaterialApp(
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
-          home: SearchView(),
+          home: SearchView(debugLogDrugImageErrors: false),
         ),
       ),
     );
@@ -460,7 +460,7 @@ void main() {
         child: const MaterialApp(
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
-          home: SearchView(),
+          home: SearchView(debugLogDrugImageErrors: false),
         ),
       ),
     );
@@ -502,7 +502,7 @@ void main() {
           theme: AppTheme.light(),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
-          home: const SearchView(),
+          home: const SearchView(debugLogDrugImageErrors: false),
         ),
       ),
     );
@@ -538,7 +538,7 @@ void main() {
           theme: AppTheme.light(),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
-          home: const SearchView(),
+          home: const SearchView(debugLogDrugImageErrors: false),
         ),
       ),
     );
@@ -595,7 +595,7 @@ void main() {
           theme: AppTheme.light(),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
-          home: const SearchView(),
+          home: const SearchView(debugLogDrugImageErrors: false),
         ),
       ),
     );
@@ -722,7 +722,7 @@ void main() {
         child: const MaterialApp(
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
-          home: SearchView(),
+          home: SearchView(debugLogDrugImageErrors: false),
         ),
       ),
     );
@@ -764,7 +764,7 @@ void main() {
         child: const MaterialApp(
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
-          home: SearchView(),
+          home: SearchView(debugLogDrugImageErrors: false),
         ),
       ),
     );
@@ -818,7 +818,7 @@ void main() {
                 size: Size(390, 844),
                 viewInsets: EdgeInsets.only(bottom: 300),
               ),
-              child: SearchView(),
+              child: SearchView(debugLogDrugImageErrors: false),
             ),
           ),
         ),
@@ -859,7 +859,7 @@ void main() {
         child: const MaterialApp(
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
-          home: SearchView(),
+          home: SearchView(debugLogDrugImageErrors: false),
         ),
       ),
     );
@@ -907,7 +907,7 @@ void main() {
           child: const MaterialApp(
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
-            home: SearchView(),
+            home: SearchView(debugLogDrugImageErrors: false),
           ),
         ),
       );
@@ -962,7 +962,7 @@ void main() {
           child: const MaterialApp(
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
-            home: SearchView(),
+            home: SearchView(debugLogDrugImageErrors: false),
           ),
         ),
       );
@@ -1019,7 +1019,7 @@ void main() {
         child: const MaterialApp(
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
-          home: SearchView(),
+          home: SearchView(debugLogDrugImageErrors: false),
         ),
       ),
     );
@@ -1065,7 +1065,8 @@ void main() {
       routes: [
         GoRoute(
           path: AppRoutes.search,
-          builder: (context, state) => const SearchView(),
+          builder: (context, state) =>
+              const SearchView(debugLogDrugImageErrors: false),
           routes: [
             GoRoute(
               path: 'drug/:id',
@@ -1136,7 +1137,8 @@ void main() {
       routes: [
         GoRoute(
           path: AppRoutes.search,
-          builder: (context, state) => const SearchView(),
+          builder: (context, state) =>
+              const SearchView(debugLogDrugImageErrors: false),
           routes: [
             GoRoute(
               path: 'drug/:id',
@@ -1229,7 +1231,7 @@ void main() {
         child: const MaterialApp(
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
-          home: SearchView(),
+          home: SearchView(debugLogDrugImageErrors: false),
         ),
       ),
     );
@@ -1294,7 +1296,8 @@ void main() {
       routes: [
         GoRoute(
           path: AppRoutes.search,
-          builder: (context, state) => const SearchView(),
+          builder: (context, state) =>
+              const SearchView(debugLogDrugImageErrors: false),
           routes: [
             GoRoute(
               path: 'drug/:id',
@@ -1385,7 +1388,7 @@ void main() {
           child: const MaterialApp(
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
-            home: SearchView(),
+            home: SearchView(debugLogDrugImageErrors: false),
           ),
         ),
       );
@@ -1450,7 +1453,7 @@ void main() {
         child: const MaterialApp(
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
-          home: SearchView(),
+          home: SearchView(debugLogDrugImageErrors: false),
         ),
       ),
     );
@@ -1491,7 +1494,7 @@ void main() {
         child: const MaterialApp(
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
-          home: SearchView(),
+          home: SearchView(debugLogDrugImageErrors: false),
         ),
       ),
     );
@@ -1540,7 +1543,7 @@ void main() {
         child: const MaterialApp(
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
-          home: SearchView(),
+          home: SearchView(debugLogDrugImageErrors: false),
         ),
       ),
     );
@@ -1608,7 +1611,7 @@ void main() {
         child: const MaterialApp(
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
-          home: SearchView(),
+          home: SearchView(debugLogDrugImageErrors: false),
         ),
       ),
     );
@@ -1646,7 +1649,7 @@ void main() {
         child: const MaterialApp(
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
-          home: SearchView(),
+          home: SearchView(debugLogDrugImageErrors: false),
         ),
       ),
     );
@@ -1693,7 +1696,7 @@ void main() {
         child: const MaterialApp(
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
-          home: SearchView(),
+          home: SearchView(debugLogDrugImageErrors: false),
         ),
       ),
     );
@@ -1771,7 +1774,7 @@ void main() {
         child: const MaterialApp(
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
-          home: SearchView(),
+          home: SearchView(debugLogDrugImageErrors: false),
         ),
       ),
     );
@@ -1818,7 +1821,7 @@ void main() {
         child: const MaterialApp(
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
-          home: SearchView(),
+          home: SearchView(debugLogDrugImageErrors: false),
         ),
       ),
     );
@@ -1891,7 +1894,7 @@ void main() {
           child: const MaterialApp(
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
-            home: SearchView(),
+            home: SearchView(debugLogDrugImageErrors: false),
           ),
         ),
       );
@@ -1945,7 +1948,7 @@ void main() {
         child: const MaterialApp(
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
-          home: SearchView(),
+          home: SearchView(debugLogDrugImageErrors: false),
         ),
       ),
     );
@@ -1995,7 +1998,7 @@ void main() {
         child: const MaterialApp(
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
-          home: SearchView(),
+          home: SearchView(debugLogDrugImageErrors: false),
         ),
       ),
     );
@@ -2052,7 +2055,7 @@ void main() {
         child: const MaterialApp(
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
-          home: SearchView(),
+          home: SearchView(debugLogDrugImageErrors: false),
         ),
       ),
     );
@@ -2110,7 +2113,7 @@ void main() {
         child: const MaterialApp(
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
-          home: SearchView(),
+          home: SearchView(debugLogDrugImageErrors: false),
         ),
       ),
     );
@@ -2200,7 +2203,7 @@ void main() {
         child: const MaterialApp(
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
-          home: SearchView(),
+          home: SearchView(debugLogDrugImageErrors: false),
         ),
       ),
     );
@@ -2247,7 +2250,7 @@ void main() {
         child: const MaterialApp(
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
-          home: SearchView(),
+          home: SearchView(debugLogDrugImageErrors: false),
         ),
       ),
     );
@@ -2300,7 +2303,7 @@ void main() {
         child: const MaterialApp(
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
-          home: SearchView(),
+          home: SearchView(debugLogDrugImageErrors: false),
         ),
       ),
     );
@@ -2390,7 +2393,7 @@ void main() {
         child: const MaterialApp(
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
-          home: SearchView(),
+          home: SearchView(debugLogDrugImageErrors: false),
         ),
       ),
     );
@@ -2456,7 +2459,7 @@ void main() {
         child: const MaterialApp(
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
-          home: SearchView(),
+          home: SearchView(debugLogDrugImageErrors: false),
         ),
       ),
     );
@@ -2493,7 +2496,7 @@ void main() {
         child: const MaterialApp(
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
-          home: SearchView(),
+          home: SearchView(debugLogDrugImageErrors: false),
         ),
       ),
     );
@@ -2527,7 +2530,7 @@ void main() {
         child: const MaterialApp(
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
-          home: SearchView(),
+          home: SearchView(debugLogDrugImageErrors: false),
         ),
       ),
     );
@@ -2576,7 +2579,7 @@ void main() {
           child: const MaterialApp(
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
-            home: SearchView(),
+            home: SearchView(debugLogDrugImageErrors: false),
           ),
         ),
       );
@@ -2627,7 +2630,7 @@ void main() {
           theme: AppTheme.light(),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
-          home: const SearchView(),
+          home: const SearchView(debugLogDrugImageErrors: false),
         ),
       ),
     );
@@ -2693,7 +2696,7 @@ void main() {
           child: const MaterialApp(
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
-            home: SearchView(),
+            home: SearchView(debugLogDrugImageErrors: false),
           ),
         ),
       );
@@ -2741,7 +2744,7 @@ void main() {
         child: const MaterialApp(
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
-          home: SearchView(),
+          home: SearchView(debugLogDrugImageErrors: false),
         ),
       ),
     );
@@ -2782,7 +2785,7 @@ void main() {
         child: const MaterialApp(
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
-          home: SearchView(),
+          home: SearchView(debugLogDrugImageErrors: false),
         ),
       ),
     );
@@ -2832,7 +2835,7 @@ void main() {
           child: const MaterialApp(
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
-            home: SearchView(),
+            home: SearchView(debugLogDrugImageErrors: false),
           ),
         ),
       );
