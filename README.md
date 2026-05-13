@@ -3,6 +3,22 @@
 A reference Flutter application that consumes the
 [fictional-drug-and-disease-ref mock-server](https://github.com/Corvus400/fictional-drug-and-disease-ref-mock-server).
 
+This is a portfolio repository. External pull requests are not accepted.
+Issues remain enabled for the Renovate Dependency Dashboard and limited
+security/process notices.
+
+All drug, disease, and clinical content in this project is fictional. It is
+not medical advice and must not be used for diagnosis, treatment, prescribing,
+or any other medical decision.
+
+## Repository Operations
+
+- Dependency update pull requests are managed by Renovate.
+- External pull requests are rejected by CI and are not reviewed.
+- General support, feature requests, and bug reports are not accepted through
+  GitHub Issues.
+- Security reports must follow [SECURITY.md](./SECURITY.md).
+
 ## License
 
 This project is licensed under the [MIT License](./LICENSE).

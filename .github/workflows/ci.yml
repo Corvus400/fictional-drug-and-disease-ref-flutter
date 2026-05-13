@@ -11,7 +11,39 @@ concurrency:
 permissions: { }
 
 jobs:
+  classify-ci-trust:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    outputs:
+      trusted: ${{ steps.classify.outputs.trusted }}
+
+    steps:
+      - id: classify
+        name: Classify pull request trust
+        shell: bash
+        env:
+          ACTOR: ${{ github.event.pull_request.user.login }}
+          HEAD_REPOSITORY: ${{ github.event.pull_request.head.repo.full_name }}
+          REPOSITORY: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+
+          trusted="false"
+          case "$ACTOR" in
+            Corvus400|renovate\[bot\])
+              if [ "$HEAD_REPOSITORY" = "$REPOSITORY" ]; then
+                trusted="true"
+              fi
+              ;;
+          esac
+
+          echo "trusted=$trusted" >> "$GITHUB_OUTPUT"
+          echo "trusted=$trusted"
+
   detect-ci-scope:
+    needs: [classify-ci-trust]
+    if: needs.classify-ci-trust.outputs.trusted == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 5
 
@@ -62,6 +94,8 @@ jobs:
           echo "golden_vrt_required=$golden_vrt_required"
 
   non-golden-tests:
+    needs: [classify-ci-trust]
+    if: needs.classify-ci-trust.outputs.trusted == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 30
 
@@ -85,8 +119,10 @@ jobs:
           test
 
   golden-vrt:
-    needs: [detect-ci-scope, non-golden-tests]
-    if: needs.detect-ci-scope.outputs.golden_vrt_required == 'true'
+    needs: [classify-ci-trust, detect-ci-scope, non-golden-tests]
+    if: >
+      needs.classify-ci-trust.outputs.trusted == 'true' &&
+      needs.detect-ci-scope.outputs.golden_vrt_required == 'true'
     runs-on: macos-26
     timeout-minutes: 45
 
@@ -126,10 +162,11 @@ jobs:
           if-no-files-found: ignore
 
   collect-golden-diff-reports:
-    needs: [non-golden-tests, golden-vrt]
+    needs: [classify-ci-trust, non-golden-tests, golden-vrt]
     if: >
       always() &&
       github.event_name == 'pull_request' &&
+      needs.classify-ci-trust.outputs.trusted == 'true' &&
       needs.non-golden-tests.result == 'success' &&
       needs.golden-vrt.result != 'skipped'
     runs-on: ubuntu-latest
@@ -169,7 +206,7 @@ jobs:
           path: pr/
 
   ci-gate:
-    needs: [detect-ci-scope, non-golden-tests, golden-vrt]
+    needs: [classify-ci-trust, detect-ci-scope, non-golden-tests, golden-vrt]
     if: always()
     runs-on: ubuntu-latest
     timeout-minutes: 5
@@ -177,12 +214,22 @@ jobs:
     steps:
       - name: Check required CI jobs
         env:
+          CLASSIFY_RESULT: ${{ needs.classify-ci-trust.result }}
+          TRUSTED: ${{ needs.classify-ci-trust.outputs.trusted }}
           DETECT_SCOPE_RESULT: ${{ needs.detect-ci-scope.result }}
           GOLDEN_VRT_REQUIRED: ${{ needs.detect-ci-scope.outputs.golden_vrt_required }}
           NON_GOLDEN_RESULT: ${{ needs.non-golden-tests.result }}
           GOLDEN_VRT_RESULT: ${{ needs.golden-vrt.result }}
         run: |
           set -euo pipefail
+          if [ "$CLASSIFY_RESULT" != "success" ]; then
+            echo "::error::classify-ci-trust result is $CLASSIFY_RESULT"
+            exit 1
+          fi
+          if [ "$TRUSTED" != "true" ]; then
+            echo "::error::External pull requests are not accepted for this portfolio repository."
+            exit 1
+          fi
           if [ "$DETECT_SCOPE_RESULT" != "success" ]; then
             echo "::error::detect-ci-scope result is $DETECT_SCOPE_RESULT"
             exit 1
