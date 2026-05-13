@@ -92,6 +92,36 @@ jobs:
           done
           echo "exist_valid_files=$exist_valid_files" >> "$GITHUB_OUTPUT"
 
+      - id: collect-golden-baseline-changes
+        name: Collect golden baseline changes
+        if: steps.download-pr.outcome == 'success'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ steps.get-pull-request-number.outputs.pull_request_number }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          pr_shas="$(gh api "repos/${{ github.repository }}/pulls/$PR_NUMBER" --jq '[.base.sha, .head.sha] | @tsv')"
+          IFS=$'\t' read -r base_sha head_sha <<< "$pr_shas"
+
+          echo "base_sha=$base_sha" >> "$GITHUB_OUTPUT"
+          echo "head_sha=$head_sha" >> "$GITHUB_OUTPUT"
+
+          gh api --paginate "repos/${{ github.repository }}/pulls/$PR_NUMBER/files" \
+            --jq '.[] | select(.filename | test("^test/.*/goldens/.*/.*\\.png$")) | [.status, .filename, (.previous_filename // "")] | @tsv' \
+            > golden-baseline-files.tsv
+
+          baseline_change_count="$(wc -l < golden-baseline-files.tsv | tr -d ' ')"
+          has_baseline_changes="false"
+          if [ "$baseline_change_count" -gt 0 ]; then
+            has_baseline_changes="true"
+          fi
+
+          echo "baseline_change_count=$baseline_change_count" >> "$GITHUB_OUTPUT"
+          echo "has_baseline_changes=$has_baseline_changes" >> "$GITHUB_OUTPUT"
+          echo "baseline_change_count=$baseline_change_count"
+
       - id: push-screenshot-diff
         shell: bash
         if: >
@@ -114,30 +144,56 @@ jobs:
           git commit -m "Add screenshot diff"
           git push origin HEAD:"$BRANCH_NAME" -f
 
-      - id: generate-diff-reports
-        name: Generate diff reports
+      - id: generate-vrt-report
+        name: Generate VRT report
         if: >
           steps.download-pr.outcome == 'success' &&
-          steps.check-if-there-are-valid-files.outputs.exist_valid_files == 'true'
+          (steps.check-if-there-are-valid-files.outputs.exist_valid_files == 'true' ||
+          steps.collect-golden-baseline-changes.outputs.has_baseline_changes == 'true')
         env:
           BRANCH_NAME: companion_${{ github.event.workflow_run.head_branch }}
+          BASE_SHA: ${{ steps.collect-golden-baseline-changes.outputs.base_sha }}
+          HEAD_SHA: ${{ steps.collect-golden-baseline-changes.outputs.head_sha }}
+          BASELINE_CHANGE_COUNT: ${{ steps.collect-golden-baseline-changes.outputs.baseline_change_count }}
         shell: bash
         run: |
+          set -euo pipefail
+
+          url_path() {
+            local value="$1"
+            value="${value//%/%25}"
+            value="${value//#/%23}"
+            value="${value//[/%5B}"
+            value="${value//]/%5D}"
+            value="${value// /%20}"
+            printf '%s' "$value"
+          }
+
+          image_link() {
+            local sha="$1"
+            local path="$2"
+            local encoded_path
+            encoded_path="$(url_path "$path")"
+            printf '<img src="https://github.com/${{ github.repository }}/blob/%s/%s?raw=true" width="220">' "$sha" "$encoded_path"
+          }
+
           # Find all the files ending with _compare.png in golden-diff-reports
           mapfile -d '' -t files < <(find . -type f -name "*_compare.png" -print0)
           delimiter="$(openssl rand -hex 8)"
           {
             echo "reports<<${delimiter}"
 
-            # Create markdown table header
             echo "Snapshot diff report"
-            echo "| File name | Image |"
-            echo "|-------|-------|"
+
+            if [ "${#files[@]}" -gt 0 ]; then
+              echo
+              echo "## Golden comparator mismatches"
+              echo "| File name | Image |"
+              echo "|-------|-------|"
+            fi
           } >> "$GITHUB_OUTPUT"
 
-          # Iterate over the files and create table rows
           for file in "${files[@]}"; do
-            # Get the file name and insert newlines every 20 characters
             fileName=$(basename "$file" | sed -r 's/(.{20})/\1<br>/g')
             urlPart="${BRANCH_NAME//#/%23}/${file//#/%23}"
             urlPart="${urlPart//[/%5B}"
@@ -145,6 +201,61 @@ jobs:
             urlPart="${urlPart// /%20}"
             echo "| [$fileName](https://github.com/${{ github.repository }}/blob/$urlPart) | ![](https://github.com/${{ github.repository }}/blob/$urlPart?raw=true) |" >> "$GITHUB_OUTPUT"
           done
+
+          if [ -s golden-baseline-files.tsv ]; then
+            {
+              echo
+              echo "## Golden baseline changes"
+              echo
+              echo "CI compares rendered output against the golden files committed in this PR. This section shows golden PNG changes against the base branch for review."
+              echo
+              echo "Changed golden baseline files: ${BASELINE_CHANGE_COUNT}"
+              echo
+              echo "| Status | File | Base | PR |"
+              echo "|-------|------|------|----|"
+            } >> "$GITHUB_OUTPUT"
+
+            row_count=0
+            max_image_rows=50
+            while IFS=$'\t' read -r status file previous_file; do
+              row_count=$((row_count + 1))
+              display_file="$file"
+              if [ "$status" = "renamed" ] && [ -n "$previous_file" ]; then
+                display_file="$previous_file -> $file"
+              fi
+
+              if [ "$row_count" -le "$max_image_rows" ]; then
+                base_cell="-"
+                pr_cell="-"
+                case "$status" in
+                  added)
+                    pr_cell="$(image_link "$HEAD_SHA" "$file")"
+                    ;;
+                  removed)
+                    base_cell="$(image_link "$BASE_SHA" "$file")"
+                    ;;
+                  renamed)
+                    if [ -n "$previous_file" ]; then
+                      base_cell="$(image_link "$BASE_SHA" "$previous_file")"
+                    fi
+                    pr_cell="$(image_link "$HEAD_SHA" "$file")"
+                    ;;
+                  *)
+                    base_cell="$(image_link "$BASE_SHA" "$file")"
+                    pr_cell="$(image_link "$HEAD_SHA" "$file")"
+                    ;;
+                esac
+                echo "| $status | \`$display_file\` | $base_cell | $pr_cell |" >> "$GITHUB_OUTPUT"
+              fi
+            done < golden-baseline-files.tsv
+
+            if [ "$row_count" -gt "$max_image_rows" ]; then
+              hidden_count=$((row_count - max_image_rows))
+              echo >> "$GITHUB_OUTPUT"
+              echo "_${hidden_count} additional golden baseline file(s) omitted from image preview to keep the comment size bounded._" >> "$GITHUB_OUTPUT"
+            fi
+          fi
+
           echo "${delimiter}" >> "$GITHUB_OUTPUT"
 
       - name: Find Comment
@@ -160,6 +271,7 @@ jobs:
         if: >
           steps.download-pr.outcome == 'success' &&
           steps.check-if-there-are-valid-files.outputs.exist_valid_files == 'false' &&
+          steps.collect-golden-baseline-changes.outputs.has_baseline_changes == 'false' &&
           steps.fc.outputs.comment-id != ''
         env:
           GH_TOKEN: ${{ github.token }}
@@ -187,11 +299,11 @@ jobs:
         uses: peter-evans/create-or-update-comment@71345be0265236311c031f5c7866368bd1eff043 # v4.0.0
         if: >
           steps.download-pr.outcome == 'success' &&
-          steps.generate-diff-reports.outputs.reports != ''
+          steps.generate-vrt-report.outputs.reports != ''
         with:
           comment-id: ${{ steps.fc.outputs.comment-id }}
           issue-number: ${{ steps.get-pull-request-number.outputs.pull_request_number }}
-          body: ${{ steps.generate-diff-reports.outputs.reports }}
+          body: ${{ steps.generate-vrt-report.outputs.reports }}
           edit-mode: replace
 
       - name: Cleanup outdated companion branches
