@@ -27,6 +27,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 import '../../helpers/test_app_database.dart';
 
@@ -942,7 +943,7 @@ void main() {
     expect(cancel.style?.fontWeight, FontWeight.w700);
   });
 
-  testWidgets('loading-more footer uses Round6 spinner and progress text', (
+  testWidgets('loading-more footer uses Round6 shimmer placeholder', (
     tester,
   ) async {
     final page2 = Completer<DrugListResponseDto>();
@@ -1022,13 +1023,14 @@ void main() {
     final footerFinder = find.byKey(const ValueKey('search-load-more-footer'));
     final footer = tester.widget<DecoratedBox>(footerFinder);
     final decoration = footer.decoration as BoxDecoration;
-    final spinner = tester.widget<CircularProgressIndicator>(
-      find.byKey(const ValueKey('search-load-more-spinner')),
+    final skeletonizer = tester.widget<Skeletonizer>(
+      find.byWidgetPredicate(
+        (widget) => widget is Skeletonizer && widget.enabled,
+      ),
     );
 
-    expect(find.text('さらに読み込む · 1 / 6'), findsOneWidget);
-    expect(spinner.strokeWidth, 2);
-    expect(spinner.color, AppPalette.light.primary);
+    expect(find.text('さらに読み込む · 1 / 6'), findsNothing);
+    expect(skeletonizer.enabled, isTrue);
     expect(decoration.color, AppPalette.light.surface);
     expect(decoration.border?.top.color, AppPalette.light.hairline);
     expect(decoration.borderRadius, BorderRadius.circular(10));
