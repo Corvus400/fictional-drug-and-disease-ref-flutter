@@ -60,7 +60,7 @@ jobs:
         with:
           run_id: ${{ github.event.workflow_run.id }}
           name: golden-diff-reports
-          path: golden-diff-reports
+          path: golden-diff-reports/build
 
       - id: check-if-there-are-valid-files
         name: Check if there are valid files
