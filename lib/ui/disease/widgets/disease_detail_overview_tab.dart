@@ -69,7 +69,7 @@ class _DiseaseHero extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(
           horizontal: DetailConstants.heroMetaPaddingHorizontal,
-          vertical: DetailConstants.heroMetaPaddingVertical + 8,
+          vertical: DetailConstants.heroMetaPaddingVertical,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
