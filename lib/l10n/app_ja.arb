@@ -4,6 +4,7 @@
   "@appTitle": {
     "description": "アプリのタイトル"
   },
+  "commonLoading": "読み込み中",
   "tabSearch": "検索",
   "tabBookmarks": "ブックマーク",
   "tabHistory": "閲覧履歴",
@@ -166,17 +167,6 @@
   },
   "searchToolbarApplied": "適用中",
   "searchToolbarLoadMore": "さらに読み込む",
-  "searchToolbarLoadMoreWithProgress": "さらに読み込む · {currentPage} / {totalPages}",
-  "@searchToolbarLoadMoreWithProgress": {
-    "placeholders": {
-      "currentPage": {
-        "type": "int"
-      },
-      "totalPages": {
-        "type": "int"
-      }
-    }
-  },
   "searchEmptyResultTitle": "該当する結果がありません",
   "searchEmptyResultSubtitle": "検索キーワードや絞り込みを\n見直してください。",
   "searchEmptyResetFilter": "条件をリセット",
@@ -333,8 +323,6 @@
   "searchDiseaseSeverityGradingTrue": "重症度評価あり",
   "searchDiseaseSeverityGradingFalse": "重症度評価なし",
   "searchSortTitle": "並び替え",
-  "searchLoadingTotalPlaceholder": "合計 — 件",
-  "searchLoadingCaption": "検索中…",
   "searchSortByRevised": "更新日(新しい順)",
   "searchSortDiseaseRevisedAt": "改訂日",
   "searchSortDiseaseName": "名称",

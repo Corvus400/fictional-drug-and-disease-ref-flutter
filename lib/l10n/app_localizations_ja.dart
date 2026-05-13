@@ -12,6 +12,9 @@ class AppLocalizationsJa extends AppLocalizations {
   String get appTitle => '医薬品・疾患リファレンス';
 
   @override
+  String get commonLoading => '読み込み中';
+
+  @override
   String get tabSearch => '検索';
 
   @override
@@ -252,11 +255,6 @@ class AppLocalizationsJa extends AppLocalizations {
   String get searchToolbarLoadMore => 'さらに読み込む';
 
   @override
-  String searchToolbarLoadMoreWithProgress(int currentPage, int totalPages) {
-    return 'さらに読み込む · $currentPage / $totalPages';
-  }
-
-  @override
   String get searchEmptyResultTitle => '該当する結果がありません';
 
   @override
@@ -473,12 +471,6 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get searchSortTitle => '並び替え';
-
-  @override
-  String get searchLoadingTotalPlaceholder => '合計 — 件';
-
-  @override
-  String get searchLoadingCaption => '検索中…';
 
   @override
   String get searchSortByRevised => '更新日(新しい順)';
