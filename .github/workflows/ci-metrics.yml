@@ -1,0 +1,38 @@
+name: CI Metrics
+
+on:
+  workflow_run:
+    workflows:
+      - CI
+    types:
+      - completed
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Collect timing and jobs JSON
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_ID: ${{ github.event.workflow_run.id }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          mkdir -p metrics
+          gh api "repos/$REPO/actions/runs/$RUN_ID/timing" > metrics/timing.json
+          gh api "repos/$REPO/actions/runs/$RUN_ID/jobs" > metrics/jobs.json
+          gh api "repos/$REPO/actions/runs/$RUN_ID" > metrics/run.json
+
+      - name: Upload metrics artifact
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: ci-metrics-${{ github.event.workflow_run.id }}
+          path: metrics/
+          retention-days: 90
+          if-no-files-found: error

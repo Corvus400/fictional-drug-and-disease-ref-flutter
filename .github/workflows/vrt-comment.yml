@@ -3,7 +3,7 @@ name: vrt-comment
 on:
   workflow_run:
     workflows:
-      - vrt
+      - CI
     types:
       - completed
 
@@ -31,24 +31,34 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: dawidd6/action-download-artifact@ac66b43f0e6a346234dd65d4d0c8fbb31cb316e5 # v11
+      - id: download-pr
+        uses: dawidd6/action-download-artifact@ac66b43f0e6a346234dd65d4d0c8fbb31cb316e5 # v11
+        continue-on-error: true
         with:
           name: pr
           run_id: ${{ github.event.workflow_run.id }}
 
+      - name: Skip when VRT did not run
+        if: steps.download-pr.outcome != 'success'
+        shell: bash
+        run: echo "No PR artifact was uploaded, so there is no VRT comment to update."
+
       - id: get-pull-request-number
         name: Get pull request number
+        if: steps.download-pr.outcome == 'success'
         shell: bash
         run: |
           echo "pull_request_number=$(cat NR)" >> "$GITHUB_OUTPUT"
 
       - name: main checkout
         id: checkout-main
+        if: steps.download-pr.outcome == 'success'
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
           ref: main
 
       - id: switch-companion-branch
+        if: steps.download-pr.outcome == 'success'
         env:
           BRANCH_NAME: companion_${{ github.event.workflow_run.head_branch }}
         run: |
@@ -58,6 +68,7 @@ jobs:
           git rm -rf .
 
       - uses: dawidd6/action-download-artifact@ac66b43f0e6a346234dd65d4d0c8fbb31cb316e5 # v11
+        if: steps.download-pr.outcome == 'success'
         with:
           run_id: ${{ github.event.workflow_run.id }}
           name: golden-diff-reports
@@ -65,6 +76,7 @@ jobs:
 
       - id: check-if-there-are-valid-files
         name: Check if there are valid files
+        if: steps.download-pr.outcome == 'success'
         shell: bash
         run: |
           # Find all the files ending with _compare.png
@@ -82,7 +94,9 @@ jobs:
 
       - id: push-screenshot-diff
         shell: bash
-        if: steps.check-if-there-are-valid-files.outputs.exist_valid_files == 'true'
+        if: >
+          steps.download-pr.outcome == 'success' &&
+          steps.check-if-there-are-valid-files.outputs.exist_valid_files == 'true'
         env:
           BRANCH_NAME: companion_${{ github.event.workflow_run.head_branch }}
         run: |
@@ -102,7 +116,9 @@ jobs:
 
       - id: generate-diff-reports
         name: Generate diff reports
-        if: steps.check-if-there-are-valid-files.outputs.exist_valid_files == 'true'
+        if: >
+          steps.download-pr.outcome == 'success' &&
+          steps.check-if-there-are-valid-files.outputs.exist_valid_files == 'true'
         env:
           BRANCH_NAME: companion_${{ github.event.workflow_run.head_branch }}
         shell: bash
@@ -134,6 +150,7 @@ jobs:
       - name: Find Comment
         uses: peter-evans/find-comment@3eae4d37986fb5a8592848f6a574fdf654e61f9e # v3.1.0
         id: fc
+        if: steps.download-pr.outcome == 'success'
         with:
           issue-number: ${{ steps.get-pull-request-number.outputs.pull_request_number }}
           comment-author: 'github-actions[bot]'
@@ -141,6 +158,7 @@ jobs:
 
       - name: Delete outdated comment on PR
         if: >
+          steps.download-pr.outcome == 'success' &&
           steps.check-if-there-are-valid-files.outputs.exist_valid_files == 'false' &&
           steps.fc.outputs.comment-id != ''
         env:
@@ -152,7 +170,9 @@ jobs:
             "repos/${{ github.repository }}/issues/comments/${{ steps.fc.outputs.comment-id }}"
 
       - name: Delete outdated companion branch
-        if: steps.check-if-there-are-valid-files.outputs.exist_valid_files == 'false'
+        if: >
+          steps.download-pr.outcome == 'success' &&
+          steps.check-if-there-are-valid-files.outputs.exist_valid_files == 'false'
         env:
           BRANCH_NAME: companion_${{ github.event.workflow_run.head_branch }}
         shell: bash
@@ -165,7 +185,9 @@ jobs:
 
       - name: Add or update comment on PR
         uses: peter-evans/create-or-update-comment@71345be0265236311c031f5c7866368bd1eff043 # v4.0.0
-        if: steps.generate-diff-reports.outputs.reports != ''
+        if: >
+          steps.download-pr.outcome == 'success' &&
+          steps.generate-diff-reports.outputs.reports != ''
         with:
           comment-id: ${{ steps.fc.outputs.comment-id }}
           issue-number: ${{ steps.get-pull-request-number.outputs.pull_request_number }}
@@ -173,6 +195,7 @@ jobs:
           edit-mode: replace
 
       - name: Cleanup outdated companion branches
+        if: steps.download-pr.outcome == 'success'
         run: |
           # Find outdated companion branches with last commit date
           git branch -r --format="%(refname:lstrip=3)" | grep companion_ | while read -r branch; do

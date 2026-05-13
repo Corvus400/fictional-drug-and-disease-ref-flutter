@@ -1,0 +1,139 @@
+name: CI
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+permissions: { }
+
+jobs:
+  non-golden-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout merged commit with base and pull-request branch
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - uses: ./.github/actions/setup-flutter
+
+      - name: Run non-golden tests
+        run: >
+          flutter test
+          --exclude-tags golden
+          --fail-fast
+          --concurrency "$(nproc)"
+          test
+
+  golden-vrt:
+    needs: non-golden-tests
+    runs-on: macos-26
+    timeout-minutes: 45
+
+    strategy:
+      fail-fast: true
+      matrix:
+        shard: [0, 1, 2, 3]
+
+    permissions:
+      contents: read
+      actions: write
+
+    steps:
+      - name: Checkout merged commit with base and pull-request branch
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - uses: ./.github/actions/setup-flutter
+
+      - name: Run golden VRT shard
+        run: >
+          ./scripts/run-command-stop-on-output-pattern.sh
+          flutter test
+          --fail-fast
+          --tags golden
+          --total-shards 4
+          --shard-index ${{ matrix.shard }}
+
+      - name: Upload golden diff reports
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        if: always()
+        with:
+          name: golden-diff-reports-${{ matrix.shard }}
+          path: |
+            build/outputs/golden/**/*.png
+            build/test-results/golden/**/*.json
+          retention-days: 30
+          if-no-files-found: ignore
+
+  collect-golden-diff-reports:
+    needs: [non-golden-tests, golden-vrt]
+    if: >
+      always() &&
+      github.event_name == 'pull_request' &&
+      needs.non-golden-tests.result == 'success' &&
+      needs.golden-vrt.result != 'skipped'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    permissions:
+      actions: read
+
+    steps:
+      - name: Prepare merged artifact directory
+        run: mkdir -p golden-diff-reports/build
+
+      - name: Download golden shard artifacts
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          pattern: golden-diff-reports-*
+          path: golden-diff-reports/build
+          merge-multiple: true
+
+      - name: Upload merged golden diff reports
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: golden-diff-reports
+          path: golden-diff-reports/build
+          retention-days: 30
+          if-no-files-found: ignore
+
+      - name: Save PR number for comment
+        run: |
+          mkdir -p ./pr
+          echo ${{ github.event.number }} > ./pr/NR
+
+      - name: Upload PR number
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: pr
+          path: pr/
+
+  ci-gate:
+    needs: [non-golden-tests, golden-vrt]
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Check required CI jobs
+        env:
+          NON_GOLDEN_RESULT: ${{ needs.non-golden-tests.result }}
+          GOLDEN_VRT_RESULT: ${{ needs.golden-vrt.result }}
+        run: |
+          set -euo pipefail
+          if [ "$NON_GOLDEN_RESULT" != "success" ]; then
+            echo "::error::non-golden-tests result is $NON_GOLDEN_RESULT"
+            exit 1
+          fi
+          if [ "$GOLDEN_VRT_RESULT" != "success" ]; then
+            echo "::error::golden-vrt result is $GOLDEN_VRT_RESULT"
+            exit 1
+          fi
+          echo "All required CI jobs passed."

@@ -1,7 +1,7 @@
-# CI 未投入期間のローカル品質ゲート。
+# ローカル品質ゲート。test/golden は CI に委譲し、lint 系はローカルにも残す。
 # stages 分離:
 #   pre-commit = build_runner (annotation 変更時のみ) → dart format → dart analyze (差分のみ)
-#   pre-push   = build_runner 全件 → dart format 全件 → flutter analyze → flutter test
+#   pre-push   = build_runner 全件 → dart format 全件 → flutter analyze → plan completion guard
 # integration_test は emulator/simulator 必須のため push フック対象外。手動実行で運用。
 repos:
   - repo: local
@@ -44,13 +44,6 @@ repos:
       - id: flutter-analyze
         name: flutter analyze (push gate)
         entry: scripts/pre-push-flutter-analyze.sh
-        language: system
-        stages: [pre-push]
-        pass_filenames: false
-        always_run: true
-      - id: flutter-test
-        name: flutter test (push gate)
-        entry: scripts/pre-push-flutter-test.sh
         language: system
         stages: [pre-push]
         pass_filenames: false

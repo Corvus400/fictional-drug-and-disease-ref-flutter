@@ -39,7 +39,8 @@
 
 `.pre-commit-config.yaml` で以下を強制:
 - pre-commit: `build_runner` (annotation 変更時のみ) + `dart format` + `dart analyze` (差分ファイルのみ)
-- pre-push: `build_runner` 全件 + `dart format` 全件 + `flutter analyze` + `flutter test` + plan completion guard
+- pre-push: `build_runner` 全件 + `dart format` 全件 + `flutter analyze` + plan completion guard
+- CI: 非 golden の `flutter test --exclude-tags golden` + macOS golden VRT shard を `CI` workflow で実行。`integration_test/` は CI 対象外
 
 CI 未投入期間中はこのフックがサイレントフォールバック検出の主装置。clone 直後に必ず以下を実行:
 ```
@@ -92,7 +93,8 @@ final value = container.read(myProvider);
 
 - パッケージ: `alchemist` (golden_toolkit は **discontinued** のため不採用)
 - 更新コマンド: `flutter test --update-goldens --tags golden`
-- 生成画像 (`test/**/*.png`) は必ず PR で diff 確認
+- 基準画像 (`test/**/goldens/macos/*.png`) は VRT の比較元なので git 管理に残す。CI artifact のみでは基準が消え、全ケースが `added` 扱いになる
+- 生成・更新された基準画像は必ず PR で diff 確認
 - macOS 以外で生成された差分は採用しない (フォントレンダリング差異)
 
 ## Lint SSOT
@@ -103,6 +105,6 @@ final value = container.read(myProvider);
 
 ## integration_test
 
-- emulator/simulator 起動が必要なため pre-push フック対象外
+- emulator/simulator と mock-server 疎通が必要なため pre-push フックおよび CI 対象外
 - 手動実行コマンド: `flutter test integration_test/`
 - E2E 経路 (起動 → 検索 → 詳細遷移) のみカバー、ロジック検証は unit/widget で担保
