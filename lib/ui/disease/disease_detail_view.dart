@@ -2,6 +2,7 @@ import 'package:fictional_drug_and_disease_ref/core/error/app_exception.dart';
 import 'package:fictional_drug_and_disease_ref/core/error/error_message_mapper.dart';
 import 'package:fictional_drug_and_disease_ref/domain/disease/disease.dart';
 import 'package:fictional_drug_and_disease_ref/l10n/app_localizations.dart';
+import 'package:fictional_drug_and_disease_ref/ui/common/loading/shimmer_skeleton.dart';
 import 'package:fictional_drug_and_disease_ref/ui/detail/constants/detail_constants.dart';
 import 'package:fictional_drug_and_disease_ref/ui/detail/widgets/detail_bookmark_footer.dart';
 import 'package:fictional_drug_and_disease_ref/ui/detail/widgets/detail_responsive_layout.dart';
@@ -45,9 +46,7 @@ class DiseaseDetailView extends ConsumerWidget {
         ),
       ),
       body: switch (state.phase) {
-        DiseaseDetailLoadingPhase() => const Center(
-          child: CircularProgressIndicator(),
-        ),
+        DiseaseDetailLoadingPhase() => const _DiseaseDetailLoadingView(),
         DiseaseDetailErrorPhase(:final error) => _DetailErrorView(
           error: error,
           onRetry: notifier.retry,
@@ -63,6 +62,45 @@ class DiseaseDetailView extends ConsumerWidget {
           onClearBookmarkError: notifier.clearBookmarkError,
         ),
       },
+    );
+  }
+}
+
+class _DiseaseDetailLoadingView extends StatelessWidget {
+  const _DiseaseDetailLoadingView();
+
+  @override
+  Widget build(BuildContext context) {
+    return ShimmerSkeleton(
+      child: DetailResponsiveLayout(
+        tabs: [
+          for (var index = 0; index < DiseaseDetailTab.values.length; index++)
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              child: ShimmerSkeletonShapes.compactBar(width: 96, height: 18),
+            ),
+        ],
+        activeBody: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              ShimmerSkeletonShapes.detailBlock(height: 148),
+              const SizedBox(height: 12),
+              ShimmerSkeletonShapes.detailBlock(),
+              const SizedBox(height: 12),
+              ShimmerSkeletonShapes.detailBlock(),
+            ],
+          ),
+        ),
+        footer: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: ShimmerSkeletonShapes.compactBar(width: 180, height: 20),
+          ),
+        ),
+      ),
     );
   }
 }
