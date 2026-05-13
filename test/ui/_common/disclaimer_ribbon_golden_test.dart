@@ -115,7 +115,10 @@ void _screenChromeGolden(
 }
 
 Widget _searchBody(ThemeData theme) {
-  return SearchView(currentTime: DateTime.utc(2026, 5, 5, 9));
+  return SearchView(
+    currentTime: DateTime.utc(2026, 5, 5, 9),
+    debugLogDrugImageErrors: false,
+  );
 }
 
 Widget _drugDetailBody(ThemeData theme) {

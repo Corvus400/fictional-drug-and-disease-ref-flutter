@@ -73,7 +73,7 @@ void main() {
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: Scaffold(
-            body: const HistoryView(),
+            body: const HistoryView(debugLogDrugImageErrors: false),
             bottomNavigationBar: AppShellBottomNavigation(
               selectedIndex: 2,
               onDestinationSelected: (_) {},
@@ -113,7 +113,7 @@ void main() {
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: Scaffold(
-            body: const HistoryView(),
+            body: const HistoryView(debugLogDrugImageErrors: false),
             bottomNavigationBar: AppShellBottomNavigation(
               selectedIndex: 2,
               onDestinationSelected: (_) {},
@@ -162,7 +162,10 @@ void main() {
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: Scaffold(
-            body: HistoryView(currentTime: now),
+            body: HistoryView(
+              currentTime: now,
+              debugLogDrugImageErrors: false,
+            ),
             bottomNavigationBar: AppShellBottomNavigation(
               selectedIndex: 2,
               onDestinationSelected: (_) {},
@@ -216,6 +219,7 @@ void main() {
             body: HistoryView(
               currentTime: now,
               debugSwipeRevealRowId: _diseaseSummary.id,
+              debugLogDrugImageErrors: false,
             ),
             bottomNavigationBar: AppShellBottomNavigation(
               selectedIndex: 2,
@@ -272,7 +276,10 @@ void main() {
               return Scaffold(
                 body: Stack(
                   children: [
-                    HistoryView(currentTime: now),
+                    HistoryView(
+                      currentTime: now,
+                      debugLogDrugImageErrors: false,
+                    ),
                     Positioned.fill(child: ColoredBox(color: palette.scrim)),
                     const Center(
                       child: BulkDeleteConfirmDialogCard(count: 2),
@@ -340,7 +347,10 @@ void main() {
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: Scaffold(
-            body: HistoryView(currentTime: now),
+            body: HistoryView(
+              currentTime: now,
+              debugLogDrugImageErrors: false,
+            ),
             bottomNavigationBar: AppShellBottomNavigation(
               selectedIndex: 2,
               onDestinationSelected: (_) {},

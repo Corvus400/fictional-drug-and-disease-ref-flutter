@@ -128,7 +128,10 @@ class _BookmarksGoldenApp extends StatelessWidget {
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         home: Scaffold(
-          body: BookmarksView(debugSwipeRevealRowId: debugSwipeRevealRowId),
+          body: BookmarksView(
+            debugSwipeRevealRowId: debugSwipeRevealRowId,
+            debugLogDrugImageErrors: false,
+          ),
           bottomNavigationBar: AppShellBottomNavigation(
             selectedIndex: 1,
             onDestinationSelected: (_) {},

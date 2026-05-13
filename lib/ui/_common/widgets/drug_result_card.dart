@@ -19,6 +19,7 @@ class DrugResultCard extends StatelessWidget {
     this.onTap,
     this.trailingTime,
     this.borderRadius,
+    this.logImageErrors = true,
   });
 
   /// Drug summary to render.
@@ -36,6 +37,9 @@ class DrugResultCard extends StatelessWidget {
   /// Card corner radius. Browsing history overrides this while swipe-delete is
   /// revealed so the front card joins the delete action without a rounded seam.
   final BorderRadius? borderRadius;
+
+  /// Whether image load/decode failures should be written to the app logger.
+  final bool logImageErrors;
 
   @override
   Widget build(BuildContext context) {
@@ -85,6 +89,7 @@ class DrugResultCard extends StatelessWidget {
                     imageCacheWidth: imageCacheWidth,
                     cacheManager: cacheManager,
                     palette: palette,
+                    logImageErrors: logImageErrors,
                   ),
                 ),
               ),
@@ -182,6 +187,7 @@ class _DrugCardCachedImage extends StatefulWidget {
     required this.imageCacheWidth,
     required this.cacheManager,
     required this.palette,
+    required this.logImageErrors,
   });
 
   final DrugSummary item;
@@ -190,6 +196,7 @@ class _DrugCardCachedImage extends StatefulWidget {
   final int imageCacheWidth;
   final BaseCacheManager cacheManager;
   final AppPalette palette;
+  final bool logImageErrors;
 
   @override
   State<_DrugCardCachedImage> createState() => _DrugCardCachedImageState();
@@ -258,6 +265,9 @@ class _DrugCardCachedImageState extends State<_DrugCardCachedImage> {
   }
 
   void _logLoadError(Object error, StackTrace? stackTrace) {
+    if (!widget.logImageErrors) {
+      return;
+    }
     if (_loggedLoadError) {
       return;
     }
@@ -270,6 +280,9 @@ class _DrugCardCachedImageState extends State<_DrugCardCachedImage> {
   }
 
   void _logDecodeError(Object error, StackTrace stackTrace) {
+    if (!widget.logImageErrors) {
+      return;
+    }
     if (_loggedDecodeError) {
       return;
     }
