@@ -1,6 +1,4 @@
-import 'package:fictional_drug_and_disease_ref/theme/app_palette.dart';
-import 'package:fictional_drug_and_disease_ref/theme/app_spacing.dart';
-import 'package:fictional_drug_and_disease_ref/theme/app_typography.dart';
+import 'package:fictional_drug_and_disease_ref/ui/common/loading/shimmer_skeleton.dart';
 import 'package:flutter/material.dart';
 
 /// Inline indicator shown while a calculation history row is restored.
@@ -20,34 +18,14 @@ class CalcHistoryRestoringIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final palette = Theme.of(context).extension<AppPalette>()!;
-    final spacing = Theme.of(context).extension<AppSpacing>()!;
-    final typography = Theme.of(context).extension<AppTypography>()!;
-
-    return Column(
+    return SizedBox(
       key: const ValueKey<String>('calc-history-restoring-indicator'),
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        SizedBox.square(
-          dimension: 38,
-          child: CircularProgressIndicator(
-            value: progressValue,
-            strokeWidth: 4,
-            strokeCap: StrokeCap.round,
-            color: palette.calcPrimary,
-          ),
+      height: 38,
+      child: Center(
+        child: ShimmerSkeleton(
+          child: ShimmerSkeletonShapes.compactBar(width: 96, height: 16),
         ),
-        SizedBox(height: spacing.s2),
-        Text(
-          message,
-          style: typography.bodyS.copyWith(
-            color: palette.calcInk,
-            fontSize: 18,
-            fontWeight: FontWeight.w800,
-            height: 1,
-          ),
-        ),
-      ],
+      ),
     );
   }
 }
