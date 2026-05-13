@@ -394,34 +394,11 @@ class _SearchPhaseSection extends StatelessWidget {
                             horizontal: 14,
                             vertical: 12,
                           ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              SizedBox(
-                                width: 16,
-                                height: 16,
-                                child: CircularProgressIndicator(
-                                  key: const ValueKey(
-                                    'search-load-more-spinner',
-                                  ),
-                                  strokeWidth: 2,
-                                  color: palette.primary,
-                                  backgroundColor: palette.surface3,
-                                ),
-                              ),
-                              const SizedBox(width: 10),
-                              Text(
-                                l10n.searchToolbarLoadMoreWithProgress(
-                                  view.page,
-                                  view.totalPages,
-                                ),
-                                style: Theme.of(context).textTheme.labelSmall
-                                    ?.copyWith(
-                                      color: palette.muted,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                              ),
-                            ],
+                          child: ShimmerSkeleton(
+                            child: ShimmerSkeletonShapes.compactBar(
+                              width: 120,
+                              height: 16,
+                            ),
                           ),
                         ),
                       ),
