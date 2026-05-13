@@ -51,7 +51,6 @@ class CompareImageWriter {
       golden: goldenImage,
       actual: actualImage,
       diff: diffResult.diffImage,
-      goldenLabel: goldenImage != null ? 'GOLDEN' : 'MISSING',
     );
 
     final compareFile = File(p.join(outputRoot, '${goldenName}_compare.png'))
@@ -115,7 +114,6 @@ class CompareImageWriter {
     required img.Image? golden,
     required img.Image actual,
     required img.Image diff,
-    required String goldenLabel,
   }) {
     final paneW = actual.width;
     final paneH = actual.height;
@@ -140,13 +138,13 @@ class CompareImageWriter {
 
     img.compositeImage(
       canvas,
-      actual,
+      diff,
       dstX: paneW + _paneSpacing,
       dstY: _labelHeight,
     );
     img.compositeImage(
       canvas,
-      diff,
+      actual,
       dstX: (paneW + _paneSpacing) * 2,
       dstY: _labelHeight,
     );
@@ -155,7 +153,7 @@ class CompareImageWriter {
     final labelColor = img.ColorRgb8(0, 0, 0);
     img.drawString(
       canvas,
-      goldenLabel,
+      'Reference',
       font: font,
       x: 4,
       y: 2,
@@ -163,7 +161,7 @@ class CompareImageWriter {
     );
     img.drawString(
       canvas,
-      'ACTUAL',
+      'Diff',
       font: font,
       x: paneW + _paneSpacing + 4,
       y: 2,
@@ -171,7 +169,7 @@ class CompareImageWriter {
     );
     img.drawString(
       canvas,
-      'DIFF',
+      'New',
       font: font,
       x: (paneW + _paneSpacing) * 2 + 4,
       y: 2,
