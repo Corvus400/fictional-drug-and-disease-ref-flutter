@@ -1,0 +1,20 @@
+name: Setup Flutter
+description: Install pinned Flutter SDK and prepare generated sources.
+
+runs:
+  using: composite
+  steps:
+    - name: Setup Flutter
+      uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
+      with:
+        flutter-version-file: .flutter-version
+        cache: true
+        cache-key: "flutter-:os:-:channel:-:version:-:arch:-:hash:"
+
+    - name: Install dependencies
+      shell: bash
+      run: flutter pub get
+
+    - name: Generate sources
+      shell: bash
+      run: dart run build_runner build --delete-conflicting-outputs
