@@ -76,28 +76,41 @@ class _DiseaseDetailLoadingView extends StatelessWidget {
         tabs: [
           for (var index = 0; index < DiseaseDetailTab.values.length; index++)
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-              child: ShimmerSkeletonShapes.compactBar(width: 96, height: 18),
+              padding: const EdgeInsets.symmetric(
+                horizontal: DetailConstants.loadingTabPaddingHorizontal,
+                vertical: DetailConstants.loadingTabPaddingVertical,
+              ),
+              child: ShimmerSkeletonShapes.compactBar(
+                width: DetailConstants.loadingTabPlaceholderWidth,
+                height: DetailConstants.loadingTabPlaceholderHeight,
+              ),
             ),
         ],
         activeBody: Padding(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(DetailConstants.contentPadding),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              ShimmerSkeletonShapes.detailBlock(height: 148),
-              const SizedBox(height: 12),
+              ShimmerSkeletonShapes.detailBlock(
+                height: DetailConstants.loadingPrimaryBlockHeight,
+              ),
+              const SizedBox(height: DetailConstants.loadingBlockGap),
               ShimmerSkeletonShapes.detailBlock(),
-              const SizedBox(height: 12),
+              const SizedBox(height: DetailConstants.loadingBlockGap),
               ShimmerSkeletonShapes.detailBlock(),
             ],
           ),
         ),
         footer: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
+          padding: const EdgeInsets.symmetric(
+            horizontal: DetailConstants.footerPaddingHorizontal,
+          ),
           child: Align(
             alignment: Alignment.centerLeft,
-            child: ShimmerSkeletonShapes.compactBar(width: 180, height: 20),
+            child: ShimmerSkeletonShapes.compactBar(
+              width: DetailConstants.loadingFooterPlaceholderWidth,
+              height: DetailConstants.loadingFooterPlaceholderHeight,
+            ),
           ),
         ),
       ),
