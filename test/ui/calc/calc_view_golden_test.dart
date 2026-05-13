@@ -64,6 +64,7 @@ void main() {
   _calcHistoryCollapsedGolden();
   _calcHistoryExpandedGolden();
   _calcHistoryEmptyGolden();
+  _calcHistoryErrorSameAsEmptyTest();
   _calcHistoryRestoringGolden();
   _calcHistoryRestoringMatrixGolden();
   _calcHistoryBoundaryEmptyGolden();
@@ -846,6 +847,38 @@ void _calcHistoryEmptyGolden() {
       return null;
     },
   );
+}
+
+void _calcHistoryErrorSameAsEmptyTest() {
+  testWidgets('Calc history error renders the same empty history surface', (
+    tester,
+  ) async {
+    final errorState = CalcScreenState.initial().copyWith(
+      historyExpanded: true,
+      history: const <CalculationHistoryEntry>[],
+      historyPhase: CalcHistoryPhase.error,
+    );
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          appDatabaseProvider.overrideWithValue(_db),
+          calcScreenProvider.overrideWithBuild((ref, notifier) => errorState),
+        ],
+        child: MaterialApp(
+          theme: AppTheme.light(),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: const CalcView(),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('履歴 (0)'), findsOneWidget);
+    expect(find.text('履歴はありません'), findsOneWidget);
+    expect(_historyHeaderIcon(Icons.history_toggle_off), findsOneWidget);
+  });
 }
 
 void _calcHistoryBoundaryEmptyGolden() {
