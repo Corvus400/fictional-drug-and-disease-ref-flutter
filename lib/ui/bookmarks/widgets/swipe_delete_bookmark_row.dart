@@ -26,6 +26,7 @@ class SwipeDeleteBookmarkRow extends StatefulWidget {
     required this.onDelete,
     super.key,
     this.revealForTesting = false,
+    this.logDrugImageErrors = true,
   });
 
   /// Row view model.
@@ -39,6 +40,9 @@ class SwipeDeleteBookmarkRow extends StatefulWidget {
 
   /// Forces the 72dp reveal state for golden tests.
   final bool revealForTesting;
+
+  /// Whether drug image load/decode failures should be logged.
+  final bool logDrugImageErrors;
 
   @override
   State<SwipeDeleteBookmarkRow> createState() => _SwipeDeleteBookmarkRowState();
@@ -108,6 +112,7 @@ class _SwipeDeleteBookmarkRowState extends State<SwipeDeleteBookmarkRow>
             child: _BookmarkRowTile(
               row: widget.row,
               drugImageCacheManager: widget.drugImageCacheManager,
+              logDrugImageErrors: widget.logDrugImageErrors,
               tapEnabled: revealValue <= 0.001,
               swipeRevealed: revealValue > 0.001,
             ),
@@ -217,12 +222,14 @@ class _BookmarkRowTile extends StatelessWidget {
     required this.drugImageCacheManager,
     this.tapEnabled = true,
     this.swipeRevealed = false,
+    this.logDrugImageErrors = true,
   });
 
   final BookmarksRow row;
   final BaseCacheManager drugImageCacheManager;
   final bool tapEnabled;
   final bool swipeRevealed;
+  final bool logDrugImageErrors;
 
   @override
   Widget build(BuildContext context) {
@@ -234,6 +241,7 @@ class _BookmarkRowTile extends StatelessWidget {
         child: DrugResultCard(
           item: summary,
           cacheManager: drugImageCacheManager,
+          logImageErrors: logDrugImageErrors,
           trailingTime: _BookmarksSavedAt(bookmarkedAt: row.bookmarkedAt),
           borderRadius: cardBorderRadius,
           onTap: tapEnabled

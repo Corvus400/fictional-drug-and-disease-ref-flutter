@@ -15,6 +15,7 @@ class CompareImageWriter {
   final String outputRoot;
 
   static const double _maxDistance = 0.007;
+  static const double defaultChangedPixelRatioTolerance = 0.001;
   static const int _paneSpacing = 16;
   static const int _labelHeight = 20;
 
@@ -25,6 +26,7 @@ class CompareImageWriter {
     required Uint8List actualBytes,
     required String goldenPath,
     required int timestampNs,
+    double changedPixelRatioTolerance = 0,
   }) async {
     final outDir = Directory(outputRoot);
     if (!outDir.existsSync()) {
@@ -37,6 +39,14 @@ class CompareImageWriter {
     }
     final goldenImage = goldenBytes != null ? img.decodePng(goldenBytes) : null;
     final diffResult = _computeDiff(goldenImage, actualImage);
+    if (goldenImage != null &&
+        diffResult.diffPercentage <= changedPixelRatioTolerance) {
+      return CaptureResultUnchanged(
+        goldenFile: goldenPath,
+        timestampNs: timestampNs,
+      );
+    }
+
     final compareImage = _buildComparePane(
       golden: goldenImage,
       actual: actualImage,

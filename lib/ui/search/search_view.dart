@@ -39,7 +39,12 @@ part 'format/search_sort_sheet.dart';
 /// Search tab view.
 class SearchView extends ConsumerStatefulWidget {
   /// Creates a search view.
-  const SearchView({super.key, this.healthCheck, this.currentTime});
+  const SearchView({
+    super.key,
+    this.healthCheck,
+    this.currentTime,
+    this.debugLogDrugImageErrors = true,
+  });
 
   /// Deprecated compatibility parameter. Search UI no longer performs health
   /// checks from the view layer.
@@ -48,6 +53,10 @@ class SearchView extends ConsumerStatefulWidget {
   /// Current time override used to render deterministic history labels in
   /// tests. Production callers leave this null.
   final DateTime? currentTime;
+
+  /// Keeps expected fallback-image golden tests from emitting production logs.
+  @visibleForTesting
+  final bool debugLogDrugImageErrors;
 
   @override
   ConsumerState<SearchView> createState() => _SearchViewState();
@@ -222,6 +231,7 @@ class _SearchViewState extends ConsumerState<SearchView> with RouteAware {
                   onChangeDrugSort: notifier.changeDrugSort,
                   onChangeDiseaseSort: notifier.changeDiseaseSort,
                   onLoadMore: notifier.loadMore,
+                  logDrugImageErrors: widget.debugLogDrugImageErrors,
                 ),
               ),
             ],

@@ -19,7 +19,12 @@ const _historyDestructiveFg = Color(0xFFFFFFFF);
 /// Browsing history tab.
 class HistoryView extends ConsumerWidget {
   /// Creates a history view.
-  const HistoryView({super.key, this.currentTime, this.debugSwipeRevealRowId});
+  const HistoryView({
+    super.key,
+    this.currentTime,
+    this.debugSwipeRevealRowId,
+    this.debugLogDrugImageErrors = true,
+  });
 
   /// Fixed time for deterministic tests; defaults to the current local time.
   final DateTime? currentTime;
@@ -27,6 +32,10 @@ class HistoryView extends ConsumerWidget {
   /// Forces one row into the 72dp swipe reveal state for golden tests.
   @visibleForTesting
   final String? debugSwipeRevealRowId;
+
+  /// Keeps expected fallback-image golden tests from emitting production logs.
+  @visibleForTesting
+  final bool debugLogDrugImageErrors;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -57,6 +66,7 @@ class HistoryView extends ConsumerWidget {
         drugImageCacheManager: drugImageCacheManager,
         onDelete: notifier.deleteRow,
         debugSwipeRevealRowId: debugSwipeRevealRowId,
+        logDrugImageErrors: debugLogDrugImageErrors,
       ),
       _ => const _HistoryLoadingState(),
     };
@@ -430,6 +440,7 @@ class _HistoryRowsList extends StatelessWidget {
     required this.drugImageCacheManager,
     required this.onDelete,
     required this.debugSwipeRevealRowId,
+    required this.logDrugImageErrors,
   });
 
   final List<HistoryRow> rows;
@@ -437,6 +448,7 @@ class _HistoryRowsList extends StatelessWidget {
   final BaseCacheManager drugImageCacheManager;
   final Future<void> Function(String id) onDelete;
   final String? debugSwipeRevealRowId;
+  final bool logDrugImageErrors;
 
   @override
   Widget build(BuildContext context) {
@@ -454,6 +466,7 @@ class _HistoryRowsList extends StatelessWidget {
           drugImageCacheManager: drugImageCacheManager,
           onDelete: onDelete,
           revealForTesting: row.id == debugSwipeRevealRowId,
+          logDrugImageErrors: logDrugImageErrors,
         );
       },
     );

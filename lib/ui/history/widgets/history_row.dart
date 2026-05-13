@@ -27,6 +27,7 @@ class SwipeDeleteHistoryRow extends StatefulWidget {
     required this.onDelete,
     super.key,
     this.revealForTesting = false,
+    this.logDrugImageErrors = true,
   });
 
   /// Row view model.
@@ -43,6 +44,9 @@ class SwipeDeleteHistoryRow extends StatefulWidget {
 
   /// Forces the 72dp reveal state for golden tests.
   final bool revealForTesting;
+
+  /// Whether drug image load/decode failures should be logged.
+  final bool logDrugImageErrors;
 
   @override
   State<SwipeDeleteHistoryRow> createState() => _SwipeDeleteHistoryRowState();
@@ -113,6 +117,7 @@ class _SwipeDeleteHistoryRowState extends State<SwipeDeleteHistoryRow>
               row: widget.row,
               now: widget.now,
               drugImageCacheManager: widget.drugImageCacheManager,
+              logDrugImageErrors: widget.logDrugImageErrors,
               tapEnabled: revealValue <= 0.001,
               swipeRevealed: revealValue > 0.001,
             ),
@@ -226,6 +231,7 @@ class HistoryRowTile extends StatelessWidget {
     super.key,
     this.tapEnabled = true,
     this.swipeRevealed = false,
+    this.logDrugImageErrors = true,
   });
 
   /// Row view model.
@@ -243,6 +249,9 @@ class HistoryRowTile extends StatelessWidget {
   /// Whether the row is currently translated to reveal the delete action.
   final bool swipeRevealed;
 
+  /// Whether drug image load/decode failures should be logged.
+  final bool logDrugImageErrors;
+
   @override
   Widget build(BuildContext context) {
     final cardBorderRadius = _historyRowCardRadius(swipeRevealed);
@@ -252,6 +261,7 @@ class HistoryRowTile extends StatelessWidget {
         child: DrugResultCard(
           item: summary,
           cacheManager: drugImageCacheManager,
+          logImageErrors: logDrugImageErrors,
           trailingTime: _HistoryRowTime(now: now, row: row),
           borderRadius: cardBorderRadius,
           onTap: tapEnabled
