@@ -30,7 +30,7 @@ This application contains FICTIONAL drug, disease, and clinical content. It is N
 
 | ズーム | 履歴削除 |
 | :---: | :---: |
-| <video alt="ズーム" src="./assets/readme/videos/drug-zoom.mov"> | <video alt="履歴削除" src="./assets/readme/videos/history-delete.mp4"> |
+| ![ズーム](./assets/readme/videos/drug-zoom.webp) | ![履歴削除](./assets/readme/videos/history-delete.webp) |
 
 ---
 
