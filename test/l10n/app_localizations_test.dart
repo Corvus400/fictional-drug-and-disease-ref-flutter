@@ -5,6 +5,12 @@ import 'package:fictional_drug_and_disease_ref/l10n/app_localizations_ja.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
+  test('app title matches the product name', () {
+    final ja = AppLocalizationsJa();
+
+    expect(ja.appTitle, 'メディマスタ');
+  });
+
   test('browsing history strings match the design contract', () {
     final ja = AppLocalizationsJa();
 

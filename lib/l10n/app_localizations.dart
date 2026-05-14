@@ -97,7 +97,7 @@ abstract class AppLocalizations {
   /// アプリのタイトル
   ///
   /// In ja, this message translates to:
-  /// **'医薬品・疾患リファレンス'**
+  /// **'メディマスタ'**
   String get appTitle;
 
   /// No description provided for @commonLoading.

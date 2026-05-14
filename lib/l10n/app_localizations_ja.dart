@@ -9,7 +9,7 @@ class AppLocalizationsJa extends AppLocalizations {
   AppLocalizationsJa([String locale = 'ja']) : super(locale);
 
   @override
-  String get appTitle => '医薬品・疾患リファレンス';
+  String get appTitle => 'メディマスタ';
 
   @override
   String get commonLoading => '読み込み中';
