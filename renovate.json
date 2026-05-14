@@ -5,6 +5,7 @@
     ":dependencyDashboard"
   ],
   "dependencyDashboard": true,
+  "pinDigests": true,
   "enabledManagers": [
     "pub",
     "gradle",
