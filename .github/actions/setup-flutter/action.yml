@@ -11,12 +11,26 @@ runs:
         version="$(tr -d '[:space:]' < .flutter-version)"
         echo "version=$version" >> "$GITHUB_OUTPUT"
 
-    - name: Setup Flutter
-      uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
-      with:
-        flutter-version: ${{ steps.flutter-version.outputs.version }}
-        cache: true
-        cache-key: "flutter-:os:-:channel:-:version:-:arch:-:hash:"
+    - name: Install Flutter SDK
+      shell: bash
+      run: |
+        set -euo pipefail
+
+        version="${{ steps.flutter-version.outputs.version }}"
+        flutter_root="$RUNNER_TEMP/flutter-sdk-$version"
+
+        git -c advice.detachedHead=false clone \
+          --depth 1 \
+          --branch "$version" \
+          https://github.com/flutter/flutter.git \
+          "$flutter_root"
+
+        echo "FLUTTER_ROOT=$flutter_root" >> "$GITHUB_ENV"
+        echo "$flutter_root/bin" >> "$GITHUB_PATH"
+        git config --global --add safe.directory "$flutter_root"
+
+        "$flutter_root/bin/flutter" --version
+        "$flutter_root/bin/flutter" config --no-analytics
 
     - name: Install dependencies
       shell: bash
