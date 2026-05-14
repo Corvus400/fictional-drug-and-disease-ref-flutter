@@ -1,7 +1,17 @@
 // Preview entrypoints must stay public for Flutter Widget Previewer.
 // ignore_for_file: public_member_api_docs
 
-part of 'search_view.dart';
+import 'package:fictional_drug_and_disease_ref/core/error/app_exception.dart';
+import 'package:fictional_drug_and_disease_ref/domain/category/categories.dart';
+import 'package:fictional_drug_and_disease_ref/domain/drug/drug_search_params.dart';
+import 'package:fictional_drug_and_disease_ref/l10n/app_localizations.dart';
+import 'package:fictional_drug_and_disease_ref/theme/app_palette.dart';
+import 'package:fictional_drug_and_disease_ref/ui/previews/preview_data.dart';
+import 'package:fictional_drug_and_disease_ref/ui/previews/preview_support.dart';
+import 'package:fictional_drug_and_disease_ref/ui/search/search_screen_notifier.dart';
+import 'package:fictional_drug_and_disease_ref/ui/search/search_screen_state.dart';
+import 'package:fictional_drug_and_disease_ref/ui/search/search_view.dart';
+import 'package:flutter/material.dart';
 
 @FddScreenPreview(group: 'Search', name: 'Drug results')
 Widget previewSearchDrugResults() {
@@ -52,9 +62,9 @@ Widget previewSearchDrugFilterSheet() {
   return Builder(
     builder: (context) {
       final l10n = AppLocalizations.of(context)!;
-      return _Round6FilterSheetFrame(
+      return Round6FilterSheetFrame(
         height: 720,
-        child: _Round6FilterSheetScaffold(
+        child: Round6FilterSheetScaffold(
           title: l10n.searchFilterTitleForTarget(l10n.searchTabDrugs),
           axisPolicy: l10n.searchFilterAxisPolicy(4),
           expandedAxis: 'dosage_form',
@@ -63,7 +73,7 @@ Widget previewSearchDrugFilterSheet() {
           onApply: () {},
           resultCount: 24,
           axes: [
-            _FilterAxis(
+            FilterAxis(
               id: 'category_atc',
               title: l10n.searchFilterDrugAtc,
               summary: _atcLabel(previewCategories, 'C'),
@@ -71,7 +81,7 @@ Widget previewSearchDrugFilterSheet() {
               hint: l10n.searchFilterHintSingleValue(
                 previewCategories.atc.length,
               ),
-              content: _FilterChipGroup(
+              content: FilterChipGroup(
                 values: previewCategories.atc
                     .map((entry) => entry.code)
                     .toList(),
@@ -80,7 +90,7 @@ Widget previewSearchDrugFilterSheet() {
                 onToggle: (_) {},
               ),
             ),
-            _FilterAxis(
+            FilterAxis(
               id: 'dosage_form',
               title: l10n.searchFilterDrugDosageForm,
               summary: '2',
@@ -88,14 +98,14 @@ Widget previewSearchDrugFilterSheet() {
               hint: l10n.searchFilterHintMultiValue(
                 previewCategories.dosageForm.length,
               ),
-              content: _FilterChipGroup(
+              content: FilterChipGroup(
                 values: previewCategories.dosageForm,
                 selected: const {'tablet', 'injection_form'},
                 labelFor: (value) => _dosageFormLabel(l10n, value),
                 onToggle: (_) {},
               ),
             ),
-            _FilterAxis(
+            FilterAxis(
               id: 'route',
               title: l10n.searchFilterDrugRoute,
               summary: _routeLabel(l10n, 'oral'),
@@ -103,14 +113,14 @@ Widget previewSearchDrugFilterSheet() {
               hint: l10n.searchFilterHintMultiValue(
                 previewCategories.routeOfAdministration.length,
               ),
-              content: _FilterChipGroup(
+              content: FilterChipGroup(
                 values: previewCategories.routeOfAdministration,
                 selected: const {'oral'},
                 labelFor: (value) => _routeLabel(l10n, value),
                 onToggle: (_) {},
               ),
             ),
-            _FilterAxis(
+            FilterAxis(
               id: 'precaution_category',
               title: l10n.searchFilterDrugPrecautionCategory,
               summary: _precautionCategoryLabel(l10n, 'GERIATRIC'),
@@ -118,7 +128,7 @@ Widget previewSearchDrugFilterSheet() {
               hint: l10n.searchFilterHintMultiValue(
                 DrugPrecautionCategory.values.length,
               ),
-              content: _FilterChipGroup(
+              content: FilterChipGroup(
                 values: const ['GERIATRIC', 'PREGNANT', 'RENAL_IMPAIRMENT'],
                 selected: const {'GERIATRIC'},
                 labelFor: (value) => _precautionCategoryLabel(l10n, value),
@@ -137,9 +147,9 @@ Widget previewSearchDiseaseFilterSheet() {
   return Builder(
     builder: (context) {
       final l10n = AppLocalizations.of(context)!;
-      return _Round6FilterSheetFrame(
+      return Round6FilterSheetFrame(
         height: 720,
-        child: _Round6FilterSheetScaffold(
+        child: Round6FilterSheetScaffold(
           title: l10n.searchFilterTitleForTarget(l10n.searchTabDiseases),
           axisPolicy: l10n.searchFilterAxisPolicy(4),
           expandedAxis: 'department',
@@ -148,7 +158,7 @@ Widget previewSearchDiseaseFilterSheet() {
           onApply: () {},
           resultCount: 8,
           axes: [
-            _FilterAxis(
+            FilterAxis(
               id: 'icd10_chapter',
               title: l10n.searchFilterDiseaseIcd10Chapter,
               summary: _icd10ChapterLabel(previewCategories, 'chapter_ix'),
@@ -156,7 +166,7 @@ Widget previewSearchDiseaseFilterSheet() {
               hint: l10n.searchFilterHintDrillIn(
                 previewCategories.icd10Chapters.length,
               ),
-              content: _FilterChipGroup(
+              content: FilterChipGroup(
                 values: const ['chapter_ix', 'chapter_x', 'chapter_iv'],
                 selected: const {'chapter_ix'},
                 labelFor: (value) =>
@@ -164,7 +174,7 @@ Widget previewSearchDiseaseFilterSheet() {
                 onToggle: (_) {},
               ),
             ),
-            _FilterAxis(
+            FilterAxis(
               id: 'department',
               title: l10n.searchFilterDiseaseDepartment,
               summary: '2',
@@ -172,14 +182,14 @@ Widget previewSearchDiseaseFilterSheet() {
               hint: l10n.searchFilterHintMultiValue(
                 previewCategories.medicalDepartments.length,
               ),
-              content: _FilterChipGroup(
+              content: FilterChipGroup(
                 values: previewCategories.medicalDepartments,
                 selected: const {'cardiology', 'internal_medicine'},
                 labelFor: (value) => _departmentLabel(l10n, value),
                 onToggle: (_) {},
               ),
             ),
-            _FilterAxis(
+            FilterAxis(
               id: 'chronicity',
               title: l10n.searchFilterDiseaseChronicity,
               summary: _chronicityLabel(l10n, 'chronic'),
@@ -187,20 +197,20 @@ Widget previewSearchDiseaseFilterSheet() {
               hint: l10n.searchFilterHintSingleValue(
                 _diseaseChronicityValues.length,
               ),
-              content: _FilterChipGroup(
+              content: FilterChipGroup(
                 values: _diseaseChronicityValues,
                 selected: const {'chronic'},
                 labelFor: (value) => _chronicityLabel(l10n, value),
                 onToggle: (_) {},
               ),
             ),
-            _FilterAxis(
+            FilterAxis(
               id: 'infectious',
               title: l10n.searchFilterDiseaseInfectious,
               summary: l10n.searchDiseaseInfectiousFalse,
               selectedCount: 1,
               hint: l10n.searchFilterHintBool,
-              content: _BoolChipGroup(
+              content: BoolChipGroup(
                 value: false,
                 trueLabel: l10n.searchDiseaseInfectiousTrue,
                 falseLabel: l10n.searchDiseaseInfectiousFalse,
@@ -242,11 +252,11 @@ Widget previewSearchSortSheet() {
           key: 'drug-therapeutic-category',
         ),
       ];
-      return _Round6SortSheet(
+      return Round6SortSheet(
         palette: palette,
         children: [
           for (var index = 0; index < options.length; index++)
-            _SortOptionTile(
+            SortOptionTile(
               label: options[index].label,
               selected: options[index].sort == DrugSort.revisedAtDesc,
               selectedKey: options[index].key,
@@ -276,3 +286,70 @@ Widget _previewSearchView(SearchScreenState state) {
     ),
   );
 }
+
+String _atcLabel(Categories categories, String value) {
+  for (final entry in categories.atc) {
+    if (entry.code == value) {
+      return '${entry.code} ${entry.label}';
+    }
+  }
+  return value;
+}
+
+String _icd10ChapterLabel(Categories categories, String value) {
+  for (final entry in categories.icd10Chapters) {
+    if ('chapter_${entry.roman.toLowerCase()}' == value) {
+      return '${entry.roman} ${entry.label}';
+    }
+  }
+  return value;
+}
+
+String _dosageFormLabel(AppLocalizations l10n, String value) {
+  return switch (value) {
+    'tablet' => l10n.searchDrugDosageFormTablet,
+    'capsule' => l10n.searchDrugDosageFormCapsule,
+    'injection_form' => l10n.searchDrugDosageFormInjection,
+    'eye_drops' => l10n.searchDrugDosageFormEyeDrops,
+    _ => value,
+  };
+}
+
+String _routeLabel(AppLocalizations l10n, String value) {
+  return switch (value) {
+    'oral' => l10n.searchDrugRouteOral,
+    'topical' => l10n.searchDrugRouteTopical,
+    'injection_route' => l10n.searchDrugRouteInjection,
+    _ => value,
+  };
+}
+
+String _precautionCategoryLabel(AppLocalizations l10n, String value) {
+  return switch (value) {
+    'GERIATRIC' => l10n.searchDrugPrecautionGeriatric,
+    'PREGNANT' => l10n.searchDrugPrecautionPregnant,
+    'RENAL_IMPAIRMENT' => l10n.searchDrugPrecautionRenalImpairment,
+    _ => value,
+  };
+}
+
+String _departmentLabel(AppLocalizations l10n, String value) {
+  return switch (value) {
+    'cardiology' => l10n.searchDiseaseDepartmentCardiology,
+    'internal_medicine' => l10n.searchDiseaseDepartmentInternalMedicine,
+    'infectious_disease' => l10n.searchDiseaseDepartmentInfectiousDisease,
+    _ => value,
+  };
+}
+
+String _chronicityLabel(AppLocalizations l10n, String value) {
+  return switch (value) {
+    'acute' => l10n.searchDiseaseChronicityAcute,
+    'subacute' => l10n.searchDiseaseChronicitySubacute,
+    'chronic' => l10n.searchDiseaseChronicityChronic,
+    'relapsing' => l10n.searchDiseaseChronicityRelapsing,
+    _ => value,
+  };
+}
+
+const _diseaseChronicityValues = ['acute', 'subacute', 'chronic', 'relapsing'];

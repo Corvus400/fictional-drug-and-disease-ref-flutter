@@ -96,7 +96,6 @@ Future<T?> showScopedDialog<T>({
   }
   return showDialog<T>(
     context: context,
-    useRootNavigator: false,
     barrierDismissible: barrierDismissible,
     barrierColor: barrierColor,
     builder: builder,

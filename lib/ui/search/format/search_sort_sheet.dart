@@ -60,12 +60,12 @@ void _showSortSheet(
         context: context,
         child: Theme(
           data: theme,
-          child: _Round6SortSheet(
+          child: Round6SortSheet(
             palette: palette,
             children: state.tab == SearchTab.drugs
                 ? [
                     for (var index = 0; index < drugOptions.length; index++)
-                      _SortOptionTile(
+                      SortOptionTile(
                         label: drugOptions[index].label,
                         selected:
                             (state.drugParams.sort ?? DrugSort.revisedAtDesc) ==
@@ -81,7 +81,7 @@ void _showSortSheet(
                   ]
                 : [
                     for (var index = 0; index < diseaseOptions.length; index++)
-                      _SortOptionTile(
+                      SortOptionTile(
                         label: diseaseOptions[index].label,
                         selected:
                             (state.diseaseParams.sort ??
@@ -105,10 +105,19 @@ void _showSortSheet(
   );
 }
 
-class _Round6SortSheet extends StatelessWidget {
-  const _Round6SortSheet({required this.palette, required this.children});
+/// Shared visual container for the Round 6 sort sheet.
+class Round6SortSheet extends StatelessWidget {
+  /// Creates a sort sheet container.
+  const Round6SortSheet({
+    required this.palette,
+    required this.children,
+    super.key,
+  });
 
+  /// Palette used by the parent search view.
   final AppPalette palette;
+
+  /// Sort option rows.
   final List<Widget> children;
 
   @override
@@ -167,21 +176,35 @@ class _Round6SortSheet extends StatelessWidget {
   }
 }
 
-class _SortOptionTile extends StatelessWidget {
-  const _SortOptionTile({
+/// One selectable row in the Round 6 sort sheet.
+class SortOptionTile extends StatelessWidget {
+  /// Creates a sort option row.
+  const SortOptionTile({
     required this.label,
     required this.selected,
     required this.selectedKey,
     required this.isLast,
     required this.palette,
     required this.onTap,
+    super.key,
   });
 
+  /// Option label.
   final String label;
+
+  /// Whether this option is selected.
   final bool selected;
+
+  /// Stable key suffix for the selected icon.
   final String selectedKey;
+
+  /// Whether this row is the final row.
   final bool isLast;
+
+  /// Palette used by the parent search view.
   final AppPalette palette;
+
+  /// Called when this row is tapped.
   final VoidCallback onTap;
 
   @override

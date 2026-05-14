@@ -13,8 +13,6 @@ import 'package:fictional_drug_and_disease_ref/ui/_common/widgets/disease_result
 import 'package:fictional_drug_and_disease_ref/ui/_common/widgets/drug_result_card.dart';
 import 'package:fictional_drug_and_disease_ref/ui/_common/widgets/scoped_dialog_host.dart';
 import 'package:fictional_drug_and_disease_ref/ui/common/loading/shimmer_skeleton.dart';
-import 'package:fictional_drug_and_disease_ref/ui/previews/preview_data.dart';
-import 'package:fictional_drug_and_disease_ref/ui/previews/preview_support.dart';
 import 'package:fictional_drug_and_disease_ref/ui/search/constants/search_constants.dart';
 import 'package:fictional_drug_and_disease_ref/ui/search/format/relative_time_formatter.dart';
 import 'package:fictional_drug_and_disease_ref/ui/search/providers/drug_card_image_cache_manager_provider.dart';
@@ -38,7 +36,6 @@ part 'widgets/filter/disease_filter_sheet.dart';
 part 'widgets/filter/round6_filter_sheet_scaffold.dart';
 part 'format/search_label_formatters.dart';
 part 'format/search_sort_sheet.dart';
-part 'search_previews.dart';
 
 /// Search tab view.
 class SearchView extends ConsumerStatefulWidget {
@@ -292,7 +289,7 @@ class _SearchViewState extends ConsumerState<SearchView> with RouteAware {
           context: context,
           child: Theme(
             data: theme,
-            child: _Round6FilterSheetFrame(
+            child: Round6FilterSheetFrame(
               height: sheetHeight,
               child: switch (state.tab) {
                 SearchTab.drugs => _DrugFilterSheet(
