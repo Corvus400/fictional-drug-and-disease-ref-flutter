@@ -72,7 +72,7 @@ String _axisBlock(String source, String axisId) {
   expect(idStart, isNot(-1), reason: 'Axis $axisId must exist.');
 
   final nextAxisStart = source.indexOf(
-    "FilterAxis(\n              id: '",
+    "_FilterAxis(\n              id: '",
     idStart + idPattern.length,
   );
   final axesEnd = source.indexOf('          ];', idStart);

@@ -4,48 +4,14 @@
 import 'package:fictional_drug_and_disease_ref/domain/calc/bmi.dart';
 import 'package:fictional_drug_and_disease_ref/domain/calc/egfr.dart';
 import 'package:fictional_drug_and_disease_ref/l10n/app_localizations.dart';
-import 'package:fictional_drug_and_disease_ref/ui/calc/calc_screen_notifier.dart';
-import 'package:fictional_drug_and_disease_ref/ui/calc/calc_screen_state.dart';
-import 'package:fictional_drug_and_disease_ref/ui/calc/calc_view.dart';
 import 'package:fictional_drug_and_disease_ref/ui/calc/widgets/calc_category_badge.dart';
 import 'package:fictional_drug_and_disease_ref/ui/calc/widgets/calc_history_row.dart';
 import 'package:fictional_drug_and_disease_ref/ui/calc/widgets/calc_result_card.dart';
 import 'package:fictional_drug_and_disease_ref/ui/calc/widgets/charts/bmi_chart.dart';
 import 'package:fictional_drug_and_disease_ref/ui/calc/widgets/charts/crcl_chart.dart';
 import 'package:fictional_drug_and_disease_ref/ui/calc/widgets/charts/egfr_chart.dart';
-import 'package:fictional_drug_and_disease_ref/ui/previews/preview_data.dart';
 import 'package:fictional_drug_and_disease_ref/ui/previews/preview_support.dart';
 import 'package:flutter/material.dart';
-
-@FddScreenPreview(group: 'Calc', name: 'BMI result with history')
-Widget previewCalcBmiResult() {
-  return _previewCalcView(previewBmiResultState);
-}
-
-@FddScreenPreview(group: 'Calc', name: 'eGFR result')
-Widget previewCalcEgfrResult() {
-  return _previewCalcView(previewEgfrResultState);
-}
-
-@FddScreenPreview(group: 'Calc', name: 'CrCl result')
-Widget previewCalcCrClResult() {
-  return _previewCalcView(previewCrClResultState);
-}
-
-@FddScreenPreview(group: 'Calc', name: 'Partial input')
-Widget previewCalcPartialInput() {
-  return _previewCalcView(previewCalcPartialState);
-}
-
-@FddScreenPreview(group: 'Calc', name: 'Out of range')
-Widget previewCalcOutOfRange() {
-  return _previewCalcView(previewCalcOutOfRangeState);
-}
-
-@FddTabletPreview(group: 'Calc', name: 'Tablet split layout')
-Widget previewCalcTabletSplitLayout() {
-  return _previewCalcView(previewBmiResultState);
-}
 
 @FddComponentPreview(group: 'Calc', name: 'Result card with charts')
 Widget previewCalcResultCardGallery() {
@@ -110,14 +76,5 @@ Widget previewCalcHistoryRow() {
         onDelete: () {},
       );
     },
-  );
-}
-
-Widget _previewCalcView(CalcScreenState state) {
-  return previewProviderScope(
-    overrides: [
-      calcScreenProvider.overrideWithBuild((ref, notifier) => state),
-    ],
-    child: const CalcView(),
   );
 }

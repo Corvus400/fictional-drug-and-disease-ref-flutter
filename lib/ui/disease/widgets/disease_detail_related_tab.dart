@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:fictional_drug_and_disease_ref/config/api_config.dart';
 import 'package:fictional_drug_and_disease_ref/core/logging/app_logger.dart';
 import 'package:fictional_drug_and_disease_ref/core/result.dart';
@@ -8,7 +10,6 @@ import 'package:fictional_drug_and_disease_ref/l10n/app_localizations.dart';
 import 'package:fictional_drug_and_disease_ref/router/app_router.dart';
 import 'package:fictional_drug_and_disease_ref/theme/app_palette.dart';
 import 'package:fictional_drug_and_disease_ref/theme/detail_color_extension.dart';
-import 'package:fictional_drug_and_disease_ref/ui/_common/widgets/cached_file_image.dart';
 import 'package:fictional_drug_and_disease_ref/ui/detail/constants/detail_constants.dart';
 import 'package:fictional_drug_and_disease_ref/ui/detail/widgets/detail_carousel.dart';
 import 'package:fictional_drug_and_disease_ref/ui/detail/widgets/detail_panel.dart';
@@ -291,7 +292,7 @@ class _RelatedDrugCachedImage extends StatefulWidget {
 }
 
 class _RelatedDrugCachedImageState extends State<_RelatedDrugCachedImage> {
-  late Future<Object> _imageFile;
+  late Future<File> _imageFile;
   bool _loggedLoadError = false;
   bool _loggedDecodeError = false;
 
@@ -312,22 +313,23 @@ class _RelatedDrugCachedImageState extends State<_RelatedDrugCachedImage> {
     }
   }
 
-  Future<Object> _loadImageFile() async {
-    return widget.cacheManager.getSingleFile(
+  Future<File> _loadImageFile() async {
+    final cachedFile = await widget.cacheManager.getSingleFile(
       _relatedDrugCardImageUrl(widget.drug.imageUrl),
       key: _relatedDrugCardImageCacheKey(widget.drug.imageUrl),
     );
+    return File(cachedFile.path);
   }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<Object>(
+    return FutureBuilder<File>(
       future: _imageFile,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          return buildCachedFileImage(
-            file: snapshot.requireData,
-            imageKey: ValueKey<String>(
+          return Image.file(
+            snapshot.requireData,
+            key: ValueKey<String>(
               'detail-related-drug-image-${widget.drug.id}',
             ),
             fit: BoxFit.cover,

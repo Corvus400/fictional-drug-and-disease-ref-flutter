@@ -1,9 +1,10 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:drift/native.dart' show SqliteException;
 import 'package:fictional_drug_and_disease_ref/core/error/app_exception.dart';
 import 'package:fictional_drug_and_disease_ref/core/error/error_response_dto.dart';
-import 'package:fictional_drug_and_disease_ref/core/error/platform_exception_classifier.dart';
 import 'package:flutter/services.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -21,14 +22,14 @@ AppException toAppException(Object error) {
   if (error is DioException) {
     return _fromDioException(error);
   }
-  if (isSocketException(error) || error is TimeoutException) {
+  if (error is SocketException || error is TimeoutException) {
     return NetworkException(cause: error);
   }
   if (error is FormatException) {
     return ParseException(cause: error);
   }
-  if (isSqliteException(error)) {
-    return StorageException(kind: sqliteStorageKind(error), cause: error);
+  if (error is SqliteException) {
+    return StorageException(kind: _storageKindFor(error), cause: error);
   }
   if (error is PlatformException || error is MissingPluginException) {
     return StorageException(
@@ -59,7 +60,7 @@ AppException _fromDioException(DioException error) {
     if (inner is FormatException) {
       return ParseException(cause: error);
     }
-    if (isSocketException(inner) || inner is TimeoutException) {
+    if (inner is SocketException || inner is TimeoutException) {
       return NetworkException(cause: error);
     }
   }
@@ -96,4 +97,13 @@ ApiException _toApiException(
     message: '',
     cause: cause,
   );
+}
+
+StorageErrorKind _storageKindFor(SqliteException error) {
+  return switch (error.extendedResultCode) {
+    1555 || 2067 => StorageErrorKind.uniqueConstraint,
+    275 => StorageErrorKind.checkConstraint,
+    1299 => StorageErrorKind.notNull,
+    _ => StorageErrorKind.unknown,
+  };
 }

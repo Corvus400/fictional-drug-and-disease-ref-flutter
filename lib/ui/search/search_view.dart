@@ -11,7 +11,6 @@ import 'package:fictional_drug_and_disease_ref/router/app_router.dart';
 import 'package:fictional_drug_and_disease_ref/theme/app_palette.dart';
 import 'package:fictional_drug_and_disease_ref/ui/_common/widgets/disease_result_card.dart';
 import 'package:fictional_drug_and_disease_ref/ui/_common/widgets/drug_result_card.dart';
-import 'package:fictional_drug_and_disease_ref/ui/_common/widgets/scoped_dialog_host.dart';
 import 'package:fictional_drug_and_disease_ref/ui/common/loading/shimmer_skeleton.dart';
 import 'package:fictional_drug_and_disease_ref/ui/search/constants/search_constants.dart';
 import 'package:fictional_drug_and_disease_ref/ui/search/format/relative_time_formatter.dart';
@@ -275,7 +274,7 @@ class _SearchViewState extends ConsumerState<SearchView> with RouteAware {
         (overlayBox?.size.height ?? MediaQuery.sizeOf(context).height) -
         SearchConstants.searchFilterSheetTopOffset;
     unawaited(
-      showScopedModalBottomSheet<void>(
+      showModalBottomSheet<void>(
         context: context,
         isScrollControlled: true,
         backgroundColor: Colors.transparent,
@@ -285,68 +284,65 @@ class _SearchViewState extends ConsumerState<SearchView> with RouteAware {
               : SearchConstants.searchLightScrimAlpha,
         ),
         constraints: BoxConstraints.tightFor(height: sheetHeight),
-        builder: (sheetContext) => Localizations.override(
-          context: context,
-          child: Theme(
-            data: theme,
-            child: Round6FilterSheetFrame(
-              height: sheetHeight,
-              child: switch (state.tab) {
-                SearchTab.drugs => _DrugFilterSheet(
-                  state: state,
-                  onApply:
-                      ({
-                        required categoryAtc,
-                        required therapeuticCategory,
-                        required regulatoryClass,
-                        required dosageForm,
-                        required route,
-                        required adverseReactionKeyword,
-                        required precautionCategory,
-                      }) async {
-                        popScopedDialog<void>(sheetContext);
-                        await onApplyDrugFilter(
-                          categoryAtc: categoryAtc,
-                          therapeuticCategory: therapeuticCategory,
-                          regulatoryClass: regulatoryClass,
-                          dosageForm: dosageForm,
-                          route: route,
-                          adverseReactionKeyword: adverseReactionKeyword,
-                          precautionCategory: precautionCategory,
-                        );
-                      },
-                ),
-                SearchTab.diseases => _DiseaseFilterSheet(
-                  state: state,
-                  onApply:
-                      ({
-                        required icd10Chapter,
-                        required department,
-                        required chronicity,
-                        required infectious,
-                        required symptomKeyword,
-                        required onsetPattern,
-                        required examCategory,
-                        required hasPharmacologicalTreatment,
-                        required hasSeverityGrading,
-                      }) async {
-                        popScopedDialog<void>(sheetContext);
-                        await onApplyDiseaseFilter(
-                          icd10Chapter: icd10Chapter,
-                          department: department,
-                          chronicity: chronicity,
-                          infectious: infectious,
-                          symptomKeyword: symptomKeyword,
-                          onsetPattern: onsetPattern,
-                          examCategory: examCategory,
-                          hasPharmacologicalTreatment:
-                              hasPharmacologicalTreatment,
-                          hasSeverityGrading: hasSeverityGrading,
-                        );
-                      },
-                ),
-              },
-            ),
+        builder: (sheetContext) => Theme(
+          data: theme,
+          child: _Round6FilterSheetFrame(
+            height: sheetHeight,
+            child: switch (state.tab) {
+              SearchTab.drugs => _DrugFilterSheet(
+                state: state,
+                onApply:
+                    ({
+                      required categoryAtc,
+                      required therapeuticCategory,
+                      required regulatoryClass,
+                      required dosageForm,
+                      required route,
+                      required adverseReactionKeyword,
+                      required precautionCategory,
+                    }) async {
+                      Navigator.of(sheetContext).pop();
+                      await onApplyDrugFilter(
+                        categoryAtc: categoryAtc,
+                        therapeuticCategory: therapeuticCategory,
+                        regulatoryClass: regulatoryClass,
+                        dosageForm: dosageForm,
+                        route: route,
+                        adverseReactionKeyword: adverseReactionKeyword,
+                        precautionCategory: precautionCategory,
+                      );
+                    },
+              ),
+              SearchTab.diseases => _DiseaseFilterSheet(
+                state: state,
+                onApply:
+                    ({
+                      required icd10Chapter,
+                      required department,
+                      required chronicity,
+                      required infectious,
+                      required symptomKeyword,
+                      required onsetPattern,
+                      required examCategory,
+                      required hasPharmacologicalTreatment,
+                      required hasSeverityGrading,
+                    }) async {
+                      Navigator.of(sheetContext).pop();
+                      await onApplyDiseaseFilter(
+                        icd10Chapter: icd10Chapter,
+                        department: department,
+                        chronicity: chronicity,
+                        infectious: infectious,
+                        symptomKeyword: symptomKeyword,
+                        onsetPattern: onsetPattern,
+                        examCategory: examCategory,
+                        hasPharmacologicalTreatment:
+                            hasPharmacologicalTreatment,
+                        hasSeverityGrading: hasSeverityGrading,
+                      );
+                    },
+              ),
+            },
           ),
         ),
       ),

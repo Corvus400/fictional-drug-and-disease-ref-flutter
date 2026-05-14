@@ -74,9 +74,9 @@ class _DiseaseFilterSheetState extends ConsumerState<_DiseaseFilterSheet> {
     final l10n = AppLocalizations.of(context)!;
     final categories = widget.state.categories;
     final axes = categories == null
-        ? <FilterAxis>[]
+        ? <_FilterAxis>[]
         : [
-            FilterAxis(
+            _FilterAxis(
               id: 'icd10_chapter',
               title: l10n.searchFilterDiseaseIcd10Chapter,
               summary: _selectedSummary(
@@ -88,7 +88,7 @@ class _DiseaseFilterSheetState extends ConsumerState<_DiseaseFilterSheet> {
               hint: l10n.searchFilterHintDrillIn(
                 categories.icd10Chapters.length,
               ),
-              content: FilterChipGroup(
+              content: _FilterChipGroup(
                 values: categories.icd10Chapters
                     .map(_icd10ChapterValue)
                     .toList(),
@@ -100,7 +100,7 @@ class _DiseaseFilterSheetState extends ConsumerState<_DiseaseFilterSheet> {
                 }),
               ),
             ),
-            FilterAxis(
+            _FilterAxis(
               id: 'department',
               title: l10n.searchFilterDiseaseDepartment,
               summary: _selectedSummary(
@@ -112,7 +112,7 @@ class _DiseaseFilterSheetState extends ConsumerState<_DiseaseFilterSheet> {
               hint: l10n.searchFilterHintMultiValue(
                 categories.medicalDepartments.length,
               ),
-              content: FilterChipGroup(
+              content: _FilterChipGroup(
                 values: categories.medicalDepartments,
                 selected: _department,
                 labelFor: (value) => _departmentLabel(l10n, value),
@@ -122,7 +122,7 @@ class _DiseaseFilterSheetState extends ConsumerState<_DiseaseFilterSheet> {
                 }),
               ),
             ),
-            FilterAxis(
+            _FilterAxis(
               id: 'chronicity',
               title: l10n.searchFilterDiseaseChronicity,
               summary: _selectedSummary(
@@ -134,7 +134,7 @@ class _DiseaseFilterSheetState extends ConsumerState<_DiseaseFilterSheet> {
               hint: l10n.searchFilterHintSingleValue(
                 _diseaseChronicityValues.length,
               ),
-              content: FilterChipGroup(
+              content: _FilterChipGroup(
                 values: _diseaseChronicityValues,
                 selected: _chronicity,
                 labelFor: (value) => _chronicityLabel(l10n, value),
@@ -144,13 +144,13 @@ class _DiseaseFilterSheetState extends ConsumerState<_DiseaseFilterSheet> {
                 }),
               ),
             ),
-            FilterAxis(
+            _FilterAxis(
               id: 'infectious',
               title: l10n.searchFilterDiseaseInfectious,
               summary: _boolSummary(l10n, _infectious),
               selectedCount: _infectious == null ? 0 : 1,
               hint: l10n.searchFilterHintBool,
-              content: BoolChipGroup(
+              content: _BoolChipGroup(
                 value: _infectious,
                 trueLabel: l10n.searchDiseaseInfectiousTrue,
                 falseLabel: l10n.searchDiseaseInfectiousFalse,
@@ -160,7 +160,7 @@ class _DiseaseFilterSheetState extends ConsumerState<_DiseaseFilterSheet> {
                 }),
               ),
             ),
-            FilterAxis(
+            _FilterAxis(
               id: 'symptom_keyword',
               title: l10n.searchFilterDiseaseSymptomKeyword,
               summary: _textSummary(
@@ -181,7 +181,7 @@ class _DiseaseFilterSheetState extends ConsumerState<_DiseaseFilterSheet> {
                 ),
               ),
             ),
-            FilterAxis(
+            _FilterAxis(
               id: 'onset_pattern',
               title: l10n.searchFilterDiseaseOnsetPattern,
               summary: _selectedSummary(
@@ -193,7 +193,7 @@ class _DiseaseFilterSheetState extends ConsumerState<_DiseaseFilterSheet> {
               hint: l10n.searchFilterHintMultiValue(
                 _diseaseOnsetPatternValues.length,
               ),
-              content: FilterChipGroup(
+              content: _FilterChipGroup(
                 values: _diseaseOnsetPatternValues,
                 selected: _onsetPattern,
                 labelFor: (value) => _onsetPatternLabel(l10n, value),
@@ -203,7 +203,7 @@ class _DiseaseFilterSheetState extends ConsumerState<_DiseaseFilterSheet> {
                 }),
               ),
             ),
-            FilterAxis(
+            _FilterAxis(
               id: 'exam_category',
               title: l10n.searchFilterDiseaseExamCategory,
               summary: _selectedSummary(
@@ -215,7 +215,7 @@ class _DiseaseFilterSheetState extends ConsumerState<_DiseaseFilterSheet> {
               hint: l10n.searchFilterHintMultiValue(
                 _diseaseExamCategoryValues.length,
               ),
-              content: FilterChipGroup(
+              content: _FilterChipGroup(
                 values: _diseaseExamCategoryValues,
                 selected: _examCategory,
                 labelFor: (value) => _examCategoryLabel(l10n, value),
@@ -225,13 +225,13 @@ class _DiseaseFilterSheetState extends ConsumerState<_DiseaseFilterSheet> {
                 }),
               ),
             ),
-            FilterAxis(
+            _FilterAxis(
               id: 'has_pharmacological_treatment',
               title: l10n.searchFilterDiseaseHasPharmacologicalTreatment,
               summary: _boolSummary(l10n, _hasPharmacologicalTreatment),
               selectedCount: _hasPharmacologicalTreatment == null ? 0 : 1,
               hint: l10n.searchFilterHintBool,
-              content: BoolChipGroup(
+              content: _BoolChipGroup(
                 value: _hasPharmacologicalTreatment,
                 trueLabel: l10n.searchDiseaseBoolTrue,
                 falseLabel: l10n.searchDiseaseBoolFalse,
@@ -241,13 +241,13 @@ class _DiseaseFilterSheetState extends ConsumerState<_DiseaseFilterSheet> {
                 }),
               ),
             ),
-            FilterAxis(
+            _FilterAxis(
               id: 'has_severity_grading',
               title: l10n.searchFilterDiseaseHasSeverityGrading,
               summary: _boolSummary(l10n, _hasSeverityGrading),
               selectedCount: _hasSeverityGrading == null ? 0 : 1,
               hint: l10n.searchFilterHintBool,
-              content: BoolChipGroup(
+              content: _BoolChipGroup(
                 value: _hasSeverityGrading,
                 trueLabel: l10n.searchDiseaseBoolTrue,
                 falseLabel: l10n.searchDiseaseBoolFalse,
@@ -258,7 +258,7 @@ class _DiseaseFilterSheetState extends ConsumerState<_DiseaseFilterSheet> {
               ),
             ),
           ];
-    return Round6FilterSheetScaffold(
+    return _Round6FilterSheetScaffold(
       title: l10n.searchFilterTitleForTarget(l10n.searchTabDiseases),
       axisPolicy: l10n.searchFilterAxisPolicy(axes.length),
       axes: axes,

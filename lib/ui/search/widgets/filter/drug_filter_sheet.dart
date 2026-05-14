@@ -67,9 +67,9 @@ class _DrugFilterSheetState extends ConsumerState<_DrugFilterSheet> {
     final l10n = AppLocalizations.of(context)!;
     final categories = widget.state.categories;
     final axes = categories == null
-        ? <FilterAxis>[]
+        ? <_FilterAxis>[]
         : [
-            FilterAxis(
+            _FilterAxis(
               id: 'regulatory_class',
               title: l10n.searchFilterDrugRegulatoryClass,
               summary: _selectedSummary(
@@ -81,7 +81,7 @@ class _DrugFilterSheetState extends ConsumerState<_DrugFilterSheet> {
               hint: l10n.searchFilterHintMultiValue(
                 categories.regulatoryClass.length,
               ),
-              content: FilterChipGroup(
+              content: _FilterChipGroup(
                 values: categories.regulatoryClass,
                 selected: _regulatoryClass,
                 labelFor: (value) => _regulatoryClassLabel(l10n, value),
@@ -91,7 +91,7 @@ class _DrugFilterSheetState extends ConsumerState<_DrugFilterSheet> {
                 }),
               ),
             ),
-            FilterAxis(
+            _FilterAxis(
               id: 'dosage_form',
               title: l10n.searchFilterDrugDosageForm,
               summary: _selectedSummary(
@@ -103,7 +103,7 @@ class _DrugFilterSheetState extends ConsumerState<_DrugFilterSheet> {
               hint: l10n.searchFilterHintMultiValue(
                 categories.dosageForm.length,
               ),
-              content: FilterChipGroup(
+              content: _FilterChipGroup(
                 values: categories.dosageForm,
                 selected: _dosageForm,
                 labelFor: (value) => _dosageFormLabel(l10n, value),
@@ -113,7 +113,7 @@ class _DrugFilterSheetState extends ConsumerState<_DrugFilterSheet> {
                 }),
               ),
             ),
-            FilterAxis(
+            _FilterAxis(
               id: 'route',
               title: l10n.searchFilterDrugRoute,
               summary: _selectedSummary(
@@ -125,7 +125,7 @@ class _DrugFilterSheetState extends ConsumerState<_DrugFilterSheet> {
               hint: l10n.searchFilterHintMultiValue(
                 categories.routeOfAdministration.length,
               ),
-              content: FilterChipGroup(
+              content: _FilterChipGroup(
                 values: categories.routeOfAdministration,
                 selected: _route,
                 labelFor: (value) => _routeLabel(l10n, value),
@@ -135,7 +135,7 @@ class _DrugFilterSheetState extends ConsumerState<_DrugFilterSheet> {
                 }),
               ),
             ),
-            FilterAxis(
+            _FilterAxis(
               id: 'atc',
               title: l10n.searchFilterDrugAtc,
               summary: _selectedSummary(
@@ -145,7 +145,7 @@ class _DrugFilterSheetState extends ConsumerState<_DrugFilterSheet> {
               ),
               selectedCount: _categoryAtc.length,
               hint: l10n.searchFilterHintSingleValue(categories.atc.length),
-              content: FilterChipGroup(
+              content: _FilterChipGroup(
                 values: categories.atc.map((entry) => entry.code).toList(),
                 selected: _categoryAtc,
                 labelFor: (value) => _atcLabel(categories, value),
@@ -155,7 +155,7 @@ class _DrugFilterSheetState extends ConsumerState<_DrugFilterSheet> {
                 }),
               ),
             ),
-            FilterAxis(
+            _FilterAxis(
               id: 'therapeutic_category',
               title: l10n.searchFilterDrugTherapeuticCategory,
               summary: _selectedSummary(
@@ -165,7 +165,7 @@ class _DrugFilterSheetState extends ConsumerState<_DrugFilterSheet> {
               ),
               selectedCount: _therapeuticCategory.length,
               hint: l10n.searchFilterHintHierarchy,
-              content: FilterChipGroup(
+              content: _FilterChipGroup(
                 values: categories.therapeuticCategories
                     .map((entry) => entry.id)
                     .toList(),
@@ -178,7 +178,7 @@ class _DrugFilterSheetState extends ConsumerState<_DrugFilterSheet> {
                 }),
               ),
             ),
-            FilterAxis(
+            _FilterAxis(
               id: 'adverse_reaction',
               title: l10n.searchFilterDrugAdverseReactionKeyword,
               summary: _textSummary(
@@ -202,7 +202,7 @@ class _DrugFilterSheetState extends ConsumerState<_DrugFilterSheet> {
                 ),
               ),
             ),
-            FilterAxis(
+            _FilterAxis(
               id: 'precaution_category',
               title: l10n.searchFilterDrugPrecautionCategory,
               summary: _selectedSummary(
@@ -214,7 +214,7 @@ class _DrugFilterSheetState extends ConsumerState<_DrugFilterSheet> {
               hint: l10n.searchFilterHintMultiValue(
                 DrugPrecautionCategory.values.length,
               ),
-              content: FilterChipGroup(
+              content: _FilterChipGroup(
                 values: DrugPrecautionCategory.values
                     .map((category) => category.wireValue)
                     .toList(),
@@ -227,7 +227,7 @@ class _DrugFilterSheetState extends ConsumerState<_DrugFilterSheet> {
               ),
             ),
           ];
-    return Round6FilterSheetScaffold(
+    return _Round6FilterSheetScaffold(
       title: l10n.searchFilterTitleForTarget(l10n.searchTabDrugs),
       axisPolicy: l10n.searchFilterAxisPolicy(axes.length),
       axes: axes,

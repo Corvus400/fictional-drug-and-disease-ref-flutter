@@ -1,23 +1,11 @@
-import 'dart:typed_data';
-
 import 'package:fictional_drug_and_disease_ref/config/api_config.dart';
 import 'package:fictional_drug_and_disease_ref/config/flavor.dart';
-import 'package:fictional_drug_and_disease_ref/data/providers/api_providers.dart';
-import 'package:fictional_drug_and_disease_ref/data/repositories/categories_repository.dart';
-import 'package:fictional_drug_and_disease_ref/data/repositories/disease_repository.dart';
-import 'package:fictional_drug_and_disease_ref/data/repositories/drug_repository.dart';
-import 'package:fictional_drug_and_disease_ref/data/services/api/preview_api_clients.dart';
 import 'package:fictional_drug_and_disease_ref/l10n/app_localizations.dart';
 import 'package:fictional_drug_and_disease_ref/theme/app_theme.dart';
-import 'package:fictional_drug_and_disease_ref/ui/_common/widgets/scoped_dialog_host.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widget_previews.dart';
-import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/misc.dart';
-
-/// Cache manager shared by previews that should never perform live fetches.
-const previewFailingCacheManager = PreviewFailingCacheManager();
 
 /// Common app preview theme.
 PreviewThemeData previewTheme() {
@@ -86,27 +74,8 @@ Widget previewProviderScope({
   ensurePreviewBootstrap();
   return ProviderScope(
     overrides: overrides,
-    child: ScopedDialogHost(child: child),
+    child: child,
   );
-}
-
-/// Provider overrides that keep previews away from live API calls.
-List<Override> previewApiOverrides() {
-  const drugClient = PreviewDrugApiClient();
-  const diseaseClient = PreviewDiseaseApiClient();
-  const categoryClient = PreviewCategoryApiClient();
-  return [
-    drugApiClientProvider.overrideWithValue(drugClient),
-    diseaseApiClientProvider.overrideWithValue(diseaseClient),
-    categoryApiClientProvider.overrideWithValue(categoryClient),
-    drugRepositoryProvider.overrideWithValue(const DrugRepository(drugClient)),
-    diseaseRepositoryProvider.overrideWithValue(
-      const DiseaseRepository(diseaseClient),
-    ),
-    categoriesRepositoryProvider.overrideWithValue(
-      CategoriesRepository(categoryClient),
-    ),
-  ];
 }
 
 /// Ensures static app configuration exists before preview widgets build.
@@ -245,98 +214,4 @@ base class FddSheetPreview extends MultiPreview {
       localizations: previewLocalizations,
     ),
   ];
-}
-
-/// Deterministic cache manager that always renders image fallbacks.
-final class PreviewFailingCacheManager implements BaseCacheManager {
-  /// Creates a failing preview cache manager.
-  const PreviewFailingCacheManager();
-
-  @override
-  Future<FileInfo> downloadFile(
-    String url, {
-    String? key,
-    Map<String, String>? authHeaders,
-    bool force = false,
-  }) {
-    return Future<FileInfo>.error(_error(url));
-  }
-
-  @override
-  Future<void> emptyCache() async {}
-
-  @override
-  Future<void> dispose() async {}
-
-  @override
-  Stream<FileInfo> getFile(
-    String url, {
-    String? key,
-    Map<String, String>? headers,
-  }) {
-    return Stream<FileInfo>.error(_error(url));
-  }
-
-  @override
-  Future<FileInfo?> getFileFromCache(
-    String key, {
-    bool ignoreMemCache = false,
-  }) async {
-    return null;
-  }
-
-  @override
-  Future<FileInfo?> getFileFromMemory(String key) async {
-    return null;
-  }
-
-  @override
-  Stream<FileResponse> getFileStream(
-    String url, {
-    String? key,
-    Map<String, String>? headers,
-    bool withProgress = false,
-  }) {
-    return Stream<FileResponse>.error(_error(url));
-  }
-
-  @override
-  Future<Never> getSingleFile(
-    String url, {
-    String? key,
-    Map<String, String>? headers,
-  }) {
-    return Future<Never>.error(_error(url));
-  }
-
-  @override
-  Future<Never> putFile(
-    String url,
-    Uint8List fileBytes, {
-    String? key,
-    String? eTag,
-    Duration maxAge = const Duration(days: 30),
-    String fileExtension = 'file',
-  }) {
-    return Future<Never>.error(_error(url));
-  }
-
-  @override
-  Future<Never> putFileStream(
-    String url,
-    Stream<List<int>> source, {
-    String? key,
-    String? eTag,
-    Duration maxAge = const Duration(days: 30),
-    String fileExtension = 'file',
-  }) {
-    return Future<Never>.error(_error(url));
-  }
-
-  @override
-  Future<void> removeFile(String key) async {}
-
-  StateError _error(String value) {
-    return StateError('Preview cache manager does not fetch files: $value');
-  }
 }

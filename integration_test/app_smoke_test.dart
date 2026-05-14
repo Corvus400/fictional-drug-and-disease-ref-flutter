@@ -66,11 +66,12 @@ void main() {
       debugPrint('[app_smoke_test] waiting for drug detail');
       await _pumpUntil(tester, find.text('医薬品詳細'));
       expect(find.text('トレデキム'), findsWidgets);
-      final heroImageArea = find.byKey(
-        const ValueKey<String>('drug-detail-hero-image-area-drug_0080'),
+      expect(
+        find.byKey(
+          const ValueKey<String>('drug-detail-hero-image-area-drug_0080'),
+        ),
+        findsOneWidget,
       );
-      await _pumpUntil(tester, heroImageArea);
-      expect(heroImageArea, findsOneWidget);
       debugPrint('[app_smoke_test] completed');
     },
     timeout: const Timeout(Duration(minutes: 2)),

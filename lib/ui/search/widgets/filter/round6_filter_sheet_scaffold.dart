@@ -1,18 +1,9 @@
 part of '../../search_view.dart';
 
-/// Shared frame for the Round 6 search filter sheet.
-class Round6FilterSheetFrame extends StatelessWidget {
-  /// Creates a fixed-height filter sheet frame.
-  const Round6FilterSheetFrame({
-    required this.height,
-    required this.child,
-    super.key,
-  });
+class _Round6FilterSheetFrame extends StatelessWidget {
+  const _Round6FilterSheetFrame({required this.height, required this.child});
 
-  /// Sheet height.
   final double height;
-
-  /// Sheet body.
   final Widget child;
 
   @override
@@ -37,10 +28,8 @@ class Round6FilterSheetFrame extends StatelessWidget {
   }
 }
 
-/// Presentation model for one filter axis row.
-final class FilterAxis {
-  /// Creates a filter axis row description.
-  const FilterAxis({
+final class _FilterAxis {
+  const _FilterAxis({
     required this.id,
     required this.title,
     required this.summary,
@@ -49,29 +38,16 @@ final class FilterAxis {
     required this.content,
   });
 
-  /// Stable axis id used for expansion state and widget keys.
   final String id;
-
-  /// Axis title.
   final String title;
-
-  /// Current selected-value summary.
   final String summary;
-
-  /// Number of selected values.
   final int selectedCount;
-
-  /// Helper text shown on the row.
   final String hint;
-
-  /// Expanded content for this axis.
   final Widget content;
 }
 
-/// Shared scaffold for the Round 6 search filter sheet.
-class Round6FilterSheetScaffold extends StatelessWidget {
-  /// Creates a search filter sheet scaffold.
-  const Round6FilterSheetScaffold({
+class _Round6FilterSheetScaffold extends StatelessWidget {
+  const _Round6FilterSheetScaffold({
     required this.title,
     required this.axisPolicy,
     required this.axes,
@@ -80,31 +56,15 @@ class Round6FilterSheetScaffold extends StatelessWidget {
     required this.onReset,
     required this.onApply,
     required this.resultCount,
-    super.key,
   });
 
-  /// Sheet title.
   final String title;
-
-  /// Axis selection policy copy.
   final String axisPolicy;
-
-  /// Axis rows rendered by the sheet.
-  final List<FilterAxis> axes;
-
-  /// Currently expanded axis id.
+  final List<_FilterAxis> axes;
   final String expandedAxis;
-
-  /// Called when an axis row is tapped.
   final ValueChanged<String> onToggleAxis;
-
-  /// Called when reset is tapped.
   final VoidCallback onReset;
-
-  /// Called when apply is tapped.
   final VoidCallback onApply;
-
-  /// Result count preview shown in the apply button.
   final int resultCount;
 
   @override
@@ -268,7 +228,7 @@ class _FilterAxisRow extends StatelessWidget {
     required this.onTap,
   });
 
-  final FilterAxis axis;
+  final _FilterAxis axis;
   final bool expanded;
   final double gutter;
   final VoidCallback onTap;
@@ -416,27 +376,17 @@ class _FilterCountPill extends StatelessWidget {
   }
 }
 
-/// Wrap of selectable filter chips.
-class FilterChipGroup extends StatelessWidget {
-  /// Creates a filter chip group.
-  const FilterChipGroup({
+class _FilterChipGroup extends StatelessWidget {
+  const _FilterChipGroup({
     required this.values,
     required this.selected,
     required this.labelFor,
     required this.onToggle,
-    super.key,
   });
 
-  /// Values rendered as chips.
   final List<String> values;
-
-  /// Currently selected values.
   final Set<String> selected;
-
-  /// Maps a raw value to display text.
   final String Function(String value) labelFor;
-
-  /// Called when a chip is toggled.
   final ValueChanged<String> onToggle;
 
   @override
@@ -538,27 +488,17 @@ class _FilterPillChip extends StatelessWidget {
   }
 }
 
-/// Two-choice boolean chip group.
-class BoolChipGroup extends StatelessWidget {
-  /// Creates a boolean chip group.
-  const BoolChipGroup({
+class _BoolChipGroup extends StatelessWidget {
+  const _BoolChipGroup({
     required this.value,
     required this.trueLabel,
     required this.falseLabel,
     required this.onChanged,
-    super.key,
   });
 
-  /// Current boolean value, or null when unselected.
   final bool? value;
-
-  /// Label for true.
   final String trueLabel;
-
-  /// Label for false.
   final String falseLabel;
-
-  /// Called when the selected value changes.
   final ValueChanged<bool?> onChanged;
 
   @override

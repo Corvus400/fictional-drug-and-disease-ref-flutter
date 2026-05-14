@@ -287,50 +287,6 @@ void main() {
     });
 
     testWidgets(
-      'opens bulk delete dialog when app l10n is scoped to preview child',
-      (tester) async {
-        tester.view.devicePixelRatio = 2;
-        tester.view.physicalSize = const Size(780, 1688);
-        addTearDown(() {
-          tester.view.resetPhysicalSize();
-          tester.view.resetDevicePixelRatio();
-        });
-
-        final now = DateTime(2026, 5, 12, 12);
-        final viewedAt = now.subtract(const Duration(minutes: 5));
-        await _seedDrug(db, _drugSummary, viewedAt);
-
-        await tester.pumpWidget(
-          _App(
-            db: db,
-            historyStream: Stream.value([
-              BrowsingHistoryEntry(id: _drugSummary.id, viewedAt: viewedAt),
-            ]),
-            currentTime: now,
-            scopeAppLocalizationsToHome: true,
-          ),
-        );
-        for (var i = 0; i < 5; i += 1) {
-          await tester.pump(const Duration(milliseconds: 100));
-        }
-        addTearDown(() async {
-          await tester.pumpWidget(const SizedBox.shrink());
-          await tester.pump();
-          await tester.pump(const Duration(milliseconds: 1));
-        });
-
-        await tester.tap(find.byKey(const ValueKey('history-bulk-delete-fab')));
-        await tester.pumpAndSettle();
-
-        expect(tester.takeException(), isNull);
-        expect(
-          find.byKey(const ValueKey('history-bulk-delete-confirm-dialog')),
-          findsOneWidget,
-        );
-      },
-    );
-
-    testWidgets(
       'does not scroll rows to top from the primary scroll controller',
       (
         tester,
@@ -761,25 +717,18 @@ class _App extends StatelessWidget {
     required this.historyStream,
     this.currentTime,
     this.debugSwipeRevealRowId,
-    this.scopeAppLocalizationsToHome = false,
   }) : cacheManager = _fallbackImageCacheManager();
 
   final AppDatabase? db;
   final Stream<List<BrowsingHistoryEntry>> historyStream;
   final DateTime? currentTime;
   final String? debugSwipeRevealRowId;
-  final bool scopeAppLocalizationsToHome;
   final BaseCacheManager cacheManager;
   final DrugApiClient drugApiClient = _MockDrugApiClient();
   final DiseaseApiClient diseaseApiClient = _MockDiseaseApiClient();
 
   @override
   Widget build(BuildContext context) {
-    final historyView = HistoryView(
-      currentTime: currentTime,
-      debugSwipeRevealRowId: debugSwipeRevealRowId,
-      debugLogDrugImageErrors: false,
-    );
     return ProviderScope(
       overrides: [
         if (db != null) appDatabaseProvider.overrideWithValue(db!),
@@ -792,24 +741,12 @@ class _App extends StatelessWidget {
       ],
       child: MaterialApp(
         theme: AppTheme.light(),
-        localizationsDelegates: scopeAppLocalizationsToHome
-            ? null
-            : AppLocalizations.localizationsDelegates,
-        supportedLocales: scopeAppLocalizationsToHome
-            ? const [Locale('en')]
-            : AppLocalizations.supportedLocales,
-        home: Builder(
-          builder: (context) {
-            if (!scopeAppLocalizationsToHome) {
-              return historyView;
-            }
-            return Localizations.override(
-              context: context,
-              locale: const Locale('ja'),
-              delegates: AppLocalizations.localizationsDelegates,
-              child: historyView,
-            );
-          },
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        home: HistoryView(
+          currentTime: currentTime,
+          debugSwipeRevealRowId: debugSwipeRevealRowId,
+          debugLogDrugImageErrors: false,
         ),
       ),
     );

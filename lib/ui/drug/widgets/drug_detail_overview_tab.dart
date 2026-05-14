@@ -1,10 +1,11 @@
+import 'dart:io';
+
 import 'package:fictional_drug_and_disease_ref/config/api_config.dart';
 import 'package:fictional_drug_and_disease_ref/core/logging/app_logger.dart';
 import 'package:fictional_drug_and_disease_ref/domain/drug/drug.dart';
 import 'package:fictional_drug_and_disease_ref/l10n/app_localizations.dart';
 import 'package:fictional_drug_and_disease_ref/theme/app_palette.dart';
 import 'package:fictional_drug_and_disease_ref/theme/detail_color_extension.dart';
-import 'package:fictional_drug_and_disease_ref/ui/_common/widgets/cached_file_image.dart';
 import 'package:fictional_drug_and_disease_ref/ui/detail/constants/detail_constants.dart';
 import 'package:fictional_drug_and_disease_ref/ui/detail/widgets/detail_badge.dart';
 import 'package:fictional_drug_and_disease_ref/ui/detail/widgets/detail_kv_row.dart';
@@ -235,7 +236,7 @@ class _DrugHeroImage extends StatefulWidget {
 }
 
 class _DrugHeroImageState extends State<_DrugHeroImage> {
-  late Future<Object> _imageFile;
+  late Future<File> _imageFile;
   bool _loggedLoadError = false;
   bool _loggedDecodeError = false;
 
@@ -256,12 +257,13 @@ class _DrugHeroImageState extends State<_DrugHeroImage> {
     }
   }
 
-  Future<Object> _loadImageFile() async {
+  Future<File> _loadImageFile() async {
     final imageUrl = _drugDetailHeroImageUrl(widget.drug.imageUrl);
-    return widget.cacheManager.getSingleFile(
+    final cachedFile = await widget.cacheManager.getSingleFile(
       imageUrl,
       key: _drugDetailHeroImageCacheKey(widget.drug.imageUrl),
     );
+    return File(cachedFile.path);
   }
 
   @override
@@ -292,7 +294,7 @@ class _DrugHeroImageState extends State<_DrugHeroImage> {
               aspectRatio: DetailConstants.heroDrugImageAspectRatio,
               child: _DrugHeroImageFrame(
                 colors: widget.colors,
-                child: FutureBuilder<Object>(
+                child: FutureBuilder<File>(
                   future: _imageFile,
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
@@ -308,9 +310,9 @@ class _DrugHeroImageState extends State<_DrugHeroImage> {
                             'drug-detail-hero-image-hero-${widget.drug.id}',
                           ),
                           tag: _drugDetailHeroImageHeroTag(widget.drug.id),
-                          child: buildCachedFileImage(
-                            file: imageFile,
-                            imageKey: ValueKey<String>(
+                          child: Image.file(
+                            imageFile,
+                            key: ValueKey<String>(
                               'drug-detail-hero-image-${widget.drug.id}',
                             ),
                             width: double.infinity,
@@ -373,7 +375,7 @@ class _DrugHeroImageState extends State<_DrugHeroImage> {
     };
   }
 
-  Future<void> _openImagePreview(BuildContext context, Object imageFile) {
+  Future<void> _openImagePreview(BuildContext context, File imageFile) {
     return Navigator.of(context).push<void>(
       PageRouteBuilder<void>(
         pageBuilder: (context, animation, secondaryAnimation) {
@@ -399,7 +401,7 @@ class _DrugHeroImagePreview extends StatelessWidget {
   });
 
   final String drugId;
-  final Object imageFile;
+  final File imageFile;
   final DetailColorExtension colors;
 
   @override
@@ -422,18 +424,12 @@ class _DrugHeroImagePreview extends StatelessWidget {
                     'drug-detail-hero-image-preview-hero-$drugId',
                   ),
                   tag: _drugDetailHeroImageHeroTag(drugId),
-                  child: buildCachedFileImage(
-                    file: imageFile,
-                    imageKey: ValueKey<String>(
+                  child: Image.file(
+                    imageFile,
+                    key: ValueKey<String>(
                       'drug-detail-hero-image-preview-image-$drugId',
                     ),
                     fit: BoxFit.contain,
-                    errorBuilder: (context, error, stackTrace) {
-                      return Icon(
-                        Icons.medication_outlined,
-                        color: colors.onSurfaceVariant,
-                      );
-                    },
                   ),
                 ),
               ),

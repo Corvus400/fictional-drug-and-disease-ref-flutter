@@ -3,7 +3,6 @@
 
 import 'package:fictional_drug_and_disease_ref/ui/_common/disclaimer_ribbon.dart';
 import 'package:fictional_drug_and_disease_ref/ui/_common/widgets/disease_result_card.dart';
-import 'package:fictional_drug_and_disease_ref/ui/_common/widgets/drug_result_card.dart';
 import 'package:fictional_drug_and_disease_ref/ui/common/loading/shimmer_skeleton.dart';
 import 'package:fictional_drug_and_disease_ref/ui/previews/preview_data.dart';
 import 'package:fictional_drug_and_disease_ref/ui/previews/preview_support.dart';
@@ -11,15 +10,6 @@ import 'package:fictional_drug_and_disease_ref/ui/shell/app_shell.dart';
 import 'package:fictional_drug_and_disease_ref/ui/shell/app_shell_tab.dart';
 import 'package:fictional_drug_and_disease_ref/ui/shell/app_tab_header.dart';
 import 'package:flutter/material.dart';
-
-@FddComponentPreview(group: 'Common', name: 'Drug result card')
-Widget previewCommonDrugResultCard() {
-  return const DrugResultCard(
-    item: previewDrugSummary,
-    cacheManager: previewFailingCacheManager,
-    logImageErrors: false,
-  );
-}
 
 @FddComponentPreview(group: 'Common', name: 'Disease result card')
 Widget previewCommonDiseaseResultCard() {

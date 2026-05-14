@@ -20,9 +20,6 @@ final searchScreenProvider =
       SearchScreenNotifier.new,
     );
 
-/// Enables Previewer-local search interactions without production persistence.
-final searchPreviewModeProvider = Provider<bool>((ref) => false);
-
 /// ViewModel for the search screen.
 final class SearchScreenNotifier extends Notifier<SearchScreenState> {
   int _previewGeneration = 0;
@@ -30,9 +27,7 @@ final class SearchScreenNotifier extends Notifier<SearchScreenState> {
   @override
   SearchScreenState build() {
     final initial = SearchScreenState.initial();
-    if (!_isPreviewMode) {
-      unawaited(Future.microtask(loadHistory));
-    }
+    unawaited(Future.microtask(loadHistory));
     return initial;
   }
 
@@ -43,10 +38,6 @@ final class SearchScreenNotifier extends Notifier<SearchScreenState> {
       phase: const SearchPhase.idle(),
       appliedChips: const AppliedFilterChips([]),
     );
-    if (_isPreviewMode) {
-      state = state.copyWith(historyForTab: const []);
-      return;
-    }
     await loadHistory();
   }
 
@@ -76,9 +67,6 @@ final class SearchScreenNotifier extends Notifier<SearchScreenState> {
 
   /// Loads history for the active tab.
   Future<void> loadHistory() async {
-    if (_isPreviewMode) {
-      return;
-    }
     final target = state.tab == SearchTab.drugs ? 'drug' : 'disease';
     final result = await ref
         .read(listSearchHistoryUsecaseProvider)
@@ -105,10 +93,6 @@ final class SearchScreenNotifier extends Notifier<SearchScreenState> {
 
   /// Performs first-page search.
   Future<void> performSearch() async {
-    if (_isPreviewMode) {
-      state = state.copyWith(historyDropdownOpen: false);
-      return;
-    }
     state = state.copyWith(
       phase: const SearchPhase.loading(),
       historyDropdownOpen: false,
@@ -145,9 +129,6 @@ final class SearchScreenNotifier extends Notifier<SearchScreenState> {
 
   /// Loads next page if possible.
   Future<void> loadMore() async {
-    if (_isPreviewMode) {
-      return;
-    }
     final phase = state.phase;
     if (phase is! SearchPhaseResults || !phase.view.canLoadMore) {
       return;
@@ -331,9 +312,6 @@ final class SearchScreenNotifier extends Notifier<SearchScreenState> {
   /// Returns the drug result count for tentative filter params.
   Future<int?> previewDrugCount(DrugSearchParams params) async {
     final generation = ++_previewGeneration;
-    if (_isPreviewMode) {
-      return _previewCount(state.phase);
-    }
     final previewParams = _copyDrugParams(params, page: 1, pageSize: 1);
     final result = await ref
         .read(searchDrugsUsecaseProvider)
@@ -352,9 +330,6 @@ final class SearchScreenNotifier extends Notifier<SearchScreenState> {
   /// Returns the disease result count for tentative filter params.
   Future<int?> previewDiseaseCount(DiseaseSearchParams params) async {
     final generation = ++_previewGeneration;
-    if (_isPreviewMode) {
-      return _previewCount(state.phase);
-    }
     final previewParams = _copyDiseaseParams(params, page: 1, pageSize: 1);
     final result = await ref
         .read(searchDiseasesUsecaseProvider)
@@ -393,39 +368,16 @@ final class SearchScreenNotifier extends Notifier<SearchScreenState> {
 
   /// Deletes a history row and refreshes history.
   Future<void> deleteHistory(String id) async {
-    if (_isPreviewMode) {
-      state = state.copyWith(
-        historyForTab: state.historyForTab
-            .where((history) => history.id != id)
-            .toList(),
-      );
-      return;
-    }
     await ref.read(deleteSearchHistoryUsecaseProvider).execute(id);
     await loadHistory();
   }
 
   /// Clears all history rows for active tab and refreshes history.
   Future<void> clearAllHistory() async {
-    if (_isPreviewMode) {
-      state = state.copyWith(historyForTab: const []);
-      return;
-    }
     final target = state.tab == SearchTab.drugs ? 'drug' : 'disease';
     await ref.read(clearSearchHistoryUsecaseProvider).execute(target);
     await loadHistory();
   }
-
-  bool get _isPreviewMode => ref.read(searchPreviewModeProvider);
-}
-
-int _previewCount(SearchPhase phase) {
-  return switch (phase) {
-    SearchPhaseResults(:final view) => view.totalCount,
-    SearchPhaseLoadingMore(:final previous) => previous.totalCount,
-    SearchPhaseEmpty() => 0,
-    SearchPhaseIdle() || SearchPhaseLoading() || SearchPhaseError() => 0,
-  };
 }
 
 SearchPhase _drugPhase(
