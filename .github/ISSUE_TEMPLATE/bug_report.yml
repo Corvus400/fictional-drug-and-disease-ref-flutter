@@ -1,0 +1,70 @@
+name: Bug report
+description: Report a reproducible problem in the Flutter sample app.
+title: "bug: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting a bug. Do not include secrets, access tokens,
+        personal information, private repository details, or real medical data.
+        This project uses entirely fictional drug and disease data.
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: Briefly describe the problem.
+      placeholder: The search screen shows...
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: List the smallest steps that reproduce the issue.
+      placeholder: |
+        1. Open...
+        2. Tap...
+        3. Observe...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: What should have happened?
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      description: What happened instead?
+    validations:
+      required: true
+  - type: dropdown
+    id: platform
+    attributes:
+      label: Platform
+      options:
+        - iOS
+        - Android
+        - macOS
+        - Web
+        - Other
+    validations:
+      required: true
+  - type: input
+    id: app_version
+    attributes:
+      label: App version or commit
+      description: App version, branch, or commit SHA where you observed the issue.
+      placeholder: main at abc1234
+    validations:
+      required: false
+  - type: textarea
+    id: additional_context
+    attributes:
+      label: Additional context
+      description: Add screenshots, logs, or notes if they are safe to share publicly.
+    validations:
+      required: false
