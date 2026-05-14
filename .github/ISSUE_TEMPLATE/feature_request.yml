@@ -1,0 +1,55 @@
+name: Feature request
+description: Suggest an improvement for the Flutter sample app.
+title: "feat: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for suggesting an improvement. Do not include secrets, access
+        tokens, personal information, private repository details, or real
+        medical data. This project uses entirely fictional drug and disease data.
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem or use case
+      description: What user need or workflow would this improve?
+      placeholder: As a user, I want...
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+      description: Describe the behavior or UI you would like to see.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Describe any alternatives or trade-offs you considered.
+    validations:
+      required: false
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Search
+        - Drug detail
+        - Disease detail
+        - Bookmarks
+        - Calculation tools
+        - Architecture
+        - Tests or CI
+        - Documentation
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: additional_context
+    attributes:
+      label: Additional context
+      description: Add screenshots, references, or notes if they are safe to share publicly.
+    validations:
+      required: false
