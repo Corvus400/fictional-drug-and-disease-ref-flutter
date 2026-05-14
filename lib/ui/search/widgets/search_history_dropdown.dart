@@ -144,20 +144,29 @@ class _SearchHistoryDropdown extends StatelessWidget {
 
   Future<void> _confirmClearHistory(BuildContext context) async {
     final l10n = AppLocalizations.of(context)!;
-    final confirmed = await showDialog<bool>(
+    final theme = Theme.of(context);
+    final confirmed = await showScopedDialog<bool>(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Text(l10n.searchHistoryClearConfirmTitle),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: Text(l10n.searchActionCancel),
+      builder: (_) => Localizations.override(
+        context: context,
+        child: Theme(
+          data: theme,
+          child: Builder(
+            builder: (dialogContext) => AlertDialog(
+              title: Text(l10n.searchHistoryClearConfirmTitle),
+              actions: [
+                TextButton(
+                  onPressed: () => popScopedDialog(dialogContext, false),
+                  child: Text(l10n.searchActionCancel),
+                ),
+                FilledButton(
+                  onPressed: () => popScopedDialog(dialogContext, true),
+                  child: Text(l10n.searchHistoryClearConfirmDelete),
+                ),
+              ],
+            ),
           ),
-          FilledButton(
-            onPressed: () => Navigator.of(context).pop(true),
-            child: Text(l10n.searchHistoryClearConfirmDelete),
-          ),
-        ],
+        ),
       ),
     );
     if (confirmed ?? false) {
@@ -186,95 +195,110 @@ class _SearchHistoryRow extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
     final isDrug = entry is DrugSearchHistoryEnvelope;
-    return Dismissible(
-      key: ValueKey('history-row-dismiss-${entry.id}'),
-      direction: DismissDirection.endToStart,
-      onDismissed: (_) => unawaited(onDelete(entry.id)),
-      background: ColoredBox(
-        color: palette.danger.withValues(alpha: 0.16),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Align(
-            alignment: Alignment.centerRight,
-            child: Icon(Icons.delete_outline, color: palette.danger),
+    return Material(
+      key: ValueKey('search-history-row-surface-${entry.id}'),
+      color: theme.colorScheme.surface,
+      child: Dismissible(
+        key: ValueKey('history-row-dismiss-${entry.id}'),
+        direction: DismissDirection.endToStart,
+        onDismissed: (_) => unawaited(onDelete(entry.id)),
+        background: ColoredBox(
+          color: palette.danger.withValues(alpha: 0.16),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Align(
+              alignment: Alignment.centerRight,
+              child: Icon(Icons.delete_outline, color: palette.danger),
+            ),
           ),
         ),
-      ),
-      child: ListTile(
-        key: ValueKey('history-row-${entry.id}'),
-        onTap: () => unawaited(onSelect(entry)),
-        dense: true,
-        leading: const Icon(Icons.history, size: 16),
-        title: Row(
-          children: [
-            Container(
-              key: ValueKey('history-target-pill-${entry.id}'),
-              padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
-              decoration: BoxDecoration(
-                color: isDrug ? palette.rxTint : palette.dxTint,
-                borderRadius: BorderRadius.circular(3),
-              ),
-              child: Text(
-                isDrug ? l10n.searchHistoryRxBadge : l10n.searchHistoryDxBadge,
-                style: TextStyle(
-                  color: isDrug ? palette.rxInk : palette.dxInk,
-                  fontFeatures: const [FontFeature.tabularFigures()],
-                  fontSize: 9.5,
-                  fontWeight: FontWeight.w700,
-                  letterSpacing: 0.4,
-                ),
-              ),
-            ),
-            const SizedBox(width: 6),
-            Expanded(
-              child: Text(
-                entry.queryText,
-                overflow: TextOverflow.ellipsis,
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
-          ],
-        ),
-        subtitle: Wrap(
-          spacing: 8,
-          crossAxisAlignment: WrapCrossAlignment.center,
-          children: [
-            Text(l10n.searchToolbarTotal(entry.totalCount)),
-            Text(formatRelativeTime(currentTime, entry.searchedAt, l10n)),
-            if (entry.filterCount > 0)
+        child: ListTile(
+          key: ValueKey('history-row-${entry.id}'),
+          onTap: () => unawaited(onSelect(entry)),
+          dense: true,
+          tileColor: theme.colorScheme.surface,
+          selectedTileColor: theme.colorScheme.surface,
+          focusColor: theme.colorScheme.surface,
+          hoverColor: theme.colorScheme.surface,
+          shape: const RoundedRectangleBorder(),
+          leading: Icon(
+            Icons.history,
+            size: 16,
+            color: theme.colorScheme.onSurfaceVariant,
+          ),
+          title: Row(
+            children: [
               Container(
-                padding: const EdgeInsets.fromLTRB(7, 2, 8, 2),
+                key: ValueKey('history-target-pill-${entry.id}'),
+                padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
                 decoration: BoxDecoration(
-                  color: palette.primarySoft,
-                  border: Border.all(color: palette.primaryRing, width: 0.5),
-                  borderRadius: BorderRadius.circular(8),
+                  color: isDrug ? palette.rxTint : palette.dxTint,
+                  borderRadius: BorderRadius.circular(3),
                 ),
                 child: Text(
-                  l10n.searchHistoryFilterCount(entry.filterCount),
+                  isDrug
+                      ? l10n.searchHistoryRxBadge
+                      : l10n.searchHistoryDxBadge,
                   style: TextStyle(
-                    color: palette.rxInk,
-                    fontSize: 10.5,
+                    color: isDrug ? palette.rxInk : palette.dxInk,
+                    fontFeatures: const [FontFeature.tabularFigures()],
+                    fontSize: 9.5,
                     fontWeight: FontWeight.w700,
+                    letterSpacing: 0.4,
                   ),
                 ),
               ),
-          ],
-        ),
-        trailing: IconButton(
-          key: ValueKey('delete-history-${entry.id}'),
-          onPressed: () => unawaited(onDelete(entry.id)),
-          icon: DecoratedBox(
-            key: ValueKey('search-history-delete-bg-${entry.id}'),
-            decoration: BoxDecoration(
-              color: palette.surface3,
-              borderRadius: BorderRadius.circular(11),
-            ),
-            child: SizedBox(
-              width: 22,
-              height: 22,
-              child: Icon(Icons.close, size: 9, color: palette.muted),
+              const SizedBox(width: 6),
+              Expanded(
+                child: Text(
+                  entry.queryText,
+                  overflow: TextOverflow.ellipsis,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          subtitle: Wrap(
+            spacing: 8,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            children: [
+              Text(l10n.searchToolbarTotal(entry.totalCount)),
+              Text(formatRelativeTime(currentTime, entry.searchedAt, l10n)),
+              if (entry.filterCount > 0)
+                Container(
+                  padding: const EdgeInsets.fromLTRB(7, 2, 8, 2),
+                  decoration: BoxDecoration(
+                    color: palette.primarySoft,
+                    border: Border.all(color: palette.primaryRing, width: 0.5),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Text(
+                    l10n.searchHistoryFilterCount(entry.filterCount),
+                    style: TextStyle(
+                      color: palette.rxInk,
+                      fontSize: 10.5,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ),
+            ],
+          ),
+          trailing: IconButton(
+            key: ValueKey('delete-history-${entry.id}'),
+            onPressed: () => unawaited(onDelete(entry.id)),
+            icon: DecoratedBox(
+              key: ValueKey('search-history-delete-bg-${entry.id}'),
+              decoration: BoxDecoration(
+                color: palette.surface3,
+                borderRadius: BorderRadius.circular(11),
+              ),
+              child: SizedBox(
+                width: 22,
+                height: 22,
+                child: Icon(Icons.close, size: 9, color: palette.muted),
+              ),
             ),
           ),
         ),

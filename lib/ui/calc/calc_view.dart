@@ -26,6 +26,8 @@ import 'package:fictional_drug_and_disease_ref/ui/calc/widgets/calc_segmented_co
 import 'package:fictional_drug_and_disease_ref/ui/calc/widgets/charts/bmi_chart.dart';
 import 'package:fictional_drug_and_disease_ref/ui/calc/widgets/charts/crcl_chart.dart';
 import 'package:fictional_drug_and_disease_ref/ui/calc/widgets/charts/egfr_chart.dart';
+import 'package:fictional_drug_and_disease_ref/ui/previews/preview_data.dart';
+import 'package:fictional_drug_and_disease_ref/ui/previews/preview_support.dart';
 import 'package:fictional_drug_and_disease_ref/ui/shell/app_shell_tab.dart';
 import 'package:fictional_drug_and_disease_ref/ui/shell/app_tab_header.dart';
 import 'package:flutter/material.dart';
@@ -33,6 +35,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 part 'calc_responsive_layout.dart';
 part 'calc_history_section.dart';
+part 'calc_previews.dart';
 
 /// Calculation tools tab.
 class CalcView extends ConsumerStatefulWidget {

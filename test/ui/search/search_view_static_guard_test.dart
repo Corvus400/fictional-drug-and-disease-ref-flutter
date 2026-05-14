@@ -74,9 +74,13 @@ void main() {
       'lib/ui/_common/widgets/drug_result_card.dart',
     ).readAsStringSync();
     final pubspec = File('pubspec.yaml').readAsStringSync();
+    final imageBuilder = File(
+      'lib/ui/_common/widgets/cached_file_image_io.dart',
+    ).readAsStringSync();
 
     expect(source, contains('getSingleFile'));
-    expect(source, contains('Image.file'));
+    expect(source, contains('buildCachedFileImage'));
+    expect(imageBuilder, contains('Image.file'));
     expect(source, contains('BaseCacheManager'));
     expect(source, isNot(contains('CachedNetworkImage')));
     expect(source, isNot(contains('Image.network(')));

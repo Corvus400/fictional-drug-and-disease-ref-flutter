@@ -7,9 +7,10 @@ void _showSortSheet(
   required Future<void> Function(DiseaseSort sort) onChangeDiseaseSort,
 }) {
   final l10n = AppLocalizations.of(context)!;
+  final theme = Theme.of(context);
   final palette =
-      Theme.of(context).extension<AppPalette>() ??
-      (Theme.of(context).brightness == Brightness.dark
+      theme.extension<AppPalette>() ??
+      (theme.brightness == Brightness.dark
           ? AppPalette.dark
           : AppPalette.light);
   final drugOptions = <({DrugSort sort, String label, String key})>[
@@ -52,47 +53,53 @@ void _showSortSheet(
     ),
   ];
   unawaited(
-    showModalBottomSheet<void>(
+    showScopedModalBottomSheet<void>(
       context: context,
       backgroundColor: Colors.transparent,
-      builder: (context) => _Round6SortSheet(
-        palette: palette,
-        children: state.tab == SearchTab.drugs
-            ? [
-                for (var index = 0; index < drugOptions.length; index++)
-                  _SortOptionTile(
-                    label: drugOptions[index].label,
-                    selected:
-                        (state.drugParams.sort ?? DrugSort.revisedAtDesc) ==
-                        drugOptions[index].sort,
-                    selectedKey: drugOptions[index].key,
-                    isLast: index == drugOptions.length - 1,
-                    palette: palette,
-                    onTap: () {
-                      Navigator.of(context).pop();
-                      unawaited(onChangeDrugSort(drugOptions[index].sort));
-                    },
-                  ),
-              ]
-            : [
-                for (var index = 0; index < diseaseOptions.length; index++)
-                  _SortOptionTile(
-                    label: diseaseOptions[index].label,
-                    selected:
-                        (state.diseaseParams.sort ??
-                            DiseaseSort.revisedAtDesc) ==
-                        diseaseOptions[index].sort,
-                    selectedKey: diseaseOptions[index].key,
-                    isLast: index == diseaseOptions.length - 1,
-                    palette: palette,
-                    onTap: () {
-                      Navigator.of(context).pop();
-                      unawaited(
-                        onChangeDiseaseSort(diseaseOptions[index].sort),
-                      );
-                    },
-                  ),
-              ],
+      builder: (sheetContext) => Localizations.override(
+        context: context,
+        child: Theme(
+          data: theme,
+          child: _Round6SortSheet(
+            palette: palette,
+            children: state.tab == SearchTab.drugs
+                ? [
+                    for (var index = 0; index < drugOptions.length; index++)
+                      _SortOptionTile(
+                        label: drugOptions[index].label,
+                        selected:
+                            (state.drugParams.sort ?? DrugSort.revisedAtDesc) ==
+                            drugOptions[index].sort,
+                        selectedKey: drugOptions[index].key,
+                        isLast: index == drugOptions.length - 1,
+                        palette: palette,
+                        onTap: () {
+                          popScopedDialog<void>(sheetContext);
+                          unawaited(onChangeDrugSort(drugOptions[index].sort));
+                        },
+                      ),
+                  ]
+                : [
+                    for (var index = 0; index < diseaseOptions.length; index++)
+                      _SortOptionTile(
+                        label: diseaseOptions[index].label,
+                        selected:
+                            (state.diseaseParams.sort ??
+                                DiseaseSort.revisedAtDesc) ==
+                            diseaseOptions[index].sort,
+                        selectedKey: diseaseOptions[index].key,
+                        isLast: index == diseaseOptions.length - 1,
+                        palette: palette,
+                        onTap: () {
+                          popScopedDialog<void>(sheetContext);
+                          unawaited(
+                            onChangeDiseaseSort(diseaseOptions[index].sort),
+                          );
+                        },
+                      ),
+                  ],
+          ),
+        ),
       ),
     ),
   );

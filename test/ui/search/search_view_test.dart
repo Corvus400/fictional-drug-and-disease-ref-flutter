@@ -24,6 +24,8 @@ import 'package:fictional_drug_and_disease_ref/theme/app_palette.dart';
 import 'package:fictional_drug_and_disease_ref/theme/app_theme.dart';
 import 'package:fictional_drug_and_disease_ref/ui/_common/widgets/disease_result_card.dart';
 import 'package:fictional_drug_and_disease_ref/ui/_common/widgets/drug_result_card.dart';
+import 'package:fictional_drug_and_disease_ref/ui/previews/preview_data.dart';
+import 'package:fictional_drug_and_disease_ref/ui/previews/preview_support.dart';
 import 'package:fictional_drug_and_disease_ref/ui/search/constants/search_constants.dart';
 import 'package:fictional_drug_and_disease_ref/ui/search/search_screen_notifier.dart';
 import 'package:fictional_drug_and_disease_ref/ui/search/search_screen_state.dart';
@@ -337,6 +339,55 @@ void main() {
     expect(find.text('検索履歴'), findsOneWidget);
     expect(find.text('履歴由来キーワード'), findsOneWidget);
     expect(find.text('合計 7 件'), findsOneWidget);
+  });
+
+  testWidgets('history row paints light surface behind dismissible child', (
+    tester,
+  ) async {
+    final container = ProviderContainer(
+      overrides: [appDatabaseProvider.overrideWithValue(db)],
+    );
+    addTearDown(container.dispose);
+    await container
+        .read(searchHistoryRepositoryProvider)
+        .insertWithDedup(
+          id: 'light_history_surface',
+          target: 'drug',
+          queryJson: container
+              .read(searchQueryCodecProvider)
+              .encode(const DrugSearchParams(keyword: 'ライト履歴')),
+          searchedAt: DateTime.utc(2026, 5, 5),
+          totalCount: 7,
+        );
+
+    final lightTheme = AppTheme.light();
+    await tester.pumpWidget(
+      UncontrolledProviderScope(
+        container: container,
+        child: MaterialApp(
+          theme: lightTheme,
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: const SearchView(debugLogDrugImageErrors: false),
+        ),
+      ),
+    );
+    await tester.pump();
+    await tester.tap(find.byKey(const ValueKey('search-field')));
+    await tester.pump();
+
+    final rowSurfaceFinder = find.byKey(
+      const ValueKey('search-history-row-surface-light_history_surface'),
+    );
+    final rowContext = tester.element(rowSurfaceFinder);
+    final rowSurface = tester.widget<Material>(rowSurfaceFinder);
+    final listTile = tester.widget<ListTile>(
+      find.byKey(const ValueKey('history-row-light_history_surface')),
+    );
+    expect(Theme.of(rowContext).brightness, Brightness.light);
+    expect(rowSurface.color, lightTheme.colorScheme.surface);
+    expect(listTile.tileColor, lightTheme.colorScheme.surface);
+    expect(listTile.hoverColor, lightTheme.colorScheme.surface);
   });
 
   testWidgets('history row tap restores params and triggers search', (
@@ -877,6 +928,56 @@ void main() {
 
     expect(find.text('全削除対象キーワード'), findsNothing);
   });
+
+  testWidgets(
+    'SearchView opens clear-history dialog when app l10n is scoped '
+    'to preview child',
+    (tester) async {
+      final container = ProviderContainer(
+        overrides: [appDatabaseProvider.overrideWithValue(db)],
+      );
+      addTearDown(container.dispose);
+      await container
+          .read(searchHistoryRepositoryProvider)
+          .insertWithDedup(
+            id: 'search_preview_clear_target',
+            target: 'drug',
+            queryJson: container
+                .read(searchQueryCodecProvider)
+                .encode(
+                  const DrugSearchParams(keyword: 'Preview 全削除対象'),
+                ),
+            searchedAt: DateTime.utc(2026, 5, 5),
+            totalCount: 11,
+          );
+
+      await tester.pumpWidget(
+        UncontrolledProviderScope(
+          container: container,
+          child: MaterialApp(
+            home: Builder(
+              builder: (context) => Localizations.override(
+                context: context,
+                locale: const Locale('ja'),
+                delegates: AppLocalizations.localizationsDelegates,
+                child: const SearchView(debugLogDrugImageErrors: false),
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pump();
+      await tester.tap(find.byKey(const ValueKey('search-field')));
+      await tester.pump();
+      expect(find.text('Preview 全削除対象'), findsOneWidget);
+
+      await tester.tap(find.byKey(const ValueKey('clear-history-button')));
+      await tester.pumpAndSettle();
+
+      expect(tester.takeException(), isNull);
+      expect(find.text('検索履歴を削除しますか？'), findsOneWidget);
+    },
+  );
 
   testWidgets(
     'SearchView clears disease history from focused dropdown on iPhone width',
@@ -2078,6 +2179,106 @@ void main() {
     expect(find.textContaining('結果を見る'), findsOneWidget);
   });
 
+  testWidgets(
+    'SearchView opens filter sheet when app l10n is scoped to preview child',
+    (tester) async {
+      final drugApiClient = _MockDrugApiClient();
+      final categoryApiClient = _MockCategoryApiClient();
+      when(
+        categoryApiClient.getCategories,
+      ).thenAnswer((_) async => _categoriesFixture());
+      when(
+        () => drugApiClient.getDrugs(
+          page: any(named: 'page'),
+          pageSize: any(named: 'pageSize'),
+          categoryAtc: any(named: 'categoryAtc'),
+          therapeuticCategory: any(named: 'therapeuticCategory'),
+          regulatoryClass: any(named: 'regulatoryClass'),
+          dosageForm: any(named: 'dosageForm'),
+          route: any(named: 'route'),
+          keyword: any(named: 'keyword'),
+          keywordMatch: any(named: 'keywordMatch'),
+          keywordTarget: any(named: 'keywordTarget'),
+          adverseReactionKeyword: any(named: 'adverseReactionKeyword'),
+          precautionCategory: any(named: 'precautionCategory'),
+          sort: any(named: 'sort'),
+        ),
+      ).thenAnswer((_) async => _drugListFixture());
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            appDatabaseProvider.overrideWithValue(db),
+            drugApiClientProvider.overrideWithValue(drugApiClient),
+            categoryApiClientProvider.overrideWithValue(categoryApiClient),
+          ],
+          child: MaterialApp(
+            home: Builder(
+              builder: (context) => Localizations.override(
+                context: context,
+                locale: const Locale('ja'),
+                delegates: AppLocalizations.localizationsDelegates,
+                child: const SearchView(debugLogDrugImageErrors: false),
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pump();
+
+      expect(find.text('検索'), findsWidgets);
+
+      await tester.tap(find.byType(FloatingActionButton));
+      await tester.pumpAndSettle();
+
+      expect(tester.takeException(), isNull);
+      expect(find.text('絞り込み（医薬品）'), findsOneWidget);
+      expect(find.textContaining('結果を見る'), findsOneWidget);
+    },
+  );
+
+  testWidgets(
+    'SearchView preview filter sheet does not read production database',
+    (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Builder(
+            builder: (context) => Localizations.override(
+              context: context,
+              locale: const Locale('ja'),
+              delegates: AppLocalizations.localizationsDelegates,
+              child: previewScreenWrapper(
+                previewProviderScope(
+                  overrides: [
+                    searchPreviewModeProvider.overrideWithValue(true),
+                    appDatabaseProvider.overrideWith(
+                      (ref) => throw UnsupportedError(
+                        'The production Drift connection is not available '
+                        'on this platform.',
+                      ),
+                    ),
+                    searchScreenProvider.overrideWithBuild(
+                      (ref, notifier) => previewDrugSearchResultsState,
+                    ),
+                  ],
+                  child: const SearchView(debugLogDrugImageErrors: false),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pump();
+
+      await tester.tap(find.byType(FloatingActionButton));
+      await tester.pumpAndSettle();
+
+      expect(tester.takeException(), isNull);
+      expect(find.text('絞り込み（医薬品）'), findsOneWidget);
+      expect(find.textContaining('結果を見る'), findsOneWidget);
+    },
+  );
+
   testWidgets('SearchView applies drug filters from category master sheet', (
     tester,
   ) async {
@@ -2763,6 +2964,51 @@ void main() {
     expect(find.text('ATC コード'), findsOneWidget);
     expect(find.text('薬効分類名'), findsOneWidget);
   });
+
+  testWidgets(
+    'SearchView opens sort sheet when app l10n is scoped to preview child',
+    (tester) async {
+      final drugApiClient = _MockDrugApiClient();
+      when(
+        () => drugApiClient.getDrugs(
+          page: any(named: 'page'),
+          pageSize: any(named: 'pageSize'),
+          keyword: any(named: 'keyword'),
+        ),
+      ).thenAnswer((_) async => _drugListFixture());
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            appDatabaseProvider.overrideWithValue(db),
+            drugApiClientProvider.overrideWithValue(drugApiClient),
+          ],
+          child: MaterialApp(
+            home: Builder(
+              builder: (context) => Localizations.override(
+                context: context,
+                locale: const Locale('ja'),
+                delegates: AppLocalizations.localizationsDelegates,
+                child: const SearchView(debugLogDrugImageErrors: false),
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.enterText(
+        find.byKey(const ValueKey('search-field')),
+        'sort preview keyword',
+      );
+      await tester.tap(find.byType(FilledButton).first);
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.textContaining('並び替え').first);
+      await tester.pumpAndSettle();
+
+      expect(tester.takeException(), isNull);
+      expect(find.byKey(const ValueKey('search-sort-sheet')), findsOneWidget);
+      expect(find.text('更新日(新しい順)'), findsOneWidget);
+    },
+  );
 
   testWidgets('SearchView applies selected drug sort from sort sheet', (
     tester,

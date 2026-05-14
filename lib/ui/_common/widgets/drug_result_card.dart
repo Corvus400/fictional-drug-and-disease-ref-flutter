@@ -1,10 +1,9 @@
-import 'dart:io';
-
 import 'package:fictional_drug_and_disease_ref/config/api_config.dart';
 import 'package:fictional_drug_and_disease_ref/core/logging/app_logger.dart';
 import 'package:fictional_drug_and_disease_ref/domain/drug/drug_summary.dart';
 import 'package:fictional_drug_and_disease_ref/l10n/app_localizations.dart';
 import 'package:fictional_drug_and_disease_ref/theme/app_palette.dart';
+import 'package:fictional_drug_and_disease_ref/ui/_common/widgets/cached_file_image.dart';
 import 'package:fictional_drug_and_disease_ref/ui/search/constants/search_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
@@ -203,7 +202,7 @@ class _DrugCardCachedImage extends StatefulWidget {
 }
 
 class _DrugCardCachedImageState extends State<_DrugCardCachedImage> {
-  late Future<File> _imageFile;
+  late Future<Object> _imageFile;
   bool _loggedLoadError = false;
   bool _loggedDecodeError = false;
 
@@ -225,23 +224,22 @@ class _DrugCardCachedImageState extends State<_DrugCardCachedImage> {
     }
   }
 
-  Future<File> _loadImageFile() async {
-    final cachedFile = await widget.cacheManager.getSingleFile(
+  Future<Object> _loadImageFile() async {
+    return widget.cacheManager.getSingleFile(
       widget.imageUrl,
       key: widget.imageCacheKey,
     );
-    return File(cachedFile.path);
   }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<File>(
+    return FutureBuilder<Object>(
       future: _imageFile,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          return Image.file(
-            snapshot.requireData,
-            key: ValueKey('drug-image-${widget.item.id}'),
+          return buildCachedFileImage(
+            file: snapshot.requireData,
+            imageKey: ValueKey('drug-image-${widget.item.id}'),
             fit: BoxFit.cover,
             cacheWidth: widget.imageCacheWidth,
             errorBuilder: (context, error, stackTrace) {

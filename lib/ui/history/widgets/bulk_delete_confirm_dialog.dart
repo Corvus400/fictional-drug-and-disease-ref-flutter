@@ -1,5 +1,6 @@
 import 'package:fictional_drug_and_disease_ref/l10n/app_localizations.dart';
 import 'package:fictional_drug_and_disease_ref/theme/app_palette.dart';
+import 'package:fictional_drug_and_disease_ref/ui/_common/widgets/scoped_dialog_host.dart';
 import 'package:flutter/material.dart';
 
 /// Shows the all-history delete confirmation dialog.
@@ -7,9 +8,16 @@ Future<bool?> showBulkDeleteConfirmDialog({
   required BuildContext context,
   required int count,
 }) {
-  return showDialog<bool>(
+  final theme = Theme.of(context);
+  return showScopedDialog<bool>(
     context: context,
-    builder: (context) => BulkDeleteConfirmDialog(count: count),
+    builder: (_) => Localizations.override(
+      context: context,
+      child: Theme(
+        data: theme,
+        child: BulkDeleteConfirmDialog(count: count),
+      ),
+    ),
   );
 }
 
@@ -101,7 +109,7 @@ class BulkDeleteConfirmDialogCard extends StatelessWidget {
                       ),
                       label: l10n.historyBulkDeleteConfirmCancel,
                       foregroundColor: palette.primary,
-                      onPressed: () => Navigator.of(context).pop(false),
+                      onPressed: () => popScopedDialog(context, false),
                     ),
                   ),
                   const SizedBox(width: 8),
@@ -112,7 +120,7 @@ class BulkDeleteConfirmDialogCard extends StatelessWidget {
                       ),
                       label: l10n.historyBulkDeleteConfirmDelete,
                       foregroundColor: palette.danger,
-                      onPressed: () => Navigator.of(context).pop(true),
+                      onPressed: () => popScopedDialog(context, true),
                     ),
                   ),
                 ],
