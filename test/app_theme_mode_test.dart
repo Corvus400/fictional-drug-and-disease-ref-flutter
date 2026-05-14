@@ -38,6 +38,25 @@ void main() {
     expect(material.themeMode, ThemeMode.dark);
   });
 
+  testWidgets('app exposes the product name as MaterialApp title', (
+    tester,
+  ) async {
+    SharedPreferences.setMockInitialValues({});
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [appDatabaseProvider.overrideWithValue(db)],
+        child: App(),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    final material = tester.widget<MaterialApp>(find.byType(MaterialApp));
+    final titleContext = tester.element(find.byType(NavigationBar));
+
+    expect(material.onGenerateTitle!(titleContext), 'メディマスタ');
+  });
+
   testWidgets('app overlays DisclaimerRibbon above the NavigationBar', (
     tester,
   ) async {
