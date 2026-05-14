@@ -15,8 +15,7 @@ runs:
       uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
       with:
         flutter-version: ${{ steps.flutter-version.outputs.version }}
-        cache: true
-        cache-key: "flutter-:os:-:channel:-:version:-:arch:-:hash:"
+        cache: false
 
     - name: Install dependencies
       shell: bash
