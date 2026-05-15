@@ -717,7 +717,7 @@ class _SearchUtilityPane extends StatelessWidget {
           children: [
             _SearchUtilityCard(
               key: const ValueKey('search-utility-history-section'),
-              title: l10n.searchHistoryTitle,
+              title: l10n.searchHistoryRecentTitle,
               child: _SearchUtilityHistorySection(
                 entries: state.historyForTab,
                 currentTime: currentTime,
@@ -825,17 +825,32 @@ class _SearchUtilityHistorySection extends StatelessWidget {
         if (entries.isEmpty)
           const _NoSearchHistoryState()
         else
-          Column(
+          DecoratedBox(
             key: const ValueKey('search-utility-history-list'),
-            children: [
-              for (final entry in visibleEntries)
-                _SearchUtilityHistoryRow(
-                  entry: entry,
-                  currentTime: currentTime,
-                  palette: palette,
-                  onSelect: onSelect,
-                ),
-            ],
+            decoration: BoxDecoration(
+              color: palette.hairline2,
+              borderRadius: BorderRadius.circular(6),
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(6),
+              child: Column(
+                children: [
+                  for (final (index, entry) in visibleEntries.indexed) ...[
+                    if (index > 0)
+                      SizedBox(
+                        height: 1,
+                        child: ColoredBox(color: palette.hairline2),
+                      ),
+                    _SearchUtilityHistoryRow(
+                      entry: entry,
+                      currentTime: currentTime,
+                      palette: palette,
+                      onSelect: onSelect,
+                    ),
+                  ],
+                ],
+              ),
+            ),
           ),
         const SizedBox(height: 8),
         Align(
@@ -868,52 +883,75 @@ class _SearchUtilityHistoryRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
+    final hasFilter = entry.filterCount > 0;
     return InkWell(
       key: ValueKey('search-utility-history-row-${entry.id}'),
       onTap: () => unawaited(onSelect(entry)),
-      borderRadius: BorderRadius.circular(8),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 7),
+      child: ColoredBox(
+        color: theme.colorScheme.surface,
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              entry.queryText,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: theme.textTheme.bodyMedium?.copyWith(
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-            const SizedBox(height: 3),
-            Wrap(
-              spacing: 8,
-              runSpacing: 4,
-              crossAxisAlignment: WrapCrossAlignment.center,
-              children: [
-                Text(l10n.searchToolbarTotal(entry.totalCount)),
-                Text(formatRelativeTime(currentTime, entry.searchedAt, l10n)),
-                if (entry.filterCount > 0)
-                  Container(
-                    padding: const EdgeInsets.fromLTRB(7, 2, 8, 2),
-                    decoration: BoxDecoration(
-                      color: palette.primarySoft,
-                      border: Border.all(
-                        color: palette.primaryRing,
-                        width: 0.5,
-                      ),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(10, 8, 10, 2),
+              child: Row(
+                children: [
+                  Expanded(
                     child: Text(
-                      l10n.searchHistoryFilterCount(entry.filterCount),
-                      style: TextStyle(
-                        color: palette.rxInk,
-                        fontSize: 10.5,
-                        fontWeight: FontWeight.w700,
+                      key: ValueKey('search-utility-history-query-${entry.id}'),
+                      entry.queryText,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
                   ),
-              ],
+                  const SizedBox(width: 8),
+                  Text(
+                    key: ValueKey('search-utility-history-count-${entry.id}'),
+                    '${entry.totalCount} 件',
+                    style: theme.textTheme.labelSmall?.copyWith(
+                      color: palette.muted,
+                      fontFeatures: const [FontFeature.tabularFigures()],
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(10, 0, 10, 8),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      key: ValueKey('search-utility-history-when-${entry.id}'),
+                      formatRelativeTime(currentTime, entry.searchedAt, l10n),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: theme.textTheme.labelSmall?.copyWith(
+                        color: palette.muted,
+                        fontFeatures: const [FontFeature.tabularFigures()],
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  _SearchHistoryFilterBadge(
+                    key: ValueKey(
+                      hasFilter
+                          ? 'search-utility-history-filter-${entry.id}'
+                          : 'search-utility-history-filter-empty-${entry.id}',
+                    ),
+                    hasFilter: hasFilter,
+                    palette: palette,
+                    label: hasFilter
+                        ? l10n.searchHistoryFilteredBadge
+                        : l10n.searchHistoryNoFilterBadge,
+                  ),
+                ],
+              ),
             ),
           ],
         ),

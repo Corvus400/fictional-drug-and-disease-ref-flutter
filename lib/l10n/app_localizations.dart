@@ -460,6 +460,12 @@ abstract class AppLocalizations {
   /// **'検索履歴'**
   String get searchHistoryTitle;
 
+  /// No description provided for @searchHistoryRecentTitle.
+  ///
+  /// In ja, this message translates to:
+  /// **'最近の検索'**
+  String get searchHistoryRecentTitle;
+
   /// No description provided for @searchHistoryEmptyTitle.
   ///
   /// In ja, this message translates to:
@@ -469,7 +475,7 @@ abstract class AppLocalizations {
   /// No description provided for @searchHistoryEmptyDescription.
   ///
   /// In ja, this message translates to:
-  /// **'検索すると履歴が最大 5 件まで残ります。\n履歴は端末内にのみ保存されます。'**
+  /// **'検索すると最新 5 件まで表示されます。履歴は端末内にのみ保存されます。'**
   String get searchHistoryEmptyDescription;
 
   /// No description provided for @searchHistoryClear.
@@ -483,6 +489,18 @@ abstract class AppLocalizations {
   /// In ja, this message translates to:
   /// **'最新 5 件まで表示。履歴は端末内にのみ保存されます'**
   String get searchHistoryPrivacyNote;
+
+  /// No description provided for @searchHistoryFilteredBadge.
+  ///
+  /// In ja, this message translates to:
+  /// **'絞込'**
+  String get searchHistoryFilteredBadge;
+
+  /// No description provided for @searchHistoryNoFilterBadge.
+  ///
+  /// In ja, this message translates to:
+  /// **'—'**
+  String get searchHistoryNoFilterBadge;
 
   /// No description provided for @searchHistoryFilterCount.
   ///

@@ -44,7 +44,7 @@ class _SearchInlineHistory extends StatelessWidget {
                 children: [
                   Expanded(
                     child: Text(
-                      l10n.searchHistoryTitle,
+                      l10n.searchHistoryRecentTitle,
                       style: theme.textTheme.labelMedium?.copyWith(
                         color: theme.colorScheme.onSurfaceVariant,
                         fontWeight: FontWeight.w700,
@@ -142,7 +142,7 @@ class _SearchHistoryRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
-    final isDrug = entry is DrugSearchHistoryEnvelope;
+    final hasFilter = entry.filterCount > 0;
     return Dismissible(
       key: ValueKey('history-row-dismiss-${entry.id}'),
       direction: DismissDirection.endToStart,
@@ -157,83 +157,109 @@ class _SearchHistoryRow extends StatelessWidget {
           ),
         ),
       ),
-      child: ListTile(
+      child: InkWell(
         key: ValueKey('history-row-${entry.id}'),
         onTap: () => unawaited(onSelect(entry)),
-        dense: true,
-        leading: const Icon(Icons.history, size: 16),
-        title: Row(
-          children: [
-            Container(
-              key: ValueKey('history-target-pill-${entry.id}'),
-              padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
-              decoration: BoxDecoration(
-                color: isDrug ? palette.rxTint : palette.dxTint,
-                borderRadius: BorderRadius.circular(3),
-              ),
-              child: Text(
-                isDrug ? l10n.searchHistoryRxBadge : l10n.searchHistoryDxBadge,
-                style: TextStyle(
-                  color: isDrug ? palette.rxInk : palette.dxInk,
-                  fontFeatures: const [FontFeature.tabularFigures()],
-                  fontSize: 9.5,
-                  fontWeight: FontWeight.w700,
-                  letterSpacing: 0.4,
-                ),
-              ),
-            ),
-            const SizedBox(width: 6),
-            Expanded(
-              child: Text(
-                entry.queryText,
-                overflow: TextOverflow.ellipsis,
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
-          ],
-        ),
-        subtitle: Wrap(
-          spacing: 8,
-          crossAxisAlignment: WrapCrossAlignment.center,
-          children: [
-            Text(l10n.searchToolbarTotal(entry.totalCount)),
-            Text(formatRelativeTime(currentTime, entry.searchedAt, l10n)),
-            if (entry.filterCount > 0)
-              Container(
-                padding: const EdgeInsets.fromLTRB(7, 2, 8, 2),
-                decoration: BoxDecoration(
-                  color: palette.primarySoft,
-                  border: Border.all(color: palette.primaryRing, width: 0.5),
-                  borderRadius: BorderRadius.circular(8),
-                ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+          child: Row(
+            children: [
+              SizedBox(
+                width: 64,
                 child: Text(
-                  l10n.searchHistoryFilterCount(entry.filterCount),
-                  style: TextStyle(
-                    color: palette.rxInk,
-                    fontSize: 10.5,
-                    fontWeight: FontWeight.w700,
+                  key: ValueKey('history-row-when-${entry.id}'),
+                  formatRelativeTime(currentTime, entry.searchedAt, l10n),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: theme.textTheme.labelSmall?.copyWith(
+                    color: palette.muted,
+                    fontFeatures: const [FontFeature.tabularFigures()],
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
               ),
-          ],
-        ),
-        trailing: IconButton(
-          key: ValueKey('delete-history-${entry.id}'),
-          onPressed: () => unawaited(onDelete(entry.id)),
-          icon: DecoratedBox(
-            key: ValueKey('search-history-delete-bg-${entry.id}'),
-            decoration: BoxDecoration(
-              color: palette.surface3,
-              borderRadius: BorderRadius.circular(11),
-            ),
-            child: SizedBox(
-              width: 22,
-              height: 22,
-              child: Icon(Icons.close, size: 9, color: palette.muted),
-            ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Text(
+                  key: ValueKey('history-row-query-${entry.id}'),
+                  entry.queryText,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 10),
+              _SearchHistoryFilterBadge(
+                key: ValueKey(
+                  hasFilter
+                      ? 'history-row-filter-${entry.id}'
+                      : 'history-row-filter-empty-${entry.id}',
+                ),
+                hasFilter: hasFilter,
+                palette: palette,
+                label: hasFilter
+                    ? l10n.searchHistoryFilteredBadge
+                    : l10n.searchHistoryNoFilterBadge,
+              ),
+              const SizedBox(width: 10),
+              Text(
+                key: ValueKey('history-row-count-${entry.id}'),
+                '${entry.totalCount} 件',
+                style: theme.textTheme.labelSmall?.copyWith(
+                  color: palette.muted,
+                  fontFeatures: const [FontFeature.tabularFigures()],
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class _SearchHistoryFilterBadge extends StatelessWidget {
+  const _SearchHistoryFilterBadge({
+    required this.hasFilter,
+    required this.palette,
+    required this.label,
+    super.key,
+  });
+
+  final bool hasFilter;
+  final AppPalette palette;
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    final textStyle = TextStyle(
+      color: hasFilter ? palette.rxInk : palette.muted,
+      fontSize: 10,
+      fontWeight: FontWeight.w700,
+    );
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: hasFilter ? palette.primarySoft : Colors.transparent,
+        border: Border.all(
+          color: hasFilter ? Colors.transparent : palette.hairline,
+          width: 0.5,
+        ),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(6, 2, 6, 2),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (hasFilter) ...[
+              Icon(Icons.tune, size: 12, color: palette.rxInk),
+              const SizedBox(width: 3),
+            ],
+            Text(label, style: textStyle),
+          ],
         ),
       ),
     );

@@ -125,7 +125,7 @@ void main() {
     );
     expect(find.text('検索履歴はまだありません'), findsNothing);
     expect(
-      find.text('検索すると履歴が最大 5 件まで残ります。\n履歴は端末内にのみ保存されます。'),
+      find.text('検索すると最新 5 件まで表示されます。履歴は端末内にのみ保存されます。'),
       findsNothing,
     );
     expect(find.byKey(const ValueKey('search-history-dropdown')), findsNothing);
@@ -153,7 +153,7 @@ void main() {
 
       expect(find.text('検索履歴はまだありません'), findsOneWidget);
       expect(
-        find.text('検索すると履歴が最大 5 件まで残ります。\n履歴は端末内にのみ保存されます。'),
+        find.text('検索すると最新 5 件まで表示されます。履歴は端末内にのみ保存されます。'),
         findsOneWidget,
       );
     },
@@ -387,9 +387,9 @@ void main() {
     );
     await tester.pump();
 
-    expect(find.text('検索履歴'), findsOneWidget);
+    expect(find.text('最近の検索'), findsOneWidget);
     expect(find.text('履歴由来キーワード'), findsOneWidget);
-    expect(find.text('合計 7 件'), findsOneWidget);
+    expect(find.text('7 件'), findsOneWidget);
   });
 
   testWidgets('history row tap restores params and triggers search', (
@@ -525,7 +525,15 @@ void main() {
     );
     await tester.pump();
 
-    expect(find.text('Rx'), findsOneWidget);
+    expect(
+      find.byKey(const ValueKey('history-row-when-search_round6_history')),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const ValueKey('history-row-count-search_round6_history')),
+      findsOneWidget,
+    );
+    expect(find.text('Rx'), findsNothing);
     expect(find.text('Dx'), findsNothing);
     expect(find.text('履歴メタデータ'), findsOneWidget);
     expect(find.text('すべて消す'), findsOneWidget);
@@ -535,7 +543,7 @@ void main() {
     );
   });
 
-  testWidgets('drug history row shows Rx pill', (tester) async {
+  testWidgets('drug history row omits target pill per Round6', (tester) async {
     final container = ProviderContainer(
       overrides: [appDatabaseProvider.overrideWithValue(db)],
     );
@@ -565,11 +573,18 @@ void main() {
     );
     await tester.pump();
 
-    expect(find.text('Rx'), findsOneWidget);
+    expect(
+      find.byKey(
+        const ValueKey('history-target-pill-drug_history_target_pill'),
+      ),
+      findsNothing,
+    );
     expect(find.text('Dx'), findsNothing);
   });
 
-  testWidgets('disease history row shows Dx pill', (tester) async {
+  testWidgets('disease history row omits target pill per Round6', (
+    tester,
+  ) async {
     final container = ProviderContainer(
       overrides: [appDatabaseProvider.overrideWithValue(db)],
     );
@@ -601,11 +616,16 @@ void main() {
     await tester.tap(find.text('疾患'));
     await tester.pumpAndSettle();
 
-    expect(find.text('Dx'), findsOneWidget);
+    expect(
+      find.byKey(
+        const ValueKey('history-target-pill-disease_history_target_pill'),
+      ),
+      findsNothing,
+    );
     expect(find.text('Rx'), findsNothing);
   });
 
-  testWidgets('history dropdown badges use Round6 target and filter colors', (
+  testWidgets('history dropdown badges use Round6 filter colors', (
     tester,
   ) async {
     final container = ProviderContainer(
@@ -654,39 +674,35 @@ void main() {
     );
     await tester.pump();
 
-    final containerWidget = tester.widget<Container>(
-      find
-          .ancestor(of: find.text('Rx'), matching: find.byType(Container))
-          .first,
+    final filterPill = tester.widget<DecoratedBox>(
+      find.descendant(
+        of: find.byKey(
+          const ValueKey('history-row-filter-drug_history_target_pill_color'),
+        ),
+        matching: find.byType(DecoratedBox),
+      ),
     );
-    final decoration = containerWidget.decoration! as BoxDecoration;
-    final rxText = tester.widget<Text>(find.text('Rx'));
-    expect(decoration.color, AppPalette.light.rxTint);
-    expect(rxText.style?.color, AppPalette.light.rxInk);
-
-    final filterPill = tester.widget<Container>(
-      find
-          .ancestor(of: find.text('絞り込み +2'), matching: find.byType(Container))
-          .first,
-    );
-    final filterDecoration = filterPill.decoration! as BoxDecoration;
-    final filterText = tester.widget<Text>(find.text('絞り込み +2'));
+    final filterDecoration = filterPill.decoration as BoxDecoration;
+    final filterText = tester.widget<Text>(find.text('絞込'));
     expect(filterDecoration.color, AppPalette.light.primarySoft);
-    expect(filterDecoration.border?.top.color, AppPalette.light.primaryRing);
     expect(filterText.style?.color, AppPalette.light.rxInk);
 
     await tester.tap(find.text('疾患'));
     await tester.pumpAndSettle();
 
-    final dxContainer = tester.widget<Container>(
-      find
-          .ancestor(of: find.text('Dx'), matching: find.byType(Container))
-          .first,
+    final emptyFilterPill = tester.widget<DecoratedBox>(
+      find.descendant(
+        of: find.byKey(
+          const ValueKey(
+            'history-row-filter-empty-disease_history_target_pill_color',
+          ),
+        ),
+        matching: find.byType(DecoratedBox),
+      ),
     );
-    final dxDecoration = dxContainer.decoration! as BoxDecoration;
-    final dxText = tester.widget<Text>(find.text('Dx'));
-    expect(dxDecoration.color, AppPalette.light.dxTint);
-    expect(dxText.style?.color, AppPalette.light.dxInk);
+    final emptyDecoration = emptyFilterPill.decoration as BoxDecoration;
+    expect(emptyDecoration.color, Colors.transparent);
+    expect(emptyDecoration.border?.top.color, AppPalette.light.hairline);
   });
 
   testWidgets('history row subtitle includes relative time and filter pill', (
@@ -728,22 +744,24 @@ void main() {
     );
     await tester.pump();
 
-    expect(find.text('合計 5 件'), findsOneWidget);
+    expect(find.text('5 件'), findsOneWidget);
     expect(find.text('5分前'), findsOneWidget);
-    expect(find.text('絞り込み +2'), findsOneWidget);
+    expect(find.text('絞込'), findsOneWidget);
 
-    final containerWidget = tester.widget<Container>(
-      find
-          .ancestor(of: find.text('絞り込み +2'), matching: find.byType(Container))
-          .first,
+    final containerWidget = tester.widget<DecoratedBox>(
+      find.descendant(
+        of: find.byKey(
+          const ValueKey('history-row-filter-history_subtitle_pill'),
+        ),
+        matching: find.byType(DecoratedBox),
+      ),
     );
-    final decoration = containerWidget.decoration! as BoxDecoration;
+    final decoration = containerWidget.decoration as BoxDecoration;
     expect(decoration.color, AppPalette.light.primarySoft);
-    expect(decoration.border?.top.color, AppPalette.light.primaryRing);
   });
 
   testWidgets(
-    'SearchView deletes a persisted history row from inline history',
+    'SearchView does not render per-row delete affordance in inline history',
     (
       tester,
     ) async {
@@ -778,12 +796,16 @@ void main() {
       await tester.pump();
       expect(find.text('削除対象キーワード'), findsOneWidget);
 
-      await tester.tap(
+      expect(
         find.byKey(const ValueKey('delete-history-search_delete_target')),
+        findsNothing,
       );
-      await tester.pump();
-
-      expect(find.text('削除対象キーワード'), findsNothing);
+      expect(
+        find.byKey(
+          const ValueKey('search-history-delete-bg-search_delete_target'),
+        ),
+        findsNothing,
+      );
     },
   );
 

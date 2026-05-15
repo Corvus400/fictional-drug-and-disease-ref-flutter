@@ -431,6 +431,20 @@ void main() {
       expect(find.text('検索キーワードを入力'), findsOneWidget);
       expect(find.text('履歴やフィルタからも始められます。'), findsOneWidget);
       expect(
+        find.descendant(
+          of: find.byKey(const ValueKey('search-utility-history-section')),
+          matching: find.text('最近の検索'),
+        ),
+        findsOneWidget,
+      );
+      expect(
+        find.descendant(
+          of: find.byKey(const ValueKey('search-utility-history-section')),
+          matching: find.text('検索履歴'),
+        ),
+        findsNothing,
+      );
+      expect(
         find.byWidgetPredicate(
           (widget) =>
               widget.key is ValueKey<String> &&
@@ -442,8 +456,41 @@ void main() {
       );
       expect(find.text('ユーティリティ履歴5'), findsOneWidget);
       expect(find.text('ユーティリティ履歴0'), findsNothing);
-      expect(find.text('合計 6 件'), findsOneWidget);
-      expect(find.text('絞り込み +1'), findsWidgets);
+      expect(find.text('6 件'), findsOneWidget);
+      expect(
+        find.byKey(
+          const ValueKey('search-utility-history-query-utility_history_5'),
+        ),
+        findsOneWidget,
+      );
+      expect(
+        find.byKey(
+          const ValueKey('search-utility-history-count-utility_history_5'),
+        ),
+        findsOneWidget,
+      );
+      expect(
+        find.byKey(
+          const ValueKey('search-utility-history-when-utility_history_5'),
+        ),
+        findsOneWidget,
+      );
+      expect(
+        find.byKey(
+          const ValueKey('search-utility-history-filter-utility_history_4'),
+        ),
+        findsOneWidget,
+      );
+      expect(
+        find.byKey(
+          const ValueKey(
+            'search-utility-history-filter-empty-utility_history_5',
+          ),
+        ),
+        findsOneWidget,
+      );
+      expect(find.text('絞込'), findsWidgets);
+      expect(find.text('絞り込み +1'), findsNothing);
       expect(find.text('7 軸 · 軸内 OR / 軸間 AND'), findsOneWidget);
       expect(find.text('11 値・複数選択 OR'), findsOneWidget);
       expect(
@@ -1564,6 +1611,28 @@ void main() {
     expect(dividers.first.thickness, 0.5);
     expect(find.text('キーボード履歴4'), findsOneWidget);
     expect(find.text('キーボード履歴0'), findsOneWidget);
+    expect(
+      find.byKey(
+        const ValueKey('history-row-when-round6_keyboard_history_4'),
+      ),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(
+        const ValueKey('history-row-filter-empty-round6_keyboard_history_4'),
+      ),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(
+        const ValueKey('history-target-pill-round6_keyboard_history_4'),
+      ),
+      findsNothing,
+    );
+    expect(
+      find.byKey(const ValueKey('delete-history-round6_keyboard_history_4')),
+      findsNothing,
+    );
     expect(find.byKey(const ValueKey('search-history-dropdown')), findsNothing);
   });
 
@@ -1601,21 +1670,22 @@ void main() {
     expect(clearLabel.style?.fontWeight, FontWeight.w700);
     expect(clearLabel.style?.color, AppPalette.light.primary);
 
-    final deleteBgFinder = find.byKey(
-      const ValueKey('search-history-delete-bg-round6_history_action'),
+    expect(
+      find.byKey(const ValueKey('delete-history-round6_history_action')),
+      findsNothing,
     );
-    expect(deleteBgFinder, findsOneWidget);
-    final deleteBg = tester.widget<DecoratedBox>(deleteBgFinder);
-    final decoration = deleteBg.decoration as BoxDecoration;
-    expect(decoration.color, AppPalette.light.surface3);
-    expect(decoration.borderRadius, BorderRadius.circular(11));
-    expect(tester.getSize(deleteBgFinder), const Size(22, 22));
-
-    final deleteIcon = tester.widget<Icon>(
-      find.descendant(of: deleteBgFinder, matching: find.byIcon(Icons.close)),
+    expect(
+      find.byKey(
+        const ValueKey('search-history-delete-bg-round6_history_action'),
+      ),
+      findsNothing,
     );
-    expect(deleteIcon.size, 9);
-    expect(deleteIcon.color, AppPalette.light.muted);
+    expect(
+      find.byKey(
+        const ValueKey('history-row-filter-empty-round6_history_action'),
+      ),
+      findsOneWidget,
+    );
   });
 
   testWidgets('focused search cancel follows Round6 bold action text', (
