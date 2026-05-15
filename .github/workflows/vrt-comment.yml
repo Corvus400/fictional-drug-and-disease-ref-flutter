@@ -109,6 +109,10 @@ jobs:
         with:
           ref: main
 
+      - name: Preserve baseline compare generator
+        if: steps.download-pr.outcome == 'success'
+        run: cp .github/scripts/generate_golden_baseline_compares.py "$RUNNER_TEMP/generate_golden_baseline_compares.py"
+
       - id: switch-companion-branch
         if: steps.download-pr.outcome == 'success'
         env:
@@ -178,10 +182,23 @@ jobs:
         shell: bash
         if: >
           steps.download-pr.outcome == 'success' &&
-          steps.check-if-there-are-valid-files.outputs.exist_valid_files == 'true'
+          (steps.check-if-there-are-valid-files.outputs.exist_valid_files == 'true' ||
+          steps.collect-golden-baseline-changes.outputs.has_baseline_changes == 'true')
         env:
           BRANCH_NAME: companion-pr-${{ needs.classify-vrt-trust.outputs.pull_request_number }}
+          GH_TOKEN: ${{ github.token }}
+          BASE_SHA: ${{ steps.collect-golden-baseline-changes.outputs.base_sha }}
+          HEAD_SHA: ${{ steps.collect-golden-baseline-changes.outputs.head_sha }}
         run: |
+          if [ -s golden-baseline-files.tsv ]; then
+            python3 "$RUNNER_TEMP/generate_golden_baseline_compares.py" \
+              "${{ github.repository }}" \
+              "$BASE_SHA" \
+              "$HEAD_SHA" \
+              golden-baseline-files.tsv \
+              golden-baseline-compares
+          fi
+
           # Find all the files ending with _compare.png
           mapfile -d '' -t files_to_add < <(find . -type f -name "*_compare.png" -print0)
 
@@ -229,8 +246,23 @@ jobs:
             printf '<img src="https://github.com/${{ github.repository }}/blob/%s/%s?raw=true" width="220">' "$sha" "$encoded_path"
           }
 
-          # Find all the files ending with _compare.png in golden-diff-reports
-          mapfile -d '' -t files < <(find . -type f -name "*_compare.png" -print0)
+          compare_image_link() {
+            local path="$1"
+            local encoded_path
+            encoded_path="$(url_path "$path")"
+            printf '<img src="https://github.com/${{ github.repository }}/blob/%s/%s?raw=true" width="900">' "$BRANCH_NAME" "$encoded_path"
+          }
+
+          safe_stem() {
+            local value="$1"
+            value="${value%.png}"
+            value="$(printf '%s' "$value" | sed -E 's/[^0-9A-Za-z._-]+/_/g')"
+            printf '%s' "$value"
+          }
+
+          # Find all comparator failure images. Baseline-change compare images
+          # are rendered separately below so file paths do not squeeze previews.
+          mapfile -d '' -t files < <(find golden-diff-reports -type f -name "*_compare.png" -print0 2>/dev/null)
           delimiter="$(openssl rand -hex 8)"
           {
             echo "reports<<${delimiter}"
@@ -262,9 +294,6 @@ jobs:
               echo "CI compares rendered output against the golden files committed in this PR. This section shows golden PNG changes against the base branch for review."
               echo
               echo "Changed golden baseline files: ${BASELINE_CHANGE_COUNT}"
-              echo
-              echo "| Status | File | Base | PR |"
-              echo "|-------|------|------|----|"
             } >> "$GITHUB_OUTPUT"
 
             row_count=0
@@ -277,27 +306,15 @@ jobs:
               fi
 
               if [ "$row_count" -le "$max_image_rows" ]; then
-                base_cell="-"
-                pr_cell="-"
-                case "$status" in
-                  added)
-                    pr_cell="$(image_link "$HEAD_SHA" "$file")"
-                    ;;
-                  removed)
-                    base_cell="$(image_link "$BASE_SHA" "$file")"
-                    ;;
-                  renamed)
-                    if [ -n "$previous_file" ]; then
-                      base_cell="$(image_link "$BASE_SHA" "$previous_file")"
-                    fi
-                    pr_cell="$(image_link "$HEAD_SHA" "$file")"
-                    ;;
-                  *)
-                    base_cell="$(image_link "$BASE_SHA" "$file")"
-                    pr_cell="$(image_link "$HEAD_SHA" "$file")"
-                    ;;
-                esac
-                echo "| $status | \`$display_file\` | $base_cell | $pr_cell |" >> "$GITHUB_OUTPUT"
+                compare_path="golden-baseline-compares/baseline_$(safe_stem "$file")_compare.png"
+                {
+                  echo
+                  echo "<table>"
+                  echo "  <tr><th>Status</th><td><code>$status</code></td></tr>"
+                  echo "  <tr><th>File</th><td><code>$display_file</code></td></tr>"
+                  echo "  <tr><th>Reference / Diff / New</th><td>$(compare_image_link "$compare_path")</td></tr>"
+                  echo "</table>"
+                } >> "$GITHUB_OUTPUT"
               fi
             done < golden-baseline-files.tsv
 
@@ -336,7 +353,8 @@ jobs:
       - name: Delete outdated companion branch
         if: >
           steps.download-pr.outcome == 'success' &&
-          steps.check-if-there-are-valid-files.outputs.exist_valid_files == 'false'
+          steps.check-if-there-are-valid-files.outputs.exist_valid_files == 'false' &&
+          steps.collect-golden-baseline-changes.outputs.has_baseline_changes == 'false'
         env:
           BRANCH_NAME: companion-pr-${{ needs.classify-vrt-trust.outputs.pull_request_number }}
         shell: bash

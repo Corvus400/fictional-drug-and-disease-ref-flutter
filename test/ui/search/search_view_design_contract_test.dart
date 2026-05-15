@@ -25,6 +25,7 @@ import 'package:fictional_drug_and_disease_ref/ui/search/search_screen_state.dar
 import 'package:fictional_drug_and_disease_ref/ui/search/search_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/misc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -66,7 +67,7 @@ void main() {
 
       await tester.pumpWidget(
         ProviderScope(
-          overrides: [appDatabaseProvider.overrideWithValue(db)],
+          overrides: _baseOverrides(db),
           child: MaterialApp(
             theme: AppTheme.light(),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -111,7 +112,7 @@ void main() {
     ) async {
       await tester.pumpWidget(
         ProviderScope(
-          overrides: [appDatabaseProvider.overrideWithValue(db)],
+          overrides: _baseOverrides(db),
           child: MaterialApp(
             theme: AppTheme.light(),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -133,7 +134,7 @@ void main() {
 
       await tester.pumpWidget(
         ProviderScope(
-          overrides: [appDatabaseProvider.overrideWithValue(db)],
+          overrides: _baseOverrides(db),
           child: MaterialApp(
             darkTheme: AppTheme.dark(),
             themeMode: ThemeMode.dark,
@@ -160,7 +161,7 @@ void main() {
       addTearDown(() => tester.binding.setSurfaceSize(null));
 
       final container = ProviderContainer(
-        overrides: [appDatabaseProvider.overrideWithValue(db)],
+        overrides: _baseOverrides(db),
       );
       addTearDown(container.dispose);
       final codec = container.read(searchQueryCodecProvider);
@@ -215,7 +216,7 @@ void main() {
 
     await tester.pumpWidget(
       ProviderScope(
-        overrides: [appDatabaseProvider.overrideWithValue(db)],
+        overrides: _baseOverrides(db),
         child: MaterialApp(
           theme: AppTheme.light(),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -240,7 +241,7 @@ void main() {
 
     await tester.pumpWidget(
       ProviderScope(
-        overrides: [appDatabaseProvider.overrideWithValue(db)],
+        overrides: _baseOverrides(db),
         child: MaterialApp(
           theme: AppTheme.light(),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -264,7 +265,7 @@ void main() {
 
     await tester.pumpWidget(
       ProviderScope(
-        overrides: [appDatabaseProvider.overrideWithValue(db)],
+        overrides: _baseOverrides(db),
         child: MaterialApp(
           theme: AppTheme.light(),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -293,7 +294,7 @@ void main() {
 
       await tester.pumpWidget(
         ProviderScope(
-          overrides: [appDatabaseProvider.overrideWithValue(db)],
+          overrides: _baseOverrides(db),
           child: MaterialApp(
             theme: AppTheme.light(),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -330,7 +331,7 @@ void main() {
 
       await tester.pumpWidget(
         ProviderScope(
-          overrides: [appDatabaseProvider.overrideWithValue(db)],
+          overrides: _baseOverrides(db),
           child: MaterialApp(
             theme: AppTheme.light(),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -369,7 +370,7 @@ void main() {
 
     await tester.pumpWidget(
       ProviderScope(
-        overrides: [appDatabaseProvider.overrideWithValue(db)],
+        overrides: _baseOverrides(db),
         child: MaterialApp(
           theme: AppTheme.light(),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -391,9 +392,7 @@ void main() {
       await tester.binding.setSurfaceSize(const Size(834, 1194));
       addTearDown(() => tester.binding.setSurfaceSize(null));
 
-      final container = ProviderContainer(
-        overrides: [appDatabaseProvider.overrideWithValue(db)],
-      );
+      final container = ProviderContainer(overrides: _baseOverrides(db));
       addTearDown(container.dispose);
       final codec = container.read(searchQueryCodecProvider);
       final repository = container.read(searchHistoryRepositoryProvider);
@@ -479,7 +478,7 @@ void main() {
 
       await tester.pumpWidget(
         ProviderScope(
-          overrides: [appDatabaseProvider.overrideWithValue(db)],
+          overrides: _baseOverrides(db),
           child: MaterialApp(
             theme: AppTheme.light(),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -496,6 +495,17 @@ void main() {
       expect(find.text('ICD-10 章'), findsOneWidget);
       expect(find.text('診療科'), findsOneWidget);
       expect(find.text('重症度評価あり'), findsOneWidget);
+      await tester.scrollUntilVisible(
+        find.byKey(
+          const ValueKey('search-utility-sort-name_kana'),
+          skipOffstage: false,
+        ),
+        120,
+        scrollable: find.descendant(
+          of: find.byKey(const ValueKey('search-utility-pane')),
+          matching: find.byType(Scrollable),
+        ),
+      );
       expect(
         find.byKey(
           const ValueKey('search-utility-sort-name_kana'),
@@ -522,7 +532,7 @@ void main() {
     Future<void> pumpWithTheme(ThemeData theme, {ThemeMode? themeMode}) async {
       await tester.pumpWidget(
         ProviderScope(
-          overrides: [appDatabaseProvider.overrideWithValue(db)],
+          overrides: _baseOverrides(db),
           child: MaterialApp(
             theme: themeMode == ThemeMode.dark ? AppTheme.light() : theme,
             darkTheme: themeMode == ThemeMode.dark ? theme : null,
@@ -556,7 +566,7 @@ void main() {
   ) async {
     await tester.pumpWidget(
       ProviderScope(
-        overrides: [appDatabaseProvider.overrideWithValue(db)],
+        overrides: _baseOverrides(db),
         child: MaterialApp(
           theme: AppTheme.light(),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -597,7 +607,7 @@ void main() {
   ) async {
     await tester.pumpWidget(
       ProviderScope(
-        overrides: [appDatabaseProvider.overrideWithValue(db)],
+        overrides: _baseOverrides(db),
         child: MaterialApp(
           theme: AppTheme.light(),
           darkTheme: AppTheme.dark(),
@@ -1113,6 +1123,72 @@ void main() {
     expect(find.byKey(const ValueKey('search-sort-sheet')), findsNothing);
   });
 
+  testWidgets('SearchView utility pane filter axes expand inside two-pane', (
+    tester,
+  ) async {
+    await tester.binding.setSurfaceSize(const Size(834, 1194));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+
+    await _pumpSearchViewWithDrugResults(tester, db);
+
+    final axis = find.byKey(
+      const ValueKey('search-utility-filter-axis-dosage_form'),
+    );
+    expect(axis, findsOneWidget);
+    expect(
+      find.byKey(
+        const ValueKey('search-utility-filter-axis-values-dosage_form'),
+      ),
+      findsNothing,
+    );
+
+    await tester.tap(axis);
+    await tester.pumpAndSettle();
+
+    expect(
+      find.byKey(
+        const ValueKey('search-utility-filter-axis-values-dosage_form'),
+      ),
+      findsOneWidget,
+    );
+    expect(find.text('錠剤', skipOffstage: false), findsOneWidget);
+  });
+
+  testWidgets(
+    'SearchView keeps result count and sort toolbar sticky above two-pane list',
+    (tester) async {
+      await tester.binding.setSurfaceSize(const Size(834, 1194));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+
+      await _pumpSearchViewWithDrugResults(tester, db);
+
+      final toolbarFinder = find.byKey(
+        const ValueKey('search-results-toolbar'),
+      );
+      final firstTop = tester.getTopLeft(toolbarFinder).dy;
+
+      await tester.drag(
+        find.byKey(const PageStorageKey<String>('drugSearchResults')),
+        const Offset(0, -360),
+      );
+      await tester.pumpAndSettle();
+
+      expect(toolbarFinder, findsOneWidget);
+      expect(
+        find.descendant(of: toolbarFinder, matching: find.text('合計 120 件')),
+        findsOneWidget,
+      );
+      expect(
+        find.descendant(
+          of: toolbarFinder,
+          matching: find.text('並び替え： 更新日(新しい順) ↓ ▾'),
+        ),
+        findsOneWidget,
+      );
+      expect(tester.getTopLeft(toolbarFinder).dy, firstTop);
+    },
+  );
+
   // Design source:
   // Round5/Search - Round 5.html TASK 4 keyboard drag-to-dismiss.
   testWidgets('SearchView result list dismisses keyboard on drag', (
@@ -1174,9 +1250,7 @@ void main() {
     await tester.binding.setSurfaceSize(const Size(390, 844));
     addTearDown(() => tester.binding.setSurfaceSize(null));
 
-    final container = ProviderContainer(
-      overrides: [appDatabaseProvider.overrideWithValue(db)],
-    );
+    final container = ProviderContainer(overrides: _baseOverrides(db));
     addTearDown(container.dispose);
     final codec = container.read(searchQueryCodecProvider);
     final repository = container.read(searchHistoryRepositoryProvider);
@@ -1226,9 +1300,7 @@ void main() {
   });
 
   testWidgets('history actions follow Round6 light controls', (tester) async {
-    final container = ProviderContainer(
-      overrides: [appDatabaseProvider.overrideWithValue(db)],
-    );
+    final container = ProviderContainer(overrides: _baseOverrides(db));
     addTearDown(container.dispose);
     final codec = container.read(searchQueryCodecProvider);
     final repository = container.read(searchHistoryRepositoryProvider);
@@ -1283,7 +1355,7 @@ void main() {
   ) async {
     await tester.pumpWidget(
       ProviderScope(
-        overrides: [appDatabaseProvider.overrideWithValue(db)],
+        overrides: _baseOverrides(db),
         child: MaterialApp(
           theme: AppTheme.light(),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -2394,7 +2466,7 @@ void main() {
 
     await tester.pumpWidget(
       ProviderScope(
-        overrides: [appDatabaseProvider.overrideWithValue(db)],
+        overrides: _baseOverrides(db),
         child: MaterialApp(
           theme: AppTheme.light(),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -2428,6 +2500,21 @@ final class _MockDrugApiClient extends Mock implements DrugApiClient {}
 final class _MockDiseaseApiClient extends Mock implements DiseaseApiClient {}
 
 final class _MockCategoryApiClient extends Mock implements CategoryApiClient {}
+
+List<Override> _baseOverrides(AppDatabase db) {
+  return [
+    appDatabaseProvider.overrideWithValue(db),
+    _categoryApiClientOverride(),
+  ];
+}
+
+Override _categoryApiClientOverride() {
+  final categoryApiClient = _MockCategoryApiClient();
+  when(categoryApiClient.getCategories).thenAnswer(
+    (_) async => _categoriesFixture(),
+  );
+  return categoryApiClientProvider.overrideWithValue(categoryApiClient);
+}
 
 void _stubDrugSearch(_MockDrugApiClient drugApiClient) {
   when(
@@ -2486,6 +2573,10 @@ Future<void> _pumpSearchViewWithDrugResults(
   DrugListResponseDto? response,
 }) async {
   final drugApiClient = _MockDrugApiClient();
+  final categoryApiClient = _MockCategoryApiClient();
+  when(categoryApiClient.getCategories).thenAnswer(
+    (_) async => _categoriesFixture(),
+  );
   if (response == null) {
     _stubDrugSearch(drugApiClient);
   } else {
@@ -2513,6 +2604,7 @@ Future<void> _pumpSearchViewWithDrugResults(
       overrides: [
         appDatabaseProvider.overrideWithValue(db),
         drugApiClientProvider.overrideWithValue(drugApiClient),
+        categoryApiClientProvider.overrideWithValue(categoryApiClient),
       ],
       child: MaterialApp(
         theme: AppTheme.light(),
@@ -2527,6 +2619,6 @@ Future<void> _pumpSearchViewWithDrugResults(
     find.byKey(const ValueKey('search-field')),
     'アムロ',
   );
-  await tester.tap(find.byType(FilledButton).first);
+  await tester.tap(find.byKey(const ValueKey('search-submit-button')));
   await tester.pumpAndSettle();
 }

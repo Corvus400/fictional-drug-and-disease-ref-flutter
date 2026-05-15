@@ -66,6 +66,7 @@ class _SearchViewState extends ConsumerState<SearchView> with RouteAware {
   late final ScrollController _drugSearchResultsScrollController;
   late final ScrollController _diseaseSearchResultsScrollController;
   PageRoute<dynamic>? _route;
+  bool _utilityPaneCategoryLoadQueued = false;
 
   @override
   void initState() {
@@ -195,6 +196,33 @@ class _SearchViewState extends ConsumerState<SearchView> with RouteAware {
           );
           final isLandscape = _usesSearchLandscapeRail(constraintsSize);
           final useUtilityPane = _usesSearchUtilityPane(constraintsSize);
+          if (state.categories != null) {
+            _utilityPaneCategoryLoadQueued = false;
+          }
+          if (useUtilityPane &&
+              state.categories == null &&
+              !_utilityPaneCategoryLoadQueued) {
+            _utilityPaneCategoryLoadQueued = true;
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (!mounted) {
+                return;
+              }
+              unawaited(
+                ref
+                    .read(searchScreenProvider.notifier)
+                    .loadCategories()
+                    .whenComplete(() {
+                      if (!mounted) {
+                        return;
+                      }
+                      final latestState = ref.read(searchScreenProvider);
+                      if (latestState.categories == null) {
+                        _utilityPaneCategoryLoadQueued = false;
+                      }
+                    }),
+              );
+            });
+          }
           final gutter = isTablet
               ? SearchConstants.searchTabletGutter
               : SearchConstants.searchPhoneGutter;
@@ -242,7 +270,8 @@ class _SearchViewState extends ConsumerState<SearchView> with RouteAware {
             onSelectHistory: notifier.selectHistory,
             onClearAllHistory: notifier.clearAllHistory,
             onResetFilter: notifier.resetFilter,
-            onApplyFilter: notifier.performSearch,
+            onApplyDrugFilter: notifier.applyDrugFilter,
+            onApplyDiseaseFilter: notifier.applyDiseaseFilter,
             onChangeDrugSort: notifier.changeDrugSort,
             onChangeDiseaseSort: notifier.changeDiseaseSort,
           );

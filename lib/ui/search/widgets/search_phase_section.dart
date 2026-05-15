@@ -323,105 +323,113 @@ class _SearchPhaseSection extends StatelessWidget {
         (theme.brightness == Brightness.dark
             ? AppPalette.dark
             : AppPalette.light);
-    return NotificationListener<ScrollNotification>(
-      onNotification: (notification) {
-        if (notification is! ScrollUpdateNotification) {
-          return false;
-        }
-        final metrics = notification.metrics;
-        final nearEnd =
-            metrics.maxScrollExtent > 0 &&
-            metrics.pixels >= metrics.maxScrollExtent - 80;
-        if (view.canLoadMore && nearEnd) {
-          unawaited(onLoadMore());
-        }
-        return false;
-      },
-      child: ListView(
-        key: state.tab == SearchTab.drugs
-            ? const PageStorageKey<String>('drugSearchResults')
-            : const PageStorageKey<String>('diseaseSearchResults'),
-        controller: resultScrollController,
-        primary: false,
-        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-        children: [
-          _SearchResultToolbar(
-            state: state,
-            gutter: gutter,
-            totalCount: view.totalCount,
-            onRemoveChipAt: onRemoveChipAt,
-            onChangeDrugSort: onChangeDrugSort,
-            onChangeDiseaseSort: onChangeDiseaseSort,
-            enableSortSheet: enableSortSheet,
-          ),
-          switch (view) {
-            DrugSearchResultsView(:final items) => Padding(
-              padding: EdgeInsets.symmetric(horizontal: gutter),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  for (final item in items)
-                    DrugResultCard(
-                      item: item,
-                      cacheManager: drugCardImageCacheManager,
-                      logImageErrors: logDrugImageErrors,
-                      onTap: () => context.push(AppRoutes.drugDetail(item.id)),
-                    ),
-                ],
-              ),
-            ),
-            DiseaseSearchResultsView(:final items) => Padding(
-              padding: EdgeInsets.symmetric(horizontal: gutter),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  for (final item in items)
-                    DiseaseResultCard(
-                      item: item,
-                      onTap: () =>
-                          context.push(AppRoutes.diseaseDetail(item.id)),
-                    ),
-                ],
-              ),
-            ),
-          },
-          if (view.canLoadMore)
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 16),
-              child: isLoadingMore
-                  ? Center(
-                      child: DecoratedBox(
-                        key: const ValueKey('search-load-more-footer'),
-                        decoration: BoxDecoration(
-                          color: palette.surface,
-                          border: Border.all(
-                            color: palette.hairline,
-                            width: 0.5,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        _SearchResultToolbar(
+          state: state,
+          gutter: gutter,
+          totalCount: view.totalCount,
+          onRemoveChipAt: onRemoveChipAt,
+          onChangeDrugSort: onChangeDrugSort,
+          onChangeDiseaseSort: onChangeDiseaseSort,
+          enableSortSheet: enableSortSheet,
+        ),
+        Expanded(
+          child: NotificationListener<ScrollNotification>(
+            onNotification: (notification) {
+              if (notification is! ScrollUpdateNotification) {
+                return false;
+              }
+              final metrics = notification.metrics;
+              final nearEnd =
+                  metrics.maxScrollExtent > 0 &&
+                  metrics.pixels >= metrics.maxScrollExtent - 80;
+              if (view.canLoadMore && nearEnd) {
+                unawaited(onLoadMore());
+              }
+              return false;
+            },
+            child: ListView(
+              key: state.tab == SearchTab.drugs
+                  ? const PageStorageKey<String>('drugSearchResults')
+                  : const PageStorageKey<String>('diseaseSearchResults'),
+              controller: resultScrollController,
+              primary: false,
+              keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+              children: [
+                switch (view) {
+                  DrugSearchResultsView(:final items) => Padding(
+                    padding: EdgeInsets.symmetric(horizontal: gutter),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        for (final item in items)
+                          DrugResultCard(
+                            item: item,
+                            cacheManager: drugCardImageCacheManager,
+                            logImageErrors: logDrugImageErrors,
+                            onTap: () =>
+                                context.push(AppRoutes.drugDetail(item.id)),
                           ),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 14,
-                            vertical: 12,
+                      ],
+                    ),
+                  ),
+                  DiseaseSearchResultsView(:final items) => Padding(
+                    padding: EdgeInsets.symmetric(horizontal: gutter),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        for (final item in items)
+                          DiseaseResultCard(
+                            item: item,
+                            onTap: () =>
+                                context.push(AppRoutes.diseaseDetail(item.id)),
                           ),
-                          child: ShimmerSkeleton(
-                            child: ShimmerSkeletonShapes.compactBar(
-                              width: 120,
-                              height: 16,
+                      ],
+                    ),
+                  ),
+                },
+                if (view.canLoadMore)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    child: isLoadingMore
+                        ? Center(
+                            child: DecoratedBox(
+                              key: const ValueKey('search-load-more-footer'),
+                              decoration: BoxDecoration(
+                                color: palette.surface,
+                                border: Border.all(
+                                  color: palette.hairline,
+                                  width: 0.5,
+                                ),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 14,
+                                  vertical: 12,
+                                ),
+                                child: ShimmerSkeleton(
+                                  child: ShimmerSkeletonShapes.compactBar(
+                                    width: 120,
+                                    height: 16,
+                                  ),
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
-                      ),
-                    )
-                  : Center(child: Text(l10n.searchToolbarLoadMore)),
+                          )
+                        : Center(child: Text(l10n.searchToolbarLoadMore)),
+                  ),
+                const SizedBox(
+                  key: ValueKey('search-results-bottom-padding'),
+                  height: SearchConstants.searchListBottomPadding,
+                ),
+              ],
             ),
-          const SizedBox(
-            key: ValueKey('search-results-bottom-padding'),
-            height: SearchConstants.searchListBottomPadding,
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
@@ -648,7 +656,8 @@ class _SearchUtilityPane extends StatelessWidget {
     required this.onSelectHistory,
     required this.onClearAllHistory,
     required this.onResetFilter,
-    required this.onApplyFilter,
+    required this.onApplyDrugFilter,
+    required this.onApplyDiseaseFilter,
     required this.onChangeDrugSort,
     required this.onChangeDiseaseSort,
   });
@@ -659,7 +668,28 @@ class _SearchUtilityPane extends StatelessWidget {
   final Future<void> Function(SearchHistoryEnvelope entry) onSelectHistory;
   final Future<void> Function() onClearAllHistory;
   final Future<void> Function() onResetFilter;
-  final Future<void> Function() onApplyFilter;
+  final Future<void> Function({
+    String? categoryAtc,
+    String? therapeuticCategory,
+    List<String>? regulatoryClass,
+    List<String>? dosageForm,
+    List<String>? route,
+    String? adverseReactionKeyword,
+    List<String>? precautionCategory,
+  })
+  onApplyDrugFilter;
+  final Future<void> Function({
+    List<String>? icd10Chapter,
+    List<String>? department,
+    List<String>? chronicity,
+    bool? infectious,
+    String? symptomKeyword,
+    List<String>? onsetPattern,
+    List<String>? examCategory,
+    bool? hasPharmacologicalTreatment,
+    bool? hasSeverityGrading,
+  })
+  onApplyDiseaseFilter;
   final Future<void> Function(DrugSort sort) onChangeDrugSort;
   final Future<void> Function(DiseaseSort sort) onChangeDiseaseSort;
 
@@ -692,10 +722,11 @@ class _SearchUtilityPane extends StatelessWidget {
             key: const ValueKey('search-utility-filter-section'),
             title: l10n.searchFilterTitle,
             child: _SearchUtilityFilterSection(
-              tab: state.tab,
+              state: state,
               resultCount: _utilityResultCount(state),
               onReset: onResetFilter,
-              onApply: onApplyFilter,
+              onApplyDrugFilter: onApplyDrugFilter,
+              onApplyDiseaseFilter: onApplyDiseaseFilter,
             ),
           ),
           const SizedBox(height: 12),
@@ -881,23 +912,125 @@ class _SearchUtilityHistoryRow extends StatelessWidget {
   }
 }
 
-class _SearchUtilityFilterSection extends StatelessWidget {
+class _SearchUtilityFilterSection extends StatefulWidget {
   const _SearchUtilityFilterSection({
-    required this.tab,
+    required this.state,
     required this.resultCount,
     required this.onReset,
-    required this.onApply,
+    required this.onApplyDrugFilter,
+    required this.onApplyDiseaseFilter,
   });
 
-  final SearchTab tab;
+  final SearchScreenState state;
   final int resultCount;
   final Future<void> Function() onReset;
-  final Future<void> Function() onApply;
+  final Future<void> Function({
+    String? categoryAtc,
+    String? therapeuticCategory,
+    List<String>? regulatoryClass,
+    List<String>? dosageForm,
+    List<String>? route,
+    String? adverseReactionKeyword,
+    List<String>? precautionCategory,
+  })
+  onApplyDrugFilter;
+  final Future<void> Function({
+    List<String>? icd10Chapter,
+    List<String>? department,
+    List<String>? chronicity,
+    bool? infectious,
+    String? symptomKeyword,
+    List<String>? onsetPattern,
+    List<String>? examCategory,
+    bool? hasPharmacologicalTreatment,
+    bool? hasSeverityGrading,
+  })
+  onApplyDiseaseFilter;
+
+  @override
+  State<_SearchUtilityFilterSection> createState() =>
+      _SearchUtilityFilterSectionState();
+}
+
+class _SearchUtilityFilterSectionState
+    extends State<_SearchUtilityFilterSection> {
+  late Set<String> _categoryAtc;
+  late Set<String> _therapeuticCategory;
+  late Set<String> _regulatoryClass;
+  late Set<String> _dosageForm;
+  late Set<String> _route;
+  late Set<String> _precautionCategory;
+  late TextEditingController _adverseReactionKeywordController;
+  late Set<String> _icd10Chapter;
+  late Set<String> _department;
+  late Set<String> _chronicity;
+  late Set<String> _onsetPattern;
+  late Set<String> _examCategory;
+  late TextEditingController _symptomKeywordController;
+  late bool? _infectious;
+  late bool? _hasPharmacologicalTreatment;
+  late bool? _hasSeverityGrading;
+  var _expandedAxis = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _syncFromState(widget.state);
+  }
+
+  @override
+  void didUpdateWidget(covariant _SearchUtilityFilterSection oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.state.tab != widget.state.tab ||
+        oldWidget.state.drugParams != widget.state.drugParams ||
+        oldWidget.state.diseaseParams != widget.state.diseaseParams) {
+      _disposeControllers();
+      _syncFromState(widget.state);
+    }
+  }
+
+  @override
+  void dispose() {
+    _disposeControllers();
+    super.dispose();
+  }
+
+  void _disposeControllers() {
+    _adverseReactionKeywordController.dispose();
+    _symptomKeywordController.dispose();
+  }
+
+  void _syncFromState(SearchScreenState state) {
+    _categoryAtc = {?state.drugParams.categoryAtc};
+    _therapeuticCategory = {?state.drugParams.therapeuticCategory};
+    _regulatoryClass = {...?state.drugParams.regulatoryClass};
+    _dosageForm = {...?state.drugParams.dosageForm};
+    _route = {...?state.drugParams.route};
+    _precautionCategory = {...?state.drugParams.precautionCategory};
+    _adverseReactionKeywordController = TextEditingController(
+      text: state.drugParams.adverseReactionKeyword,
+    );
+    _icd10Chapter = {...?state.diseaseParams.icd10Chapter};
+    _department = {...?state.diseaseParams.department};
+    _chronicity = {...?state.diseaseParams.chronicity};
+    _onsetPattern = {...?state.diseaseParams.onsetPattern};
+    _examCategory = {...?state.diseaseParams.examCategory};
+    _symptomKeywordController = TextEditingController(
+      text: state.diseaseParams.symptomKeyword,
+    );
+    _infectious = state.diseaseParams.infectious;
+    _hasPharmacologicalTreatment =
+        state.diseaseParams.hasPharmacologicalTreatment;
+    _hasSeverityGrading = state.diseaseParams.hasSeverityGrading;
+    _expandedAxis = state.tab == SearchTab.drugs
+        ? 'regulatory_class'
+        : 'icd10_chapter';
+  }
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final axes = _utilityFilterAxes(l10n, tab);
+    final axes = _utilityFilterAxesForState(l10n, widget.state);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -909,21 +1042,50 @@ class _SearchUtilityFilterSection extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 8),
-        for (final axis in axes) _SearchUtilityAxisTile(axis: axis),
+        for (final axis in axes)
+          _SearchUtilityAxisTile(
+            axis: axis,
+            expanded: _expandedAxis == axis.id,
+            onTap: () => setState(() {
+              _expandedAxis = _expandedAxis == axis.id ? '' : axis.id;
+            }),
+          ),
         const SizedBox(height: 10),
         Row(
           children: [
             TextButton(
               key: const ValueKey('search-utility-filter-reset'),
-              onPressed: () => unawaited(onReset()),
+              onPressed: () {
+                setState(() {
+                  _categoryAtc.clear();
+                  _therapeuticCategory.clear();
+                  _regulatoryClass.clear();
+                  _dosageForm.clear();
+                  _route.clear();
+                  _precautionCategory.clear();
+                  _adverseReactionKeywordController.clear();
+                  _icd10Chapter.clear();
+                  _department.clear();
+                  _chronicity.clear();
+                  _onsetPattern.clear();
+                  _examCategory.clear();
+                  _symptomKeywordController.clear();
+                  _infectious = null;
+                  _hasPharmacologicalTreatment = null;
+                  _hasSeverityGrading = null;
+                });
+                unawaited(widget.onReset());
+              },
               child: Text(l10n.searchFilterReset),
             ),
             const SizedBox(width: 8),
             Expanded(
               child: FilledButton(
                 key: const ValueKey('search-utility-filter-apply'),
-                onPressed: () => unawaited(onApply()),
-                child: Text(l10n.searchFilterApplyWithCount(resultCount)),
+                onPressed: _apply,
+                child: Text(
+                  l10n.searchFilterApplyWithCount(widget.resultCount),
+                ),
               ),
             ),
           ],
@@ -931,12 +1093,390 @@ class _SearchUtilityFilterSection extends StatelessWidget {
       ],
     );
   }
+
+  void _apply() {
+    if (widget.state.tab == SearchTab.drugs) {
+      unawaited(
+        widget.onApplyDrugFilter(
+          categoryAtc: _singleValue(_categoryAtc),
+          therapeuticCategory: _singleValue(_therapeuticCategory),
+          regulatoryClass: _regulatoryClass.toList(),
+          dosageForm: _dosageForm.toList(),
+          route: _route.toList(),
+          adverseReactionKeyword: _emptyToNull(
+            _adverseReactionKeywordController.text.trim(),
+          ),
+          precautionCategory: _precautionCategory.toList(),
+        ),
+      );
+      return;
+    }
+    unawaited(
+      widget.onApplyDiseaseFilter(
+        icd10Chapter: _icd10Chapter.toList(),
+        department: _department.toList(),
+        chronicity: _chronicity.toList(),
+        infectious: _infectious,
+        symptomKeyword: _emptyToNull(_symptomKeywordController.text.trim()),
+        onsetPattern: _onsetPattern.toList(),
+        examCategory: _examCategory.toList(),
+        hasPharmacologicalTreatment: _hasPharmacologicalTreatment,
+        hasSeverityGrading: _hasSeverityGrading,
+      ),
+    );
+  }
+
+  void _toggle(Set<String> target, String value) {
+    if (!target.add(value)) {
+      target.remove(value);
+    }
+  }
+
+  void _toggleSingle(Set<String> target, String value) {
+    if (target.contains(value)) {
+      target.clear();
+      return;
+    }
+    target
+      ..clear()
+      ..add(value);
+  }
+
+  String? _singleValue(Set<String> target) {
+    if (target.isEmpty) {
+      return null;
+    }
+    return target.first;
+  }
+
+  List<_FilterAxis> _utilityFilterAxesForState(
+    AppLocalizations l10n,
+    SearchScreenState state,
+  ) {
+    final categories = state.categories;
+    if (categories == null) {
+      return _utilityFilterAxes(l10n, state.tab)
+          .map(
+            (axis) => _FilterAxis(
+              id: axis.id,
+              title: axis.label,
+              summary: 'すべて',
+              selectedCount: 0,
+              hint: axis.meta,
+              content: const SizedBox.shrink(),
+            ),
+          )
+          .toList();
+    }
+    return switch (state.tab) {
+      SearchTab.drugs => [
+        _FilterAxis(
+          id: 'regulatory_class',
+          title: l10n.searchFilterDrugRegulatoryClass,
+          summary: _selectedSummary(
+            l10n,
+            _regulatoryClass,
+            (value) => _regulatoryClassLabel(l10n, value),
+          ),
+          selectedCount: _regulatoryClass.length,
+          hint: l10n.searchFilterHintMultiValue(
+            categories.regulatoryClass.length,
+          ),
+          content: _FilterChipGroup(
+            values: categories.regulatoryClass,
+            selected: _regulatoryClass,
+            labelFor: (value) => _regulatoryClassLabel(l10n, value),
+            onToggle: (value) =>
+                setState(() => _toggle(_regulatoryClass, value)),
+          ),
+        ),
+        _FilterAxis(
+          id: 'dosage_form',
+          title: l10n.searchFilterDrugDosageForm,
+          summary: _selectedSummary(
+            l10n,
+            _dosageForm,
+            (value) => _dosageFormLabel(l10n, value),
+          ),
+          selectedCount: _dosageForm.length,
+          hint: l10n.searchFilterHintMultiValue(categories.dosageForm.length),
+          content: _FilterChipGroup(
+            values: categories.dosageForm,
+            selected: _dosageForm,
+            labelFor: (value) => _dosageFormLabel(l10n, value),
+            onToggle: (value) => setState(() => _toggle(_dosageForm, value)),
+          ),
+        ),
+        _FilterAxis(
+          id: 'route',
+          title: l10n.searchFilterDrugRoute,
+          summary: _selectedSummary(
+            l10n,
+            _route,
+            (value) => _routeLabel(l10n, value),
+          ),
+          selectedCount: _route.length,
+          hint: l10n.searchFilterHintMultiValue(
+            categories.routeOfAdministration.length,
+          ),
+          content: _FilterChipGroup(
+            values: categories.routeOfAdministration,
+            selected: _route,
+            labelFor: (value) => _routeLabel(l10n, value),
+            onToggle: (value) => setState(() => _toggle(_route, value)),
+          ),
+        ),
+        _FilterAxis(
+          id: 'atc',
+          title: l10n.searchFilterDrugAtc,
+          summary: _selectedSummary(
+            l10n,
+            _categoryAtc,
+            (value) => _atcLabel(categories, value),
+          ),
+          selectedCount: _categoryAtc.length,
+          hint: l10n.searchFilterHintSingleValue(categories.atc.length),
+          content: _FilterChipGroup(
+            values: categories.atc.map((entry) => entry.code).toList(),
+            selected: _categoryAtc,
+            labelFor: (value) => _atcLabel(categories, value),
+            onToggle: (value) =>
+                setState(() => _toggleSingle(_categoryAtc, value)),
+          ),
+        ),
+        _FilterAxis(
+          id: 'therapeutic_category',
+          title: l10n.searchFilterDrugTherapeuticCategory,
+          summary: _selectedSummary(
+            l10n,
+            _therapeuticCategory,
+            (value) => _therapeuticCategoryLabel(categories, value),
+          ),
+          selectedCount: _therapeuticCategory.length,
+          hint: l10n.searchFilterHintHierarchy,
+          content: _FilterChipGroup(
+            values: categories.therapeuticCategories
+                .map((entry) => entry.id)
+                .toList(),
+            selected: _therapeuticCategory,
+            labelFor: (value) => _therapeuticCategoryLabel(categories, value),
+            onToggle: (value) =>
+                setState(() => _toggleSingle(_therapeuticCategory, value)),
+          ),
+        ),
+        _FilterAxis(
+          id: 'adverse_reaction',
+          title: l10n.searchFilterDrugAdverseReactionKeyword,
+          summary: _textSummary(
+            l10n,
+            _adverseReactionKeywordController.text.trim(),
+          ),
+          selectedCount:
+              _emptyToNull(_adverseReactionKeywordController.text.trim()) ==
+                  null
+              ? 0
+              : 1,
+          hint: l10n.searchFilterHintPartialMatch,
+          content: TextField(
+            key: const ValueKey('drug-filter-adverse-reaction'),
+            controller: _adverseReactionKeywordController,
+            onChanged: (_) => setState(() {}),
+            decoration: InputDecoration(
+              labelText: l10n.searchFilterDrugAdverseReactionKeyword,
+            ),
+          ),
+        ),
+        _FilterAxis(
+          id: 'precaution_category',
+          title: l10n.searchFilterDrugPrecautionCategory,
+          summary: _selectedSummary(
+            l10n,
+            _precautionCategory,
+            (value) => _precautionCategoryLabel(l10n, value),
+          ),
+          selectedCount: _precautionCategory.length,
+          hint: l10n.searchFilterHintMultiValue(
+            DrugPrecautionCategory.values.length,
+          ),
+          content: _FilterChipGroup(
+            values: DrugPrecautionCategory.values
+                .map((category) => category.wireValue)
+                .toList(),
+            selected: _precautionCategory,
+            labelFor: (value) => _precautionCategoryLabel(l10n, value),
+            onToggle: (value) =>
+                setState(() => _toggle(_precautionCategory, value)),
+          ),
+        ),
+      ],
+      SearchTab.diseases => [
+        _FilterAxis(
+          id: 'icd10_chapter',
+          title: l10n.searchFilterDiseaseIcd10Chapter,
+          summary: _selectedSummary(
+            l10n,
+            _icd10Chapter,
+            (value) => _icd10ChapterLabel(categories, value),
+          ),
+          selectedCount: _icd10Chapter.length,
+          hint: l10n.searchFilterHintDrillIn(categories.icd10Chapters.length),
+          content: _FilterChipGroup(
+            values: categories.icd10Chapters.map(_icd10ChapterValue).toList(),
+            selected: _icd10Chapter,
+            labelFor: (value) => _icd10ChapterLabel(categories, value),
+            onToggle: (value) => setState(() => _toggle(_icd10Chapter, value)),
+          ),
+        ),
+        _FilterAxis(
+          id: 'department',
+          title: l10n.searchFilterDiseaseDepartment,
+          summary: _selectedSummary(
+            l10n,
+            _department,
+            (value) => _departmentLabel(l10n, value),
+          ),
+          selectedCount: _department.length,
+          hint: l10n.searchFilterHintMultiValue(
+            categories.medicalDepartments.length,
+          ),
+          content: _FilterChipGroup(
+            values: categories.medicalDepartments,
+            selected: _department,
+            labelFor: (value) => _departmentLabel(l10n, value),
+            onToggle: (value) => setState(() => _toggle(_department, value)),
+          ),
+        ),
+        _FilterAxis(
+          id: 'chronicity',
+          title: l10n.searchFilterDiseaseChronicity,
+          summary: _selectedSummary(
+            l10n,
+            _chronicity,
+            (value) => _chronicityLabel(l10n, value),
+          ),
+          selectedCount: _chronicity.length,
+          hint: l10n.searchFilterHintSingleValue(
+            _diseaseChronicityValues.length,
+          ),
+          content: _FilterChipGroup(
+            values: _diseaseChronicityValues,
+            selected: _chronicity,
+            labelFor: (value) => _chronicityLabel(l10n, value),
+            onToggle: (value) =>
+                setState(() => _toggleSingle(_chronicity, value)),
+          ),
+        ),
+        _FilterAxis(
+          id: 'infectious',
+          title: l10n.searchFilterDiseaseInfectious,
+          summary: _boolSummary(l10n, _infectious),
+          selectedCount: _infectious == null ? 0 : 1,
+          hint: l10n.searchFilterHintBool,
+          content: _BoolChipGroup(
+            value: _infectious,
+            trueLabel: l10n.searchDiseaseInfectiousTrue,
+            falseLabel: l10n.searchDiseaseInfectiousFalse,
+            onChanged: (value) => setState(() => _infectious = value),
+          ),
+        ),
+        _FilterAxis(
+          id: 'symptom_keyword',
+          title: l10n.searchFilterDiseaseSymptomKeyword,
+          summary: _textSummary(l10n, _symptomKeywordController.text.trim()),
+          selectedCount:
+              _emptyToNull(_symptomKeywordController.text.trim()) == null
+              ? 0
+              : 1,
+          hint: l10n.searchFilterHintPartialMatch,
+          content: TextField(
+            key: const ValueKey('disease-filter-symptom-keyword'),
+            controller: _symptomKeywordController,
+            onChanged: (_) => setState(() {}),
+            decoration: InputDecoration(
+              labelText: l10n.searchFilterDiseaseSymptomKeyword,
+            ),
+          ),
+        ),
+        _FilterAxis(
+          id: 'onset_pattern',
+          title: l10n.searchFilterDiseaseOnsetPattern,
+          summary: _selectedSummary(
+            l10n,
+            _onsetPattern,
+            (value) => _onsetPatternLabel(l10n, value),
+          ),
+          selectedCount: _onsetPattern.length,
+          hint: l10n.searchFilterHintMultiValue(
+            _diseaseOnsetPatternValues.length,
+          ),
+          content: _FilterChipGroup(
+            values: _diseaseOnsetPatternValues,
+            selected: _onsetPattern,
+            labelFor: (value) => _onsetPatternLabel(l10n, value),
+            onToggle: (value) => setState(() => _toggle(_onsetPattern, value)),
+          ),
+        ),
+        _FilterAxis(
+          id: 'exam_category',
+          title: l10n.searchFilterDiseaseExamCategory,
+          summary: _selectedSummary(
+            l10n,
+            _examCategory,
+            (value) => _examCategoryLabel(l10n, value),
+          ),
+          selectedCount: _examCategory.length,
+          hint: l10n.searchFilterHintMultiValue(
+            _diseaseExamCategoryValues.length,
+          ),
+          content: _FilterChipGroup(
+            values: _diseaseExamCategoryValues,
+            selected: _examCategory,
+            labelFor: (value) => _examCategoryLabel(l10n, value),
+            onToggle: (value) => setState(() => _toggle(_examCategory, value)),
+          ),
+        ),
+        _FilterAxis(
+          id: 'has_pharmacological_treatment',
+          title: l10n.searchFilterDiseaseHasPharmacologicalTreatment,
+          summary: _boolSummary(l10n, _hasPharmacologicalTreatment),
+          selectedCount: _hasPharmacologicalTreatment == null ? 0 : 1,
+          hint: l10n.searchFilterHintBool,
+          content: _BoolChipGroup(
+            value: _hasPharmacologicalTreatment,
+            trueLabel: l10n.searchDiseaseBoolTrue,
+            falseLabel: l10n.searchDiseaseBoolFalse,
+            onChanged: (value) =>
+                setState(() => _hasPharmacologicalTreatment = value),
+          ),
+        ),
+        _FilterAxis(
+          id: 'has_severity_grading',
+          title: l10n.searchFilterDiseaseHasSeverityGrading,
+          summary: _boolSummary(l10n, _hasSeverityGrading),
+          selectedCount: _hasSeverityGrading == null ? 0 : 1,
+          hint: l10n.searchFilterHintBool,
+          content: _BoolChipGroup(
+            value: _hasSeverityGrading,
+            trueLabel: l10n.searchDiseaseBoolTrue,
+            falseLabel: l10n.searchDiseaseBoolFalse,
+            onChanged: (value) => setState(() => _hasSeverityGrading = value),
+          ),
+        ),
+      ],
+    };
+  }
 }
 
 class _SearchUtilityAxisTile extends StatelessWidget {
-  const _SearchUtilityAxisTile({required this.axis});
+  const _SearchUtilityAxisTile({
+    required this.axis,
+    required this.expanded,
+    required this.onTap,
+  });
 
-  final _UtilityFilterAxis axis;
+  final _FilterAxis axis;
+  final bool expanded;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -949,41 +1489,64 @@ class _SearchUtilityAxisTile extends StatelessWidget {
     return DecoratedBox(
       key: ValueKey('search-utility-filter-axis-${axis.id}'),
       decoration: BoxDecoration(
-        color: Colors.transparent,
+        color: expanded ? palette.surfaceSubtle : Colors.transparent,
         border: Border.all(color: palette.hairline, width: 0.5),
         borderRadius: BorderRadius.circular(8),
       ),
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(10, 8, 10, 8),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    axis.label,
-                    style: theme.textTheme.bodyMedium?.copyWith(
-                      fontWeight: FontWeight.w700,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(8),
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(10, 8, 10, 8),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      axis.title,
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
                   ),
+                  if (axis.selectedCount > 0) ...[
+                    const SizedBox(width: 6),
+                    _FilterCountPill(count: axis.selectedCount),
+                  ],
+                  const SizedBox(width: 6),
+                  AnimatedRotation(
+                    turns: expanded ? 0.25 : 0,
+                    duration: const Duration(milliseconds: 120),
+                    child: const Icon(Icons.chevron_right, size: 16),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 2),
+              Text(
+                axis.hint,
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: palette.muted,
+                ),
+              ),
+              const SizedBox(height: 2),
+              Text(
+                axis.summary,
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: palette.muted,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              if (expanded) ...[
+                const SizedBox(height: 8),
+                KeyedSubtree(
+                  key: ValueKey('search-utility-filter-axis-values-${axis.id}'),
+                  child: axis.content,
                 ),
               ],
-            ),
-            const SizedBox(height: 2),
-            Text(
-              axis.meta,
-              style: theme.textTheme.bodySmall?.copyWith(color: palette.muted),
-            ),
-            const SizedBox(height: 2),
-            Text(
-              'すべて',
-              style: theme.textTheme.bodySmall?.copyWith(
-                color: palette.muted,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
