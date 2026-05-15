@@ -780,14 +780,17 @@ class _SearchUtilityCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(10),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(12),
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Text(
               title,
               style: theme.textTheme.titleSmall?.copyWith(
+                color: palette.ink,
+                fontSize: 12,
                 fontWeight: FontWeight.w700,
+                letterSpacing: 0.02,
               ),
             ),
             const SizedBox(height: 10),
@@ -817,6 +820,7 @@ class _SearchUtilityHistorySection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
     final visibleEntries = entries.take(SearchConstants.searchHistoryMaxItems);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -857,7 +861,28 @@ class _SearchUtilityHistorySection extends StatelessWidget {
           child: TextButton(
             key: const ValueKey('search-utility-history-clear'),
             onPressed: entries.isEmpty ? null : () => unawaited(onClearAll()),
-            child: Text(l10n.searchHistoryClear),
+            style: TextButton.styleFrom(
+              foregroundColor: entries.isEmpty
+                  ? palette.muted2
+                  : palette.primary,
+              minimumSize: const Size(0, 32),
+              padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 6),
+              textStyle: theme.textTheme.labelSmall?.copyWith(
+                fontSize: 11.5,
+                fontWeight: FontWeight.w600,
+              ),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(6),
+              ),
+            ),
+            child: Text(
+              l10n.searchHistoryClear,
+              style: theme.textTheme.labelSmall?.copyWith(
+                color: entries.isEmpty ? palette.muted2 : palette.primary,
+                fontSize: 11.5,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
           ),
         ),
       ],
@@ -1129,6 +1154,12 @@ class _SearchUtilityFilterSectionState
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
+    final palette =
+        theme.extension<AppPalette>() ??
+        (theme.brightness == Brightness.dark
+            ? AppPalette.dark
+            : AppPalette.light);
     final axes = _utilityFilterAxesForState(l10n, widget.state);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -1136,8 +1167,10 @@ class _SearchUtilityFilterSectionState
         Text(
           '${axes.length} 軸 · 軸内 OR / 軸間 AND',
           key: const ValueKey('search-utility-filter-policy'),
-          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-            color: Theme.of(context).colorScheme.onSurfaceVariant,
+          style: theme.textTheme.bodySmall?.copyWith(
+            color: palette.muted,
+            fontSize: 11,
+            fontWeight: FontWeight.w500,
           ),
         ),
         const SizedBox(height: 8),
@@ -1154,6 +1187,21 @@ class _SearchUtilityFilterSectionState
           children: [
             TextButton(
               key: const ValueKey('search-utility-filter-reset'),
+              style: TextButton.styleFrom(
+                foregroundColor: palette.primary,
+                minimumSize: const Size(0, 44),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 8,
+                  vertical: 10,
+                ),
+                textStyle: theme.textTheme.labelMedium?.copyWith(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600,
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
               onPressed: () {
                 setState(() {
                   _categoryAtc.clear();
@@ -1176,12 +1224,32 @@ class _SearchUtilityFilterSectionState
                 });
                 unawaited(widget.onReset());
               },
-              child: Text(l10n.searchFilterReset),
+              child: Text(
+                l10n.searchFilterReset,
+                style: theme.textTheme.labelMedium?.copyWith(
+                  color: palette.primary,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
             ),
             const SizedBox(width: 8),
             Expanded(
               child: FilledButton(
                 key: const ValueKey('search-utility-filter-apply'),
+                style: FilledButton.styleFrom(
+                  backgroundColor: palette.primaryCont,
+                  foregroundColor: palette.onPrimaryCont,
+                  minimumSize: const Size.fromHeight(44),
+                  padding: const EdgeInsets.symmetric(horizontal: 14),
+                  textStyle: theme.textTheme.labelMedium?.copyWith(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w700,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
                 onPressed: _apply,
                 child: Text(
                   l10n.searchFilterApplyWithCount(
@@ -1237,12 +1305,19 @@ class _SearchUtilityFilterSectionState
 
   Future<void> _loadPreviewCount() async {
     final notifier = ref.read(searchScreenProvider.notifier);
-    final count = switch (widget.state.tab) {
-      SearchTab.drugs => await notifier.previewDrugCount(_drugPreviewParams()),
-      SearchTab.diseases => await notifier.previewDiseaseCount(
-        _diseasePreviewParams(),
-      ),
-    };
+    final int? count;
+    try {
+      count = switch (widget.state.tab) {
+        SearchTab.drugs => await notifier.previewDrugCount(
+          _drugPreviewParams(),
+        ),
+        SearchTab.diseases => await notifier.previewDiseaseCount(
+          _diseasePreviewParams(),
+        ),
+      };
+    } on Exception {
+      return;
+    }
     if (!mounted || count == null) {
       return;
     }
@@ -1346,6 +1421,7 @@ class _SearchUtilityFilterSectionState
             categories.regulatoryClass.length,
           ),
           content: _FilterChipGroup(
+            compact: true,
             values: categories.regulatoryClass,
             selected: _regulatoryClass,
             labelFor: (value) => _regulatoryClassLabel(l10n, value),
@@ -1366,6 +1442,7 @@ class _SearchUtilityFilterSectionState
           selectedCount: _dosageForm.length,
           hint: l10n.searchFilterHintMultiValue(categories.dosageForm.length),
           content: _FilterChipGroup(
+            compact: true,
             values: categories.dosageForm,
             selected: _dosageForm,
             labelFor: (value) => _dosageFormLabel(l10n, value),
@@ -1388,6 +1465,7 @@ class _SearchUtilityFilterSectionState
             categories.routeOfAdministration.length,
           ),
           content: _FilterChipGroup(
+            compact: true,
             values: categories.routeOfAdministration,
             selected: _route,
             labelFor: (value) => _routeLabel(l10n, value),
@@ -1408,6 +1486,7 @@ class _SearchUtilityFilterSectionState
           selectedCount: _categoryAtc.length,
           hint: l10n.searchFilterHintSingleValue(categories.atc.length),
           content: _FilterChipGroup(
+            compact: true,
             values: categories.atc.map((entry) => entry.code).toList(),
             selected: _categoryAtc,
             labelFor: (value) => _atcLabel(categories, value),
@@ -1428,6 +1507,7 @@ class _SearchUtilityFilterSectionState
           selectedCount: _therapeuticCategory.length,
           hint: l10n.searchFilterHintHierarchy,
           content: _FilterChipGroup(
+            compact: true,
             values: categories.therapeuticCategories
                 .map((entry) => entry.id)
                 .toList(),
@@ -1474,6 +1554,7 @@ class _SearchUtilityFilterSectionState
             DrugPrecautionCategory.values.length,
           ),
           content: _FilterChipGroup(
+            compact: true,
             values: DrugPrecautionCategory.values
                 .map((category) => category.wireValue)
                 .toList(),
@@ -1498,6 +1579,7 @@ class _SearchUtilityFilterSectionState
           selectedCount: _icd10Chapter.length,
           hint: l10n.searchFilterHintDrillIn(categories.icd10Chapters.length),
           content: _FilterChipGroup(
+            compact: true,
             values: categories.icd10Chapters.map(_icd10ChapterValue).toList(),
             selected: _icd10Chapter,
             labelFor: (value) => _icd10ChapterLabel(categories, value),
@@ -1520,6 +1602,7 @@ class _SearchUtilityFilterSectionState
             categories.medicalDepartments.length,
           ),
           content: _FilterChipGroup(
+            compact: true,
             values: categories.medicalDepartments,
             selected: _department,
             labelFor: (value) => _departmentLabel(l10n, value),
@@ -1542,6 +1625,7 @@ class _SearchUtilityFilterSectionState
             _diseaseChronicityValues.length,
           ),
           content: _FilterChipGroup(
+            compact: true,
             values: _diseaseChronicityValues,
             selected: _chronicity,
             labelFor: (value) => _chronicityLabel(l10n, value),
@@ -1558,6 +1642,7 @@ class _SearchUtilityFilterSectionState
           selectedCount: _infectious == null ? 0 : 1,
           hint: l10n.searchFilterHintBool,
           content: _BoolChipGroup(
+            compact: true,
             value: _infectious,
             trueLabel: l10n.searchDiseaseInfectiousTrue,
             falseLabel: l10n.searchDiseaseInfectiousFalse,
@@ -1598,6 +1683,7 @@ class _SearchUtilityFilterSectionState
             _diseaseOnsetPatternValues.length,
           ),
           content: _FilterChipGroup(
+            compact: true,
             values: _diseaseOnsetPatternValues,
             selected: _onsetPattern,
             labelFor: (value) => _onsetPatternLabel(l10n, value),
@@ -1620,6 +1706,7 @@ class _SearchUtilityFilterSectionState
             _diseaseExamCategoryValues.length,
           ),
           content: _FilterChipGroup(
+            compact: true,
             values: _diseaseExamCategoryValues,
             selected: _examCategory,
             labelFor: (value) => _examCategoryLabel(l10n, value),
@@ -1636,6 +1723,7 @@ class _SearchUtilityFilterSectionState
           selectedCount: _hasPharmacologicalTreatment == null ? 0 : 1,
           hint: l10n.searchFilterHintBool,
           content: _BoolChipGroup(
+            compact: true,
             value: _hasPharmacologicalTreatment,
             trueLabel: l10n.searchDiseaseBoolTrue,
             falseLabel: l10n.searchDiseaseBoolFalse,
@@ -1652,6 +1740,7 @@ class _SearchUtilityFilterSectionState
           selectedCount: _hasSeverityGrading == null ? 0 : 1,
           hint: l10n.searchFilterHintBool,
           content: _BoolChipGroup(
+            compact: true,
             value: _hasSeverityGrading,
             trueLabel: l10n.searchDiseaseBoolTrue,
             falseLabel: l10n.searchDiseaseBoolFalse,
@@ -1705,42 +1794,49 @@ class _SearchUtilityAxisTile extends StatelessWidget {
               Row(
                 children: [
                   Expanded(
-                    child: Text(
-                      axis.title,
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        fontWeight: FontWeight.w700,
-                      ),
+                    child: Row(
+                      children: [
+                        Flexible(
+                          child: Text(
+                            axis.title,
+                            overflow: TextOverflow.ellipsis,
+                            style: theme.textTheme.bodyMedium?.copyWith(
+                              color: palette.ink,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ),
+                        if (axis.selectedCount > 0) ...[
+                          const SizedBox(width: 6),
+                          _FilterCountPill(count: axis.selectedCount),
+                        ],
+                      ],
                     ),
                   ),
-                  if (axis.selectedCount > 0) ...[
-                    const SizedBox(width: 6),
-                    _FilterCountPill(count: axis.selectedCount),
-                  ],
-                  const SizedBox(width: 6),
-                  AnimatedRotation(
-                    turns: expanded ? 0.25 : 0,
-                    duration: const Duration(milliseconds: 120),
-                    child: const Icon(Icons.chevron_right, size: 16),
+                  const SizedBox(width: 8),
+                  Text(
+                    axis.hint,
+                    textAlign: TextAlign.right,
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: palette.muted,
+                      fontSize: 10.5,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                 ],
               ),
-              const SizedBox(height: 2),
-              Text(
-                axis.hint,
-                style: theme.textTheme.bodySmall?.copyWith(
-                  color: palette.muted,
-                ),
-              ),
-              const SizedBox(height: 2),
+              const SizedBox(height: 4),
               Text(
                 axis.summary,
                 style: theme.textTheme.bodySmall?.copyWith(
                   color: palette.muted,
-                  fontWeight: FontWeight.w700,
+                  fontSize: 11,
+                  fontWeight: FontWeight.w500,
                 ),
               ),
               if (expanded) ...[
-                const SizedBox(height: 8),
+                const SizedBox(height: 6),
                 KeyedSubtree(
                   key: ValueKey('search-utility-filter-axis-values-${axis.id}'),
                   child: axis.content,
@@ -1770,23 +1866,39 @@ class _SearchUtilitySortSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final options = _utilitySortOptions(AppLocalizations.of(context)!, state);
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        for (final option in options)
-          _SearchUtilitySortOptionTile(
-            option: option,
-            palette: palette,
-            onTap: () {
-              switch (option.value) {
-                case final DrugSort sort:
-                  unawaited(onChangeDrugSort(sort));
-                case final DiseaseSort sort:
-                  unawaited(onChangeDiseaseSort(sort));
-              }
-            },
-          ),
-      ],
+    return DecoratedBox(
+      key: const ValueKey('search-utility-sort-options'),
+      decoration: BoxDecoration(
+        color: palette.hairline2,
+        borderRadius: BorderRadius.circular(6),
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(6),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            for (final (index, option) in options.indexed) ...[
+              if (index > 0)
+                SizedBox(
+                  height: 1,
+                  child: ColoredBox(color: palette.hairline2),
+                ),
+              _SearchUtilitySortOptionTile(
+                option: option,
+                palette: palette,
+                onTap: () {
+                  switch (option.value) {
+                    case final DrugSort sort:
+                      unawaited(onChangeDrugSort(sort));
+                    case final DiseaseSort sort:
+                      unawaited(onChangeDiseaseSort(sort));
+                  }
+                },
+              ),
+            ],
+          ],
+        ),
+      ),
     );
   }
 }
@@ -1808,55 +1920,58 @@ class _SearchUtilitySortOptionTile extends StatelessWidget {
     return InkWell(
       key: ValueKey('search-utility-sort-${option.keySuffix}'),
       onTap: onTap,
-      borderRadius: BorderRadius.circular(8),
       child: DecoratedBox(
         decoration: BoxDecoration(
-          color: option.selected ? palette.primarySoft : Colors.transparent,
-          border: Border.all(
-            color: option.selected ? palette.primaryRing : palette.hairline,
-            width: 0.5,
-          ),
-          borderRadius: BorderRadius.circular(8),
+          color: option.selected ? palette.primarySoft : palette.surface,
         ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 9),
-          child: Row(
-            children: [
-              Expanded(
-                child: Text(
-                  option.label,
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    color: option.selected ? palette.primary : null,
-                    fontWeight: option.selected
-                        ? FontWeight.w700
-                        : FontWeight.w500,
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(minHeight: 44),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    option.label,
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: option.selected ? palette.primary : palette.ink,
+                      fontSize: 12.5,
+                      fontWeight: option.selected
+                          ? FontWeight.w700
+                          : FontWeight.w500,
+                    ),
                   ),
                 ),
-              ),
-              Container(
-                key: option.selected
-                    ? const ValueKey('search-utility-sort-radio-selected')
-                    : null,
-                width: 16,
-                height: 16,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(color: palette.primary, width: 1.5),
-                ),
-                child: option.selected
-                    ? Center(
-                        child: Container(
-                          width: 8,
-                          height: 8,
-                          decoration: BoxDecoration(
-                            color: palette.primary,
-                            shape: BoxShape.circle,
+                Container(
+                  key: ValueKey(
+                    'search-utility-sort-radio-${option.keySuffix}',
+                  ),
+                  constraints: const BoxConstraints.tightFor(
+                    width: 18,
+                    height: 18,
+                  ),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: option.selected ? palette.primary : palette.muted2,
+                      width: 1.5,
+                    ),
+                  ),
+                  child: option.selected
+                      ? Center(
+                          child: Container(
+                            width: 10,
+                            height: 10,
+                            decoration: BoxDecoration(
+                              color: palette.primary,
+                              shape: BoxShape.circle,
+                            ),
                           ),
-                        ),
-                      )
-                    : null,
-              ),
-            ],
+                        )
+                      : null,
+                ),
+              ],
+            ),
           ),
         ),
       ),

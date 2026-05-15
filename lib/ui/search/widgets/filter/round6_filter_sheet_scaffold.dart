@@ -382,18 +382,20 @@ class _FilterChipGroup extends StatelessWidget {
     required this.selected,
     required this.labelFor,
     required this.onToggle,
+    this.compact = false,
   });
 
   final List<String> values;
   final Set<String> selected;
   final String Function(String value) labelFor;
   final ValueChanged<String> onToggle;
+  final bool compact;
 
   @override
   Widget build(BuildContext context) {
     return Wrap(
-      spacing: 6,
-      runSpacing: 6,
+      spacing: compact ? 4 : 6,
+      runSpacing: compact ? 4 : 6,
       children: [
         for (final value in values)
           _FilterPillChip(
@@ -404,6 +406,7 @@ class _FilterChipGroup extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
             ),
             selected: selected.contains(value),
+            compact: compact,
             onTap: () => onToggle(value),
           ),
       ],
@@ -417,12 +420,14 @@ class _FilterPillChip extends StatelessWidget {
     required this.label,
     required this.selected,
     required this.onTap,
+    this.compact = false,
   });
 
   final String value;
   final Widget label;
   final bool selected;
   final VoidCallback onTap;
+  final bool compact;
 
   @override
   Widget build(BuildContext context) {
@@ -433,14 +438,16 @@ class _FilterPillChip extends StatelessWidget {
             ? AppPalette.dark
             : AppPalette.light);
     final safeValue = value.replaceAll(RegExp('[^A-Za-z0-9_-]'), '_');
-    const borderRadius = 14.0;
+    final borderRadius = compact ? 22.0 : 14.0;
     final textStyle = theme.textTheme.labelSmall?.copyWith(
       color: selected ? palette.primary : palette.ink2,
-      fontSize: 12,
-      fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
+      fontSize: compact ? 11 : 12.5,
+      fontWeight: selected && !compact ? FontWeight.w700 : FontWeight.w500,
     );
     final fillColor = selected
         ? palette.primarySoft
+        : compact
+        ? palette.surface3
         : theme.brightness == Brightness.dark
         ? palette.surface2
         : palette.surface;
@@ -456,14 +463,21 @@ class _FilterPillChip extends StatelessWidget {
           color: fillColor,
           borderRadius: BorderRadius.circular(borderRadius),
           border: Border.all(
-            color: selected ? palette.primaryRing : palette.hairline,
-            width: 0.5,
+            color: selected
+                ? palette.primaryRing
+                : compact
+                ? Colors.transparent
+                : palette.hairline,
+            width: compact ? 1 : 0.5,
           ),
         ),
         child: ConstrainedBox(
-          constraints: const BoxConstraints(minHeight: 30),
+          constraints: BoxConstraints(minHeight: compact ? 24 : 30),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 6),
+            padding: EdgeInsets.symmetric(
+              horizontal: compact ? 8 : 10,
+              vertical: compact ? 4 : 6,
+            ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -494,12 +508,14 @@ class _BoolChipGroup extends StatelessWidget {
     required this.trueLabel,
     required this.falseLabel,
     required this.onChanged,
+    this.compact = false,
   });
 
   final bool? value;
   final String trueLabel;
   final String falseLabel;
   final ValueChanged<bool?> onChanged;
+  final bool compact;
 
   @override
   Widget build(BuildContext context) {
@@ -513,9 +529,10 @@ class _BoolChipGroup extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
           ),
           selected: value == true,
+          compact: compact,
           onTap: () => onChanged(value == true ? null : true),
         ),
-        const SizedBox(width: 6),
+        SizedBox(width: compact ? 4 : 6),
         _FilterPillChip(
           value: 'false',
           label: Text(
@@ -524,6 +541,7 @@ class _BoolChipGroup extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
           ),
           selected: value == false,
+          compact: compact,
           onTap: () => onChanged(value == false ? null : false),
         ),
       ],

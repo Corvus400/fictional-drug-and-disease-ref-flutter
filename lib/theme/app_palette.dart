@@ -82,6 +82,8 @@ final class AppPalette extends ThemeExtension<AppPalette> {
     required this.onPrimary,
     required this.searchPrimaryActionBg,
     required this.searchPrimaryActionFg,
+    required this.primaryCont,
+    required this.onPrimaryCont,
     required this.filterFabBg,
     required this.filterFabFg,
     required this.primarySoft,
@@ -126,6 +128,8 @@ final class AppPalette extends ThemeExtension<AppPalette> {
     onPrimary: Color(0xFFFFFFFF),
     searchPrimaryActionBg: Color(0xFF007AFF),
     searchPrimaryActionFg: Color(0xFFFFFFFF),
+    primaryCont: Color(0xFFD8E4FF),
+    onPrimaryCont: Color(0xFF001A41),
     filterFabBg: Color(0xFF007AFF),
     filterFabFg: Color(0xFFFFFFFF),
     primarySoft: Color(0x1A007AFF),
@@ -170,6 +174,8 @@ final class AppPalette extends ThemeExtension<AppPalette> {
     onPrimary: Color(0xFF003258),
     searchPrimaryActionBg: Color(0xFF9ECAFF),
     searchPrimaryActionFg: Color(0xFF003258),
+    primaryCont: Color(0xFF003494),
+    onPrimaryCont: Color(0xFFD8E4FF),
     filterFabBg: Color(0xFF00497F),
     filterFabFg: Color(0xFFD1E4FF),
     primarySoft: Color(0x249ECAFF),
@@ -247,6 +253,12 @@ final class AppPalette extends ThemeExtension<AppPalette> {
 
   /// Round6 primary action foreground.
   final Color searchPrimaryActionFg;
+
+  /// Contained primary background for utility controls.
+  final Color primaryCont;
+
+  /// Foreground color on [primaryCont].
+  final Color onPrimaryCont;
 
   /// Round6 filter FAB background.
   final Color filterFabBg;
@@ -713,6 +725,8 @@ final class AppPalette extends ThemeExtension<AppPalette> {
     Color? onPrimary,
     Color? searchPrimaryActionBg,
     Color? searchPrimaryActionFg,
+    Color? primaryCont,
+    Color? onPrimaryCont,
     Color? filterFabBg,
     Color? filterFabFg,
     Color? primarySoft,
@@ -757,6 +771,8 @@ final class AppPalette extends ThemeExtension<AppPalette> {
           searchPrimaryActionBg ?? this.searchPrimaryActionBg,
       searchPrimaryActionFg:
           searchPrimaryActionFg ?? this.searchPrimaryActionFg,
+      primaryCont: primaryCont ?? this.primaryCont,
+      onPrimaryCont: onPrimaryCont ?? this.onPrimaryCont,
       filterFabBg: filterFabBg ?? this.filterFabBg,
       filterFabFg: filterFabFg ?? this.filterFabFg,
       primarySoft: primarySoft ?? this.primarySoft,
@@ -814,6 +830,8 @@ final class AppPalette extends ThemeExtension<AppPalette> {
         other.searchPrimaryActionFg,
         t,
       )!,
+      primaryCont: Color.lerp(primaryCont, other.primaryCont, t)!,
+      onPrimaryCont: Color.lerp(onPrimaryCont, other.onPrimaryCont, t)!,
       filterFabBg: Color.lerp(filterFabBg, other.filterFabBg, t)!,
       filterFabFg: Color.lerp(filterFabFg, other.filterFabFg, t)!,
       primarySoft: Color.lerp(primarySoft, other.primarySoft, t)!,

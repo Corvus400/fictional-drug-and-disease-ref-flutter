@@ -419,6 +419,226 @@ void main() {
     );
   });
 
+  testWidgets('SearchView utility pane follows light typography and controls', (
+    tester,
+  ) async {
+    await tester.binding.setSurfaceSize(const Size(834, 1194));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: _baseOverrides(db),
+        child: MaterialApp(
+          theme: AppTheme.light(),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: const SearchView(),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    final filterSection = find.byKey(
+      const ValueKey('search-utility-filter-section'),
+    );
+    final filterTitle = tester.widget<Text>(
+      find.descendant(of: filterSection, matching: find.text('絞り込み')),
+    );
+    expect(filterTitle.style?.color, AppPalette.light.ink);
+    expect(filterTitle.style?.fontSize, 12);
+    expect(filterTitle.style?.fontWeight, FontWeight.w700);
+
+    final policy = tester.widget<Text>(
+      find.byKey(const ValueKey('search-utility-filter-policy')),
+    );
+    expect(policy.style?.color, AppPalette.light.muted);
+    expect(policy.style?.fontSize, 11);
+    expect(policy.style?.fontWeight, FontWeight.w500);
+
+    final axisTitle = tester.widget<Text>(
+      find.descendant(
+        of: find.byKey(
+          const ValueKey('search-utility-filter-axis-regulatory_class'),
+        ),
+        matching: find.text('規制区分'),
+      ),
+    );
+    expect(axisTitle.style?.color, AppPalette.light.ink);
+    expect(axisTitle.style?.fontSize, 12);
+    expect(axisTitle.style?.fontWeight, FontWeight.w700);
+
+    final axisMeta = tester.widget<Text>(find.text('11 値・複数選択 OR'));
+    expect(axisMeta.style?.color, AppPalette.light.muted);
+    expect(axisMeta.style?.fontSize, 10.5);
+    expect(axisMeta.style?.fontWeight, FontWeight.w500);
+    expect(
+      find.descendant(
+        of: find.byKey(
+          const ValueKey('search-utility-filter-axis-regulatory_class'),
+        ),
+        matching: find.byIcon(Icons.chevron_right),
+      ),
+      findsNothing,
+    );
+
+    final axisSummary = tester.widget<Text>(find.text('すべて').first);
+    expect(axisSummary.style?.color, AppPalette.light.muted);
+    expect(axisSummary.style?.fontSize, 11);
+    expect(axisSummary.style?.fontWeight, FontWeight.w500);
+
+    final clearHistory = tester.widget<Text>(find.text('すべて消す'));
+    expect(clearHistory.style?.fontSize, 11.5);
+    expect(clearHistory.style?.fontWeight, FontWeight.w600);
+
+    final resetButton = tester.widget<TextButton>(
+      find.byKey(const ValueKey('search-utility-filter-reset')),
+    );
+    expect(
+      resetButton.style?.foregroundColor?.resolve({}),
+      AppPalette.light.primary,
+    );
+    expect(resetButton.style?.textStyle?.resolve({})?.fontSize, 12);
+    expect(
+      resetButton.style?.textStyle?.resolve({})?.fontWeight,
+      FontWeight.w600,
+    );
+    final resetText = tester.widget<Text>(find.text('リセット'));
+    expect(resetText.style?.fontSize, 12);
+    expect(resetText.style?.fontWeight, FontWeight.w600);
+
+    final applyButton = tester.widget<FilledButton>(
+      find.byKey(const ValueKey('search-utility-filter-apply')),
+    );
+    expect(
+      applyButton.style?.backgroundColor?.resolve({}),
+      AppPalette.light.primaryCont,
+    );
+    expect(
+      applyButton.style?.foregroundColor?.resolve({}),
+      AppPalette.light.onPrimaryCont,
+    );
+    final shape = applyButton.style?.shape?.resolve({});
+    expect(shape, isA<RoundedRectangleBorder>());
+    expect(
+      (shape! as RoundedRectangleBorder).borderRadius,
+      BorderRadius.circular(8),
+    );
+    expect(applyButton.style?.textStyle?.resolve({})?.fontSize, 13);
+    expect(
+      applyButton.style?.textStyle?.resolve({})?.fontWeight,
+      FontWeight.w700,
+    );
+  });
+
+  testWidgets('SearchView utility sort follows grouped option contract', (
+    tester,
+  ) async {
+    await tester.binding.setSurfaceSize(const Size(834, 1194));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: _baseOverrides(db),
+        child: MaterialApp(
+          theme: AppTheme.light(),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: const SearchView(),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    final group = tester.widget<DecoratedBox>(
+      find.byKey(const ValueKey('search-utility-sort-options')),
+    );
+    final groupDecoration = group.decoration as BoxDecoration;
+    expect(groupDecoration.color, AppPalette.light.hairline2);
+    expect(groupDecoration.borderRadius, BorderRadius.circular(6));
+
+    final selected = tester.widget<DecoratedBox>(
+      find
+          .descendant(
+            of: find.byKey(
+              const ValueKey('search-utility-sort-revised_at'),
+              skipOffstage: false,
+            ),
+            matching: find.byType(DecoratedBox),
+          )
+          .first,
+    );
+    final selectedDecoration = selected.decoration as BoxDecoration;
+    expect(selectedDecoration.color, AppPalette.light.primarySoft);
+    expect(selectedDecoration.border, isNull);
+
+    final selectedLabel = tester.widget<Text>(
+      find.descendant(
+        of: find.byKey(
+          const ValueKey('search-utility-sort-revised_at'),
+          skipOffstage: false,
+        ),
+        matching: find.text('更新日(新しい順)'),
+      ),
+    );
+    expect(selectedLabel.style?.color, AppPalette.light.primary);
+    expect(selectedLabel.style?.fontSize, 12.5);
+    expect(selectedLabel.style?.fontWeight, FontWeight.w700);
+
+    final unselected = tester.widget<DecoratedBox>(
+      find
+          .descendant(
+            of: find.byKey(
+              const ValueKey('search-utility-sort-brand_name_kana'),
+              skipOffstage: false,
+            ),
+            matching: find.byType(DecoratedBox),
+          )
+          .first,
+    );
+    final unselectedDecoration = unselected.decoration as BoxDecoration;
+    expect(unselectedDecoration.color, AppPalette.light.surface);
+    expect(unselectedDecoration.border, isNull);
+
+    final unselectedLabel = tester.widget<Text>(
+      find.descendant(
+        of: find.byKey(
+          const ValueKey('search-utility-sort-brand_name_kana'),
+          skipOffstage: false,
+        ),
+        matching: find.text('ブランド名カナ'),
+      ),
+    );
+    expect(unselectedLabel.style?.color, AppPalette.light.ink);
+    expect(unselectedLabel.style?.fontSize, 12.5);
+    expect(unselectedLabel.style?.fontWeight, FontWeight.w500);
+
+    final selectedRadio = tester.widget<Container>(
+      find.byKey(
+        const ValueKey('search-utility-sort-radio-revised_at'),
+        skipOffstage: false,
+      ),
+    );
+    final selectedRadioDecoration = selectedRadio.decoration! as BoxDecoration;
+    expect(
+      selectedRadio.constraints,
+      const BoxConstraints.tightFor(width: 18, height: 18),
+    );
+    expect(selectedRadioDecoration.border?.top.color, AppPalette.light.primary);
+
+    final unselectedRadio = tester.widget<Container>(
+      find.byKey(
+        const ValueKey('search-utility-sort-radio-brand_name_kana'),
+        skipOffstage: false,
+      ),
+    );
+    final unselectedRadioDecoration =
+        unselectedRadio.decoration! as BoxDecoration;
+    expect(
+      unselectedRadioDecoration.border?.top.color,
+      AppPalette.light.muted2,
+    );
+  });
+
   testWidgets('SearchView utility empty history uses compact placeholder', (
     tester,
   ) async {
@@ -604,7 +824,7 @@ void main() {
       expect(find.text('結果を見る (0 件)'), findsOneWidget);
       expect(
         find.byKey(
-          const ValueKey('search-utility-sort-radio-selected'),
+          const ValueKey('search-utility-sort-radio-revised_at'),
           skipOffstage: false,
         ),
         findsOneWidget,
