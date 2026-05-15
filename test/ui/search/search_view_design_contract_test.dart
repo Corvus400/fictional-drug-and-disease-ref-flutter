@@ -362,6 +362,53 @@ void main() {
     },
   );
 
+  testWidgets('SearchView utility empty history uses compact placeholder', (
+    tester,
+  ) async {
+    await tester.binding.setSurfaceSize(const Size(834, 1194));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: _baseOverrides(db),
+        child: MaterialApp(
+          theme: AppTheme.light(),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: const SearchView(),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(
+      find.byKey(const ValueKey('search-utility-history-empty')),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const ValueKey('search-utility-history-empty-icon')),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const ValueKey('search-history-inline-empty')),
+      findsNothing,
+    );
+    expect(
+      tester.getSize(
+        find.byKey(const ValueKey('search-utility-history-empty-icon')),
+      ),
+      const Size(28, 28),
+    );
+    expect(
+      tester
+          .getRect(
+            find.byKey(const ValueKey('search-utility-history-section')),
+          )
+          .height,
+      lessThan(210),
+    );
+  });
+
   testWidgets('SearchView 600dp shortest side already uses utility pane', (
     tester,
   ) async {

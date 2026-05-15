@@ -823,7 +823,7 @@ class _SearchUtilityHistorySection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         if (entries.isEmpty)
-          const _NoSearchHistoryState()
+          const _SearchUtilityNoHistoryState()
         else
           DecoratedBox(
             key: const ValueKey('search-utility-history-list'),
@@ -862,6 +862,54 @@ class _SearchUtilityHistorySection extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+class _SearchUtilityNoHistoryState extends StatelessWidget {
+  const _SearchUtilityNoHistoryState();
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
+    final palette =
+        theme.extension<AppPalette>() ??
+        (theme.brightness == Brightness.dark
+            ? AppPalette.dark
+            : AppPalette.light);
+    return Padding(
+      key: const ValueKey('search-utility-history-empty'),
+      padding: const EdgeInsets.fromLTRB(8, 10, 8, 2),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          SizedBox(
+            key: const ValueKey('search-utility-history-empty-icon'),
+            width: 28,
+            height: 28,
+            child: Icon(Icons.history, size: 22, color: palette.muted2),
+          ),
+          const SizedBox(height: 2),
+          Text(
+            l10n.searchHistoryEmptyTitle,
+            textAlign: TextAlign.center,
+            style: theme.textTheme.labelMedium?.copyWith(
+              color: theme.colorScheme.onSurface,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          const SizedBox(height: 2),
+          Text(
+            l10n.searchHistoryEmptyDescription,
+            textAlign: TextAlign.center,
+            style: theme.textTheme.labelSmall?.copyWith(
+              color: palette.muted,
+              height: 1.35,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
