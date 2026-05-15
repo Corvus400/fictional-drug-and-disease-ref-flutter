@@ -130,7 +130,7 @@ class _SearchViewState extends ConsumerState<SearchView> with RouteAware {
         (theme.brightness == Brightness.dark
             ? AppPalette.dark
             : AppPalette.light);
-    final keyboardInset = MediaQuery.viewInsetsOf(context).bottom;
+    final keyboardInset = _keyboardBottomInset(context);
     return Scaffold(
       backgroundColor: palette.background,
       appBar: AppTabHeader(
@@ -507,6 +507,13 @@ Size _searchResponsiveSize(
     return Size(layoutSize.width, viewportSize.height);
   }
   return layoutSize;
+}
+
+double _keyboardBottomInset(BuildContext context) {
+  final mediaQueryInset = MediaQuery.viewInsetsOf(context).bottom;
+  final view = View.of(context);
+  final viewInset = view.viewInsets.bottom / view.devicePixelRatio;
+  return mediaQueryInset > viewInset ? mediaQueryInset : viewInset;
 }
 
 bool _showsPhoneInlineHistory(SearchScreenState state) {

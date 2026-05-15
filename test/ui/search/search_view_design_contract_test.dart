@@ -1268,6 +1268,77 @@ void main() {
   });
 
   testWidgets(
+    'SearchView utility pane reads raw view inset '
+    'when route MediaQuery is zero',
+    (tester) async {
+      tester.view
+        ..devicePixelRatio = 1
+        ..physicalSize = const Size(1194, 834)
+        ..viewInsets = const FakeViewPadding(bottom: 414);
+      addTearDown(() {
+        tester.view
+          ..resetViewInsets()
+          ..resetPhysicalSize()
+          ..resetDevicePixelRatio();
+      });
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: _baseOverrides(db),
+          child: MaterialApp(
+            theme: AppTheme.light(),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: const MediaQuery(
+              data: MediaQueryData(size: Size(1194, 834)),
+              child: SearchView(),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      final scroll = tester.widget<ListView>(
+        find.byKey(const ValueKey('search-utility-pane-scroll')),
+      );
+      final padding = scroll.padding! as EdgeInsets;
+
+      expect(padding.bottom, greaterThanOrEqualTo(434));
+    },
+  );
+
+  testWidgets('SearchView utility pane interaction dismisses search keyboard', (
+    tester,
+  ) async {
+    await tester.binding.setSurfaceSize(const Size(1194, 834));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: _baseOverrides(db),
+        child: MaterialApp(
+          theme: AppTheme.light(),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: const SearchView(),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byKey(const ValueKey('search-field')));
+    await tester.pump();
+    expect(tester.testTextInput.isVisible, isTrue);
+
+    await tester.tap(
+      find.byKey(const ValueKey('search-utility-filter-axis-regulatory_class')),
+    );
+    await tester.pump();
+
+    expect(tester.testTextInput.isVisible, isFalse);
+  });
+
+  testWidgets(
     'SearchView utility pane filter CTA count previews toggled chips '
     'in two-pane',
     (tester) async {
