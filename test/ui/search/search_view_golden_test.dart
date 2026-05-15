@@ -316,7 +316,7 @@ void _searchGoldenMatrix({
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: SearchView(
-            currentTime: DateTime.utc(2026, 5, 5, 9),
+            currentTime: DateTime(2026, 5, 5, 18),
             debugLogDrugImageErrors: false,
           ),
         ),
@@ -356,14 +356,14 @@ Future<Future<void> Function()?> _seedDrugHistory(WidgetTester tester) async {
       id: 'golden_history_1',
       target: 'drug',
       queryJson: codec.encode(const DrugSearchParams(keyword: 'アムロジピン')),
-      searchedAt: DateTime.utc(2026, 5, 5, 8, 50),
+      searchedAt: DateTime(2026, 5, 5, 17, 50),
       totalCount: 23,
     );
     await repository.insertWithDedup(
       id: 'golden_history_2',
       target: 'drug',
       queryJson: codec.encode(const DrugSearchParams(keyword: 'ロサルタン K')),
-      searchedAt: DateTime.utc(2026, 5, 4, 22, 15),
+      searchedAt: DateTime(2026, 5, 5, 7, 15),
       totalCount: 8,
     );
     await container.read(searchScreenProvider.notifier).loadHistory();
@@ -391,14 +391,14 @@ Future<Future<void> Function()?> _seedDiseaseHistory(
       id: 'golden_disease_history_1',
       target: 'disease',
       queryJson: codec.encode(const DiseaseSearchParams(keyword: '高血圧')),
-      searchedAt: DateTime.utc(2026, 5, 5, 8, 40),
+      searchedAt: DateTime(2026, 5, 5, 17, 40),
       totalCount: 14,
     );
     await repository.insertWithDedup(
       id: 'golden_disease_history_2',
       target: 'disease',
       queryJson: codec.encode(const DiseaseSearchParams(keyword: '糖尿病')),
-      searchedAt: DateTime.utc(2026, 5, 4, 21, 10),
+      searchedAt: DateTime(2026, 5, 5, 6, 10),
       totalCount: 6,
     );
     await container.read(searchScreenProvider.notifier).loadHistory();
