@@ -1234,6 +1234,39 @@ void main() {
     );
   });
 
+  testWidgets('SearchView utility pane reserves keyboard bottom inset', (
+    tester,
+  ) async {
+    await tester.binding.setSurfaceSize(const Size(1194, 834));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: _baseOverrides(db),
+        child: MaterialApp(
+          theme: AppTheme.light(),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: const MediaQuery(
+            data: MediaQueryData(
+              size: Size(1194, 834),
+              viewInsets: EdgeInsets.only(bottom: 414),
+            ),
+            child: SearchView(),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    final scroll = tester.widget<ListView>(
+      find.byKey(const ValueKey('search-utility-pane-scroll')),
+    );
+    final padding = scroll.padding! as EdgeInsets;
+
+    expect(padding.bottom, greaterThanOrEqualTo(434));
+  });
+
   testWidgets(
     'SearchView utility pane filter CTA count previews toggled chips '
     'in two-pane',
@@ -2735,6 +2768,7 @@ Future<void> _pumpSearchViewWithDrugResults(
   WidgetTester tester,
   AppDatabase db, {
   DrugListResponseDto? response,
+  MediaQueryData? mediaQueryData,
 }) async {
   final drugApiClient = _MockDrugApiClient();
   final categoryApiClient = _MockCategoryApiClient();
@@ -2774,7 +2808,12 @@ Future<void> _pumpSearchViewWithDrugResults(
         theme: AppTheme.light(),
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
-        home: const SearchView(),
+        home: mediaQueryData == null
+            ? const SearchView()
+            : MediaQuery(
+                data: mediaQueryData,
+                child: const SearchView(),
+              ),
       ),
     ),
   );

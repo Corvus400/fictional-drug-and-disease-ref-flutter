@@ -277,6 +277,7 @@ class _SearchViewState extends ConsumerState<SearchView> with RouteAware {
             enableSortSheet: !useUtilityPane,
             showIdleMasterState: useUtilityPane,
             logDrugImageErrors: widget.debugLogDrugImageErrors,
+            keyboardBottomInset: keyboardInset,
           );
           final utilityPane = _SearchUtilityPane(
             state: state,
@@ -289,6 +290,7 @@ class _SearchViewState extends ConsumerState<SearchView> with RouteAware {
             onApplyDiseaseFilter: notifier.applyDiseaseFilter,
             onChangeDrugSort: notifier.changeDrugSort,
             onChangeDiseaseSort: notifier.changeDiseaseSort,
+            keyboardBottomInset: keyboardInset,
           );
           final landscapeRailChrome = _SearchLandscapeRailChrome(
             state: state,

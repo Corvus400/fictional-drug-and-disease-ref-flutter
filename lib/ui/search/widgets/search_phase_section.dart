@@ -16,6 +16,7 @@ class _SearchPhaseSection extends StatelessWidget {
     required this.enableSortSheet,
     required this.showIdleMasterState,
     required this.logDrugImageErrors,
+    required this.keyboardBottomInset,
   });
 
   final SearchScreenState state;
@@ -32,6 +33,7 @@ class _SearchPhaseSection extends StatelessWidget {
   final bool enableSortSheet;
   final bool showIdleMasterState;
   final bool logDrugImageErrors;
+  final double keyboardBottomInset;
 
   @override
   Widget build(BuildContext context) {
@@ -421,9 +423,11 @@ class _SearchPhaseSection extends StatelessWidget {
                           )
                         : Center(child: Text(l10n.searchToolbarLoadMore)),
                   ),
-                const SizedBox(
-                  key: ValueKey('search-results-bottom-padding'),
-                  height: SearchConstants.searchListBottomPadding,
+                SizedBox(
+                  key: const ValueKey('search-results-bottom-padding'),
+                  height:
+                      SearchConstants.searchListBottomPadding +
+                      keyboardBottomInset,
                 ),
               ],
             ),
@@ -660,6 +664,7 @@ class _SearchUtilityPane extends StatelessWidget {
     required this.onApplyDiseaseFilter,
     required this.onChangeDrugSort,
     required this.onChangeDiseaseSort,
+    required this.keyboardBottomInset,
   });
 
   final SearchScreenState state;
@@ -692,6 +697,7 @@ class _SearchUtilityPane extends StatelessWidget {
   onApplyDiseaseFilter;
   final Future<void> Function(DrugSort sort) onChangeDrugSort;
   final Future<void> Function(DiseaseSort sort) onChangeDiseaseSort;
+  final double keyboardBottomInset;
 
   @override
   Widget build(BuildContext context) {
@@ -704,7 +710,8 @@ class _SearchUtilityPane extends StatelessWidget {
         border: Border(left: BorderSide(color: palette.hairline)),
       ),
       child: ListView(
-        padding: const EdgeInsets.fromLTRB(14, 12, 14, 20),
+        key: const ValueKey('search-utility-pane-scroll'),
+        padding: EdgeInsets.fromLTRB(14, 12, 14, 20 + keyboardBottomInset),
         children: [
           _SearchUtilityCard(
             key: const ValueKey('search-utility-history-section'),
