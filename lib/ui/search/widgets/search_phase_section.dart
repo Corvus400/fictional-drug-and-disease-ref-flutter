@@ -709,45 +709,48 @@ class _SearchUtilityPane extends StatelessWidget {
         color: theme.colorScheme.surface,
         border: Border(left: BorderSide(color: palette.hairline)),
       ),
-      child: ListView(
-        key: const ValueKey('search-utility-pane-scroll'),
-        padding: EdgeInsets.fromLTRB(14, 12, 14, 20 + keyboardBottomInset),
-        children: [
-          _SearchUtilityCard(
-            key: const ValueKey('search-utility-history-section'),
-            title: l10n.searchHistoryTitle,
-            child: _SearchUtilityHistorySection(
-              entries: state.historyForTab,
-              currentTime: currentTime,
-              palette: palette,
-              onSelect: onSelectHistory,
-              onClearAll: onClearAllHistory,
+      child: Listener(
+        onPointerDown: (_) => FocusManager.instance.primaryFocus?.unfocus(),
+        child: ListView(
+          key: const ValueKey('search-utility-pane-scroll'),
+          padding: EdgeInsets.fromLTRB(14, 12, 14, 20 + keyboardBottomInset),
+          children: [
+            _SearchUtilityCard(
+              key: const ValueKey('search-utility-history-section'),
+              title: l10n.searchHistoryTitle,
+              child: _SearchUtilityHistorySection(
+                entries: state.historyForTab,
+                currentTime: currentTime,
+                palette: palette,
+                onSelect: onSelectHistory,
+                onClearAll: onClearAllHistory,
+              ),
             ),
-          ),
-          const SizedBox(height: 12),
-          _SearchUtilityCard(
-            key: const ValueKey('search-utility-filter-section'),
-            title: l10n.searchFilterTitle,
-            child: _SearchUtilityFilterSection(
-              state: state,
-              resultCount: _utilityResultCount(state),
-              onReset: onResetFilter,
-              onApplyDrugFilter: onApplyDrugFilter,
-              onApplyDiseaseFilter: onApplyDiseaseFilter,
+            const SizedBox(height: 12),
+            _SearchUtilityCard(
+              key: const ValueKey('search-utility-filter-section'),
+              title: l10n.searchFilterTitle,
+              child: _SearchUtilityFilterSection(
+                state: state,
+                resultCount: _utilityResultCount(state),
+                onReset: onResetFilter,
+                onApplyDrugFilter: onApplyDrugFilter,
+                onApplyDiseaseFilter: onApplyDiseaseFilter,
+              ),
             ),
-          ),
-          const SizedBox(height: 12),
-          _SearchUtilityCard(
-            key: const ValueKey('search-utility-sort-section'),
-            title: l10n.searchSortTitle,
-            child: _SearchUtilitySortSection(
-              state: state,
-              palette: palette,
-              onChangeDrugSort: onChangeDrugSort,
-              onChangeDiseaseSort: onChangeDiseaseSort,
+            const SizedBox(height: 12),
+            _SearchUtilityCard(
+              key: const ValueKey('search-utility-sort-section'),
+              title: l10n.searchSortTitle,
+              child: _SearchUtilitySortSection(
+                state: state,
+                palette: palette,
+                onChangeDrugSort: onChangeDrugSort,
+                onChangeDiseaseSort: onChangeDiseaseSort,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
