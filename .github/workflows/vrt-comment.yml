@@ -65,7 +65,7 @@ jobs:
       (github.event.workflow_run.conclusion == 'success' ||
       github.event.workflow_run.conclusion == 'failure')
 
-    timeout-minutes: 2
+    timeout-minutes: 10
 
     permissions:
       actions: read
@@ -297,7 +297,7 @@ jobs:
             } >> "$GITHUB_OUTPUT"
 
             row_count=0
-            max_image_rows=50
+            max_image_rows=200
             while IFS=$'\t' read -r status file previous_file; do
               row_count=$((row_count + 1))
               display_file="$file"
@@ -312,7 +312,7 @@ jobs:
                   echo "<table>"
                   echo "  <tr><th>Status</th><td><code>$status</code></td></tr>"
                   echo "  <tr><th>File</th><td><code>$display_file</code></td></tr>"
-                  echo "  <tr><th>Reference / Diff / New</th><td>$(compare_image_link "$compare_path")</td></tr>"
+                  echo "  <tr><th>変更前 / 差分 / 変更後</th><td>$(compare_image_link "$compare_path")</td></tr>"
                   echo "</table>"
                 } >> "$GITHUB_OUTPUT"
               fi

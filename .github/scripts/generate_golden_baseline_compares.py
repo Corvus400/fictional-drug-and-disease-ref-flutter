@@ -5,8 +5,9 @@ The Flutter golden comparator already emits ``*_compare.png`` files for test
 failures. PRs that intentionally update golden baselines also need reviewable
 compare images, but those PNGs are committed files rather than failed test
 outputs. This script fetches the base and PR versions of each changed golden and
-writes a matching Reference / Diff / New compare artifact using only Python's
-standard library so the VRT comment workflow does not need image packages.
+writes a matching Reference / Diff / New compare artifact. It uses ImageMagick
+when available so the generated baseline previews follow the same three-pane
+shape as normal VRT diffs, then falls back to a minimal PNG implementation.
 """
 
 from __future__ import annotations
@@ -15,8 +16,11 @@ import base64
 import json
 import os
 import re
+import shutil
 import struct
+import subprocess
 import sys
+import tempfile
 import urllib.parse
 import urllib.request
 import zlib
@@ -67,9 +71,11 @@ def main() -> int:
 
             base_image = decode_png(base_bytes) if base_bytes is not None else None
             head_image = decode_png(head_bytes) if head_bytes is not None else None
-            compare = build_compare(base_image, head_image)
             output_name = f"baseline_{safe_stem(head_path)}_compare.png"
-            (out / output_name).write_bytes(encode_png(compare))
+            output_path = out / output_name
+            if not build_compare_with_imagemagick(base_bytes, head_bytes, output_path):
+                compare = build_compare(base_image, head_image)
+                output_path.write_bytes(encode_png(compare))
             print(f"{status}\t{head_path}\t{out / output_name}")
 
     return 0
@@ -93,9 +99,113 @@ def _fetch(repo: str, sha: str, path: str, token: str) -> bytes | None:
             return None
         raise
     content = payload.get("content")
-    if not isinstance(content, str):
-        return None
-    return base64.b64decode(content)
+    encoding = payload.get("encoding")
+    if isinstance(content, str) and encoding == "base64":
+        return base64.b64decode(content)
+
+    download_url = payload.get("download_url")
+    if isinstance(download_url, str) and download_url:
+        download_request = urllib.request.Request(
+            download_url,
+            headers={"Authorization": f"Bearer {token}"} if token else {},
+        )
+        with urllib.request.urlopen(download_request, timeout=30) as response:
+            return response.read()
+
+    return None
+
+
+def build_compare_with_imagemagick(
+    base_bytes: bytes | None,
+    head_bytes: bytes | None,
+    output_path: Path,
+) -> bool:
+    magick = shutil.which("magick")
+    if magick is None:
+        return False
+
+    with tempfile.TemporaryDirectory() as temp_dir:
+        temp = Path(temp_dir)
+        source_bytes = head_bytes or base_bytes
+        if source_bytes is None:
+            return False
+
+        source_path = temp / "source.png"
+        source_path.write_bytes(source_bytes)
+        width, height = image_size(magick, source_path)
+
+        blank = temp / "blank.png"
+        red = temp / "diff-red.png"
+        run_magick(magick, "-size", f"{width}x{height}", "xc:black", str(blank))
+        run_magick(magick, "-size", f"{width}x{height}", "xc:red", str(red))
+
+        base_path = temp / "base.png"
+        head_path = temp / "head.png"
+        diff_path = temp / "diff.png"
+        if base_bytes is not None:
+            base_path.write_bytes(base_bytes)
+        else:
+            shutil.copyfile(blank, base_path)
+        if head_bytes is not None:
+            head_path.write_bytes(head_bytes)
+        else:
+            shutil.copyfile(blank, head_path)
+
+        if base_bytes is None or head_bytes is None:
+            shutil.copyfile(red, diff_path)
+        else:
+            base_width, base_height = image_size(magick, base_path)
+            head_width, head_height = image_size(magick, head_path)
+            if (base_width, base_height) != (head_width, head_height):
+                shutil.copyfile(red, diff_path)
+            else:
+                result = subprocess.run(
+                    [
+                        magick,
+                        "compare",
+                        "-highlight-color",
+                        "red",
+                        "-lowlight-color",
+                        "white",
+                        base_path,
+                        head_path,
+                        diff_path,
+                    ],
+                    check=False,
+                    stdout=subprocess.DEVNULL,
+                    stderr=subprocess.DEVNULL,
+                )
+                if result.returncode not in (0, 1):
+                    return False
+
+        panels = [
+            base_path,
+            diff_path,
+            head_path,
+        ]
+        run_magick(
+            magick,
+            *(str(panel) for panel in panels),
+            "+append",
+            str(output_path),
+        )
+    return True
+
+
+def image_size(magick: str, image_path: Path) -> tuple[int, int]:
+    result = subprocess.run(
+        [magick, "identify", "-format", "%w %h", str(image_path)],
+        check=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+    )
+    width, height = result.stdout.split()
+    return int(width), int(height)
+
+
+def run_magick(magick: str, *args: str) -> None:
+    subprocess.run([magick, *args], check=True)
 
 
 def safe_stem(path: str) -> str:

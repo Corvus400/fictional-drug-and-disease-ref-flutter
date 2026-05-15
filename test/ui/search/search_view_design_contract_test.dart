@@ -1154,6 +1154,170 @@ void main() {
     expect(find.text('錠剤', skipOffstage: false), findsOneWidget);
   });
 
+  testWidgets('SearchView keeps iPad portrait utility layout under keyboard', (
+    tester,
+  ) async {
+    await tester.binding.setSurfaceSize(const Size(834, 1194));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: _baseOverrides(db),
+        child: MaterialApp(
+          theme: AppTheme.light(),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: const MediaQuery(
+            data: MediaQueryData(
+              size: Size(834, 1194),
+              viewInsets: EdgeInsets.only(bottom: 804),
+            ),
+            child: SearchView(),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(
+      find.byKey(const ValueKey('search-round6-top-chrome')),
+      findsOneWidget,
+    );
+    expect(find.byKey(const ValueKey('search-utility-pane')), findsOneWidget);
+    expect(
+      find.byKey(const ValueKey('search-adaptive-split-rail')),
+      findsNothing,
+    );
+    expect(
+      find.byKey(const ValueKey('search-landscape-vertical-tabs')),
+      findsNothing,
+    );
+  });
+
+  testWidgets('SearchView keeps iPad landscape utility layout under keyboard', (
+    tester,
+  ) async {
+    await tester.binding.setSurfaceSize(const Size(1194, 834));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: _baseOverrides(db),
+        child: MaterialApp(
+          theme: AppTheme.light(),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: const MediaQuery(
+            data: MediaQueryData(
+              size: Size(1194, 834),
+              viewInsets: EdgeInsets.only(bottom: 414),
+            ),
+            child: SearchView(),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(
+      find.byKey(const ValueKey('search-round6-top-chrome')),
+      findsOneWidget,
+    );
+    expect(find.byKey(const ValueKey('search-utility-pane')), findsOneWidget);
+    expect(
+      find.byKey(const ValueKey('search-adaptive-split-rail')),
+      findsNothing,
+    );
+    expect(
+      find.byKey(const ValueKey('search-landscape-vertical-tabs')),
+      findsNothing,
+    );
+  });
+
+  testWidgets(
+    'SearchView utility pane filter CTA count previews toggled chips '
+    'in two-pane',
+    (tester) async {
+      await tester.binding.setSurfaceSize(const Size(834, 1194));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+
+      final drugApiClient = _MockDrugApiClient();
+      final categoryApiClient = _MockCategoryApiClient();
+      when(categoryApiClient.getCategories).thenAnswer(
+        (_) async => _categoriesFixture(),
+      );
+      when(
+        () => drugApiClient.getDrugs(
+          page: any(named: 'page'),
+          pageSize: any(named: 'pageSize'),
+          categoryAtc: any(named: 'categoryAtc'),
+          therapeuticCategory: any(named: 'therapeuticCategory'),
+          regulatoryClass: any(named: 'regulatoryClass'),
+          dosageForm: any(named: 'dosageForm'),
+          route: any(named: 'route'),
+          keyword: any(named: 'keyword'),
+          keywordMatch: any(named: 'keywordMatch'),
+          keywordTarget: any(named: 'keywordTarget'),
+          adverseReactionKeyword: any(named: 'adverseReactionKeyword'),
+          precautionCategory: any(named: 'precautionCategory'),
+          sort: any(named: 'sort'),
+        ),
+      ).thenAnswer((invocation) async {
+        final pageSize = invocation.namedArguments[#pageSize] as int?;
+        return _drugListFixture().copyWith(
+          items: pageSize == 1 ? _drugListFixture().items.take(1).toList() : [],
+          totalCount: pageSize == 1 ? 17 : 0,
+        );
+      });
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            appDatabaseProvider.overrideWithValue(db),
+            drugApiClientProvider.overrideWithValue(drugApiClient),
+            categoryApiClientProvider.overrideWithValue(categoryApiClient),
+          ],
+          child: MaterialApp(
+            theme: AppTheme.light(),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: const SearchView(),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.text('結果を見る (0 件)'), findsOneWidget);
+
+      await tester.tap(
+        find.byKey(const ValueKey('search-utility-filter-axis-dosage_form')),
+      );
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('錠剤', skipOffstage: false));
+      await tester.pump(const Duration(milliseconds: 250));
+      await tester.pump();
+
+      expect(find.text('結果を見る (17 件)'), findsOneWidget);
+      verify(
+        () => drugApiClient.getDrugs(
+          page: 1,
+          pageSize: 1,
+          categoryAtc: any(named: 'categoryAtc'),
+          therapeuticCategory: any(named: 'therapeuticCategory'),
+          regulatoryClass: any(named: 'regulatoryClass'),
+          dosageForm: any(named: 'dosageForm'),
+          route: any(named: 'route'),
+          keyword: any(named: 'keyword'),
+          keywordMatch: any(named: 'keywordMatch'),
+          keywordTarget: any(named: 'keywordTarget'),
+          adverseReactionKeyword: any(named: 'adverseReactionKeyword'),
+          precautionCategory: any(named: 'precautionCategory'),
+          sort: any(named: 'sort'),
+        ),
+      ).called(1);
+    },
+  );
+
   testWidgets(
     'SearchView keeps result count and sort toolbar sticky above two-pane list',
     (tester) async {

@@ -31,6 +31,7 @@ import '../../golden/golden_test_helpers.dart';
 import '../../helpers/test_app_database.dart';
 
 late AppDatabase _db;
+final DateTime _relativeHistoryAnchor = DateTime(2000, 1, 2, 12);
 
 void main() {
   ApiConfig.initialize(
@@ -316,7 +317,7 @@ void _searchGoldenMatrix({
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: SearchView(
-            currentTime: DateTime(2026, 5, 5, 18),
+            currentTime: _relativeHistoryAnchor,
             debugLogDrugImageErrors: false,
           ),
         ),
@@ -356,14 +357,14 @@ Future<Future<void> Function()?> _seedDrugHistory(WidgetTester tester) async {
       id: 'golden_history_1',
       target: 'drug',
       queryJson: codec.encode(const DrugSearchParams(keyword: 'アムロジピン')),
-      searchedAt: DateTime(2026, 5, 5, 17, 50),
+      searchedAt: _historyTime(minutesAgo: 10),
       totalCount: 23,
     );
     await repository.insertWithDedup(
       id: 'golden_history_2',
       target: 'drug',
       queryJson: codec.encode(const DrugSearchParams(keyword: 'ロサルタン K')),
-      searchedAt: DateTime(2026, 5, 5, 7, 15),
+      searchedAt: _historyTime(hoursAgo: 10),
       totalCount: 8,
     );
     await container.read(searchScreenProvider.notifier).loadHistory();
@@ -391,20 +392,26 @@ Future<Future<void> Function()?> _seedDiseaseHistory(
       id: 'golden_disease_history_1',
       target: 'disease',
       queryJson: codec.encode(const DiseaseSearchParams(keyword: '高血圧')),
-      searchedAt: DateTime(2026, 5, 5, 17, 40),
+      searchedAt: _historyTime(minutesAgo: 20),
       totalCount: 14,
     );
     await repository.insertWithDedup(
       id: 'golden_disease_history_2',
       target: 'disease',
       queryJson: codec.encode(const DiseaseSearchParams(keyword: '糖尿病')),
-      searchedAt: DateTime(2026, 5, 5, 6, 10),
+      searchedAt: _historyTime(hoursAgo: 11),
       totalCount: 6,
     );
     await container.read(searchScreenProvider.notifier).loadHistory();
   }
   await tester.pumpAndSettle();
   return null;
+}
+
+DateTime _historyTime({int minutesAgo = 0, int hoursAgo = 0}) {
+  return _relativeHistoryAnchor.subtract(
+    Duration(minutes: minutesAgo, hours: hoursAgo),
+  );
 }
 
 Future<Future<void> Function()?> _openEmptyHistory(WidgetTester tester) async {

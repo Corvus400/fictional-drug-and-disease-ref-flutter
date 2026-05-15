@@ -912,7 +912,7 @@ class _SearchUtilityHistoryRow extends StatelessWidget {
   }
 }
 
-class _SearchUtilityFilterSection extends StatefulWidget {
+class _SearchUtilityFilterSection extends ConsumerStatefulWidget {
   const _SearchUtilityFilterSection({
     required this.state,
     required this.resultCount,
@@ -948,12 +948,12 @@ class _SearchUtilityFilterSection extends StatefulWidget {
   onApplyDiseaseFilter;
 
   @override
-  State<_SearchUtilityFilterSection> createState() =>
+  ConsumerState<_SearchUtilityFilterSection> createState() =>
       _SearchUtilityFilterSectionState();
 }
 
 class _SearchUtilityFilterSectionState
-    extends State<_SearchUtilityFilterSection> {
+    extends ConsumerState<_SearchUtilityFilterSection> {
   late Set<String> _categoryAtc;
   late Set<String> _therapeuticCategory;
   late Set<String> _regulatoryClass;
@@ -971,6 +971,8 @@ class _SearchUtilityFilterSectionState
   late bool? _hasPharmacologicalTreatment;
   late bool? _hasSeverityGrading;
   var _expandedAxis = '';
+  Timer? _previewDebounce;
+  int? _previewCount;
 
   @override
   void initState() {
@@ -991,6 +993,7 @@ class _SearchUtilityFilterSectionState
 
   @override
   void dispose() {
+    _previewDebounce?.cancel();
     _disposeControllers();
     super.dispose();
   }
@@ -1025,6 +1028,7 @@ class _SearchUtilityFilterSectionState
     _expandedAxis = state.tab == SearchTab.drugs
         ? 'regulatory_class'
         : 'icd10_chapter';
+    _previewCount = null;
   }
 
   @override
@@ -1073,6 +1077,7 @@ class _SearchUtilityFilterSectionState
                   _infectious = null;
                   _hasPharmacologicalTreatment = null;
                   _hasSeverityGrading = null;
+                  _schedulePreview();
                 });
                 unawaited(widget.onReset());
               },
@@ -1084,7 +1089,9 @@ class _SearchUtilityFilterSectionState
                 key: const ValueKey('search-utility-filter-apply'),
                 onPressed: _apply,
                 child: Text(
-                  l10n.searchFilterApplyWithCount(widget.resultCount),
+                  l10n.searchFilterApplyWithCount(
+                    _previewCount ?? widget.resultCount,
+                  ),
                 ),
               ),
             ),
@@ -1123,6 +1130,67 @@ class _SearchUtilityFilterSectionState
         hasPharmacologicalTreatment: _hasPharmacologicalTreatment,
         hasSeverityGrading: _hasSeverityGrading,
       ),
+    );
+  }
+
+  void _schedulePreview() {
+    _previewDebounce?.cancel();
+    _previewDebounce = Timer(const Duration(milliseconds: 200), () {
+      unawaited(_loadPreviewCount());
+    });
+  }
+
+  Future<void> _loadPreviewCount() async {
+    final notifier = ref.read(searchScreenProvider.notifier);
+    final count = switch (widget.state.tab) {
+      SearchTab.drugs => await notifier.previewDrugCount(_drugPreviewParams()),
+      SearchTab.diseases => await notifier.previewDiseaseCount(
+        _diseasePreviewParams(),
+      ),
+    };
+    if (!mounted || count == null) {
+      return;
+    }
+    setState(() => _previewCount = count);
+  }
+
+  DrugSearchParams _drugPreviewParams() {
+    return DrugSearchParams(
+      page: 1,
+      pageSize: 1,
+      categoryAtc: _singleValue(_categoryAtc),
+      therapeuticCategory: _singleValue(_therapeuticCategory),
+      regulatoryClass: _emptyListToNull(_regulatoryClass.toList()),
+      dosageForm: _emptyListToNull(_dosageForm.toList()),
+      route: _emptyListToNull(_route.toList()),
+      keyword: widget.state.queryText,
+      keywordMatch: widget.state.drugParams.keywordMatch,
+      keywordTarget: widget.state.drugParams.keywordTarget,
+      adverseReactionKeyword: _emptyToNull(
+        _adverseReactionKeywordController.text.trim(),
+      ),
+      precautionCategory: _emptyListToNull(_precautionCategory.toList()),
+      sort: widget.state.drugParams.sort,
+    );
+  }
+
+  DiseaseSearchParams _diseasePreviewParams() {
+    return DiseaseSearchParams(
+      page: 1,
+      pageSize: 1,
+      icd10Chapter: _emptyListToNull(_icd10Chapter.toList()),
+      department: _emptyListToNull(_department.toList()),
+      chronicity: _emptyListToNull(_chronicity.toList()),
+      infectious: _infectious,
+      keyword: widget.state.queryText,
+      keywordMatch: widget.state.diseaseParams.keywordMatch,
+      keywordTarget: widget.state.diseaseParams.keywordTarget,
+      symptomKeyword: _emptyToNull(_symptomKeywordController.text.trim()),
+      onsetPattern: _emptyListToNull(_onsetPattern.toList()),
+      examCategory: _emptyListToNull(_examCategory.toList()),
+      hasPharmacologicalTreatment: _hasPharmacologicalTreatment,
+      hasSeverityGrading: _hasSeverityGrading,
+      sort: widget.state.diseaseParams.sort,
     );
   }
 
@@ -1186,8 +1254,10 @@ class _SearchUtilityFilterSectionState
             values: categories.regulatoryClass,
             selected: _regulatoryClass,
             labelFor: (value) => _regulatoryClassLabel(l10n, value),
-            onToggle: (value) =>
-                setState(() => _toggle(_regulatoryClass, value)),
+            onToggle: (value) => setState(() {
+              _toggle(_regulatoryClass, value);
+              _schedulePreview();
+            }),
           ),
         ),
         _FilterAxis(
@@ -1204,7 +1274,10 @@ class _SearchUtilityFilterSectionState
             values: categories.dosageForm,
             selected: _dosageForm,
             labelFor: (value) => _dosageFormLabel(l10n, value),
-            onToggle: (value) => setState(() => _toggle(_dosageForm, value)),
+            onToggle: (value) => setState(() {
+              _toggle(_dosageForm, value);
+              _schedulePreview();
+            }),
           ),
         ),
         _FilterAxis(
@@ -1223,7 +1296,10 @@ class _SearchUtilityFilterSectionState
             values: categories.routeOfAdministration,
             selected: _route,
             labelFor: (value) => _routeLabel(l10n, value),
-            onToggle: (value) => setState(() => _toggle(_route, value)),
+            onToggle: (value) => setState(() {
+              _toggle(_route, value);
+              _schedulePreview();
+            }),
           ),
         ),
         _FilterAxis(
@@ -1240,8 +1316,10 @@ class _SearchUtilityFilterSectionState
             values: categories.atc.map((entry) => entry.code).toList(),
             selected: _categoryAtc,
             labelFor: (value) => _atcLabel(categories, value),
-            onToggle: (value) =>
-                setState(() => _toggleSingle(_categoryAtc, value)),
+            onToggle: (value) => setState(() {
+              _toggleSingle(_categoryAtc, value);
+              _schedulePreview();
+            }),
           ),
         ),
         _FilterAxis(
@@ -1260,8 +1338,10 @@ class _SearchUtilityFilterSectionState
                 .toList(),
             selected: _therapeuticCategory,
             labelFor: (value) => _therapeuticCategoryLabel(categories, value),
-            onToggle: (value) =>
-                setState(() => _toggleSingle(_therapeuticCategory, value)),
+            onToggle: (value) => setState(() {
+              _toggleSingle(_therapeuticCategory, value);
+              _schedulePreview();
+            }),
           ),
         ),
         _FilterAxis(
@@ -1280,7 +1360,7 @@ class _SearchUtilityFilterSectionState
           content: TextField(
             key: const ValueKey('drug-filter-adverse-reaction'),
             controller: _adverseReactionKeywordController,
-            onChanged: (_) => setState(() {}),
+            onChanged: (_) => setState(_schedulePreview),
             decoration: InputDecoration(
               labelText: l10n.searchFilterDrugAdverseReactionKeyword,
             ),
@@ -1304,8 +1384,10 @@ class _SearchUtilityFilterSectionState
                 .toList(),
             selected: _precautionCategory,
             labelFor: (value) => _precautionCategoryLabel(l10n, value),
-            onToggle: (value) =>
-                setState(() => _toggle(_precautionCategory, value)),
+            onToggle: (value) => setState(() {
+              _toggle(_precautionCategory, value);
+              _schedulePreview();
+            }),
           ),
         ),
       ],
@@ -1324,7 +1406,10 @@ class _SearchUtilityFilterSectionState
             values: categories.icd10Chapters.map(_icd10ChapterValue).toList(),
             selected: _icd10Chapter,
             labelFor: (value) => _icd10ChapterLabel(categories, value),
-            onToggle: (value) => setState(() => _toggle(_icd10Chapter, value)),
+            onToggle: (value) => setState(() {
+              _toggle(_icd10Chapter, value);
+              _schedulePreview();
+            }),
           ),
         ),
         _FilterAxis(
@@ -1343,7 +1428,10 @@ class _SearchUtilityFilterSectionState
             values: categories.medicalDepartments,
             selected: _department,
             labelFor: (value) => _departmentLabel(l10n, value),
-            onToggle: (value) => setState(() => _toggle(_department, value)),
+            onToggle: (value) => setState(() {
+              _toggle(_department, value);
+              _schedulePreview();
+            }),
           ),
         ),
         _FilterAxis(
@@ -1362,8 +1450,10 @@ class _SearchUtilityFilterSectionState
             values: _diseaseChronicityValues,
             selected: _chronicity,
             labelFor: (value) => _chronicityLabel(l10n, value),
-            onToggle: (value) =>
-                setState(() => _toggleSingle(_chronicity, value)),
+            onToggle: (value) => setState(() {
+              _toggleSingle(_chronicity, value);
+              _schedulePreview();
+            }),
           ),
         ),
         _FilterAxis(
@@ -1376,7 +1466,10 @@ class _SearchUtilityFilterSectionState
             value: _infectious,
             trueLabel: l10n.searchDiseaseInfectiousTrue,
             falseLabel: l10n.searchDiseaseInfectiousFalse,
-            onChanged: (value) => setState(() => _infectious = value),
+            onChanged: (value) => setState(() {
+              _infectious = value;
+              _schedulePreview();
+            }),
           ),
         ),
         _FilterAxis(
@@ -1391,7 +1484,7 @@ class _SearchUtilityFilterSectionState
           content: TextField(
             key: const ValueKey('disease-filter-symptom-keyword'),
             controller: _symptomKeywordController,
-            onChanged: (_) => setState(() {}),
+            onChanged: (_) => setState(_schedulePreview),
             decoration: InputDecoration(
               labelText: l10n.searchFilterDiseaseSymptomKeyword,
             ),
@@ -1413,7 +1506,10 @@ class _SearchUtilityFilterSectionState
             values: _diseaseOnsetPatternValues,
             selected: _onsetPattern,
             labelFor: (value) => _onsetPatternLabel(l10n, value),
-            onToggle: (value) => setState(() => _toggle(_onsetPattern, value)),
+            onToggle: (value) => setState(() {
+              _toggle(_onsetPattern, value);
+              _schedulePreview();
+            }),
           ),
         ),
         _FilterAxis(
@@ -1432,7 +1528,10 @@ class _SearchUtilityFilterSectionState
             values: _diseaseExamCategoryValues,
             selected: _examCategory,
             labelFor: (value) => _examCategoryLabel(l10n, value),
-            onToggle: (value) => setState(() => _toggle(_examCategory, value)),
+            onToggle: (value) => setState(() {
+              _toggle(_examCategory, value);
+              _schedulePreview();
+            }),
           ),
         ),
         _FilterAxis(
@@ -1445,8 +1544,10 @@ class _SearchUtilityFilterSectionState
             value: _hasPharmacologicalTreatment,
             trueLabel: l10n.searchDiseaseBoolTrue,
             falseLabel: l10n.searchDiseaseBoolFalse,
-            onChanged: (value) =>
-                setState(() => _hasPharmacologicalTreatment = value),
+            onChanged: (value) => setState(() {
+              _hasPharmacologicalTreatment = value;
+              _schedulePreview();
+            }),
           ),
         ),
         _FilterAxis(
@@ -1459,7 +1560,10 @@ class _SearchUtilityFilterSectionState
             value: _hasSeverityGrading,
             trueLabel: l10n.searchDiseaseBoolTrue,
             falseLabel: l10n.searchDiseaseBoolFalse,
-            onChanged: (value) => setState(() => _hasSeverityGrading = value),
+            onChanged: (value) => setState(() {
+              _hasSeverityGrading = value;
+              _schedulePreview();
+            }),
           ),
         ),
       ],

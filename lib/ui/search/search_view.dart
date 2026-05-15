@@ -130,6 +130,7 @@ class _SearchViewState extends ConsumerState<SearchView> with RouteAware {
         (theme.brightness == Brightness.dark
             ? AppPalette.dark
             : AppPalette.light);
+    final keyboardInset = MediaQuery.viewInsetsOf(context).bottom;
     return Scaffold(
       backgroundColor: palette.background,
       appBar: AppTabHeader(
@@ -138,7 +139,11 @@ class _SearchViewState extends ConsumerState<SearchView> with RouteAware {
       ),
       floatingActionButton: LayoutBuilder(
         builder: (context, constraints) {
-          final size = Size(constraints.maxWidth, constraints.maxHeight);
+          final size = _searchResponsiveSize(
+            Size(constraints.maxWidth, constraints.maxHeight),
+            MediaQuery.sizeOf(context),
+            keyboardInset,
+          );
           if (_usesSearchUtilityPane(size)) {
             return const SizedBox.shrink();
           }
@@ -189,13 +194,23 @@ class _SearchViewState extends ConsumerState<SearchView> with RouteAware {
       body: LayoutBuilder(
         builder: (context, constraints) {
           final isTablet =
-              constraints.maxWidth >= SearchConstants.searchTabletBreakpoint;
+              _searchResponsiveSize(
+                Size(constraints.maxWidth, constraints.maxHeight),
+                MediaQuery.sizeOf(context),
+                keyboardInset,
+              ).shortestSide >=
+              SearchConstants.searchTabletBreakpoint;
           final constraintsSize = Size(
             constraints.maxWidth,
             constraints.maxHeight,
           );
-          final isLandscape = _usesSearchLandscapeRail(constraintsSize);
-          final useUtilityPane = _usesSearchUtilityPane(constraintsSize);
+          final responsiveSize = _searchResponsiveSize(
+            constraintsSize,
+            MediaQuery.sizeOf(context),
+            keyboardInset,
+          );
+          final isLandscape = _usesSearchLandscapeRail(responsiveSize);
+          final useUtilityPane = _usesSearchUtilityPane(responsiveSize);
           if (state.categories != null) {
             _utilityPaneCategoryLoadQueued = false;
           }
@@ -474,6 +489,22 @@ bool _usesSearchLandscapeRail(Size size) {
   return size.width > size.height &&
       size.shortestSide < SearchConstants.searchTabletBreakpoint &&
       size.width / size.height >= 1.7;
+}
+
+Size _searchResponsiveSize(
+  Size layoutSize,
+  Size viewportSize,
+  double bottomInset,
+) {
+  final keyboardReducedTabletHeight =
+      bottomInset > 0 &&
+      layoutSize.width >= SearchConstants.searchTabletBreakpoint &&
+      viewportSize.width >= layoutSize.width &&
+      viewportSize.height > layoutSize.height;
+  if (keyboardReducedTabletHeight) {
+    return Size(layoutSize.width, viewportSize.height);
+  }
+  return layoutSize;
 }
 
 bool _showsPhoneInlineHistory(SearchScreenState state) {
