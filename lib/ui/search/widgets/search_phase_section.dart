@@ -701,13 +701,12 @@ class _SearchUtilityPane extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context)!;
     return DecoratedBox(
       key: const ValueKey('search-utility-pane'),
       decoration: BoxDecoration(
-        color: theme.colorScheme.surface,
-        border: Border(left: BorderSide(color: palette.hairline)),
+        color: palette.surface2,
+        border: Border(left: BorderSide(color: palette.hairline, width: 0.5)),
       ),
       child: Listener(
         onPointerDown: (_) => FocusManager.instance.primaryFocus?.unfocus(),
@@ -776,7 +775,7 @@ class _SearchUtilityCard extends StatelessWidget {
             : AppPalette.light);
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: palette.surfaceSubtle,
+        color: palette.surface,
         border: Border.all(color: palette.hairline, width: 0.5),
         borderRadius: BorderRadius.circular(10),
       ),
@@ -936,7 +935,7 @@ class _SearchUtilityHistoryRow extends StatelessWidget {
       key: ValueKey('search-utility-history-row-${entry.id}'),
       onTap: () => unawaited(onSelect(entry)),
       child: ColoredBox(
-        color: theme.colorScheme.surface,
+        color: palette.surface,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -1689,8 +1688,10 @@ class _SearchUtilityAxisTile extends StatelessWidget {
     return DecoratedBox(
       key: ValueKey('search-utility-filter-axis-${axis.id}'),
       decoration: BoxDecoration(
-        color: expanded ? palette.surfaceSubtle : Colors.transparent,
-        border: Border.all(color: palette.hairline, width: 0.5),
+        color: expanded ? palette.surface : palette.surface2,
+        border: Border.all(
+          color: expanded ? palette.primaryRing : palette.hairline2,
+        ),
         borderRadius: BorderRadius.circular(8),
       ),
       child: InkWell(

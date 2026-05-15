@@ -362,6 +362,63 @@ void main() {
     },
   );
 
+  testWidgets('SearchView utility pane uses design surface hierarchy', (
+    tester,
+  ) async {
+    await tester.binding.setSurfaceSize(const Size(834, 1194));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: _baseOverrides(db),
+        child: MaterialApp(
+          theme: AppTheme.dark(),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: const SearchView(),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    final pane = tester.widget<DecoratedBox>(
+      find.byKey(const ValueKey('search-utility-pane')),
+    );
+    final paneDecoration = pane.decoration as BoxDecoration;
+    expect(paneDecoration.color, AppPalette.dark.surface2);
+
+    final historyCard = tester.widget<DecoratedBox>(
+      find
+          .descendant(
+            of: find.byKey(const ValueKey('search-utility-history-section')),
+            matching: find.byType(DecoratedBox),
+          )
+          .first,
+    );
+    final historyCardDecoration = historyCard.decoration as BoxDecoration;
+    expect(historyCardDecoration.color, AppPalette.dark.surface);
+
+    final expandedAxis = tester.widget<DecoratedBox>(
+      find.byKey(const ValueKey('search-utility-filter-axis-regulatory_class')),
+    );
+    final expandedAxisDecoration = expandedAxis.decoration as BoxDecoration;
+    expect(expandedAxisDecoration.color, AppPalette.dark.surface);
+    expect(
+      (expandedAxisDecoration.border! as Border).top.color,
+      AppPalette.dark.primaryRing,
+    );
+
+    final collapsedAxis = tester.widget<DecoratedBox>(
+      find.byKey(const ValueKey('search-utility-filter-axis-dosage_form')),
+    );
+    final collapsedAxisDecoration = collapsedAxis.decoration as BoxDecoration;
+    expect(collapsedAxisDecoration.color, AppPalette.dark.surface2);
+    expect(
+      (collapsedAxisDecoration.border! as Border).top.color,
+      AppPalette.dark.hairline2,
+    );
+  });
+
   testWidgets('SearchView utility empty history uses compact placeholder', (
     tester,
   ) async {
