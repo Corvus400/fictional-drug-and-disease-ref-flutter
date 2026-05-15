@@ -179,7 +179,10 @@ class _SearchFieldState extends State<_SearchField> {
       controller: _controller,
       focusNode: _focusNode,
       groupId: widget.tapRegionGroupId,
-      onTap: widget.onTap,
+      onTap: () {
+        _focusNode.requestFocus();
+        widget.onTap();
+      },
       onTapOutside: (_) {
         FocusScope.of(context).unfocus();
         widget.onCancel();

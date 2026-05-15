@@ -207,6 +207,41 @@ void main() {
     expect(editableText.focusNode.hasFocus, isTrue);
   });
 
+  testWidgets('SearchView search field shows keyboard on single retap', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [appDatabaseProvider.overrideWithValue(db)],
+        child: const MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: SearchView(debugLogDrugImageErrors: false),
+        ),
+      ),
+    );
+
+    final field = find.byKey(const ValueKey('search-field'));
+    await tester.tap(field);
+    await tester.pump();
+    expect(tester.testTextInput.isVisible, isTrue);
+
+    tester.testTextInput.hide();
+    tester.testTextInput.log.clear();
+    final editableText = tester.widget<EditableText>(find.byType(EditableText));
+    expect(editableText.focusNode.hasFocus, isTrue);
+    expect(tester.testTextInput.isVisible, isFalse);
+
+    await tester.tap(field);
+    await tester.pump();
+
+    expect(tester.testTextInput.isVisible, isTrue);
+    expect(
+      tester.testTextInput.log.any((call) => call.method == 'TextInput.show'),
+      isTrue,
+    );
+  });
+
   testWidgets('SearchView returns cancel action to search on outside tap', (
     tester,
   ) async {
