@@ -41,6 +41,8 @@ import 'package:skeletonizer/skeletonizer.dart';
 import '../../helpers/test_app_database.dart';
 
 void main() {
+  final binding = TestWidgetsFlutterBinding.ensureInitialized();
+
   ApiConfig.initialize(
     const FlavorConfig(
       flavor: Flavor.dev,
@@ -50,11 +52,20 @@ void main() {
 
   late AppDatabase db;
 
+  setUp(() {
+    binding.platformDispatcher.views.single
+      ..devicePixelRatio = 1
+      ..physicalSize = const Size(390, 844);
+  });
+
   setUpAll(() {
     db = createTestAppDatabase();
   });
 
   tearDown(() async {
+    binding.platformDispatcher.views.single
+      ..resetPhysicalSize()
+      ..resetDevicePixelRatio();
     await clearTestAppDatabase(db);
   });
 
@@ -84,7 +95,7 @@ void main() {
     expect(find.textContaining('Health:'), findsNothing);
   });
 
-  testWidgets('empty_history_text_shown_only_when_dropdown_open_(T11)', (
+  testWidgets('empty_history_text_shown_only_when_phone_idle_unfocused_(T11)', (
     tester,
   ) async {
     await tester.pumpWidget(
@@ -99,16 +110,25 @@ void main() {
     );
     await tester.pump();
 
-    expect(find.text('検索履歴はまだありません'), findsNothing);
+    expect(
+      find.byKey(const ValueKey('search-history-inline-empty')),
+      findsOneWidget,
+    );
+    expect(find.text('検索履歴はまだありません'), findsOneWidget);
 
     await tester.tap(find.byKey(const ValueKey('search-field')));
     await tester.pumpAndSettle();
 
-    expect(find.text('検索履歴はまだありません'), findsOneWidget);
+    expect(
+      find.byKey(const ValueKey('search-history-inline-empty')),
+      findsNothing,
+    );
+    expect(find.text('検索履歴はまだありません'), findsNothing);
     expect(
       find.text('検索すると履歴が最大 5 件まで残ります。\n履歴は端末内にのみ保存されます。'),
-      findsOneWidget,
+      findsNothing,
     );
+    expect(find.byKey(const ValueKey('search-history-dropdown')), findsNothing);
   });
 
   testWidgets(
@@ -131,10 +151,10 @@ void main() {
       await tester.tap(find.text('疾患'));
       await tester.pumpAndSettle();
 
-      expect(find.text('検索履歴はまだありません'), findsNothing);
+      expect(find.text('検索履歴はまだありません'), findsOneWidget);
       expect(
         find.text('検索すると履歴が最大 5 件まで残ります。\n履歴は端末内にのみ保存されます。'),
-        findsNothing,
+        findsOneWidget,
       );
     },
   );
@@ -299,7 +319,7 @@ void main() {
     expect(scaffold.backgroundColor, AppPalette.light.background);
   });
 
-  testWidgets('SearchView renders persisted search history when focused', (
+  testWidgets('SearchView renders persisted search history while idle', (
     tester,
   ) async {
     final container = ProviderContainer(
@@ -330,8 +350,6 @@ void main() {
         ),
       ),
     );
-    await tester.pump();
-    await tester.tap(find.byKey(const ValueKey('search-field')));
     await tester.pump();
 
     expect(find.text('検索履歴'), findsOneWidget);
@@ -392,8 +410,6 @@ void main() {
       ),
     );
     await tester.pump();
-    await tester.tap(find.byKey(const ValueKey('search-field')));
-    await tester.pump();
     expect(find.text('復元キーワード'), findsOneWidget);
 
     await tester.tap(
@@ -412,7 +428,7 @@ void main() {
     expect(container.read(searchScreenProvider).historyDropdownOpen, false);
   });
 
-  testWidgets('SearchView shows no-history panel while focused', (
+  testWidgets('SearchView hides inline no-history panel while focused', (
     tester,
   ) async {
     await tester.pumpWidget(
@@ -426,13 +442,21 @@ void main() {
       ),
     );
     await tester.pump();
-    expect(find.text('検索履歴はまだありません'), findsNothing);
+    expect(
+      find.byKey(const ValueKey('search-history-inline-empty')),
+      findsOneWidget,
+    );
+    expect(find.text('検索履歴はまだありません'), findsOneWidget);
 
     await tester.tap(find.byKey(const ValueKey('search-field')));
     await tester.pumpAndSettle();
 
-    expect(find.text('検索履歴'), findsOneWidget);
-    expect(find.text('検索履歴はまだありません'), findsOneWidget);
+    expect(
+      find.byKey(const ValueKey('search-history-inline-empty')),
+      findsNothing,
+    );
+    expect(find.text('検索履歴はまだありません'), findsNothing);
+    expect(find.byKey(const ValueKey('search-history-dropdown')), findsNothing);
   });
 
   testWidgets('SearchView renders Round6 history row metadata and note', (
@@ -465,8 +489,6 @@ void main() {
       ),
     );
     await tester.pump();
-    await tester.tap(find.byKey(const ValueKey('search-field')));
-    await tester.pump();
 
     expect(find.text('Rx'), findsOneWidget);
     expect(find.text('Dx'), findsNothing);
@@ -474,7 +496,7 @@ void main() {
     expect(find.text('すべて消す'), findsOneWidget);
     expect(
       find.text('最新 5 件まで表示。履歴は端末内にのみ保存されます'),
-      findsOneWidget,
+      findsNothing,
     );
   });
 
@@ -506,8 +528,6 @@ void main() {
         ),
       ),
     );
-    await tester.pump();
-    await tester.tap(find.byKey(const ValueKey('search-field')));
     await tester.pump();
 
     expect(find.text('Rx'), findsOneWidget);
@@ -545,8 +565,6 @@ void main() {
     await tester.pump();
     await tester.tap(find.text('疾患'));
     await tester.pumpAndSettle();
-    await tester.tap(find.byKey(const ValueKey('search-field')));
-    await tester.pump();
 
     expect(find.text('Dx'), findsOneWidget);
     expect(find.text('Rx'), findsNothing);
@@ -600,8 +618,6 @@ void main() {
       ),
     );
     await tester.pump();
-    await tester.tap(find.byKey(const ValueKey('search-field')));
-    await tester.pump();
 
     final containerWidget = tester.widget<Container>(
       find
@@ -626,8 +642,6 @@ void main() {
 
     await tester.tap(find.text('疾患'));
     await tester.pumpAndSettle();
-    await tester.tap(find.byKey(const ValueKey('search-field')));
-    await tester.pump();
 
     final dxContainer = tester.widget<Container>(
       find
@@ -678,8 +692,6 @@ void main() {
       ),
     );
     await tester.pump();
-    await tester.tap(find.byKey(const ValueKey('search-field')));
-    await tester.pump();
 
     expect(find.text('合計 5 件'), findsOneWidget);
     expect(find.text('5分前'), findsOneWidget);
@@ -695,49 +707,50 @@ void main() {
     expect(decoration.border?.top.color, AppPalette.light.primaryRing);
   });
 
-  testWidgets('SearchView deletes a persisted history row from dropdown', (
-    tester,
-  ) async {
-    final container = ProviderContainer(
-      overrides: [appDatabaseProvider.overrideWithValue(db)],
-    );
-    addTearDown(container.dispose);
-    await container
-        .read(searchHistoryRepositoryProvider)
-        .insertWithDedup(
-          id: 'search_delete_target',
-          target: 'drug',
-          queryJson: container
-              .read(searchQueryCodecProvider)
-              .encode(
-                const DrugSearchParams(keyword: '削除対象キーワード'),
-              ),
-          searchedAt: DateTime.utc(2026, 5, 5),
-          totalCount: 3,
-        );
+  testWidgets(
+    'SearchView deletes a persisted history row from inline history',
+    (
+      tester,
+    ) async {
+      final container = ProviderContainer(
+        overrides: [appDatabaseProvider.overrideWithValue(db)],
+      );
+      addTearDown(container.dispose);
+      await container
+          .read(searchHistoryRepositoryProvider)
+          .insertWithDedup(
+            id: 'search_delete_target',
+            target: 'drug',
+            queryJson: container
+                .read(searchQueryCodecProvider)
+                .encode(
+                  const DrugSearchParams(keyword: '削除対象キーワード'),
+                ),
+            searchedAt: DateTime.utc(2026, 5, 5),
+            totalCount: 3,
+          );
 
-    await tester.pumpWidget(
-      UncontrolledProviderScope(
-        container: container,
-        child: const MaterialApp(
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
-          supportedLocales: AppLocalizations.supportedLocales,
-          home: SearchView(debugLogDrugImageErrors: false),
+      await tester.pumpWidget(
+        UncontrolledProviderScope(
+          container: container,
+          child: const MaterialApp(
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: SearchView(debugLogDrugImageErrors: false),
+          ),
         ),
-      ),
-    );
-    await tester.pump();
-    await tester.tap(find.byKey(const ValueKey('search-field')));
-    await tester.pump();
-    expect(find.text('削除対象キーワード'), findsOneWidget);
+      );
+      await tester.pump();
+      expect(find.text('削除対象キーワード'), findsOneWidget);
 
-    await tester.tap(
-      find.byKey(const ValueKey('delete-history-search_delete_target')),
-    );
-    await tester.pump();
+      await tester.tap(
+        find.byKey(const ValueKey('delete-history-search_delete_target')),
+      );
+      await tester.pump();
 
-    expect(find.text('削除対象キーワード'), findsNothing);
-  });
+      expect(find.text('削除対象キーワード'), findsNothing);
+    },
+  );
 
   testWidgets('history row swipe dismisses the entry', (tester) async {
     final container = ProviderContainer(
@@ -769,8 +782,6 @@ void main() {
       ),
     );
     await tester.pump();
-    await tester.tap(find.byKey(const ValueKey('search-field')));
-    await tester.pump();
     expect(find.text('スワイプ削除'), findsOneWidget);
 
     await tester.fling(
@@ -784,7 +795,7 @@ void main() {
   });
 
   testWidgets(
-    'history_dropdown_does_not_overflow_when_keyboard_is_visible_(T04)',
+    'focused_phone_history_does_not_render_under_keyboard_(T04)',
     (tester) async {
       await tester.binding.setSurfaceSize(const Size(390, 844));
       addTearDown(() => tester.binding.setSurfaceSize(null));
@@ -828,11 +839,12 @@ void main() {
       await tester.pump();
 
       expect(tester.takeException(), isNull);
-      expect(find.text('キーボード履歴4'), findsOneWidget);
+      expect(find.byKey(const ValueKey('search-history-inline')), findsNothing);
+      expect(find.text('キーボード履歴4'), findsNothing);
     },
   );
 
-  testWidgets('SearchView clears persisted history after confirmation', (
+  testWidgets('SearchView clears inline history after confirmation', (
     tester,
   ) async {
     final container = ProviderContainer(
@@ -864,8 +876,6 @@ void main() {
       ),
     );
     await tester.pump();
-    await tester.tap(find.byKey(const ValueKey('search-field')));
-    await tester.pump();
     expect(find.text('全削除対象キーワード'), findsOneWidget);
 
     await tester.tap(find.byKey(const ValueKey('clear-history-button')));
@@ -879,7 +889,7 @@ void main() {
   });
 
   testWidgets(
-    'SearchView clears disease history from focused dropdown on iPhone width',
+    'SearchView clears disease history from inline history on iPhone width',
     (tester) async {
       await tester.binding.setSurfaceSize(const Size(430, 932));
       addTearDown(() => tester.binding.setSurfaceSize(null));
@@ -914,8 +924,6 @@ void main() {
       await tester.pump();
       await tester.tap(find.text('疾患'));
       await tester.pumpAndSettle();
-      await tester.tap(find.byKey(const ValueKey('search-field')));
-      await tester.pump();
       expect(find.text('疾患全削除対象'), findsOneWidget);
 
       await tester.tap(
@@ -933,8 +941,7 @@ void main() {
   );
 
   testWidgets(
-    'SearchView deletes disease history row from focused dropdown '
-    'on iPad width',
+    'SearchView shows disease history in utility pane on iPad width',
     (tester) async {
       await tester.binding.setSurfaceSize(const Size(834, 1194));
       addTearDown(() => tester.binding.setSurfaceSize(null));
@@ -969,17 +976,17 @@ void main() {
       await tester.pump();
       await tester.tap(find.text('疾患'));
       await tester.pumpAndSettle();
-      await tester.tap(find.byKey(const ValueKey('search-field')));
-      await tester.pump();
       expect(find.text('疾患個別削除対象'), findsOneWidget);
-
-      await tester.tap(
-        find.byKey(const ValueKey('delete-history-disease_delete_target')),
-        kind: PointerDeviceKind.mouse,
+      expect(
+        find.byKey(
+          const ValueKey('search-utility-history-row-disease_delete_target'),
+        ),
+        findsOneWidget,
       );
-      await tester.pump();
-
-      expect(find.text('疾患個別削除対象'), findsNothing);
+      expect(
+        find.byKey(const ValueKey('search-history-dropdown')),
+        findsNothing,
+      );
     },
   );
 
@@ -2513,6 +2520,9 @@ void main() {
   testWidgets('SearchView stretches disease cards to the result width', (
     tester,
   ) async {
+    await tester.binding.setSurfaceSize(const Size(834, 1194));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+
     final diseaseApiClient = _MockDiseaseApiClient();
     when(
       () => diseaseApiClient.getDiseases(

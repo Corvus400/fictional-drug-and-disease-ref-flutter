@@ -1,8 +1,7 @@
 part of '../search_view.dart';
 
-class _SearchHistoryDropdown extends StatelessWidget {
-  const _SearchHistoryDropdown({
-    required this.tapRegionGroupId,
+class _SearchInlineHistory extends StatelessWidget {
+  const _SearchInlineHistory({
     required this.entries,
     required this.currentTime,
     required this.onSelect,
@@ -10,14 +9,11 @@ class _SearchHistoryDropdown extends StatelessWidget {
     required this.onClearAll,
   });
 
-  final Object tapRegionGroupId;
   final List<SearchHistoryEnvelope> entries;
   final DateTime currentTime;
   final Future<void> Function(SearchHistoryEnvelope entry) onSelect;
   final Future<void> Function(String id) onDelete;
   final Future<void> Function() onClearAll;
-
-  static const _maxHistoryRowExtent = 64.0;
 
   @override
   Widget build(BuildContext context) {
@@ -28,115 +24,76 @@ class _SearchHistoryDropdown extends StatelessWidget {
         (theme.brightness == Brightness.dark
             ? AppPalette.dark
             : AppPalette.light);
-    final keyboardVisible = MediaQuery.viewInsetsOf(context).bottom > 0;
-    final textScaleFactor = MediaQuery.textScalerOf(context).scale(1);
-    final emptyHistoryMaxHeight =
-        150 + ((textScaleFactor - 1) * 200).clamp(0, 130);
-    return TapRegion(
-      groupId: tapRegionGroupId,
-      child: ConstrainedBox(
-        constraints: BoxConstraints(
-          maxHeight: keyboardVisible ? 250 : double.infinity,
-        ),
-        child: Material(
-          key: const ValueKey('search-history-dropdown'),
-          color: theme.colorScheme.surface,
-          clipBehavior: Clip.hardEdge,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(
-                  SearchConstants.searchPhoneGutter,
-                  10,
-                  SearchConstants.searchPhoneGutter,
-                  6,
-                ),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        l10n.searchHistoryTitle,
-                        style: theme.textTheme.labelMedium?.copyWith(
-                          color: theme.colorScheme.onSurfaceVariant,
-                          fontWeight: FontWeight.w700,
-                        ),
+    final visibleEntries = entries.take(5).toList();
+    return DecoratedBox(
+      key: const ValueKey('search-history-inline'),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surface,
+        border: Border.all(color: palette.hairline, width: 0.5),
+        borderRadius: BorderRadius.circular(SearchConstants.searchCardRadius),
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(SearchConstants.searchCardRadius),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(14, 10, 14, 6),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      l10n.searchHistoryTitle,
+                      style: theme.textTheme.labelMedium?.copyWith(
+                        color: theme.colorScheme.onSurfaceVariant,
+                        fontWeight: FontWeight.w700,
                       ),
                     ),
-                    TextButton(
-                      key: const ValueKey('clear-history-button'),
-                      onPressed: () => unawaited(_confirmClearHistory(context)),
-                      child: Text(
-                        l10n.searchHistoryClear,
-                        style: TextStyle(
-                          color: palette.primary,
-                          fontWeight: FontWeight.w700,
-                        ),
+                  ),
+                  TextButton(
+                    key: const ValueKey('clear-history-button'),
+                    onPressed: entries.isEmpty
+                        ? null
+                        : () => unawaited(_confirmClearHistory(context)),
+                    child: Text(
+                      l10n.searchHistoryClear,
+                      style: TextStyle(
+                        color: entries.isEmpty ? null : palette.primary,
+                        fontWeight: FontWeight.w700,
                       ),
                     ),
-                  ],
-                ),
-              ),
-              Flexible(
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(
-                    maxHeight: entries.isEmpty
-                        ? emptyHistoryMaxHeight.toDouble()
-                        : entries.length * _maxHistoryRowExtent,
                   ),
-                  child: entries.isEmpty
-                      ? const SingleChildScrollView(
-                          child: _NoSearchHistoryState(),
-                        )
-                      : ListView(
-                          padding: EdgeInsets.zero,
-                          shrinkWrap: true,
-                          children: [
-                            for (
-                              var index = 0;
-                              index < entries.length;
-                              index++
-                            ) ...[
-                              _SearchHistoryRow(
-                                entry: entries[index],
-                                palette: palette,
-                                currentTime: currentTime,
-                                onSelect: onSelect,
-                                onDelete: onDelete,
-                              ),
-                              if (index != entries.length - 1)
-                                Divider(
-                                  key: ValueKey(
-                                    'search-history-row-divider-'
-                                    '${entries[index].id}',
-                                  ),
-                                  height: 0,
-                                  thickness: 0.5,
-                                  color: palette.hairline2,
-                                ),
-                            ],
-                          ],
-                        ),
-                ),
+                ],
               ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(
-                  SearchConstants.searchPhoneGutter,
-                  8,
-                  SearchConstants.searchPhoneGutter,
-                  10,
-                ),
-                child: Text(
-                  l10n.searchHistoryPrivacyNote,
-                  textAlign: TextAlign.center,
-                  style: theme.textTheme.labelSmall?.copyWith(
-                    color: theme.colorScheme.onSurfaceVariant,
+            ),
+            if (entries.isEmpty)
+              const Padding(
+                key: ValueKey('search-history-inline-empty'),
+                padding: EdgeInsets.fromLTRB(20, 18, 20, 24),
+                child: _NoSearchHistoryState(),
+              )
+            else
+              for (var index = 0; index < visibleEntries.length; index++) ...[
+                if (index > 0)
+                  Divider(
+                    key: ValueKey(
+                      'search-history-inline-divider-'
+                      '${visibleEntries[index].id}',
+                    ),
+                    height: 0,
+                    thickness: 0.5,
+                    color: palette.hairline2,
                   ),
+                _SearchHistoryRow(
+                  entry: visibleEntries[index],
+                  palette: palette,
+                  currentTime: currentTime,
+                  onSelect: onSelect,
+                  onDelete: onDelete,
                 ),
-              ),
-            ],
-          ),
+              ],
+          ],
         ),
       ),
     );

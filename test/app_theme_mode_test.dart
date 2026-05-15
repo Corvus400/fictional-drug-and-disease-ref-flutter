@@ -13,6 +13,24 @@ void main() {
 
   late AppDatabase db;
 
+  Future<void> pumpPhonePortraitApp(WidgetTester tester) async {
+    tester.view
+      ..devicePixelRatio = 1
+      ..physicalSize = const Size(390, 844);
+    addTearDown(() {
+      tester.view
+        ..resetPhysicalSize()
+        ..resetDevicePixelRatio();
+    });
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [appDatabaseProvider.overrideWithValue(db)],
+        child: App(),
+      ),
+    );
+    await tester.pumpAndSettle();
+  }
+
   setUpAll(() {
     db = AppDatabase(NativeDatabase.memory());
   });
@@ -26,13 +44,7 @@ void main() {
   ) async {
     SharedPreferences.setMockInitialValues({'theme_mode': 'dark'});
 
-    await tester.pumpWidget(
-      ProviderScope(
-        overrides: [appDatabaseProvider.overrideWithValue(db)],
-        child: App(),
-      ),
-    );
-    await tester.pumpAndSettle();
+    await pumpPhonePortraitApp(tester);
 
     final material = tester.widget<MaterialApp>(find.byType(MaterialApp));
     expect(material.themeMode, ThemeMode.dark);
@@ -43,13 +55,7 @@ void main() {
   ) async {
     SharedPreferences.setMockInitialValues({});
 
-    await tester.pumpWidget(
-      ProviderScope(
-        overrides: [appDatabaseProvider.overrideWithValue(db)],
-        child: App(),
-      ),
-    );
-    await tester.pumpAndSettle();
+    await pumpPhonePortraitApp(tester);
 
     final material = tester.widget<MaterialApp>(find.byType(MaterialApp));
     final titleContext = tester.element(find.byType(NavigationBar));
@@ -62,13 +68,7 @@ void main() {
   ) async {
     SharedPreferences.setMockInitialValues({});
 
-    await tester.pumpWidget(
-      ProviderScope(
-        overrides: [appDatabaseProvider.overrideWithValue(db)],
-        child: App(),
-      ),
-    );
-    await tester.pumpAndSettle();
+    await pumpPhonePortraitApp(tester);
 
     expect(find.byType(DisclaimerRibbon), findsOneWidget);
     final semantics = tester.widget<Semantics>(

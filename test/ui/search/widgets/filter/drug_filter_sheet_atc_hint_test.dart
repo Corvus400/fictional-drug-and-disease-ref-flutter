@@ -42,6 +42,9 @@ void main() {
   });
 
   testWidgets('ATC 第1階層軸の hint は単一選択ラベルになる', (tester) async {
+    await tester.binding.setSurfaceSize(const Size(390, 844));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+
     final categoryApiClient = _MockCategoryApiClient();
     final drugApiClient = _MockDrugApiClient();
     when(

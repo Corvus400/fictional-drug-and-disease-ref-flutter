@@ -14,18 +14,114 @@ class AppShell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final shellUsesNavigationRail = _usesNavigationRail(
+      BoxConstraints.tight(MediaQuery.sizeOf(context)),
+    );
     return Scaffold(
-      body: navigationShell,
-      bottomNavigationBar: AppShellBottomNavigation(
-        selectedIndex: navigationShell.currentIndex,
-        onDestinationSelected: (index) {
-          logger.i('TAB_CHANGE: $index');
-          navigationShell.goBranch(
-            index,
-            initialLocation: index == navigationShell.currentIndex,
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          final navigation = AppShellAdaptiveNavigation(
+            selectedIndex: navigationShell.currentIndex,
+            onDestinationSelected: (index) {
+              logger.i('TAB_CHANGE: $index');
+              navigationShell.goBranch(
+                index,
+                initialLocation: index == navigationShell.currentIndex,
+              );
+            },
+          );
+          if (!_usesNavigationRail(constraints)) {
+            return navigationShell;
+          }
+          return Row(
+            children: [
+              navigation,
+              Expanded(child: navigationShell),
+            ],
           );
         },
       ),
+      bottomNavigationBar: shellUsesNavigationRail
+          ? const DisclaimerRibbon()
+          : AppShellAdaptiveNavigation(
+              selectedIndex: navigationShell.currentIndex,
+              onDestinationSelected: (index) {
+                logger.i('TAB_CHANGE: $index');
+                navigationShell.goBranch(
+                  index,
+                  initialLocation: index == navigationShell.currentIndex,
+                );
+              },
+            ),
+    );
+  }
+}
+
+bool _usesNavigationRail(BoxConstraints constraints) {
+  return constraints.maxWidth > constraints.maxHeight;
+}
+
+/// Adaptive app-shell navigation.
+class AppShellAdaptiveNavigation extends StatelessWidget {
+  /// Creates adaptive app-shell navigation.
+  const AppShellAdaptiveNavigation({
+    required this.selectedIndex,
+    required this.onDestinationSelected,
+    super.key,
+  });
+
+  /// Current selected destination index.
+  final int selectedIndex;
+
+  /// Destination selection callback.
+  final ValueChanged<int> onDestinationSelected;
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        if (!_usesNavigationRail(constraints)) {
+          return AppShellBottomNavigation(
+            selectedIndex: selectedIndex,
+            onDestinationSelected: onDestinationSelected,
+          );
+        }
+
+        final railWidth = constraints.maxHeight >= 600 ? 72.0 : 52.0;
+        return SizedBox(
+          key: const ValueKey('app-shell-navigation-rail-box'),
+          width: railWidth,
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.surface,
+              border: Border(
+                right: BorderSide(color: Theme.of(context).dividerColor),
+              ),
+            ),
+            child: SafeArea(
+              right: false,
+              bottom: false,
+              child: NavigationRail(
+                key: const ValueKey('app-shell-navigation-rail'),
+                selectedIndex: selectedIndex,
+                minWidth: railWidth,
+                labelType: NavigationRailLabelType.none,
+                onDestinationSelected: onDestinationSelected,
+                destinations: [
+                  for (final tab in AppShellTab.values)
+                    NavigationRailDestination(
+                      icon: Tooltip(
+                        message: tab.label(context),
+                        child: Icon(tab.icon),
+                      ),
+                      label: Text(tab.label(context)),
+                    ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }

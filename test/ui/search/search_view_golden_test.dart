@@ -52,10 +52,10 @@ void main() {
     await _db.close();
   });
 
-  _searchGoldenMatrix(name: 's1_idle');
+  _searchGoldenMatrix(name: 's1_idle', whilePerforming: _seedDrugHistory);
   _searchGoldenMatrix(
     name: 's22_disease_idle',
-    whilePerforming: _selectDiseaseTabOnly,
+    whilePerforming: _seedDiseaseHistory,
   );
   _searchGoldenMatrix(name: 's2_history', whilePerforming: _openHistory);
   _searchGoldenMatrix(
@@ -101,15 +101,18 @@ void main() {
   );
   _searchGoldenMatrix(
     name: 's8_filter_drugs',
+    sizes: _phoneModalGoldenSizes,
     whilePerforming: _openDrugFilter,
   );
   _searchGoldenMatrix(
     name: 's9_filter_diseases',
+    sizes: _phoneModalGoldenSizes,
     whilePerforming: _openDiseaseFilter,
   );
   _searchGoldenMatrix(
     name: 's10_sort',
     response: _drugListFixture(),
+    sizes: _phoneModalGoldenSizes,
     whilePerforming: _openSort,
   );
   _searchGoldenMatrix(
@@ -144,6 +147,7 @@ void main() {
   _searchGoldenMatrix(
     name: 's15_disease_sort',
     diseaseResponse: _diseaseListFixture(),
+    sizes: _phoneModalGoldenSizes,
     whilePerforming: _openDiseaseSort,
   );
   _searchGoldenMatrix(
@@ -178,11 +182,14 @@ void _searchGoldenMatrix({
   Completer<DiseaseListResponseDto>? diseasePage2Completer,
   Object? error,
   Object? diseaseError,
+  Iterable<String>? sizes,
   GoldenInteraction? whilePerforming,
 }) {
   runGoldenMatrix(
     fileNamePrefix: 'search_$name',
     description: 'Search $name',
+    sizes: sizes ?? _searchSpecGoldenSizes,
+    customSizes: _searchSpecCustomSizes,
     builder: (theme, size, scaler) {
       final drugApiClient = _MockDrugApiClient();
       final diseaseApiClient = _MockDiseaseApiClient();
@@ -319,33 +326,48 @@ void _searchGoldenMatrix({
   );
 }
 
-Future<Future<void> Function()?> _selectDiseaseTabOnly(
-  WidgetTester tester,
-) async {
-  await _selectDiseaseTab(tester);
+const _phoneModalGoldenSizes = ['phone'];
+
+const _searchSpecGoldenSizes = [
+  'phone',
+  'iphone_landscape',
+  'tablet',
+  'ipad_landscape',
+  'ipad_split_view',
+];
+
+const _searchSpecCustomSizes = {
+  'iphone_landscape': Size(844, 390),
+  'ipad_landscape': Size(1194, 834),
+  'ipad_split_view': Size(960, 700),
+};
+
+Future<Future<void> Function()?> _openHistory(WidgetTester tester) async {
+  await _seedDrugHistory(tester);
   return null;
 }
 
-Future<Future<void> Function()?> _openHistory(WidgetTester tester) async {
-  final context = tester.element(find.byType(SearchView).first);
-  final container = ProviderScope.containerOf(context);
-  final repository = container.read(searchHistoryRepositoryProvider);
-  final codec = container.read(searchQueryCodecProvider);
-  await repository.insertWithDedup(
-    id: 'golden_history_1',
-    target: 'drug',
-    queryJson: codec.encode(const DrugSearchParams(keyword: 'アムロジピン')),
-    searchedAt: DateTime.utc(2026, 5, 5, 8, 50),
-    totalCount: 23,
-  );
-  await repository.insertWithDedup(
-    id: 'golden_history_2',
-    target: 'drug',
-    queryJson: codec.encode(const DrugSearchParams(keyword: 'ロサルタン K')),
-    searchedAt: DateTime.utc(2026, 5, 4, 22, 15),
-    totalCount: 8,
-  );
-  await _tapAll(tester, find.byKey(const ValueKey('search-field')));
+Future<Future<void> Function()?> _seedDrugHistory(WidgetTester tester) async {
+  for (final element in find.byType(SearchView).evaluate()) {
+    final container = ProviderScope.containerOf(element);
+    final repository = container.read(searchHistoryRepositoryProvider);
+    final codec = container.read(searchQueryCodecProvider);
+    await repository.insertWithDedup(
+      id: 'golden_history_1',
+      target: 'drug',
+      queryJson: codec.encode(const DrugSearchParams(keyword: 'アムロジピン')),
+      searchedAt: DateTime.utc(2026, 5, 5, 8, 50),
+      totalCount: 23,
+    );
+    await repository.insertWithDedup(
+      id: 'golden_history_2',
+      target: 'drug',
+      queryJson: codec.encode(const DrugSearchParams(keyword: 'ロサルタン K')),
+      searchedAt: DateTime.utc(2026, 5, 4, 22, 15),
+      totalCount: 8,
+    );
+    await container.read(searchScreenProvider.notifier).loadHistory();
+  }
   await tester.pumpAndSettle();
   return null;
 }
@@ -353,32 +375,39 @@ Future<Future<void> Function()?> _openHistory(WidgetTester tester) async {
 Future<Future<void> Function()?> _openDiseaseHistory(
   WidgetTester tester,
 ) async {
-  final context = tester.element(find.byType(SearchView).first);
-  final container = ProviderScope.containerOf(context);
-  final repository = container.read(searchHistoryRepositoryProvider);
-  final codec = container.read(searchQueryCodecProvider);
-  await repository.insertWithDedup(
-    id: 'golden_disease_history_1',
-    target: 'disease',
-    queryJson: codec.encode(const DiseaseSearchParams(keyword: '高血圧')),
-    searchedAt: DateTime.utc(2026, 5, 5, 8, 40),
-    totalCount: 14,
-  );
-  await repository.insertWithDedup(
-    id: 'golden_disease_history_2',
-    target: 'disease',
-    queryJson: codec.encode(const DiseaseSearchParams(keyword: '糖尿病')),
-    searchedAt: DateTime.utc(2026, 5, 4, 21, 10),
-    totalCount: 6,
-  );
+  await _seedDiseaseHistory(tester);
+  return null;
+}
+
+Future<Future<void> Function()?> _seedDiseaseHistory(
+  WidgetTester tester,
+) async {
   await _selectDiseaseTab(tester);
-  await _tapAll(tester, find.byKey(const ValueKey('search-field')));
+  for (final element in find.byType(SearchView).evaluate()) {
+    final container = ProviderScope.containerOf(element);
+    final repository = container.read(searchHistoryRepositoryProvider);
+    final codec = container.read(searchQueryCodecProvider);
+    await repository.insertWithDedup(
+      id: 'golden_disease_history_1',
+      target: 'disease',
+      queryJson: codec.encode(const DiseaseSearchParams(keyword: '高血圧')),
+      searchedAt: DateTime.utc(2026, 5, 5, 8, 40),
+      totalCount: 14,
+    );
+    await repository.insertWithDedup(
+      id: 'golden_disease_history_2',
+      target: 'disease',
+      queryJson: codec.encode(const DiseaseSearchParams(keyword: '糖尿病')),
+      searchedAt: DateTime.utc(2026, 5, 4, 21, 10),
+      totalCount: 6,
+    );
+    await container.read(searchScreenProvider.notifier).loadHistory();
+  }
   await tester.pumpAndSettle();
   return null;
 }
 
 Future<Future<void> Function()?> _openEmptyHistory(WidgetTester tester) async {
-  await _tapAll(tester, find.byKey(const ValueKey('search-field')));
   await tester.pumpAndSettle();
   return null;
 }
@@ -387,7 +416,6 @@ Future<Future<void> Function()?> _openDiseaseEmptyHistory(
   WidgetTester tester,
 ) async {
   await _selectDiseaseTab(tester);
-  await _tapAll(tester, find.byKey(const ValueKey('search-field')));
   await tester.pumpAndSettle();
   return null;
 }

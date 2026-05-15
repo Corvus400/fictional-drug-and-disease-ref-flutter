@@ -13,6 +13,8 @@ class _SearchPhaseSection extends StatelessWidget {
     required this.onChangeDrugSort,
     required this.onChangeDiseaseSort,
     required this.onLoadMore,
+    required this.enableSortSheet,
+    required this.showIdleMasterState,
     required this.logDrugImageErrors,
   });
 
@@ -27,6 +29,8 @@ class _SearchPhaseSection extends StatelessWidget {
   final Future<void> Function(DrugSort sort) onChangeDrugSort;
   final Future<void> Function(DiseaseSort sort) onChangeDiseaseSort;
   final Future<void> Function() onLoadMore;
+  final bool enableSortSheet;
+  final bool showIdleMasterState;
   final bool logDrugImageErrors;
 
   @override
@@ -82,6 +86,7 @@ class _SearchPhaseSection extends StatelessWidget {
             onRemoveChipAt: onRemoveChipAt,
             onChangeDrugSort: onChangeDrugSort,
             onChangeDiseaseSort: onChangeDiseaseSort,
+            enableSortSheet: enableSortSheet,
           ),
           Expanded(
             child: Center(
@@ -302,6 +307,11 @@ class _SearchPhaseSection extends StatelessWidget {
       _ => null,
     };
     if (view == null) {
+      if (showIdleMasterState && phase is SearchPhaseIdle) {
+        return _SearchUtilityIdleMasterState(
+          emptyHistory: state.historyForTab.isEmpty,
+        );
+      }
       if (state.historyDropdownOpen) {
         return const SizedBox.shrink();
       }
@@ -342,6 +352,7 @@ class _SearchPhaseSection extends StatelessWidget {
             onRemoveChipAt: onRemoveChipAt,
             onChangeDrugSort: onChangeDrugSort,
             onChangeDiseaseSort: onChangeDiseaseSort,
+            enableSortSheet: enableSortSheet,
           ),
           switch (view) {
             DrugSearchResultsView(:final items) => Padding(
@@ -566,4 +577,681 @@ class _NoSearchHistoryState extends StatelessWidget {
       ),
     );
   }
+}
+
+class _SearchUtilityIdleMasterState extends StatelessWidget {
+  const _SearchUtilityIdleMasterState({required this.emptyHistory});
+
+  final bool emptyHistory;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final palette =
+        theme.extension<AppPalette>() ??
+        (theme.brightness == Brightness.dark
+            ? AppPalette.dark
+            : AppPalette.light);
+    return Center(
+      key: const ValueKey('search-utility-idle-master-state'),
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 320),
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              DecoratedBox(
+                decoration: BoxDecoration(
+                  color: palette.surfaceSubtle,
+                  borderRadius: BorderRadius.circular(32),
+                ),
+                child: SizedBox(
+                  width: 64,
+                  height: 64,
+                  child: Icon(Icons.search, size: 28, color: palette.muted),
+                ),
+              ),
+              const SizedBox(height: 16),
+              Text(
+                '検索キーワードを入力',
+                textAlign: TextAlign.center,
+                style: theme.textTheme.titleMedium?.copyWith(
+                  color: palette.muted,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              const SizedBox(height: 6),
+              Text(
+                emptyHistory
+                    ? '履歴はまだありません。検索すると右パネルに記録されます。'
+                    : '履歴やフィルタからも始められます。',
+                textAlign: TextAlign.center,
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: palette.muted,
+                  height: 1.6,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _SearchUtilityPane extends StatelessWidget {
+  const _SearchUtilityPane({
+    required this.state,
+    required this.palette,
+    required this.currentTime,
+    required this.onSelectHistory,
+    required this.onClearAllHistory,
+    required this.onResetFilter,
+    required this.onApplyFilter,
+    required this.onChangeDrugSort,
+    required this.onChangeDiseaseSort,
+  });
+
+  final SearchScreenState state;
+  final AppPalette palette;
+  final DateTime currentTime;
+  final Future<void> Function(SearchHistoryEnvelope entry) onSelectHistory;
+  final Future<void> Function() onClearAllHistory;
+  final Future<void> Function() onResetFilter;
+  final Future<void> Function() onApplyFilter;
+  final Future<void> Function(DrugSort sort) onChangeDrugSort;
+  final Future<void> Function(DiseaseSort sort) onChangeDiseaseSort;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
+    return DecoratedBox(
+      key: const ValueKey('search-utility-pane'),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surface,
+        border: Border(left: BorderSide(color: palette.hairline)),
+      ),
+      child: ListView(
+        padding: const EdgeInsets.fromLTRB(14, 12, 14, 20),
+        children: [
+          _SearchUtilityCard(
+            key: const ValueKey('search-utility-history-section'),
+            title: l10n.searchHistoryTitle,
+            child: _SearchUtilityHistorySection(
+              entries: state.historyForTab,
+              currentTime: currentTime,
+              palette: palette,
+              onSelect: onSelectHistory,
+              onClearAll: onClearAllHistory,
+            ),
+          ),
+          const SizedBox(height: 12),
+          _SearchUtilityCard(
+            key: const ValueKey('search-utility-filter-section'),
+            title: l10n.searchFilterTitle,
+            child: _SearchUtilityFilterSection(
+              tab: state.tab,
+              resultCount: _utilityResultCount(state),
+              onReset: onResetFilter,
+              onApply: onApplyFilter,
+            ),
+          ),
+          const SizedBox(height: 12),
+          _SearchUtilityCard(
+            key: const ValueKey('search-utility-sort-section'),
+            title: l10n.searchSortTitle,
+            child: _SearchUtilitySortSection(
+              state: state,
+              palette: palette,
+              onChangeDrugSort: onChangeDrugSort,
+              onChangeDiseaseSort: onChangeDiseaseSort,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _SearchUtilityCard extends StatelessWidget {
+  const _SearchUtilityCard({
+    required this.title,
+    required this.child,
+    super.key,
+  });
+
+  final String title;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final palette =
+        theme.extension<AppPalette>() ??
+        (theme.brightness == Brightness.dark
+            ? AppPalette.dark
+            : AppPalette.light);
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: palette.surfaceSubtle,
+        border: Border.all(color: palette.hairline, width: 0.5),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(
+              title,
+              style: theme.textTheme.titleSmall?.copyWith(
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            const SizedBox(height: 10),
+            child,
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _SearchUtilityHistorySection extends StatelessWidget {
+  const _SearchUtilityHistorySection({
+    required this.entries,
+    required this.currentTime,
+    required this.palette,
+    required this.onSelect,
+    required this.onClearAll,
+  });
+
+  final List<SearchHistoryEnvelope> entries;
+  final DateTime currentTime;
+  final AppPalette palette;
+  final Future<void> Function(SearchHistoryEnvelope entry) onSelect;
+  final Future<void> Function() onClearAll;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final visibleEntries = entries.take(SearchConstants.searchHistoryMaxItems);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        if (entries.isEmpty)
+          const _NoSearchHistoryState()
+        else
+          Column(
+            key: const ValueKey('search-utility-history-list'),
+            children: [
+              for (final entry in visibleEntries)
+                _SearchUtilityHistoryRow(
+                  entry: entry,
+                  currentTime: currentTime,
+                  palette: palette,
+                  onSelect: onSelect,
+                ),
+            ],
+          ),
+        const SizedBox(height: 8),
+        Align(
+          alignment: Alignment.centerRight,
+          child: TextButton(
+            key: const ValueKey('search-utility-history-clear'),
+            onPressed: entries.isEmpty ? null : () => unawaited(onClearAll()),
+            child: Text(l10n.searchHistoryClear),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _SearchUtilityHistoryRow extends StatelessWidget {
+  const _SearchUtilityHistoryRow({
+    required this.entry,
+    required this.currentTime,
+    required this.palette,
+    required this.onSelect,
+  });
+
+  final SearchHistoryEnvelope entry;
+  final DateTime currentTime;
+  final AppPalette palette;
+  final Future<void> Function(SearchHistoryEnvelope entry) onSelect;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
+    return InkWell(
+      key: ValueKey('search-utility-history-row-${entry.id}'),
+      onTap: () => unawaited(onSelect(entry)),
+      borderRadius: BorderRadius.circular(8),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 7),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              entry.queryText,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            const SizedBox(height: 3),
+            Wrap(
+              spacing: 8,
+              runSpacing: 4,
+              crossAxisAlignment: WrapCrossAlignment.center,
+              children: [
+                Text(l10n.searchToolbarTotal(entry.totalCount)),
+                Text(formatRelativeTime(currentTime, entry.searchedAt, l10n)),
+                if (entry.filterCount > 0)
+                  Container(
+                    padding: const EdgeInsets.fromLTRB(7, 2, 8, 2),
+                    decoration: BoxDecoration(
+                      color: palette.primarySoft,
+                      border: Border.all(
+                        color: palette.primaryRing,
+                        width: 0.5,
+                      ),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Text(
+                      l10n.searchHistoryFilterCount(entry.filterCount),
+                      style: TextStyle(
+                        color: palette.rxInk,
+                        fontSize: 10.5,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _SearchUtilityFilterSection extends StatelessWidget {
+  const _SearchUtilityFilterSection({
+    required this.tab,
+    required this.resultCount,
+    required this.onReset,
+    required this.onApply,
+  });
+
+  final SearchTab tab;
+  final int resultCount;
+  final Future<void> Function() onReset;
+  final Future<void> Function() onApply;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final axes = _utilityFilterAxes(l10n, tab);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Text(
+          '${axes.length} 軸 · 軸内 OR / 軸間 AND',
+          key: const ValueKey('search-utility-filter-policy'),
+          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
+          ),
+        ),
+        const SizedBox(height: 8),
+        for (final axis in axes) _SearchUtilityAxisTile(axis: axis),
+        const SizedBox(height: 10),
+        Row(
+          children: [
+            TextButton(
+              key: const ValueKey('search-utility-filter-reset'),
+              onPressed: () => unawaited(onReset()),
+              child: Text(l10n.searchFilterReset),
+            ),
+            const SizedBox(width: 8),
+            Expanded(
+              child: FilledButton(
+                key: const ValueKey('search-utility-filter-apply'),
+                onPressed: () => unawaited(onApply()),
+                child: Text(l10n.searchFilterApplyWithCount(resultCount)),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+class _SearchUtilityAxisTile extends StatelessWidget {
+  const _SearchUtilityAxisTile({required this.axis});
+
+  final _UtilityFilterAxis axis;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final palette =
+        theme.extension<AppPalette>() ??
+        (theme.brightness == Brightness.dark
+            ? AppPalette.dark
+            : AppPalette.light);
+    return DecoratedBox(
+      key: ValueKey('search-utility-filter-axis-${axis.id}'),
+      decoration: BoxDecoration(
+        color: Colors.transparent,
+        border: Border.all(color: palette.hairline, width: 0.5),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(10, 8, 10, 8),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    axis.label,
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 2),
+            Text(
+              axis.meta,
+              style: theme.textTheme.bodySmall?.copyWith(color: palette.muted),
+            ),
+            const SizedBox(height: 2),
+            Text(
+              'すべて',
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: palette.muted,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _SearchUtilitySortSection extends StatelessWidget {
+  const _SearchUtilitySortSection({
+    required this.state,
+    required this.palette,
+    required this.onChangeDrugSort,
+    required this.onChangeDiseaseSort,
+  });
+
+  final SearchScreenState state;
+  final AppPalette palette;
+  final Future<void> Function(DrugSort sort) onChangeDrugSort;
+  final Future<void> Function(DiseaseSort sort) onChangeDiseaseSort;
+
+  @override
+  Widget build(BuildContext context) {
+    final options = _utilitySortOptions(AppLocalizations.of(context)!, state);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        for (final option in options)
+          _SearchUtilitySortOptionTile(
+            option: option,
+            palette: palette,
+            onTap: () {
+              switch (option.value) {
+                case final DrugSort sort:
+                  unawaited(onChangeDrugSort(sort));
+                case final DiseaseSort sort:
+                  unawaited(onChangeDiseaseSort(sort));
+              }
+            },
+          ),
+      ],
+    );
+  }
+}
+
+class _SearchUtilitySortOptionTile extends StatelessWidget {
+  const _SearchUtilitySortOptionTile({
+    required this.option,
+    required this.palette,
+    required this.onTap,
+  });
+
+  final _UtilitySortOption option;
+  final AppPalette palette;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return InkWell(
+      key: ValueKey('search-utility-sort-${option.keySuffix}'),
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(8),
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          color: option.selected ? palette.primarySoft : Colors.transparent,
+          border: Border.all(
+            color: option.selected ? palette.primaryRing : palette.hairline,
+            width: 0.5,
+          ),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 9),
+          child: Row(
+            children: [
+              Expanded(
+                child: Text(
+                  option.label,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: option.selected ? palette.primary : null,
+                    fontWeight: option.selected
+                        ? FontWeight.w700
+                        : FontWeight.w500,
+                  ),
+                ),
+              ),
+              Container(
+                key: option.selected
+                    ? const ValueKey('search-utility-sort-radio-selected')
+                    : null,
+                width: 16,
+                height: 16,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(color: palette.primary, width: 1.5),
+                ),
+                child: option.selected
+                    ? Center(
+                        child: Container(
+                          width: 8,
+                          height: 8,
+                          decoration: BoxDecoration(
+                            color: palette.primary,
+                            shape: BoxShape.circle,
+                          ),
+                        ),
+                      )
+                    : null,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+List<_UtilityFilterAxis> _utilityFilterAxes(
+  AppLocalizations l10n,
+  SearchTab tab,
+) {
+  return switch (tab) {
+    SearchTab.drugs => [
+      _UtilityFilterAxis(
+        id: 'regulatory_class',
+        label: l10n.searchFilterDrugRegulatoryClass,
+        meta: '11 値・複数選択 OR',
+      ),
+      _UtilityFilterAxis(
+        id: 'dosage_form',
+        label: l10n.searchFilterDrugDosageForm,
+        meta: '13 値・複数選択 OR',
+      ),
+      _UtilityFilterAxis(
+        id: 'route',
+        label: l10n.searchFilterDrugRoute,
+        meta: '8 値・複数選択 OR',
+      ),
+      _UtilityFilterAxis(
+        id: 'atc',
+        label: l10n.searchFilterDrugAtc,
+        meta: '14 値・単一選択',
+      ),
+      _UtilityFilterAxis(
+        id: 'therapeutic_category',
+        label: l10n.searchFilterDrugTherapeuticCategory,
+        meta: '階層選択',
+      ),
+      _UtilityFilterAxis(
+        id: 'adverse_reaction_keyword',
+        label: l10n.searchFilterDrugAdverseReactionKeyword,
+        meta: '部分一致',
+      ),
+      _UtilityFilterAxis(
+        id: 'precaution_category',
+        label: l10n.searchFilterDrugPrecautionCategory,
+        meta: '8 値・複数選択 OR',
+      ),
+    ],
+    SearchTab.diseases => [
+      _UtilityFilterAxis(
+        id: 'icd10_chapter',
+        label: l10n.searchFilterDiseaseIcd10Chapter,
+        meta: '22 値・複数選択 OR',
+      ),
+      _UtilityFilterAxis(
+        id: 'department',
+        label: l10n.searchFilterDiseaseDepartment,
+        meta: '診療科・複数選択 OR',
+      ),
+      _UtilityFilterAxis(
+        id: 'chronicity',
+        label: l10n.searchFilterDiseaseChronicity,
+        meta: '急性 / 慢性',
+      ),
+      _UtilityFilterAxis(
+        id: 'infectious',
+        label: l10n.searchFilterDiseaseInfectious,
+        meta: '真偽値',
+      ),
+      _UtilityFilterAxis(
+        id: 'symptom_keyword',
+        label: l10n.searchFilterDiseaseSymptomKeyword,
+        meta: '部分一致',
+      ),
+      _UtilityFilterAxis(
+        id: 'onset_pattern',
+        label: l10n.searchFilterDiseaseOnsetPattern,
+        meta: '複数選択 OR',
+      ),
+      _UtilityFilterAxis(
+        id: 'exam_category',
+        label: l10n.searchFilterDiseaseExamCategory,
+        meta: '複数選択 OR',
+      ),
+      _UtilityFilterAxis(
+        id: 'has_pharmacological_treatment',
+        label: l10n.searchFilterDiseaseHasPharmacologicalTreatment,
+        meta: '真偽値',
+      ),
+      _UtilityFilterAxis(
+        id: 'has_severity_grading',
+        label: l10n.searchFilterDiseaseHasSeverityGrading,
+        meta: '真偽値',
+      ),
+    ],
+  };
+}
+
+List<_UtilitySortOption> _utilitySortOptions(
+  AppLocalizations l10n,
+  SearchScreenState state,
+) {
+  return switch (state.tab) {
+    SearchTab.drugs => [
+      for (final sort in DrugSort.values)
+        _UtilitySortOption(
+          label: _drugSortLabel(l10n, sort),
+          wireValue: sort.serialName,
+          selected: (state.drugParams.sort ?? DrugSort.revisedAtDesc) == sort,
+          value: sort,
+        ),
+    ],
+    SearchTab.diseases => [
+      for (final sort in DiseaseSort.values)
+        _UtilitySortOption(
+          label: _diseaseSortLabel(l10n, sort),
+          wireValue: sort.serialName,
+          selected:
+              (state.diseaseParams.sort ?? DiseaseSort.revisedAtDesc) == sort,
+          value: sort,
+        ),
+    ],
+  };
+}
+
+int _utilityResultCount(SearchScreenState state) {
+  return switch (state.phase) {
+    SearchPhaseResults(:final view) => view.totalCount,
+    SearchPhaseLoadingMore(:final previous) => previous.totalCount,
+    SearchPhaseEmpty() => 0,
+    _ => 0,
+  };
+}
+
+final class _UtilityFilterAxis {
+  const _UtilityFilterAxis({
+    required this.id,
+    required this.label,
+    required this.meta,
+  });
+
+  final String id;
+  final String label;
+  final String meta;
+}
+
+final class _UtilitySortOption {
+  const _UtilitySortOption({
+    required this.label,
+    required this.wireValue,
+    required this.selected,
+    required this.value,
+  });
+
+  final String label;
+  final String wireValue;
+  final bool selected;
+  final Object value;
+
+  String get keySuffix => wireValue.replaceFirst(RegExp('^-'), '');
 }

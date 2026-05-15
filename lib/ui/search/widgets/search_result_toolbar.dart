@@ -8,6 +8,7 @@ class _SearchResultToolbar extends StatefulWidget {
     required this.onRemoveChipAt,
     required this.onChangeDrugSort,
     required this.onChangeDiseaseSort,
+    required this.enableSortSheet,
   });
 
   final SearchScreenState state;
@@ -16,6 +17,7 @@ class _SearchResultToolbar extends StatefulWidget {
   final Future<void> Function(int index) onRemoveChipAt;
   final Future<void> Function(DrugSort sort) onChangeDrugSort;
   final Future<void> Function(DiseaseSort sort) onChangeDiseaseSort;
+  final bool enableSortSheet;
 
   @override
   State<_SearchResultToolbar> createState() => _SearchResultToolbarState();
@@ -183,12 +185,14 @@ class _SearchResultToolbarState extends State<_SearchResultToolbar> {
                         minimumSize: Size.zero,
                         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                       ),
-                      onPressed: () => _showSortSheet(
-                        context,
-                        widget.state,
-                        onChangeDrugSort: widget.onChangeDrugSort,
-                        onChangeDiseaseSort: widget.onChangeDiseaseSort,
-                      ),
+                      onPressed: widget.enableSortSheet
+                          ? () => _showSortSheet(
+                              context,
+                              widget.state,
+                              onChangeDrugSort: widget.onChangeDrugSort,
+                              onChangeDiseaseSort: widget.onChangeDiseaseSort,
+                            )
+                          : null,
                       child: Text(
                         _sortToolbarLabel(l10n, widget.state),
                         overflow: TextOverflow.ellipsis,
