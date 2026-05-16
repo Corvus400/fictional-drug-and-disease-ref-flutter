@@ -458,6 +458,7 @@ void main() {
         page: 1,
         pageSize: 20,
         keyword: '復元キーワード',
+        keywordTarget: any(named: 'keywordTarget'),
       ),
     ).called(1);
     expect(container.read(searchScreenProvider).historyDropdownOpen, false);
@@ -1120,6 +1121,7 @@ void main() {
         page: any(named: 'page'),
         pageSize: any(named: 'pageSize'),
         keyword: any(named: 'keyword'),
+        keywordTarget: any(named: 'keywordTarget'),
       ),
     ).thenAnswer((_) async => fixture);
 
@@ -1190,6 +1192,7 @@ void main() {
         page: any(named: 'page'),
         pageSize: any(named: 'pageSize'),
         keyword: any(named: 'keyword'),
+        keywordTarget: any(named: 'keywordTarget'),
       ),
     ).thenAnswer((invocation) async {
       final page = invocation.namedArguments[#page] as int;
@@ -1283,6 +1286,7 @@ void main() {
         page: any(named: 'page'),
         pageSize: any(named: 'pageSize'),
         keyword: any(named: 'keyword'),
+        keywordTarget: any(named: 'keywordTarget'),
       ),
     ).thenAnswer((_) async => firstPage);
 
@@ -1352,6 +1356,7 @@ void main() {
         page: any(named: 'page'),
         pageSize: any(named: 'pageSize'),
         keyword: any(named: 'keyword'),
+        keywordTarget: any(named: 'keywordTarget'),
       ),
     ).thenAnswer((_) async => fixture);
 
@@ -1430,6 +1435,7 @@ void main() {
           page: any(named: 'page'),
           pageSize: any(named: 'pageSize'),
           keyword: any(named: 'keyword'),
+          keywordTarget: any(named: 'keywordTarget'),
         ),
       ).thenAnswer((_) async => fixture);
       when(
@@ -1505,6 +1511,7 @@ void main() {
         page: any(named: 'page'),
         pageSize: any(named: 'pageSize'),
         keyword: any(named: 'keyword'),
+        keywordTarget: any(named: 'keywordTarget'),
       ),
     ).thenAnswer((_) async => fixture);
 
@@ -1546,6 +1553,7 @@ void main() {
         page: any(named: 'page'),
         pageSize: any(named: 'pageSize'),
         keyword: any(named: 'keyword'),
+        keywordTarget: any(named: 'keywordTarget'),
       ),
     ).thenAnswer((_) async => scrollableFixture);
 
@@ -1580,6 +1588,7 @@ void main() {
         page: 2,
         pageSize: 20,
         keyword: 'load more keyword',
+        keywordTarget: any(named: 'keywordTarget'),
       ),
     ).called(greaterThanOrEqualTo(1));
   });
@@ -1595,6 +1604,7 @@ void main() {
         page: any(named: 'page'),
         pageSize: any(named: 'pageSize'),
         keyword: any(named: 'keyword'),
+        keywordTarget: any(named: 'keywordTarget'),
       ),
     ).thenAnswer((_) async => scrollableFixture);
 
@@ -1643,6 +1653,7 @@ void main() {
         page: 2,
         pageSize: 20,
         keyword: 'inertial load more keyword',
+        keywordTarget: any(named: 'keywordTarget'),
       ),
     ).called(greaterThanOrEqualTo(1));
   });
@@ -1660,6 +1671,7 @@ void main() {
         page: any(named: 'page'),
         pageSize: any(named: 'pageSize'),
         keyword: any(named: 'keyword'),
+        keywordTarget: any(named: 'keywordTarget'),
       ),
     ).thenAnswer(
       (_) async => _drugListFixture().copyWith(items: [], totalCount: 0),
@@ -1699,6 +1711,7 @@ void main() {
         page: any(named: 'page'),
         pageSize: any(named: 'pageSize'),
         keyword: any(named: 'keyword'),
+        keywordTarget: any(named: 'keywordTarget'),
       ),
     ).thenAnswer(
       (_) async => _drugListFixture().copyWith(items: [], totalCount: 0),
@@ -1746,6 +1759,7 @@ void main() {
         page: any(named: 'page'),
         pageSize: any(named: 'pageSize'),
         keyword: any(named: 'keyword'),
+        keywordTarget: any(named: 'keywordTarget'),
       ),
     ).thenAnswer(
       (_) async => _drugListFixture().copyWith(items: [], totalCount: 0),
@@ -1808,6 +1822,7 @@ void main() {
         regulatoryClass: any(named: 'regulatoryClass'),
         dosageForm: any(named: 'dosageForm'),
         keyword: any(named: 'keyword'),
+        keywordTarget: any(named: 'keywordTarget'),
       ),
     ).thenAnswer(
       (_) async => _drugListFixture().copyWith(items: [], totalCount: 0),
@@ -1868,6 +1883,7 @@ void main() {
         page: any(named: 'page'),
         pageSize: any(named: 'pageSize'),
         keyword: any(named: 'keyword'),
+        keywordTarget: any(named: 'keywordTarget'),
       ),
     ).thenThrow(
       DioException(
@@ -1932,6 +1948,7 @@ void main() {
           page: any(named: 'page'),
           pageSize: any(named: 'pageSize'),
           keyword: any(named: 'keyword'),
+          keywordTarget: any(named: 'keywordTarget'),
         ),
       ).thenThrow(
         DioException(
@@ -1987,6 +2004,7 @@ void main() {
         page: any(named: 'page'),
         pageSize: any(named: 'pageSize'),
         keyword: any(named: 'keyword'),
+        keywordTarget: any(named: 'keywordTarget'),
       ),
     ).thenThrow(
       DioException(
@@ -2041,6 +2059,7 @@ void main() {
         page: any(named: 'page'),
         pageSize: any(named: 'pageSize'),
         keyword: any(named: 'keyword'),
+        keywordTarget: any(named: 'keywordTarget'),
       ),
     ).thenAnswer((_) async {
       callCount += 1;
@@ -2236,6 +2255,7 @@ void main() {
         adverseReactionKeyword: '浮腫',
         precautionCategory: ['GERIATRIC'],
         keyword: any(named: 'keyword'),
+        keywordTarget: any(named: 'keywordTarget'),
       ),
     ).called(1);
   });
@@ -2255,6 +2275,7 @@ void main() {
         regulatoryClass: any(named: 'regulatoryClass'),
         dosageForm: any(named: 'dosageForm'),
         keyword: any(named: 'keyword'),
+        keywordTarget: any(named: 'keywordTarget'),
       ),
     ).thenAnswer((_) async => _drugListFixture());
     await tester.pumpWidget(
@@ -2302,6 +2323,7 @@ void main() {
         regulatoryClass: any(named: 'regulatoryClass'),
         dosageForm: any(named: 'dosageForm'),
         keyword: any(named: 'keyword'),
+        keywordTarget: any(named: 'keywordTarget'),
       ),
     ).thenAnswer((_) async => _drugListFixture());
     await tester.pumpWidget(
@@ -2353,6 +2375,7 @@ void main() {
         department: any(named: 'department'),
         chronicity: any(named: 'chronicity'),
         keyword: any(named: 'keyword'),
+        keywordTarget: any(named: 'keywordTarget'),
         onsetPattern: any(named: 'onsetPattern'),
         examCategory: any(named: 'examCategory'),
       ),
@@ -2494,6 +2517,7 @@ void main() {
         department: ['cardiology'],
         infectious: any(named: 'infectious'),
         keyword: any(named: 'keyword'),
+        keywordTarget: any(named: 'keywordTarget'),
         symptomKeyword: any(named: 'symptomKeyword'),
         hasPharmacologicalTreatment: any(
           named: 'hasPharmacologicalTreatment',
@@ -2512,6 +2536,7 @@ void main() {
         page: any(named: 'page'),
         pageSize: any(named: 'pageSize'),
         keyword: any(named: 'keyword'),
+        keywordTarget: any(named: 'keywordTarget'),
       ),
     ).thenAnswer((_) async => _diseaseListFixture());
     await tester.pumpWidget(
@@ -2549,6 +2574,7 @@ void main() {
         page: any(named: 'page'),
         pageSize: any(named: 'pageSize'),
         keyword: any(named: 'keyword'),
+        keywordTarget: any(named: 'keywordTarget'),
       ),
     ).thenAnswer((_) async => _diseaseListFixtureForChapter('chapter_ii'));
     await tester.pumpWidget(
@@ -2586,6 +2612,7 @@ void main() {
         page: any(named: 'page'),
         pageSize: any(named: 'pageSize'),
         keyword: any(named: 'keyword'),
+        keywordTarget: any(named: 'keywordTarget'),
       ),
     ).thenAnswer((_) async => _diseaseListFixture());
     await tester.pumpWidget(
@@ -2634,6 +2661,7 @@ void main() {
           page: any(named: 'page'),
           pageSize: any(named: 'pageSize'),
           keyword: any(named: 'keyword'),
+          keywordTarget: any(named: 'keywordTarget'),
         ),
       ).thenAnswer((_) async => _diseaseListFixture());
 
@@ -2685,6 +2713,7 @@ void main() {
         page: any(named: 'page'),
         pageSize: any(named: 'pageSize'),
         keyword: any(named: 'keyword'),
+        keywordTarget: any(named: 'keywordTarget'),
       ),
     ).thenAnswer((_) async => _drugListFixture());
     await tester.pumpWidget(
@@ -2740,6 +2769,7 @@ void main() {
           page: any(named: 'page'),
           pageSize: any(named: 'pageSize'),
           keyword: any(named: 'keyword'),
+          keywordTarget: any(named: 'keywordTarget'),
         ),
       ).thenAnswer((_) async => _drugListFixture());
       final imageCacheManager = _MockBaseCacheManager();
@@ -2800,6 +2830,7 @@ void main() {
         page: any(named: 'page'),
         pageSize: any(named: 'pageSize'),
         keyword: any(named: 'keyword'),
+        keywordTarget: any(named: 'keywordTarget'),
       ),
     ).thenAnswer((_) async => _drugListFixture());
     await tester.pumpWidget(
@@ -2840,6 +2871,7 @@ void main() {
         page: any(named: 'page'),
         pageSize: any(named: 'pageSize'),
         keyword: any(named: 'keyword'),
+        keywordTarget: any(named: 'keywordTarget'),
         sort: any(named: 'sort'),
       ),
     ).thenAnswer((_) async => _drugListFixture());
@@ -2873,6 +2905,7 @@ void main() {
         page: 1,
         pageSize: 20,
         keyword: 'sort apply keyword',
+        keywordTarget: any(named: 'keywordTarget'),
         sort: 'atc_code',
       ),
     ).called(1);
@@ -2890,6 +2923,7 @@ void main() {
           page: any(named: 'page'),
           pageSize: any(named: 'pageSize'),
           keyword: any(named: 'keyword'),
+          keywordTarget: any(named: 'keywordTarget'),
         ),
       ).thenAnswer((_) => pending.future);
 

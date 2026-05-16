@@ -79,14 +79,21 @@ final class SearchQueryCodec {
     );
   }
 
-  /// Counts active filter fields, excluding keyword, sort, page and page size.
+  /// Counts active filter fields, excluding search metadata and pagination.
   int filterCountFor(Object params) {
     final map = switch (params) {
       DrugSearchParams() => _encodeDrug(params),
       DiseaseSearchParams() => _encodeDisease(params),
       _ => throw ArgumentError.value(params, 'params', 'Unsupported params'),
     };
-    const ignored = {'keyword', 'sort', 'page', 'page_size'};
+    const ignored = {
+      'keyword',
+      'keyword_match',
+      'keyword_target',
+      'sort',
+      'page',
+      'page_size',
+    };
     return map.entries
         .where((entry) => !ignored.contains(entry.key))
         .where((entry) => _hasValue(entry.value))

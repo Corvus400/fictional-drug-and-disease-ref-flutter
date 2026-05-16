@@ -79,6 +79,7 @@ void main() {
           page: any(named: 'page'),
           pageSize: any(named: 'pageSize'),
           keyword: any(named: 'keyword'),
+          keywordTarget: any(named: 'keywordTarget'),
         ),
       ).thenAnswer((_) async => dto);
       final notifier = container.read(searchScreenProvider.notifier)
@@ -97,9 +98,51 @@ void main() {
           page: 1,
           pageSize: 20,
           keyword: 'アムロ',
+          keywordTarget: DrugKeywordTarget.all.serialName,
         ),
       ).called(1);
     });
+
+    test(
+      'performSearch sends keywordTarget all for drug keyword search',
+      () async {
+        _stubDrugSearch(drugApiClient);
+        final notifier = container.read(searchScreenProvider.notifier)
+          ..changeQueryText('999612426256');
+
+        await notifier.performSearch();
+
+        verify(
+          () => drugApiClient.getDrugs(
+            page: 1,
+            pageSize: 20,
+            keyword: '999612426256',
+            keywordTarget: DrugKeywordTarget.all.serialName,
+          ),
+        ).called(1);
+      },
+    );
+
+    test(
+      'performSearch sends keywordTarget all for disease keyword search',
+      () async {
+        _stubDiseaseSearch(diseaseApiClient);
+        final notifier = container.read(searchScreenProvider.notifier);
+        await notifier.changeTab(SearchTab.diseases);
+        notifier.changeQueryText('発熱');
+
+        await notifier.performSearch();
+
+        verify(
+          () => diseaseApiClient.getDiseases(
+            page: 1,
+            pageSize: 20,
+            keyword: '発熱',
+            keywordTarget: DiseaseKeywordTarget.all.serialName,
+          ),
+        ).called(1);
+      },
+    );
 
     test('selectHistory restores query and searches immediately', () async {
       final dto = _drugListFixture();
@@ -108,6 +151,7 @@ void main() {
           page: any(named: 'page'),
           pageSize: any(named: 'pageSize'),
           keyword: any(named: 'keyword'),
+          keywordTarget: any(named: 'keywordTarget'),
         ),
       ).thenAnswer((_) async => dto);
       const params = DrugSearchParams(keyword: '履歴');
@@ -153,6 +197,9 @@ void main() {
           pageSize: 20,
           categoryAtc: any(named: 'categoryAtc'),
           keyword: any(named: 'keyword'),
+          keywordMatch: any(named: 'keywordMatch'),
+          keywordTarget: any(named: 'keywordTarget'),
+          sort: any(named: 'sort'),
         ),
       ).called(2);
     });
@@ -238,6 +285,8 @@ void main() {
             chronicity: any(named: 'chronicity'),
             infectious: any(named: 'infectious'),
             keyword: any(named: 'keyword'),
+            keywordMatch: any(named: 'keywordMatch'),
+            keywordTarget: any(named: 'keywordTarget'),
             symptomKeyword: any(named: 'symptomKeyword'),
             onsetPattern: any(named: 'onsetPattern'),
             examCategory: any(named: 'examCategory'),
@@ -245,6 +294,7 @@ void main() {
               named: 'hasPharmacologicalTreatment',
             ),
             hasSeverityGrading: any(named: 'hasSeverityGrading'),
+            sort: any(named: 'sort'),
           ),
         ).called(1);
       },
@@ -858,8 +908,11 @@ void _stubDrugSearch(_MockDrugApiClient drugApiClient) {
       dosageForm: any(named: 'dosageForm'),
       route: any(named: 'route'),
       keyword: any(named: 'keyword'),
+      keywordMatch: any(named: 'keywordMatch'),
+      keywordTarget: any(named: 'keywordTarget'),
       adverseReactionKeyword: any(named: 'adverseReactionKeyword'),
       precautionCategory: any(named: 'precautionCategory'),
+      sort: any(named: 'sort'),
     ),
   ).thenAnswer((_) async => _drugListFixture());
 }
@@ -875,8 +928,11 @@ void _stubEmptyDrugSearch(_MockDrugApiClient drugApiClient) {
       dosageForm: any(named: 'dosageForm'),
       route: any(named: 'route'),
       keyword: any(named: 'keyword'),
+      keywordMatch: any(named: 'keywordMatch'),
+      keywordTarget: any(named: 'keywordTarget'),
       adverseReactionKeyword: any(named: 'adverseReactionKeyword'),
       precautionCategory: any(named: 'precautionCategory'),
+      sort: any(named: 'sort'),
     ),
   ).thenAnswer((_) async => _emptyDrugListFixture());
 }
@@ -891,6 +947,8 @@ void _stubDiseaseSearch(_MockDiseaseApiClient diseaseApiClient) {
       chronicity: any(named: 'chronicity'),
       infectious: any(named: 'infectious'),
       keyword: any(named: 'keyword'),
+      keywordMatch: any(named: 'keywordMatch'),
+      keywordTarget: any(named: 'keywordTarget'),
       symptomKeyword: any(named: 'symptomKeyword'),
       onsetPattern: any(named: 'onsetPattern'),
       examCategory: any(named: 'examCategory'),
@@ -898,6 +956,7 @@ void _stubDiseaseSearch(_MockDiseaseApiClient diseaseApiClient) {
         named: 'hasPharmacologicalTreatment',
       ),
       hasSeverityGrading: any(named: 'hasSeverityGrading'),
+      sort: any(named: 'sort'),
     ),
   ).thenAnswer((_) async => _diseaseListFixture());
 }

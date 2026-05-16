@@ -15,7 +15,7 @@ void main() {
         pageSize: 20,
         keyword: 'アムロ',
         keywordMatch: KeywordMatch.prefix,
-        keywordTarget: DrugKeywordTarget.both,
+        keywordTarget: DrugKeywordTarget.all,
         regulatoryClass: ['poisonous', 'prescription_required'],
         dosageForm: ['tablet'],
         sort: DrugSort.atcCode,
@@ -26,11 +26,11 @@ void main() {
       final decoded = codec.decodeDrug(jsonText);
 
       expect(json['keyword_match'], 'prefix');
-      expect(json['keyword_target'], 'both');
+      expect(json['keyword_target'], 'all');
       expect(json['sort'], 'atc_code');
       expect(decoded.keyword, 'アムロ');
       expect(decoded.keywordMatch, KeywordMatch.prefix);
-      expect(decoded.keywordTarget, DrugKeywordTarget.both);
+      expect(decoded.keywordTarget, DrugKeywordTarget.all);
       expect(decoded.regulatoryClass, ['poisonous', 'prescription_required']);
       expect(decoded.dosageForm, ['tablet']);
       expect(decoded.sort, DrugSort.atcCode);
@@ -50,7 +50,7 @@ void main() {
         pageSize: 20,
         keyword: '高血圧',
         keywordMatch: KeywordMatch.partial,
-        keywordTarget: DiseaseKeywordTarget.name,
+        keywordTarget: DiseaseKeywordTarget.all,
         icd10Chapter: ['I00-I99'],
         infectious: false,
         hasPharmacologicalTreatment: true,
@@ -61,7 +61,7 @@ void main() {
 
       expect(decoded.keyword, '高血圧');
       expect(decoded.keywordMatch, KeywordMatch.partial);
-      expect(decoded.keywordTarget, DiseaseKeywordTarget.name);
+      expect(decoded.keywordTarget, DiseaseKeywordTarget.all);
       expect(decoded.icd10Chapter, ['I00-I99']);
       expect(decoded.infectious, isFalse);
       expect(decoded.hasPharmacologicalTreatment, isTrue);
@@ -73,6 +73,8 @@ void main() {
         page: 3,
         pageSize: 20,
         keyword: 'アムロ',
+        keywordMatch: KeywordMatch.partial,
+        keywordTarget: DrugKeywordTarget.all,
         sort: DrugSort.revisedAtDesc,
         regulatoryClass: ['poisonous'],
         dosageForm: ['tablet'],

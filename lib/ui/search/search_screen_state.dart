@@ -34,8 +34,16 @@ final class SearchScreenState {
   factory SearchScreenState.initial() => const SearchScreenState(
     tab: SearchTab.drugs,
     queryText: '',
-    drugParams: DrugSearchParams(page: 1, pageSize: 20),
-    diseaseParams: DiseaseSearchParams(page: 1, pageSize: 20),
+    drugParams: DrugSearchParams(
+      page: 1,
+      pageSize: 20,
+      keywordTarget: DrugKeywordTarget.all,
+    ),
+    diseaseParams: DiseaseSearchParams(
+      page: 1,
+      pageSize: 20,
+      keywordTarget: DiseaseKeywordTarget.all,
+    ),
     phase: SearchPhase.idle(),
     historyForTab: [],
     historyDropdownOpen: false,
