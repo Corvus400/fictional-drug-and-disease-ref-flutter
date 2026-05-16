@@ -102,6 +102,14 @@ jobs:
           fi
           echo "pull_request_number=$EXPECTED_PULL_REQUEST_NUMBER" >> "$GITHUB_OUTPUT"
 
+      - name: Preserve PR metadata
+        if: steps.download-pr.outcome == 'success'
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/pr-metadata"
+          cp NR BASE_SHA HEAD_SHA golden-baseline-files.tsv "$RUNNER_TEMP/pr-metadata/"
+
       - name: main checkout
         id: checkout-main
         if: steps.download-pr.outcome == 'success'
@@ -151,22 +159,20 @@ jobs:
       - id: collect-golden-baseline-changes
         name: Collect golden baseline changes
         if: steps.download-pr.outcome == 'success'
-        env:
-          GH_TOKEN: ${{ github.token }}
-          PR_NUMBER: ${{ steps.get-pull-request-number.outputs.pull_request_number }}
         shell: bash
         run: |
           set -euo pipefail
 
-          pr_shas="$(gh api "repos/${{ github.repository }}/pulls/$PR_NUMBER" --jq '[.base.sha, .head.sha] | @tsv')"
-          IFS=$'\t' read -r base_sha head_sha <<< "$pr_shas"
+          cp "$RUNNER_TEMP/pr-metadata/golden-baseline-files.tsv" golden-baseline-files.tsv
+          base_sha="$(cat "$RUNNER_TEMP/pr-metadata/BASE_SHA")"
+          head_sha="$(cat "$RUNNER_TEMP/pr-metadata/HEAD_SHA")"
 
           echo "base_sha=$base_sha" >> "$GITHUB_OUTPUT"
           echo "head_sha=$head_sha" >> "$GITHUB_OUTPUT"
 
-          gh api --paginate "repos/${{ github.repository }}/pulls/$PR_NUMBER/files" \
-            --jq '.[] | select(.filename | test("^test/.*/goldens/.*/.*\\.png$")) | [.status, .filename, (.previous_filename // "")] | @tsv' \
-            > golden-baseline-files.tsv
+          if [ ! -f golden-baseline-files.tsv ]; then
+            : > golden-baseline-files.tsv
+          fi
 
           baseline_change_count="$(wc -l < golden-baseline-files.tsv | tr -d ' ')"
           has_baseline_changes="false"
@@ -271,7 +277,10 @@ jobs:
 
             if [ "${#files[@]}" -gt 0 ]; then
               echo
-              echo "## Golden comparator mismatches"
+              echo "## Golden test mismatches"
+              echo
+              echo "These images compare rendered output against the golden files committed in this PR. They are not base-branch baseline comparisons; committed golden PNG changes against the base branch are shown in the section below."
+              echo
               echo "| File name | Image |"
               echo "|-------|-------|"
             fi
