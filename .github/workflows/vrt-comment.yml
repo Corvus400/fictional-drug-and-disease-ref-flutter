@@ -277,11 +277,11 @@ jobs:
 
             if [ "${#files[@]}" -gt 0 ]; then
               echo
-              echo "## Golden test mismatches"
+              echo "## Golden VRT differences"
               echo
-              echo "These images compare rendered output against the golden files committed in this PR. They are not base-branch baseline comparisons; committed golden PNG changes against the base branch are shown in the section below."
+              echo "These images compare the base branch golden output against the PR branch rendered output."
               echo
-              echo "| File name | Image |"
+              echo "| File name | main / diff / PR |"
               echo "|-------|-------|"
             fi
           } >> "$GITHUB_OUTPUT"
