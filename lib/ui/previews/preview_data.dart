@@ -82,9 +82,21 @@ const Categories previewCategories = Categories(
     AtcEntry(code: 'N', label: '神経系'),
   ],
   therapeuticCategories: [
-    TherapeuticCategoryEntry(id: 'ca_antagonist', label: 'Ca拮抗薬'),
-    TherapeuticCategoryEntry(id: 'antibacterial', label: '抗菌薬'),
-    TherapeuticCategoryEntry(id: 'analgesic', label: '鎮痛薬'),
+    TherapeuticCategoryEntry(
+      id: 'ca_antagonist',
+      queryValue: 'CA_ANTAGONIST',
+      label: 'Ca拮抗薬',
+    ),
+    TherapeuticCategoryEntry(
+      id: 'antibacterial',
+      queryValue: 'ANTIBACTERIAL',
+      label: '抗菌薬',
+    ),
+    TherapeuticCategoryEntry(
+      id: 'analgesic',
+      queryValue: 'ANALGESIC',
+      label: '鎮痛薬',
+    ),
   ],
   routeOfAdministration: ['oral', 'injection_route', 'topical'],
   dosageForm: ['tablet', 'capsule', 'injection_form', 'eye_drops'],

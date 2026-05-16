@@ -36,6 +36,14 @@ void main() {
       expect(decoded.sort, DrugSort.atcCode);
     });
 
+    test('decodes legacy therapeutic category ids to enum constant names', () {
+      final decoded = codec.decodeDrug(
+        '{"therapeutic_category":"cardiovascular"}',
+      );
+
+      expect(decoded.therapeuticCategory, 'CARDIOVASCULAR_SYSTEM');
+    });
+
     test('encodes and decodes disease search params with booleans', () {
       const params = DiseaseSearchParams(
         page: 1,

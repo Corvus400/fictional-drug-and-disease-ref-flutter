@@ -167,7 +167,7 @@ class _DrugFilterSheetState extends ConsumerState<_DrugFilterSheet> {
               hint: l10n.searchFilterHintHierarchy,
               content: _FilterChipGroup(
                 values: categories.therapeuticCategories
-                    .map((entry) => entry.id)
+                    .map((entry) => entry.queryValue)
                     .toList(),
                 selected: _therapeuticCategory,
                 labelFor: (value) =>

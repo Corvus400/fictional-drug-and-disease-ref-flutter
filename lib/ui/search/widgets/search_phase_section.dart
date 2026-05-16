@@ -1559,7 +1559,7 @@ class _SearchUtilityFilterSectionState
           content: _FilterChipGroup(
             compact: true,
             values: categories.therapeuticCategories
-                .map((entry) => entry.id)
+                .map((entry) => entry.queryValue)
                 .toList(),
             selected: _therapeuticCategory,
             labelFor: (value) => _therapeuticCategoryLabel(categories, value),

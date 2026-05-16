@@ -2232,7 +2232,7 @@ void main() {
         dosageForm: ['tablet'],
         route: ['oral'],
         categoryAtc: 'C',
-        therapeuticCategory: 'cardiovascular',
+        therapeuticCategory: 'CARDIOVASCULAR_SYSTEM',
         adverseReactionKeyword: '浮腫',
         precautionCategory: ['GERIATRIC'],
         keyword: any(named: 'keyword'),
