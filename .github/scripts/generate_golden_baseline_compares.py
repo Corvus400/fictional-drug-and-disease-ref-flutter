@@ -5,9 +5,7 @@ The Flutter golden comparator already emits ``*_compare.png`` files for test
 failures. PRs that intentionally update golden baselines also need reviewable
 compare images, but those PNGs are committed files rather than failed test
 outputs. This script fetches the base and PR versions of each changed golden and
-writes a matching Reference / Diff / New compare artifact. It uses ImageMagick
-when available so the generated baseline previews follow the same three-pane
-shape as normal VRT diffs, then falls back to a minimal PNG implementation.
+writes a matching Reference / Diff / New compare artifact.
 """
 
 from __future__ import annotations
@@ -16,11 +14,8 @@ import base64
 import json
 import os
 import re
-import shutil
 import struct
-import subprocess
 import sys
-import tempfile
 import urllib.parse
 import urllib.request
 import zlib
@@ -73,9 +68,8 @@ def main() -> int:
             head_image = decode_png(head_bytes) if head_bytes is not None else None
             output_name = f"baseline_{safe_stem(head_path)}_compare.png"
             output_path = out / output_name
-            if not build_compare_with_imagemagick(base_bytes, head_bytes, output_path):
-                compare = build_compare(base_image, head_image)
-                output_path.write_bytes(encode_png(compare))
+            compare = build_compare(base_image, head_image)
+            output_path.write_bytes(encode_png(compare))
             print(f"{status}\t{head_path}\t{out / output_name}")
 
     return 0
@@ -113,99 +107,6 @@ def _fetch(repo: str, sha: str, path: str, token: str) -> bytes | None:
             return response.read()
 
     return None
-
-
-def build_compare_with_imagemagick(
-    base_bytes: bytes | None,
-    head_bytes: bytes | None,
-    output_path: Path,
-) -> bool:
-    magick = shutil.which("magick")
-    if magick is None:
-        return False
-
-    with tempfile.TemporaryDirectory() as temp_dir:
-        temp = Path(temp_dir)
-        source_bytes = head_bytes or base_bytes
-        if source_bytes is None:
-            return False
-
-        source_path = temp / "source.png"
-        source_path.write_bytes(source_bytes)
-        width, height = image_size(magick, source_path)
-
-        blank = temp / "blank.png"
-        red = temp / "diff-red.png"
-        run_magick(magick, "-size", f"{width}x{height}", "xc:black", str(blank))
-        run_magick(magick, "-size", f"{width}x{height}", "xc:red", str(red))
-
-        base_path = temp / "base.png"
-        head_path = temp / "head.png"
-        diff_path = temp / "diff.png"
-        if base_bytes is not None:
-            base_path.write_bytes(base_bytes)
-        else:
-            shutil.copyfile(blank, base_path)
-        if head_bytes is not None:
-            head_path.write_bytes(head_bytes)
-        else:
-            shutil.copyfile(blank, head_path)
-
-        if base_bytes is None or head_bytes is None:
-            shutil.copyfile(red, diff_path)
-        else:
-            base_width, base_height = image_size(magick, base_path)
-            head_width, head_height = image_size(magick, head_path)
-            if (base_width, base_height) != (head_width, head_height):
-                shutil.copyfile(red, diff_path)
-            else:
-                result = subprocess.run(
-                    [
-                        magick,
-                        "compare",
-                        "-highlight-color",
-                        "red",
-                        "-lowlight-color",
-                        "white",
-                        base_path,
-                        head_path,
-                        diff_path,
-                    ],
-                    check=False,
-                    stdout=subprocess.DEVNULL,
-                    stderr=subprocess.DEVNULL,
-                )
-                if result.returncode not in (0, 1):
-                    return False
-
-        panels = [
-            base_path,
-            diff_path,
-            head_path,
-        ]
-        run_magick(
-            magick,
-            *(str(panel) for panel in panels),
-            "+append",
-            str(output_path),
-        )
-    return True
-
-
-def image_size(magick: str, image_path: Path) -> tuple[int, int]:
-    result = subprocess.run(
-        [magick, "identify", "-format", "%w %h", str(image_path)],
-        check=True,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        text=True,
-    )
-    width, height = result.stdout.split()
-    return int(width), int(height)
-
-
-def run_magick(magick: str, *args: str) -> None:
-    subprocess.run([magick, *args], check=True)
 
 
 def safe_stem(path: str) -> str:
@@ -300,8 +201,8 @@ def paeth(a: int, b: int, c: int) -> int:
 def build_compare(base: PngImage | None, head: PngImage | None) -> PngImage:
     source = head or base
     assert source is not None
-    pane_w = source.width
-    pane_h = source.height
+    pane_w = max(base.width if base else 0, head.width if head else 0)
+    pane_h = max(base.height if base else 0, head.height if head else 0)
     total_w = pane_w * 3 + PANE_SPACING * 2
     total_h = pane_h + LABEL_HEIGHT
     canvas = bytearray([245, 245, 245, 255] * total_w * total_h)
@@ -326,12 +227,22 @@ def fit_or_blank(image: PngImage | None, width: int, height: int, color: tuple[i
 
 
 def diff_image(base: PngImage | None, head: PngImage | None, width: int, height: int) -> PngImage:
-    if base is None or head is None or base.width != head.width or base.height != head.height:
+    if base is None or head is None:
         return PngImage(width, height, bytes([255, 0, 0, 255] * width * height))
     pixels = bytearray()
-    for i in range(0, len(base.pixels), 4):
-        changed = base.pixels[i : i + 3] != head.pixels[i : i + 3]
-        pixels.extend((255, 0, 0, 255) if changed else (255, 255, 255, 255))
+    for y in range(height):
+        for x in range(width):
+            base_has_pixel = x < base.width and y < base.height
+            head_has_pixel = x < head.width and y < head.height
+            if not base_has_pixel or not head_has_pixel:
+                pixels.extend((255, 0, 0, 255))
+                continue
+            base_offset = (y * base.width + x) * 4
+            head_offset = (y * head.width + x) * 4
+            changed = base.pixels[base_offset : base_offset + 3] != head.pixels[
+                head_offset : head_offset + 3
+            ]
+            pixels.extend((255, 0, 0, 255) if changed else (255, 255, 255, 255))
     return PngImage(width, height, bytes(pixels))
 
 
