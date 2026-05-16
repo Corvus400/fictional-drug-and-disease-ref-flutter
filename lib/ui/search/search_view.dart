@@ -17,9 +17,11 @@ import 'package:fictional_drug_and_disease_ref/ui/search/format/relative_time_fo
 import 'package:fictional_drug_and_disease_ref/ui/search/providers/drug_card_image_cache_manager_provider.dart';
 import 'package:fictional_drug_and_disease_ref/ui/search/search_screen_notifier.dart';
 import 'package:fictional_drug_and_disease_ref/ui/search/search_screen_state.dart';
+import 'package:fictional_drug_and_disease_ref/ui/shell/app_shell.dart';
 import 'package:fictional_drug_and_disease_ref/ui/shell/app_shell_tab.dart';
 import 'package:fictional_drug_and_disease_ref/ui/shell/app_tab_header.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -66,6 +68,9 @@ class _SearchViewState extends ConsumerState<SearchView> with RouteAware {
   late final ScrollController _drugSearchResultsScrollController;
   late final ScrollController _diseaseSearchResultsScrollController;
   PageRoute<dynamic>? _route;
+  bool _utilityPaneCategoryLoadQueued = false;
+  bool _phoneModalSheetOpen = false;
+  bool _phoneModalSheetDismissQueued = false;
 
   @override
   void initState() {
@@ -129,115 +134,307 @@ class _SearchViewState extends ConsumerState<SearchView> with RouteAware {
         (theme.brightness == Brightness.dark
             ? AppPalette.dark
             : AppPalette.light);
-
+    final keyboardInset = _keyboardBottomInset(context);
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: palette.background,
       appBar: AppTabHeader(
         tab: AppShellTab.search,
         toolbarHeight: MediaQuery.sizeOf(context).shortestSide >= 600 ? 64 : 56,
       ),
-      floatingActionButton: Stack(
-        clipBehavior: Clip.none,
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(
-              right: SearchConstants.searchFilterFabRightOffset - 16,
-              bottom: SearchConstants.searchFilterFabBottomOffset - 16,
-            ),
-            child: FloatingActionButton(
-              backgroundColor: palette.filterFabBg,
-              foregroundColor: palette.filterFabFg,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(
-                  SearchConstants.searchFilterFabRadius,
+      floatingActionButton: LayoutBuilder(
+        builder: (context, constraints) {
+          final size = _searchResponsiveSize(
+            Size(constraints.maxWidth, constraints.maxHeight),
+            MediaQuery.sizeOf(context),
+            keyboardInset,
+          );
+          if (_usesSearchUtilityPane(size)) {
+            return const SizedBox.shrink();
+          }
+          return Stack(
+            clipBehavior: Clip.none,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(
+                  right: SearchConstants.searchFilterFabRightOffset - 16,
+                  bottom: SearchConstants.searchFilterFabBottomOffset - 16,
+                ),
+                child: FloatingActionButton(
+                  backgroundColor: palette.filterFabBg,
+                  foregroundColor: palette.filterFabFg,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(
+                      SearchConstants.searchFilterFabRadius,
+                    ),
+                  ),
+                  onPressed: () async {
+                    await notifier.loadCategories();
+                    if (!context.mounted) {
+                      return;
+                    }
+                    _showFilterSheet(
+                      context,
+                      ref.read(searchScreenProvider),
+                      onApplyDrugFilter: notifier.applyDrugFilter,
+                      onApplyDiseaseFilter: notifier.applyDiseaseFilter,
+                    );
+                  },
+                  child: const Icon(Icons.tune),
                 ),
               ),
-              onPressed: () async {
-                await notifier.loadCategories();
-                if (!context.mounted) {
-                  return;
-                }
-                _showFilterSheet(
-                  context,
-                  ref.read(searchScreenProvider),
-                  onApplyDrugFilter: notifier.applyDrugFilter,
-                  onApplyDiseaseFilter: notifier.applyDiseaseFilter,
-                );
-              },
-              child: const Icon(Icons.tune),
-            ),
-          ),
-          if (state.appliedChips.count > 0)
-            Positioned(
-              top: -2,
-              right: 0,
-              child: _SearchFilterFabBadge(
-                count: state.appliedChips.count,
-                palette: palette,
-              ),
-            ),
-        ],
-      ),
-      body: LayoutBuilder(
-        builder: (context, constraints) {
-          final isTablet =
-              constraints.maxWidth >= SearchConstants.searchTabletBreakpoint;
-          final gutter = isTablet
-              ? SearchConstants.searchTabletGutter
-              : SearchConstants.searchPhoneGutter;
-          final historyTapRegionGroupId = Object();
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              _SearchTopChrome(
-                state: state,
-                palette: palette,
-                gutter: gutter,
-                isTablet: isTablet,
-                historyTapRegionGroupId: historyTapRegionGroupId,
-                onChangeTab: notifier.changeTab,
-                onOpenHistory: () {
-                  notifier.openHistoryDropdown();
-                  unawaited(notifier.loadHistory());
-                },
-                onChangeQuery: notifier.changeQueryText,
-                onClearQuery: notifier.clearQueryText,
-                onSubmit: notifier.performSearch,
-                onCancel: notifier.closeHistoryDropdown,
-              ),
-              if (state.historyDropdownOpen)
-                Flexible(
-                  child: _SearchHistoryDropdown(
-                    tapRegionGroupId: historyTapRegionGroupId,
-                    entries: state.historyForTab,
-                    currentTime: widget.currentTime ?? DateTime.now(),
-                    onSelect: notifier.selectHistory,
-                    onDelete: notifier.deleteHistory,
-                    onClearAll: notifier.clearAllHistory,
+              if (state.appliedChips.count > 0)
+                Positioned(
+                  top: -2,
+                  right: 0,
+                  child: _SearchFilterFabBadge(
+                    count: state.appliedChips.count,
+                    palette: palette,
                   ),
                 ),
-              Expanded(
-                child: _SearchPhaseSection(
-                  state: state,
-                  gutter: gutter,
-                  drugCardImageCacheManager: drugCardImageCacheManager,
-                  resultScrollController: state.tab == SearchTab.drugs
-                      ? _drugSearchResultsScrollController
-                      : _diseaseSearchResultsScrollController,
-                  onRetry: notifier.performSearch,
-                  onResetFilter: notifier.resetFilter,
-                  onRemoveOneChip: notifier.removeOneChip,
-                  onRemoveChipAt: notifier.removeChipAt,
-                  onChangeDrugSort: notifier.changeDrugSort,
-                  onChangeDiseaseSort: notifier.changeDiseaseSort,
-                  onLoadMore: notifier.loadMore,
-                  logDrugImageErrors: widget.debugLogDrugImageErrors,
-                ),
-              ),
             ],
           );
         },
       ),
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          final isTablet =
+              _searchResponsiveSize(
+                Size(constraints.maxWidth, constraints.maxHeight),
+                MediaQuery.sizeOf(context),
+                keyboardInset,
+              ).shortestSide >=
+              SearchConstants.searchTabletBreakpoint;
+          final constraintsSize = Size(
+            constraints.maxWidth,
+            constraints.maxHeight,
+          );
+          final responsiveSize = _searchResponsiveSize(
+            constraintsSize,
+            MediaQuery.sizeOf(context),
+            keyboardInset,
+          );
+          final isLandscape = _usesSearchLandscapeRail(responsiveSize);
+          final useUtilityPane = _usesSearchUtilityPane(responsiveSize);
+          if (useUtilityPane) {
+            _dismissPhoneModalSheetForUtilityPane();
+          }
+          if (state.categories != null) {
+            _utilityPaneCategoryLoadQueued = false;
+          }
+          if (useUtilityPane &&
+              state.categories == null &&
+              !_utilityPaneCategoryLoadQueued) {
+            _utilityPaneCategoryLoadQueued = true;
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (!mounted) {
+                return;
+              }
+              unawaited(
+                ref
+                    .read(searchScreenProvider.notifier)
+                    .loadCategories()
+                    .whenComplete(() {
+                      if (!mounted) {
+                        return;
+                      }
+                      final latestState = ref.read(searchScreenProvider);
+                      if (latestState.categories == null) {
+                        _utilityPaneCategoryLoadQueued = false;
+                      }
+                    }),
+              );
+            });
+          }
+          final gutter = isTablet
+              ? SearchConstants.searchTabletGutter
+              : SearchConstants.searchPhoneGutter;
+          final historyTapRegionGroupId = Object();
+          final topChrome = _SearchTopChrome(
+            state: state,
+            palette: palette,
+            gutter: gutter,
+            isTablet: isTablet,
+            historyTapRegionGroupId: historyTapRegionGroupId,
+            onChangeTab: notifier.changeTab,
+            onOpenHistory: () {
+              if (!useUtilityPane) {
+                notifier.openHistoryDropdown();
+              }
+              unawaited(notifier.loadHistory());
+            },
+            onChangeQuery: notifier.changeQueryText,
+            onClearQuery: notifier.clearQueryText,
+            onSubmit: notifier.performSearch,
+            onCancel: notifier.closeHistoryDropdown,
+          );
+          final phaseSection = _SearchPhaseSection(
+            state: state,
+            gutter: gutter,
+            drugCardImageCacheManager: drugCardImageCacheManager,
+            resultScrollController: state.tab == SearchTab.drugs
+                ? _drugSearchResultsScrollController
+                : _diseaseSearchResultsScrollController,
+            onRetry: notifier.performSearch,
+            onResetFilter: notifier.resetFilter,
+            onRemoveOneChip: notifier.removeOneChip,
+            onRemoveChipAt: notifier.removeChipAt,
+            onOpenSortSheet: () {
+              _showTrackedSortSheet(
+                context,
+                state,
+                onChangeDrugSort: notifier.changeDrugSort,
+                onChangeDiseaseSort: notifier.changeDiseaseSort,
+              );
+            },
+            onChangeDrugSort: notifier.changeDrugSort,
+            onChangeDiseaseSort: notifier.changeDiseaseSort,
+            onLoadMore: notifier.loadMore,
+            enableSortSheet: !useUtilityPane,
+            showIdleMasterState: useUtilityPane,
+            logDrugImageErrors: widget.debugLogDrugImageErrors,
+            keyboardBottomInset: keyboardInset,
+          );
+          final utilityPane = _SearchUtilityPane(
+            state: state,
+            palette: palette,
+            currentTime: widget.currentTime ?? DateTime.now(),
+            onSelectHistory: notifier.selectHistory,
+            onClearAllHistory: notifier.clearAllHistory,
+            onResetFilter: notifier.resetFilter,
+            onApplyDrugFilter: notifier.applyDrugFilter,
+            onApplyDiseaseFilter: notifier.applyDiseaseFilter,
+            onChangeDrugSort: notifier.changeDrugSort,
+            onChangeDiseaseSort: notifier.changeDiseaseSort,
+            keyboardBottomInset: keyboardInset,
+          );
+          final landscapeRailChrome = _SearchLandscapeRailChrome(
+            state: state,
+            palette: palette,
+            historyTapRegionGroupId: historyTapRegionGroupId,
+            onChangeTab: notifier.changeTab,
+            onOpenHistory: () {
+              unawaited(notifier.loadHistory());
+            },
+            onChangeQuery: notifier.changeQueryText,
+            onClearQuery: notifier.clearQueryText,
+            onSubmit: notifier.performSearch,
+            onCancel: notifier.closeHistoryDropdown,
+          );
+          if (isLandscape) {
+            final needsStandaloneNavRail = !AppShellNavigationScope.isInShell(
+              context,
+            );
+            return Row(
+              key: const ValueKey('search-adaptive-split-rail'),
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                if (needsStandaloneNavRail)
+                  AppShellAdaptiveNavigation(
+                    selectedIndex: AppShellTab.search.index,
+                    onDestinationSelected: (_) {},
+                  ),
+                SizedBox(
+                  key: const ValueKey('search-adaptive-left-rail'),
+                  width: SearchConstants.searchLandscapeLeftRailWidth,
+                  child: Column(
+                    children: [
+                      landscapeRailChrome,
+                      Expanded(child: utilityPane),
+                    ],
+                  ),
+                ),
+                Expanded(child: phaseSection),
+              ],
+            );
+          }
+          if (useUtilityPane) {
+            final utilityWidth = (constraints.maxWidth * 0.34).clamp(
+              SearchConstants.searchUtilityPaneMinWidth,
+              SearchConstants.searchUtilityPaneMaxWidth,
+            );
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                topChrome,
+                Expanded(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Expanded(child: phaseSection),
+                      SizedBox(width: utilityWidth, child: utilityPane),
+                    ],
+                  ),
+                ),
+              ],
+            );
+          }
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              topChrome,
+              if (_showsPhoneInlineHistory(state))
+                Expanded(
+                  child: SingleChildScrollView(
+                    padding: EdgeInsets.fromLTRB(gutter, 4, gutter, 12),
+                    child: _SearchInlineHistory(
+                      entries: state.historyForTab,
+                      currentTime: widget.currentTime ?? DateTime.now(),
+                      onSelect: notifier.selectHistory,
+                      onDelete: notifier.deleteHistory,
+                      onClearAll: notifier.clearAllHistory,
+                    ),
+                  ),
+                )
+              else
+                Expanded(
+                  child: phaseSection,
+                ),
+            ],
+          );
+        },
+      ),
+    );
+  }
+
+  void _dismissPhoneModalSheetForUtilityPane() {
+    if (!_phoneModalSheetOpen || _phoneModalSheetDismissQueued) {
+      return;
+    }
+    _phoneModalSheetDismissQueued = true;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) {
+        return;
+      }
+      final navigator = Navigator.of(context);
+      if (!navigator.canPop()) {
+        _phoneModalSheetDismissQueued = false;
+        return;
+      }
+      unawaited(
+        navigator.maybePop().whenComplete(() {
+          _phoneModalSheetDismissQueued = false;
+        }),
+      );
+    });
+  }
+
+  void _showTrackedSortSheet(
+    BuildContext context,
+    SearchScreenState state, {
+    required Future<void> Function(DrugSort sort) onChangeDrugSort,
+    required Future<void> Function(DiseaseSort sort) onChangeDiseaseSort,
+  }) {
+    _phoneModalSheetOpen = true;
+    unawaited(
+      _showSortSheet(
+        context,
+        state,
+        onChangeDrugSort: onChangeDrugSort,
+        onChangeDiseaseSort: onChangeDiseaseSort,
+      ).whenComplete(() {
+        _phoneModalSheetOpen = false;
+      }),
     );
   }
 
@@ -273,6 +470,7 @@ class _SearchViewState extends ConsumerState<SearchView> with RouteAware {
     final sheetHeight =
         (overlayBox?.size.height ?? MediaQuery.sizeOf(context).height) -
         SearchConstants.searchFilterSheetTopOffset;
+    _phoneModalSheetOpen = true;
     unawaited(
       showModalBottomSheet<void>(
         context: context,
@@ -343,6 +541,178 @@ class _SearchViewState extends ConsumerState<SearchView> with RouteAware {
                     },
               ),
             },
+          ),
+        ),
+      ).whenComplete(() {
+        _phoneModalSheetOpen = false;
+      }),
+    );
+  }
+}
+
+bool _usesSearchUtilityPane(Size size) {
+  return size.shortestSide >= SearchConstants.searchTabletBreakpoint ||
+      _usesSearchLandscapeRail(size);
+}
+
+bool _usesSearchLandscapeRail(Size size) {
+  return size.width > size.height &&
+      size.shortestSide < SearchConstants.searchTabletBreakpoint &&
+      size.width / size.height >= 1.7;
+}
+
+Size _searchResponsiveSize(
+  Size layoutSize,
+  Size viewportSize,
+  double bottomInset,
+) {
+  final keyboardReducedTabletHeight =
+      bottomInset > 0 &&
+      layoutSize.width >= SearchConstants.searchTabletBreakpoint &&
+      viewportSize.width >= layoutSize.width &&
+      viewportSize.height > layoutSize.height;
+  if (keyboardReducedTabletHeight) {
+    return Size(layoutSize.width, viewportSize.height);
+  }
+  return layoutSize;
+}
+
+double _keyboardBottomInset(BuildContext context) {
+  final mediaQueryInset = MediaQuery.viewInsetsOf(context).bottom;
+  final view = View.of(context);
+  final viewInset = view.viewInsets.bottom / view.devicePixelRatio;
+  return mediaQueryInset > viewInset ? mediaQueryInset : viewInset;
+}
+
+bool _showsPhoneInlineHistory(SearchScreenState state) {
+  return state.phase is SearchPhaseIdle && !state.historyDropdownOpen;
+}
+
+class _SearchLandscapeRailChrome extends StatelessWidget {
+  const _SearchLandscapeRailChrome({
+    required this.state,
+    required this.palette,
+    required this.historyTapRegionGroupId,
+    required this.onChangeTab,
+    required this.onOpenHistory,
+    required this.onChangeQuery,
+    required this.onClearQuery,
+    required this.onSubmit,
+    required this.onCancel,
+  });
+
+  final SearchScreenState state;
+  final AppPalette palette;
+  final Object historyTapRegionGroupId;
+  final Future<void> Function(SearchTab tab) onChangeTab;
+  final VoidCallback onOpenHistory;
+  final ValueChanged<String> onChangeQuery;
+  final VoidCallback onClearQuery;
+  final Future<void> Function() onSubmit;
+  final VoidCallback onCancel;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
+    return Material(
+      color: theme.colorScheme.surface,
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          border: Border(bottom: BorderSide(color: palette.hairline)),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(10, 6, 10, 6),
+              child: SizedBox(
+                height: 34,
+                child: _SearchField(
+                  queryText: state.queryText,
+                  hintText: state.tab == SearchTab.drugs
+                      ? l10n.searchHintDrugs
+                      : l10n.searchHintDiseases,
+                  palette: palette,
+                  tapRegionGroupId: historyTapRegionGroupId,
+                  onTap: onOpenHistory,
+                  onChanged: onChangeQuery,
+                  onClear: onClearQuery,
+                  onSubmit: onSubmit,
+                  onCancel: onCancel,
+                ),
+              ),
+            ),
+            DecoratedBox(
+              decoration: BoxDecoration(
+                border: Border(top: BorderSide(color: palette.hairline)),
+              ),
+              child: Column(
+                key: const ValueKey('search-landscape-vertical-tabs'),
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  _SearchLandscapeRailTab(
+                    key: const ValueKey('search-landscape-tab-drugs'),
+                    label: l10n.searchTabDrugs,
+                    selected: state.tab == SearchTab.drugs,
+                    palette: palette,
+                    onTap: () => unawaited(onChangeTab(SearchTab.drugs)),
+                  ),
+                  _SearchLandscapeRailTab(
+                    key: const ValueKey('search-landscape-tab-diseases'),
+                    label: l10n.searchTabDiseases,
+                    selected: state.tab == SearchTab.diseases,
+                    palette: palette,
+                    onTap: () => unawaited(onChangeTab(SearchTab.diseases)),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _SearchLandscapeRailTab extends StatelessWidget {
+  const _SearchLandscapeRailTab({
+    required this.label,
+    required this.selected,
+    required this.palette,
+    required this.onTap,
+    super.key,
+  });
+
+  final String label;
+  final bool selected;
+  final AppPalette palette;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return InkWell(
+      onTap: onTap,
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          color: selected ? palette.primarySoft : Colors.transparent,
+          border: Border(
+            left: BorderSide(
+              color: selected ? palette.primary : Colors.transparent,
+              width: 4,
+            ),
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(14, 10, 14, 10),
+          child: Text(
+            label,
+            style: theme.textTheme.labelLarge?.copyWith(
+              color: selected ? palette.primary : theme.colorScheme.onSurface,
+              fontWeight: selected ? FontWeight.w700 : FontWeight.w600,
+            ),
           ),
         ),
       ),

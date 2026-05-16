@@ -1,6 +1,6 @@
 part of '../search_view.dart';
 
-void _showSortSheet(
+Future<void> _showSortSheet(
   BuildContext context,
   SearchScreenState state, {
   required Future<void> Function(DrugSort sort) onChangeDrugSort,
@@ -51,49 +51,46 @@ void _showSortSheet(
       key: 'disease-icd10',
     ),
   ];
-  unawaited(
-    showModalBottomSheet<void>(
-      context: context,
-      backgroundColor: Colors.transparent,
-      builder: (context) => _Round6SortSheet(
-        palette: palette,
-        children: state.tab == SearchTab.drugs
-            ? [
-                for (var index = 0; index < drugOptions.length; index++)
-                  _SortOptionTile(
-                    label: drugOptions[index].label,
-                    selected:
-                        (state.drugParams.sort ?? DrugSort.revisedAtDesc) ==
-                        drugOptions[index].sort,
-                    selectedKey: drugOptions[index].key,
-                    isLast: index == drugOptions.length - 1,
-                    palette: palette,
-                    onTap: () {
-                      Navigator.of(context).pop();
-                      unawaited(onChangeDrugSort(drugOptions[index].sort));
-                    },
-                  ),
-              ]
-            : [
-                for (var index = 0; index < diseaseOptions.length; index++)
-                  _SortOptionTile(
-                    label: diseaseOptions[index].label,
-                    selected:
-                        (state.diseaseParams.sort ??
-                            DiseaseSort.revisedAtDesc) ==
-                        diseaseOptions[index].sort,
-                    selectedKey: diseaseOptions[index].key,
-                    isLast: index == diseaseOptions.length - 1,
-                    palette: palette,
-                    onTap: () {
-                      Navigator.of(context).pop();
-                      unawaited(
-                        onChangeDiseaseSort(diseaseOptions[index].sort),
-                      );
-                    },
-                  ),
-              ],
-      ),
+  return showModalBottomSheet<void>(
+    context: context,
+    backgroundColor: Colors.transparent,
+    builder: (context) => _Round6SortSheet(
+      palette: palette,
+      children: state.tab == SearchTab.drugs
+          ? [
+              for (var index = 0; index < drugOptions.length; index++)
+                _SortOptionTile(
+                  label: drugOptions[index].label,
+                  selected:
+                      (state.drugParams.sort ?? DrugSort.revisedAtDesc) ==
+                      drugOptions[index].sort,
+                  selectedKey: drugOptions[index].key,
+                  isLast: index == drugOptions.length - 1,
+                  palette: palette,
+                  onTap: () {
+                    Navigator.of(context).pop();
+                    unawaited(onChangeDrugSort(drugOptions[index].sort));
+                  },
+                ),
+            ]
+          : [
+              for (var index = 0; index < diseaseOptions.length; index++)
+                _SortOptionTile(
+                  label: diseaseOptions[index].label,
+                  selected:
+                      (state.diseaseParams.sort ?? DiseaseSort.revisedAtDesc) ==
+                      diseaseOptions[index].sort,
+                  selectedKey: diseaseOptions[index].key,
+                  isLast: index == diseaseOptions.length - 1,
+                  palette: palette,
+                  onTap: () {
+                    Navigator.of(context).pop();
+                    unawaited(
+                      onChangeDiseaseSort(diseaseOptions[index].sort),
+                    );
+                  },
+                ),
+            ],
     ),
   );
 }
@@ -116,43 +113,46 @@ class _Round6SortSheet extends StatelessWidget {
           borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
         ),
         clipBehavior: Clip.antiAlias,
-        child: Padding(
-          padding: const EdgeInsets.only(bottom: 20),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(top: 8, bottom: 4),
-                child: DecoratedBox(
-                  key: const ValueKey('search-sort-sheet-handle'),
-                  decoration: BoxDecoration(
-                    color: palette.hairline,
-                    borderRadius: BorderRadius.circular(2),
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.only(bottom: 20),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 8, bottom: 4),
+                  child: DecoratedBox(
+                    key: const ValueKey('search-sort-sheet-handle'),
+                    decoration: BoxDecoration(
+                      color: palette.hairline,
+                      borderRadius: BorderRadius.circular(2),
+                    ),
+                    child: const SizedBox(width: 40, height: 4),
                   ),
-                  child: const SizedBox(width: 40, height: 4),
                 ),
-              ),
-              DecoratedBox(
-                key: const ValueKey('search-sort-sheet-header'),
-                decoration: BoxDecoration(
-                  border: Border(bottom: BorderSide(color: palette.hairline)),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
-                  child: Center(
-                    child: Text(
-                      l10n.searchSortTitle,
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        color: palette.ink,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w700,
+                DecoratedBox(
+                  key: const ValueKey('search-sort-sheet-header'),
+                  decoration: BoxDecoration(
+                    border: Border(bottom: BorderSide(color: palette.hairline)),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
+                    child: Center(
+                      child: Text(
+                        l10n.searchSortTitle,
+                        style: Theme.of(context).textTheme.titleMedium
+                            ?.copyWith(
+                              color: palette.ink,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w700,
+                            ),
                       ),
                     ),
                   ),
                 ),
-              ),
-              ...children,
-            ],
+                ...children,
+              ],
+            ),
           ),
         ),
       ),

@@ -127,7 +127,7 @@ jobs:
     timeout-minutes: 45
 
     strategy:
-      fail-fast: true
+      fail-fast: false
       matrix:
         shard: [0, 1, 2, 3]
 
@@ -138,15 +138,44 @@ jobs:
     steps:
       - name: Checkout merged commit with base and pull-request branch
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          fetch-depth: 0
 
       - uses: ./.github/actions/setup-flutter
 
-      - name: Run golden VRT shard
+      - name: Replace golden baselines with base branch versions
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          git diff --name-status --find-renames "$BASE_SHA" "$HEAD_SHA" -- ':(glob)test/**/goldens/**/*.png' > /tmp/golden-baseline-name-status.tsv
+
+          # Keep PR code/tests, but make the comparator reference main/base goldens.
+          git checkout "$BASE_SHA" -- ':(glob)test/**/goldens/**/*.png'
+
+          while IFS=$'\t' read -r status first_path second_path; do
+            case "$status" in
+              A)
+                rm -f "$first_path"
+                ;;
+              C*|R*)
+                if [ -n "$second_path" ] && [ -f "$first_path" ]; then
+                  cp "$first_path" "$second_path"
+                fi
+                ;;
+            esac
+          done < /tmp/golden-baseline-name-status.tsv
+
+      - name: Generate main-vs-PR golden VRT shard
+        env:
+          GOLDEN_VRT_COMPARE_ONLY: "true"
         run: >
-          ./scripts/run-command-stop-on-output-pattern.sh
           flutter test
-          --fail-fast
           --tags golden
+          --fail-fast
           --total-shards 4
           --shard-index ${{ matrix.shard }}
 
@@ -174,8 +203,14 @@ jobs:
 
     permissions:
       actions: read
+      contents: read
 
     steps:
+      - name: Checkout pull-request branch metadata
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          fetch-depth: 0
+
       - name: Prepare merged artifact directory
         run: mkdir -p golden-diff-reports/build
 
@@ -194,12 +229,21 @@ jobs:
           retention-days: 30
           if-no-files-found: ignore
 
-      - name: Save PR number for comment
+      - name: Save PR metadata for comment
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
         run: |
           mkdir -p ./pr
-          echo ${{ github.event.number }} > ./pr/NR
+          printf '%s\n' "${{ github.event.number }}" > ./pr/NR
+          printf '%s\n' "$BASE_SHA" > ./pr/BASE_SHA
+          printf '%s\n' "$HEAD_SHA" > ./pr/HEAD_SHA
+          ./.github/scripts/collect_golden_baseline_changes.sh \
+            "$BASE_SHA" \
+            "$HEAD_SHA" \
+            ./pr/golden-baseline-files.tsv
 
-      - name: Upload PR number
+      - name: Upload PR metadata
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: pr

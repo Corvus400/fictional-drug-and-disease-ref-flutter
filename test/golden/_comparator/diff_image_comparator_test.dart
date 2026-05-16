@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
@@ -85,6 +86,53 @@ void main() {
   );
 
   test(
+    'passes meaningful visual differences in compare-only mode '
+    'and writes diff artifacts',
+    () async {
+      final compareOnlyComparator = DiffImageComparator(
+        Uri.file(p.join(tempDir.path, '_resolved.dart')),
+        outputRoot: outputDir.path,
+        resultsRoot: resultsDir.path,
+        compareOnly: true,
+      );
+      final golden = _solidPng(width: 20, height: 20, r: 255, g: 255, b: 255);
+      final actual = _solidImage(width: 20, height: 20, r: 255, g: 255, b: 255);
+      for (var y = 0; y < 20; y++) {
+        for (var x = 0; x < 20; x++) {
+          if (x < 10) {
+            actual.setPixelRgb(x, y, 0, 0, 0);
+          }
+        }
+      }
+      File(
+        p.join(tempDir.path, 'compare_only_changed.png'),
+      ).writeAsBytesSync(golden);
+
+      final passed = await compareOnlyComparator.compare(
+        img.encodePng(actual),
+        Uri.parse('compare_only_changed.png'),
+      );
+
+      expect(passed, isTrue);
+      expect(
+        File(
+          p.join(outputDir.path, 'compare_only_changed_compare.png'),
+        ).existsSync(),
+        isTrue,
+      );
+      expect(
+        File(
+          p.join(outputDir.path, 'compare_only_changed_actual.png'),
+        ).existsSync(),
+        isTrue,
+      );
+      final resultJson = _singleResultJson(resultsDir);
+      expect(resultJson['type'], 'changed');
+      expect(resultJson['compare_file_path'], contains('compare_only_changed'));
+    },
+  );
+
+  test(
     'writes compare image in Reference Diff New pane order',
     () async {
       final golden = _solidPng(width: 4, height: 4, r: 0, g: 0, b: 255);
@@ -104,6 +152,35 @@ void main() {
       expect(_rgbAt(compare, 0, 20), (0, 0, 255));
       expect(_rgbAt(compare, 20, 20), (255, 0, 0));
       expect(_rgbAt(compare, 40, 20), (0, 255, 0));
+    },
+  );
+
+  test(
+    'shows only out-of-bounds area as red when image sizes differ',
+    () async {
+      final golden = _solidPng(width: 4, height: 4, r: 0, g: 0, b: 255);
+      final actual = _solidImage(width: 6, height: 4, r: 0, g: 0, b: 255);
+      for (var y = 0; y < 4; y++) {
+        for (var x = 4; x < 6; x++) {
+          actual.setPixelRgb(x, y, 0, 255, 0);
+        }
+      }
+      File(p.join(tempDir.path, 'size_changed.png')).writeAsBytesSync(golden);
+
+      await comparator.compare(
+        img.encodePng(actual),
+        Uri.parse('size_changed.png'),
+      );
+
+      final compareBytes = File(
+        p.join(outputDir.path, 'size_changed_compare.png'),
+      ).readAsBytesSync();
+      final compare = img.decodePng(compareBytes)!;
+
+      expect(_rgbAt(compare, 0, 20), (0, 0, 255));
+      expect(_rgbAt(compare, 22, 20), (255, 255, 255));
+      expect(_rgbAt(compare, 26, 20), (255, 0, 0));
+      expect(_rgbAt(compare, 48, 20), (0, 255, 0));
     },
   );
 }
@@ -132,4 +209,14 @@ img.Image _solidImage({
 (int, int, int) _rgbAt(img.Image image, int x, int y) {
   final pixel = image.getPixel(x, y);
   return (pixel.r.toInt(), pixel.g.toInt(), pixel.b.toInt());
+}
+
+Map<String, dynamic> _singleResultJson(Directory resultsDir) {
+  final files = resultsDir
+      .listSync()
+      .whereType<File>()
+      .where((file) => file.path.endsWith('.json'))
+      .toList();
+  expect(files, hasLength(1));
+  return jsonDecode(files.single.readAsStringSync()) as Map<String, dynamic>;
 }

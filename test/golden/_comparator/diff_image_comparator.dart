@@ -14,10 +14,14 @@ class DiffImageComparator extends LocalFileComparator {
     super.testFile, {
     required this.outputRoot,
     required this.resultsRoot,
-  });
+    bool? compareOnly,
+  }) : compareOnly =
+           compareOnly ??
+           Platform.environment['GOLDEN_VRT_COMPARE_ONLY'] == 'true';
 
   final String outputRoot;
   final String resultsRoot;
+  final bool compareOnly;
 
   @override
   Future<bool> compare(Uint8List imageBytes, Uri golden) async {
@@ -64,6 +68,9 @@ class DiffImageComparator extends LocalFileComparator {
     );
 
     await _writeJson(result);
+    if (compareOnly) {
+      return true;
+    }
     return result is CaptureResultUnchanged;
   }
 

@@ -141,10 +141,13 @@
   "searchActionSearch": "検索",
   "searchActionCancel": "キャンセル",
   "searchHistoryTitle": "検索履歴",
+  "searchHistoryRecentTitle": "最近の検索",
   "searchHistoryEmptyTitle": "検索履歴はまだありません",
-  "searchHistoryEmptyDescription": "検索すると履歴が最大 5 件まで残ります。\n履歴は端末内にのみ保存されます。",
+  "searchHistoryEmptyDescription": "検索すると最新 5 件まで表示されます。履歴は端末内にのみ保存されます。",
   "searchHistoryClear": "すべて消す",
   "searchHistoryPrivacyNote": "最新 5 件まで表示。履歴は端末内にのみ保存されます",
+  "searchHistoryFilteredBadge": "絞込",
+  "searchHistoryNoFilterBadge": "—",
   "searchHistoryFilterCount": "絞り込み +{count}",
   "@searchHistoryFilterCount": {
     "placeholders": {

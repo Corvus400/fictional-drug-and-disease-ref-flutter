@@ -18,6 +18,18 @@ abstract final class SearchConstants {
   /// Tablet layout breakpoint.
   static const searchTabletBreakpoint = 600.0;
 
+  /// iPhone landscape search left rail width.
+  static const searchLandscapeLeftRailWidth = 240.0;
+
+  /// iPhone landscape app-shell navigation rail width.
+  static const searchLandscapeNavigationRailWidth = 52.0;
+
+  /// Utility pane minimum width.
+  static const searchUtilityPaneMinWidth = 300.0;
+
+  /// Utility pane maximum width.
+  static const searchUtilityPaneMaxWidth = 340.0;
+
   /// Light scrim alpha.
   static const searchLightScrimAlpha = 0.32;
 

@@ -17,6 +17,7 @@ import 'package:fictional_drug_and_disease_ref/data/services/api/disease_api_cli
 import 'package:fictional_drug_and_disease_ref/data/services/api/drug_api_client.dart';
 import 'package:fictional_drug_and_disease_ref/domain/drug/drug_search_params.dart';
 import 'package:fictional_drug_and_disease_ref/l10n/app_localizations.dart';
+import 'package:fictional_drug_and_disease_ref/router/app_router.dart';
 import 'package:fictional_drug_and_disease_ref/theme/app_palette.dart';
 import 'package:fictional_drug_and_disease_ref/theme/app_theme.dart';
 import 'package:fictional_drug_and_disease_ref/ui/search/constants/search_constants.dart';
@@ -25,6 +26,7 @@ import 'package:fictional_drug_and_disease_ref/ui/search/search_screen_state.dar
 import 'package:fictional_drug_and_disease_ref/ui/search/search_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/misc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -66,7 +68,7 @@ void main() {
 
       await tester.pumpWidget(
         ProviderScope(
-          overrides: [appDatabaseProvider.overrideWithValue(db)],
+          overrides: _baseOverrides(db),
           child: MaterialApp(
             theme: AppTheme.light(),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -111,7 +113,7 @@ void main() {
     ) async {
       await tester.pumpWidget(
         ProviderScope(
-          overrides: [appDatabaseProvider.overrideWithValue(db)],
+          overrides: _baseOverrides(db),
           child: MaterialApp(
             theme: AppTheme.light(),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -133,7 +135,7 @@ void main() {
 
       await tester.pumpWidget(
         ProviderScope(
-          overrides: [appDatabaseProvider.overrideWithValue(db)],
+          overrides: _baseOverrides(db),
           child: MaterialApp(
             darkTheme: AppTheme.dark(),
             themeMode: ThemeMode.dark,
@@ -151,13 +153,96 @@ void main() {
     },
   );
 
+  testWidgets(
+    'iPhone portrait idle shows inline history only while search is unfocused',
+    (
+      tester,
+    ) async {
+      await tester.binding.setSurfaceSize(const Size(390, 844));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+
+      final container = ProviderContainer(
+        overrides: _baseOverrides(db),
+      );
+      addTearDown(container.dispose);
+      final codec = container.read(searchQueryCodecProvider);
+      final repository = container.read(searchHistoryRepositoryProvider);
+      await repository.insertWithDedup(
+        id: 'round6_inline_history',
+        target: 'drug',
+        queryJson: codec.encode(const DrugSearchParams(keyword: 'アムロジピン')),
+        searchedAt: DateTime.utc(2026, 5, 5, 8, 50),
+        totalCount: 23,
+      );
+
+      await tester.pumpWidget(
+        UncontrolledProviderScope(
+          container: container,
+          child: MaterialApp(
+            theme: AppTheme.light(),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: SearchView(currentTime: DateTime.utc(2026, 5, 5, 9)),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(
+        find.byKey(const ValueKey('search-history-inline')),
+        findsOneWidget,
+      );
+      expect(find.text('アムロジピン'), findsOneWidget);
+      expect(
+        find.byKey(const ValueKey('search-history-dropdown')),
+        findsNothing,
+      );
+
+      await tester.tap(find.byKey(const ValueKey('search-field')));
+      await tester.pumpAndSettle();
+
+      expect(find.byKey(const ValueKey('search-history-inline')), findsNothing);
+      expect(
+        find.byKey(const ValueKey('search-history-dropdown')),
+        findsNothing,
+      );
+    },
+  );
+
+  testWidgets('iPhone portrait empty history uses inline idle placeholder', (
+    tester,
+  ) async {
+    await tester.binding.setSurfaceSize(const Size(390, 844));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: _baseOverrides(db),
+        child: MaterialApp(
+          theme: AppTheme.light(),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: const SearchView(),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.byKey(const ValueKey('search-history-inline')), findsOneWidget);
+    expect(
+      find.byKey(const ValueKey('search-history-inline-empty')),
+      findsOneWidget,
+    );
+    expect(find.byKey(const ValueKey('search-history-dropdown')), findsNothing);
+  });
+
   testWidgets('SearchView FAB follows Round6 phone metrics', (tester) async {
     await tester.binding.setSurfaceSize(const Size(390, 844));
     addTearDown(() => tester.binding.setSurfaceSize(null));
 
     await tester.pumpWidget(
       ProviderScope(
-        overrides: [appDatabaseProvider.overrideWithValue(db)],
+        overrides: _baseOverrides(db),
         child: MaterialApp(
           theme: AppTheme.light(),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -175,13 +260,913 @@ void main() {
     expect(844 - fab.bottom, 28);
   });
 
+  testWidgets('SearchView keeps filter FAB phone-only', (tester) async {
+    await tester.binding.setSurfaceSize(const Size(844, 390));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: _baseOverrides(db),
+        child: MaterialApp(
+          theme: AppTheme.light(),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: const SearchView(),
+        ),
+      ),
+    );
+
+    expect(find.byType(FloatingActionButton), findsNothing);
+    expect(
+      find.byKey(const ValueKey('search-adaptive-left-rail')),
+      findsOneWidget,
+    );
+    expect(find.byKey(const ValueKey('search-utility-pane')), findsOneWidget);
+    expect(
+      find.byKey(const ValueKey('app-shell-compact-navigation-rail')),
+      findsOneWidget,
+    );
+  });
+
+  testWidgets(
+    'SearchView iPhone landscape uses 240px left rail with vertical tabs',
+    (
+      tester,
+    ) async {
+      await tester.binding.setSurfaceSize(const Size(932, 430));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: _baseOverrides(db),
+          child: MaterialApp(
+            theme: AppTheme.light(),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: const SearchView(),
+          ),
+        ),
+      );
+
+      final leftRail = tester.getRect(
+        find.byKey(const ValueKey('search-adaptive-left-rail')),
+      );
+      final navRail = tester.getRect(
+        find.byKey(const ValueKey('app-shell-navigation-rail-box')),
+      );
+
+      expect(navRail.width, SearchConstants.searchLandscapeNavigationRailWidth);
+      expect(leftRail.left, navRail.right);
+      expect(leftRail.width, 240);
+      expect(
+        find.byKey(const ValueKey('search-landscape-vertical-tabs')),
+        findsOneWidget,
+      );
+      expect(
+        find.byKey(const ValueKey('search-round6-segmented')),
+        findsNothing,
+      );
+      expect(find.byKey(const ValueKey('search-submit-button')), findsNothing);
+    },
+  );
+
+  testWidgets(
+    'SearchView inside AppShell keeps icon rail in iPhone landscape',
+    (tester) async {
+      await tester.binding.setSurfaceSize(const Size(844, 390));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+
+      final router = buildRouter();
+      addTearDown(router.dispose);
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: _baseOverrides(db),
+          child: MaterialApp.router(
+            theme: AppTheme.light(),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            routerConfig: router,
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      final appRail = tester.getRect(
+        find.byKey(const ValueKey('app-shell-navigation-rail-box')),
+      );
+      final searchRail = tester.getRect(
+        find.byKey(const ValueKey('search-adaptive-left-rail')),
+      );
+
+      expect(appRail.width, 52);
+      expect(appRail.left, 0);
+      expect(searchRail.left, appRail.right);
+      expect(searchRail.width, SearchConstants.searchLandscapeLeftRailWidth);
+      expect(find.byType(NavigationBar), findsNothing);
+    },
+  );
+
+  testWidgets(
+    'SearchView iPhone landscape idle master scrolls instead of overflowing '
+    'under keyboard',
+    (
+      tester,
+    ) async {
+      await tester.binding.setSurfaceSize(const Size(844, 390));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: _baseOverrides(db),
+          child: MaterialApp(
+            theme: AppTheme.light(),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: const MediaQuery(
+              data: MediaQueryData(
+                size: Size(844, 390),
+                viewInsets: EdgeInsets.only(bottom: 220),
+              ),
+              child: SearchView(),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(
+        find.byKey(const ValueKey('search-adaptive-split-rail')),
+        findsOneWidget,
+      );
+      expect(
+        find.byKey(const ValueKey('search-utility-idle-master-state')),
+        findsOneWidget,
+      );
+      expect(tester.takeException(), isNull);
+    },
+  );
+
+  testWidgets(
+    'SearchView iPhone landscape utility filter chips keep ICD labels readable',
+    (
+      tester,
+    ) async {
+      await tester.binding.setSurfaceSize(const Size(844, 390));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: _baseOverrides(db),
+          child: MaterialApp(
+            theme: AppTheme.light(),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: const SearchView(),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      await tester.pump(const Duration(milliseconds: 100));
+      await tester.pumpAndSettle();
+
+      final container = ProviderScope.containerOf(
+        tester.element(find.byType(SearchView)),
+      );
+      final notifier = container.read(searchScreenProvider.notifier);
+      await notifier.loadCategories();
+      await notifier.changeTab(SearchTab.diseases);
+      await tester.pumpAndSettle();
+      await tester.pump(const Duration(milliseconds: 100));
+      await tester.pumpAndSettle();
+      expect(
+        find.text('9 軸 · 軸内 OR / 軸間 AND', skipOffstage: false),
+        findsOneWidget,
+      );
+      expect(
+        find.byKey(
+          const ValueKey('search-utility-filter-axis-values-icd10_chapter'),
+          skipOffstage: false,
+        ),
+        findsOneWidget,
+      );
+
+      final longIcdLabel = tester.widget<Text>(
+        find.text(
+          'III 血液および造血器の疾患ならびに免疫機構の障害',
+          skipOffstage: false,
+        ),
+      );
+
+      expect(longIcdLabel.maxLines, 2);
+      expect(longIcdLabel.overflow, TextOverflow.visible);
+      expect(longIcdLabel.softWrap, isTrue);
+      expect(tester.takeException(), isNull);
+    },
+  );
+
+  testWidgets(
+    'SearchView iPhone landscape utility filter actions stack in one column',
+    (
+      tester,
+    ) async {
+      await tester.binding.setSurfaceSize(const Size(844, 390));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: _baseOverrides(db),
+          child: MaterialApp(
+            theme: AppTheme.light(),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: const SearchView(),
+          ),
+        ),
+      );
+      final container = ProviderScope.containerOf(
+        tester.element(find.byType(SearchView)),
+      );
+      await container.read(searchScreenProvider.notifier).loadCategories();
+      await tester.pumpAndSettle();
+
+      final reset = tester.getRect(
+        find.byKey(
+          const ValueKey('search-utility-filter-reset'),
+          skipOffstage: false,
+        ),
+      );
+      final apply = tester.getRect(
+        find.byKey(
+          const ValueKey('search-utility-filter-apply'),
+          skipOffstage: false,
+        ),
+      );
+      final actions = tester.getRect(
+        find.byKey(
+          const ValueKey('search-utility-filter-actions'),
+          skipOffstage: false,
+        ),
+      );
+      final applyLabel = tester.widget<Text>(
+        find.text('結果を見る (0 件)', skipOffstage: false),
+      );
+
+      expect(reset.bottom, lessThanOrEqualTo(apply.top));
+      expect(apply.width, actions.width);
+      expect(applyLabel.maxLines, 1);
+      expect(tester.takeException(), isNull);
+    },
+  );
+
+  testWidgets(
+    'SearchView iPhone landscape utility filter axis titles stay readable',
+    (
+      tester,
+    ) async {
+      await tester.binding.setSurfaceSize(const Size(844, 390));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: _baseOverrides(db),
+          child: MaterialApp(
+            theme: AppTheme.light(),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: const SearchView(),
+          ),
+        ),
+      );
+      final container = ProviderScope.containerOf(
+        tester.element(find.byType(SearchView)),
+      );
+      final notifier = container.read(searchScreenProvider.notifier);
+      await notifier.loadCategories();
+      await tester.pumpAndSettle();
+      await tester.scrollUntilVisible(
+        find.byKey(
+          const ValueKey('search-utility-filter-axis-title-atc'),
+          skipOffstage: false,
+        ),
+        80,
+        scrollable: find.descendant(
+          of: find.byKey(const ValueKey('search-utility-pane')),
+          matching: find.byType(Scrollable),
+        ),
+      );
+
+      final drugAtcTitle = tester.widget<Text>(
+        find.byKey(
+          const ValueKey('search-utility-filter-axis-title-atc'),
+          skipOffstage: false,
+        ),
+      );
+      expect(drugAtcTitle.data, 'ATC 第 1 階層');
+      expect(drugAtcTitle.maxLines, 2);
+      expect(drugAtcTitle.overflow, TextOverflow.visible);
+      expect(drugAtcTitle.softWrap, isTrue);
+
+      await notifier.changeTab(SearchTab.diseases);
+      await tester.pumpAndSettle();
+
+      final diseaseIcdTitle = tester.widget<Text>(
+        find.byKey(
+          const ValueKey('search-utility-filter-axis-title-icd10_chapter'),
+          skipOffstage: false,
+        ),
+      );
+      expect(diseaseIcdTitle.data, 'ICD-10 章');
+      expect(diseaseIcdTitle.maxLines, 2);
+      expect(diseaseIcdTitle.overflow, TextOverflow.visible);
+      expect(diseaseIcdTitle.softWrap, isTrue);
+      expect(tester.takeException(), isNull);
+    },
+  );
+
+  testWidgets(
+    'SearchView tablet renders utility pane instead of modal-only chrome',
+    (
+      tester,
+    ) async {
+      await tester.binding.setSurfaceSize(const Size(834, 1194));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: _baseOverrides(db),
+          child: MaterialApp(
+            theme: AppTheme.light(),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: const SearchView(),
+          ),
+        ),
+      );
+
+      expect(find.byType(FloatingActionButton), findsNothing);
+      expect(
+        find.byKey(const ValueKey('search-adaptive-left-rail')),
+        findsNothing,
+      );
+      expect(find.byKey(const ValueKey('search-utility-pane')), findsOneWidget);
+      expect(
+        find.byKey(const ValueKey('search-utility-filter-section')),
+        findsOneWidget,
+      );
+      expect(
+        find.byKey(const ValueKey('search-utility-sort-section')),
+        findsOneWidget,
+      );
+      expect(
+        find.byKey(const ValueKey('search-utility-history-section')),
+        findsOneWidget,
+      );
+    },
+  );
+
+  testWidgets('SearchView utility pane uses design surface hierarchy', (
+    tester,
+  ) async {
+    await tester.binding.setSurfaceSize(const Size(834, 1194));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: _baseOverrides(db),
+        child: MaterialApp(
+          theme: AppTheme.dark(),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: const SearchView(),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    final pane = tester.widget<DecoratedBox>(
+      find.byKey(const ValueKey('search-utility-pane')),
+    );
+    final paneDecoration = pane.decoration as BoxDecoration;
+    expect(paneDecoration.color, AppPalette.dark.surface2);
+
+    final historyCard = tester.widget<DecoratedBox>(
+      find
+          .descendant(
+            of: find.byKey(const ValueKey('search-utility-history-section')),
+            matching: find.byType(DecoratedBox),
+          )
+          .first,
+    );
+    final historyCardDecoration = historyCard.decoration as BoxDecoration;
+    expect(historyCardDecoration.color, AppPalette.dark.surface);
+
+    final expandedAxis = tester.widget<DecoratedBox>(
+      find.byKey(const ValueKey('search-utility-filter-axis-regulatory_class')),
+    );
+    final expandedAxisDecoration = expandedAxis.decoration as BoxDecoration;
+    expect(expandedAxisDecoration.color, AppPalette.dark.surface);
+    expect(
+      (expandedAxisDecoration.border! as Border).top.color,
+      AppPalette.dark.primaryRing,
+    );
+
+    final collapsedAxis = tester.widget<DecoratedBox>(
+      find.byKey(const ValueKey('search-utility-filter-axis-dosage_form')),
+    );
+    final collapsedAxisDecoration = collapsedAxis.decoration as BoxDecoration;
+    expect(collapsedAxisDecoration.color, AppPalette.dark.surface2);
+    expect(
+      (collapsedAxisDecoration.border! as Border).top.color,
+      AppPalette.dark.hairline2,
+    );
+  });
+
+  testWidgets('SearchView utility pane follows light typography and controls', (
+    tester,
+  ) async {
+    await tester.binding.setSurfaceSize(const Size(834, 1194));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: _baseOverrides(db),
+        child: MaterialApp(
+          theme: AppTheme.light(),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: const SearchView(),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    final filterSection = find.byKey(
+      const ValueKey('search-utility-filter-section'),
+    );
+    final filterTitle = tester.widget<Text>(
+      find.descendant(of: filterSection, matching: find.text('絞り込み')),
+    );
+    expect(filterTitle.style?.color, AppPalette.light.ink);
+    expect(filterTitle.style?.fontSize, 12);
+    expect(filterTitle.style?.fontWeight, FontWeight.w700);
+
+    final policy = tester.widget<Text>(
+      find.byKey(const ValueKey('search-utility-filter-policy')),
+    );
+    expect(policy.style?.color, AppPalette.light.muted);
+    expect(policy.style?.fontSize, 11);
+    expect(policy.style?.fontWeight, FontWeight.w500);
+
+    final axisTitle = tester.widget<Text>(
+      find.descendant(
+        of: find.byKey(
+          const ValueKey('search-utility-filter-axis-regulatory_class'),
+        ),
+        matching: find.text('規制区分'),
+      ),
+    );
+    expect(axisTitle.style?.color, AppPalette.light.ink);
+    expect(axisTitle.style?.fontSize, 12);
+    expect(axisTitle.style?.fontWeight, FontWeight.w700);
+
+    final axisMeta = tester.widget<Text>(find.text('11 値・複数選択 OR'));
+    expect(axisMeta.style?.color, AppPalette.light.muted);
+    expect(axisMeta.style?.fontSize, 10.5);
+    expect(axisMeta.style?.fontWeight, FontWeight.w500);
+    expect(
+      find.descendant(
+        of: find.byKey(
+          const ValueKey('search-utility-filter-axis-regulatory_class'),
+        ),
+        matching: find.byIcon(Icons.chevron_right),
+      ),
+      findsNothing,
+    );
+
+    final axisSummary = tester.widget<Text>(find.text('すべて').first);
+    expect(axisSummary.style?.color, AppPalette.light.muted);
+    expect(axisSummary.style?.fontSize, 11);
+    expect(axisSummary.style?.fontWeight, FontWeight.w500);
+
+    final clearHistory = tester.widget<Text>(find.text('すべて消す'));
+    expect(clearHistory.style?.fontSize, 11.5);
+    expect(clearHistory.style?.fontWeight, FontWeight.w600);
+
+    final resetButton = tester.widget<TextButton>(
+      find.byKey(const ValueKey('search-utility-filter-reset')),
+    );
+    expect(
+      resetButton.style?.foregroundColor?.resolve({}),
+      AppPalette.light.primary,
+    );
+    expect(resetButton.style?.textStyle?.resolve({})?.fontSize, 12);
+    expect(
+      resetButton.style?.textStyle?.resolve({})?.fontWeight,
+      FontWeight.w600,
+    );
+    final resetText = tester.widget<Text>(find.text('リセット'));
+    expect(resetText.style?.fontSize, 12);
+    expect(resetText.style?.fontWeight, FontWeight.w600);
+
+    final applyButton = tester.widget<FilledButton>(
+      find.byKey(const ValueKey('search-utility-filter-apply')),
+    );
+    expect(
+      applyButton.style?.backgroundColor?.resolve({}),
+      AppPalette.light.primaryCont,
+    );
+    expect(
+      applyButton.style?.foregroundColor?.resolve({}),
+      AppPalette.light.onPrimaryCont,
+    );
+    final shape = applyButton.style?.shape?.resolve({});
+    expect(shape, isA<RoundedRectangleBorder>());
+    expect(
+      (shape! as RoundedRectangleBorder).borderRadius,
+      BorderRadius.circular(8),
+    );
+    expect(applyButton.style?.textStyle?.resolve({})?.fontSize, 13);
+    expect(
+      applyButton.style?.textStyle?.resolve({})?.fontWeight,
+      FontWeight.w700,
+    );
+  });
+
+  testWidgets('SearchView utility sort follows grouped option contract', (
+    tester,
+  ) async {
+    await tester.binding.setSurfaceSize(const Size(834, 1194));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: _baseOverrides(db),
+        child: MaterialApp(
+          theme: AppTheme.light(),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: const SearchView(),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    final group = tester.widget<DecoratedBox>(
+      find.byKey(const ValueKey('search-utility-sort-options')),
+    );
+    final groupDecoration = group.decoration as BoxDecoration;
+    expect(groupDecoration.color, AppPalette.light.hairline2);
+    expect(groupDecoration.borderRadius, BorderRadius.circular(6));
+
+    final selected = tester.widget<DecoratedBox>(
+      find
+          .descendant(
+            of: find.byKey(
+              const ValueKey('search-utility-sort-revised_at'),
+              skipOffstage: false,
+            ),
+            matching: find.byType(DecoratedBox),
+          )
+          .first,
+    );
+    final selectedDecoration = selected.decoration as BoxDecoration;
+    expect(selectedDecoration.color, AppPalette.light.primarySoft);
+    expect(selectedDecoration.border, isNull);
+
+    final selectedLabel = tester.widget<Text>(
+      find.descendant(
+        of: find.byKey(
+          const ValueKey('search-utility-sort-revised_at'),
+          skipOffstage: false,
+        ),
+        matching: find.text('更新日(新しい順)'),
+      ),
+    );
+    expect(selectedLabel.style?.color, AppPalette.light.primary);
+    expect(selectedLabel.style?.fontSize, 12.5);
+    expect(selectedLabel.style?.fontWeight, FontWeight.w700);
+
+    final unselected = tester.widget<DecoratedBox>(
+      find
+          .descendant(
+            of: find.byKey(
+              const ValueKey('search-utility-sort-brand_name_kana'),
+              skipOffstage: false,
+            ),
+            matching: find.byType(DecoratedBox),
+          )
+          .first,
+    );
+    final unselectedDecoration = unselected.decoration as BoxDecoration;
+    expect(unselectedDecoration.color, AppPalette.light.surface);
+    expect(unselectedDecoration.border, isNull);
+
+    final unselectedLabel = tester.widget<Text>(
+      find.descendant(
+        of: find.byKey(
+          const ValueKey('search-utility-sort-brand_name_kana'),
+          skipOffstage: false,
+        ),
+        matching: find.text('ブランド名カナ'),
+      ),
+    );
+    expect(unselectedLabel.style?.color, AppPalette.light.ink);
+    expect(unselectedLabel.style?.fontSize, 12.5);
+    expect(unselectedLabel.style?.fontWeight, FontWeight.w500);
+
+    final selectedRadio = tester.widget<Container>(
+      find.byKey(
+        const ValueKey('search-utility-sort-radio-revised_at'),
+        skipOffstage: false,
+      ),
+    );
+    final selectedRadioDecoration = selectedRadio.decoration! as BoxDecoration;
+    expect(
+      selectedRadio.constraints,
+      const BoxConstraints.tightFor(width: 18, height: 18),
+    );
+    expect(selectedRadioDecoration.border?.top.color, AppPalette.light.primary);
+
+    final unselectedRadio = tester.widget<Container>(
+      find.byKey(
+        const ValueKey('search-utility-sort-radio-brand_name_kana'),
+        skipOffstage: false,
+      ),
+    );
+    final unselectedRadioDecoration =
+        unselectedRadio.decoration! as BoxDecoration;
+    expect(
+      unselectedRadioDecoration.border?.top.color,
+      AppPalette.light.muted2,
+    );
+  });
+
+  testWidgets('SearchView utility empty history uses compact placeholder', (
+    tester,
+  ) async {
+    await tester.binding.setSurfaceSize(const Size(834, 1194));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: _baseOverrides(db),
+        child: MaterialApp(
+          theme: AppTheme.light(),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: const SearchView(),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(
+      find.byKey(const ValueKey('search-utility-history-empty')),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const ValueKey('search-utility-history-empty-icon')),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const ValueKey('search-history-inline-empty')),
+      findsNothing,
+    );
+    expect(
+      tester.getSize(
+        find.byKey(const ValueKey('search-utility-history-empty-icon')),
+      ),
+      const Size(28, 28),
+    );
+    expect(
+      tester
+          .getRect(
+            find.byKey(const ValueKey('search-utility-history-section')),
+          )
+          .height,
+      lessThan(210),
+    );
+  });
+
+  testWidgets('SearchView 600dp shortest side already uses utility pane', (
+    tester,
+  ) async {
+    await tester.binding.setSurfaceSize(const Size(600, 900));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: _baseOverrides(db),
+        child: MaterialApp(
+          theme: AppTheme.light(),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: const SearchView(),
+        ),
+      ),
+    );
+
+    expect(find.byKey(const ValueKey('search-utility-pane')), findsOneWidget);
+    expect(find.byType(FloatingActionButton), findsNothing);
+  });
+
+  testWidgets(
+    'SearchView utility pane renders idle hint and controls',
+    (
+      tester,
+    ) async {
+      await tester.binding.setSurfaceSize(const Size(834, 1194));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+
+      final container = ProviderContainer(overrides: _baseOverrides(db));
+      addTearDown(container.dispose);
+      final codec = container.read(searchQueryCodecProvider);
+      final repository = container.read(searchHistoryRepositoryProvider);
+      for (var index = 0; index < 6; index += 1) {
+        await repository.insertWithDedup(
+          id: 'utility_history_$index',
+          target: 'drug',
+          queryJson: codec.encode(
+            DrugSearchParams(
+              keyword: 'ユーティリティ履歴$index',
+              dosageForm: index.isEven ? const ['tablet'] : null,
+            ),
+          ),
+          searchedAt: DateTime.utc(2026, 5, 5, 9, index),
+          totalCount: index + 1,
+        );
+      }
+
+      await tester.pumpWidget(
+        UncontrolledProviderScope(
+          container: container,
+          child: MaterialApp(
+            theme: AppTheme.light(),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: SearchView(currentTime: DateTime.utc(2026, 5, 5, 9, 10)),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(
+        find.byKey(const ValueKey('search-utility-idle-master-state')),
+        findsOneWidget,
+      );
+      expect(find.text('検索キーワードを入力'), findsOneWidget);
+      expect(find.text('履歴やフィルタからも始められます。'), findsOneWidget);
+      expect(
+        find.descendant(
+          of: find.byKey(const ValueKey('search-utility-history-section')),
+          matching: find.text('最近の検索'),
+        ),
+        findsOneWidget,
+      );
+      expect(
+        find.descendant(
+          of: find.byKey(const ValueKey('search-utility-history-section')),
+          matching: find.text('検索履歴'),
+        ),
+        findsNothing,
+      );
+      expect(
+        find.byWidgetPredicate(
+          (widget) =>
+              widget.key is ValueKey<String> &&
+              (widget.key! as ValueKey<String>).value.startsWith(
+                'search-utility-history-row-',
+              ),
+        ),
+        findsNWidgets(5),
+      );
+      expect(find.text('ユーティリティ履歴5'), findsOneWidget);
+      expect(find.text('ユーティリティ履歴0'), findsNothing);
+      expect(find.text('6 件'), findsOneWidget);
+      expect(
+        find.byKey(
+          const ValueKey('search-utility-history-query-utility_history_5'),
+        ),
+        findsOneWidget,
+      );
+      expect(
+        find.byKey(
+          const ValueKey('search-utility-history-count-utility_history_5'),
+        ),
+        findsOneWidget,
+      );
+      expect(
+        find.byKey(
+          const ValueKey('search-utility-history-when-utility_history_5'),
+        ),
+        findsOneWidget,
+      );
+      expect(
+        find.byKey(
+          const ValueKey('search-utility-history-filter-utility_history_4'),
+        ),
+        findsOneWidget,
+      );
+      expect(
+        find.byKey(
+          const ValueKey(
+            'search-utility-history-filter-empty-utility_history_5',
+          ),
+        ),
+        findsOneWidget,
+      );
+      expect(find.text('絞込'), findsWidgets);
+      expect(find.text('絞り込み +1'), findsNothing);
+      expect(find.text('7 軸 · 軸内 OR / 軸間 AND'), findsOneWidget);
+      expect(find.text('11 値・複数選択 OR'), findsOneWidget);
+      expect(
+        find.byKey(const ValueKey('search-utility-filter-reset')),
+        findsOneWidget,
+      );
+      expect(find.text('結果を見る (0 件)'), findsOneWidget);
+      expect(
+        find.byKey(
+          const ValueKey('search-utility-sort-radio-revised_at'),
+          skipOffstage: false,
+        ),
+        findsOneWidget,
+      );
+      expect(
+        find.byKey(
+          const ValueKey('search-utility-sort-revised_at'),
+          skipOffstage: false,
+        ),
+        findsOneWidget,
+      );
+    },
+  );
+
+  testWidgets(
+    'SearchView utility pane switches disease axes and sort options',
+    (
+      tester,
+    ) async {
+      await tester.binding.setSurfaceSize(const Size(834, 1194));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: _baseOverrides(db),
+          child: MaterialApp(
+            theme: AppTheme.light(),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: const SearchView(),
+          ),
+        ),
+      );
+
+      await tester.tap(find.text('疾患'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('9 軸 · 軸内 OR / 軸間 AND'), findsOneWidget);
+      expect(find.text('ICD-10 章'), findsOneWidget);
+      expect(find.text('診療科'), findsOneWidget);
+      expect(find.text('重症度評価あり'), findsOneWidget);
+      await tester.scrollUntilVisible(
+        find.byKey(
+          const ValueKey('search-utility-sort-name_kana'),
+          skipOffstage: false,
+        ),
+        120,
+        scrollable: find.descendant(
+          of: find.byKey(const ValueKey('search-utility-pane')),
+          matching: find.byType(Scrollable),
+        ),
+      );
+      expect(
+        find.byKey(
+          const ValueKey('search-utility-sort-name_kana'),
+          skipOffstage: false,
+        ),
+        findsOneWidget,
+      );
+      expect(
+        find.byKey(
+          const ValueKey('search-utility-sort-icd10_chapter'),
+          skipOffstage: false,
+        ),
+        findsOneWidget,
+      );
+    },
+  );
+
   testWidgets('SearchView FAB uses Round6 colors in both modes', (
     tester,
   ) async {
+    await tester.binding.setSurfaceSize(const Size(390, 844));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+
     Future<void> pumpWithTheme(ThemeData theme, {ThemeMode? themeMode}) async {
       await tester.pumpWidget(
         ProviderScope(
-          overrides: [appDatabaseProvider.overrideWithValue(db)],
+          overrides: _baseOverrides(db),
           child: MaterialApp(
             theme: themeMode == ThemeMode.dark ? AppTheme.light() : theme,
             darkTheme: themeMode == ThemeMode.dark ? theme : null,
@@ -215,7 +1200,7 @@ void main() {
   ) async {
     await tester.pumpWidget(
       ProviderScope(
-        overrides: [appDatabaseProvider.overrideWithValue(db)],
+        overrides: _baseOverrides(db),
         child: MaterialApp(
           theme: AppTheme.light(),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -256,7 +1241,7 @@ void main() {
   ) async {
     await tester.pumpWidget(
       ProviderScope(
-        overrides: [appDatabaseProvider.overrideWithValue(db)],
+        overrides: _baseOverrides(db),
         child: MaterialApp(
           theme: AppTheme.light(),
           darkTheme: AppTheme.dark(),
@@ -448,6 +1433,9 @@ void main() {
   testWidgets('filter sheet close icon uses Round6 primary color', (
     tester,
   ) async {
+    await tester.binding.setSurfaceSize(const Size(390, 844));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+
     final categoryApiClient = _MockCategoryApiClient();
     final drugApiClient = _MockDrugApiClient();
     _stubDrugSearch(drugApiClient);
@@ -486,6 +1474,9 @@ void main() {
   testWidgets('FAB badge uses Round6 custom +N geometry and colors', (
     tester,
   ) async {
+    await tester.binding.setSurfaceSize(const Size(390, 844));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+
     final drugApiClient = _MockDrugApiClient();
     _stubDrugSearch(drugApiClient);
 
@@ -751,6 +1742,406 @@ void main() {
     },
   );
 
+  testWidgets(
+    'SearchView closes phone sort sheet when rotating to landscape '
+    'utility pane',
+    (tester) async {
+      await tester.binding.setSurfaceSize(const Size(390, 844));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+
+      await _pumpSearchViewWithDrugResults(tester, db);
+
+      await tester.tap(find.text('並び替え： 更新日(新しい順) ↓ ▾'));
+      await tester.pumpAndSettle();
+      expect(
+        find.byKey(const ValueKey('search-sort-sheet')),
+        findsOneWidget,
+      );
+
+      await tester.binding.setSurfaceSize(const Size(844, 390));
+      await tester.pumpAndSettle();
+
+      expect(find.byKey(const ValueKey('search-sort-sheet')), findsNothing);
+      expect(tester.takeException(), isNull);
+    },
+  );
+
+  testWidgets(
+    'SearchView closes phone filter sheet when rotating to landscape '
+    'utility pane',
+    (tester) async {
+      await tester.binding.setSurfaceSize(const Size(390, 844));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+
+      await _pumpSearchViewWithDrugResults(tester, db);
+
+      await tester.tap(find.byType(FloatingActionButton));
+      await tester.pumpAndSettle();
+      expect(
+        find.byKey(const ValueKey('search-round6-filter-sheet')),
+        findsOneWidget,
+      );
+
+      await tester.binding.setSurfaceSize(const Size(844, 390));
+      await tester.pumpAndSettle();
+
+      expect(
+        find.byKey(const ValueKey('search-round6-filter-sheet')),
+        findsNothing,
+      );
+      expect(tester.takeException(), isNull);
+    },
+  );
+
+  testWidgets('SearchView utility pane does not open phone sort sheet', (
+    tester,
+  ) async {
+    await tester.binding.setSurfaceSize(const Size(834, 1194));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+
+    await _pumpSearchViewWithDrugResults(tester, db);
+
+    expect(find.byKey(const ValueKey('search-utility-pane')), findsOneWidget);
+    await tester.tap(find.text('並び替え： 更新日(新しい順) ↓ ▾'));
+    await tester.pumpAndSettle();
+
+    expect(find.byKey(const ValueKey('search-sort-sheet')), findsNothing);
+  });
+
+  testWidgets('SearchView utility pane filter axes expand inside two-pane', (
+    tester,
+  ) async {
+    await tester.binding.setSurfaceSize(const Size(834, 1194));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+
+    await _pumpSearchViewWithDrugResults(tester, db);
+
+    final axis = find.byKey(
+      const ValueKey('search-utility-filter-axis-dosage_form'),
+    );
+    expect(axis, findsOneWidget);
+    expect(
+      find.byKey(
+        const ValueKey('search-utility-filter-axis-values-dosage_form'),
+      ),
+      findsNothing,
+    );
+
+    await tester.tap(axis);
+    await tester.pumpAndSettle();
+
+    expect(
+      find.byKey(
+        const ValueKey('search-utility-filter-axis-values-dosage_form'),
+      ),
+      findsOneWidget,
+    );
+    expect(find.text('錠剤', skipOffstage: false), findsOneWidget);
+  });
+
+  testWidgets('SearchView keeps iPad portrait utility layout under keyboard', (
+    tester,
+  ) async {
+    await tester.binding.setSurfaceSize(const Size(834, 1194));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: _baseOverrides(db),
+        child: MaterialApp(
+          theme: AppTheme.light(),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: const MediaQuery(
+            data: MediaQueryData(
+              size: Size(834, 1194),
+              viewInsets: EdgeInsets.only(bottom: 804),
+            ),
+            child: SearchView(),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(
+      find.byKey(const ValueKey('search-round6-top-chrome')),
+      findsOneWidget,
+    );
+    expect(find.byKey(const ValueKey('search-utility-pane')), findsOneWidget);
+    expect(
+      find.byKey(const ValueKey('search-adaptive-split-rail')),
+      findsNothing,
+    );
+    expect(
+      find.byKey(const ValueKey('search-landscape-vertical-tabs')),
+      findsNothing,
+    );
+  });
+
+  testWidgets('SearchView keeps iPad landscape utility layout under keyboard', (
+    tester,
+  ) async {
+    await tester.binding.setSurfaceSize(const Size(1194, 834));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: _baseOverrides(db),
+        child: MaterialApp(
+          theme: AppTheme.light(),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: const MediaQuery(
+            data: MediaQueryData(
+              size: Size(1194, 834),
+              viewInsets: EdgeInsets.only(bottom: 414),
+            ),
+            child: SearchView(),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(
+      find.byKey(const ValueKey('search-round6-top-chrome')),
+      findsOneWidget,
+    );
+    expect(find.byKey(const ValueKey('search-utility-pane')), findsOneWidget);
+    expect(
+      find.byKey(const ValueKey('search-adaptive-split-rail')),
+      findsNothing,
+    );
+    expect(
+      find.byKey(const ValueKey('search-landscape-vertical-tabs')),
+      findsNothing,
+    );
+  });
+
+  testWidgets('SearchView utility pane reserves keyboard bottom inset', (
+    tester,
+  ) async {
+    await tester.binding.setSurfaceSize(const Size(1194, 834));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: _baseOverrides(db),
+        child: MaterialApp(
+          theme: AppTheme.light(),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: const MediaQuery(
+            data: MediaQueryData(
+              size: Size(1194, 834),
+              viewInsets: EdgeInsets.only(bottom: 414),
+            ),
+            child: SearchView(),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    final scroll = tester.widget<ListView>(
+      find.byKey(const ValueKey('search-utility-pane-scroll')),
+    );
+    final padding = scroll.padding! as EdgeInsets;
+
+    expect(padding.bottom, greaterThanOrEqualTo(434));
+  });
+
+  testWidgets(
+    'SearchView utility pane reads raw view inset '
+    'when route MediaQuery is zero',
+    (tester) async {
+      tester.view
+        ..devicePixelRatio = 1
+        ..physicalSize = const Size(1194, 834)
+        ..viewInsets = const FakeViewPadding(bottom: 414);
+      addTearDown(() {
+        tester.view
+          ..resetViewInsets()
+          ..resetPhysicalSize()
+          ..resetDevicePixelRatio();
+      });
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: _baseOverrides(db),
+          child: MaterialApp(
+            theme: AppTheme.light(),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: const MediaQuery(
+              data: MediaQueryData(size: Size(1194, 834)),
+              child: SearchView(),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      final scroll = tester.widget<ListView>(
+        find.byKey(const ValueKey('search-utility-pane-scroll')),
+      );
+      final padding = scroll.padding! as EdgeInsets;
+
+      expect(padding.bottom, greaterThanOrEqualTo(434));
+    },
+  );
+
+  testWidgets('SearchView utility pane interaction dismisses search keyboard', (
+    tester,
+  ) async {
+    await tester.binding.setSurfaceSize(const Size(1194, 834));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: _baseOverrides(db),
+        child: MaterialApp(
+          theme: AppTheme.light(),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: const SearchView(),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byKey(const ValueKey('search-field')));
+    await tester.pump();
+    expect(tester.testTextInput.isVisible, isTrue);
+
+    await tester.tap(
+      find.byKey(const ValueKey('search-utility-filter-axis-regulatory_class')),
+    );
+    await tester.pump();
+
+    expect(tester.testTextInput.isVisible, isFalse);
+  });
+
+  testWidgets(
+    'SearchView utility pane filter CTA count previews toggled chips '
+    'in two-pane',
+    (tester) async {
+      await tester.binding.setSurfaceSize(const Size(834, 1194));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+
+      final drugApiClient = _MockDrugApiClient();
+      final categoryApiClient = _MockCategoryApiClient();
+      when(categoryApiClient.getCategories).thenAnswer(
+        (_) async => _categoriesFixture(),
+      );
+      when(
+        () => drugApiClient.getDrugs(
+          page: any(named: 'page'),
+          pageSize: any(named: 'pageSize'),
+          categoryAtc: any(named: 'categoryAtc'),
+          therapeuticCategory: any(named: 'therapeuticCategory'),
+          regulatoryClass: any(named: 'regulatoryClass'),
+          dosageForm: any(named: 'dosageForm'),
+          route: any(named: 'route'),
+          keyword: any(named: 'keyword'),
+          keywordMatch: any(named: 'keywordMatch'),
+          keywordTarget: any(named: 'keywordTarget'),
+          adverseReactionKeyword: any(named: 'adverseReactionKeyword'),
+          precautionCategory: any(named: 'precautionCategory'),
+          sort: any(named: 'sort'),
+        ),
+      ).thenAnswer((invocation) async {
+        final pageSize = invocation.namedArguments[#pageSize] as int?;
+        return _drugListFixture().copyWith(
+          items: pageSize == 1 ? _drugListFixture().items.take(1).toList() : [],
+          totalCount: pageSize == 1 ? 17 : 0,
+        );
+      });
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            appDatabaseProvider.overrideWithValue(db),
+            drugApiClientProvider.overrideWithValue(drugApiClient),
+            categoryApiClientProvider.overrideWithValue(categoryApiClient),
+          ],
+          child: MaterialApp(
+            theme: AppTheme.light(),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: const SearchView(),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.text('結果を見る (0 件)'), findsOneWidget);
+
+      await tester.tap(
+        find.byKey(const ValueKey('search-utility-filter-axis-dosage_form')),
+      );
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('錠剤', skipOffstage: false));
+      await tester.pump(const Duration(milliseconds: 250));
+      await tester.pump();
+
+      expect(find.text('結果を見る (17 件)'), findsOneWidget);
+      verify(
+        () => drugApiClient.getDrugs(
+          page: 1,
+          pageSize: 1,
+          categoryAtc: any(named: 'categoryAtc'),
+          therapeuticCategory: any(named: 'therapeuticCategory'),
+          regulatoryClass: any(named: 'regulatoryClass'),
+          dosageForm: any(named: 'dosageForm'),
+          route: any(named: 'route'),
+          keyword: any(named: 'keyword'),
+          keywordMatch: any(named: 'keywordMatch'),
+          keywordTarget: any(named: 'keywordTarget'),
+          adverseReactionKeyword: any(named: 'adverseReactionKeyword'),
+          precautionCategory: any(named: 'precautionCategory'),
+          sort: any(named: 'sort'),
+        ),
+      ).called(1);
+    },
+  );
+
+  testWidgets(
+    'SearchView keeps result count and sort toolbar sticky above two-pane list',
+    (tester) async {
+      await tester.binding.setSurfaceSize(const Size(834, 1194));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+
+      await _pumpSearchViewWithDrugResults(tester, db);
+
+      final toolbarFinder = find.byKey(
+        const ValueKey('search-results-toolbar'),
+      );
+      final firstTop = tester.getTopLeft(toolbarFinder).dy;
+
+      await tester.drag(
+        find.byKey(const PageStorageKey<String>('drugSearchResults')),
+        const Offset(0, -360),
+      );
+      await tester.pumpAndSettle();
+
+      expect(toolbarFinder, findsOneWidget);
+      expect(
+        find.descendant(of: toolbarFinder, matching: find.text('合計 120 件')),
+        findsOneWidget,
+      );
+      expect(
+        find.descendant(
+          of: toolbarFinder,
+          matching: find.text('並び替え： 更新日(新しい順) ↓ ▾'),
+        ),
+        findsOneWidget,
+      );
+      expect(tester.getTopLeft(toolbarFinder).dy, firstTop);
+    },
+  );
+
   // Design source:
   // Round5/Search - Round 5.html TASK 4 keyboard drag-to-dismiss.
   testWidgets('SearchView result list dismisses keyboard on drag', (
@@ -806,15 +2197,13 @@ void main() {
     );
   });
 
-  testWidgets('history dropdown follows Round6 divider and keyboard geometry', (
+  testWidgets('inline history follows Round6 divider and latest-five limit', (
     tester,
   ) async {
     await tester.binding.setSurfaceSize(const Size(390, 844));
     addTearDown(() => tester.binding.setSurfaceSize(null));
 
-    final container = ProviderContainer(
-      overrides: [appDatabaseProvider.overrideWithValue(db)],
-    );
+    final container = ProviderContainer(overrides: _baseOverrides(db));
     addTearDown(container.dispose);
     final codec = container.read(searchQueryCodecProvider);
     final repository = container.read(searchHistoryRepositoryProvider);
@@ -837,39 +2226,56 @@ void main() {
           theme: AppTheme.light(),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
-          home: const MediaQuery(
-            data: MediaQueryData(
-              size: Size(390, 844),
-              viewInsets: EdgeInsets.only(bottom: 300),
-            ),
-            child: SearchView(),
-          ),
+          home: SearchView(currentTime: DateTime.utc(2026, 5, 5, 9, 10)),
         ),
       ),
     );
 
-    await tester.tap(find.byKey(const ValueKey('search-field')));
     await tester.pumpAndSettle();
 
-    final dropdown = tester.getRect(
-      find.byKey(const ValueKey('search-history-dropdown')),
+    final inline = tester.getRect(
+      find.byKey(const ValueKey('search-history-inline')),
     );
-    final divider = tester.widget<Divider>(
-      find.byKey(
-        const ValueKey('search-history-row-divider-round6_keyboard_history_4'),
+    final dividers = tester.widgetList<Divider>(
+      find.descendant(
+        of: find.byKey(const ValueKey('search-history-inline')),
+        matching: find.byType(Divider),
       ),
     );
 
-    expect(dropdown.height, lessThanOrEqualTo(250));
-    expect(divider.color, AppPalette.light.hairline2);
-    expect(divider.thickness, 0.5);
+    expect(inline.width, 358);
+    expect(dividers, hasLength(4));
+    expect(dividers.first.color, AppPalette.light.hairline2);
+    expect(dividers.first.thickness, 0.5);
     expect(find.text('キーボード履歴4'), findsOneWidget);
+    expect(find.text('キーボード履歴0'), findsOneWidget);
+    expect(
+      find.byKey(
+        const ValueKey('history-row-when-round6_keyboard_history_4'),
+      ),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(
+        const ValueKey('history-row-filter-empty-round6_keyboard_history_4'),
+      ),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(
+        const ValueKey('history-target-pill-round6_keyboard_history_4'),
+      ),
+      findsNothing,
+    );
+    expect(
+      find.byKey(const ValueKey('delete-history-round6_keyboard_history_4')),
+      findsNothing,
+    );
+    expect(find.byKey(const ValueKey('search-history-dropdown')), findsNothing);
   });
 
   testWidgets('history actions follow Round6 light controls', (tester) async {
-    final container = ProviderContainer(
-      overrides: [appDatabaseProvider.overrideWithValue(db)],
-    );
+    final container = ProviderContainer(overrides: _baseOverrides(db));
     addTearDown(container.dispose);
     final codec = container.read(searchQueryCodecProvider);
     final repository = container.read(searchHistoryRepositoryProvider);
@@ -893,7 +2299,6 @@ void main() {
       ),
     );
 
-    await tester.tap(find.byKey(const ValueKey('search-field')));
     await tester.pumpAndSettle();
 
     final clearButton = tester.widget<TextButton>(
@@ -903,21 +2308,22 @@ void main() {
     expect(clearLabel.style?.fontWeight, FontWeight.w700);
     expect(clearLabel.style?.color, AppPalette.light.primary);
 
-    final deleteBgFinder = find.byKey(
-      const ValueKey('search-history-delete-bg-round6_history_action'),
+    expect(
+      find.byKey(const ValueKey('delete-history-round6_history_action')),
+      findsNothing,
     );
-    expect(deleteBgFinder, findsOneWidget);
-    final deleteBg = tester.widget<DecoratedBox>(deleteBgFinder);
-    final decoration = deleteBg.decoration as BoxDecoration;
-    expect(decoration.color, AppPalette.light.surface3);
-    expect(decoration.borderRadius, BorderRadius.circular(11));
-    expect(tester.getSize(deleteBgFinder), const Size(22, 22));
-
-    final deleteIcon = tester.widget<Icon>(
-      find.descendant(of: deleteBgFinder, matching: find.byIcon(Icons.close)),
+    expect(
+      find.byKey(
+        const ValueKey('search-history-delete-bg-round6_history_action'),
+      ),
+      findsNothing,
     );
-    expect(deleteIcon.size, 9);
-    expect(deleteIcon.color, AppPalette.light.muted);
+    expect(
+      find.byKey(
+        const ValueKey('history-row-filter-empty-round6_history_action'),
+      ),
+      findsOneWidget,
+    );
   });
 
   testWidgets('focused search cancel follows Round6 bold action text', (
@@ -925,7 +2331,7 @@ void main() {
   ) async {
     await tester.pumpWidget(
       ProviderScope(
-        overrides: [appDatabaseProvider.overrideWithValue(db)],
+        overrides: _baseOverrides(db),
         child: MaterialApp(
           theme: AppTheme.light(),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -1632,6 +3038,9 @@ void main() {
   testWidgets('drug_regulatory_axis_title_is_kisei_kubun_(T15)', (
     tester,
   ) async {
+    await tester.binding.setSurfaceSize(const Size(390, 844));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+
     final categoryApiClient = _MockCategoryApiClient();
     final drugApiClient = _MockDrugApiClient();
     _stubDrugSearch(drugApiClient);
@@ -1675,6 +3084,9 @@ void main() {
   testWidgets('filter_cta_uses_primary_palette_in_both_modes_(T16)', (
     tester,
   ) async {
+    await tester.binding.setSurfaceSize(const Size(390, 844));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+
     Future<void> pumpFilter(Brightness brightness) async {
       final categoryApiClient = _MockCategoryApiClient();
       final drugApiClient = _MockDrugApiClient();
@@ -1740,6 +3152,9 @@ void main() {
   testWidgets('axis_summary_and_hint_share_single_row_(T17)', (
     tester,
   ) async {
+    await tester.binding.setSurfaceSize(const Size(390, 844));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+
     final categoryApiClient = _MockCategoryApiClient();
     final drugApiClient = _MockDrugApiClient();
     _stubDrugSearch(drugApiClient);
@@ -2027,7 +3442,7 @@ void main() {
 
     await tester.pumpWidget(
       ProviderScope(
-        overrides: [appDatabaseProvider.overrideWithValue(db)],
+        overrides: _baseOverrides(db),
         child: MaterialApp(
           theme: AppTheme.light(),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -2061,6 +3476,21 @@ final class _MockDrugApiClient extends Mock implements DrugApiClient {}
 final class _MockDiseaseApiClient extends Mock implements DiseaseApiClient {}
 
 final class _MockCategoryApiClient extends Mock implements CategoryApiClient {}
+
+List<Override> _baseOverrides(AppDatabase db) {
+  return [
+    appDatabaseProvider.overrideWithValue(db),
+    _categoryApiClientOverride(),
+  ];
+}
+
+Override _categoryApiClientOverride() {
+  final categoryApiClient = _MockCategoryApiClient();
+  when(categoryApiClient.getCategories).thenAnswer(
+    (_) async => _categoriesFixture(),
+  );
+  return categoryApiClientProvider.overrideWithValue(categoryApiClient);
+}
 
 void _stubDrugSearch(_MockDrugApiClient drugApiClient) {
   when(
@@ -2117,8 +3547,13 @@ Future<void> _pumpSearchViewWithDrugResults(
   WidgetTester tester,
   AppDatabase db, {
   DrugListResponseDto? response,
+  MediaQueryData? mediaQueryData,
 }) async {
   final drugApiClient = _MockDrugApiClient();
+  final categoryApiClient = _MockCategoryApiClient();
+  when(categoryApiClient.getCategories).thenAnswer(
+    (_) async => _categoriesFixture(),
+  );
   if (response == null) {
     _stubDrugSearch(drugApiClient);
   } else {
@@ -2146,12 +3581,18 @@ Future<void> _pumpSearchViewWithDrugResults(
       overrides: [
         appDatabaseProvider.overrideWithValue(db),
         drugApiClientProvider.overrideWithValue(drugApiClient),
+        categoryApiClientProvider.overrideWithValue(categoryApiClient),
       ],
       child: MaterialApp(
         theme: AppTheme.light(),
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
-        home: const SearchView(),
+        home: mediaQueryData == null
+            ? const SearchView()
+            : MediaQuery(
+                data: mediaQueryData,
+                child: const SearchView(),
+              ),
       ),
     ),
   );
@@ -2160,6 +3601,6 @@ Future<void> _pumpSearchViewWithDrugResults(
     find.byKey(const ValueKey('search-field')),
     'アムロ',
   );
-  await tester.tap(find.byType(FilledButton).first);
+  await tester.tap(find.byKey(const ValueKey('search-submit-button')));
   await tester.pumpAndSettle();
 }

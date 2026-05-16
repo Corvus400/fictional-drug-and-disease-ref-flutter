@@ -214,17 +214,26 @@ class AppLocalizationsJa extends AppLocalizations {
   String get searchHistoryTitle => '検索履歴';
 
   @override
+  String get searchHistoryRecentTitle => '最近の検索';
+
+  @override
   String get searchHistoryEmptyTitle => '検索履歴はまだありません';
 
   @override
   String get searchHistoryEmptyDescription =>
-      '検索すると履歴が最大 5 件まで残ります。\n履歴は端末内にのみ保存されます。';
+      '検索すると最新 5 件まで表示されます。履歴は端末内にのみ保存されます。';
 
   @override
   String get searchHistoryClear => 'すべて消す';
 
   @override
   String get searchHistoryPrivacyNote => '最新 5 件まで表示。履歴は端末内にのみ保存されます';
+
+  @override
+  String get searchHistoryFilteredBadge => '絞込';
+
+  @override
+  String get searchHistoryNoFilterBadge => '—';
 
   @override
   String searchHistoryFilterCount(int count) {

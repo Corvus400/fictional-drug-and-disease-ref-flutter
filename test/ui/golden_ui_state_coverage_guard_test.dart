@@ -117,7 +117,7 @@ const _expectations = <_GoldenCoverageExpectation>[
   ),
   _GoldenCoverageExpectation(
     screen: 'search',
-    state: 'history dropdown with entries',
+    state: 'inline history with entries',
     testFile: 'test/ui/search/search_view_golden_test.dart',
     goldenDir: 'test/ui/search/goldens/macos',
     sourceFragment: "name: 's2_history'",
@@ -125,7 +125,7 @@ const _expectations = <_GoldenCoverageExpectation>[
   ),
   _GoldenCoverageExpectation(
     screen: 'search',
-    state: 'disease history dropdown with entries',
+    state: 'disease inline history with entries',
     testFile: 'test/ui/search/search_view_golden_test.dart',
     goldenDir: 'test/ui/search/goldens/macos',
     sourceFragment: "name: 's23_disease_history'",
@@ -133,7 +133,7 @@ const _expectations = <_GoldenCoverageExpectation>[
   ),
   _GoldenCoverageExpectation(
     screen: 'search',
-    state: 'history dropdown empty',
+    state: 'inline history empty',
     testFile: 'test/ui/search/search_view_golden_test.dart',
     goldenDir: 'test/ui/search/goldens/macos',
     sourceFragment: "name: 's16_empty_history'",
@@ -141,7 +141,7 @@ const _expectations = <_GoldenCoverageExpectation>[
   ),
   _GoldenCoverageExpectation(
     screen: 'search',
-    state: 'disease history dropdown empty',
+    state: 'disease inline history empty',
     testFile: 'test/ui/search/search_view_golden_test.dart',
     goldenDir: 'test/ui/search/goldens/macos',
     sourceFragment: "name: 's24_disease_empty_history'",
@@ -613,6 +613,14 @@ const _expectations = <_GoldenCoverageExpectation>[
     sourceFragment: 'history error renders the same empty history surface',
     goldenPrefix: 'calc_history_error',
     baselinePrefix: 'calc_history_empty',
+  ),
+  _GoldenCoverageExpectation(
+    screen: 'shell',
+    state: 'landscape navigation rail',
+    testFile: 'test/ui/shell/app_shell_navigation_bar_golden_test.dart',
+    goldenDir: 'test/ui/shell/goldens/macos',
+    sourceFragment: "fileNamePrefix: 'app_shell_navigation_rail'",
+    goldenPrefix: 'app_shell_navigation_rail',
   ),
 ];
 

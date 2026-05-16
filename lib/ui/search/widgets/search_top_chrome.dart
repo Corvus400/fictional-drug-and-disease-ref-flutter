@@ -146,12 +146,14 @@ class _SearchField extends StatefulWidget {
 class _SearchFieldState extends State<_SearchField> {
   late final TextEditingController _controller;
   late final FocusNode _focusNode;
+  Timer? _keyboardReconnectTimer;
+  bool _wasFocusedOnPointerDown = false;
 
   @override
   void initState() {
     super.initState();
     _controller = TextEditingController(text: widget.queryText);
-    _focusNode = FocusNode();
+    _focusNode = FocusNode(debugLabel: 'search-field');
   }
 
   @override
@@ -167,6 +169,7 @@ class _SearchFieldState extends State<_SearchField> {
 
   @override
   void dispose() {
+    _keyboardReconnectTimer?.cancel();
     _controller.dispose();
     _focusNode.dispose();
     super.dispose();
@@ -174,49 +177,96 @@ class _SearchFieldState extends State<_SearchField> {
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
-      key: const ValueKey('search-field'),
-      controller: _controller,
-      focusNode: _focusNode,
-      groupId: widget.tapRegionGroupId,
-      onTap: widget.onTap,
-      onTapOutside: (_) {
-        FocusScope.of(context).unfocus();
-        widget.onCancel();
+    return Listener(
+      onPointerDown: (_) {
+        _wasFocusedOnPointerDown = _focusNode.hasFocus;
+        _focusNode.requestFocus();
+        _showKeyboardOnNextFrame();
+        if (_wasFocusedOnPointerDown && !_keyboardIsVisible()) {
+          _reconnectKeyboard();
+        }
       },
-      onChanged: widget.onChanged,
-      onSubmitted: (_) => unawaited(widget.onSubmit()),
-      textInputAction: TextInputAction.search,
-      decoration: InputDecoration(
-        hintText: widget.hintText,
-        prefixIcon: const Icon(Icons.search),
-        suffixIcon: widget.queryText.isEmpty
-            ? null
-            : IconButton(
-                key: const ValueKey('search-query-clear-button'),
-                onPressed: () {
-                  widget.onClear();
-                  _focusNode.requestFocus();
-                },
-                icon: const Icon(Icons.cancel),
-              ),
-        filled: true,
-        fillColor: widget.palette.searchFieldBg,
-        contentPadding: EdgeInsets.zero,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(
-            SearchConstants.searchFieldRadius,
+      child: TextField(
+        key: const ValueKey('search-field'),
+        controller: _controller,
+        focusNode: _focusNode,
+        groupId: widget.tapRegionGroupId,
+        onTapAlwaysCalled: true,
+        onTap: () {
+          widget.onTap();
+        },
+        onTapOutside: (_) {
+          _keyboardReconnectTimer?.cancel();
+          FocusScope.of(context).unfocus();
+          widget.onCancel();
+        },
+        onChanged: widget.onChanged,
+        onSubmitted: (_) => unawaited(widget.onSubmit()),
+        textInputAction: TextInputAction.search,
+        decoration: InputDecoration(
+          hintText: widget.hintText,
+          prefixIcon: const Icon(Icons.search),
+          suffixIcon: widget.queryText.isEmpty
+              ? null
+              : IconButton(
+                  key: const ValueKey('search-query-clear-button'),
+                  onPressed: () {
+                    widget.onClear();
+                    _focusNode.requestFocus();
+                  },
+                  icon: const Icon(Icons.cancel),
+                ),
+          filled: true,
+          fillColor: widget.palette.searchFieldBg,
+          contentPadding: EdgeInsets.zero,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(
+              SearchConstants.searchFieldRadius,
+            ),
+            borderSide: BorderSide.none,
           ),
-          borderSide: BorderSide.none,
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(
-            SearchConstants.searchFieldRadius,
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(
+              SearchConstants.searchFieldRadius,
+            ),
+            borderSide: BorderSide(color: widget.palette.primaryRing),
           ),
-          borderSide: BorderSide(color: widget.palette.primaryRing),
         ),
       ),
     );
+  }
+
+  void _reconnectKeyboard() {
+    _keyboardReconnectTimer?.cancel();
+    _keyboardReconnectTimer = Timer(const Duration(milliseconds: 80), () {
+      if (!mounted || !_focusNode.hasFocus) {
+        return;
+      }
+      _focusNode.unfocus();
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) {
+          return;
+        }
+        _focusNode.requestFocus();
+        _showKeyboardOnNextFrame();
+      });
+    });
+  }
+
+  void _showKeyboardOnNextFrame() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted || !_focusNode.hasFocus) {
+        return;
+      }
+      unawaited(SystemChannels.textInput.invokeMethod<void>('TextInput.show'));
+    });
+  }
+
+  bool _keyboardIsVisible() {
+    final routeInset = MediaQuery.viewInsetsOf(context).bottom;
+    final view = View.of(context);
+    final rawInset = view.viewInsets.bottom / view.devicePixelRatio;
+    return routeInset > 0 || rawInset > 0;
   }
 }
 
