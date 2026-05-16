@@ -127,49 +127,6 @@ jobs:
     timeout-minutes: 45
 
     strategy:
-      fail-fast: true
-      matrix:
-        shard: [0, 1, 2, 3]
-
-    permissions:
-      contents: read
-      actions: write
-
-    steps:
-      - name: Checkout merged commit with base and pull-request branch
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
-
-      - uses: ./.github/actions/setup-flutter
-
-      - name: Run golden VRT shard
-        run: >
-          ./scripts/run-command-stop-on-output-pattern.sh
-          flutter test
-          --fail-fast
-          --tags golden
-          --total-shards 4
-          --shard-index ${{ matrix.shard }}
-
-      - name: Upload golden diff reports
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
-        if: always()
-        with:
-          name: golden-diff-reports-${{ matrix.shard }}
-          path: |
-            build/outputs/golden/**/*.png
-            build/test-results/golden/**/*.json
-          retention-days: 30
-          if-no-files-found: ignore
-
-  golden-main-vrt:
-    needs: [classify-ci-trust, detect-ci-scope, non-golden-tests]
-    if: >
-      needs.classify-ci-trust.outputs.trusted == 'true' &&
-      needs.detect-ci-scope.outputs.golden_vrt_required == 'true'
-    runs-on: macos-26
-    timeout-minutes: 45
-
-    strategy:
       fail-fast: false
       matrix:
         shard: [0, 1, 2, 3]
@@ -215,18 +172,16 @@ jobs:
       - name: Generate main-vs-PR golden VRT shard
         continue-on-error: true
         run: >
-          ./scripts/run-command-stop-on-output-pattern.sh
           flutter test
-          --fail-fast
           --tags golden
           --total-shards 4
           --shard-index ${{ matrix.shard }}
 
-      - name: Upload main-vs-PR golden diff reports
+      - name: Upload golden diff reports
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         if: always()
         with:
-          name: golden-main-diff-reports-${{ matrix.shard }}
+          name: golden-diff-reports-${{ matrix.shard }}
           path: |
             build/outputs/golden/**/*.png
             build/test-results/golden/**/*.json
@@ -234,14 +189,13 @@ jobs:
           if-no-files-found: ignore
 
   collect-golden-diff-reports:
-    needs: [classify-ci-trust, non-golden-tests, golden-vrt, golden-main-vrt]
+    needs: [classify-ci-trust, non-golden-tests, golden-vrt]
     if: >
       always() &&
       github.event_name == 'pull_request' &&
       needs.classify-ci-trust.outputs.trusted == 'true' &&
       needs.non-golden-tests.result == 'success' &&
-      needs.golden-vrt.result != 'skipped' &&
-      needs.golden-main-vrt.result != 'skipped'
+      needs.golden-vrt.result != 'skipped'
     runs-on: ubuntu-latest
     timeout-minutes: 5
 
@@ -261,7 +215,7 @@ jobs:
       - name: Download golden shard artifacts
         uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
         with:
-          pattern: golden-main-diff-reports-*
+          pattern: golden-diff-reports-*
           path: golden-diff-reports/build
           merge-multiple: true
 
