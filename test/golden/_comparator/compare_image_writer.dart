@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math' as math;
 import 'dart:typed_data';
 
 import 'package:image/image.dart' as img;
@@ -78,31 +79,38 @@ class CompareImageWriter {
   }
 
   _DiffResult _computeDiff(img.Image? golden, img.Image actual) {
-    if (golden == null ||
-        golden.width != actual.width ||
-        golden.height != actual.height) {
+    if (golden == null) {
       final diff = img.Image(width: actual.width, height: actual.height);
       img.fill(diff, color: img.ColorRgb8(255, 0, 0));
       return _DiffResult(diff, 1);
     }
 
-    final diff = img.Image(width: actual.width, height: actual.height);
+    final diffW = math.max(golden.width, actual.width);
+    final diffH = math.max(golden.height, actual.height);
+    final diff = img.Image(width: diffW, height: diffH);
     var changedCount = 0;
-    final totalPx = actual.width * actual.height;
+    final totalPx = diffW * diffH;
 
-    for (var y = 0; y < actual.height; y++) {
-      for (var x = 0; x < actual.width; x++) {
-        final actualPixel = actual.getPixel(x, y);
-        final goldenPixel = golden.getPixel(x, y);
-        final dr = (actualPixel.r - goldenPixel.r) / 255.0;
-        final dg = (actualPixel.g - goldenPixel.g) / 255.0;
-        final db = (actualPixel.b - goldenPixel.b) / 255.0;
-        final distSq = dr * dr + dg * dg + db * db;
-        if (distSq > _maxDistance * _maxDistance) {
+    for (var y = 0; y < diffH; y++) {
+      for (var x = 0; x < diffW; x++) {
+        final hasActual = x < actual.width && y < actual.height;
+        final hasGolden = x < golden.width && y < golden.height;
+        if (!hasActual || !hasGolden) {
           diff.setPixelRgb(x, y, 255, 0, 0);
           changedCount++;
         } else {
-          diff.setPixelRgb(x, y, 255, 255, 255);
+          final actualPixel = actual.getPixel(x, y);
+          final goldenPixel = golden.getPixel(x, y);
+          final dr = (actualPixel.r - goldenPixel.r) / 255.0;
+          final dg = (actualPixel.g - goldenPixel.g) / 255.0;
+          final db = (actualPixel.b - goldenPixel.b) / 255.0;
+          final distSq = dr * dr + dg * dg + db * db;
+          if (distSq > _maxDistance * _maxDistance) {
+            diff.setPixelRgb(x, y, 255, 0, 0);
+            changedCount++;
+          } else {
+            diff.setPixelRgb(x, y, 255, 255, 255);
+          }
         }
       }
     }
@@ -115,8 +123,8 @@ class CompareImageWriter {
     required img.Image actual,
     required img.Image diff,
   }) {
-    final paneW = actual.width;
-    final paneH = actual.height;
+    final paneW = math.max(golden?.width ?? actual.width, actual.width);
+    final paneH = math.max(golden?.height ?? actual.height, actual.height);
     final totalW = paneW * 3 + _paneSpacing * 2;
     final totalH = paneH + _labelHeight;
 

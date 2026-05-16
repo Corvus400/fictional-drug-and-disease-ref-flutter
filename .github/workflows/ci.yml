@@ -170,10 +170,10 @@ jobs:
           done < /tmp/golden-baseline-name-status.tsv
 
       - name: Generate main-vs-PR golden VRT shard
-        continue-on-error: true
         run: >
           flutter test
           --tags golden
+          --fail-fast
           --total-shards 4
           --shard-index ${{ matrix.shard }}
 

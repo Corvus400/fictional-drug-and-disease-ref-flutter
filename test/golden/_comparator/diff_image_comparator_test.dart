@@ -106,6 +106,35 @@ void main() {
       expect(_rgbAt(compare, 40, 20), (0, 255, 0));
     },
   );
+
+  test(
+    'shows only out-of-bounds area as red when image sizes differ',
+    () async {
+      final golden = _solidPng(width: 4, height: 4, r: 0, g: 0, b: 255);
+      final actual = _solidImage(width: 6, height: 4, r: 0, g: 0, b: 255);
+      for (var y = 0; y < 4; y++) {
+        for (var x = 4; x < 6; x++) {
+          actual.setPixelRgb(x, y, 0, 255, 0);
+        }
+      }
+      File(p.join(tempDir.path, 'size_changed.png')).writeAsBytesSync(golden);
+
+      await comparator.compare(
+        img.encodePng(actual),
+        Uri.parse('size_changed.png'),
+      );
+
+      final compareBytes = File(
+        p.join(outputDir.path, 'size_changed_compare.png'),
+      ).readAsBytesSync();
+      final compare = img.decodePng(compareBytes)!;
+
+      expect(_rgbAt(compare, 0, 20), (0, 0, 255));
+      expect(_rgbAt(compare, 22, 20), (255, 255, 255));
+      expect(_rgbAt(compare, 26, 20), (255, 0, 0));
+      expect(_rgbAt(compare, 48, 20), (0, 255, 0));
+    },
+  );
 }
 
 List<int> _solidPng({
