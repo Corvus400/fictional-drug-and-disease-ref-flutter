@@ -47,7 +47,7 @@ String _atcLabel(Categories categories, String value) {
 
 String _therapeuticCategoryLabel(Categories categories, String value) {
   for (final entry in categories.therapeuticCategories) {
-    if (entry.id == value) {
+    if (entry.id == value || entry.queryValue == value) {
       return entry.label;
     }
   }

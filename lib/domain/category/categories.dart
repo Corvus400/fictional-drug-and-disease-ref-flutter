@@ -48,10 +48,17 @@ final class AtcEntry {
 /// Therapeutic category entry.
 final class TherapeuticCategoryEntry {
   /// Creates a therapeutic category entry.
-  const TherapeuticCategoryEntry({required this.id, required this.label});
+  const TherapeuticCategoryEntry({
+    required this.id,
+    required this.queryValue,
+    required this.label,
+  });
 
   /// Category id.
   final String id;
+
+  /// Query value accepted by `/v1/drugs?therapeutic_category=...`.
+  final String queryValue;
 
   /// Display label.
   final String label;

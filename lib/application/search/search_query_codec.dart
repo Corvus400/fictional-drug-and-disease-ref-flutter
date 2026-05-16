@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:fictional_drug_and_disease_ref/data/mappers/categories_mapper.dart';
 import 'package:fictional_drug_and_disease_ref/domain/disease/disease_search_params.dart';
 import 'package:fictional_drug_and_disease_ref/domain/drug/drug_search_params.dart';
 
@@ -27,7 +28,9 @@ final class SearchQueryCodec {
       page: _int(json['page']),
       pageSize: _int(json['page_size']),
       categoryAtc: _string(json['category_atc']),
-      therapeuticCategory: _string(json['therapeutic_category']),
+      therapeuticCategory: _therapeuticCategory(
+        json['therapeutic_category'],
+      ),
       regulatoryClass: _stringList(json['regulatory_class']),
       dosageForm: _stringList(json['dosage_form']),
       route: _stringList(json['route']),
@@ -123,6 +126,11 @@ final class SearchQueryCodec {
     'has_severity_grading': params.hasSeverityGrading,
     'sort': params.sort?.serialName,
   }..removeWhere((_, value) => !_hasValue(value));
+}
+
+String? _therapeuticCategory(Object? value) {
+  final string = _string(value);
+  return string == null ? null : therapeuticCategoryQueryValue(string);
 }
 
 Map<String, Object?> _decode(String jsonText) {
