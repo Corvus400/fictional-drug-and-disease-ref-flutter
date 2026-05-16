@@ -22,4 +22,8 @@ void main() {
     expect(params.keywordTarget?.serialName, 'brand');
     expect(params.sort?.serialName, 'brand_name_kana');
   });
+
+  test('DrugKeywordTarget all serializes to all', () {
+    expect(DrugKeywordTarget.all.serialName, 'all');
+  });
 }

@@ -22,7 +22,10 @@ enum DrugKeywordTarget {
   brand('brand'),
 
   /// Generic and brand names.
-  both('both')
+  both('both'),
+
+  /// Generic, brand, ATC and YJ code fields.
+  all('all')
   ;
 
   const DrugKeywordTarget(this.serialName);

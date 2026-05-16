@@ -7,6 +7,7 @@ void main() {
     expect(DiseaseKeywordTarget.name.serialName, 'name');
     expect(DiseaseKeywordTarget.nameEnglish.serialName, 'name_english');
     expect(DiseaseKeywordTarget.synonyms.serialName, 'synonyms');
+    expect(DiseaseKeywordTarget.all.serialName, 'all');
   });
 
   test('DiseaseSearchParams stores query fields', () {

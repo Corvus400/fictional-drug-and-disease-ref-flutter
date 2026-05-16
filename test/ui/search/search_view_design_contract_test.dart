@@ -1276,6 +1276,7 @@ void main() {
         page: any(named: 'page'),
         pageSize: any(named: 'pageSize'),
         keyword: any(named: 'keyword'),
+        keywordTarget: any(named: 'keywordTarget'),
       ),
     ).thenThrow(
       DioException(
@@ -1337,6 +1338,7 @@ void main() {
         page: any(named: 'page'),
         pageSize: any(named: 'pageSize'),
         keyword: any(named: 'keyword'),
+        keywordTarget: any(named: 'keywordTarget'),
       ),
     ).thenAnswer(
       (_) async => _drugListFixture().copyWith(items: [], totalCount: 0),
@@ -2359,6 +2361,7 @@ void main() {
         page: any(named: 'page'),
         pageSize: any(named: 'pageSize'),
         keyword: any(named: 'keyword'),
+        keywordTarget: any(named: 'keywordTarget'),
       ),
     ).thenAnswer((invocation) {
       final page = invocation.namedArguments[#page] as int?;

@@ -45,8 +45,16 @@ final class SearchScreenNotifier extends Notifier<SearchScreenState> {
   void changeQueryText(String value) {
     state = state.copyWith(
       queryText: value,
-      drugParams: _copyDrugParams(state.drugParams, keyword: value),
-      diseaseParams: _copyDiseaseParams(state.diseaseParams, keyword: value),
+      drugParams: _copyDrugParams(
+        state.drugParams,
+        keyword: value,
+        keywordTarget: DrugKeywordTarget.all,
+      ),
+      diseaseParams: _copyDiseaseParams(
+        state.diseaseParams,
+        keyword: value,
+        keywordTarget: DiseaseKeywordTarget.all,
+      ),
     );
   }
 
@@ -103,6 +111,7 @@ final class SearchScreenNotifier extends Notifier<SearchScreenState> {
         page: 1,
         pageSize: SearchConstants.searchPageSize,
         keyword: state.queryText,
+        keywordTarget: DrugKeywordTarget.all,
       );
       state = state.copyWith(drugParams: params);
       final result = await ref.read(searchDrugsUsecaseProvider).execute(params);
@@ -115,6 +124,7 @@ final class SearchScreenNotifier extends Notifier<SearchScreenState> {
         page: 1,
         pageSize: SearchConstants.searchPageSize,
         keyword: state.queryText,
+        keywordTarget: DiseaseKeywordTarget.all,
       );
       state = state.copyWith(diseaseParams: params);
       final result = await ref
@@ -251,11 +261,13 @@ final class SearchScreenNotifier extends Notifier<SearchScreenState> {
         page: 1,
         pageSize: SearchConstants.searchPageSize,
         keyword: state.queryText,
+        keywordTarget: DrugKeywordTarget.all,
       ),
       diseaseParams: DiseaseSearchParams(
         page: 1,
         pageSize: SearchConstants.searchPageSize,
         keyword: state.queryText,
+        keywordTarget: DiseaseKeywordTarget.all,
       ),
       appliedChips: const AppliedFilterChips([]),
     );
@@ -597,6 +609,7 @@ DrugSearchParams _copyDrugParams(
   int? pageSize,
   String? keyword,
   KeywordMatch? keywordMatch,
+  DrugKeywordTarget? keywordTarget,
   DrugSort? sort,
   String? categoryAtc,
   String? therapeuticCategory,
@@ -616,7 +629,7 @@ DrugSearchParams _copyDrugParams(
     route: route ?? params.route,
     keyword: keyword ?? params.keyword,
     keywordMatch: keywordMatch ?? params.keywordMatch,
-    keywordTarget: params.keywordTarget,
+    keywordTarget: keywordTarget ?? params.keywordTarget,
     adverseReactionKeyword:
         adverseReactionKeyword ?? params.adverseReactionKeyword,
     precautionCategory: precautionCategory ?? params.precautionCategory,
@@ -630,6 +643,7 @@ DiseaseSearchParams _copyDiseaseParams(
   int? pageSize,
   String? keyword,
   KeywordMatch? keywordMatch,
+  DiseaseKeywordTarget? keywordTarget,
   List<String>? icd10Chapter,
   List<String>? department,
   List<String>? chronicity,
@@ -650,7 +664,7 @@ DiseaseSearchParams _copyDiseaseParams(
     infectious: infectious ?? params.infectious,
     keyword: keyword ?? params.keyword,
     keywordMatch: keywordMatch ?? params.keywordMatch,
-    keywordTarget: params.keywordTarget,
+    keywordTarget: keywordTarget ?? params.keywordTarget,
     symptomKeyword: symptomKeyword ?? params.symptomKeyword,
     onsetPattern: onsetPattern ?? params.onsetPattern,
     examCategory: examCategory ?? params.examCategory,

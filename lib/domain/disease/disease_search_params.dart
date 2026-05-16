@@ -9,7 +9,10 @@ enum DiseaseKeywordTarget {
   nameEnglish('name_english'),
 
   /// Synonyms.
-  synonyms('synonyms')
+  synonyms('synonyms'),
+
+  /// Name, synonyms, symptoms and ICD-10 fields.
+  all('all')
   ;
 
   const DiseaseKeywordTarget(this.serialName);
