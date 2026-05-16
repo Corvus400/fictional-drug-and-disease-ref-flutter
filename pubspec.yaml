@@ -46,6 +46,7 @@ dependencies:
   json_annotation: ^4.11.0
   logger: ^2.7.0
   material_symbols_icons: ^4.2928.1
+  package_info_plus: ^10.1.0
   path: ^1.9.1
   path_provider: ^2.1.5
   retrofit: ^4.9.2

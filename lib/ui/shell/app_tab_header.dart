@@ -1,7 +1,10 @@
+import 'package:fictional_drug_and_disease_ref/l10n/app_localizations.dart';
+import 'package:fictional_drug_and_disease_ref/router/app_router.dart';
 import 'package:fictional_drug_and_disease_ref/theme/app_palette.dart';
 import 'package:fictional_drug_and_disease_ref/theme/app_typography.dart';
 import 'package:fictional_drug_and_disease_ref/ui/shell/app_shell_tab.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 /// Shared title header for top-level shell tabs.
 class AppTabHeader extends StatelessWidget implements PreferredSizeWidget {
@@ -10,6 +13,7 @@ class AppTabHeader extends StatelessWidget implements PreferredSizeWidget {
     required this.tab,
     this.toolbarHeight = 56,
     this.bottom,
+    this.actions,
     super.key,
   });
 
@@ -21,6 +25,9 @@ class AppTabHeader extends StatelessWidget implements PreferredSizeWidget {
 
   /// Optional tab-specific bottom area.
   final PreferredSizeWidget? bottom;
+
+  /// Optional tab-specific actions rendered before the about entry point.
+  final List<Widget>? actions;
 
   @override
   Size get preferredSize {
@@ -38,6 +45,7 @@ class AppTabHeader extends StatelessWidget implements PreferredSizeWidget {
             : AppPalette.light);
     final typography = theme.extension<AppTypography>() ?? AppTypography.tokens;
     final effectiveBottom = bottom ?? _AppTabHeaderHairline(palette: palette);
+    final l10n = AppLocalizations.of(context)!;
 
     return AppBar(
       key: const ValueKey<String>('app-tab-header'),
@@ -60,6 +68,14 @@ class AppTabHeader extends StatelessWidget implements PreferredSizeWidget {
       elevation: 0,
       scrolledUnderElevation: 0,
       bottom: effectiveBottom,
+      actions: [
+        ...?actions,
+        IconButton(
+          icon: Icon(Icons.info_outline, color: palette.ink),
+          tooltip: l10n.aboutTitle,
+          onPressed: () => context.push(AppRoutes.about),
+        ),
+      ],
     );
   }
 }

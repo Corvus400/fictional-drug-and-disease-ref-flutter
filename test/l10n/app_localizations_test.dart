@@ -11,6 +11,19 @@ void main() {
     expect(ja.appTitle, 'メディマスタ');
   });
 
+  test('about strings match the app license contract', () {
+    final ja = AppLocalizationsJa();
+
+    expect(ja.aboutTitle, 'アプリについて');
+    expect(ja.aboutLicensesTitle, 'オープンソースライセンス');
+    expect(ja.aboutLicensesSubtitle, '使用しているオープンソースライブラリの一覧');
+    expect(ja.aboutAppVersionLabel('1.0.0'), 'バージョン 1.0.0');
+    expect(
+      ja.aboutAppLegalese,
+      '© 2026 Fictional Drug & Disease Ref Contributors',
+    );
+  });
+
   test('browsing history strings match the design contract', () {
     final ja = AppLocalizationsJa();
 

@@ -4,6 +4,31 @@
   "@appTitle": {
     "description": "アプリのタイトル"
   },
+  "aboutTitle": "アプリについて",
+  "@aboutTitle": {
+    "description": "アプリ情報画面のタイトル / AppTabHeader info icon の tooltip"
+  },
+  "aboutLicensesTitle": "オープンソースライセンス",
+  "@aboutLicensesTitle": {
+    "description": "ライセンス一覧へ遷移する ListTile のタイトル"
+  },
+  "aboutLicensesSubtitle": "使用しているオープンソースライブラリの一覧",
+  "@aboutLicensesSubtitle": {
+    "description": "ライセンス一覧 ListTile のサブタイトル"
+  },
+  "aboutAppVersionLabel": "バージョン {version}",
+  "@aboutAppVersionLabel": {
+    "description": "バージョン情報タイルのラベル",
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "aboutAppLegalese": "© 2026 Fictional Drug & Disease Ref Contributors",
+  "@aboutAppLegalese": {
+    "description": "LicensePage の legalese 文言"
+  },
   "commonLoading": "読み込み中",
   "tabSearch": "検索",
   "tabBookmarks": "ブックマーク",

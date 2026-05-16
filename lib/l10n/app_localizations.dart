@@ -100,6 +100,36 @@ abstract class AppLocalizations {
   /// **'メディマスタ'**
   String get appTitle;
 
+  /// アプリ情報画面のタイトル / AppTabHeader info icon の tooltip
+  ///
+  /// In ja, this message translates to:
+  /// **'アプリについて'**
+  String get aboutTitle;
+
+  /// ライセンス一覧へ遷移する ListTile のタイトル
+  ///
+  /// In ja, this message translates to:
+  /// **'オープンソースライセンス'**
+  String get aboutLicensesTitle;
+
+  /// ライセンス一覧 ListTile のサブタイトル
+  ///
+  /// In ja, this message translates to:
+  /// **'使用しているオープンソースライブラリの一覧'**
+  String get aboutLicensesSubtitle;
+
+  /// バージョン情報タイルのラベル
+  ///
+  /// In ja, this message translates to:
+  /// **'バージョン {version}'**
+  String aboutAppVersionLabel(String version);
+
+  /// LicensePage の legalese 文言
+  ///
+  /// In ja, this message translates to:
+  /// **'© 2026 Fictional Drug & Disease Ref Contributors'**
+  String get aboutAppLegalese;
+
   /// No description provided for @commonLoading.
   ///
   /// In ja, this message translates to:

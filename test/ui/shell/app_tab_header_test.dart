@@ -1,11 +1,17 @@
+import 'package:fictional_drug_and_disease_ref/data/providers/local_providers.dart';
+import 'package:fictional_drug_and_disease_ref/domain/about/app_package_info.dart';
 import 'package:fictional_drug_and_disease_ref/l10n/app_localizations.dart';
+import 'package:fictional_drug_and_disease_ref/router/app_router.dart';
 import 'package:fictional_drug_and_disease_ref/theme/app_palette.dart';
 import 'package:fictional_drug_and_disease_ref/theme/app_theme.dart';
+import 'package:fictional_drug_and_disease_ref/ui/about/about_view.dart';
 import 'package:fictional_drug_and_disease_ref/ui/shell/app_shell.dart';
 import 'package:fictional_drug_and_disease_ref/ui/shell/app_shell_tab.dart';
 import 'package:fictional_drug_and_disease_ref/ui/shell/app_tab_header.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:go_router/go_router.dart';
 
 void main() {
   testWidgets('uses the same localized labels as the bottom navigation', (
@@ -144,6 +150,87 @@ void main() {
     expect(title.style?.fontSize, 20);
     expect(title.style?.fontWeight, FontWeight.w700);
     expect(title.style?.fontVariations, const [FontVariation('wght', 700)]);
+  });
+
+  testWidgets('renders info icon after custom actions', (tester) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: AppTheme.light(),
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        home: const Scaffold(
+          appBar: AppTabHeader(
+            tab: AppShellTab.search,
+            actions: [
+              IconButton(
+                key: ValueKey<String>('custom-action'),
+                icon: Icon(Icons.refresh),
+                onPressed: null,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+
+    expect(find.byIcon(Icons.info_outline), findsOneWidget);
+    expect(find.byTooltip('アプリについて'), findsOneWidget);
+
+    final appBar = tester.widget<AppBar>(find.byType(AppBar));
+    expect(appBar.actions, hasLength(2));
+    expect(appBar.actions!.first.key, const ValueKey<String>('custom-action'));
+    expect(
+      appBar.actions!.last,
+      isA<IconButton>().having(
+        (button) => (button.icon as Icon).icon,
+        'icon',
+        Icons.info_outline,
+      ),
+    );
+  });
+
+  testWidgets('pushes /about when the info icon is tapped', (tester) async {
+    final router = GoRouter(
+      initialLocation: AppRoutes.search,
+      routes: [
+        GoRoute(
+          path: AppRoutes.search,
+          builder: (context, state) => const Scaffold(
+            appBar: AppTabHeader(tab: AppShellTab.search),
+          ),
+        ),
+        GoRoute(
+          path: AppRoutes.about,
+          builder: (context, state) => const AboutView(),
+        ),
+      ],
+    );
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          packageInfoProvider.overrideWith(
+            (ref) async => const AppPackageInfo(
+              version: '1.0.0',
+              buildNumber: '1',
+            ),
+          ),
+        ],
+        child: MaterialApp.router(
+          theme: AppTheme.light(),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          routerConfig: router,
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byIcon(Icons.info_outline));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(AboutView), findsOneWidget);
+    expect(find.text('アプリについて'), findsOneWidget);
   });
 }
 
