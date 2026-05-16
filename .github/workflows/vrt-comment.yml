@@ -266,8 +266,9 @@ jobs:
             printf '%s' "$value"
           }
 
-          # Find all comparator failure images. Baseline-change compare images
-          # are rendered separately below so file paths do not squeeze previews.
+          # Find all main-vs-PR comparator images. Baseline-change compare
+          # images are rendered separately below so file paths do not squeeze
+          # previews.
           mapfile -d '' -t files < <(find golden-diff-reports -type f -name "*_compare.png" -print0 2>/dev/null)
           delimiter="$(openssl rand -hex 8)"
           {
@@ -300,7 +301,7 @@ jobs:
               echo
               echo "## Golden baseline changes"
               echo
-              echo "CI compares rendered output against the golden files committed in this PR. This section shows golden PNG changes against the base branch for review."
+              echo "This section shows committed golden PNG changes against the base branch for review."
               echo
               echo "Changed golden baseline files: ${BASELINE_CHANGE_COUNT}"
             } >> "$GITHUB_OUTPUT"

@@ -170,6 +170,8 @@ jobs:
           done < /tmp/golden-baseline-name-status.tsv
 
       - name: Generate main-vs-PR golden VRT shard
+        env:
+          GOLDEN_VRT_COMPARE_ONLY: "true"
         run: >
           flutter test
           --tags golden
