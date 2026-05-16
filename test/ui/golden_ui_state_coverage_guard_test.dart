@@ -300,6 +300,14 @@ const _expectations = <_GoldenCoverageExpectation>[
     goldenPrefix: 'bookmarks_normal',
   ),
   _GoldenCoverageExpectation(
+    screen: 'about',
+    state: 'normal',
+    testFile: 'test/ui/about/about_view_golden_test.dart',
+    goldenDir: 'test/ui/about/goldens/macos',
+    sourceFragment: "fileNamePrefix: 'about_normal'",
+    goldenPrefix: 'about_normal',
+  ),
+  _GoldenCoverageExpectation(
     screen: 'bookmarks',
     state: 'normal drug tab',
     testFile: 'test/ui/bookmarks/bookmarks_view_golden_test.dart',
@@ -629,6 +637,7 @@ const _goldenTestFiles = <String>[
   'test/ui/_common/navigation_bar_golden_helpers.dart',
   'test/ui/_common/widgets/disease_result_card_golden_test.dart',
   'test/ui/_common/widgets/drug_result_card_golden_test.dart',
+  'test/ui/about/about_view_golden_test.dart',
   'test/ui/bookmarks/bookmarks_navigation_bar_golden_test.dart',
   'test/ui/bookmarks/bookmarks_view_golden_test.dart',
   'test/ui/calc/calc_navigation_bar_golden_test.dart',
