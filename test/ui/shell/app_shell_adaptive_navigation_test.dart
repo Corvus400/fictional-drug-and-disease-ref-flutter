@@ -46,22 +46,30 @@ void main() {
     );
 
     expect(find.byType(AppShellBottomNavigation), findsNothing);
-    expect(find.byType(NavigationRail), findsOneWidget);
+    expect(find.byType(NavigationRail), findsNothing);
+    expect(
+      find.byKey(const ValueKey('app-shell-compact-navigation-rail')),
+      findsOneWidget,
+    );
     expect(find.byType(DisclaimerRibbon), findsNothing);
 
-    final rail = tester.widget<NavigationRail>(find.byType(NavigationRail));
-    expect(rail.labelType, NavigationRailLabelType.none);
-    expect(rail.minWidth, 52);
-    expect(rail.destinations, hasLength(AppShellTab.values.length));
+    final railBox = tester.getRect(
+      find.byKey(const ValueKey('app-shell-navigation-rail-box')),
+    );
+    expect(railBox.width, 52);
 
     for (final tab in AppShellTab.values.indexed) {
       expect(
         find.byTooltip(
-          tab.$2.label(tester.element(find.byType(NavigationRail))),
+          tab.$2.label(
+            tester.element(
+              find.byKey(const ValueKey('app-shell-compact-navigation-rail')),
+            ),
+          ),
         ),
         findsOneWidget,
       );
-      expect(rail.destinations[tab.$1].label, isA<Text>());
+      expect(find.byIcon(tab.$2.icon), findsOneWidget);
     }
 
     await tester.tap(find.byTooltip('ブックマーク'));
@@ -89,6 +97,43 @@ void main() {
     expect(find.byType(AppShellBottomNavigation), findsOneWidget);
     expect(find.byType(NavigationRail), findsNothing);
     expect(find.byType(DisclaimerRibbon), findsOneWidget);
+  });
+
+  testWidgets('compact landscape rail keeps icons inside iPhone safe area', (
+    tester,
+  ) async {
+    await tester.binding.setSurfaceSize(const Size(844, 390));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: AppTheme.light(),
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        home: MediaQuery(
+          data: const MediaQueryData(
+            size: Size(844, 390),
+            padding: EdgeInsets.only(left: 47, right: 47),
+          ),
+          child: Scaffold(
+            body: AppShellAdaptiveNavigation(
+              selectedIndex: AppShellTab.search.index,
+              onDestinationSelected: (_) {},
+            ),
+          ),
+        ),
+      ),
+    );
+
+    final railBox = tester.getRect(
+      find.byKey(const ValueKey('app-shell-navigation-rail-box')),
+    );
+    final searchIcon = tester.getRect(find.byIcon(Icons.search));
+
+    expect(railBox.left, 0);
+    expect(railBox.width, 52);
+    expect(searchIcon.left, greaterThanOrEqualTo(railBox.left));
+    expect(searchIcon.right, lessThanOrEqualTo(railBox.right));
   });
 
   testWidgets('iPad landscape shell uses 72px icon-only rail', (tester) async {
@@ -138,8 +183,22 @@ void main() {
         ),
       );
 
-      final rail = tester.widget<NavigationRail>(find.byType(NavigationRail));
-      expect(rail.selectedIndex, tab.index);
+      expect(
+        find.byKey(const ValueKey('app-shell-compact-navigation-rail')),
+        findsOneWidget,
+      );
+      final selectedIconMaterial = tester.widget<Material>(
+        find
+            .ancestor(
+              of: find.byIcon(tab.icon),
+              matching: find.byType(Material),
+            )
+            .first,
+      );
+      expect(
+        selectedIconMaterial.color,
+        AppTheme.light().colorScheme.primaryContainer,
+      );
       expect(find.byType(NavigationBar), findsNothing);
     });
   }

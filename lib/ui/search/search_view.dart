@@ -17,6 +17,7 @@ import 'package:fictional_drug_and_disease_ref/ui/search/format/relative_time_fo
 import 'package:fictional_drug_and_disease_ref/ui/search/providers/drug_card_image_cache_manager_provider.dart';
 import 'package:fictional_drug_and_disease_ref/ui/search/search_screen_notifier.dart';
 import 'package:fictional_drug_and_disease_ref/ui/search/search_screen_state.dart';
+import 'package:fictional_drug_and_disease_ref/ui/shell/app_shell.dart';
 import 'package:fictional_drug_and_disease_ref/ui/shell/app_shell_tab.dart';
 import 'package:fictional_drug_and_disease_ref/ui/shell/app_tab_header.dart';
 import 'package:flutter/material.dart';
@@ -68,6 +69,8 @@ class _SearchViewState extends ConsumerState<SearchView> with RouteAware {
   late final ScrollController _diseaseSearchResultsScrollController;
   PageRoute<dynamic>? _route;
   bool _utilityPaneCategoryLoadQueued = false;
+  bool _phoneModalSheetOpen = false;
+  bool _phoneModalSheetDismissQueued = false;
 
   @override
   void initState() {
@@ -133,6 +136,7 @@ class _SearchViewState extends ConsumerState<SearchView> with RouteAware {
             : AppPalette.light);
     final keyboardInset = _keyboardBottomInset(context);
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: palette.background,
       appBar: AppTabHeader(
         tab: AppShellTab.search,
@@ -212,6 +216,9 @@ class _SearchViewState extends ConsumerState<SearchView> with RouteAware {
           );
           final isLandscape = _usesSearchLandscapeRail(responsiveSize);
           final useUtilityPane = _usesSearchUtilityPane(responsiveSize);
+          if (useUtilityPane) {
+            _dismissPhoneModalSheetForUtilityPane();
+          }
           if (state.categories != null) {
             _utilityPaneCategoryLoadQueued = false;
           }
@@ -272,6 +279,14 @@ class _SearchViewState extends ConsumerState<SearchView> with RouteAware {
             onResetFilter: notifier.resetFilter,
             onRemoveOneChip: notifier.removeOneChip,
             onRemoveChipAt: notifier.removeChipAt,
+            onOpenSortSheet: () {
+              _showTrackedSortSheet(
+                context,
+                state,
+                onChangeDrugSort: notifier.changeDrugSort,
+                onChangeDiseaseSort: notifier.changeDiseaseSort,
+              );
+            },
             onChangeDrugSort: notifier.changeDrugSort,
             onChangeDiseaseSort: notifier.changeDiseaseSort,
             onLoadMore: notifier.loadMore,
@@ -307,10 +322,18 @@ class _SearchViewState extends ConsumerState<SearchView> with RouteAware {
             onCancel: notifier.closeHistoryDropdown,
           );
           if (isLandscape) {
+            final needsStandaloneNavRail = !AppShellNavigationScope.isInShell(
+              context,
+            );
             return Row(
               key: const ValueKey('search-adaptive-split-rail'),
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
+                if (needsStandaloneNavRail)
+                  AppShellAdaptiveNavigation(
+                    selectedIndex: AppShellTab.search.index,
+                    onDestinationSelected: (_) {},
+                  ),
                 SizedBox(
                   key: const ValueKey('search-adaptive-left-rail'),
                   width: SearchConstants.searchLandscapeLeftRailWidth,
@@ -374,6 +397,47 @@ class _SearchViewState extends ConsumerState<SearchView> with RouteAware {
     );
   }
 
+  void _dismissPhoneModalSheetForUtilityPane() {
+    if (!_phoneModalSheetOpen || _phoneModalSheetDismissQueued) {
+      return;
+    }
+    _phoneModalSheetDismissQueued = true;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) {
+        return;
+      }
+      final navigator = Navigator.of(context);
+      if (!navigator.canPop()) {
+        _phoneModalSheetDismissQueued = false;
+        return;
+      }
+      unawaited(
+        navigator.maybePop().whenComplete(() {
+          _phoneModalSheetDismissQueued = false;
+        }),
+      );
+    });
+  }
+
+  void _showTrackedSortSheet(
+    BuildContext context,
+    SearchScreenState state, {
+    required Future<void> Function(DrugSort sort) onChangeDrugSort,
+    required Future<void> Function(DiseaseSort sort) onChangeDiseaseSort,
+  }) {
+    _phoneModalSheetOpen = true;
+    unawaited(
+      _showSortSheet(
+        context,
+        state,
+        onChangeDrugSort: onChangeDrugSort,
+        onChangeDiseaseSort: onChangeDiseaseSort,
+      ).whenComplete(() {
+        _phoneModalSheetOpen = false;
+      }),
+    );
+  }
+
   void _showFilterSheet(
     BuildContext context,
     SearchScreenState state, {
@@ -406,6 +470,7 @@ class _SearchViewState extends ConsumerState<SearchView> with RouteAware {
     final sheetHeight =
         (overlayBox?.size.height ?? MediaQuery.sizeOf(context).height) -
         SearchConstants.searchFilterSheetTopOffset;
+    _phoneModalSheetOpen = true;
     unawaited(
       showModalBottomSheet<void>(
         context: context,
@@ -478,7 +543,9 @@ class _SearchViewState extends ConsumerState<SearchView> with RouteAware {
             },
           ),
         ),
-      ),
+      ).whenComplete(() {
+        _phoneModalSheetOpen = false;
+      }),
     );
   }
 }
@@ -586,12 +653,14 @@ class _SearchLandscapeRailChrome extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   _SearchLandscapeRailTab(
+                    key: const ValueKey('search-landscape-tab-drugs'),
                     label: l10n.searchTabDrugs,
                     selected: state.tab == SearchTab.drugs,
                     palette: palette,
                     onTap: () => unawaited(onChangeTab(SearchTab.drugs)),
                   ),
                   _SearchLandscapeRailTab(
+                    key: const ValueKey('search-landscape-tab-diseases'),
                     label: l10n.searchTabDiseases,
                     selected: state.tab == SearchTab.diseases,
                     palette: palette,
@@ -613,6 +682,7 @@ class _SearchLandscapeRailTab extends StatelessWidget {
     required this.selected,
     required this.palette,
     required this.onTap,
+    super.key,
   });
 
   final String label;

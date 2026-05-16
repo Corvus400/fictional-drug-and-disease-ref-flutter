@@ -21,6 +21,9 @@ abstract final class SearchConstants {
   /// iPhone landscape search left rail width.
   static const searchLandscapeLeftRailWidth = 240.0;
 
+  /// iPhone landscape app-shell navigation rail width.
+  static const searchLandscapeNavigationRailWidth = 52.0;
+
   /// Utility pane minimum width.
   static const searchUtilityPaneMinWidth = 300.0;
 

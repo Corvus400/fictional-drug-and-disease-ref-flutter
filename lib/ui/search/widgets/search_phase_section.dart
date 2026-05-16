@@ -10,6 +10,7 @@ class _SearchPhaseSection extends StatelessWidget {
     required this.onResetFilter,
     required this.onRemoveOneChip,
     required this.onRemoveChipAt,
+    required this.onOpenSortSheet,
     required this.onChangeDrugSort,
     required this.onChangeDiseaseSort,
     required this.onLoadMore,
@@ -27,6 +28,7 @@ class _SearchPhaseSection extends StatelessWidget {
   final Future<void> Function() onResetFilter;
   final Future<void> Function() onRemoveOneChip;
   final Future<void> Function(int index) onRemoveChipAt;
+  final VoidCallback onOpenSortSheet;
   final Future<void> Function(DrugSort sort) onChangeDrugSort;
   final Future<void> Function(DiseaseSort sort) onChangeDiseaseSort;
   final Future<void> Function() onLoadMore;
@@ -86,6 +88,7 @@ class _SearchPhaseSection extends StatelessWidget {
             gutter: gutter,
             totalCount: 0,
             onRemoveChipAt: onRemoveChipAt,
+            onOpenSortSheet: onOpenSortSheet,
             onChangeDrugSort: onChangeDrugSort,
             onChangeDiseaseSort: onChangeDiseaseSort,
             enableSortSheet: enableSortSheet,
@@ -333,6 +336,7 @@ class _SearchPhaseSection extends StatelessWidget {
           gutter: gutter,
           totalCount: view.totalCount,
           onRemoveChipAt: onRemoveChipAt,
+          onOpenSortSheet: onOpenSortSheet,
           onChangeDrugSort: onChangeDrugSort,
           onChangeDiseaseSort: onChangeDiseaseSort,
           enableSortSheet: enableSortSheet,
@@ -604,50 +608,63 @@ class _SearchUtilityIdleMasterState extends StatelessWidget {
         (theme.brightness == Brightness.dark
             ? AppPalette.dark
             : AppPalette.light);
-    return Center(
+    return LayoutBuilder(
       key: const ValueKey('search-utility-idle-master-state'),
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 320),
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              DecoratedBox(
-                decoration: BoxDecoration(
-                  color: palette.surfaceSubtle,
-                  borderRadius: BorderRadius.circular(32),
-                ),
-                child: SizedBox(
-                  width: 64,
-                  height: 64,
-                  child: Icon(Icons.search, size: 28, color: palette.muted),
+      builder: (context, constraints) {
+        return SingleChildScrollView(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(minHeight: constraints.maxHeight),
+            child: Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 320),
+                child: Padding(
+                  padding: const EdgeInsets.all(24),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      DecoratedBox(
+                        decoration: BoxDecoration(
+                          color: palette.surfaceSubtle,
+                          borderRadius: BorderRadius.circular(32),
+                        ),
+                        child: SizedBox(
+                          width: 64,
+                          height: 64,
+                          child: Icon(
+                            Icons.search,
+                            size: 28,
+                            color: palette.muted,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      Text(
+                        '検索キーワードを入力',
+                        textAlign: TextAlign.center,
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          color: palette.muted,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      const SizedBox(height: 6),
+                      Text(
+                        emptyHistory
+                            ? '履歴はまだありません。検索すると右パネルに記録されます。'
+                            : '履歴やフィルタからも始められます。',
+                        textAlign: TextAlign.center,
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: palette.muted,
+                          height: 1.6,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-              const SizedBox(height: 16),
-              Text(
-                '検索キーワードを入力',
-                textAlign: TextAlign.center,
-                style: theme.textTheme.titleMedium?.copyWith(
-                  color: palette.muted,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-              const SizedBox(height: 6),
-              Text(
-                emptyHistory
-                    ? '履歴はまだありません。検索すると右パネルに記録されます。'
-                    : '履歴やフィルタからも始められます。',
-                textAlign: TextAlign.center,
-                style: theme.textTheme.bodySmall?.copyWith(
-                  color: palette.muted,
-                  height: 1.6,
-                ),
-              ),
-            ],
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }
@@ -1183,84 +1200,117 @@ class _SearchUtilityFilterSectionState
             }),
           ),
         const SizedBox(height: 10),
-        Row(
-          children: [
-            TextButton(
-              key: const ValueKey('search-utility-filter-reset'),
-              style: TextButton.styleFrom(
-                foregroundColor: palette.primary,
-                minimumSize: const Size(0, 44),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 8,
-                  vertical: 10,
-                ),
-                textStyle: theme.textTheme.labelMedium?.copyWith(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w600,
-                ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-              ),
-              onPressed: () {
-                setState(() {
-                  _categoryAtc.clear();
-                  _therapeuticCategory.clear();
-                  _regulatoryClass.clear();
-                  _dosageForm.clear();
-                  _route.clear();
-                  _precautionCategory.clear();
-                  _adverseReactionKeywordController.clear();
-                  _icd10Chapter.clear();
-                  _department.clear();
-                  _chronicity.clear();
-                  _onsetPattern.clear();
-                  _examCategory.clear();
-                  _symptomKeywordController.clear();
-                  _infectious = null;
-                  _hasPharmacologicalTreatment = null;
-                  _hasSeverityGrading = null;
-                  _schedulePreview();
-                });
-                unawaited(widget.onReset());
-              },
-              child: Text(
-                l10n.searchFilterReset,
-                style: theme.textTheme.labelMedium?.copyWith(
-                  color: palette.primary,
-                  fontSize: 12,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
-            const SizedBox(width: 8),
-            Expanded(
-              child: FilledButton(
-                key: const ValueKey('search-utility-filter-apply'),
-                style: FilledButton.styleFrom(
-                  backgroundColor: palette.primaryCont,
-                  foregroundColor: palette.onPrimaryCont,
-                  minimumSize: const Size.fromHeight(44),
-                  padding: const EdgeInsets.symmetric(horizontal: 14),
-                  textStyle: theme.textTheme.labelMedium?.copyWith(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w700,
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                ),
-                onPressed: _apply,
-                child: Text(
-                  l10n.searchFilterApplyWithCount(
-                    _previewCount ?? widget.resultCount,
-                  ),
-                ),
-              ),
-            ),
-          ],
+        LayoutBuilder(
+          key: const ValueKey('search-utility-filter-actions'),
+          builder: (context, constraints) {
+            final resetButton = _buildResetButton(l10n, theme, palette);
+            final useRailColumn = constraints.maxWidth < 230;
+            final applyButton = _buildApplyButton(
+              l10n,
+              theme,
+              palette,
+              compact: useRailColumn,
+            );
+            if (useRailColumn) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Align(alignment: Alignment.centerRight, child: resetButton),
+                  const SizedBox(height: 4),
+                  applyButton,
+                ],
+              );
+            }
+            return Row(
+              children: [
+                resetButton,
+                const SizedBox(width: 8),
+                Expanded(child: applyButton),
+              ],
+            );
+          },
         ),
       ],
+    );
+  }
+
+  Widget _buildResetButton(
+    AppLocalizations l10n,
+    ThemeData theme,
+    AppPalette palette,
+  ) {
+    return TextButton(
+      key: const ValueKey('search-utility-filter-reset'),
+      style: TextButton.styleFrom(
+        foregroundColor: palette.primary,
+        minimumSize: const Size(0, 32),
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+        textStyle: theme.textTheme.labelMedium?.copyWith(
+          fontSize: 12,
+          fontWeight: FontWeight.w600,
+        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      ),
+      onPressed: () {
+        setState(() {
+          _categoryAtc.clear();
+          _therapeuticCategory.clear();
+          _regulatoryClass.clear();
+          _dosageForm.clear();
+          _route.clear();
+          _precautionCategory.clear();
+          _adverseReactionKeywordController.clear();
+          _icd10Chapter.clear();
+          _department.clear();
+          _chronicity.clear();
+          _onsetPattern.clear();
+          _examCategory.clear();
+          _symptomKeywordController.clear();
+          _infectious = null;
+          _hasPharmacologicalTreatment = null;
+          _hasSeverityGrading = null;
+          _schedulePreview();
+        });
+        unawaited(widget.onReset());
+      },
+      child: Text(
+        l10n.searchFilterReset,
+        maxLines: 1,
+        overflow: TextOverflow.visible,
+        style: theme.textTheme.labelMedium?.copyWith(
+          color: palette.primary,
+          fontSize: 12,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildApplyButton(
+    AppLocalizations l10n,
+    ThemeData theme,
+    AppPalette palette, {
+    required bool compact,
+  }) {
+    return FilledButton(
+      key: const ValueKey('search-utility-filter-apply'),
+      style: FilledButton.styleFrom(
+        backgroundColor: palette.primaryCont,
+        foregroundColor: palette.onPrimaryCont,
+        minimumSize: Size.fromHeight(compact ? 36 : 44),
+        padding: EdgeInsets.symmetric(horizontal: compact ? 10 : 14),
+        textStyle: theme.textTheme.labelMedium?.copyWith(
+          fontSize: compact ? 12 : 13,
+          fontWeight: FontWeight.w700,
+        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      ),
+      onPressed: _apply,
+      child: Text(
+        l10n.searchFilterApplyWithCount(_previewCount ?? widget.resultCount),
+        maxLines: 1,
+        overflow: TextOverflow.visible,
+      ),
     );
   }
 
@@ -1799,7 +1849,12 @@ class _SearchUtilityAxisTile extends StatelessWidget {
                         Flexible(
                           child: Text(
                             axis.title,
-                            overflow: TextOverflow.ellipsis,
+                            key: ValueKey(
+                              'search-utility-filter-axis-title-${axis.id}',
+                            ),
+                            maxLines: 2,
+                            overflow: TextOverflow.visible,
+                            softWrap: true,
                             style: theme.textTheme.bodyMedium?.copyWith(
                               color: palette.ink,
                               fontSize: 12,

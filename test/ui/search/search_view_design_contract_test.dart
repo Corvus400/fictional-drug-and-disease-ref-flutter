@@ -17,6 +17,7 @@ import 'package:fictional_drug_and_disease_ref/data/services/api/disease_api_cli
 import 'package:fictional_drug_and_disease_ref/data/services/api/drug_api_client.dart';
 import 'package:fictional_drug_and_disease_ref/domain/drug/drug_search_params.dart';
 import 'package:fictional_drug_and_disease_ref/l10n/app_localizations.dart';
+import 'package:fictional_drug_and_disease_ref/router/app_router.dart';
 import 'package:fictional_drug_and_disease_ref/theme/app_palette.dart';
 import 'package:fictional_drug_and_disease_ref/theme/app_theme.dart';
 import 'package:fictional_drug_and_disease_ref/ui/search/constants/search_constants.dart';
@@ -281,7 +282,10 @@ void main() {
       findsOneWidget,
     );
     expect(find.byKey(const ValueKey('search-utility-pane')), findsOneWidget);
-    expect(find.byType(NavigationRail), findsNothing);
+    expect(
+      find.byKey(const ValueKey('app-shell-compact-navigation-rail')),
+      findsOneWidget,
+    );
   });
 
   testWidgets(
@@ -289,7 +293,7 @@ void main() {
     (
       tester,
     ) async {
-      await tester.binding.setSurfaceSize(const Size(844, 390));
+      await tester.binding.setSurfaceSize(const Size(932, 430));
       addTearDown(() => tester.binding.setSurfaceSize(null));
 
       await tester.pumpWidget(
@@ -307,7 +311,12 @@ void main() {
       final leftRail = tester.getRect(
         find.byKey(const ValueKey('search-adaptive-left-rail')),
       );
+      final navRail = tester.getRect(
+        find.byKey(const ValueKey('app-shell-navigation-rail-box')),
+      );
 
+      expect(navRail.width, SearchConstants.searchLandscapeNavigationRailWidth);
+      expect(leftRail.left, navRail.right);
       expect(leftRail.width, 240);
       expect(
         find.byKey(const ValueKey('search-landscape-vertical-tabs')),
@@ -318,6 +327,260 @@ void main() {
         findsNothing,
       );
       expect(find.byKey(const ValueKey('search-submit-button')), findsNothing);
+    },
+  );
+
+  testWidgets(
+    'SearchView inside AppShell keeps icon rail in iPhone landscape',
+    (tester) async {
+      await tester.binding.setSurfaceSize(const Size(844, 390));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+
+      final router = buildRouter();
+      addTearDown(router.dispose);
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: _baseOverrides(db),
+          child: MaterialApp.router(
+            theme: AppTheme.light(),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            routerConfig: router,
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      final appRail = tester.getRect(
+        find.byKey(const ValueKey('app-shell-navigation-rail-box')),
+      );
+      final searchRail = tester.getRect(
+        find.byKey(const ValueKey('search-adaptive-left-rail')),
+      );
+
+      expect(appRail.width, 52);
+      expect(appRail.left, 0);
+      expect(searchRail.left, appRail.right);
+      expect(searchRail.width, SearchConstants.searchLandscapeLeftRailWidth);
+      expect(find.byType(NavigationBar), findsNothing);
+    },
+  );
+
+  testWidgets(
+    'SearchView iPhone landscape idle master scrolls instead of overflowing '
+    'under keyboard',
+    (
+      tester,
+    ) async {
+      await tester.binding.setSurfaceSize(const Size(844, 390));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: _baseOverrides(db),
+          child: MaterialApp(
+            theme: AppTheme.light(),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: const MediaQuery(
+              data: MediaQueryData(
+                size: Size(844, 390),
+                viewInsets: EdgeInsets.only(bottom: 220),
+              ),
+              child: SearchView(),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(
+        find.byKey(const ValueKey('search-adaptive-split-rail')),
+        findsOneWidget,
+      );
+      expect(
+        find.byKey(const ValueKey('search-utility-idle-master-state')),
+        findsOneWidget,
+      );
+      expect(tester.takeException(), isNull);
+    },
+  );
+
+  testWidgets(
+    'SearchView iPhone landscape utility filter chips keep ICD labels readable',
+    (
+      tester,
+    ) async {
+      await tester.binding.setSurfaceSize(const Size(844, 390));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: _baseOverrides(db),
+          child: MaterialApp(
+            theme: AppTheme.light(),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: const SearchView(),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      await tester.pump(const Duration(milliseconds: 100));
+      await tester.pumpAndSettle();
+
+      final container = ProviderScope.containerOf(
+        tester.element(find.byType(SearchView)),
+      );
+      final notifier = container.read(searchScreenProvider.notifier);
+      await notifier.loadCategories();
+      await notifier.changeTab(SearchTab.diseases);
+      await tester.pumpAndSettle();
+      await tester.pump(const Duration(milliseconds: 100));
+      await tester.pumpAndSettle();
+      expect(
+        find.text('9 軸 · 軸内 OR / 軸間 AND', skipOffstage: false),
+        findsOneWidget,
+      );
+      expect(
+        find.byKey(
+          const ValueKey('search-utility-filter-axis-values-icd10_chapter'),
+          skipOffstage: false,
+        ),
+        findsOneWidget,
+      );
+
+      final longIcdLabel = tester.widget<Text>(
+        find.text(
+          'III 血液および造血器の疾患ならびに免疫機構の障害',
+          skipOffstage: false,
+        ),
+      );
+
+      expect(longIcdLabel.maxLines, 2);
+      expect(longIcdLabel.overflow, TextOverflow.visible);
+      expect(longIcdLabel.softWrap, isTrue);
+      expect(tester.takeException(), isNull);
+    },
+  );
+
+  testWidgets(
+    'SearchView iPhone landscape utility filter actions stack in one column',
+    (
+      tester,
+    ) async {
+      await tester.binding.setSurfaceSize(const Size(844, 390));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: _baseOverrides(db),
+          child: MaterialApp(
+            theme: AppTheme.light(),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: const SearchView(),
+          ),
+        ),
+      );
+      final container = ProviderScope.containerOf(
+        tester.element(find.byType(SearchView)),
+      );
+      await container.read(searchScreenProvider.notifier).loadCategories();
+      await tester.pumpAndSettle();
+
+      final reset = tester.getRect(
+        find.byKey(
+          const ValueKey('search-utility-filter-reset'),
+          skipOffstage: false,
+        ),
+      );
+      final apply = tester.getRect(
+        find.byKey(
+          const ValueKey('search-utility-filter-apply'),
+          skipOffstage: false,
+        ),
+      );
+      final actions = tester.getRect(
+        find.byKey(
+          const ValueKey('search-utility-filter-actions'),
+          skipOffstage: false,
+        ),
+      );
+      final applyLabel = tester.widget<Text>(
+        find.text('結果を見る (0 件)', skipOffstage: false),
+      );
+
+      expect(reset.bottom, lessThanOrEqualTo(apply.top));
+      expect(apply.width, actions.width);
+      expect(applyLabel.maxLines, 1);
+      expect(tester.takeException(), isNull);
+    },
+  );
+
+  testWidgets(
+    'SearchView iPhone landscape utility filter axis titles stay readable',
+    (
+      tester,
+    ) async {
+      await tester.binding.setSurfaceSize(const Size(844, 390));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: _baseOverrides(db),
+          child: MaterialApp(
+            theme: AppTheme.light(),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: const SearchView(),
+          ),
+        ),
+      );
+      final container = ProviderScope.containerOf(
+        tester.element(find.byType(SearchView)),
+      );
+      final notifier = container.read(searchScreenProvider.notifier);
+      await notifier.loadCategories();
+      await tester.pumpAndSettle();
+      await tester.scrollUntilVisible(
+        find.byKey(
+          const ValueKey('search-utility-filter-axis-title-atc'),
+          skipOffstage: false,
+        ),
+        80,
+        scrollable: find.descendant(
+          of: find.byKey(const ValueKey('search-utility-pane')),
+          matching: find.byType(Scrollable),
+        ),
+      );
+
+      final drugAtcTitle = tester.widget<Text>(
+        find.byKey(
+          const ValueKey('search-utility-filter-axis-title-atc'),
+          skipOffstage: false,
+        ),
+      );
+      expect(drugAtcTitle.data, 'ATC 第 1 階層');
+      expect(drugAtcTitle.maxLines, 2);
+      expect(drugAtcTitle.overflow, TextOverflow.visible);
+      expect(drugAtcTitle.softWrap, isTrue);
+
+      await notifier.changeTab(SearchTab.diseases);
+      await tester.pumpAndSettle();
+
+      final diseaseIcdTitle = tester.widget<Text>(
+        find.byKey(
+          const ValueKey('search-utility-filter-axis-title-icd10_chapter'),
+          skipOffstage: false,
+        ),
+      );
+      expect(diseaseIcdTitle.data, 'ICD-10 章');
+      expect(diseaseIcdTitle.maxLines, 2);
+      expect(diseaseIcdTitle.overflow, TextOverflow.visible);
+      expect(diseaseIcdTitle.softWrap, isTrue);
+      expect(tester.takeException(), isNull);
     },
   );
 
@@ -1476,6 +1739,57 @@ void main() {
       expect(selectedLabel.style?.fontWeight, FontWeight.w700);
       expect(selectedCheck.color, AppPalette.light.primary);
       expect(selectedCheck.size, 16);
+    },
+  );
+
+  testWidgets(
+    'SearchView closes phone sort sheet when rotating to landscape '
+    'utility pane',
+    (tester) async {
+      await tester.binding.setSurfaceSize(const Size(390, 844));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+
+      await _pumpSearchViewWithDrugResults(tester, db);
+
+      await tester.tap(find.text('並び替え： 更新日(新しい順) ↓ ▾'));
+      await tester.pumpAndSettle();
+      expect(
+        find.byKey(const ValueKey('search-sort-sheet')),
+        findsOneWidget,
+      );
+
+      await tester.binding.setSurfaceSize(const Size(844, 390));
+      await tester.pumpAndSettle();
+
+      expect(find.byKey(const ValueKey('search-sort-sheet')), findsNothing);
+      expect(tester.takeException(), isNull);
+    },
+  );
+
+  testWidgets(
+    'SearchView closes phone filter sheet when rotating to landscape '
+    'utility pane',
+    (tester) async {
+      await tester.binding.setSurfaceSize(const Size(390, 844));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+
+      await _pumpSearchViewWithDrugResults(tester, db);
+
+      await tester.tap(find.byType(FloatingActionButton));
+      await tester.pumpAndSettle();
+      expect(
+        find.byKey(const ValueKey('search-round6-filter-sheet')),
+        findsOneWidget,
+      );
+
+      await tester.binding.setSurfaceSize(const Size(844, 390));
+      await tester.pumpAndSettle();
+
+      expect(
+        find.byKey(const ValueKey('search-round6-filter-sheet')),
+        findsNothing,
+      );
+      expect(tester.takeException(), isNull);
     },
   );
 

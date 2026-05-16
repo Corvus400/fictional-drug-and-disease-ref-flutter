@@ -18,8 +18,9 @@ class AppShell extends StatelessWidget {
       BoxConstraints.tight(MediaQuery.sizeOf(context)),
     );
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: LayoutBuilder(
-        builder: (context, constraints) {
+        builder: (context, _) {
           final navigation = AppShellAdaptiveNavigation(
             selectedIndex: navigationShell.currentIndex,
             onDestinationSelected: (index) {
@@ -30,13 +31,13 @@ class AppShell extends StatelessWidget {
               );
             },
           );
-          if (!_usesNavigationRail(constraints)) {
-            return navigationShell;
+          if (!shellUsesNavigationRail) {
+            return AppShellNavigationScope(child: navigationShell);
           }
           return Row(
             children: [
               navigation,
-              Expanded(child: navigationShell),
+              Expanded(child: AppShellNavigationScope(child: navigationShell)),
             ],
           );
         },
@@ -55,6 +56,22 @@ class AppShell extends StatelessWidget {
             ),
     );
   }
+}
+
+/// Marks a subtree as already wrapped by the top-level app shell navigation.
+class AppShellNavigationScope extends InheritedWidget {
+  /// Creates an app-shell navigation marker.
+  const AppShellNavigationScope({required super.child, super.key});
+
+  /// Returns whether the current subtree is inside [AppShell].
+  static bool isInShell(BuildContext context) {
+    return context
+            .dependOnInheritedWidgetOfExactType<AppShellNavigationScope>() !=
+        null;
+  }
+
+  @override
+  bool updateShouldNotify(AppShellNavigationScope oldWidget) => false;
 }
 
 bool _usesNavigationRail(BoxConstraints constraints) {
@@ -99,29 +116,84 @@ class AppShellAdaptiveNavigation extends StatelessWidget {
               ),
             ),
             child: SafeArea(
+              left: false,
               right: false,
               bottom: false,
-              child: NavigationRail(
-                key: const ValueKey('app-shell-navigation-rail'),
-                selectedIndex: selectedIndex,
-                minWidth: railWidth,
-                labelType: NavigationRailLabelType.none,
-                onDestinationSelected: onDestinationSelected,
-                destinations: [
-                  for (final tab in AppShellTab.values)
-                    NavigationRailDestination(
-                      icon: Tooltip(
-                        message: tab.label(context),
-                        child: Icon(tab.icon),
-                      ),
-                      label: Text(tab.label(context)),
+              child: railWidth < 56
+                  ? _CompactAppShellRail(
+                      selectedIndex: selectedIndex,
+                      onDestinationSelected: onDestinationSelected,
+                    )
+                  : NavigationRail(
+                      key: const ValueKey('app-shell-navigation-rail'),
+                      selectedIndex: selectedIndex,
+                      minWidth: railWidth,
+                      labelType: NavigationRailLabelType.none,
+                      onDestinationSelected: onDestinationSelected,
+                      destinations: [
+                        for (final tab in AppShellTab.values)
+                          NavigationRailDestination(
+                            icon: Tooltip(
+                              message: tab.label(context),
+                              child: Icon(tab.icon),
+                            ),
+                            label: Text(tab.label(context)),
+                          ),
+                      ],
                     ),
-                ],
-              ),
             ),
           ),
         );
       },
+    );
+  }
+}
+
+class _CompactAppShellRail extends StatelessWidget {
+  const _CompactAppShellRail({
+    required this.selectedIndex,
+    required this.onDestinationSelected,
+  });
+
+  final int selectedIndex;
+  final ValueChanged<int> onDestinationSelected;
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    return Column(
+      key: const ValueKey('app-shell-compact-navigation-rail'),
+      children: [
+        const SizedBox(height: 8),
+        for (final (index, tab) in AppShellTab.values.indexed)
+          Tooltip(
+            message: tab.label(context),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 6),
+              child: SizedBox(
+                width: 48,
+                height: 36,
+                child: Material(
+                  color: index == selectedIndex
+                      ? colorScheme.primaryContainer
+                      : Colors.transparent,
+                  shape: const StadiumBorder(),
+                  child: InkWell(
+                    customBorder: const StadiumBorder(),
+                    onTap: () => onDestinationSelected(index),
+                    child: Icon(
+                      tab.icon,
+                      size: 24,
+                      color: index == selectedIndex
+                          ? colorScheme.onPrimaryContainer
+                          : colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+      ],
     );
   }
 }
