@@ -1,3 +1,5 @@
+import 'package:fictional_drug_and_disease_ref/ui/about/about_view.dart';
+import 'package:fictional_drug_and_disease_ref/ui/about/licenses_view.dart';
 import 'package:fictional_drug_and_disease_ref/ui/bookmarks/bookmarks_view.dart';
 import 'package:fictional_drug_and_disease_ref/ui/calc/calc_view.dart';
 import 'package:fictional_drug_and_disease_ref/ui/disease/disease_detail_view.dart';
@@ -26,6 +28,12 @@ class AppRoutes {
 
   /// Calculation tools tab route.
   static const calc = '/calc';
+
+  /// About route.
+  static const about = '/about';
+
+  /// Open source licenses route.
+  static const aboutLicenses = '/about/licenses';
 
   /// Builds a drug detail route.
   static String drugDetail(String id) => '$search/drug/$id';
@@ -106,6 +114,22 @@ GoRouter buildRouter() {
                 ),
               ),
             ],
+          ),
+        ],
+      ),
+      GoRoute(
+        path: AppRoutes.about,
+        pageBuilder: (context, state) => CupertinoPage<void>(
+          key: state.pageKey,
+          child: const AboutView(),
+        ),
+        routes: [
+          GoRoute(
+            path: 'licenses',
+            pageBuilder: (context, state) => CupertinoPage<void>(
+              key: state.pageKey,
+              child: const LicensesView(),
+            ),
           ),
         ],
       ),
