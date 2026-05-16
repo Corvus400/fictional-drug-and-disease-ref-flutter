@@ -12,6 +12,24 @@ class AppLocalizationsJa extends AppLocalizations {
   String get appTitle => 'メディマスタ';
 
   @override
+  String get aboutTitle => 'アプリについて';
+
+  @override
+  String get aboutLicensesTitle => 'オープンソースライセンス';
+
+  @override
+  String get aboutLicensesSubtitle => '使用しているオープンソースライブラリの一覧';
+
+  @override
+  String aboutAppVersionLabel(String version) {
+    return 'バージョン $version';
+  }
+
+  @override
+  String get aboutAppLegalese =>
+      '© 2026 Fictional Drug & Disease Ref Contributors';
+
+  @override
   String get commonLoading => '読み込み中';
 
   @override
