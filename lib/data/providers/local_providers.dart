@@ -3,9 +3,12 @@ import 'package:fictional_drug_and_disease_ref/data/local/app_database.dart';
 import 'package:fictional_drug_and_disease_ref/data/repositories/bookmark_repository.dart';
 import 'package:fictional_drug_and_disease_ref/data/repositories/browsing_history_repository.dart';
 import 'package:fictional_drug_and_disease_ref/data/repositories/calculation_history_repository.dart';
+import 'package:fictional_drug_and_disease_ref/data/repositories/package_info_repository.dart';
 import 'package:fictional_drug_and_disease_ref/data/repositories/search_history_repository.dart';
 import 'package:fictional_drug_and_disease_ref/data/repositories/theme_settings_repository.dart';
+import 'package:fictional_drug_and_disease_ref/data/services/local/package_info_service.dart';
 import 'package:fictional_drug_and_disease_ref/data/services/local/theme_settings_service.dart';
+import 'package:fictional_drug_and_disease_ref/domain/about/app_package_info.dart';
 import 'package:fictional_drug_and_disease_ref/domain/theme/theme_mode_setting.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -42,6 +45,11 @@ final themeSettingsServiceProvider = Provider<ThemeSettingsService>(
   (ref) => ThemeSettingsService(SharedPreferences.getInstance()),
 );
 
+/// Package info service provider.
+final packageInfoServiceProvider = Provider<PackageInfoService>(
+  (ref) => const PackageInfoService(),
+);
+
 /// Bookmark repository provider.
 final bookmarkRepositoryProvider = Provider<BookmarkRepository>(
   (ref) => BookmarkRepository(ref.watch(bookmarksDaoProvider)),
@@ -70,11 +78,25 @@ final themeSettingsRepositoryProvider = Provider<ThemeSettingsRepository>(
   (ref) => ThemeSettingsRepository(ref.watch(themeSettingsServiceProvider)),
 );
 
+/// Package info repository provider.
+final packageInfoRepositoryProvider = Provider<PackageInfoRepository>(
+  (ref) => PackageInfoRepository(ref.watch(packageInfoServiceProvider)),
+);
+
 /// Current theme-mode setting provider.
 final themeModeSettingProvider = FutureProvider<ThemeModeSetting>((ref) async {
   final result = await ref.watch(themeSettingsRepositoryProvider).read();
   return switch (result) {
     Ok<ThemeModeSetting>(:final value) => value,
     Err<ThemeModeSetting>() => ThemeModeSetting.system,
+  };
+});
+
+/// Current app package metadata provider.
+final packageInfoProvider = FutureProvider<AppPackageInfo>((ref) async {
+  final result = await ref.watch(packageInfoRepositoryProvider).read();
+  return switch (result) {
+    Ok<AppPackageInfo>(:final value) => value,
+    Err<AppPackageInfo>(:final error) => throw error,
   };
 });
