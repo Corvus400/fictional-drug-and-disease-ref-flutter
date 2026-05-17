@@ -129,6 +129,29 @@ void main() {
     ).called(1);
   });
 
+  testWidgets(
+    'DrugDetailOverviewTab passes DPR-scaled cacheWidth to hero image',
+    (tester) async {
+      final drug = _drugFixture().toDomain();
+      final cacheManager = _mockCacheManagerWithImage(
+        'drug-detail-hero-cache-width.png',
+      );
+
+      await tester.pumpWidget(
+        _overviewTab(drug, cacheManager: cacheManager, devicePixelRatio: 3),
+      );
+      await tester.pumpAndSettle();
+
+      final image = tester.widget<Image>(
+        find.byKey(ValueKey<String>('drug-detail-hero-image-${drug.id}')),
+      );
+      expect(
+        image.image,
+        isA<ResizeImage>().having((provider) => provider.width, 'width', 192),
+      );
+    },
+  );
+
   testWidgets('DrugDetailOverviewTab opens zoomable Hero route preview', (
     tester,
   ) async {
@@ -244,6 +267,7 @@ void main() {
 Widget _overviewTab(
   Drug drug, {
   _MockBaseCacheManager? cacheManager,
+  double devicePixelRatio = 1,
   List<NavigatorObserver> navigatorObservers = const [],
 }) {
   final resolvedCacheManager =
@@ -256,10 +280,13 @@ Widget _overviewTab(
     supportedLocales: AppLocalizations.supportedLocales,
     navigatorObservers: navigatorObservers,
     home: Scaffold(
-      body: SingleChildScrollView(
-        child: DrugDetailOverviewTab(
-          drug: drug,
-          cacheManager: resolvedCacheManager,
+      body: MediaQuery(
+        data: MediaQueryData(devicePixelRatio: devicePixelRatio),
+        child: SingleChildScrollView(
+          child: DrugDetailOverviewTab(
+            drug: drug,
+            cacheManager: resolvedCacheManager,
+          ),
         ),
       ),
     ),
