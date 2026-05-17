@@ -217,6 +217,36 @@ void main() {
     );
   });
 
+  testWidgets(
+    'DrugDetailOverviewTab preview keeps Original resolution without cacheWidth',
+    (tester) async {
+      final drug = _drugFixture().toDomain();
+      final cacheManager = _mockCacheManagerWithImage(
+        'drug-detail-hero-preview-original.png',
+      );
+
+      await tester.pumpWidget(
+        _overviewTab(drug, cacheManager: cacheManager, devicePixelRatio: 3),
+      );
+      await tester.pumpAndSettle();
+      await tester.tap(
+        find.byKey(
+          ValueKey<String>(
+            'drug-detail-hero-image-preview-trigger-${drug.id}',
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      final previewImage = tester.widget<Image>(
+        find.byKey(
+          ValueKey<String>('drug-detail-hero-image-preview-image-${drug.id}'),
+        ),
+      );
+      expect(previewImage.image, isA<FileImage>());
+    },
+  );
+
   testWidgets('DrugDetailOverviewTab renders warning section from D3', (
     tester,
   ) async {
