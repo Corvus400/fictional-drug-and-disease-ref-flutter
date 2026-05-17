@@ -71,18 +71,44 @@ void main() {
       expect(manager.removedOriginalKeys, ['image-key']);
     },
   );
+
+  test(
+    'resizedFile keeps the original cache key when image retrieval fails',
+    () async {
+      final manager = _TestResizedImageCacheManager(
+        cachedFile: _writeTestFile('todo3.png'),
+        imageResponseError: StateError('download failed'),
+      );
+
+      try {
+        await manager.resizedFile(
+          url: 'https://api.example.test/image.png?size=M',
+          originalKey: 'image-key',
+          maxWidth: 168,
+          maxHeight: 252,
+        );
+      } on StateError {
+        // Expected in this test; the assertion is that removal did not run.
+      }
+
+      expect(manager.removedOriginalKeys, isEmpty);
+    },
+  );
 }
 
 final class _TestResizedImageCacheManager extends ResizedImageCacheManager {
-  _TestResizedImageCacheManager({required this.cachedFile})
-    : super.testing(
-        Config(
-          'test-resized-image-cache',
-          repo: NonStoringObjectProvider(),
-        ),
-      );
+  _TestResizedImageCacheManager({
+    required this.cachedFile,
+    this.imageResponseError,
+  }) : super.testing(
+         Config(
+           'test-resized-image-cache',
+           repo: NonStoringObjectProvider(),
+         ),
+       );
 
   final file.File cachedFile;
+  final Object? imageResponseError;
   int getImageFileCalls = 0;
   final List<String> removedOriginalKeys = [];
 
@@ -94,6 +120,10 @@ final class _TestResizedImageCacheManager extends ResizedImageCacheManager {
     required int maxHeight,
   }) {
     getImageFileCalls += 1;
+    final imageResponseError = this.imageResponseError;
+    if (imageResponseError != null) {
+      return Stream<FileResponse>.error(imageResponseError);
+    }
     return Stream<FileResponse>.value(
       FileInfo(cachedFile, FileSource.Online, DateTime(2099), url),
     );
