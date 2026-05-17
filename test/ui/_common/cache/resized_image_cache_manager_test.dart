@@ -94,12 +94,33 @@ void main() {
       expect(manager.removedOriginalKeys, isEmpty);
     },
   );
+
+  test(
+    'resizedFile returns the resized file when original removal fails',
+    () async {
+      final expectedFile = _writeTestFile('todo3b.png');
+      final manager = _TestResizedImageCacheManager(
+        cachedFile: expectedFile,
+        removeOriginalError: const FileSystemException('remove failed'),
+      );
+
+      final actualFile = await manager.resizedFile(
+        url: 'https://api.example.test/image.png?size=M',
+        originalKey: 'image-key',
+        maxWidth: 168,
+        maxHeight: 252,
+      );
+
+      expect(actualFile.path, expectedFile.path);
+    },
+  );
 }
 
 final class _TestResizedImageCacheManager extends ResizedImageCacheManager {
   _TestResizedImageCacheManager({
     required this.cachedFile,
     this.imageResponseError,
+    this.removeOriginalError,
   }) : super.testing(
          Config(
            'test-resized-image-cache',
@@ -109,6 +130,7 @@ final class _TestResizedImageCacheManager extends ResizedImageCacheManager {
 
   final file.File cachedFile;
   final Object? imageResponseError;
+  final Object? removeOriginalError;
   int getImageFileCalls = 0;
   final List<String> removedOriginalKeys = [];
 
@@ -131,6 +153,10 @@ final class _TestResizedImageCacheManager extends ResizedImageCacheManager {
 
   @override
   Future<void> removeOriginalFile(String key) async {
+    final removeOriginalError = this.removeOriginalError;
+    if (removeOriginalError != null) {
+      throw removeOriginalError;
+    }
     removedOriginalKeys.add(key);
   }
 }

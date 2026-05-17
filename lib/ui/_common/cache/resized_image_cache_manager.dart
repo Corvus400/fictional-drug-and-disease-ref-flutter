@@ -33,7 +33,11 @@ class ResizedImageCacheManager extends CacheManager with ImageCacheManager {
       maxWidth: maxWidth,
       maxHeight: maxHeight,
     ).where((response) => response is FileInfo).cast<FileInfo>().last;
-    await removeOriginalFile(originalKey);
+    try {
+      await removeOriginalFile(originalKey);
+    } on Object catch (error, stackTrace) {
+      logOriginalRemovalFailure(originalKey, error, stackTrace);
+    }
     return io.File(fileInfo.file.path);
   }
 
