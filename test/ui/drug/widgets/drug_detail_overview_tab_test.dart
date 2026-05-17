@@ -218,7 +218,8 @@ void main() {
   });
 
   testWidgets(
-    'DrugDetailOverviewTab preview keeps Original resolution without cacheWidth',
+    'DrugDetailOverviewTab preview keeps Original resolution '
+    'without cacheWidth',
     (tester) async {
       final drug = _drugFixture().toDomain();
       final cacheManager = _mockCacheManagerWithImage(

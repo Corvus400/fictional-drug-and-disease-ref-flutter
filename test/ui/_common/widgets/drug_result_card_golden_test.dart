@@ -2,8 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:file/file.dart' as file;
-import 'package:file/local.dart';
 import 'package:fictional_drug_and_disease_ref/config/api_config.dart';
 import 'package:fictional_drug_and_disease_ref/config/flavor.dart';
 import 'package:fictional_drug_and_disease_ref/domain/drug/drug_summary.dart';
@@ -12,9 +10,11 @@ import 'package:fictional_drug_and_disease_ref/theme/app_palette.dart';
 import 'package:fictional_drug_and_disease_ref/theme/app_typography.dart';
 import 'package:fictional_drug_and_disease_ref/ui/_common/cache/resized_image_cache_manager.dart';
 import 'package:fictional_drug_and_disease_ref/ui/_common/widgets/drug_result_card.dart';
+import 'package:file/file.dart' as file;
+import 'package:file/local.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 

@@ -1,14 +1,11 @@
 import 'dart:io' as io;
 
 import 'package:fictional_drug_and_disease_ref/core/logging/app_logger.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
-import 'package:meta/meta.dart';
 
 /// Cache manager that keeps the resized image entry and removes the original.
 class ResizedImageCacheManager extends CacheManager with ImageCacheManager {
-  static const _key = 'resizedImageCache';
-  static ResizedImageCacheManager? _instance;
-
   /// Returns the shared resized image cache manager.
   factory ResizedImageCacheManager() {
     return _instance ??= ResizedImageCacheManager._();
@@ -19,6 +16,9 @@ class ResizedImageCacheManager extends CacheManager with ImageCacheManager {
   /// Creates a manager with a custom config for tests.
   @visibleForTesting
   ResizedImageCacheManager.testing(super.config);
+
+  static const _key = 'resizedImageCache';
+  static ResizedImageCacheManager? _instance;
 
   /// Gets a resized image file and removes the original cache entry.
   Future<io.File> resizedFile({

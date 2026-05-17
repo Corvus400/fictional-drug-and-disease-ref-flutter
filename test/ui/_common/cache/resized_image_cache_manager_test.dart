@@ -1,11 +1,11 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:fictional_drug_and_disease_ref/ui/_common/cache/resized_image_cache_manager.dart';
 import 'package:file/file.dart' as file;
 import 'package:file/local.dart';
-import 'package:fictional_drug_and_disease_ref/ui/_common/cache/resized_image_cache_manager.dart';
-import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -77,19 +77,18 @@ void main() {
     () async {
       final manager = _TestResizedImageCacheManager(
         cachedFile: _writeTestFile('todo3.png'),
-        imageResponseError: StateError('download failed'),
+        imageResponseError: Exception('download failed'),
       );
 
-      try {
-        await manager.resizedFile(
+      await expectLater(
+        manager.resizedFile(
           url: 'https://api.example.test/image.png?size=M',
           originalKey: 'image-key',
           maxWidth: 168,
           maxHeight: 252,
-        );
-      } on StateError {
-        // Expected in this test; the assertion is that removal did not run.
-      }
+        ),
+        throwsA(isA<Exception>()),
+      );
 
       expect(manager.removedOriginalKeys, isEmpty);
     },
@@ -130,7 +129,7 @@ final class _TestResizedImageCacheManager extends ResizedImageCacheManager {
 
   final file.File cachedFile;
   final Object? imageResponseError;
-  final Object? removeOriginalError;
+  final Exception? removeOriginalError;
   int getImageFileCalls = 0;
   final List<String> removedOriginalKeys = [];
 

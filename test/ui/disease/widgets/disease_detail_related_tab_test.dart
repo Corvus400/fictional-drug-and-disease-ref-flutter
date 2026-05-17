@@ -1,6 +1,6 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'dart:async';
 
 import 'package:fictional_drug_and_disease_ref/config/api_config.dart';
 import 'package:fictional_drug_and_disease_ref/config/flavor.dart';
@@ -20,10 +20,10 @@ import 'package:fictional_drug_and_disease_ref/ui/disease/widgets/disease_detail
 import 'package:file/file.dart' as file;
 import 'package:file/local.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mocktail/mocktail.dart';
 
@@ -180,7 +180,8 @@ void main() {
   );
 
   testWidgets(
-    'DiseaseDetailRelatedTab requests related drug resized image with DPR cache dimensions',
+    'DiseaseDetailRelatedTab requests related drug resized image '
+    'with DPR cache dimensions',
     (tester) async {
       final disease = _diseaseFixture().toDomain();
       final drugDto = _drugFixture();
