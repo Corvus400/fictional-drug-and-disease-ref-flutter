@@ -5,9 +5,40 @@ import 'package:file/file.dart' as file;
 import 'package:file/local.dart';
 import 'package:fictional_drug_and_disease_ref/ui/_common/cache/resized_image_cache_manager.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
+  late Directory tempDir;
+
+  setUpAll(() async {
+    tempDir = await Directory.systemTemp.createTemp(
+      'resized_image_cache_manager_test',
+    );
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(
+          const MethodChannel('plugins.flutter.io/path_provider'),
+          (call) async {
+            return switch (call.method) {
+              'getTemporaryDirectory' => tempDir.path,
+              'getApplicationSupportDirectory' => tempDir.path,
+              _ => null,
+            };
+          },
+        );
+  });
+
+  tearDownAll(() async {
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(
+          const MethodChannel('plugins.flutter.io/path_provider'),
+          null,
+        );
+    await tempDir.delete(recursive: true);
+  });
+
   test('resizedFile requests one resized image stream', () async {
     final manager = _TestResizedImageCacheManager(
       cachedFile: _writeTestFile('todo1.png'),
@@ -22,14 +53,38 @@ void main() {
 
     expect(manager.getImageFileCalls, 1);
   });
+
+  test(
+    'resizedFile removes the original cache key after image retrieval',
+    () async {
+      final manager = _TestResizedImageCacheManager(
+        cachedFile: _writeTestFile('todo2.png'),
+      );
+
+      await manager.resizedFile(
+        url: 'https://api.example.test/image.png?size=M',
+        originalKey: 'image-key',
+        maxWidth: 168,
+        maxHeight: 252,
+      );
+
+      expect(manager.removedOriginalKeys, ['image-key']);
+    },
+  );
 }
 
 final class _TestResizedImageCacheManager extends ResizedImageCacheManager {
   _TestResizedImageCacheManager({required this.cachedFile})
-    : super.testing(Config('test-resized-image-cache'));
+    : super.testing(
+        Config(
+          'test-resized-image-cache',
+          repo: NonStoringObjectProvider(),
+        ),
+      );
 
   final file.File cachedFile;
   int getImageFileCalls = 0;
+  final List<String> removedOriginalKeys = [];
 
   @override
   Stream<FileResponse> imageFileResponses({
@@ -45,7 +100,9 @@ final class _TestResizedImageCacheManager extends ResizedImageCacheManager {
   }
 
   @override
-  Future<void> removeOriginalFile(String key) async {}
+  Future<void> removeOriginalFile(String key) async {
+    removedOriginalKeys.add(key);
+  }
 }
 
 file.File _writeTestFile(String name) {
