@@ -5,6 +5,7 @@ import 'package:fictional_drug_and_disease_ref/core/logging/app_logger.dart';
 import 'package:fictional_drug_and_disease_ref/domain/drug/drug_summary.dart';
 import 'package:fictional_drug_and_disease_ref/l10n/app_localizations.dart';
 import 'package:fictional_drug_and_disease_ref/theme/app_palette.dart';
+import 'package:fictional_drug_and_disease_ref/ui/_common/cache/resized_image_cache_manager.dart';
 import 'package:fictional_drug_and_disease_ref/ui/search/constants/search_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
@@ -226,10 +227,21 @@ class _DrugCardCachedImageState extends State<_DrugCardCachedImage> {
   }
 
   Future<File> _loadImageFile() async {
-    final cachedFile = await widget.cacheManager.getSingleFile(
-      widget.imageUrl,
-      key: widget.imageCacheKey,
-    );
+    final cacheManager = widget.cacheManager;
+    final cachedFile = cacheManager is ResizedImageCacheManager
+        ? await cacheManager.resizedFile(
+            url: widget.imageUrl,
+            originalKey: widget.imageCacheKey,
+            maxWidth: widget.imageCacheWidth,
+            maxHeight:
+                (widget.imageCacheWidth /
+                        SearchConstants.searchDrugCardImageAspectRatio)
+                    .round(),
+          )
+        : await cacheManager.getSingleFile(
+            widget.imageUrl,
+            key: widget.imageCacheKey,
+          );
     return File(cachedFile.path);
   }
 
