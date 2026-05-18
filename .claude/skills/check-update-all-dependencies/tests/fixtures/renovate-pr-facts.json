@@ -1,0 +1,28 @@
+{
+  "pr_number": 999,
+  "title": "chore(deps): update Flutter SDK (major)",
+  "group_name": "Flutter SDK",
+  "is_vulnerability_alert": false,
+  "packages": [
+    {
+      "coordinate": "flutter",
+      "old_version": "3.41.5",
+      "new_version": "4.0.0",
+      "source_url": "https://github.com/flutter/flutter",
+      "compare_url": "https://github.com/flutter/flutter/compare/3.41.5...4.0.0",
+      "package_file": ".flutter-version",
+      "release_notes_raw": ""
+    },
+    {
+      "coordinate": "shared_preferences",
+      "old_version": "2.5.4",
+      "new_version": "2.5.5",
+      "source_url": "https://pub.dev/packages/shared_preferences",
+      "compare_url": "",
+      "package_file": "pubspec.lock",
+      "release_notes_raw": "Patch release."
+    }
+  ],
+  "_parse_failed": false,
+  "_raw_body": null
+}
