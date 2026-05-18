@@ -129,6 +129,26 @@ void main() {
     ).called(1);
   });
 
+  testWidgets(
+    'DrugDetailOverviewTab keeps hero image full resolution for preview Hero',
+    (tester) async {
+      final drug = _drugFixture().toDomain();
+      final cacheManager = _mockCacheManagerWithImage(
+        'drug-detail-hero-full-resolution.png',
+      );
+
+      await tester.pumpWidget(
+        _overviewTab(drug, cacheManager: cacheManager, devicePixelRatio: 3),
+      );
+      await tester.pumpAndSettle();
+
+      final image = tester.widget<Image>(
+        find.byKey(ValueKey<String>('drug-detail-hero-image-${drug.id}')),
+      );
+      expect(image.image, isA<FileImage>());
+    },
+  );
+
   testWidgets('DrugDetailOverviewTab opens zoomable Hero route preview', (
     tester,
   ) async {
@@ -194,6 +214,37 @@ void main() {
     );
   });
 
+  testWidgets(
+    'DrugDetailOverviewTab preview keeps Original resolution '
+    'without cacheWidth',
+    (tester) async {
+      final drug = _drugFixture().toDomain();
+      final cacheManager = _mockCacheManagerWithImage(
+        'drug-detail-hero-preview-original.png',
+      );
+
+      await tester.pumpWidget(
+        _overviewTab(drug, cacheManager: cacheManager, devicePixelRatio: 3),
+      );
+      await tester.pumpAndSettle();
+      await tester.tap(
+        find.byKey(
+          ValueKey<String>(
+            'drug-detail-hero-image-preview-trigger-${drug.id}',
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      final previewImage = tester.widget<Image>(
+        find.byKey(
+          ValueKey<String>('drug-detail-hero-image-preview-image-${drug.id}'),
+        ),
+      );
+      expect(previewImage.image, isA<FileImage>());
+    },
+  );
+
   testWidgets('DrugDetailOverviewTab renders warning section from D3', (
     tester,
   ) async {
@@ -244,6 +295,7 @@ void main() {
 Widget _overviewTab(
   Drug drug, {
   _MockBaseCacheManager? cacheManager,
+  double devicePixelRatio = 1,
   List<NavigatorObserver> navigatorObservers = const [],
 }) {
   final resolvedCacheManager =
@@ -256,10 +308,13 @@ Widget _overviewTab(
     supportedLocales: AppLocalizations.supportedLocales,
     navigatorObservers: navigatorObservers,
     home: Scaffold(
-      body: SingleChildScrollView(
-        child: DrugDetailOverviewTab(
-          drug: drug,
-          cacheManager: resolvedCacheManager,
+      body: MediaQuery(
+        data: MediaQueryData(devicePixelRatio: devicePixelRatio),
+        child: SingleChildScrollView(
+          child: DrugDetailOverviewTab(
+            drug: drug,
+            cacheManager: resolvedCacheManager,
+          ),
         ),
       ),
     ),

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -11,6 +12,7 @@ import 'package:fictional_drug_and_disease_ref/data/services/api/drug_api_client
 import 'package:fictional_drug_and_disease_ref/l10n/app_localizations.dart';
 import 'package:fictional_drug_and_disease_ref/router/app_router.dart';
 import 'package:fictional_drug_and_disease_ref/theme/app_theme.dart';
+import 'package:fictional_drug_and_disease_ref/ui/_common/cache/resized_image_cache_manager.dart';
 import 'package:fictional_drug_and_disease_ref/ui/detail/constants/detail_constants.dart';
 import 'package:fictional_drug_and_disease_ref/ui/detail/widgets/detail_carousel.dart';
 import 'package:fictional_drug_and_disease_ref/ui/detail/widgets/detail_panel.dart';
@@ -18,6 +20,7 @@ import 'package:fictional_drug_and_disease_ref/ui/disease/widgets/disease_detail
 import 'package:file/file.dart' as file;
 import 'package:file/local.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -25,13 +28,40 @@ import 'package:go_router/go_router.dart';
 import 'package:mocktail/mocktail.dart';
 
 void main() {
-  setUpAll(() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
+  late Directory tempDir;
+
+  setUpAll(() async {
     ApiConfig.initialize(
       const FlavorConfig(
         flavor: Flavor.dev,
         apiBaseUrl: 'https://api.example.test',
       ),
     );
+    tempDir = await Directory.systemTemp.createTemp(
+      'disease_related_resized_cache_test',
+    );
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(
+          const MethodChannel('plugins.flutter.io/path_provider'),
+          (call) async {
+            return switch (call.method) {
+              'getTemporaryDirectory' => tempDir.path,
+              'getApplicationSupportDirectory' => tempDir.path,
+              _ => null,
+            };
+          },
+        );
+  });
+
+  tearDownAll(() async {
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(
+          const MethodChannel('plugins.flutter.io/path_provider'),
+          null,
+        );
+    await tempDir.delete(recursive: true);
   });
 
   testWidgets(
@@ -148,11 +178,115 @@ void main() {
       ).called(1);
     },
   );
+
+  testWidgets(
+    'DiseaseDetailRelatedTab requests related drug resized image '
+    'with DPR cache dimensions',
+    (tester) async {
+      final disease = _diseaseFixture().toDomain();
+      final drugDto = _drugFixture();
+      final drugId = disease.relatedDrugIds.single;
+      final apiClient = _MockDrugApiClient();
+      final cacheManager = _RecordingResizedImageCacheManager(
+        cachedFile: _writeTestImageFile('related-drug-resized.png'),
+      );
+      when(() => apiClient.getDrug(drugId)).thenAnswer((_) async => drugDto);
+      final router = GoRouter(
+        initialLocation: AppRoutes.search,
+        routes: [
+          GoRoute(
+            path: AppRoutes.search,
+            builder: (context, state) => MediaQuery(
+              data: const MediaQueryData(
+                size: Size(390, 844),
+                devicePixelRatio: 3,
+              ),
+              child: DiseaseDetailRelatedTab(
+                disease: disease,
+                cacheManager: cacheManager,
+              ),
+            ),
+          ),
+        ],
+      );
+      addTearDown(router.dispose);
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [drugApiClientProvider.overrideWithValue(apiClient)],
+          child: MaterialApp.router(
+            routerConfig: router,
+            theme: AppTheme.light(),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(
+        cacheManager.resizeRequests.single,
+        (
+          url: 'https://api.example.test/v1/images/drugs/$drugId?size=M',
+          key:
+              'detail-related-drug-card-image-v1::'
+              'https://api.example.test/v1/images/drugs/$drugId?size=M',
+          maxWidth: 168,
+          maxHeight: 252,
+        ),
+      );
+    },
+  );
 }
 
 final class _MockDrugApiClient extends Mock implements DrugApiClient {}
 
 final class _MockBaseCacheManager extends Mock implements BaseCacheManager {}
+
+final class _RecordingResizedImageCacheManager
+    extends ResizedImageCacheManager {
+  _RecordingResizedImageCacheManager({required this.cachedFile})
+    : super.testing(
+        Config(
+          'disease-related-resized-cache-test',
+          repo: NonStoringObjectProvider(),
+        ),
+      );
+
+  final file.File cachedFile;
+  final List<({String url, String key, int maxWidth, int maxHeight})>
+  resizeRequests = [];
+
+  @override
+  Stream<FileResponse> imageFileResponses({
+    required String url,
+    required String key,
+    required int maxWidth,
+    required int maxHeight,
+  }) {
+    resizeRequests.add((
+      url: url,
+      key: key,
+      maxWidth: maxWidth,
+      maxHeight: maxHeight,
+    ));
+    return Stream<FileResponse>.value(
+      FileInfo(cachedFile, FileSource.Online, DateTime(2099), url),
+    );
+  }
+
+  @override
+  Future<void> removeOriginalFile(String key) async {}
+
+  @override
+  Future<file.File> getSingleFile(
+    String url, {
+    String? key,
+    Map<String, String>? headers,
+  }) {
+    throw StateError('DiseaseDetailRelatedTab should use resizedFile');
+  }
+}
 
 file.File _writeTestImageFile(String name) {
   const fileSystem = LocalFileSystem();

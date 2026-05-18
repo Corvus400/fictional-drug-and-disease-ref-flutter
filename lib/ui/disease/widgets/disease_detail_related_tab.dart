@@ -10,6 +10,7 @@ import 'package:fictional_drug_and_disease_ref/l10n/app_localizations.dart';
 import 'package:fictional_drug_and_disease_ref/router/app_router.dart';
 import 'package:fictional_drug_and_disease_ref/theme/app_palette.dart';
 import 'package:fictional_drug_and_disease_ref/theme/detail_color_extension.dart';
+import 'package:fictional_drug_and_disease_ref/ui/_common/cache/resized_image_cache_manager.dart';
 import 'package:fictional_drug_and_disease_ref/ui/detail/constants/detail_constants.dart';
 import 'package:fictional_drug_and_disease_ref/ui/detail/widgets/detail_carousel.dart';
 import 'package:fictional_drug_and_disease_ref/ui/detail/widgets/detail_panel.dart';
@@ -314,10 +315,20 @@ class _RelatedDrugCachedImageState extends State<_RelatedDrugCachedImage> {
   }
 
   Future<File> _loadImageFile() async {
-    final cachedFile = await widget.cacheManager.getSingleFile(
-      _relatedDrugCardImageUrl(widget.drug.imageUrl),
-      key: _relatedDrugCardImageCacheKey(widget.drug.imageUrl),
-    );
+    final imageUrl = _relatedDrugCardImageUrl(widget.drug.imageUrl);
+    final imageCacheKey = _relatedDrugCardImageCacheKey(widget.drug.imageUrl);
+    final cacheManager = widget.cacheManager;
+    final cachedFile = cacheManager is ResizedImageCacheManager
+        ? await cacheManager.resizedFile(
+            url: imageUrl,
+            originalKey: imageCacheKey,
+            maxWidth: widget.imageCacheWidth,
+            maxHeight:
+                (widget.imageCacheWidth /
+                        SearchConstants.searchDrugCardImageAspectRatio)
+                    .round(),
+          )
+        : await cacheManager.getSingleFile(imageUrl, key: imageCacheKey);
     return File(cachedFile.path);
   }
 
