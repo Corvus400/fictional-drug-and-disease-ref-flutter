@@ -24,6 +24,16 @@
         "pub"
       ],
       "groupName": "Dart and Flutter packages"
+    },
+    {
+      "description": "Ignore Flutter SDK gradle plugin (bundled with Flutter SDK, not published to Maven)",
+      "matchManagers": [
+        "gradle"
+      ],
+      "matchDepNames": [
+        "dev.flutter.flutter-plugin-loader"
+      ],
+      "enabled": false
     }
   ]
 }
