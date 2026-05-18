@@ -130,11 +130,11 @@ void main() {
   });
 
   testWidgets(
-    'DrugDetailOverviewTab passes DPR-scaled cacheWidth to hero image',
+    'DrugDetailOverviewTab keeps hero image full resolution for preview Hero',
     (tester) async {
       final drug = _drugFixture().toDomain();
       final cacheManager = _mockCacheManagerWithImage(
-        'drug-detail-hero-cache-width.png',
+        'drug-detail-hero-full-resolution.png',
       );
 
       await tester.pumpWidget(
@@ -145,10 +145,7 @@ void main() {
       final image = tester.widget<Image>(
         find.byKey(ValueKey<String>('drug-detail-hero-image-${drug.id}')),
       );
-      expect(
-        image.image,
-        isA<ResizeImage>().having((provider) => provider.width, 'width', 192),
-      );
+      expect(image.image, isA<FileImage>());
     },
   );
 

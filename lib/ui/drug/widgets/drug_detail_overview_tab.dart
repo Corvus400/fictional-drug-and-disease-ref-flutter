@@ -317,10 +317,6 @@ class _DrugHeroImageState extends State<_DrugHeroImage> {
                             ),
                             width: double.infinity,
                             height: double.infinity,
-                            cacheWidth:
-                                (DetailConstants.heroDrugImageWidth *
-                                        MediaQuery.devicePixelRatioOf(context))
-                                    .round(),
                             fit: BoxFit.contain,
                             errorBuilder: (context, error, stackTrace) {
                               _logDecodeError(
