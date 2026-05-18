@@ -35,5 +35,15 @@
       ],
       "enabled": false
     }
+  ],
+  "prBodyDefinitions": {
+    "Source": "{{#if sourceUrl}}[{{{sourceUrl}}}]({{{sourceUrl}}}){{else}}—{{/if}}"
+  },
+  "prBodyColumns": [
+    "Package",
+    "Change",
+    "Age",
+    "Confidence",
+    "Source"
   ]
 }
