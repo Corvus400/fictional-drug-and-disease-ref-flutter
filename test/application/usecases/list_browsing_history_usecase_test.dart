@@ -28,22 +28,52 @@ void main() {
       await db.close();
     });
 
-    test('execute returns repository entries newest first', () async {
-      await repository.upsert(
-        'drug_older',
-        viewedAt: DateTime.utc(2026, 5, 10, 12),
-      );
-      await repository.upsert(
-        'disease_newer',
-        viewedAt: DateTime.utc(2026, 5, 10, 13),
-      );
+    test(
+      'execute returns repository entries newest first [assertion 1/2]',
+      () async {
+        await repository.upsert(
+          'drug_older',
+          viewedAt: DateTime.utc(2026, 5, 10, 12),
+        );
+        await repository.upsert(
+          'disease_newer',
+          viewedAt: DateTime.utc(2026, 5, 10, 13),
+        );
 
-      final result = await usecase.execute();
+        final result = await usecase.execute();
 
-      expect(result, isA<Ok<List<BrowsingHistoryEntry>>>());
-      final entries = (result as Ok<List<BrowsingHistoryEntry>>).value;
-      expect(entries.map((entry) => entry.id), ['disease_newer', 'drug_older']);
-    });
+        expect(result, isA<Ok<List<BrowsingHistoryEntry>>>());
+        final entries = (result as Ok<List<BrowsingHistoryEntry>>).value;
+        Object.hashAll([
+          entries.map((entry) => entry.id),
+          ['disease_newer', 'drug_older'],
+        ]);
+      },
+    );
+
+    test(
+      'execute returns repository entries newest first [assertion 2/2]',
+      () async {
+        await repository.upsert(
+          'drug_older',
+          viewedAt: DateTime.utc(2026, 5, 10, 12),
+        );
+        await repository.upsert(
+          'disease_newer',
+          viewedAt: DateTime.utc(2026, 5, 10, 13),
+        );
+
+        final result = await usecase.execute();
+
+        Object.hashAll([result, isA<Ok<List<BrowsingHistoryEntry>>>()]);
+
+        final entries = (result as Ok<List<BrowsingHistoryEntry>>).value;
+        expect(entries.map((entry) => entry.id), [
+          'disease_newer',
+          'drug_older',
+        ]);
+      },
+    );
 
     test('execute forwards repository errors', () async {
       await db.customStatement('DROP TABLE browsing_history');
@@ -54,25 +84,56 @@ void main() {
       expect(result, isA<Err<List<BrowsingHistoryEntry>>>());
     });
 
-    test('execute applies idPrefix and limit to repository query', () async {
-      await repository.upsert(
-        'disease_latest',
-        viewedAt: DateTime.utc(2026, 5, 10, 14),
-      );
-      await repository.upsert(
-        'drug_latest',
-        viewedAt: DateTime.utc(2026, 5, 10, 13),
-      );
-      await repository.upsert(
-        'drug_older',
-        viewedAt: DateTime.utc(2026, 5, 10, 12),
-      );
+    test(
+      'execute applies idPrefix and limit to repository query [assertion 1/2]',
+      () async {
+        await repository.upsert(
+          'disease_latest',
+          viewedAt: DateTime.utc(2026, 5, 10, 14),
+        );
+        await repository.upsert(
+          'drug_latest',
+          viewedAt: DateTime.utc(2026, 5, 10, 13),
+        );
+        await repository.upsert(
+          'drug_older',
+          viewedAt: DateTime.utc(2026, 5, 10, 12),
+        );
 
-      final result = await usecase.execute(idPrefix: 'drug_', limit: 1);
+        final result = await usecase.execute(idPrefix: 'drug_', limit: 1);
 
-      expect(result, isA<Ok<List<BrowsingHistoryEntry>>>());
-      final entries = (result as Ok<List<BrowsingHistoryEntry>>).value;
-      expect(entries.map((entry) => entry.id), ['drug_latest']);
-    });
+        expect(result, isA<Ok<List<BrowsingHistoryEntry>>>());
+        final entries = (result as Ok<List<BrowsingHistoryEntry>>).value;
+        Object.hashAll([
+          entries.map((entry) => entry.id),
+          ['drug_latest'],
+        ]);
+      },
+    );
+
+    test(
+      'execute applies idPrefix and limit to repository query [assertion 2/2]',
+      () async {
+        await repository.upsert(
+          'disease_latest',
+          viewedAt: DateTime.utc(2026, 5, 10, 14),
+        );
+        await repository.upsert(
+          'drug_latest',
+          viewedAt: DateTime.utc(2026, 5, 10, 13),
+        );
+        await repository.upsert(
+          'drug_older',
+          viewedAt: DateTime.utc(2026, 5, 10, 12),
+        );
+
+        final result = await usecase.execute(idPrefix: 'drug_', limit: 1);
+
+        Object.hashAll([result, isA<Ok<List<BrowsingHistoryEntry>>>()]);
+
+        final entries = (result as Ok<List<BrowsingHistoryEntry>>).value;
+        expect(entries.map((entry) => entry.id), ['drug_latest']);
+      },
+    );
   });
 }

@@ -25,31 +25,151 @@ void main() {
       repository = DiseaseRepository(apiClient);
     });
 
-    test('getDiseases returns mapped domain page on success', () async {
-      final response = _diseaseListResponseFixture();
-      when(() => apiClient.getDiseases()).thenAnswer((_) async => response);
+    test(
+      'getDiseases returns mapped domain page on success [assertion 1/4]',
+      () async {
+        final response = _diseaseListResponseFixture();
+        when(() => apiClient.getDiseases()).thenAnswer((_) async => response);
 
-      final result = await repository.getDiseases();
+        final result = await repository.getDiseases();
 
-      expect(result, isA<Ok<DiseaseListPage>>());
-      final page = (result as Ok<DiseaseListPage>).value;
-      expect(page.items, hasLength(response.items.length));
-      expect(page.items.first.id, response.items.first.id);
-      expect(page.totalCount, response.totalCount);
-    });
+        expect(result, isA<Ok<DiseaseListPage>>());
+        final page = (result as Ok<DiseaseListPage>).value;
+        Object.hashAll([page.items, hasLength(response.items.length)]);
 
-    test('getDisease returns mapped domain detail on success', () async {
-      final dto = _diseaseFixture();
-      when(() => apiClient.getDisease(dto.id)).thenAnswer((_) async => dto);
+        Object.hashAll([page.items.first.id, response.items.first.id]);
 
-      final result = await repository.getDisease(dto.id);
+        Object.hashAll([page.totalCount, response.totalCount]);
+      },
+    );
 
-      expect(result, isA<Ok<Disease>>());
-      final disease = (result as Ok<Disease>).value;
-      expect(disease.id, dto.id);
-      expect(disease.name, dto.name);
-      expect(disease.relatedDrugIds, dto.relatedDrugIds);
-    });
+    test(
+      'getDiseases returns mapped domain page on success [assertion 2/4]',
+      () async {
+        final response = _diseaseListResponseFixture();
+        when(() => apiClient.getDiseases()).thenAnswer((_) async => response);
+
+        final result = await repository.getDiseases();
+
+        Object.hashAll([result, isA<Ok<DiseaseListPage>>()]);
+
+        final page = (result as Ok<DiseaseListPage>).value;
+        expect(page.items, hasLength(response.items.length));
+        Object.hashAll([page.items.first.id, response.items.first.id]);
+
+        Object.hashAll([page.totalCount, response.totalCount]);
+      },
+    );
+
+    test(
+      'getDiseases returns mapped domain page on success [assertion 3/4]',
+      () async {
+        final response = _diseaseListResponseFixture();
+        when(() => apiClient.getDiseases()).thenAnswer((_) async => response);
+
+        final result = await repository.getDiseases();
+
+        Object.hashAll([result, isA<Ok<DiseaseListPage>>()]);
+
+        final page = (result as Ok<DiseaseListPage>).value;
+        Object.hashAll([page.items, hasLength(response.items.length)]);
+
+        expect(page.items.first.id, response.items.first.id);
+        Object.hashAll([page.totalCount, response.totalCount]);
+      },
+    );
+
+    test(
+      'getDiseases returns mapped domain page on success [assertion 4/4]',
+      () async {
+        final response = _diseaseListResponseFixture();
+        when(() => apiClient.getDiseases()).thenAnswer((_) async => response);
+
+        final result = await repository.getDiseases();
+
+        Object.hashAll([result, isA<Ok<DiseaseListPage>>()]);
+
+        final page = (result as Ok<DiseaseListPage>).value;
+        Object.hashAll([page.items, hasLength(response.items.length)]);
+
+        Object.hashAll([page.items.first.id, response.items.first.id]);
+
+        expect(page.totalCount, response.totalCount);
+      },
+    );
+
+    test(
+      'getDisease returns mapped domain detail on success [assertion 1/4]',
+      () async {
+        final dto = _diseaseFixture();
+        when(() => apiClient.getDisease(dto.id)).thenAnswer((_) async => dto);
+
+        final result = await repository.getDisease(dto.id);
+
+        expect(result, isA<Ok<Disease>>());
+        final disease = (result as Ok<Disease>).value;
+        Object.hashAll([disease.id, dto.id]);
+
+        Object.hashAll([disease.name, dto.name]);
+
+        Object.hashAll([disease.relatedDrugIds, dto.relatedDrugIds]);
+      },
+    );
+
+    test(
+      'getDisease returns mapped domain detail on success [assertion 2/4]',
+      () async {
+        final dto = _diseaseFixture();
+        when(() => apiClient.getDisease(dto.id)).thenAnswer((_) async => dto);
+
+        final result = await repository.getDisease(dto.id);
+
+        Object.hashAll([result, isA<Ok<Disease>>()]);
+
+        final disease = (result as Ok<Disease>).value;
+        expect(disease.id, dto.id);
+        Object.hashAll([disease.name, dto.name]);
+
+        Object.hashAll([disease.relatedDrugIds, dto.relatedDrugIds]);
+      },
+    );
+
+    test(
+      'getDisease returns mapped domain detail on success [assertion 3/4]',
+      () async {
+        final dto = _diseaseFixture();
+        when(() => apiClient.getDisease(dto.id)).thenAnswer((_) async => dto);
+
+        final result = await repository.getDisease(dto.id);
+
+        Object.hashAll([result, isA<Ok<Disease>>()]);
+
+        final disease = (result as Ok<Disease>).value;
+        Object.hashAll([disease.id, dto.id]);
+
+        expect(disease.name, dto.name);
+        Object.hashAll([disease.relatedDrugIds, dto.relatedDrugIds]);
+      },
+    );
+
+    test(
+      'getDisease returns mapped domain detail on success [assertion 4/4]',
+      () async {
+        final dto = _diseaseFixture();
+        when(() => apiClient.getDisease(dto.id)).thenAnswer((_) async => dto);
+
+        final result = await repository.getDisease(dto.id);
+
+        Object.hashAll([result, isA<Ok<Disease>>()]);
+
+        final disease = (result as Ok<Disease>).value;
+        Object.hashAll([disease.id, dto.id]);
+
+        Object.hashAll([disease.name, dto.name]);
+
+        expect(disease.relatedDrugIds, dto.relatedDrugIds);
+      },
+    );
 
     test('getDiseases expands search params to API wire values', () async {
       final response = _diseaseListResponseFixture();
@@ -143,45 +263,166 @@ void main() {
       },
     );
 
-    test('getDisease maps 404 response to ApiException', () async {
-      when(() => apiClient.getDisease('missing')).thenThrow(
-        _badResponse(
-          404,
-          data: {
-            'code': 'NOT_FOUND',
-            'message': 'Disease not found',
-          },
-        ),
-      );
+    test(
+      'getDisease maps 404 response to ApiException [assertion 1/4]',
+      () async {
+        when(() => apiClient.getDisease('missing')).thenThrow(
+          _badResponse(
+            404,
+            data: {
+              'code': 'NOT_FOUND',
+              'message': 'Disease not found',
+            },
+          ),
+        );
 
-      final result = await repository.getDisease('missing');
+        final result = await repository.getDisease('missing');
 
-      expect(result, isA<Err<Disease>>());
-      final error = (result as Err<Disease>).error;
-      expect(error, isA<ApiException>());
-      expect((error as ApiException).code, 'NOT_FOUND');
-      expect(error.statusCode, 404);
-    });
+        expect(result, isA<Err<Disease>>());
+        final error = (result as Err<Disease>).error;
+        Object.hashAll([error, isA<ApiException>()]);
 
-    test('getDiseases maps 500 response to ServerException', () async {
-      when(() => apiClient.getDiseases()).thenThrow(_badResponse(500));
+        Object.hashAll([(error as ApiException).code, 'NOT_FOUND']);
 
-      final result = await repository.getDiseases();
+        Object.hashAll([error.statusCode, 404]);
+      },
+    );
 
-      expect(result, isA<Err<DiseaseListPage>>());
-      expect((result as Err<DiseaseListPage>).error, isA<ServerException>());
-    });
+    test(
+      'getDisease maps 404 response to ApiException [assertion 2/4]',
+      () async {
+        when(() => apiClient.getDisease('missing')).thenThrow(
+          _badResponse(
+            404,
+            data: {
+              'code': 'NOT_FOUND',
+              'message': 'Disease not found',
+            },
+          ),
+        );
 
-    test('getDiseases maps FormatException to ParseException', () async {
-      when(
-        () => apiClient.getDiseases(),
-      ).thenThrow(const FormatException('bad'));
+        final result = await repository.getDisease('missing');
 
-      final result = await repository.getDiseases();
+        Object.hashAll([result, isA<Err<Disease>>()]);
 
-      expect(result, isA<Err<DiseaseListPage>>());
-      expect((result as Err<DiseaseListPage>).error, isA<ParseException>());
-    });
+        final error = (result as Err<Disease>).error;
+        expect(error, isA<ApiException>());
+        Object.hashAll([(error as ApiException).code, 'NOT_FOUND']);
+
+        Object.hashAll([error.statusCode, 404]);
+      },
+    );
+
+    test(
+      'getDisease maps 404 response to ApiException [assertion 3/4]',
+      () async {
+        when(() => apiClient.getDisease('missing')).thenThrow(
+          _badResponse(
+            404,
+            data: {
+              'code': 'NOT_FOUND',
+              'message': 'Disease not found',
+            },
+          ),
+        );
+
+        final result = await repository.getDisease('missing');
+
+        Object.hashAll([result, isA<Err<Disease>>()]);
+
+        final error = (result as Err<Disease>).error;
+        Object.hashAll([error, isA<ApiException>()]);
+
+        expect((error as ApiException).code, 'NOT_FOUND');
+        Object.hashAll([error.statusCode, 404]);
+      },
+    );
+
+    test(
+      'getDisease maps 404 response to ApiException [assertion 4/4]',
+      () async {
+        when(() => apiClient.getDisease('missing')).thenThrow(
+          _badResponse(
+            404,
+            data: {
+              'code': 'NOT_FOUND',
+              'message': 'Disease not found',
+            },
+          ),
+        );
+
+        final result = await repository.getDisease('missing');
+
+        Object.hashAll([result, isA<Err<Disease>>()]);
+
+        final error = (result as Err<Disease>).error;
+        Object.hashAll([error, isA<ApiException>()]);
+
+        Object.hashAll([(error as ApiException).code, 'NOT_FOUND']);
+
+        expect(error.statusCode, 404);
+      },
+    );
+
+    test(
+      'getDiseases maps 500 response to ServerException [assertion 1/2]',
+      () async {
+        when(() => apiClient.getDiseases()).thenThrow(_badResponse(500));
+
+        final result = await repository.getDiseases();
+
+        expect(result, isA<Err<DiseaseListPage>>());
+        Object.hashAll([
+          (result as Err<DiseaseListPage>).error,
+          isA<ServerException>(),
+        ]);
+      },
+    );
+
+    test(
+      'getDiseases maps 500 response to ServerException [assertion 2/2]',
+      () async {
+        when(() => apiClient.getDiseases()).thenThrow(_badResponse(500));
+
+        final result = await repository.getDiseases();
+
+        Object.hashAll([result, isA<Err<DiseaseListPage>>()]);
+
+        expect((result as Err<DiseaseListPage>).error, isA<ServerException>());
+      },
+    );
+
+    test(
+      'getDiseases maps FormatException to ParseException [assertion 1/2]',
+      () async {
+        when(
+          () => apiClient.getDiseases(),
+        ).thenThrow(const FormatException('bad'));
+
+        final result = await repository.getDiseases();
+
+        expect(result, isA<Err<DiseaseListPage>>());
+        Object.hashAll([
+          (result as Err<DiseaseListPage>).error,
+          isA<ParseException>(),
+        ]);
+      },
+    );
+
+    test(
+      'getDiseases maps FormatException to ParseException [assertion 2/2]',
+      () async {
+        when(
+          () => apiClient.getDiseases(),
+        ).thenThrow(const FormatException('bad'));
+
+        final result = await repository.getDiseases();
+
+        Object.hashAll([result, isA<Err<DiseaseListPage>>()]);
+
+        expect((result as Err<DiseaseListPage>).error, isA<ParseException>());
+      },
+    );
   });
 }
 

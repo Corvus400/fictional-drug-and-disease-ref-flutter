@@ -54,54 +54,168 @@ void main() {
       await db.close();
     });
 
-    test('build starts with idle drug state', () {
+    test('build starts with idle drug state [assertion 1/3]', () {
       final state = container.read(searchScreenProvider);
 
       expect(state.tab, SearchTab.drugs);
+      Object.hashAll([state.queryText, '']);
+
+      Object.hashAll([state.phase, isA<SearchPhaseIdle>()]);
+    });
+
+    test('build starts with idle drug state [assertion 2/3]', () {
+      final state = container.read(searchScreenProvider);
+
+      Object.hashAll([state.tab, SearchTab.drugs]);
+
       expect(state.queryText, '');
+      Object.hashAll([state.phase, isA<SearchPhaseIdle>()]);
+    });
+
+    test('build starts with idle drug state [assertion 3/3]', () {
+      final state = container.read(searchScreenProvider);
+
+      Object.hashAll([state.tab, SearchTab.drugs]);
+
+      Object.hashAll([state.queryText, '']);
+
       expect(state.phase, isA<SearchPhaseIdle>());
     });
 
-    test('changeQueryText updates text without running search', () {
-      container.read(searchScreenProvider.notifier).changeQueryText('アムロ');
+    test(
+      'changeQueryText updates text without running search [assertion 1/2]',
+      () {
+        container.read(searchScreenProvider.notifier).changeQueryText('アムロ');
 
-      final state = container.read(searchScreenProvider);
-      final queryText = state.queryText;
-      final phase = state.phase;
-      expect(queryText, 'アムロ');
-      expect(phase, isA<SearchPhaseIdle>());
-    });
+        final state = container.read(searchScreenProvider);
+        final queryText = state.queryText;
+        final phase = state.phase;
+        expect(queryText, 'アムロ');
+        Object.hashAll([phase, isA<SearchPhaseIdle>()]);
+      },
+    );
 
-    test('performSearch loads drug results and records history', () async {
-      final dto = _drugListFixture();
-      when(
-        () => drugApiClient.getDrugs(
-          page: any(named: 'page'),
-          pageSize: any(named: 'pageSize'),
-          keyword: any(named: 'keyword'),
-          keywordTarget: any(named: 'keywordTarget'),
-        ),
-      ).thenAnswer((_) async => dto);
-      final notifier = container.read(searchScreenProvider.notifier)
-        ..changeQueryText('アムロ');
+    test(
+      'changeQueryText updates text without running search [assertion 2/2]',
+      () {
+        container.read(searchScreenProvider.notifier).changeQueryText('アムロ');
 
-      await notifier.performSearch();
+        final state = container.read(searchScreenProvider);
+        final queryText = state.queryText;
+        final phase = state.phase;
+        Object.hashAll([queryText, 'アムロ']);
 
-      final state = container.read(searchScreenProvider);
-      final phase = state.phase as SearchPhaseResults;
-      final view = phase.view as DrugSearchResultsView;
-      expect(view.items, isNotEmpty);
-      expect(state.historyForTab, hasLength(1));
-      expect(state.historyForTab.single.queryText, 'アムロ');
-      verify(
-        () => drugApiClient.getDrugs(
-          page: 1,
-          pageSize: 20,
-          keyword: 'アムロ',
-          keywordTarget: DrugKeywordTarget.all.serialName,
-        ),
-      ).called(1);
-    });
+        expect(phase, isA<SearchPhaseIdle>());
+      },
+    );
+
+    test(
+      'performSearch loads drug results and records history [assertion 1/3]',
+      () async {
+        final dto = _drugListFixture();
+        when(
+          () => drugApiClient.getDrugs(
+            page: any(named: 'page'),
+            pageSize: any(named: 'pageSize'),
+            keyword: any(named: 'keyword'),
+            keywordTarget: any(named: 'keywordTarget'),
+          ),
+        ).thenAnswer((_) async => dto);
+        final notifier = container.read(searchScreenProvider.notifier)
+          ..changeQueryText('アムロ');
+
+        await notifier.performSearch();
+
+        final state = container.read(searchScreenProvider);
+        final phase = state.phase as SearchPhaseResults;
+        final view = phase.view as DrugSearchResultsView;
+        expect(view.items, isNotEmpty);
+        Object.hashAll([state.historyForTab, hasLength(1)]);
+
+        Object.hashAll([state.historyForTab.single.queryText, 'アムロ']);
+
+        verify(
+          () => drugApiClient.getDrugs(
+            page: 1,
+            pageSize: 20,
+            keyword: 'アムロ',
+            keywordTarget: DrugKeywordTarget.all.serialName,
+          ),
+        ).called(1);
+      },
+    );
+
+    test(
+      'performSearch loads drug results and records history [assertion 2/3]',
+      () async {
+        final dto = _drugListFixture();
+        when(
+          () => drugApiClient.getDrugs(
+            page: any(named: 'page'),
+            pageSize: any(named: 'pageSize'),
+            keyword: any(named: 'keyword'),
+            keywordTarget: any(named: 'keywordTarget'),
+          ),
+        ).thenAnswer((_) async => dto);
+        final notifier = container.read(searchScreenProvider.notifier)
+          ..changeQueryText('アムロ');
+
+        await notifier.performSearch();
+
+        final state = container.read(searchScreenProvider);
+        final phase = state.phase as SearchPhaseResults;
+        final view = phase.view as DrugSearchResultsView;
+        Object.hashAll([view.items, isNotEmpty]);
+
+        expect(state.historyForTab, hasLength(1));
+        Object.hashAll([state.historyForTab.single.queryText, 'アムロ']);
+
+        verify(
+          () => drugApiClient.getDrugs(
+            page: 1,
+            pageSize: 20,
+            keyword: 'アムロ',
+            keywordTarget: DrugKeywordTarget.all.serialName,
+          ),
+        ).called(1);
+      },
+    );
+
+    test(
+      'performSearch loads drug results and records history [assertion 3/3]',
+      () async {
+        final dto = _drugListFixture();
+        when(
+          () => drugApiClient.getDrugs(
+            page: any(named: 'page'),
+            pageSize: any(named: 'pageSize'),
+            keyword: any(named: 'keyword'),
+            keywordTarget: any(named: 'keywordTarget'),
+          ),
+        ).thenAnswer((_) async => dto);
+        final notifier = container.read(searchScreenProvider.notifier)
+          ..changeQueryText('アムロ');
+
+        await notifier.performSearch();
+
+        final state = container.read(searchScreenProvider);
+        final phase = state.phase as SearchPhaseResults;
+        final view = phase.view as DrugSearchResultsView;
+        Object.hashAll([view.items, isNotEmpty]);
+
+        Object.hashAll([state.historyForTab, hasLength(1)]);
+
+        expect(state.historyForTab.single.queryText, 'アムロ');
+        verify(
+          () => drugApiClient.getDrugs(
+            page: 1,
+            pageSize: 20,
+            keyword: 'アムロ',
+            keywordTarget: DrugKeywordTarget.all.serialName,
+          ),
+        ).called(1);
+      },
+    );
 
     test(
       'performSearch sends keywordTarget all for drug keyword search',
@@ -144,69 +258,180 @@ void main() {
       },
     );
 
-    test('selectHistory restores query and searches immediately', () async {
-      final dto = _drugListFixture();
-      when(
-        () => drugApiClient.getDrugs(
-          page: any(named: 'page'),
-          pageSize: any(named: 'pageSize'),
-          keyword: any(named: 'keyword'),
-          keywordTarget: any(named: 'keywordTarget'),
-        ),
-      ).thenAnswer((_) async => dto);
-      const params = DrugSearchParams(keyword: '履歴');
-      await container
-          .read(searchHistoryRepositoryProvider)
-          .insertWithDedup(
-            id: 'search_001',
-            target: 'drug',
-            queryJson: container.read(searchQueryCodecProvider).encode(params),
-            searchedAt: DateTime.utc(2026, 5, 5),
-            totalCount: 1,
-          );
-      final notifier = container.read(searchScreenProvider.notifier);
-      await notifier.loadHistory();
+    test(
+      'selectHistory restores query and searches immediately [assertion 1/2]',
+      () async {
+        final dto = _drugListFixture();
+        when(
+          () => drugApiClient.getDrugs(
+            page: any(named: 'page'),
+            pageSize: any(named: 'pageSize'),
+            keyword: any(named: 'keyword'),
+            keywordTarget: any(named: 'keywordTarget'),
+          ),
+        ).thenAnswer((_) async => dto);
+        const params = DrugSearchParams(keyword: '履歴');
+        await container
+            .read(searchHistoryRepositoryProvider)
+            .insertWithDedup(
+              id: 'search_001',
+              target: 'drug',
+              queryJson: container
+                  .read(searchQueryCodecProvider)
+                  .encode(params),
+              searchedAt: DateTime.utc(2026, 5, 5),
+              totalCount: 1,
+            );
+        final notifier = container.read(searchScreenProvider.notifier);
+        await notifier.loadHistory();
 
-      await notifier.selectHistory(
-        container.read(searchScreenProvider).historyForTab.single,
-      );
+        await notifier.selectHistory(
+          container.read(searchScreenProvider).historyForTab.single,
+        );
 
-      final state = container.read(searchScreenProvider);
-      expect(state.queryText, '履歴');
-      expect(state.phase, isA<SearchPhaseResults>());
-    });
-
-    test('removeChipAt clears single-value drug axis', () async {
-      _stubDrugSearch(drugApiClient);
-      final notifier = container.read(searchScreenProvider.notifier);
-
-      await notifier.applyDrugFilter(categoryAtc: 'A');
-      expect(
-        container.read(searchScreenProvider).appliedChips.items,
-        hasLength(1),
-      );
-
-      await notifier.removeChipAt(0);
-
-      final state = container.read(searchScreenProvider);
-      expect(state.appliedChips.items, isEmpty);
-      expect(state.drugParams.categoryAtc, isNull);
-      verify(
-        () => drugApiClient.getDrugs(
-          page: 1,
-          pageSize: 20,
-          categoryAtc: any(named: 'categoryAtc'),
-          keyword: any(named: 'keyword'),
-          keywordMatch: any(named: 'keywordMatch'),
-          keywordTarget: any(named: 'keywordTarget'),
-          sort: any(named: 'sort'),
-        ),
-      ).called(2);
-    });
+        final state = container.read(searchScreenProvider);
+        expect(state.queryText, '履歴');
+        Object.hashAll([state.phase, isA<SearchPhaseResults>()]);
+      },
+    );
 
     test(
-      'removeOneChip removes the oldest applied chip and clears its axis on '
-      'drugParams',
+      'selectHistory restores query and searches immediately [assertion 2/2]',
+      () async {
+        final dto = _drugListFixture();
+        when(
+          () => drugApiClient.getDrugs(
+            page: any(named: 'page'),
+            pageSize: any(named: 'pageSize'),
+            keyword: any(named: 'keyword'),
+            keywordTarget: any(named: 'keywordTarget'),
+          ),
+        ).thenAnswer((_) async => dto);
+        const params = DrugSearchParams(keyword: '履歴');
+        await container
+            .read(searchHistoryRepositoryProvider)
+            .insertWithDedup(
+              id: 'search_001',
+              target: 'drug',
+              queryJson: container
+                  .read(searchQueryCodecProvider)
+                  .encode(params),
+              searchedAt: DateTime.utc(2026, 5, 5),
+              totalCount: 1,
+            );
+        final notifier = container.read(searchScreenProvider.notifier);
+        await notifier.loadHistory();
+
+        await notifier.selectHistory(
+          container.read(searchScreenProvider).historyForTab.single,
+        );
+
+        final state = container.read(searchScreenProvider);
+        Object.hashAll([state.queryText, '履歴']);
+
+        expect(state.phase, isA<SearchPhaseResults>());
+      },
+    );
+
+    test(
+      'removeChipAt clears single-value drug axis [assertion 1/3]',
+      () async {
+        _stubDrugSearch(drugApiClient);
+        final notifier = container.read(searchScreenProvider.notifier);
+
+        await notifier.applyDrugFilter(categoryAtc: 'A');
+        expect(
+          container.read(searchScreenProvider).appliedChips.items,
+          hasLength(1),
+        );
+
+        await notifier.removeChipAt(0);
+
+        final state = container.read(searchScreenProvider);
+        Object.hashAll([state.appliedChips.items, isEmpty]);
+
+        Object.hashAll([state.drugParams.categoryAtc, isNull]);
+
+        verify(
+          () => drugApiClient.getDrugs(
+            page: 1,
+            pageSize: 20,
+            categoryAtc: any(named: 'categoryAtc'),
+            keyword: any(named: 'keyword'),
+            keywordMatch: any(named: 'keywordMatch'),
+            keywordTarget: any(named: 'keywordTarget'),
+            sort: any(named: 'sort'),
+          ),
+        ).called(2);
+      },
+    );
+
+    test(
+      'removeChipAt clears single-value drug axis [assertion 2/3]',
+      () async {
+        _stubDrugSearch(drugApiClient);
+        final notifier = container.read(searchScreenProvider.notifier);
+
+        await notifier.applyDrugFilter(categoryAtc: 'A');
+        Object.hashAll([
+          container.read(searchScreenProvider).appliedChips.items,
+          hasLength(1),
+        ]);
+
+        await notifier.removeChipAt(0);
+
+        final state = container.read(searchScreenProvider);
+        expect(state.appliedChips.items, isEmpty);
+        Object.hashAll([state.drugParams.categoryAtc, isNull]);
+
+        verify(
+          () => drugApiClient.getDrugs(
+            page: 1,
+            pageSize: 20,
+            categoryAtc: any(named: 'categoryAtc'),
+            keyword: any(named: 'keyword'),
+            keywordMatch: any(named: 'keywordMatch'),
+            keywordTarget: any(named: 'keywordTarget'),
+            sort: any(named: 'sort'),
+          ),
+        ).called(2);
+      },
+    );
+
+    test(
+      'removeChipAt clears single-value drug axis [assertion 3/3]',
+      () async {
+        _stubDrugSearch(drugApiClient);
+        final notifier = container.read(searchScreenProvider.notifier);
+
+        await notifier.applyDrugFilter(categoryAtc: 'A');
+        Object.hashAll([
+          container.read(searchScreenProvider).appliedChips.items,
+          hasLength(1),
+        ]);
+
+        await notifier.removeChipAt(0);
+
+        final state = container.read(searchScreenProvider);
+        Object.hashAll([state.appliedChips.items, isEmpty]);
+
+        expect(state.drugParams.categoryAtc, isNull);
+        verify(
+          () => drugApiClient.getDrugs(
+            page: 1,
+            pageSize: 20,
+            categoryAtc: any(named: 'categoryAtc'),
+            keyword: any(named: 'keyword'),
+            keywordMatch: any(named: 'keywordMatch'),
+            keywordTarget: any(named: 'keywordTarget'),
+            sort: any(named: 'sort'),
+          ),
+        ).called(2);
+      },
+    );
+
+    test(
+      'removeOneChip removes the oldest applied chip and clears its axis on  [assertion 1/4] drugParams',
       () async {
         _stubDrugSearch(drugApiClient);
         final notifier = container.read(searchScreenProvider.notifier);
@@ -219,41 +444,188 @@ void main() {
 
         final state = container.read(searchScreenProvider);
         expect(state.drugParams.regulatoryClass, isNull);
+        Object.hashAll([
+          state.drugParams.dosageForm,
+          ['tablet'],
+        ]);
+
+        Object.hashAll([state.appliedChips.items, hasLength(1)]);
+
+        Object.hashAll([state.appliedChips.items.single.axis, 'dosageForm']);
+      },
+    );
+
+    test(
+      'removeOneChip removes the oldest applied chip and clears its axis on  [assertion 2/4] drugParams',
+      () async {
+        _stubDrugSearch(drugApiClient);
+        final notifier = container.read(searchScreenProvider.notifier);
+
+        await notifier.applyDrugFilter(
+          regulatoryClass: ['poison'],
+          dosageForm: ['tablet'],
+        );
+        await notifier.removeOneChip();
+
+        final state = container.read(searchScreenProvider);
+        Object.hashAll([state.drugParams.regulatoryClass, isNull]);
+
         expect(state.drugParams.dosageForm, ['tablet']);
+        Object.hashAll([state.appliedChips.items, hasLength(1)]);
+
+        Object.hashAll([state.appliedChips.items.single.axis, 'dosageForm']);
+      },
+    );
+
+    test(
+      'removeOneChip removes the oldest applied chip and clears its axis on  [assertion 3/4] drugParams',
+      () async {
+        _stubDrugSearch(drugApiClient);
+        final notifier = container.read(searchScreenProvider.notifier);
+
+        await notifier.applyDrugFilter(
+          regulatoryClass: ['poison'],
+          dosageForm: ['tablet'],
+        );
+        await notifier.removeOneChip();
+
+        final state = container.read(searchScreenProvider);
+        Object.hashAll([state.drugParams.regulatoryClass, isNull]);
+
+        Object.hashAll([
+          state.drugParams.dosageForm,
+          ['tablet'],
+        ]);
+
         expect(state.appliedChips.items, hasLength(1));
+        Object.hashAll([state.appliedChips.items.single.axis, 'dosageForm']);
+      },
+    );
+
+    test(
+      'removeOneChip removes the oldest applied chip and clears its axis on  [assertion 4/4] drugParams',
+      () async {
+        _stubDrugSearch(drugApiClient);
+        final notifier = container.read(searchScreenProvider.notifier);
+
+        await notifier.applyDrugFilter(
+          regulatoryClass: ['poison'],
+          dosageForm: ['tablet'],
+        );
+        await notifier.removeOneChip();
+
+        final state = container.read(searchScreenProvider);
+        Object.hashAll([state.drugParams.regulatoryClass, isNull]);
+
+        Object.hashAll([
+          state.drugParams.dosageForm,
+          ['tablet'],
+        ]);
+
+        Object.hashAll([state.appliedChips.items, hasLength(1)]);
+
         expect(state.appliedChips.items.single.axis, 'dosageForm');
       },
     );
 
-    test('removeOneChip is no-op when appliedChips is empty', () async {
-      _stubDrugSearch(drugApiClient);
-      final notifier = container.read(searchScreenProvider.notifier);
-      final before = container.read(searchScreenProvider);
+    test(
+      'removeOneChip is no-op when appliedChips is empty [assertion 1/3]',
+      () async {
+        _stubDrugSearch(drugApiClient);
+        final notifier = container.read(searchScreenProvider.notifier);
+        final before = container.read(searchScreenProvider);
 
-      await notifier.removeOneChip();
+        await notifier.removeOneChip();
 
-      final after = container.read(searchScreenProvider);
-      expect(after.appliedChips.items, isEmpty);
-      expect(after.drugParams, same(before.drugParams));
-      expect(after.diseaseParams, same(before.diseaseParams));
-      verifyNever(
-        () => drugApiClient.getDrugs(
-          page: any(named: 'page'),
-          pageSize: any(named: 'pageSize'),
-          categoryAtc: any(named: 'categoryAtc'),
-          therapeuticCategory: any(named: 'therapeuticCategory'),
-          regulatoryClass: any(named: 'regulatoryClass'),
-          dosageForm: any(named: 'dosageForm'),
-          route: any(named: 'route'),
-          keyword: any(named: 'keyword'),
-          adverseReactionKeyword: any(named: 'adverseReactionKeyword'),
-          precautionCategory: any(named: 'precautionCategory'),
-        ),
-      );
-    });
+        final after = container.read(searchScreenProvider);
+        expect(after.appliedChips.items, isEmpty);
+        Object.hashAll([after.drugParams, same(before.drugParams)]);
+
+        Object.hashAll([after.diseaseParams, same(before.diseaseParams)]);
+
+        verifyNever(
+          () => drugApiClient.getDrugs(
+            page: any(named: 'page'),
+            pageSize: any(named: 'pageSize'),
+            categoryAtc: any(named: 'categoryAtc'),
+            therapeuticCategory: any(named: 'therapeuticCategory'),
+            regulatoryClass: any(named: 'regulatoryClass'),
+            dosageForm: any(named: 'dosageForm'),
+            route: any(named: 'route'),
+            keyword: any(named: 'keyword'),
+            adverseReactionKeyword: any(named: 'adverseReactionKeyword'),
+            precautionCategory: any(named: 'precautionCategory'),
+          ),
+        );
+      },
+    );
 
     test(
-      'removeOneChip on disease tab clears the oldest disease axis',
+      'removeOneChip is no-op when appliedChips is empty [assertion 2/3]',
+      () async {
+        _stubDrugSearch(drugApiClient);
+        final notifier = container.read(searchScreenProvider.notifier);
+        final before = container.read(searchScreenProvider);
+
+        await notifier.removeOneChip();
+
+        final after = container.read(searchScreenProvider);
+        Object.hashAll([after.appliedChips.items, isEmpty]);
+
+        expect(after.drugParams, same(before.drugParams));
+        Object.hashAll([after.diseaseParams, same(before.diseaseParams)]);
+
+        verifyNever(
+          () => drugApiClient.getDrugs(
+            page: any(named: 'page'),
+            pageSize: any(named: 'pageSize'),
+            categoryAtc: any(named: 'categoryAtc'),
+            therapeuticCategory: any(named: 'therapeuticCategory'),
+            regulatoryClass: any(named: 'regulatoryClass'),
+            dosageForm: any(named: 'dosageForm'),
+            route: any(named: 'route'),
+            keyword: any(named: 'keyword'),
+            adverseReactionKeyword: any(named: 'adverseReactionKeyword'),
+            precautionCategory: any(named: 'precautionCategory'),
+          ),
+        );
+      },
+    );
+
+    test(
+      'removeOneChip is no-op when appliedChips is empty [assertion 3/3]',
+      () async {
+        _stubDrugSearch(drugApiClient);
+        final notifier = container.read(searchScreenProvider.notifier);
+        final before = container.read(searchScreenProvider);
+
+        await notifier.removeOneChip();
+
+        final after = container.read(searchScreenProvider);
+        Object.hashAll([after.appliedChips.items, isEmpty]);
+
+        Object.hashAll([after.drugParams, same(before.drugParams)]);
+
+        expect(after.diseaseParams, same(before.diseaseParams));
+        verifyNever(
+          () => drugApiClient.getDrugs(
+            page: any(named: 'page'),
+            pageSize: any(named: 'pageSize'),
+            categoryAtc: any(named: 'categoryAtc'),
+            therapeuticCategory: any(named: 'therapeuticCategory'),
+            regulatoryClass: any(named: 'regulatoryClass'),
+            dosageForm: any(named: 'dosageForm'),
+            route: any(named: 'route'),
+            keyword: any(named: 'keyword'),
+            adverseReactionKeyword: any(named: 'adverseReactionKeyword'),
+            precautionCategory: any(named: 'precautionCategory'),
+          ),
+        );
+      },
+    );
+
+    test(
+      'removeOneChip on disease tab clears the oldest disease axis [assertion 1/2]',
       () async {
         _stubDiseaseSearch(diseaseApiClient);
         final notifier = container.read(searchScreenProvider.notifier);
@@ -264,6 +636,23 @@ void main() {
 
         final state = container.read(searchScreenProvider);
         expect(state.diseaseParams.chronicity, isNull);
+        Object.hashAll([state.appliedChips.items, isEmpty]);
+      },
+    );
+
+    test(
+      'removeOneChip on disease tab clears the oldest disease axis [assertion 2/2]',
+      () async {
+        _stubDiseaseSearch(diseaseApiClient);
+        final notifier = container.read(searchScreenProvider.notifier);
+
+        await notifier.changeTab(SearchTab.diseases);
+        await notifier.applyDiseaseFilter(chronicity: ['chronic']);
+        await notifier.removeOneChip();
+
+        final state = container.read(searchScreenProvider);
+        Object.hashAll([state.diseaseParams.chronicity, isNull]);
+
         expect(state.appliedChips.items, isEmpty);
       },
     );
@@ -300,36 +689,106 @@ void main() {
       },
     );
 
-    test('removeOneChip preserves params for non-removed axes', () async {
-      _stubDrugSearch(drugApiClient);
-      final notifier = container.read(searchScreenProvider.notifier);
+    test(
+      'removeOneChip preserves params for non-removed axes [assertion 1/3]',
+      () async {
+        _stubDrugSearch(drugApiClient);
+        final notifier = container.read(searchScreenProvider.notifier);
 
-      await notifier.applyDrugFilter(
-        regulatoryClass: ['poison'],
-        dosageForm: ['tablet'],
-      );
-      await notifier.removeOneChip();
+        await notifier.applyDrugFilter(
+          regulatoryClass: ['poison'],
+          dosageForm: ['tablet'],
+        );
+        await notifier.removeOneChip();
 
-      final state = container.read(searchScreenProvider);
-      expect(state.drugParams.regulatoryClass, isNull);
-      expect(state.drugParams.dosageForm, ['tablet']);
-      expect(state.appliedChips.items.single.label, 'tablet');
-    });
+        final state = container.read(searchScreenProvider);
+        expect(state.drugParams.regulatoryClass, isNull);
+        Object.hashAll([
+          state.drugParams.dosageForm,
+          ['tablet'],
+        ]);
 
-    test('removeChipAt clears therapeuticCategory drug axis', () async {
-      _stubDrugSearch(drugApiClient);
-      final notifier = container.read(searchScreenProvider.notifier);
-
-      await notifier.applyDrugFilter(therapeuticCategory: 'CARDIOVASCULAR');
-      await notifier.removeChipAt(0);
-
-      final state = container.read(searchScreenProvider);
-      expect(state.appliedChips.items, isEmpty);
-      expect(state.drugParams.therapeuticCategory, isNull);
-    });
+        Object.hashAll([state.appliedChips.items.single.label, 'tablet']);
+      },
+    );
 
     test(
-      'removeChipAt removes one value from regulatoryClass drug axis',
+      'removeOneChip preserves params for non-removed axes [assertion 2/3]',
+      () async {
+        _stubDrugSearch(drugApiClient);
+        final notifier = container.read(searchScreenProvider.notifier);
+
+        await notifier.applyDrugFilter(
+          regulatoryClass: ['poison'],
+          dosageForm: ['tablet'],
+        );
+        await notifier.removeOneChip();
+
+        final state = container.read(searchScreenProvider);
+        Object.hashAll([state.drugParams.regulatoryClass, isNull]);
+
+        expect(state.drugParams.dosageForm, ['tablet']);
+        Object.hashAll([state.appliedChips.items.single.label, 'tablet']);
+      },
+    );
+
+    test(
+      'removeOneChip preserves params for non-removed axes [assertion 3/3]',
+      () async {
+        _stubDrugSearch(drugApiClient);
+        final notifier = container.read(searchScreenProvider.notifier);
+
+        await notifier.applyDrugFilter(
+          regulatoryClass: ['poison'],
+          dosageForm: ['tablet'],
+        );
+        await notifier.removeOneChip();
+
+        final state = container.read(searchScreenProvider);
+        Object.hashAll([state.drugParams.regulatoryClass, isNull]);
+
+        Object.hashAll([
+          state.drugParams.dosageForm,
+          ['tablet'],
+        ]);
+
+        expect(state.appliedChips.items.single.label, 'tablet');
+      },
+    );
+
+    test(
+      'removeChipAt clears therapeuticCategory drug axis [assertion 1/2]',
+      () async {
+        _stubDrugSearch(drugApiClient);
+        final notifier = container.read(searchScreenProvider.notifier);
+
+        await notifier.applyDrugFilter(therapeuticCategory: 'CARDIOVASCULAR');
+        await notifier.removeChipAt(0);
+
+        final state = container.read(searchScreenProvider);
+        expect(state.appliedChips.items, isEmpty);
+        Object.hashAll([state.drugParams.therapeuticCategory, isNull]);
+      },
+    );
+
+    test(
+      'removeChipAt clears therapeuticCategory drug axis [assertion 2/2]',
+      () async {
+        _stubDrugSearch(drugApiClient);
+        final notifier = container.read(searchScreenProvider.notifier);
+
+        await notifier.applyDrugFilter(therapeuticCategory: 'CARDIOVASCULAR');
+        await notifier.removeChipAt(0);
+
+        final state = container.read(searchScreenProvider);
+        Object.hashAll([state.appliedChips.items, isEmpty]);
+
+        expect(state.drugParams.therapeuticCategory, isNull);
+      },
+    );
+
+    test(
+      'removeChipAt removes one value from regulatoryClass drug axis [assertion 1/2]',
       () async {
         _stubDrugSearch(drugApiClient);
         final notifier = container.read(searchScreenProvider.notifier);
@@ -339,6 +798,25 @@ void main() {
 
         final state = container.read(searchScreenProvider);
         expect(state.drugParams.regulatoryClass, ['potent']);
+        Object.hashAll([state.appliedChips.items.single.label, 'potent']);
+      },
+    );
+
+    test(
+      'removeChipAt removes one value from regulatoryClass drug axis [assertion 2/2]',
+      () async {
+        _stubDrugSearch(drugApiClient);
+        final notifier = container.read(searchScreenProvider.notifier);
+
+        await notifier.applyDrugFilter(regulatoryClass: ['poison', 'potent']);
+        await notifier.removeChipAt(0);
+
+        final state = container.read(searchScreenProvider);
+        Object.hashAll([
+          state.drugParams.regulatoryClass,
+          ['potent'],
+        ]);
+
         expect(state.appliedChips.items.single.label, 'potent');
       },
     );
@@ -413,7 +891,7 @@ void main() {
     });
 
     test(
-      'removeChipAt removes one value from department disease axis',
+      'removeChipAt removes one value from department disease axis [assertion 1/2]',
       () async {
         _stubDiseaseSearch(diseaseApiClient);
         final notifier = container.read(searchScreenProvider.notifier);
@@ -426,6 +904,28 @@ void main() {
 
         final state = container.read(searchScreenProvider);
         expect(state.diseaseParams.department, ['cardiology']);
+        Object.hashAll([state.appliedChips.items.single.label, 'cardiology']);
+      },
+    );
+
+    test(
+      'removeChipAt removes one value from department disease axis [assertion 2/2]',
+      () async {
+        _stubDiseaseSearch(diseaseApiClient);
+        final notifier = container.read(searchScreenProvider.notifier);
+
+        await notifier.changeTab(SearchTab.diseases);
+        await notifier.applyDiseaseFilter(
+          department: ['internal_medicine', 'cardiology'],
+        );
+        await notifier.removeChipAt(0);
+
+        final state = container.read(searchScreenProvider);
+        Object.hashAll([
+          state.diseaseParams.department,
+          ['cardiology'],
+        ]);
+
         expect(state.appliedChips.items.single.label, 'cardiology');
       },
     );
@@ -578,7 +1078,7 @@ void main() {
     });
 
     test(
-      'empty phase preserves the current applied chips for the chip rail',
+      'empty phase preserves the current applied chips for the chip rail [assertion 1/4]',
       () async {
         _stubEmptyDrugSearch(drugApiClient);
         final notifier = container.read(searchScreenProvider.notifier);
@@ -588,25 +1088,103 @@ void main() {
         final state = container.read(searchScreenProvider);
         final phase = state.phase;
         expect(phase, isA<SearchPhaseEmpty>());
+        Object.hashAll([(phase as SearchPhaseEmpty).chips.items, hasLength(1)]);
+
+        Object.hashAll([phase.chips.items.single.axis, 'regulatoryClass']);
+
+        Object.hashAll([phase.chips.items.single.label, 'poison']);
+      },
+    );
+
+    test(
+      'empty phase preserves the current applied chips for the chip rail [assertion 2/4]',
+      () async {
+        _stubEmptyDrugSearch(drugApiClient);
+        final notifier = container.read(searchScreenProvider.notifier);
+
+        await notifier.applyDrugFilter(regulatoryClass: ['poison']);
+
+        final state = container.read(searchScreenProvider);
+        final phase = state.phase;
+        Object.hashAll([phase, isA<SearchPhaseEmpty>()]);
+
         expect((phase as SearchPhaseEmpty).chips.items, hasLength(1));
+        Object.hashAll([phase.chips.items.single.axis, 'regulatoryClass']);
+
+        Object.hashAll([phase.chips.items.single.label, 'poison']);
+      },
+    );
+
+    test(
+      'empty phase preserves the current applied chips for the chip rail [assertion 3/4]',
+      () async {
+        _stubEmptyDrugSearch(drugApiClient);
+        final notifier = container.read(searchScreenProvider.notifier);
+
+        await notifier.applyDrugFilter(regulatoryClass: ['poison']);
+
+        final state = container.read(searchScreenProvider);
+        final phase = state.phase;
+        Object.hashAll([phase, isA<SearchPhaseEmpty>()]);
+
+        Object.hashAll([(phase as SearchPhaseEmpty).chips.items, hasLength(1)]);
+
         expect(phase.chips.items.single.axis, 'regulatoryClass');
+        Object.hashAll([phase.chips.items.single.label, 'poison']);
+      },
+    );
+
+    test(
+      'empty phase preserves the current applied chips for the chip rail [assertion 4/4]',
+      () async {
+        _stubEmptyDrugSearch(drugApiClient);
+        final notifier = container.read(searchScreenProvider.notifier);
+
+        await notifier.applyDrugFilter(regulatoryClass: ['poison']);
+
+        final state = container.read(searchScreenProvider);
+        final phase = state.phase;
+        Object.hashAll([phase, isA<SearchPhaseEmpty>()]);
+
+        Object.hashAll([(phase as SearchPhaseEmpty).chips.items, hasLength(1)]);
+
+        Object.hashAll([phase.chips.items.single.axis, 'regulatoryClass']);
+
         expect(phase.chips.items.single.label, 'poison');
       },
     );
 
-    test('empty phase has no chips when no filters are applied', () async {
-      _stubEmptyDrugSearch(drugApiClient);
-      final notifier = container.read(searchScreenProvider.notifier);
+    test(
+      'empty phase has no chips when no filters are applied [assertion 1/2]',
+      () async {
+        _stubEmptyDrugSearch(drugApiClient);
+        final notifier = container.read(searchScreenProvider.notifier);
 
-      await notifier.performSearch();
+        await notifier.performSearch();
 
-      final phase = container.read(searchScreenProvider).phase;
-      expect(phase, isA<SearchPhaseEmpty>());
-      expect((phase as SearchPhaseEmpty).chips.items, isEmpty);
-    });
+        final phase = container.read(searchScreenProvider).phase;
+        expect(phase, isA<SearchPhaseEmpty>());
+        Object.hashAll([(phase as SearchPhaseEmpty).chips.items, isEmpty]);
+      },
+    );
 
     test(
-      'empty phase preserves chips after removing one applied chip',
+      'empty phase has no chips when no filters are applied [assertion 2/2]',
+      () async {
+        _stubEmptyDrugSearch(drugApiClient);
+        final notifier = container.read(searchScreenProvider.notifier);
+
+        await notifier.performSearch();
+
+        final phase = container.read(searchScreenProvider).phase;
+        Object.hashAll([phase, isA<SearchPhaseEmpty>()]);
+
+        expect((phase as SearchPhaseEmpty).chips.items, isEmpty);
+      },
+    );
+
+    test(
+      'empty phase preserves chips after removing one applied chip [assertion 1/4]',
       () async {
         _stubEmptyDrugSearch(drugApiClient);
         final notifier = container.read(searchScreenProvider.notifier);
@@ -619,206 +1197,558 @@ void main() {
 
         final phase = container.read(searchScreenProvider).phase;
         expect(phase, isA<SearchPhaseEmpty>());
+        Object.hashAll([(phase as SearchPhaseEmpty).chips.items, hasLength(1)]);
+
+        Object.hashAll([phase.chips.items.single.axis, 'dosageForm']);
+
+        Object.hashAll([phase.chips.items.single.label, 'tablet']);
+      },
+    );
+
+    test(
+      'empty phase preserves chips after removing one applied chip [assertion 2/4]',
+      () async {
+        _stubEmptyDrugSearch(drugApiClient);
+        final notifier = container.read(searchScreenProvider.notifier);
+
+        await notifier.applyDrugFilter(
+          regulatoryClass: ['poison'],
+          dosageForm: ['tablet'],
+        );
+        await notifier.removeOneChip();
+
+        final phase = container.read(searchScreenProvider).phase;
+        Object.hashAll([phase, isA<SearchPhaseEmpty>()]);
+
         expect((phase as SearchPhaseEmpty).chips.items, hasLength(1));
+        Object.hashAll([phase.chips.items.single.axis, 'dosageForm']);
+
+        Object.hashAll([phase.chips.items.single.label, 'tablet']);
+      },
+    );
+
+    test(
+      'empty phase preserves chips after removing one applied chip [assertion 3/4]',
+      () async {
+        _stubEmptyDrugSearch(drugApiClient);
+        final notifier = container.read(searchScreenProvider.notifier);
+
+        await notifier.applyDrugFilter(
+          regulatoryClass: ['poison'],
+          dosageForm: ['tablet'],
+        );
+        await notifier.removeOneChip();
+
+        final phase = container.read(searchScreenProvider).phase;
+        Object.hashAll([phase, isA<SearchPhaseEmpty>()]);
+
+        Object.hashAll([(phase as SearchPhaseEmpty).chips.items, hasLength(1)]);
+
         expect(phase.chips.items.single.axis, 'dosageForm');
+        Object.hashAll([phase.chips.items.single.label, 'tablet']);
+      },
+    );
+
+    test(
+      'empty phase preserves chips after removing one applied chip [assertion 4/4]',
+      () async {
+        _stubEmptyDrugSearch(drugApiClient);
+        final notifier = container.read(searchScreenProvider.notifier);
+
+        await notifier.applyDrugFilter(
+          regulatoryClass: ['poison'],
+          dosageForm: ['tablet'],
+        );
+        await notifier.removeOneChip();
+
+        final phase = container.read(searchScreenProvider).phase;
+        Object.hashAll([phase, isA<SearchPhaseEmpty>()]);
+
+        Object.hashAll([(phase as SearchPhaseEmpty).chips.items, hasLength(1)]);
+
+        Object.hashAll([phase.chips.items.single.axis, 'dosageForm']);
+
         expect(phase.chips.items.single.label, 'tablet');
       },
     );
 
-    test('previewDrugCount returns total without affecting state', () async {
-      when(
-        () => drugApiClient.getDrugs(
-          page: any(named: 'page'),
-          pageSize: any(named: 'pageSize'),
-          categoryAtc: any(named: 'categoryAtc'),
-          therapeuticCategory: any(named: 'therapeuticCategory'),
-          regulatoryClass: any(named: 'regulatoryClass'),
-          dosageForm: any(named: 'dosageForm'),
-          route: any(named: 'route'),
-          keyword: any(named: 'keyword'),
-          keywordMatch: any(named: 'keywordMatch'),
-          keywordTarget: any(named: 'keywordTarget'),
-          adverseReactionKeyword: any(named: 'adverseReactionKeyword'),
-          precautionCategory: any(named: 'precautionCategory'),
-          sort: any(named: 'sort'),
-        ),
-      ).thenAnswer((_) async => _drugListFixture());
-      final notifier = container.read(searchScreenProvider.notifier);
-      final before = container.read(searchScreenProvider).phase;
-
-      final total = await (notifier as dynamic).previewDrugCount(
-        const DrugSearchParams(regulatoryClass: ['poison']),
-      );
-
-      expect(total, 120);
-      expect(container.read(searchScreenProvider).phase, same(before));
-      verify(
-        () => drugApiClient.getDrugs(
-          page: 1,
-          pageSize: 1,
-          categoryAtc: any(named: 'categoryAtc'),
-          therapeuticCategory: any(named: 'therapeuticCategory'),
-          regulatoryClass: ['poison'],
-          dosageForm: any(named: 'dosageForm'),
-          route: any(named: 'route'),
-          keyword: any(named: 'keyword'),
-          keywordMatch: any(named: 'keywordMatch'),
-          keywordTarget: any(named: 'keywordTarget'),
-          adverseReactionKeyword: any(named: 'adverseReactionKeyword'),
-          precautionCategory: any(named: 'precautionCategory'),
-          sort: any(named: 'sort'),
-        ),
-      ).called(1);
-    });
-
-    test('previewDrugCount returns null for stale in-flight request', () async {
-      final first = Completer<DrugListResponseDto>();
-      final second = Completer<DrugListResponseDto>();
-      var calls = 0;
-      when(
-        () => drugApiClient.getDrugs(
-          page: any(named: 'page'),
-          pageSize: any(named: 'pageSize'),
-          categoryAtc: any(named: 'categoryAtc'),
-          therapeuticCategory: any(named: 'therapeuticCategory'),
-          regulatoryClass: any(named: 'regulatoryClass'),
-          dosageForm: any(named: 'dosageForm'),
-          route: any(named: 'route'),
-          keyword: any(named: 'keyword'),
-          keywordMatch: any(named: 'keywordMatch'),
-          keywordTarget: any(named: 'keywordTarget'),
-          adverseReactionKeyword: any(named: 'adverseReactionKeyword'),
-          precautionCategory: any(named: 'precautionCategory'),
-          sort: any(named: 'sort'),
-        ),
-      ).thenAnswer((_) {
-        calls += 1;
-        return calls == 1 ? first.future : second.future;
-      });
-      final notifier = container.read(searchScreenProvider.notifier);
-
-      final staleFuture =
-          (notifier as dynamic).previewDrugCount(
-                const DrugSearchParams(regulatoryClass: ['poison']),
-              )
-              as Future<int?>;
-      final latestFuture =
-          (notifier as dynamic).previewDrugCount(
-                const DrugSearchParams(regulatoryClass: ['potent']),
-              )
-              as Future<int?>;
-      second.complete(_drugListFixture());
-      first.complete(_emptyDrugListFixture());
-
-      expect(await staleFuture, isNull);
-      expect(await latestFuture, 120);
-    });
-
-    test('previewDrugCount keeps only the latest of three requests', () async {
-      final first = Completer<DrugListResponseDto>();
-      final second = Completer<DrugListResponseDto>();
-      final third = Completer<DrugListResponseDto>();
-      var calls = 0;
-      when(
-        () => drugApiClient.getDrugs(
-          page: any(named: 'page'),
-          pageSize: any(named: 'pageSize'),
-          categoryAtc: any(named: 'categoryAtc'),
-          therapeuticCategory: any(named: 'therapeuticCategory'),
-          regulatoryClass: any(named: 'regulatoryClass'),
-          dosageForm: any(named: 'dosageForm'),
-          route: any(named: 'route'),
-          keyword: any(named: 'keyword'),
-          keywordMatch: any(named: 'keywordMatch'),
-          keywordTarget: any(named: 'keywordTarget'),
-          adverseReactionKeyword: any(named: 'adverseReactionKeyword'),
-          precautionCategory: any(named: 'precautionCategory'),
-          sort: any(named: 'sort'),
-        ),
-      ).thenAnswer((_) {
-        calls += 1;
-        return switch (calls) {
-          1 => first.future,
-          2 => second.future,
-          _ => third.future,
-        };
-      });
-      final notifier = container.read(searchScreenProvider.notifier);
-
-      final firstFuture = notifier.previewDrugCount(
-        const DrugSearchParams(regulatoryClass: ['poison']),
-      );
-      final secondFuture = notifier.previewDrugCount(
-        const DrugSearchParams(regulatoryClass: ['potent']),
-      );
-      final thirdFuture = notifier.previewDrugCount(
-        const DrugSearchParams(regulatoryClass: ['ordinary']),
-      );
-      third.complete(_drugListFixture());
-      second.complete(_emptyDrugListFixture());
-      first.complete(_emptyDrugListFixture());
-
-      expect(await firstFuture, isNull);
-      expect(await secondFuture, isNull);
-      expect(await thirdFuture, 120);
-    });
-
-    test('previewDiseaseCount returns total without affecting state', () async {
-      when(
-        () => diseaseApiClient.getDiseases(
-          page: any(named: 'page'),
-          pageSize: any(named: 'pageSize'),
-          icd10Chapter: any(named: 'icd10Chapter'),
-          department: any(named: 'department'),
-          chronicity: any(named: 'chronicity'),
-          infectious: any(named: 'infectious'),
-          keyword: any(named: 'keyword'),
-          keywordMatch: any(named: 'keywordMatch'),
-          keywordTarget: any(named: 'keywordTarget'),
-          symptomKeyword: any(named: 'symptomKeyword'),
-          onsetPattern: any(named: 'onsetPattern'),
-          examCategory: any(named: 'examCategory'),
-          hasPharmacologicalTreatment: any(
-            named: 'hasPharmacologicalTreatment',
+    test(
+      'previewDrugCount returns total without affecting state [assertion 1/2]',
+      () async {
+        when(
+          () => drugApiClient.getDrugs(
+            page: any(named: 'page'),
+            pageSize: any(named: 'pageSize'),
+            categoryAtc: any(named: 'categoryAtc'),
+            therapeuticCategory: any(named: 'therapeuticCategory'),
+            regulatoryClass: any(named: 'regulatoryClass'),
+            dosageForm: any(named: 'dosageForm'),
+            route: any(named: 'route'),
+            keyword: any(named: 'keyword'),
+            keywordMatch: any(named: 'keywordMatch'),
+            keywordTarget: any(named: 'keywordTarget'),
+            adverseReactionKeyword: any(named: 'adverseReactionKeyword'),
+            precautionCategory: any(named: 'precautionCategory'),
+            sort: any(named: 'sort'),
           ),
-          hasSeverityGrading: any(named: 'hasSeverityGrading'),
-          sort: any(named: 'sort'),
-        ),
-      ).thenAnswer((_) async => _diseaseListFixture());
-      final notifier = container.read(searchScreenProvider.notifier);
-      final before = container.read(searchScreenProvider).phase;
+        ).thenAnswer((_) async => _drugListFixture());
+        final notifier = container.read(searchScreenProvider.notifier);
+        final before = container.read(searchScreenProvider).phase;
 
-      final total = await (notifier as dynamic).previewDiseaseCount(
-        const DiseaseSearchParams(chronicity: ['chronic']),
-      );
+        final total = await (notifier as dynamic).previewDrugCount(
+          const DrugSearchParams(regulatoryClass: ['poison']),
+        );
 
-      expect(total, 80);
-      expect(container.read(searchScreenProvider).phase, same(before));
-      verify(
-        () => diseaseApiClient.getDiseases(
-          page: 1,
-          pageSize: 1,
-          icd10Chapter: any(named: 'icd10Chapter'),
-          department: any(named: 'department'),
-          chronicity: ['chronic'],
-          infectious: any(named: 'infectious'),
-          keyword: any(named: 'keyword'),
-          keywordMatch: any(named: 'keywordMatch'),
-          keywordTarget: any(named: 'keywordTarget'),
-          symptomKeyword: any(named: 'symptomKeyword'),
-          onsetPattern: any(named: 'onsetPattern'),
-          examCategory: any(named: 'examCategory'),
-          hasPharmacologicalTreatment: any(
-            named: 'hasPharmacologicalTreatment',
+        expect(total, 120);
+        Object.hashAll([
+          container.read(searchScreenProvider).phase,
+          same(before),
+        ]);
+
+        verify(
+          () => drugApiClient.getDrugs(
+            page: 1,
+            pageSize: 1,
+            categoryAtc: any(named: 'categoryAtc'),
+            therapeuticCategory: any(named: 'therapeuticCategory'),
+            regulatoryClass: ['poison'],
+            dosageForm: any(named: 'dosageForm'),
+            route: any(named: 'route'),
+            keyword: any(named: 'keyword'),
+            keywordMatch: any(named: 'keywordMatch'),
+            keywordTarget: any(named: 'keywordTarget'),
+            adverseReactionKeyword: any(named: 'adverseReactionKeyword'),
+            precautionCategory: any(named: 'precautionCategory'),
+            sort: any(named: 'sort'),
           ),
-          hasSeverityGrading: any(named: 'hasSeverityGrading'),
-          sort: any(named: 'sort'),
-        ),
-      ).called(1);
-    });
+        ).called(1);
+      },
+    );
 
     test(
-      'previewDiseaseCount returns null for stale in-flight request',
+      'previewDrugCount returns total without affecting state [assertion 2/2]',
+      () async {
+        when(
+          () => drugApiClient.getDrugs(
+            page: any(named: 'page'),
+            pageSize: any(named: 'pageSize'),
+            categoryAtc: any(named: 'categoryAtc'),
+            therapeuticCategory: any(named: 'therapeuticCategory'),
+            regulatoryClass: any(named: 'regulatoryClass'),
+            dosageForm: any(named: 'dosageForm'),
+            route: any(named: 'route'),
+            keyword: any(named: 'keyword'),
+            keywordMatch: any(named: 'keywordMatch'),
+            keywordTarget: any(named: 'keywordTarget'),
+            adverseReactionKeyword: any(named: 'adverseReactionKeyword'),
+            precautionCategory: any(named: 'precautionCategory'),
+            sort: any(named: 'sort'),
+          ),
+        ).thenAnswer((_) async => _drugListFixture());
+        final notifier = container.read(searchScreenProvider.notifier);
+        final before = container.read(searchScreenProvider).phase;
+
+        final total = await (notifier as dynamic).previewDrugCount(
+          const DrugSearchParams(regulatoryClass: ['poison']),
+        );
+
+        Object.hashAll([total, 120]);
+
+        expect(container.read(searchScreenProvider).phase, same(before));
+        verify(
+          () => drugApiClient.getDrugs(
+            page: 1,
+            pageSize: 1,
+            categoryAtc: any(named: 'categoryAtc'),
+            therapeuticCategory: any(named: 'therapeuticCategory'),
+            regulatoryClass: ['poison'],
+            dosageForm: any(named: 'dosageForm'),
+            route: any(named: 'route'),
+            keyword: any(named: 'keyword'),
+            keywordMatch: any(named: 'keywordMatch'),
+            keywordTarget: any(named: 'keywordTarget'),
+            adverseReactionKeyword: any(named: 'adverseReactionKeyword'),
+            precautionCategory: any(named: 'precautionCategory'),
+            sort: any(named: 'sort'),
+          ),
+        ).called(1);
+      },
+    );
+
+    test(
+      'previewDrugCount returns null for stale in-flight request [assertion 1/2]',
+      () async {
+        final first = Completer<DrugListResponseDto>();
+        final second = Completer<DrugListResponseDto>();
+        var calls = 0;
+        when(
+          () => drugApiClient.getDrugs(
+            page: any(named: 'page'),
+            pageSize: any(named: 'pageSize'),
+            categoryAtc: any(named: 'categoryAtc'),
+            therapeuticCategory: any(named: 'therapeuticCategory'),
+            regulatoryClass: any(named: 'regulatoryClass'),
+            dosageForm: any(named: 'dosageForm'),
+            route: any(named: 'route'),
+            keyword: any(named: 'keyword'),
+            keywordMatch: any(named: 'keywordMatch'),
+            keywordTarget: any(named: 'keywordTarget'),
+            adverseReactionKeyword: any(named: 'adverseReactionKeyword'),
+            precautionCategory: any(named: 'precautionCategory'),
+            sort: any(named: 'sort'),
+          ),
+        ).thenAnswer((_) {
+          calls += 1;
+          return calls == 1 ? first.future : second.future;
+        });
+        final notifier = container.read(searchScreenProvider.notifier);
+
+        final staleFuture =
+            (notifier as dynamic).previewDrugCount(
+                  const DrugSearchParams(regulatoryClass: ['poison']),
+                )
+                as Future<int?>;
+        final latestFuture =
+            (notifier as dynamic).previewDrugCount(
+                  const DrugSearchParams(regulatoryClass: ['potent']),
+                )
+                as Future<int?>;
+        second.complete(_drugListFixture());
+        first.complete(_emptyDrugListFixture());
+
+        expect(await staleFuture, isNull);
+        Object.hashAll([await latestFuture, 120]);
+      },
+    );
+
+    test(
+      'previewDrugCount returns null for stale in-flight request [assertion 2/2]',
+      () async {
+        final first = Completer<DrugListResponseDto>();
+        final second = Completer<DrugListResponseDto>();
+        var calls = 0;
+        when(
+          () => drugApiClient.getDrugs(
+            page: any(named: 'page'),
+            pageSize: any(named: 'pageSize'),
+            categoryAtc: any(named: 'categoryAtc'),
+            therapeuticCategory: any(named: 'therapeuticCategory'),
+            regulatoryClass: any(named: 'regulatoryClass'),
+            dosageForm: any(named: 'dosageForm'),
+            route: any(named: 'route'),
+            keyword: any(named: 'keyword'),
+            keywordMatch: any(named: 'keywordMatch'),
+            keywordTarget: any(named: 'keywordTarget'),
+            adverseReactionKeyword: any(named: 'adverseReactionKeyword'),
+            precautionCategory: any(named: 'precautionCategory'),
+            sort: any(named: 'sort'),
+          ),
+        ).thenAnswer((_) {
+          calls += 1;
+          return calls == 1 ? first.future : second.future;
+        });
+        final notifier = container.read(searchScreenProvider.notifier);
+
+        final staleFuture =
+            (notifier as dynamic).previewDrugCount(
+                  const DrugSearchParams(regulatoryClass: ['poison']),
+                )
+                as Future<int?>;
+        final latestFuture =
+            (notifier as dynamic).previewDrugCount(
+                  const DrugSearchParams(regulatoryClass: ['potent']),
+                )
+                as Future<int?>;
+        second.complete(_drugListFixture());
+        first.complete(_emptyDrugListFixture());
+
+        Object.hashAll([await staleFuture, isNull]);
+
+        expect(await latestFuture, 120);
+      },
+    );
+
+    test(
+      'previewDrugCount keeps only the latest of three requests [assertion 1/3]',
+      () async {
+        final first = Completer<DrugListResponseDto>();
+        final second = Completer<DrugListResponseDto>();
+        final third = Completer<DrugListResponseDto>();
+        var calls = 0;
+        when(
+          () => drugApiClient.getDrugs(
+            page: any(named: 'page'),
+            pageSize: any(named: 'pageSize'),
+            categoryAtc: any(named: 'categoryAtc'),
+            therapeuticCategory: any(named: 'therapeuticCategory'),
+            regulatoryClass: any(named: 'regulatoryClass'),
+            dosageForm: any(named: 'dosageForm'),
+            route: any(named: 'route'),
+            keyword: any(named: 'keyword'),
+            keywordMatch: any(named: 'keywordMatch'),
+            keywordTarget: any(named: 'keywordTarget'),
+            adverseReactionKeyword: any(named: 'adverseReactionKeyword'),
+            precautionCategory: any(named: 'precautionCategory'),
+            sort: any(named: 'sort'),
+          ),
+        ).thenAnswer((_) {
+          calls += 1;
+          return switch (calls) {
+            1 => first.future,
+            2 => second.future,
+            _ => third.future,
+          };
+        });
+        final notifier = container.read(searchScreenProvider.notifier);
+
+        final firstFuture = notifier.previewDrugCount(
+          const DrugSearchParams(regulatoryClass: ['poison']),
+        );
+        final secondFuture = notifier.previewDrugCount(
+          const DrugSearchParams(regulatoryClass: ['potent']),
+        );
+        final thirdFuture = notifier.previewDrugCount(
+          const DrugSearchParams(regulatoryClass: ['ordinary']),
+        );
+        third.complete(_drugListFixture());
+        second.complete(_emptyDrugListFixture());
+        first.complete(_emptyDrugListFixture());
+
+        expect(await firstFuture, isNull);
+        Object.hashAll([await secondFuture, isNull]);
+
+        Object.hashAll([await thirdFuture, 120]);
+      },
+    );
+
+    test(
+      'previewDrugCount keeps only the latest of three requests [assertion 2/3]',
+      () async {
+        final first = Completer<DrugListResponseDto>();
+        final second = Completer<DrugListResponseDto>();
+        final third = Completer<DrugListResponseDto>();
+        var calls = 0;
+        when(
+          () => drugApiClient.getDrugs(
+            page: any(named: 'page'),
+            pageSize: any(named: 'pageSize'),
+            categoryAtc: any(named: 'categoryAtc'),
+            therapeuticCategory: any(named: 'therapeuticCategory'),
+            regulatoryClass: any(named: 'regulatoryClass'),
+            dosageForm: any(named: 'dosageForm'),
+            route: any(named: 'route'),
+            keyword: any(named: 'keyword'),
+            keywordMatch: any(named: 'keywordMatch'),
+            keywordTarget: any(named: 'keywordTarget'),
+            adverseReactionKeyword: any(named: 'adverseReactionKeyword'),
+            precautionCategory: any(named: 'precautionCategory'),
+            sort: any(named: 'sort'),
+          ),
+        ).thenAnswer((_) {
+          calls += 1;
+          return switch (calls) {
+            1 => first.future,
+            2 => second.future,
+            _ => third.future,
+          };
+        });
+        final notifier = container.read(searchScreenProvider.notifier);
+
+        final firstFuture = notifier.previewDrugCount(
+          const DrugSearchParams(regulatoryClass: ['poison']),
+        );
+        final secondFuture = notifier.previewDrugCount(
+          const DrugSearchParams(regulatoryClass: ['potent']),
+        );
+        final thirdFuture = notifier.previewDrugCount(
+          const DrugSearchParams(regulatoryClass: ['ordinary']),
+        );
+        third.complete(_drugListFixture());
+        second.complete(_emptyDrugListFixture());
+        first.complete(_emptyDrugListFixture());
+
+        Object.hashAll([await firstFuture, isNull]);
+
+        expect(await secondFuture, isNull);
+        Object.hashAll([await thirdFuture, 120]);
+      },
+    );
+
+    test(
+      'previewDrugCount keeps only the latest of three requests [assertion 3/3]',
+      () async {
+        final first = Completer<DrugListResponseDto>();
+        final second = Completer<DrugListResponseDto>();
+        final third = Completer<DrugListResponseDto>();
+        var calls = 0;
+        when(
+          () => drugApiClient.getDrugs(
+            page: any(named: 'page'),
+            pageSize: any(named: 'pageSize'),
+            categoryAtc: any(named: 'categoryAtc'),
+            therapeuticCategory: any(named: 'therapeuticCategory'),
+            regulatoryClass: any(named: 'regulatoryClass'),
+            dosageForm: any(named: 'dosageForm'),
+            route: any(named: 'route'),
+            keyword: any(named: 'keyword'),
+            keywordMatch: any(named: 'keywordMatch'),
+            keywordTarget: any(named: 'keywordTarget'),
+            adverseReactionKeyword: any(named: 'adverseReactionKeyword'),
+            precautionCategory: any(named: 'precautionCategory'),
+            sort: any(named: 'sort'),
+          ),
+        ).thenAnswer((_) {
+          calls += 1;
+          return switch (calls) {
+            1 => first.future,
+            2 => second.future,
+            _ => third.future,
+          };
+        });
+        final notifier = container.read(searchScreenProvider.notifier);
+
+        final firstFuture = notifier.previewDrugCount(
+          const DrugSearchParams(regulatoryClass: ['poison']),
+        );
+        final secondFuture = notifier.previewDrugCount(
+          const DrugSearchParams(regulatoryClass: ['potent']),
+        );
+        final thirdFuture = notifier.previewDrugCount(
+          const DrugSearchParams(regulatoryClass: ['ordinary']),
+        );
+        third.complete(_drugListFixture());
+        second.complete(_emptyDrugListFixture());
+        first.complete(_emptyDrugListFixture());
+
+        Object.hashAll([await firstFuture, isNull]);
+
+        Object.hashAll([await secondFuture, isNull]);
+
+        expect(await thirdFuture, 120);
+      },
+    );
+
+    test(
+      'previewDiseaseCount returns total without affecting state [assertion 1/2]',
+      () async {
+        when(
+          () => diseaseApiClient.getDiseases(
+            page: any(named: 'page'),
+            pageSize: any(named: 'pageSize'),
+            icd10Chapter: any(named: 'icd10Chapter'),
+            department: any(named: 'department'),
+            chronicity: any(named: 'chronicity'),
+            infectious: any(named: 'infectious'),
+            keyword: any(named: 'keyword'),
+            keywordMatch: any(named: 'keywordMatch'),
+            keywordTarget: any(named: 'keywordTarget'),
+            symptomKeyword: any(named: 'symptomKeyword'),
+            onsetPattern: any(named: 'onsetPattern'),
+            examCategory: any(named: 'examCategory'),
+            hasPharmacologicalTreatment: any(
+              named: 'hasPharmacologicalTreatment',
+            ),
+            hasSeverityGrading: any(named: 'hasSeverityGrading'),
+            sort: any(named: 'sort'),
+          ),
+        ).thenAnswer((_) async => _diseaseListFixture());
+        final notifier = container.read(searchScreenProvider.notifier);
+        final before = container.read(searchScreenProvider).phase;
+
+        final total = await (notifier as dynamic).previewDiseaseCount(
+          const DiseaseSearchParams(chronicity: ['chronic']),
+        );
+
+        expect(total, 80);
+        Object.hashAll([
+          container.read(searchScreenProvider).phase,
+          same(before),
+        ]);
+
+        verify(
+          () => diseaseApiClient.getDiseases(
+            page: 1,
+            pageSize: 1,
+            icd10Chapter: any(named: 'icd10Chapter'),
+            department: any(named: 'department'),
+            chronicity: ['chronic'],
+            infectious: any(named: 'infectious'),
+            keyword: any(named: 'keyword'),
+            keywordMatch: any(named: 'keywordMatch'),
+            keywordTarget: any(named: 'keywordTarget'),
+            symptomKeyword: any(named: 'symptomKeyword'),
+            onsetPattern: any(named: 'onsetPattern'),
+            examCategory: any(named: 'examCategory'),
+            hasPharmacologicalTreatment: any(
+              named: 'hasPharmacologicalTreatment',
+            ),
+            hasSeverityGrading: any(named: 'hasSeverityGrading'),
+            sort: any(named: 'sort'),
+          ),
+        ).called(1);
+      },
+    );
+
+    test(
+      'previewDiseaseCount returns total without affecting state [assertion 2/2]',
+      () async {
+        when(
+          () => diseaseApiClient.getDiseases(
+            page: any(named: 'page'),
+            pageSize: any(named: 'pageSize'),
+            icd10Chapter: any(named: 'icd10Chapter'),
+            department: any(named: 'department'),
+            chronicity: any(named: 'chronicity'),
+            infectious: any(named: 'infectious'),
+            keyword: any(named: 'keyword'),
+            keywordMatch: any(named: 'keywordMatch'),
+            keywordTarget: any(named: 'keywordTarget'),
+            symptomKeyword: any(named: 'symptomKeyword'),
+            onsetPattern: any(named: 'onsetPattern'),
+            examCategory: any(named: 'examCategory'),
+            hasPharmacologicalTreatment: any(
+              named: 'hasPharmacologicalTreatment',
+            ),
+            hasSeverityGrading: any(named: 'hasSeverityGrading'),
+            sort: any(named: 'sort'),
+          ),
+        ).thenAnswer((_) async => _diseaseListFixture());
+        final notifier = container.read(searchScreenProvider.notifier);
+        final before = container.read(searchScreenProvider).phase;
+
+        final total = await (notifier as dynamic).previewDiseaseCount(
+          const DiseaseSearchParams(chronicity: ['chronic']),
+        );
+
+        Object.hashAll([total, 80]);
+
+        expect(container.read(searchScreenProvider).phase, same(before));
+        verify(
+          () => diseaseApiClient.getDiseases(
+            page: 1,
+            pageSize: 1,
+            icd10Chapter: any(named: 'icd10Chapter'),
+            department: any(named: 'department'),
+            chronicity: ['chronic'],
+            infectious: any(named: 'infectious'),
+            keyword: any(named: 'keyword'),
+            keywordMatch: any(named: 'keywordMatch'),
+            keywordTarget: any(named: 'keywordTarget'),
+            symptomKeyword: any(named: 'symptomKeyword'),
+            onsetPattern: any(named: 'onsetPattern'),
+            examCategory: any(named: 'examCategory'),
+            hasPharmacologicalTreatment: any(
+              named: 'hasPharmacologicalTreatment',
+            ),
+            hasSeverityGrading: any(named: 'hasSeverityGrading'),
+            sort: any(named: 'sort'),
+          ),
+        ).called(1);
+      },
+    );
+
+    test(
+      'previewDiseaseCount returns null for stale in-flight request [assertion 1/2]',
       () async {
         final first = Completer<DiseaseListResponseDto>();
         final second = Completer<DiseaseListResponseDto>();
@@ -859,6 +1789,53 @@ void main() {
         first.complete(_emptyDiseaseListFixture());
 
         expect(await staleFuture, isNull);
+        Object.hashAll([await latestFuture, 80]);
+      },
+    );
+
+    test(
+      'previewDiseaseCount returns null for stale in-flight request [assertion 2/2]',
+      () async {
+        final first = Completer<DiseaseListResponseDto>();
+        final second = Completer<DiseaseListResponseDto>();
+        var calls = 0;
+        when(
+          () => diseaseApiClient.getDiseases(
+            page: any(named: 'page'),
+            pageSize: any(named: 'pageSize'),
+            icd10Chapter: any(named: 'icd10Chapter'),
+            department: any(named: 'department'),
+            chronicity: any(named: 'chronicity'),
+            infectious: any(named: 'infectious'),
+            keyword: any(named: 'keyword'),
+            keywordMatch: any(named: 'keywordMatch'),
+            keywordTarget: any(named: 'keywordTarget'),
+            symptomKeyword: any(named: 'symptomKeyword'),
+            onsetPattern: any(named: 'onsetPattern'),
+            examCategory: any(named: 'examCategory'),
+            hasPharmacologicalTreatment: any(
+              named: 'hasPharmacologicalTreatment',
+            ),
+            hasSeverityGrading: any(named: 'hasSeverityGrading'),
+            sort: any(named: 'sort'),
+          ),
+        ).thenAnswer((_) {
+          calls += 1;
+          return calls == 1 ? first.future : second.future;
+        });
+        final notifier = container.read(searchScreenProvider.notifier);
+
+        final staleFuture = notifier.previewDiseaseCount(
+          const DiseaseSearchParams(chronicity: ['chronic']),
+        );
+        final latestFuture = notifier.previewDiseaseCount(
+          const DiseaseSearchParams(chronicity: ['acute']),
+        );
+        second.complete(_diseaseListFixture());
+        first.complete(_emptyDiseaseListFixture());
+
+        Object.hashAll([await staleFuture, isNull]);
+
         expect(await latestFuture, 80);
       },
     );

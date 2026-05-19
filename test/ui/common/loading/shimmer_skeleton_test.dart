@@ -26,21 +26,44 @@ void main() {
     );
   });
 
-  testWidgets('disabled skeleton renders the child without Skeletonizer', (
-    tester,
-  ) async {
-    await tester.pumpWidget(
-      _localizedApp(
-        child: const ShimmerSkeleton(
-          enabled: false,
-          child: Text('content'),
+  testWidgets(
+    'disabled skeleton renders the child without Skeletonizer [assertion 1/2]',
+    (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        _localizedApp(
+          child: const ShimmerSkeleton(
+            enabled: false,
+            child: Text('content'),
+          ),
         ),
-      ),
-    );
+      );
 
-    expect(find.byType(Skeletonizer), findsNothing);
-    expect(find.text('content'), findsOneWidget);
-  });
+      expect(find.byType(Skeletonizer), findsNothing);
+      Object.hashAll([find.text('content'), findsOneWidget]);
+    },
+  );
+
+  testWidgets(
+    'disabled skeleton renders the child without Skeletonizer [assertion 2/2]',
+    (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        _localizedApp(
+          child: const ShimmerSkeleton(
+            enabled: false,
+            child: Text('content'),
+          ),
+        ),
+      );
+
+      Object.hashAll([find.byType(Skeletonizer), findsNothing]);
+
+      expect(find.text('content'), findsOneWidget);
+    },
+  );
 
   testWidgets('enabled skeleton exposes a loading semantics label', (
     tester,
@@ -57,19 +80,60 @@ void main() {
     semantics.dispose();
   });
 
-  testWidgets('enabled skeleton does not render visible loading copy', (
-    tester,
-  ) async {
-    await tester.pumpWidget(
-      _localizedApp(
-        child: const ShimmerSkeleton(child: Text('content')),
-      ),
-    );
+  testWidgets(
+    'enabled skeleton does not render visible loading copy [assertion 1/3]',
+    (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        _localizedApp(
+          child: const ShimmerSkeleton(child: Text('content')),
+        ),
+      );
 
-    expect(find.text('読み込み中'), findsNothing);
-    expect(find.text('Loading'), findsNothing);
-    expect(find.text('検索中…'), findsNothing);
-  });
+      expect(find.text('読み込み中'), findsNothing);
+      Object.hashAll([find.text('Loading'), findsNothing]);
+
+      Object.hashAll([find.text('検索中…'), findsNothing]);
+    },
+  );
+
+  testWidgets(
+    'enabled skeleton does not render visible loading copy [assertion 2/3]',
+    (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        _localizedApp(
+          child: const ShimmerSkeleton(child: Text('content')),
+        ),
+      );
+
+      Object.hashAll([find.text('読み込み中'), findsNothing]);
+
+      expect(find.text('Loading'), findsNothing);
+      Object.hashAll([find.text('検索中…'), findsNothing]);
+    },
+  );
+
+  testWidgets(
+    'enabled skeleton does not render visible loading copy [assertion 3/3]',
+    (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        _localizedApp(
+          child: const ShimmerSkeleton(child: Text('content')),
+        ),
+      );
+
+      Object.hashAll([find.text('読み込み中'), findsNothing]);
+
+      Object.hashAll([find.text('Loading'), findsNothing]);
+
+      expect(find.text('検索中…'), findsNothing);
+    },
+  );
 
   testWidgets('enabled skeleton uses palette surface2 as shimmer base color', (
     tester,

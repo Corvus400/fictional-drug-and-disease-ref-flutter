@@ -65,7 +65,7 @@ void main() {
   });
 
   testWidgets(
-    'DiseaseDetailRelatedTab renders E15 carousel and navigates by id',
+    'DiseaseDetailRelatedTab renders E15 carousel and navigates by id [assertion 1/19]',
     (
       tester,
     ) async {
@@ -118,9 +118,541 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.byType(DetailPanel), findsNWidgets(2));
+      Object.hashAll([find.text('E15'), findsOneWidget]);
+
+      Object.hashAll([find.text('関連医薬品'), findsWidgets]);
+
+      Object.hashAll([find.byType(DetailCarousel), findsWidgets]);
+
+      Object.hashAll([
+        find.byKey(const ValueKey<String>('detail-related-drug-card')),
+        findsOneWidget,
+      ]);
+
+      final relatedDrugCardSize = tester.getSize(
+        find.byKey(const ValueKey<String>('detail-related-drug-card')),
+      );
+      Object.hashAll([
+        relatedDrugCardSize.width,
+        lessThanOrEqualTo(DetailConstants.relatedDrugCardMaxWidth),
+      ]);
+
+      Object.hashAll([
+        tester
+            .widget<SizedBox>(
+              find.byKey(
+                const ValueKey<String>('detail-related-drug-image-text-gap'),
+              ),
+            )
+            .width,
+        DetailConstants.relatedDrugCardImageTextGap,
+      ]);
+
+      Object.hashAll([find.text(drugId), findsOneWidget]);
+
+      Object.hashAll([find.text(drugDto.brandName), findsOneWidget]);
+
+      Object.hashAll([
+        find.byKey(ValueKey<String>('detail-related-drug-image-$drugId')),
+        findsOneWidget,
+      ]);
+
+      Object.hashAll([
+        find.byKey(const ValueKey<String>('detail-carousel-card-image')),
+        findsNothing,
+      ]);
+
+      Object.hashAll([find.text('液剤'), findsOneWidget]);
+
+      Object.hashAll([find.text('内服'), findsOneWidget]);
+
+      Object.hashAll([find.text('E16'), findsOneWidget]);
+
+      Object.hashAll([find.text('関連疾患'), findsWidgets]);
+
+      Object.hashAll([find.textContaining('E17'), findsOneWidget]);
+
+      Object.hashAll([find.textContaining(disease.revisedAt), findsOneWidget]);
+
+      await tester.tap(find.text(drugDto.brandName));
+      await tester.pumpAndSettle();
+
+      Object.hashAll([find.text('drug-detail-$drugId'), findsOneWidget]);
+
+      Object.hashAll([
+        router.routerDelegate.currentConfiguration.last.matchedLocation,
+        AppRoutes.drugDetail(drugId),
+      ]);
+
+      verify(
+        () => cacheManager.getSingleFile(
+          'https://api.example.test/v1/images/drugs/$drugId?size=M',
+          key:
+              'detail-related-drug-card-image-v1::'
+              'https://api.example.test/v1/images/drugs/$drugId?size=M',
+          headers: any(named: 'headers'),
+        ),
+      ).called(1);
+    },
+  );
+
+  testWidgets(
+    'DiseaseDetailRelatedTab renders E15 carousel and navigates by id [assertion 2/19]',
+    (
+      tester,
+    ) async {
+      final disease = _diseaseFixture().toDomain();
+      final drugDto = _drugFixture();
+      final drugId = disease.relatedDrugIds.single;
+      final apiClient = _MockDrugApiClient();
+      final cacheManager = _MockBaseCacheManager();
+      final imageFile = _writeTestImageFile('related-drug-card.png');
+      when(() => apiClient.getDrug(drugId)).thenAnswer((_) async => drugDto);
+      when(
+        () => cacheManager.getSingleFile(
+          any(),
+          key: any(named: 'key'),
+          headers: any(named: 'headers'),
+        ),
+      ).thenAnswer((_) async => imageFile);
+      final router = GoRouter(
+        initialLocation: AppRoutes.search,
+        routes: [
+          GoRoute(
+            path: AppRoutes.search,
+            builder: (context, state) => DiseaseDetailRelatedTab(
+              disease: disease,
+              cacheManager: cacheManager,
+            ),
+            routes: [
+              GoRoute(
+                path: 'drug/:id',
+                builder: (context, state) =>
+                    Text('drug-detail-${state.pathParameters['id']}'),
+              ),
+            ],
+          ),
+        ],
+      );
+      addTearDown(router.dispose);
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [drugApiClientProvider.overrideWithValue(apiClient)],
+          child: MaterialApp.router(
+            routerConfig: router,
+            theme: AppTheme.light(),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      Object.hashAll([find.byType(DetailPanel), findsNWidgets(2)]);
+
       expect(find.text('E15'), findsOneWidget);
+      Object.hashAll([find.text('関連医薬品'), findsWidgets]);
+
+      Object.hashAll([find.byType(DetailCarousel), findsWidgets]);
+
+      Object.hashAll([
+        find.byKey(const ValueKey<String>('detail-related-drug-card')),
+        findsOneWidget,
+      ]);
+
+      final relatedDrugCardSize = tester.getSize(
+        find.byKey(const ValueKey<String>('detail-related-drug-card')),
+      );
+      Object.hashAll([
+        relatedDrugCardSize.width,
+        lessThanOrEqualTo(DetailConstants.relatedDrugCardMaxWidth),
+      ]);
+
+      Object.hashAll([
+        tester
+            .widget<SizedBox>(
+              find.byKey(
+                const ValueKey<String>('detail-related-drug-image-text-gap'),
+              ),
+            )
+            .width,
+        DetailConstants.relatedDrugCardImageTextGap,
+      ]);
+
+      Object.hashAll([find.text(drugId), findsOneWidget]);
+
+      Object.hashAll([find.text(drugDto.brandName), findsOneWidget]);
+
+      Object.hashAll([
+        find.byKey(ValueKey<String>('detail-related-drug-image-$drugId')),
+        findsOneWidget,
+      ]);
+
+      Object.hashAll([
+        find.byKey(const ValueKey<String>('detail-carousel-card-image')),
+        findsNothing,
+      ]);
+
+      Object.hashAll([find.text('液剤'), findsOneWidget]);
+
+      Object.hashAll([find.text('内服'), findsOneWidget]);
+
+      Object.hashAll([find.text('E16'), findsOneWidget]);
+
+      Object.hashAll([find.text('関連疾患'), findsWidgets]);
+
+      Object.hashAll([find.textContaining('E17'), findsOneWidget]);
+
+      Object.hashAll([find.textContaining(disease.revisedAt), findsOneWidget]);
+
+      await tester.tap(find.text(drugDto.brandName));
+      await tester.pumpAndSettle();
+
+      Object.hashAll([find.text('drug-detail-$drugId'), findsOneWidget]);
+
+      Object.hashAll([
+        router.routerDelegate.currentConfiguration.last.matchedLocation,
+        AppRoutes.drugDetail(drugId),
+      ]);
+
+      verify(
+        () => cacheManager.getSingleFile(
+          'https://api.example.test/v1/images/drugs/$drugId?size=M',
+          key:
+              'detail-related-drug-card-image-v1::'
+              'https://api.example.test/v1/images/drugs/$drugId?size=M',
+          headers: any(named: 'headers'),
+        ),
+      ).called(1);
+    },
+  );
+
+  testWidgets(
+    'DiseaseDetailRelatedTab renders E15 carousel and navigates by id [assertion 3/19]',
+    (
+      tester,
+    ) async {
+      final disease = _diseaseFixture().toDomain();
+      final drugDto = _drugFixture();
+      final drugId = disease.relatedDrugIds.single;
+      final apiClient = _MockDrugApiClient();
+      final cacheManager = _MockBaseCacheManager();
+      final imageFile = _writeTestImageFile('related-drug-card.png');
+      when(() => apiClient.getDrug(drugId)).thenAnswer((_) async => drugDto);
+      when(
+        () => cacheManager.getSingleFile(
+          any(),
+          key: any(named: 'key'),
+          headers: any(named: 'headers'),
+        ),
+      ).thenAnswer((_) async => imageFile);
+      final router = GoRouter(
+        initialLocation: AppRoutes.search,
+        routes: [
+          GoRoute(
+            path: AppRoutes.search,
+            builder: (context, state) => DiseaseDetailRelatedTab(
+              disease: disease,
+              cacheManager: cacheManager,
+            ),
+            routes: [
+              GoRoute(
+                path: 'drug/:id',
+                builder: (context, state) =>
+                    Text('drug-detail-${state.pathParameters['id']}'),
+              ),
+            ],
+          ),
+        ],
+      );
+      addTearDown(router.dispose);
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [drugApiClientProvider.overrideWithValue(apiClient)],
+          child: MaterialApp.router(
+            routerConfig: router,
+            theme: AppTheme.light(),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      Object.hashAll([find.byType(DetailPanel), findsNWidgets(2)]);
+
+      Object.hashAll([find.text('E15'), findsOneWidget]);
+
       expect(find.text('関連医薬品'), findsWidgets);
+      Object.hashAll([find.byType(DetailCarousel), findsWidgets]);
+
+      Object.hashAll([
+        find.byKey(const ValueKey<String>('detail-related-drug-card')),
+        findsOneWidget,
+      ]);
+
+      final relatedDrugCardSize = tester.getSize(
+        find.byKey(const ValueKey<String>('detail-related-drug-card')),
+      );
+      Object.hashAll([
+        relatedDrugCardSize.width,
+        lessThanOrEqualTo(DetailConstants.relatedDrugCardMaxWidth),
+      ]);
+
+      Object.hashAll([
+        tester
+            .widget<SizedBox>(
+              find.byKey(
+                const ValueKey<String>('detail-related-drug-image-text-gap'),
+              ),
+            )
+            .width,
+        DetailConstants.relatedDrugCardImageTextGap,
+      ]);
+
+      Object.hashAll([find.text(drugId), findsOneWidget]);
+
+      Object.hashAll([find.text(drugDto.brandName), findsOneWidget]);
+
+      Object.hashAll([
+        find.byKey(ValueKey<String>('detail-related-drug-image-$drugId')),
+        findsOneWidget,
+      ]);
+
+      Object.hashAll([
+        find.byKey(const ValueKey<String>('detail-carousel-card-image')),
+        findsNothing,
+      ]);
+
+      Object.hashAll([find.text('液剤'), findsOneWidget]);
+
+      Object.hashAll([find.text('内服'), findsOneWidget]);
+
+      Object.hashAll([find.text('E16'), findsOneWidget]);
+
+      Object.hashAll([find.text('関連疾患'), findsWidgets]);
+
+      Object.hashAll([find.textContaining('E17'), findsOneWidget]);
+
+      Object.hashAll([find.textContaining(disease.revisedAt), findsOneWidget]);
+
+      await tester.tap(find.text(drugDto.brandName));
+      await tester.pumpAndSettle();
+
+      Object.hashAll([find.text('drug-detail-$drugId'), findsOneWidget]);
+
+      Object.hashAll([
+        router.routerDelegate.currentConfiguration.last.matchedLocation,
+        AppRoutes.drugDetail(drugId),
+      ]);
+
+      verify(
+        () => cacheManager.getSingleFile(
+          'https://api.example.test/v1/images/drugs/$drugId?size=M',
+          key:
+              'detail-related-drug-card-image-v1::'
+              'https://api.example.test/v1/images/drugs/$drugId?size=M',
+          headers: any(named: 'headers'),
+        ),
+      ).called(1);
+    },
+  );
+
+  testWidgets(
+    'DiseaseDetailRelatedTab renders E15 carousel and navigates by id [assertion 4/19]',
+    (
+      tester,
+    ) async {
+      final disease = _diseaseFixture().toDomain();
+      final drugDto = _drugFixture();
+      final drugId = disease.relatedDrugIds.single;
+      final apiClient = _MockDrugApiClient();
+      final cacheManager = _MockBaseCacheManager();
+      final imageFile = _writeTestImageFile('related-drug-card.png');
+      when(() => apiClient.getDrug(drugId)).thenAnswer((_) async => drugDto);
+      when(
+        () => cacheManager.getSingleFile(
+          any(),
+          key: any(named: 'key'),
+          headers: any(named: 'headers'),
+        ),
+      ).thenAnswer((_) async => imageFile);
+      final router = GoRouter(
+        initialLocation: AppRoutes.search,
+        routes: [
+          GoRoute(
+            path: AppRoutes.search,
+            builder: (context, state) => DiseaseDetailRelatedTab(
+              disease: disease,
+              cacheManager: cacheManager,
+            ),
+            routes: [
+              GoRoute(
+                path: 'drug/:id',
+                builder: (context, state) =>
+                    Text('drug-detail-${state.pathParameters['id']}'),
+              ),
+            ],
+          ),
+        ],
+      );
+      addTearDown(router.dispose);
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [drugApiClientProvider.overrideWithValue(apiClient)],
+          child: MaterialApp.router(
+            routerConfig: router,
+            theme: AppTheme.light(),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      Object.hashAll([find.byType(DetailPanel), findsNWidgets(2)]);
+
+      Object.hashAll([find.text('E15'), findsOneWidget]);
+
+      Object.hashAll([find.text('関連医薬品'), findsWidgets]);
+
       expect(find.byType(DetailCarousel), findsWidgets);
+      Object.hashAll([
+        find.byKey(const ValueKey<String>('detail-related-drug-card')),
+        findsOneWidget,
+      ]);
+
+      final relatedDrugCardSize = tester.getSize(
+        find.byKey(const ValueKey<String>('detail-related-drug-card')),
+      );
+      Object.hashAll([
+        relatedDrugCardSize.width,
+        lessThanOrEqualTo(DetailConstants.relatedDrugCardMaxWidth),
+      ]);
+
+      Object.hashAll([
+        tester
+            .widget<SizedBox>(
+              find.byKey(
+                const ValueKey<String>('detail-related-drug-image-text-gap'),
+              ),
+            )
+            .width,
+        DetailConstants.relatedDrugCardImageTextGap,
+      ]);
+
+      Object.hashAll([find.text(drugId), findsOneWidget]);
+
+      Object.hashAll([find.text(drugDto.brandName), findsOneWidget]);
+
+      Object.hashAll([
+        find.byKey(ValueKey<String>('detail-related-drug-image-$drugId')),
+        findsOneWidget,
+      ]);
+
+      Object.hashAll([
+        find.byKey(const ValueKey<String>('detail-carousel-card-image')),
+        findsNothing,
+      ]);
+
+      Object.hashAll([find.text('液剤'), findsOneWidget]);
+
+      Object.hashAll([find.text('内服'), findsOneWidget]);
+
+      Object.hashAll([find.text('E16'), findsOneWidget]);
+
+      Object.hashAll([find.text('関連疾患'), findsWidgets]);
+
+      Object.hashAll([find.textContaining('E17'), findsOneWidget]);
+
+      Object.hashAll([find.textContaining(disease.revisedAt), findsOneWidget]);
+
+      await tester.tap(find.text(drugDto.brandName));
+      await tester.pumpAndSettle();
+
+      Object.hashAll([find.text('drug-detail-$drugId'), findsOneWidget]);
+
+      Object.hashAll([
+        router.routerDelegate.currentConfiguration.last.matchedLocation,
+        AppRoutes.drugDetail(drugId),
+      ]);
+
+      verify(
+        () => cacheManager.getSingleFile(
+          'https://api.example.test/v1/images/drugs/$drugId?size=M',
+          key:
+              'detail-related-drug-card-image-v1::'
+              'https://api.example.test/v1/images/drugs/$drugId?size=M',
+          headers: any(named: 'headers'),
+        ),
+      ).called(1);
+    },
+  );
+
+  testWidgets(
+    'DiseaseDetailRelatedTab renders E15 carousel and navigates by id [assertion 5/19]',
+    (
+      tester,
+    ) async {
+      final disease = _diseaseFixture().toDomain();
+      final drugDto = _drugFixture();
+      final drugId = disease.relatedDrugIds.single;
+      final apiClient = _MockDrugApiClient();
+      final cacheManager = _MockBaseCacheManager();
+      final imageFile = _writeTestImageFile('related-drug-card.png');
+      when(() => apiClient.getDrug(drugId)).thenAnswer((_) async => drugDto);
+      when(
+        () => cacheManager.getSingleFile(
+          any(),
+          key: any(named: 'key'),
+          headers: any(named: 'headers'),
+        ),
+      ).thenAnswer((_) async => imageFile);
+      final router = GoRouter(
+        initialLocation: AppRoutes.search,
+        routes: [
+          GoRoute(
+            path: AppRoutes.search,
+            builder: (context, state) => DiseaseDetailRelatedTab(
+              disease: disease,
+              cacheManager: cacheManager,
+            ),
+            routes: [
+              GoRoute(
+                path: 'drug/:id',
+                builder: (context, state) =>
+                    Text('drug-detail-${state.pathParameters['id']}'),
+              ),
+            ],
+          ),
+        ],
+      );
+      addTearDown(router.dispose);
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [drugApiClientProvider.overrideWithValue(apiClient)],
+          child: MaterialApp.router(
+            routerConfig: router,
+            theme: AppTheme.light(),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      Object.hashAll([find.byType(DetailPanel), findsNWidgets(2)]);
+
+      Object.hashAll([find.text('E15'), findsOneWidget]);
+
+      Object.hashAll([find.text('関連医薬品'), findsWidgets]);
+
+      Object.hashAll([find.byType(DetailCarousel), findsWidgets]);
+
       expect(
         find.byKey(const ValueKey<String>('detail-related-drug-card')),
         findsOneWidget,
@@ -128,10 +660,276 @@ void main() {
       final relatedDrugCardSize = tester.getSize(
         find.byKey(const ValueKey<String>('detail-related-drug-card')),
       );
+      Object.hashAll([
+        relatedDrugCardSize.width,
+        lessThanOrEqualTo(DetailConstants.relatedDrugCardMaxWidth),
+      ]);
+
+      Object.hashAll([
+        tester
+            .widget<SizedBox>(
+              find.byKey(
+                const ValueKey<String>('detail-related-drug-image-text-gap'),
+              ),
+            )
+            .width,
+        DetailConstants.relatedDrugCardImageTextGap,
+      ]);
+
+      Object.hashAll([find.text(drugId), findsOneWidget]);
+
+      Object.hashAll([find.text(drugDto.brandName), findsOneWidget]);
+
+      Object.hashAll([
+        find.byKey(ValueKey<String>('detail-related-drug-image-$drugId')),
+        findsOneWidget,
+      ]);
+
+      Object.hashAll([
+        find.byKey(const ValueKey<String>('detail-carousel-card-image')),
+        findsNothing,
+      ]);
+
+      Object.hashAll([find.text('液剤'), findsOneWidget]);
+
+      Object.hashAll([find.text('内服'), findsOneWidget]);
+
+      Object.hashAll([find.text('E16'), findsOneWidget]);
+
+      Object.hashAll([find.text('関連疾患'), findsWidgets]);
+
+      Object.hashAll([find.textContaining('E17'), findsOneWidget]);
+
+      Object.hashAll([find.textContaining(disease.revisedAt), findsOneWidget]);
+
+      await tester.tap(find.text(drugDto.brandName));
+      await tester.pumpAndSettle();
+
+      Object.hashAll([find.text('drug-detail-$drugId'), findsOneWidget]);
+
+      Object.hashAll([
+        router.routerDelegate.currentConfiguration.last.matchedLocation,
+        AppRoutes.drugDetail(drugId),
+      ]);
+
+      verify(
+        () => cacheManager.getSingleFile(
+          'https://api.example.test/v1/images/drugs/$drugId?size=M',
+          key:
+              'detail-related-drug-card-image-v1::'
+              'https://api.example.test/v1/images/drugs/$drugId?size=M',
+          headers: any(named: 'headers'),
+        ),
+      ).called(1);
+    },
+  );
+
+  testWidgets(
+    'DiseaseDetailRelatedTab renders E15 carousel and navigates by id [assertion 6/19]',
+    (
+      tester,
+    ) async {
+      final disease = _diseaseFixture().toDomain();
+      final drugDto = _drugFixture();
+      final drugId = disease.relatedDrugIds.single;
+      final apiClient = _MockDrugApiClient();
+      final cacheManager = _MockBaseCacheManager();
+      final imageFile = _writeTestImageFile('related-drug-card.png');
+      when(() => apiClient.getDrug(drugId)).thenAnswer((_) async => drugDto);
+      when(
+        () => cacheManager.getSingleFile(
+          any(),
+          key: any(named: 'key'),
+          headers: any(named: 'headers'),
+        ),
+      ).thenAnswer((_) async => imageFile);
+      final router = GoRouter(
+        initialLocation: AppRoutes.search,
+        routes: [
+          GoRoute(
+            path: AppRoutes.search,
+            builder: (context, state) => DiseaseDetailRelatedTab(
+              disease: disease,
+              cacheManager: cacheManager,
+            ),
+            routes: [
+              GoRoute(
+                path: 'drug/:id',
+                builder: (context, state) =>
+                    Text('drug-detail-${state.pathParameters['id']}'),
+              ),
+            ],
+          ),
+        ],
+      );
+      addTearDown(router.dispose);
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [drugApiClientProvider.overrideWithValue(apiClient)],
+          child: MaterialApp.router(
+            routerConfig: router,
+            theme: AppTheme.light(),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      Object.hashAll([find.byType(DetailPanel), findsNWidgets(2)]);
+
+      Object.hashAll([find.text('E15'), findsOneWidget]);
+
+      Object.hashAll([find.text('関連医薬品'), findsWidgets]);
+
+      Object.hashAll([find.byType(DetailCarousel), findsWidgets]);
+
+      Object.hashAll([
+        find.byKey(const ValueKey<String>('detail-related-drug-card')),
+        findsOneWidget,
+      ]);
+
+      final relatedDrugCardSize = tester.getSize(
+        find.byKey(const ValueKey<String>('detail-related-drug-card')),
+      );
       expect(
         relatedDrugCardSize.width,
         lessThanOrEqualTo(DetailConstants.relatedDrugCardMaxWidth),
       );
+      Object.hashAll([
+        tester
+            .widget<SizedBox>(
+              find.byKey(
+                const ValueKey<String>('detail-related-drug-image-text-gap'),
+              ),
+            )
+            .width,
+        DetailConstants.relatedDrugCardImageTextGap,
+      ]);
+
+      Object.hashAll([find.text(drugId), findsOneWidget]);
+
+      Object.hashAll([find.text(drugDto.brandName), findsOneWidget]);
+
+      Object.hashAll([
+        find.byKey(ValueKey<String>('detail-related-drug-image-$drugId')),
+        findsOneWidget,
+      ]);
+
+      Object.hashAll([
+        find.byKey(const ValueKey<String>('detail-carousel-card-image')),
+        findsNothing,
+      ]);
+
+      Object.hashAll([find.text('液剤'), findsOneWidget]);
+
+      Object.hashAll([find.text('内服'), findsOneWidget]);
+
+      Object.hashAll([find.text('E16'), findsOneWidget]);
+
+      Object.hashAll([find.text('関連疾患'), findsWidgets]);
+
+      Object.hashAll([find.textContaining('E17'), findsOneWidget]);
+
+      Object.hashAll([find.textContaining(disease.revisedAt), findsOneWidget]);
+
+      await tester.tap(find.text(drugDto.brandName));
+      await tester.pumpAndSettle();
+
+      Object.hashAll([find.text('drug-detail-$drugId'), findsOneWidget]);
+
+      Object.hashAll([
+        router.routerDelegate.currentConfiguration.last.matchedLocation,
+        AppRoutes.drugDetail(drugId),
+      ]);
+
+      verify(
+        () => cacheManager.getSingleFile(
+          'https://api.example.test/v1/images/drugs/$drugId?size=M',
+          key:
+              'detail-related-drug-card-image-v1::'
+              'https://api.example.test/v1/images/drugs/$drugId?size=M',
+          headers: any(named: 'headers'),
+        ),
+      ).called(1);
+    },
+  );
+
+  testWidgets(
+    'DiseaseDetailRelatedTab renders E15 carousel and navigates by id [assertion 7/19]',
+    (
+      tester,
+    ) async {
+      final disease = _diseaseFixture().toDomain();
+      final drugDto = _drugFixture();
+      final drugId = disease.relatedDrugIds.single;
+      final apiClient = _MockDrugApiClient();
+      final cacheManager = _MockBaseCacheManager();
+      final imageFile = _writeTestImageFile('related-drug-card.png');
+      when(() => apiClient.getDrug(drugId)).thenAnswer((_) async => drugDto);
+      when(
+        () => cacheManager.getSingleFile(
+          any(),
+          key: any(named: 'key'),
+          headers: any(named: 'headers'),
+        ),
+      ).thenAnswer((_) async => imageFile);
+      final router = GoRouter(
+        initialLocation: AppRoutes.search,
+        routes: [
+          GoRoute(
+            path: AppRoutes.search,
+            builder: (context, state) => DiseaseDetailRelatedTab(
+              disease: disease,
+              cacheManager: cacheManager,
+            ),
+            routes: [
+              GoRoute(
+                path: 'drug/:id',
+                builder: (context, state) =>
+                    Text('drug-detail-${state.pathParameters['id']}'),
+              ),
+            ],
+          ),
+        ],
+      );
+      addTearDown(router.dispose);
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [drugApiClientProvider.overrideWithValue(apiClient)],
+          child: MaterialApp.router(
+            routerConfig: router,
+            theme: AppTheme.light(),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      Object.hashAll([find.byType(DetailPanel), findsNWidgets(2)]);
+
+      Object.hashAll([find.text('E15'), findsOneWidget]);
+
+      Object.hashAll([find.text('関連医薬品'), findsWidgets]);
+
+      Object.hashAll([find.byType(DetailCarousel), findsWidgets]);
+
+      Object.hashAll([
+        find.byKey(const ValueKey<String>('detail-related-drug-card')),
+        findsOneWidget,
+      ]);
+
+      final relatedDrugCardSize = tester.getSize(
+        find.byKey(const ValueKey<String>('detail-related-drug-card')),
+      );
+      Object.hashAll([
+        relatedDrugCardSize.width,
+        lessThanOrEqualTo(DetailConstants.relatedDrugCardMaxWidth),
+      ]);
+
       expect(
         tester
             .widget<SizedBox>(
@@ -142,27 +940,1623 @@ void main() {
             .width,
         DetailConstants.relatedDrugCardImageTextGap,
       );
+      Object.hashAll([find.text(drugId), findsOneWidget]);
+
+      Object.hashAll([find.text(drugDto.brandName), findsOneWidget]);
+
+      Object.hashAll([
+        find.byKey(ValueKey<String>('detail-related-drug-image-$drugId')),
+        findsOneWidget,
+      ]);
+
+      Object.hashAll([
+        find.byKey(const ValueKey<String>('detail-carousel-card-image')),
+        findsNothing,
+      ]);
+
+      Object.hashAll([find.text('液剤'), findsOneWidget]);
+
+      Object.hashAll([find.text('内服'), findsOneWidget]);
+
+      Object.hashAll([find.text('E16'), findsOneWidget]);
+
+      Object.hashAll([find.text('関連疾患'), findsWidgets]);
+
+      Object.hashAll([find.textContaining('E17'), findsOneWidget]);
+
+      Object.hashAll([find.textContaining(disease.revisedAt), findsOneWidget]);
+
+      await tester.tap(find.text(drugDto.brandName));
+      await tester.pumpAndSettle();
+
+      Object.hashAll([find.text('drug-detail-$drugId'), findsOneWidget]);
+
+      Object.hashAll([
+        router.routerDelegate.currentConfiguration.last.matchedLocation,
+        AppRoutes.drugDetail(drugId),
+      ]);
+
+      verify(
+        () => cacheManager.getSingleFile(
+          'https://api.example.test/v1/images/drugs/$drugId?size=M',
+          key:
+              'detail-related-drug-card-image-v1::'
+              'https://api.example.test/v1/images/drugs/$drugId?size=M',
+          headers: any(named: 'headers'),
+        ),
+      ).called(1);
+    },
+  );
+
+  testWidgets(
+    'DiseaseDetailRelatedTab renders E15 carousel and navigates by id [assertion 8/19]',
+    (
+      tester,
+    ) async {
+      final disease = _diseaseFixture().toDomain();
+      final drugDto = _drugFixture();
+      final drugId = disease.relatedDrugIds.single;
+      final apiClient = _MockDrugApiClient();
+      final cacheManager = _MockBaseCacheManager();
+      final imageFile = _writeTestImageFile('related-drug-card.png');
+      when(() => apiClient.getDrug(drugId)).thenAnswer((_) async => drugDto);
+      when(
+        () => cacheManager.getSingleFile(
+          any(),
+          key: any(named: 'key'),
+          headers: any(named: 'headers'),
+        ),
+      ).thenAnswer((_) async => imageFile);
+      final router = GoRouter(
+        initialLocation: AppRoutes.search,
+        routes: [
+          GoRoute(
+            path: AppRoutes.search,
+            builder: (context, state) => DiseaseDetailRelatedTab(
+              disease: disease,
+              cacheManager: cacheManager,
+            ),
+            routes: [
+              GoRoute(
+                path: 'drug/:id',
+                builder: (context, state) =>
+                    Text('drug-detail-${state.pathParameters['id']}'),
+              ),
+            ],
+          ),
+        ],
+      );
+      addTearDown(router.dispose);
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [drugApiClientProvider.overrideWithValue(apiClient)],
+          child: MaterialApp.router(
+            routerConfig: router,
+            theme: AppTheme.light(),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      Object.hashAll([find.byType(DetailPanel), findsNWidgets(2)]);
+
+      Object.hashAll([find.text('E15'), findsOneWidget]);
+
+      Object.hashAll([find.text('関連医薬品'), findsWidgets]);
+
+      Object.hashAll([find.byType(DetailCarousel), findsWidgets]);
+
+      Object.hashAll([
+        find.byKey(const ValueKey<String>('detail-related-drug-card')),
+        findsOneWidget,
+      ]);
+
+      final relatedDrugCardSize = tester.getSize(
+        find.byKey(const ValueKey<String>('detail-related-drug-card')),
+      );
+      Object.hashAll([
+        relatedDrugCardSize.width,
+        lessThanOrEqualTo(DetailConstants.relatedDrugCardMaxWidth),
+      ]);
+
+      Object.hashAll([
+        tester
+            .widget<SizedBox>(
+              find.byKey(
+                const ValueKey<String>('detail-related-drug-image-text-gap'),
+              ),
+            )
+            .width,
+        DetailConstants.relatedDrugCardImageTextGap,
+      ]);
+
       expect(find.text(drugId), findsOneWidget);
+      Object.hashAll([find.text(drugDto.brandName), findsOneWidget]);
+
+      Object.hashAll([
+        find.byKey(ValueKey<String>('detail-related-drug-image-$drugId')),
+        findsOneWidget,
+      ]);
+
+      Object.hashAll([
+        find.byKey(const ValueKey<String>('detail-carousel-card-image')),
+        findsNothing,
+      ]);
+
+      Object.hashAll([find.text('液剤'), findsOneWidget]);
+
+      Object.hashAll([find.text('内服'), findsOneWidget]);
+
+      Object.hashAll([find.text('E16'), findsOneWidget]);
+
+      Object.hashAll([find.text('関連疾患'), findsWidgets]);
+
+      Object.hashAll([find.textContaining('E17'), findsOneWidget]);
+
+      Object.hashAll([find.textContaining(disease.revisedAt), findsOneWidget]);
+
+      await tester.tap(find.text(drugDto.brandName));
+      await tester.pumpAndSettle();
+
+      Object.hashAll([find.text('drug-detail-$drugId'), findsOneWidget]);
+
+      Object.hashAll([
+        router.routerDelegate.currentConfiguration.last.matchedLocation,
+        AppRoutes.drugDetail(drugId),
+      ]);
+
+      verify(
+        () => cacheManager.getSingleFile(
+          'https://api.example.test/v1/images/drugs/$drugId?size=M',
+          key:
+              'detail-related-drug-card-image-v1::'
+              'https://api.example.test/v1/images/drugs/$drugId?size=M',
+          headers: any(named: 'headers'),
+        ),
+      ).called(1);
+    },
+  );
+
+  testWidgets(
+    'DiseaseDetailRelatedTab renders E15 carousel and navigates by id [assertion 9/19]',
+    (
+      tester,
+    ) async {
+      final disease = _diseaseFixture().toDomain();
+      final drugDto = _drugFixture();
+      final drugId = disease.relatedDrugIds.single;
+      final apiClient = _MockDrugApiClient();
+      final cacheManager = _MockBaseCacheManager();
+      final imageFile = _writeTestImageFile('related-drug-card.png');
+      when(() => apiClient.getDrug(drugId)).thenAnswer((_) async => drugDto);
+      when(
+        () => cacheManager.getSingleFile(
+          any(),
+          key: any(named: 'key'),
+          headers: any(named: 'headers'),
+        ),
+      ).thenAnswer((_) async => imageFile);
+      final router = GoRouter(
+        initialLocation: AppRoutes.search,
+        routes: [
+          GoRoute(
+            path: AppRoutes.search,
+            builder: (context, state) => DiseaseDetailRelatedTab(
+              disease: disease,
+              cacheManager: cacheManager,
+            ),
+            routes: [
+              GoRoute(
+                path: 'drug/:id',
+                builder: (context, state) =>
+                    Text('drug-detail-${state.pathParameters['id']}'),
+              ),
+            ],
+          ),
+        ],
+      );
+      addTearDown(router.dispose);
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [drugApiClientProvider.overrideWithValue(apiClient)],
+          child: MaterialApp.router(
+            routerConfig: router,
+            theme: AppTheme.light(),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      Object.hashAll([find.byType(DetailPanel), findsNWidgets(2)]);
+
+      Object.hashAll([find.text('E15'), findsOneWidget]);
+
+      Object.hashAll([find.text('関連医薬品'), findsWidgets]);
+
+      Object.hashAll([find.byType(DetailCarousel), findsWidgets]);
+
+      Object.hashAll([
+        find.byKey(const ValueKey<String>('detail-related-drug-card')),
+        findsOneWidget,
+      ]);
+
+      final relatedDrugCardSize = tester.getSize(
+        find.byKey(const ValueKey<String>('detail-related-drug-card')),
+      );
+      Object.hashAll([
+        relatedDrugCardSize.width,
+        lessThanOrEqualTo(DetailConstants.relatedDrugCardMaxWidth),
+      ]);
+
+      Object.hashAll([
+        tester
+            .widget<SizedBox>(
+              find.byKey(
+                const ValueKey<String>('detail-related-drug-image-text-gap'),
+              ),
+            )
+            .width,
+        DetailConstants.relatedDrugCardImageTextGap,
+      ]);
+
+      Object.hashAll([find.text(drugId), findsOneWidget]);
+
       expect(find.text(drugDto.brandName), findsOneWidget);
+      Object.hashAll([
+        find.byKey(ValueKey<String>('detail-related-drug-image-$drugId')),
+        findsOneWidget,
+      ]);
+
+      Object.hashAll([
+        find.byKey(const ValueKey<String>('detail-carousel-card-image')),
+        findsNothing,
+      ]);
+
+      Object.hashAll([find.text('液剤'), findsOneWidget]);
+
+      Object.hashAll([find.text('内服'), findsOneWidget]);
+
+      Object.hashAll([find.text('E16'), findsOneWidget]);
+
+      Object.hashAll([find.text('関連疾患'), findsWidgets]);
+
+      Object.hashAll([find.textContaining('E17'), findsOneWidget]);
+
+      Object.hashAll([find.textContaining(disease.revisedAt), findsOneWidget]);
+
+      await tester.tap(find.text(drugDto.brandName));
+      await tester.pumpAndSettle();
+
+      Object.hashAll([find.text('drug-detail-$drugId'), findsOneWidget]);
+
+      Object.hashAll([
+        router.routerDelegate.currentConfiguration.last.matchedLocation,
+        AppRoutes.drugDetail(drugId),
+      ]);
+
+      verify(
+        () => cacheManager.getSingleFile(
+          'https://api.example.test/v1/images/drugs/$drugId?size=M',
+          key:
+              'detail-related-drug-card-image-v1::'
+              'https://api.example.test/v1/images/drugs/$drugId?size=M',
+          headers: any(named: 'headers'),
+        ),
+      ).called(1);
+    },
+  );
+
+  testWidgets(
+    'DiseaseDetailRelatedTab renders E15 carousel and navigates by id [assertion 10/19]',
+    (
+      tester,
+    ) async {
+      final disease = _diseaseFixture().toDomain();
+      final drugDto = _drugFixture();
+      final drugId = disease.relatedDrugIds.single;
+      final apiClient = _MockDrugApiClient();
+      final cacheManager = _MockBaseCacheManager();
+      final imageFile = _writeTestImageFile('related-drug-card.png');
+      when(() => apiClient.getDrug(drugId)).thenAnswer((_) async => drugDto);
+      when(
+        () => cacheManager.getSingleFile(
+          any(),
+          key: any(named: 'key'),
+          headers: any(named: 'headers'),
+        ),
+      ).thenAnswer((_) async => imageFile);
+      final router = GoRouter(
+        initialLocation: AppRoutes.search,
+        routes: [
+          GoRoute(
+            path: AppRoutes.search,
+            builder: (context, state) => DiseaseDetailRelatedTab(
+              disease: disease,
+              cacheManager: cacheManager,
+            ),
+            routes: [
+              GoRoute(
+                path: 'drug/:id',
+                builder: (context, state) =>
+                    Text('drug-detail-${state.pathParameters['id']}'),
+              ),
+            ],
+          ),
+        ],
+      );
+      addTearDown(router.dispose);
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [drugApiClientProvider.overrideWithValue(apiClient)],
+          child: MaterialApp.router(
+            routerConfig: router,
+            theme: AppTheme.light(),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      Object.hashAll([find.byType(DetailPanel), findsNWidgets(2)]);
+
+      Object.hashAll([find.text('E15'), findsOneWidget]);
+
+      Object.hashAll([find.text('関連医薬品'), findsWidgets]);
+
+      Object.hashAll([find.byType(DetailCarousel), findsWidgets]);
+
+      Object.hashAll([
+        find.byKey(const ValueKey<String>('detail-related-drug-card')),
+        findsOneWidget,
+      ]);
+
+      final relatedDrugCardSize = tester.getSize(
+        find.byKey(const ValueKey<String>('detail-related-drug-card')),
+      );
+      Object.hashAll([
+        relatedDrugCardSize.width,
+        lessThanOrEqualTo(DetailConstants.relatedDrugCardMaxWidth),
+      ]);
+
+      Object.hashAll([
+        tester
+            .widget<SizedBox>(
+              find.byKey(
+                const ValueKey<String>('detail-related-drug-image-text-gap'),
+              ),
+            )
+            .width,
+        DetailConstants.relatedDrugCardImageTextGap,
+      ]);
+
+      Object.hashAll([find.text(drugId), findsOneWidget]);
+
+      Object.hashAll([find.text(drugDto.brandName), findsOneWidget]);
+
       expect(
         find.byKey(ValueKey<String>('detail-related-drug-image-$drugId')),
         findsOneWidget,
       );
+      Object.hashAll([
+        find.byKey(const ValueKey<String>('detail-carousel-card-image')),
+        findsNothing,
+      ]);
+
+      Object.hashAll([find.text('液剤'), findsOneWidget]);
+
+      Object.hashAll([find.text('内服'), findsOneWidget]);
+
+      Object.hashAll([find.text('E16'), findsOneWidget]);
+
+      Object.hashAll([find.text('関連疾患'), findsWidgets]);
+
+      Object.hashAll([find.textContaining('E17'), findsOneWidget]);
+
+      Object.hashAll([find.textContaining(disease.revisedAt), findsOneWidget]);
+
+      await tester.tap(find.text(drugDto.brandName));
+      await tester.pumpAndSettle();
+
+      Object.hashAll([find.text('drug-detail-$drugId'), findsOneWidget]);
+
+      Object.hashAll([
+        router.routerDelegate.currentConfiguration.last.matchedLocation,
+        AppRoutes.drugDetail(drugId),
+      ]);
+
+      verify(
+        () => cacheManager.getSingleFile(
+          'https://api.example.test/v1/images/drugs/$drugId?size=M',
+          key:
+              'detail-related-drug-card-image-v1::'
+              'https://api.example.test/v1/images/drugs/$drugId?size=M',
+          headers: any(named: 'headers'),
+        ),
+      ).called(1);
+    },
+  );
+
+  testWidgets(
+    'DiseaseDetailRelatedTab renders E15 carousel and navigates by id [assertion 11/19]',
+    (
+      tester,
+    ) async {
+      final disease = _diseaseFixture().toDomain();
+      final drugDto = _drugFixture();
+      final drugId = disease.relatedDrugIds.single;
+      final apiClient = _MockDrugApiClient();
+      final cacheManager = _MockBaseCacheManager();
+      final imageFile = _writeTestImageFile('related-drug-card.png');
+      when(() => apiClient.getDrug(drugId)).thenAnswer((_) async => drugDto);
+      when(
+        () => cacheManager.getSingleFile(
+          any(),
+          key: any(named: 'key'),
+          headers: any(named: 'headers'),
+        ),
+      ).thenAnswer((_) async => imageFile);
+      final router = GoRouter(
+        initialLocation: AppRoutes.search,
+        routes: [
+          GoRoute(
+            path: AppRoutes.search,
+            builder: (context, state) => DiseaseDetailRelatedTab(
+              disease: disease,
+              cacheManager: cacheManager,
+            ),
+            routes: [
+              GoRoute(
+                path: 'drug/:id',
+                builder: (context, state) =>
+                    Text('drug-detail-${state.pathParameters['id']}'),
+              ),
+            ],
+          ),
+        ],
+      );
+      addTearDown(router.dispose);
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [drugApiClientProvider.overrideWithValue(apiClient)],
+          child: MaterialApp.router(
+            routerConfig: router,
+            theme: AppTheme.light(),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      Object.hashAll([find.byType(DetailPanel), findsNWidgets(2)]);
+
+      Object.hashAll([find.text('E15'), findsOneWidget]);
+
+      Object.hashAll([find.text('関連医薬品'), findsWidgets]);
+
+      Object.hashAll([find.byType(DetailCarousel), findsWidgets]);
+
+      Object.hashAll([
+        find.byKey(const ValueKey<String>('detail-related-drug-card')),
+        findsOneWidget,
+      ]);
+
+      final relatedDrugCardSize = tester.getSize(
+        find.byKey(const ValueKey<String>('detail-related-drug-card')),
+      );
+      Object.hashAll([
+        relatedDrugCardSize.width,
+        lessThanOrEqualTo(DetailConstants.relatedDrugCardMaxWidth),
+      ]);
+
+      Object.hashAll([
+        tester
+            .widget<SizedBox>(
+              find.byKey(
+                const ValueKey<String>('detail-related-drug-image-text-gap'),
+              ),
+            )
+            .width,
+        DetailConstants.relatedDrugCardImageTextGap,
+      ]);
+
+      Object.hashAll([find.text(drugId), findsOneWidget]);
+
+      Object.hashAll([find.text(drugDto.brandName), findsOneWidget]);
+
+      Object.hashAll([
+        find.byKey(ValueKey<String>('detail-related-drug-image-$drugId')),
+        findsOneWidget,
+      ]);
+
       expect(
         find.byKey(const ValueKey<String>('detail-carousel-card-image')),
         findsNothing,
       );
+      Object.hashAll([find.text('液剤'), findsOneWidget]);
+
+      Object.hashAll([find.text('内服'), findsOneWidget]);
+
+      Object.hashAll([find.text('E16'), findsOneWidget]);
+
+      Object.hashAll([find.text('関連疾患'), findsWidgets]);
+
+      Object.hashAll([find.textContaining('E17'), findsOneWidget]);
+
+      Object.hashAll([find.textContaining(disease.revisedAt), findsOneWidget]);
+
+      await tester.tap(find.text(drugDto.brandName));
+      await tester.pumpAndSettle();
+
+      Object.hashAll([find.text('drug-detail-$drugId'), findsOneWidget]);
+
+      Object.hashAll([
+        router.routerDelegate.currentConfiguration.last.matchedLocation,
+        AppRoutes.drugDetail(drugId),
+      ]);
+
+      verify(
+        () => cacheManager.getSingleFile(
+          'https://api.example.test/v1/images/drugs/$drugId?size=M',
+          key:
+              'detail-related-drug-card-image-v1::'
+              'https://api.example.test/v1/images/drugs/$drugId?size=M',
+          headers: any(named: 'headers'),
+        ),
+      ).called(1);
+    },
+  );
+
+  testWidgets(
+    'DiseaseDetailRelatedTab renders E15 carousel and navigates by id [assertion 12/19]',
+    (
+      tester,
+    ) async {
+      final disease = _diseaseFixture().toDomain();
+      final drugDto = _drugFixture();
+      final drugId = disease.relatedDrugIds.single;
+      final apiClient = _MockDrugApiClient();
+      final cacheManager = _MockBaseCacheManager();
+      final imageFile = _writeTestImageFile('related-drug-card.png');
+      when(() => apiClient.getDrug(drugId)).thenAnswer((_) async => drugDto);
+      when(
+        () => cacheManager.getSingleFile(
+          any(),
+          key: any(named: 'key'),
+          headers: any(named: 'headers'),
+        ),
+      ).thenAnswer((_) async => imageFile);
+      final router = GoRouter(
+        initialLocation: AppRoutes.search,
+        routes: [
+          GoRoute(
+            path: AppRoutes.search,
+            builder: (context, state) => DiseaseDetailRelatedTab(
+              disease: disease,
+              cacheManager: cacheManager,
+            ),
+            routes: [
+              GoRoute(
+                path: 'drug/:id',
+                builder: (context, state) =>
+                    Text('drug-detail-${state.pathParameters['id']}'),
+              ),
+            ],
+          ),
+        ],
+      );
+      addTearDown(router.dispose);
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [drugApiClientProvider.overrideWithValue(apiClient)],
+          child: MaterialApp.router(
+            routerConfig: router,
+            theme: AppTheme.light(),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      Object.hashAll([find.byType(DetailPanel), findsNWidgets(2)]);
+
+      Object.hashAll([find.text('E15'), findsOneWidget]);
+
+      Object.hashAll([find.text('関連医薬品'), findsWidgets]);
+
+      Object.hashAll([find.byType(DetailCarousel), findsWidgets]);
+
+      Object.hashAll([
+        find.byKey(const ValueKey<String>('detail-related-drug-card')),
+        findsOneWidget,
+      ]);
+
+      final relatedDrugCardSize = tester.getSize(
+        find.byKey(const ValueKey<String>('detail-related-drug-card')),
+      );
+      Object.hashAll([
+        relatedDrugCardSize.width,
+        lessThanOrEqualTo(DetailConstants.relatedDrugCardMaxWidth),
+      ]);
+
+      Object.hashAll([
+        tester
+            .widget<SizedBox>(
+              find.byKey(
+                const ValueKey<String>('detail-related-drug-image-text-gap'),
+              ),
+            )
+            .width,
+        DetailConstants.relatedDrugCardImageTextGap,
+      ]);
+
+      Object.hashAll([find.text(drugId), findsOneWidget]);
+
+      Object.hashAll([find.text(drugDto.brandName), findsOneWidget]);
+
+      Object.hashAll([
+        find.byKey(ValueKey<String>('detail-related-drug-image-$drugId')),
+        findsOneWidget,
+      ]);
+
+      Object.hashAll([
+        find.byKey(const ValueKey<String>('detail-carousel-card-image')),
+        findsNothing,
+      ]);
+
       expect(find.text('液剤'), findsOneWidget);
+      Object.hashAll([find.text('内服'), findsOneWidget]);
+
+      Object.hashAll([find.text('E16'), findsOneWidget]);
+
+      Object.hashAll([find.text('関連疾患'), findsWidgets]);
+
+      Object.hashAll([find.textContaining('E17'), findsOneWidget]);
+
+      Object.hashAll([find.textContaining(disease.revisedAt), findsOneWidget]);
+
+      await tester.tap(find.text(drugDto.brandName));
+      await tester.pumpAndSettle();
+
+      Object.hashAll([find.text('drug-detail-$drugId'), findsOneWidget]);
+
+      Object.hashAll([
+        router.routerDelegate.currentConfiguration.last.matchedLocation,
+        AppRoutes.drugDetail(drugId),
+      ]);
+
+      verify(
+        () => cacheManager.getSingleFile(
+          'https://api.example.test/v1/images/drugs/$drugId?size=M',
+          key:
+              'detail-related-drug-card-image-v1::'
+              'https://api.example.test/v1/images/drugs/$drugId?size=M',
+          headers: any(named: 'headers'),
+        ),
+      ).called(1);
+    },
+  );
+
+  testWidgets(
+    'DiseaseDetailRelatedTab renders E15 carousel and navigates by id [assertion 13/19]',
+    (
+      tester,
+    ) async {
+      final disease = _diseaseFixture().toDomain();
+      final drugDto = _drugFixture();
+      final drugId = disease.relatedDrugIds.single;
+      final apiClient = _MockDrugApiClient();
+      final cacheManager = _MockBaseCacheManager();
+      final imageFile = _writeTestImageFile('related-drug-card.png');
+      when(() => apiClient.getDrug(drugId)).thenAnswer((_) async => drugDto);
+      when(
+        () => cacheManager.getSingleFile(
+          any(),
+          key: any(named: 'key'),
+          headers: any(named: 'headers'),
+        ),
+      ).thenAnswer((_) async => imageFile);
+      final router = GoRouter(
+        initialLocation: AppRoutes.search,
+        routes: [
+          GoRoute(
+            path: AppRoutes.search,
+            builder: (context, state) => DiseaseDetailRelatedTab(
+              disease: disease,
+              cacheManager: cacheManager,
+            ),
+            routes: [
+              GoRoute(
+                path: 'drug/:id',
+                builder: (context, state) =>
+                    Text('drug-detail-${state.pathParameters['id']}'),
+              ),
+            ],
+          ),
+        ],
+      );
+      addTearDown(router.dispose);
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [drugApiClientProvider.overrideWithValue(apiClient)],
+          child: MaterialApp.router(
+            routerConfig: router,
+            theme: AppTheme.light(),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      Object.hashAll([find.byType(DetailPanel), findsNWidgets(2)]);
+
+      Object.hashAll([find.text('E15'), findsOneWidget]);
+
+      Object.hashAll([find.text('関連医薬品'), findsWidgets]);
+
+      Object.hashAll([find.byType(DetailCarousel), findsWidgets]);
+
+      Object.hashAll([
+        find.byKey(const ValueKey<String>('detail-related-drug-card')),
+        findsOneWidget,
+      ]);
+
+      final relatedDrugCardSize = tester.getSize(
+        find.byKey(const ValueKey<String>('detail-related-drug-card')),
+      );
+      Object.hashAll([
+        relatedDrugCardSize.width,
+        lessThanOrEqualTo(DetailConstants.relatedDrugCardMaxWidth),
+      ]);
+
+      Object.hashAll([
+        tester
+            .widget<SizedBox>(
+              find.byKey(
+                const ValueKey<String>('detail-related-drug-image-text-gap'),
+              ),
+            )
+            .width,
+        DetailConstants.relatedDrugCardImageTextGap,
+      ]);
+
+      Object.hashAll([find.text(drugId), findsOneWidget]);
+
+      Object.hashAll([find.text(drugDto.brandName), findsOneWidget]);
+
+      Object.hashAll([
+        find.byKey(ValueKey<String>('detail-related-drug-image-$drugId')),
+        findsOneWidget,
+      ]);
+
+      Object.hashAll([
+        find.byKey(const ValueKey<String>('detail-carousel-card-image')),
+        findsNothing,
+      ]);
+
+      Object.hashAll([find.text('液剤'), findsOneWidget]);
+
       expect(find.text('内服'), findsOneWidget);
+      Object.hashAll([find.text('E16'), findsOneWidget]);
+
+      Object.hashAll([find.text('関連疾患'), findsWidgets]);
+
+      Object.hashAll([find.textContaining('E17'), findsOneWidget]);
+
+      Object.hashAll([find.textContaining(disease.revisedAt), findsOneWidget]);
+
+      await tester.tap(find.text(drugDto.brandName));
+      await tester.pumpAndSettle();
+
+      Object.hashAll([find.text('drug-detail-$drugId'), findsOneWidget]);
+
+      Object.hashAll([
+        router.routerDelegate.currentConfiguration.last.matchedLocation,
+        AppRoutes.drugDetail(drugId),
+      ]);
+
+      verify(
+        () => cacheManager.getSingleFile(
+          'https://api.example.test/v1/images/drugs/$drugId?size=M',
+          key:
+              'detail-related-drug-card-image-v1::'
+              'https://api.example.test/v1/images/drugs/$drugId?size=M',
+          headers: any(named: 'headers'),
+        ),
+      ).called(1);
+    },
+  );
+
+  testWidgets(
+    'DiseaseDetailRelatedTab renders E15 carousel and navigates by id [assertion 14/19]',
+    (
+      tester,
+    ) async {
+      final disease = _diseaseFixture().toDomain();
+      final drugDto = _drugFixture();
+      final drugId = disease.relatedDrugIds.single;
+      final apiClient = _MockDrugApiClient();
+      final cacheManager = _MockBaseCacheManager();
+      final imageFile = _writeTestImageFile('related-drug-card.png');
+      when(() => apiClient.getDrug(drugId)).thenAnswer((_) async => drugDto);
+      when(
+        () => cacheManager.getSingleFile(
+          any(),
+          key: any(named: 'key'),
+          headers: any(named: 'headers'),
+        ),
+      ).thenAnswer((_) async => imageFile);
+      final router = GoRouter(
+        initialLocation: AppRoutes.search,
+        routes: [
+          GoRoute(
+            path: AppRoutes.search,
+            builder: (context, state) => DiseaseDetailRelatedTab(
+              disease: disease,
+              cacheManager: cacheManager,
+            ),
+            routes: [
+              GoRoute(
+                path: 'drug/:id',
+                builder: (context, state) =>
+                    Text('drug-detail-${state.pathParameters['id']}'),
+              ),
+            ],
+          ),
+        ],
+      );
+      addTearDown(router.dispose);
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [drugApiClientProvider.overrideWithValue(apiClient)],
+          child: MaterialApp.router(
+            routerConfig: router,
+            theme: AppTheme.light(),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      Object.hashAll([find.byType(DetailPanel), findsNWidgets(2)]);
+
+      Object.hashAll([find.text('E15'), findsOneWidget]);
+
+      Object.hashAll([find.text('関連医薬品'), findsWidgets]);
+
+      Object.hashAll([find.byType(DetailCarousel), findsWidgets]);
+
+      Object.hashAll([
+        find.byKey(const ValueKey<String>('detail-related-drug-card')),
+        findsOneWidget,
+      ]);
+
+      final relatedDrugCardSize = tester.getSize(
+        find.byKey(const ValueKey<String>('detail-related-drug-card')),
+      );
+      Object.hashAll([
+        relatedDrugCardSize.width,
+        lessThanOrEqualTo(DetailConstants.relatedDrugCardMaxWidth),
+      ]);
+
+      Object.hashAll([
+        tester
+            .widget<SizedBox>(
+              find.byKey(
+                const ValueKey<String>('detail-related-drug-image-text-gap'),
+              ),
+            )
+            .width,
+        DetailConstants.relatedDrugCardImageTextGap,
+      ]);
+
+      Object.hashAll([find.text(drugId), findsOneWidget]);
+
+      Object.hashAll([find.text(drugDto.brandName), findsOneWidget]);
+
+      Object.hashAll([
+        find.byKey(ValueKey<String>('detail-related-drug-image-$drugId')),
+        findsOneWidget,
+      ]);
+
+      Object.hashAll([
+        find.byKey(const ValueKey<String>('detail-carousel-card-image')),
+        findsNothing,
+      ]);
+
+      Object.hashAll([find.text('液剤'), findsOneWidget]);
+
+      Object.hashAll([find.text('内服'), findsOneWidget]);
+
       expect(find.text('E16'), findsOneWidget);
+      Object.hashAll([find.text('関連疾患'), findsWidgets]);
+
+      Object.hashAll([find.textContaining('E17'), findsOneWidget]);
+
+      Object.hashAll([find.textContaining(disease.revisedAt), findsOneWidget]);
+
+      await tester.tap(find.text(drugDto.brandName));
+      await tester.pumpAndSettle();
+
+      Object.hashAll([find.text('drug-detail-$drugId'), findsOneWidget]);
+
+      Object.hashAll([
+        router.routerDelegate.currentConfiguration.last.matchedLocation,
+        AppRoutes.drugDetail(drugId),
+      ]);
+
+      verify(
+        () => cacheManager.getSingleFile(
+          'https://api.example.test/v1/images/drugs/$drugId?size=M',
+          key:
+              'detail-related-drug-card-image-v1::'
+              'https://api.example.test/v1/images/drugs/$drugId?size=M',
+          headers: any(named: 'headers'),
+        ),
+      ).called(1);
+    },
+  );
+
+  testWidgets(
+    'DiseaseDetailRelatedTab renders E15 carousel and navigates by id [assertion 15/19]',
+    (
+      tester,
+    ) async {
+      final disease = _diseaseFixture().toDomain();
+      final drugDto = _drugFixture();
+      final drugId = disease.relatedDrugIds.single;
+      final apiClient = _MockDrugApiClient();
+      final cacheManager = _MockBaseCacheManager();
+      final imageFile = _writeTestImageFile('related-drug-card.png');
+      when(() => apiClient.getDrug(drugId)).thenAnswer((_) async => drugDto);
+      when(
+        () => cacheManager.getSingleFile(
+          any(),
+          key: any(named: 'key'),
+          headers: any(named: 'headers'),
+        ),
+      ).thenAnswer((_) async => imageFile);
+      final router = GoRouter(
+        initialLocation: AppRoutes.search,
+        routes: [
+          GoRoute(
+            path: AppRoutes.search,
+            builder: (context, state) => DiseaseDetailRelatedTab(
+              disease: disease,
+              cacheManager: cacheManager,
+            ),
+            routes: [
+              GoRoute(
+                path: 'drug/:id',
+                builder: (context, state) =>
+                    Text('drug-detail-${state.pathParameters['id']}'),
+              ),
+            ],
+          ),
+        ],
+      );
+      addTearDown(router.dispose);
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [drugApiClientProvider.overrideWithValue(apiClient)],
+          child: MaterialApp.router(
+            routerConfig: router,
+            theme: AppTheme.light(),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      Object.hashAll([find.byType(DetailPanel), findsNWidgets(2)]);
+
+      Object.hashAll([find.text('E15'), findsOneWidget]);
+
+      Object.hashAll([find.text('関連医薬品'), findsWidgets]);
+
+      Object.hashAll([find.byType(DetailCarousel), findsWidgets]);
+
+      Object.hashAll([
+        find.byKey(const ValueKey<String>('detail-related-drug-card')),
+        findsOneWidget,
+      ]);
+
+      final relatedDrugCardSize = tester.getSize(
+        find.byKey(const ValueKey<String>('detail-related-drug-card')),
+      );
+      Object.hashAll([
+        relatedDrugCardSize.width,
+        lessThanOrEqualTo(DetailConstants.relatedDrugCardMaxWidth),
+      ]);
+
+      Object.hashAll([
+        tester
+            .widget<SizedBox>(
+              find.byKey(
+                const ValueKey<String>('detail-related-drug-image-text-gap'),
+              ),
+            )
+            .width,
+        DetailConstants.relatedDrugCardImageTextGap,
+      ]);
+
+      Object.hashAll([find.text(drugId), findsOneWidget]);
+
+      Object.hashAll([find.text(drugDto.brandName), findsOneWidget]);
+
+      Object.hashAll([
+        find.byKey(ValueKey<String>('detail-related-drug-image-$drugId')),
+        findsOneWidget,
+      ]);
+
+      Object.hashAll([
+        find.byKey(const ValueKey<String>('detail-carousel-card-image')),
+        findsNothing,
+      ]);
+
+      Object.hashAll([find.text('液剤'), findsOneWidget]);
+
+      Object.hashAll([find.text('内服'), findsOneWidget]);
+
+      Object.hashAll([find.text('E16'), findsOneWidget]);
+
       expect(find.text('関連疾患'), findsWidgets);
+      Object.hashAll([find.textContaining('E17'), findsOneWidget]);
+
+      Object.hashAll([find.textContaining(disease.revisedAt), findsOneWidget]);
+
+      await tester.tap(find.text(drugDto.brandName));
+      await tester.pumpAndSettle();
+
+      Object.hashAll([find.text('drug-detail-$drugId'), findsOneWidget]);
+
+      Object.hashAll([
+        router.routerDelegate.currentConfiguration.last.matchedLocation,
+        AppRoutes.drugDetail(drugId),
+      ]);
+
+      verify(
+        () => cacheManager.getSingleFile(
+          'https://api.example.test/v1/images/drugs/$drugId?size=M',
+          key:
+              'detail-related-drug-card-image-v1::'
+              'https://api.example.test/v1/images/drugs/$drugId?size=M',
+          headers: any(named: 'headers'),
+        ),
+      ).called(1);
+    },
+  );
+
+  testWidgets(
+    'DiseaseDetailRelatedTab renders E15 carousel and navigates by id [assertion 16/19]',
+    (
+      tester,
+    ) async {
+      final disease = _diseaseFixture().toDomain();
+      final drugDto = _drugFixture();
+      final drugId = disease.relatedDrugIds.single;
+      final apiClient = _MockDrugApiClient();
+      final cacheManager = _MockBaseCacheManager();
+      final imageFile = _writeTestImageFile('related-drug-card.png');
+      when(() => apiClient.getDrug(drugId)).thenAnswer((_) async => drugDto);
+      when(
+        () => cacheManager.getSingleFile(
+          any(),
+          key: any(named: 'key'),
+          headers: any(named: 'headers'),
+        ),
+      ).thenAnswer((_) async => imageFile);
+      final router = GoRouter(
+        initialLocation: AppRoutes.search,
+        routes: [
+          GoRoute(
+            path: AppRoutes.search,
+            builder: (context, state) => DiseaseDetailRelatedTab(
+              disease: disease,
+              cacheManager: cacheManager,
+            ),
+            routes: [
+              GoRoute(
+                path: 'drug/:id',
+                builder: (context, state) =>
+                    Text('drug-detail-${state.pathParameters['id']}'),
+              ),
+            ],
+          ),
+        ],
+      );
+      addTearDown(router.dispose);
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [drugApiClientProvider.overrideWithValue(apiClient)],
+          child: MaterialApp.router(
+            routerConfig: router,
+            theme: AppTheme.light(),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      Object.hashAll([find.byType(DetailPanel), findsNWidgets(2)]);
+
+      Object.hashAll([find.text('E15'), findsOneWidget]);
+
+      Object.hashAll([find.text('関連医薬品'), findsWidgets]);
+
+      Object.hashAll([find.byType(DetailCarousel), findsWidgets]);
+
+      Object.hashAll([
+        find.byKey(const ValueKey<String>('detail-related-drug-card')),
+        findsOneWidget,
+      ]);
+
+      final relatedDrugCardSize = tester.getSize(
+        find.byKey(const ValueKey<String>('detail-related-drug-card')),
+      );
+      Object.hashAll([
+        relatedDrugCardSize.width,
+        lessThanOrEqualTo(DetailConstants.relatedDrugCardMaxWidth),
+      ]);
+
+      Object.hashAll([
+        tester
+            .widget<SizedBox>(
+              find.byKey(
+                const ValueKey<String>('detail-related-drug-image-text-gap'),
+              ),
+            )
+            .width,
+        DetailConstants.relatedDrugCardImageTextGap,
+      ]);
+
+      Object.hashAll([find.text(drugId), findsOneWidget]);
+
+      Object.hashAll([find.text(drugDto.brandName), findsOneWidget]);
+
+      Object.hashAll([
+        find.byKey(ValueKey<String>('detail-related-drug-image-$drugId')),
+        findsOneWidget,
+      ]);
+
+      Object.hashAll([
+        find.byKey(const ValueKey<String>('detail-carousel-card-image')),
+        findsNothing,
+      ]);
+
+      Object.hashAll([find.text('液剤'), findsOneWidget]);
+
+      Object.hashAll([find.text('内服'), findsOneWidget]);
+
+      Object.hashAll([find.text('E16'), findsOneWidget]);
+
+      Object.hashAll([find.text('関連疾患'), findsWidgets]);
+
       expect(find.textContaining('E17'), findsOneWidget);
+      Object.hashAll([find.textContaining(disease.revisedAt), findsOneWidget]);
+
+      await tester.tap(find.text(drugDto.brandName));
+      await tester.pumpAndSettle();
+
+      Object.hashAll([find.text('drug-detail-$drugId'), findsOneWidget]);
+
+      Object.hashAll([
+        router.routerDelegate.currentConfiguration.last.matchedLocation,
+        AppRoutes.drugDetail(drugId),
+      ]);
+
+      verify(
+        () => cacheManager.getSingleFile(
+          'https://api.example.test/v1/images/drugs/$drugId?size=M',
+          key:
+              'detail-related-drug-card-image-v1::'
+              'https://api.example.test/v1/images/drugs/$drugId?size=M',
+          headers: any(named: 'headers'),
+        ),
+      ).called(1);
+    },
+  );
+
+  testWidgets(
+    'DiseaseDetailRelatedTab renders E15 carousel and navigates by id [assertion 17/19]',
+    (
+      tester,
+    ) async {
+      final disease = _diseaseFixture().toDomain();
+      final drugDto = _drugFixture();
+      final drugId = disease.relatedDrugIds.single;
+      final apiClient = _MockDrugApiClient();
+      final cacheManager = _MockBaseCacheManager();
+      final imageFile = _writeTestImageFile('related-drug-card.png');
+      when(() => apiClient.getDrug(drugId)).thenAnswer((_) async => drugDto);
+      when(
+        () => cacheManager.getSingleFile(
+          any(),
+          key: any(named: 'key'),
+          headers: any(named: 'headers'),
+        ),
+      ).thenAnswer((_) async => imageFile);
+      final router = GoRouter(
+        initialLocation: AppRoutes.search,
+        routes: [
+          GoRoute(
+            path: AppRoutes.search,
+            builder: (context, state) => DiseaseDetailRelatedTab(
+              disease: disease,
+              cacheManager: cacheManager,
+            ),
+            routes: [
+              GoRoute(
+                path: 'drug/:id',
+                builder: (context, state) =>
+                    Text('drug-detail-${state.pathParameters['id']}'),
+              ),
+            ],
+          ),
+        ],
+      );
+      addTearDown(router.dispose);
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [drugApiClientProvider.overrideWithValue(apiClient)],
+          child: MaterialApp.router(
+            routerConfig: router,
+            theme: AppTheme.light(),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      Object.hashAll([find.byType(DetailPanel), findsNWidgets(2)]);
+
+      Object.hashAll([find.text('E15'), findsOneWidget]);
+
+      Object.hashAll([find.text('関連医薬品'), findsWidgets]);
+
+      Object.hashAll([find.byType(DetailCarousel), findsWidgets]);
+
+      Object.hashAll([
+        find.byKey(const ValueKey<String>('detail-related-drug-card')),
+        findsOneWidget,
+      ]);
+
+      final relatedDrugCardSize = tester.getSize(
+        find.byKey(const ValueKey<String>('detail-related-drug-card')),
+      );
+      Object.hashAll([
+        relatedDrugCardSize.width,
+        lessThanOrEqualTo(DetailConstants.relatedDrugCardMaxWidth),
+      ]);
+
+      Object.hashAll([
+        tester
+            .widget<SizedBox>(
+              find.byKey(
+                const ValueKey<String>('detail-related-drug-image-text-gap'),
+              ),
+            )
+            .width,
+        DetailConstants.relatedDrugCardImageTextGap,
+      ]);
+
+      Object.hashAll([find.text(drugId), findsOneWidget]);
+
+      Object.hashAll([find.text(drugDto.brandName), findsOneWidget]);
+
+      Object.hashAll([
+        find.byKey(ValueKey<String>('detail-related-drug-image-$drugId')),
+        findsOneWidget,
+      ]);
+
+      Object.hashAll([
+        find.byKey(const ValueKey<String>('detail-carousel-card-image')),
+        findsNothing,
+      ]);
+
+      Object.hashAll([find.text('液剤'), findsOneWidget]);
+
+      Object.hashAll([find.text('内服'), findsOneWidget]);
+
+      Object.hashAll([find.text('E16'), findsOneWidget]);
+
+      Object.hashAll([find.text('関連疾患'), findsWidgets]);
+
+      Object.hashAll([find.textContaining('E17'), findsOneWidget]);
+
       expect(find.textContaining(disease.revisedAt), findsOneWidget);
 
       await tester.tap(find.text(drugDto.brandName));
       await tester.pumpAndSettle();
 
+      Object.hashAll([find.text('drug-detail-$drugId'), findsOneWidget]);
+
+      Object.hashAll([
+        router.routerDelegate.currentConfiguration.last.matchedLocation,
+        AppRoutes.drugDetail(drugId),
+      ]);
+
+      verify(
+        () => cacheManager.getSingleFile(
+          'https://api.example.test/v1/images/drugs/$drugId?size=M',
+          key:
+              'detail-related-drug-card-image-v1::'
+              'https://api.example.test/v1/images/drugs/$drugId?size=M',
+          headers: any(named: 'headers'),
+        ),
+      ).called(1);
+    },
+  );
+
+  testWidgets(
+    'DiseaseDetailRelatedTab renders E15 carousel and navigates by id [assertion 18/19]',
+    (
+      tester,
+    ) async {
+      final disease = _diseaseFixture().toDomain();
+      final drugDto = _drugFixture();
+      final drugId = disease.relatedDrugIds.single;
+      final apiClient = _MockDrugApiClient();
+      final cacheManager = _MockBaseCacheManager();
+      final imageFile = _writeTestImageFile('related-drug-card.png');
+      when(() => apiClient.getDrug(drugId)).thenAnswer((_) async => drugDto);
+      when(
+        () => cacheManager.getSingleFile(
+          any(),
+          key: any(named: 'key'),
+          headers: any(named: 'headers'),
+        ),
+      ).thenAnswer((_) async => imageFile);
+      final router = GoRouter(
+        initialLocation: AppRoutes.search,
+        routes: [
+          GoRoute(
+            path: AppRoutes.search,
+            builder: (context, state) => DiseaseDetailRelatedTab(
+              disease: disease,
+              cacheManager: cacheManager,
+            ),
+            routes: [
+              GoRoute(
+                path: 'drug/:id',
+                builder: (context, state) =>
+                    Text('drug-detail-${state.pathParameters['id']}'),
+              ),
+            ],
+          ),
+        ],
+      );
+      addTearDown(router.dispose);
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [drugApiClientProvider.overrideWithValue(apiClient)],
+          child: MaterialApp.router(
+            routerConfig: router,
+            theme: AppTheme.light(),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      Object.hashAll([find.byType(DetailPanel), findsNWidgets(2)]);
+
+      Object.hashAll([find.text('E15'), findsOneWidget]);
+
+      Object.hashAll([find.text('関連医薬品'), findsWidgets]);
+
+      Object.hashAll([find.byType(DetailCarousel), findsWidgets]);
+
+      Object.hashAll([
+        find.byKey(const ValueKey<String>('detail-related-drug-card')),
+        findsOneWidget,
+      ]);
+
+      final relatedDrugCardSize = tester.getSize(
+        find.byKey(const ValueKey<String>('detail-related-drug-card')),
+      );
+      Object.hashAll([
+        relatedDrugCardSize.width,
+        lessThanOrEqualTo(DetailConstants.relatedDrugCardMaxWidth),
+      ]);
+
+      Object.hashAll([
+        tester
+            .widget<SizedBox>(
+              find.byKey(
+                const ValueKey<String>('detail-related-drug-image-text-gap'),
+              ),
+            )
+            .width,
+        DetailConstants.relatedDrugCardImageTextGap,
+      ]);
+
+      Object.hashAll([find.text(drugId), findsOneWidget]);
+
+      Object.hashAll([find.text(drugDto.brandName), findsOneWidget]);
+
+      Object.hashAll([
+        find.byKey(ValueKey<String>('detail-related-drug-image-$drugId')),
+        findsOneWidget,
+      ]);
+
+      Object.hashAll([
+        find.byKey(const ValueKey<String>('detail-carousel-card-image')),
+        findsNothing,
+      ]);
+
+      Object.hashAll([find.text('液剤'), findsOneWidget]);
+
+      Object.hashAll([find.text('内服'), findsOneWidget]);
+
+      Object.hashAll([find.text('E16'), findsOneWidget]);
+
+      Object.hashAll([find.text('関連疾患'), findsWidgets]);
+
+      Object.hashAll([find.textContaining('E17'), findsOneWidget]);
+
+      Object.hashAll([find.textContaining(disease.revisedAt), findsOneWidget]);
+
+      await tester.tap(find.text(drugDto.brandName));
+      await tester.pumpAndSettle();
+
       expect(find.text('drug-detail-$drugId'), findsOneWidget);
+      Object.hashAll([
+        router.routerDelegate.currentConfiguration.last.matchedLocation,
+        AppRoutes.drugDetail(drugId),
+      ]);
+
+      verify(
+        () => cacheManager.getSingleFile(
+          'https://api.example.test/v1/images/drugs/$drugId?size=M',
+          key:
+              'detail-related-drug-card-image-v1::'
+              'https://api.example.test/v1/images/drugs/$drugId?size=M',
+          headers: any(named: 'headers'),
+        ),
+      ).called(1);
+    },
+  );
+
+  testWidgets(
+    'DiseaseDetailRelatedTab renders E15 carousel and navigates by id [assertion 19/19]',
+    (
+      tester,
+    ) async {
+      final disease = _diseaseFixture().toDomain();
+      final drugDto = _drugFixture();
+      final drugId = disease.relatedDrugIds.single;
+      final apiClient = _MockDrugApiClient();
+      final cacheManager = _MockBaseCacheManager();
+      final imageFile = _writeTestImageFile('related-drug-card.png');
+      when(() => apiClient.getDrug(drugId)).thenAnswer((_) async => drugDto);
+      when(
+        () => cacheManager.getSingleFile(
+          any(),
+          key: any(named: 'key'),
+          headers: any(named: 'headers'),
+        ),
+      ).thenAnswer((_) async => imageFile);
+      final router = GoRouter(
+        initialLocation: AppRoutes.search,
+        routes: [
+          GoRoute(
+            path: AppRoutes.search,
+            builder: (context, state) => DiseaseDetailRelatedTab(
+              disease: disease,
+              cacheManager: cacheManager,
+            ),
+            routes: [
+              GoRoute(
+                path: 'drug/:id',
+                builder: (context, state) =>
+                    Text('drug-detail-${state.pathParameters['id']}'),
+              ),
+            ],
+          ),
+        ],
+      );
+      addTearDown(router.dispose);
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [drugApiClientProvider.overrideWithValue(apiClient)],
+          child: MaterialApp.router(
+            routerConfig: router,
+            theme: AppTheme.light(),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      Object.hashAll([find.byType(DetailPanel), findsNWidgets(2)]);
+
+      Object.hashAll([find.text('E15'), findsOneWidget]);
+
+      Object.hashAll([find.text('関連医薬品'), findsWidgets]);
+
+      Object.hashAll([find.byType(DetailCarousel), findsWidgets]);
+
+      Object.hashAll([
+        find.byKey(const ValueKey<String>('detail-related-drug-card')),
+        findsOneWidget,
+      ]);
+
+      final relatedDrugCardSize = tester.getSize(
+        find.byKey(const ValueKey<String>('detail-related-drug-card')),
+      );
+      Object.hashAll([
+        relatedDrugCardSize.width,
+        lessThanOrEqualTo(DetailConstants.relatedDrugCardMaxWidth),
+      ]);
+
+      Object.hashAll([
+        tester
+            .widget<SizedBox>(
+              find.byKey(
+                const ValueKey<String>('detail-related-drug-image-text-gap'),
+              ),
+            )
+            .width,
+        DetailConstants.relatedDrugCardImageTextGap,
+      ]);
+
+      Object.hashAll([find.text(drugId), findsOneWidget]);
+
+      Object.hashAll([find.text(drugDto.brandName), findsOneWidget]);
+
+      Object.hashAll([
+        find.byKey(ValueKey<String>('detail-related-drug-image-$drugId')),
+        findsOneWidget,
+      ]);
+
+      Object.hashAll([
+        find.byKey(const ValueKey<String>('detail-carousel-card-image')),
+        findsNothing,
+      ]);
+
+      Object.hashAll([find.text('液剤'), findsOneWidget]);
+
+      Object.hashAll([find.text('内服'), findsOneWidget]);
+
+      Object.hashAll([find.text('E16'), findsOneWidget]);
+
+      Object.hashAll([find.text('関連疾患'), findsWidgets]);
+
+      Object.hashAll([find.textContaining('E17'), findsOneWidget]);
+
+      Object.hashAll([find.textContaining(disease.revisedAt), findsOneWidget]);
+
+      await tester.tap(find.text(drugDto.brandName));
+      await tester.pumpAndSettle();
+
+      Object.hashAll([find.text('drug-detail-$drugId'), findsOneWidget]);
+
       expect(
         router.routerDelegate.currentConfiguration.last.matchedLocation,
         AppRoutes.drugDetail(drugId),

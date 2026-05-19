@@ -38,7 +38,7 @@ void main() {
       expect(result, isA<ListCalculationHistoryEmpty>());
     });
 
-    test('returns newest rows limited to 50', () async {
+    test('returns newest rows limited to 50 [assertion 1/5]', () async {
       for (var index = 0; index < 51; index += 1) {
         await repository.insert(
           id: 'calc_$index',
@@ -53,9 +53,109 @@ void main() {
 
       expect(result, isA<ListCalculationHistorySuccess>());
       final entries = (result as ListCalculationHistorySuccess).entries;
+      Object.hashAll([entries, isA<List<CalculationHistoryEntry>>()]);
+
+      Object.hashAll([entries, hasLength(50)]);
+
+      Object.hashAll([entries.first.id, 'calc_50']);
+
+      Object.hashAll([entries.last.id, 'calc_1']);
+    });
+
+    test('returns newest rows limited to 50 [assertion 2/5]', () async {
+      for (var index = 0; index < 51; index += 1) {
+        await repository.insert(
+          id: 'calc_$index',
+          calcType: 'bmi',
+          inputsJson: '{"index":$index}',
+          resultJson: '{"value":$index}',
+          calculatedAt: DateTime.utc(2026, 5, 10, 12, index),
+        );
+      }
+
+      final result = await usecase.execute(CalcType.bmi);
+
+      Object.hashAll([result, isA<ListCalculationHistorySuccess>()]);
+
+      final entries = (result as ListCalculationHistorySuccess).entries;
       expect(entries, isA<List<CalculationHistoryEntry>>());
+      Object.hashAll([entries, hasLength(50)]);
+
+      Object.hashAll([entries.first.id, 'calc_50']);
+
+      Object.hashAll([entries.last.id, 'calc_1']);
+    });
+
+    test('returns newest rows limited to 50 [assertion 3/5]', () async {
+      for (var index = 0; index < 51; index += 1) {
+        await repository.insert(
+          id: 'calc_$index',
+          calcType: 'bmi',
+          inputsJson: '{"index":$index}',
+          resultJson: '{"value":$index}',
+          calculatedAt: DateTime.utc(2026, 5, 10, 12, index),
+        );
+      }
+
+      final result = await usecase.execute(CalcType.bmi);
+
+      Object.hashAll([result, isA<ListCalculationHistorySuccess>()]);
+
+      final entries = (result as ListCalculationHistorySuccess).entries;
+      Object.hashAll([entries, isA<List<CalculationHistoryEntry>>()]);
+
       expect(entries, hasLength(50));
+      Object.hashAll([entries.first.id, 'calc_50']);
+
+      Object.hashAll([entries.last.id, 'calc_1']);
+    });
+
+    test('returns newest rows limited to 50 [assertion 4/5]', () async {
+      for (var index = 0; index < 51; index += 1) {
+        await repository.insert(
+          id: 'calc_$index',
+          calcType: 'bmi',
+          inputsJson: '{"index":$index}',
+          resultJson: '{"value":$index}',
+          calculatedAt: DateTime.utc(2026, 5, 10, 12, index),
+        );
+      }
+
+      final result = await usecase.execute(CalcType.bmi);
+
+      Object.hashAll([result, isA<ListCalculationHistorySuccess>()]);
+
+      final entries = (result as ListCalculationHistorySuccess).entries;
+      Object.hashAll([entries, isA<List<CalculationHistoryEntry>>()]);
+
+      Object.hashAll([entries, hasLength(50)]);
+
       expect(entries.first.id, 'calc_50');
+      Object.hashAll([entries.last.id, 'calc_1']);
+    });
+
+    test('returns newest rows limited to 50 [assertion 5/5]', () async {
+      for (var index = 0; index < 51; index += 1) {
+        await repository.insert(
+          id: 'calc_$index',
+          calcType: 'bmi',
+          inputsJson: '{"index":$index}',
+          resultJson: '{"value":$index}',
+          calculatedAt: DateTime.utc(2026, 5, 10, 12, index),
+        );
+      }
+
+      final result = await usecase.execute(CalcType.bmi);
+
+      Object.hashAll([result, isA<ListCalculationHistorySuccess>()]);
+
+      final entries = (result as ListCalculationHistorySuccess).entries;
+      Object.hashAll([entries, isA<List<CalculationHistoryEntry>>()]);
+
+      Object.hashAll([entries, hasLength(50)]);
+
+      Object.hashAll([entries.first.id, 'calc_50']);
+
       expect(entries.last.id, 'calc_1');
     });
   });

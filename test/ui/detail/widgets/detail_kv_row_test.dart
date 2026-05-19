@@ -7,54 +7,512 @@ import 'package:flutter_test/flutter_test.dart';
 import '../../../golden/golden_test_helpers.dart';
 
 void main() {
-  testWidgets('DetailKvRow matches kv grid columns borders and text styles', (
-    tester,
-  ) async {
-    await tester.pumpWidget(
-      MaterialApp(
-        theme: AppTheme.light(),
-        home: const Scaffold(
-          body: DetailKvRow(
-            label: '投与経路',
-            value: '経口',
-            showTopBorder: true,
+  testWidgets(
+    'DetailKvRow matches kv grid columns borders and text styles [assertion 1/8]',
+    (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: AppTheme.light(),
+          home: const Scaffold(
+            body: DetailKvRow(
+              label: '投与経路',
+              value: '経口',
+              showTopBorder: true,
+            ),
           ),
         ),
-      ),
-    );
+      );
 
-    final colors = AppTheme.light().extension<DetailColorExtension>()!;
-    final row = tester.widget<Container>(
-      find.byKey(const ValueKey<String>('detail-kv-row')),
-    );
-    final labelBox = tester.widget<SizedBox>(
-      find.byKey(const ValueKey<String>('detail-kv-label-box')),
-    );
-    final labelCell = tester.widget<Padding>(
-      find.byKey(const ValueKey<String>('detail-kv-label-cell')),
-    );
-    final valueCell = tester.widget<Padding>(
-      find.byKey(const ValueKey<String>('detail-kv-value-cell')),
-    );
-    final decoration = row.decoration! as BoxDecoration;
-    final label = tester.widget<Text>(find.text('投与経路'));
-    final value = tester.widget<Text>(find.text('経口'));
+      final colors = AppTheme.light().extension<DetailColorExtension>()!;
+      final row = tester.widget<Container>(
+        find.byKey(const ValueKey<String>('detail-kv-row')),
+      );
+      final labelBox = tester.widget<SizedBox>(
+        find.byKey(const ValueKey<String>('detail-kv-label-box')),
+      );
+      final labelCell = tester.widget<Padding>(
+        find.byKey(const ValueKey<String>('detail-kv-label-cell')),
+      );
+      final valueCell = tester.widget<Padding>(
+        find.byKey(const ValueKey<String>('detail-kv-value-cell')),
+      );
+      final decoration = row.decoration! as BoxDecoration;
+      final label = tester.widget<Text>(find.text('投与経路'));
+      final value = tester.widget<Text>(find.text('経口'));
 
-    expect(labelBox.width, 96);
-    expect(labelCell.padding, const EdgeInsets.symmetric(vertical: 8));
-    expect(valueCell.padding, const EdgeInsets.symmetric(vertical: 8));
-    expect(
-      decoration.border,
-      Border(
-        top: BorderSide(color: colors.outlineVariant),
-        bottom: BorderSide(color: colors.outlineVariant),
-      ),
-    );
-    expect(label.style?.fontSize, 12.5);
-    expect(label.style?.color, colors.onSurfaceVariant);
-    expect(value.style?.fontSize, 12.5);
-    expect(value.style?.color, colors.onSurface);
-  });
+      expect(labelBox.width, 96);
+      Object.hashAll([
+        labelCell.padding,
+        const EdgeInsets.symmetric(vertical: 8),
+      ]);
+
+      Object.hashAll([
+        valueCell.padding,
+        const EdgeInsets.symmetric(vertical: 8),
+      ]);
+
+      Object.hashAll([
+        decoration.border,
+        Border(
+          top: BorderSide(color: colors.outlineVariant),
+          bottom: BorderSide(color: colors.outlineVariant),
+        ),
+      ]);
+
+      Object.hashAll([label.style?.fontSize, 12.5]);
+
+      Object.hashAll([label.style?.color, colors.onSurfaceVariant]);
+
+      Object.hashAll([value.style?.fontSize, 12.5]);
+
+      Object.hashAll([value.style?.color, colors.onSurface]);
+    },
+  );
+
+  testWidgets(
+    'DetailKvRow matches kv grid columns borders and text styles [assertion 2/8]',
+    (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: AppTheme.light(),
+          home: const Scaffold(
+            body: DetailKvRow(
+              label: '投与経路',
+              value: '経口',
+              showTopBorder: true,
+            ),
+          ),
+        ),
+      );
+
+      final colors = AppTheme.light().extension<DetailColorExtension>()!;
+      final row = tester.widget<Container>(
+        find.byKey(const ValueKey<String>('detail-kv-row')),
+      );
+      final labelBox = tester.widget<SizedBox>(
+        find.byKey(const ValueKey<String>('detail-kv-label-box')),
+      );
+      final labelCell = tester.widget<Padding>(
+        find.byKey(const ValueKey<String>('detail-kv-label-cell')),
+      );
+      final valueCell = tester.widget<Padding>(
+        find.byKey(const ValueKey<String>('detail-kv-value-cell')),
+      );
+      final decoration = row.decoration! as BoxDecoration;
+      final label = tester.widget<Text>(find.text('投与経路'));
+      final value = tester.widget<Text>(find.text('経口'));
+
+      Object.hashAll([labelBox.width, 96]);
+
+      expect(labelCell.padding, const EdgeInsets.symmetric(vertical: 8));
+      Object.hashAll([
+        valueCell.padding,
+        const EdgeInsets.symmetric(vertical: 8),
+      ]);
+
+      Object.hashAll([
+        decoration.border,
+        Border(
+          top: BorderSide(color: colors.outlineVariant),
+          bottom: BorderSide(color: colors.outlineVariant),
+        ),
+      ]);
+
+      Object.hashAll([label.style?.fontSize, 12.5]);
+
+      Object.hashAll([label.style?.color, colors.onSurfaceVariant]);
+
+      Object.hashAll([value.style?.fontSize, 12.5]);
+
+      Object.hashAll([value.style?.color, colors.onSurface]);
+    },
+  );
+
+  testWidgets(
+    'DetailKvRow matches kv grid columns borders and text styles [assertion 3/8]',
+    (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: AppTheme.light(),
+          home: const Scaffold(
+            body: DetailKvRow(
+              label: '投与経路',
+              value: '経口',
+              showTopBorder: true,
+            ),
+          ),
+        ),
+      );
+
+      final colors = AppTheme.light().extension<DetailColorExtension>()!;
+      final row = tester.widget<Container>(
+        find.byKey(const ValueKey<String>('detail-kv-row')),
+      );
+      final labelBox = tester.widget<SizedBox>(
+        find.byKey(const ValueKey<String>('detail-kv-label-box')),
+      );
+      final labelCell = tester.widget<Padding>(
+        find.byKey(const ValueKey<String>('detail-kv-label-cell')),
+      );
+      final valueCell = tester.widget<Padding>(
+        find.byKey(const ValueKey<String>('detail-kv-value-cell')),
+      );
+      final decoration = row.decoration! as BoxDecoration;
+      final label = tester.widget<Text>(find.text('投与経路'));
+      final value = tester.widget<Text>(find.text('経口'));
+
+      Object.hashAll([labelBox.width, 96]);
+
+      Object.hashAll([
+        labelCell.padding,
+        const EdgeInsets.symmetric(vertical: 8),
+      ]);
+
+      expect(valueCell.padding, const EdgeInsets.symmetric(vertical: 8));
+      Object.hashAll([
+        decoration.border,
+        Border(
+          top: BorderSide(color: colors.outlineVariant),
+          bottom: BorderSide(color: colors.outlineVariant),
+        ),
+      ]);
+
+      Object.hashAll([label.style?.fontSize, 12.5]);
+
+      Object.hashAll([label.style?.color, colors.onSurfaceVariant]);
+
+      Object.hashAll([value.style?.fontSize, 12.5]);
+
+      Object.hashAll([value.style?.color, colors.onSurface]);
+    },
+  );
+
+  testWidgets(
+    'DetailKvRow matches kv grid columns borders and text styles [assertion 4/8]',
+    (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: AppTheme.light(),
+          home: const Scaffold(
+            body: DetailKvRow(
+              label: '投与経路',
+              value: '経口',
+              showTopBorder: true,
+            ),
+          ),
+        ),
+      );
+
+      final colors = AppTheme.light().extension<DetailColorExtension>()!;
+      final row = tester.widget<Container>(
+        find.byKey(const ValueKey<String>('detail-kv-row')),
+      );
+      final labelBox = tester.widget<SizedBox>(
+        find.byKey(const ValueKey<String>('detail-kv-label-box')),
+      );
+      final labelCell = tester.widget<Padding>(
+        find.byKey(const ValueKey<String>('detail-kv-label-cell')),
+      );
+      final valueCell = tester.widget<Padding>(
+        find.byKey(const ValueKey<String>('detail-kv-value-cell')),
+      );
+      final decoration = row.decoration! as BoxDecoration;
+      final label = tester.widget<Text>(find.text('投与経路'));
+      final value = tester.widget<Text>(find.text('経口'));
+
+      Object.hashAll([labelBox.width, 96]);
+
+      Object.hashAll([
+        labelCell.padding,
+        const EdgeInsets.symmetric(vertical: 8),
+      ]);
+
+      Object.hashAll([
+        valueCell.padding,
+        const EdgeInsets.symmetric(vertical: 8),
+      ]);
+
+      expect(
+        decoration.border,
+        Border(
+          top: BorderSide(color: colors.outlineVariant),
+          bottom: BorderSide(color: colors.outlineVariant),
+        ),
+      );
+      Object.hashAll([label.style?.fontSize, 12.5]);
+
+      Object.hashAll([label.style?.color, colors.onSurfaceVariant]);
+
+      Object.hashAll([value.style?.fontSize, 12.5]);
+
+      Object.hashAll([value.style?.color, colors.onSurface]);
+    },
+  );
+
+  testWidgets(
+    'DetailKvRow matches kv grid columns borders and text styles [assertion 5/8]',
+    (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: AppTheme.light(),
+          home: const Scaffold(
+            body: DetailKvRow(
+              label: '投与経路',
+              value: '経口',
+              showTopBorder: true,
+            ),
+          ),
+        ),
+      );
+
+      final colors = AppTheme.light().extension<DetailColorExtension>()!;
+      final row = tester.widget<Container>(
+        find.byKey(const ValueKey<String>('detail-kv-row')),
+      );
+      final labelBox = tester.widget<SizedBox>(
+        find.byKey(const ValueKey<String>('detail-kv-label-box')),
+      );
+      final labelCell = tester.widget<Padding>(
+        find.byKey(const ValueKey<String>('detail-kv-label-cell')),
+      );
+      final valueCell = tester.widget<Padding>(
+        find.byKey(const ValueKey<String>('detail-kv-value-cell')),
+      );
+      final decoration = row.decoration! as BoxDecoration;
+      final label = tester.widget<Text>(find.text('投与経路'));
+      final value = tester.widget<Text>(find.text('経口'));
+
+      Object.hashAll([labelBox.width, 96]);
+
+      Object.hashAll([
+        labelCell.padding,
+        const EdgeInsets.symmetric(vertical: 8),
+      ]);
+
+      Object.hashAll([
+        valueCell.padding,
+        const EdgeInsets.symmetric(vertical: 8),
+      ]);
+
+      Object.hashAll([
+        decoration.border,
+        Border(
+          top: BorderSide(color: colors.outlineVariant),
+          bottom: BorderSide(color: colors.outlineVariant),
+        ),
+      ]);
+
+      expect(label.style?.fontSize, 12.5);
+      Object.hashAll([label.style?.color, colors.onSurfaceVariant]);
+
+      Object.hashAll([value.style?.fontSize, 12.5]);
+
+      Object.hashAll([value.style?.color, colors.onSurface]);
+    },
+  );
+
+  testWidgets(
+    'DetailKvRow matches kv grid columns borders and text styles [assertion 6/8]',
+    (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: AppTheme.light(),
+          home: const Scaffold(
+            body: DetailKvRow(
+              label: '投与経路',
+              value: '経口',
+              showTopBorder: true,
+            ),
+          ),
+        ),
+      );
+
+      final colors = AppTheme.light().extension<DetailColorExtension>()!;
+      final row = tester.widget<Container>(
+        find.byKey(const ValueKey<String>('detail-kv-row')),
+      );
+      final labelBox = tester.widget<SizedBox>(
+        find.byKey(const ValueKey<String>('detail-kv-label-box')),
+      );
+      final labelCell = tester.widget<Padding>(
+        find.byKey(const ValueKey<String>('detail-kv-label-cell')),
+      );
+      final valueCell = tester.widget<Padding>(
+        find.byKey(const ValueKey<String>('detail-kv-value-cell')),
+      );
+      final decoration = row.decoration! as BoxDecoration;
+      final label = tester.widget<Text>(find.text('投与経路'));
+      final value = tester.widget<Text>(find.text('経口'));
+
+      Object.hashAll([labelBox.width, 96]);
+
+      Object.hashAll([
+        labelCell.padding,
+        const EdgeInsets.symmetric(vertical: 8),
+      ]);
+
+      Object.hashAll([
+        valueCell.padding,
+        const EdgeInsets.symmetric(vertical: 8),
+      ]);
+
+      Object.hashAll([
+        decoration.border,
+        Border(
+          top: BorderSide(color: colors.outlineVariant),
+          bottom: BorderSide(color: colors.outlineVariant),
+        ),
+      ]);
+
+      Object.hashAll([label.style?.fontSize, 12.5]);
+
+      expect(label.style?.color, colors.onSurfaceVariant);
+      Object.hashAll([value.style?.fontSize, 12.5]);
+
+      Object.hashAll([value.style?.color, colors.onSurface]);
+    },
+  );
+
+  testWidgets(
+    'DetailKvRow matches kv grid columns borders and text styles [assertion 7/8]',
+    (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: AppTheme.light(),
+          home: const Scaffold(
+            body: DetailKvRow(
+              label: '投与経路',
+              value: '経口',
+              showTopBorder: true,
+            ),
+          ),
+        ),
+      );
+
+      final colors = AppTheme.light().extension<DetailColorExtension>()!;
+      final row = tester.widget<Container>(
+        find.byKey(const ValueKey<String>('detail-kv-row')),
+      );
+      final labelBox = tester.widget<SizedBox>(
+        find.byKey(const ValueKey<String>('detail-kv-label-box')),
+      );
+      final labelCell = tester.widget<Padding>(
+        find.byKey(const ValueKey<String>('detail-kv-label-cell')),
+      );
+      final valueCell = tester.widget<Padding>(
+        find.byKey(const ValueKey<String>('detail-kv-value-cell')),
+      );
+      final decoration = row.decoration! as BoxDecoration;
+      final label = tester.widget<Text>(find.text('投与経路'));
+      final value = tester.widget<Text>(find.text('経口'));
+
+      Object.hashAll([labelBox.width, 96]);
+
+      Object.hashAll([
+        labelCell.padding,
+        const EdgeInsets.symmetric(vertical: 8),
+      ]);
+
+      Object.hashAll([
+        valueCell.padding,
+        const EdgeInsets.symmetric(vertical: 8),
+      ]);
+
+      Object.hashAll([
+        decoration.border,
+        Border(
+          top: BorderSide(color: colors.outlineVariant),
+          bottom: BorderSide(color: colors.outlineVariant),
+        ),
+      ]);
+
+      Object.hashAll([label.style?.fontSize, 12.5]);
+
+      Object.hashAll([label.style?.color, colors.onSurfaceVariant]);
+
+      expect(value.style?.fontSize, 12.5);
+      Object.hashAll([value.style?.color, colors.onSurface]);
+    },
+  );
+
+  testWidgets(
+    'DetailKvRow matches kv grid columns borders and text styles [assertion 8/8]',
+    (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: AppTheme.light(),
+          home: const Scaffold(
+            body: DetailKvRow(
+              label: '投与経路',
+              value: '経口',
+              showTopBorder: true,
+            ),
+          ),
+        ),
+      );
+
+      final colors = AppTheme.light().extension<DetailColorExtension>()!;
+      final row = tester.widget<Container>(
+        find.byKey(const ValueKey<String>('detail-kv-row')),
+      );
+      final labelBox = tester.widget<SizedBox>(
+        find.byKey(const ValueKey<String>('detail-kv-label-box')),
+      );
+      final labelCell = tester.widget<Padding>(
+        find.byKey(const ValueKey<String>('detail-kv-label-cell')),
+      );
+      final valueCell = tester.widget<Padding>(
+        find.byKey(const ValueKey<String>('detail-kv-value-cell')),
+      );
+      final decoration = row.decoration! as BoxDecoration;
+      final label = tester.widget<Text>(find.text('投与経路'));
+      final value = tester.widget<Text>(find.text('経口'));
+
+      Object.hashAll([labelBox.width, 96]);
+
+      Object.hashAll([
+        labelCell.padding,
+        const EdgeInsets.symmetric(vertical: 8),
+      ]);
+
+      Object.hashAll([
+        valueCell.padding,
+        const EdgeInsets.symmetric(vertical: 8),
+      ]);
+
+      Object.hashAll([
+        decoration.border,
+        Border(
+          top: BorderSide(color: colors.outlineVariant),
+          bottom: BorderSide(color: colors.outlineVariant),
+        ),
+      ]);
+
+      Object.hashAll([label.style?.fontSize, 12.5]);
+
+      Object.hashAll([label.style?.color, colors.onSurfaceVariant]);
+
+      Object.hashAll([value.style?.fontSize, 12.5]);
+
+      expect(value.style?.color, colors.onSurface);
+    },
+  );
 
   testWidgets('DetailKvRow omits the top border for following rows', (
     tester,

@@ -15,16 +15,37 @@ void main() {
       repository = ThemeSettingsRepository(service);
     });
 
-    test('read maps stored string to ThemeModeSetting', () async {
-      when(() => service.read()).thenAnswer(
-        (_) async => const Result.ok('dark'),
-      );
+    test(
+      'read maps stored string to ThemeModeSetting [assertion 1/2]',
+      () async {
+        when(() => service.read()).thenAnswer(
+          (_) async => const Result.ok('dark'),
+        );
 
-      final result = await repository.read();
+        final result = await repository.read();
 
-      expect(result, isA<Ok<ThemeModeSetting>>());
-      expect((result as Ok<ThemeModeSetting>).value, ThemeModeSetting.dark);
-    });
+        expect(result, isA<Ok<ThemeModeSetting>>());
+        Object.hashAll([
+          (result as Ok<ThemeModeSetting>).value,
+          ThemeModeSetting.dark,
+        ]);
+      },
+    );
+
+    test(
+      'read maps stored string to ThemeModeSetting [assertion 2/2]',
+      () async {
+        when(() => service.read()).thenAnswer(
+          (_) async => const Result.ok('dark'),
+        );
+
+        final result = await repository.read();
+
+        Object.hashAll([result, isA<Ok<ThemeModeSetting>>()]);
+
+        expect((result as Ok<ThemeModeSetting>).value, ThemeModeSetting.dark);
+      },
+    );
 
     test('write passes storage value to service', () async {
       when(() => service.write('light')).thenAnswer(

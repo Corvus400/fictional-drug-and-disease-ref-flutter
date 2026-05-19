@@ -67,7 +67,7 @@ void main() {
     SharedPreferences.setMockInitialValues({});
   });
 
-  test('detail usecase providers return typed instances', () {
+  test('detail usecase providers return typed instances [assertion 1/19]', () {
     final container = ProviderContainer();
     addTearDown(container.dispose);
 
@@ -75,74 +75,1874 @@ void main() {
       container.read(viewDrugDetailUsecaseProvider),
       isA<ViewDrugDetailUsecase>(),
     );
+    Object.hashAll([
+      container.read(viewDiseaseDetailUsecaseProvider),
+      isA<ViewDiseaseDetailUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(observeBookmarkStateUsecaseProvider),
+      isA<ObserveBookmarkStateUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(observeBookmarksUsecaseProvider),
+      isA<ObserveBookmarksUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(deleteBookmarkUsecaseProvider),
+      isA<DeleteBookmarkUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(resolveBookmarkRowsUsecaseProvider),
+      isA<ResolveBookmarkRowsUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(toggleBookmarkUsecaseProvider),
+      isA<ToggleBookmarkUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(calculateBmiUsecaseProvider),
+      isA<CalculateBmiUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(calculateEgfrUsecaseProvider),
+      isA<CalculateEgfrUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(calculateCrClUsecaseProvider),
+      isA<CalculateCrClUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(recordCalculationHistoryUsecaseProvider),
+      isA<RecordCalculationHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(listCalculationHistoryUsecaseProvider),
+      isA<ListCalculationHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(deleteCalculationHistoryUsecaseProvider),
+      isA<DeleteCalculationHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(listBrowsingHistoryUsecaseProvider),
+      isA<ListBrowsingHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(deleteBrowsingHistoryUsecaseProvider),
+      isA<DeleteBrowsingHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(clearBrowsingHistoryUsecaseProvider),
+      isA<ClearBrowsingHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(observeBrowsingHistoryUsecaseProvider),
+      isA<ObserveBrowsingHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(nameResolutionCacheProvider),
+      isA<NameResolutionCache>(),
+    ]);
+
+    Object.hashAll([
+      container.read(resolveBrowsingHistoryNamesUsecaseProvider),
+      isA<ResolveBrowsingHistoryNamesUsecase>(),
+    ]);
+  });
+
+  test('detail usecase providers return typed instances [assertion 2/19]', () {
+    final container = ProviderContainer();
+    addTearDown(container.dispose);
+
+    Object.hashAll([
+      container.read(viewDrugDetailUsecaseProvider),
+      isA<ViewDrugDetailUsecase>(),
+    ]);
+
     expect(
       container.read(viewDiseaseDetailUsecaseProvider),
       isA<ViewDiseaseDetailUsecase>(),
     );
+    Object.hashAll([
+      container.read(observeBookmarkStateUsecaseProvider),
+      isA<ObserveBookmarkStateUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(observeBookmarksUsecaseProvider),
+      isA<ObserveBookmarksUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(deleteBookmarkUsecaseProvider),
+      isA<DeleteBookmarkUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(resolveBookmarkRowsUsecaseProvider),
+      isA<ResolveBookmarkRowsUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(toggleBookmarkUsecaseProvider),
+      isA<ToggleBookmarkUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(calculateBmiUsecaseProvider),
+      isA<CalculateBmiUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(calculateEgfrUsecaseProvider),
+      isA<CalculateEgfrUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(calculateCrClUsecaseProvider),
+      isA<CalculateCrClUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(recordCalculationHistoryUsecaseProvider),
+      isA<RecordCalculationHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(listCalculationHistoryUsecaseProvider),
+      isA<ListCalculationHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(deleteCalculationHistoryUsecaseProvider),
+      isA<DeleteCalculationHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(listBrowsingHistoryUsecaseProvider),
+      isA<ListBrowsingHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(deleteBrowsingHistoryUsecaseProvider),
+      isA<DeleteBrowsingHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(clearBrowsingHistoryUsecaseProvider),
+      isA<ClearBrowsingHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(observeBrowsingHistoryUsecaseProvider),
+      isA<ObserveBrowsingHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(nameResolutionCacheProvider),
+      isA<NameResolutionCache>(),
+    ]);
+
+    Object.hashAll([
+      container.read(resolveBrowsingHistoryNamesUsecaseProvider),
+      isA<ResolveBrowsingHistoryNamesUsecase>(),
+    ]);
+  });
+
+  test('detail usecase providers return typed instances [assertion 3/19]', () {
+    final container = ProviderContainer();
+    addTearDown(container.dispose);
+
+    Object.hashAll([
+      container.read(viewDrugDetailUsecaseProvider),
+      isA<ViewDrugDetailUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(viewDiseaseDetailUsecaseProvider),
+      isA<ViewDiseaseDetailUsecase>(),
+    ]);
+
     expect(
       container.read(observeBookmarkStateUsecaseProvider),
       isA<ObserveBookmarkStateUsecase>(),
     );
+    Object.hashAll([
+      container.read(observeBookmarksUsecaseProvider),
+      isA<ObserveBookmarksUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(deleteBookmarkUsecaseProvider),
+      isA<DeleteBookmarkUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(resolveBookmarkRowsUsecaseProvider),
+      isA<ResolveBookmarkRowsUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(toggleBookmarkUsecaseProvider),
+      isA<ToggleBookmarkUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(calculateBmiUsecaseProvider),
+      isA<CalculateBmiUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(calculateEgfrUsecaseProvider),
+      isA<CalculateEgfrUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(calculateCrClUsecaseProvider),
+      isA<CalculateCrClUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(recordCalculationHistoryUsecaseProvider),
+      isA<RecordCalculationHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(listCalculationHistoryUsecaseProvider),
+      isA<ListCalculationHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(deleteCalculationHistoryUsecaseProvider),
+      isA<DeleteCalculationHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(listBrowsingHistoryUsecaseProvider),
+      isA<ListBrowsingHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(deleteBrowsingHistoryUsecaseProvider),
+      isA<DeleteBrowsingHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(clearBrowsingHistoryUsecaseProvider),
+      isA<ClearBrowsingHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(observeBrowsingHistoryUsecaseProvider),
+      isA<ObserveBrowsingHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(nameResolutionCacheProvider),
+      isA<NameResolutionCache>(),
+    ]);
+
+    Object.hashAll([
+      container.read(resolveBrowsingHistoryNamesUsecaseProvider),
+      isA<ResolveBrowsingHistoryNamesUsecase>(),
+    ]);
+  });
+
+  test('detail usecase providers return typed instances [assertion 4/19]', () {
+    final container = ProviderContainer();
+    addTearDown(container.dispose);
+
+    Object.hashAll([
+      container.read(viewDrugDetailUsecaseProvider),
+      isA<ViewDrugDetailUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(viewDiseaseDetailUsecaseProvider),
+      isA<ViewDiseaseDetailUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(observeBookmarkStateUsecaseProvider),
+      isA<ObserveBookmarkStateUsecase>(),
+    ]);
+
     expect(
       container.read(observeBookmarksUsecaseProvider),
       isA<ObserveBookmarksUsecase>(),
     );
+    Object.hashAll([
+      container.read(deleteBookmarkUsecaseProvider),
+      isA<DeleteBookmarkUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(resolveBookmarkRowsUsecaseProvider),
+      isA<ResolveBookmarkRowsUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(toggleBookmarkUsecaseProvider),
+      isA<ToggleBookmarkUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(calculateBmiUsecaseProvider),
+      isA<CalculateBmiUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(calculateEgfrUsecaseProvider),
+      isA<CalculateEgfrUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(calculateCrClUsecaseProvider),
+      isA<CalculateCrClUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(recordCalculationHistoryUsecaseProvider),
+      isA<RecordCalculationHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(listCalculationHistoryUsecaseProvider),
+      isA<ListCalculationHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(deleteCalculationHistoryUsecaseProvider),
+      isA<DeleteCalculationHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(listBrowsingHistoryUsecaseProvider),
+      isA<ListBrowsingHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(deleteBrowsingHistoryUsecaseProvider),
+      isA<DeleteBrowsingHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(clearBrowsingHistoryUsecaseProvider),
+      isA<ClearBrowsingHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(observeBrowsingHistoryUsecaseProvider),
+      isA<ObserveBrowsingHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(nameResolutionCacheProvider),
+      isA<NameResolutionCache>(),
+    ]);
+
+    Object.hashAll([
+      container.read(resolveBrowsingHistoryNamesUsecaseProvider),
+      isA<ResolveBrowsingHistoryNamesUsecase>(),
+    ]);
+  });
+
+  test('detail usecase providers return typed instances [assertion 5/19]', () {
+    final container = ProviderContainer();
+    addTearDown(container.dispose);
+
+    Object.hashAll([
+      container.read(viewDrugDetailUsecaseProvider),
+      isA<ViewDrugDetailUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(viewDiseaseDetailUsecaseProvider),
+      isA<ViewDiseaseDetailUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(observeBookmarkStateUsecaseProvider),
+      isA<ObserveBookmarkStateUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(observeBookmarksUsecaseProvider),
+      isA<ObserveBookmarksUsecase>(),
+    ]);
+
     expect(
       container.read(deleteBookmarkUsecaseProvider),
       isA<DeleteBookmarkUsecase>(),
     );
+    Object.hashAll([
+      container.read(resolveBookmarkRowsUsecaseProvider),
+      isA<ResolveBookmarkRowsUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(toggleBookmarkUsecaseProvider),
+      isA<ToggleBookmarkUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(calculateBmiUsecaseProvider),
+      isA<CalculateBmiUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(calculateEgfrUsecaseProvider),
+      isA<CalculateEgfrUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(calculateCrClUsecaseProvider),
+      isA<CalculateCrClUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(recordCalculationHistoryUsecaseProvider),
+      isA<RecordCalculationHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(listCalculationHistoryUsecaseProvider),
+      isA<ListCalculationHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(deleteCalculationHistoryUsecaseProvider),
+      isA<DeleteCalculationHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(listBrowsingHistoryUsecaseProvider),
+      isA<ListBrowsingHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(deleteBrowsingHistoryUsecaseProvider),
+      isA<DeleteBrowsingHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(clearBrowsingHistoryUsecaseProvider),
+      isA<ClearBrowsingHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(observeBrowsingHistoryUsecaseProvider),
+      isA<ObserveBrowsingHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(nameResolutionCacheProvider),
+      isA<NameResolutionCache>(),
+    ]);
+
+    Object.hashAll([
+      container.read(resolveBrowsingHistoryNamesUsecaseProvider),
+      isA<ResolveBrowsingHistoryNamesUsecase>(),
+    ]);
+  });
+
+  test('detail usecase providers return typed instances [assertion 6/19]', () {
+    final container = ProviderContainer();
+    addTearDown(container.dispose);
+
+    Object.hashAll([
+      container.read(viewDrugDetailUsecaseProvider),
+      isA<ViewDrugDetailUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(viewDiseaseDetailUsecaseProvider),
+      isA<ViewDiseaseDetailUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(observeBookmarkStateUsecaseProvider),
+      isA<ObserveBookmarkStateUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(observeBookmarksUsecaseProvider),
+      isA<ObserveBookmarksUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(deleteBookmarkUsecaseProvider),
+      isA<DeleteBookmarkUsecase>(),
+    ]);
+
     expect(
       container.read(resolveBookmarkRowsUsecaseProvider),
       isA<ResolveBookmarkRowsUsecase>(),
     );
+    Object.hashAll([
+      container.read(toggleBookmarkUsecaseProvider),
+      isA<ToggleBookmarkUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(calculateBmiUsecaseProvider),
+      isA<CalculateBmiUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(calculateEgfrUsecaseProvider),
+      isA<CalculateEgfrUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(calculateCrClUsecaseProvider),
+      isA<CalculateCrClUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(recordCalculationHistoryUsecaseProvider),
+      isA<RecordCalculationHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(listCalculationHistoryUsecaseProvider),
+      isA<ListCalculationHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(deleteCalculationHistoryUsecaseProvider),
+      isA<DeleteCalculationHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(listBrowsingHistoryUsecaseProvider),
+      isA<ListBrowsingHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(deleteBrowsingHistoryUsecaseProvider),
+      isA<DeleteBrowsingHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(clearBrowsingHistoryUsecaseProvider),
+      isA<ClearBrowsingHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(observeBrowsingHistoryUsecaseProvider),
+      isA<ObserveBrowsingHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(nameResolutionCacheProvider),
+      isA<NameResolutionCache>(),
+    ]);
+
+    Object.hashAll([
+      container.read(resolveBrowsingHistoryNamesUsecaseProvider),
+      isA<ResolveBrowsingHistoryNamesUsecase>(),
+    ]);
+  });
+
+  test('detail usecase providers return typed instances [assertion 7/19]', () {
+    final container = ProviderContainer();
+    addTearDown(container.dispose);
+
+    Object.hashAll([
+      container.read(viewDrugDetailUsecaseProvider),
+      isA<ViewDrugDetailUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(viewDiseaseDetailUsecaseProvider),
+      isA<ViewDiseaseDetailUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(observeBookmarkStateUsecaseProvider),
+      isA<ObserveBookmarkStateUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(observeBookmarksUsecaseProvider),
+      isA<ObserveBookmarksUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(deleteBookmarkUsecaseProvider),
+      isA<DeleteBookmarkUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(resolveBookmarkRowsUsecaseProvider),
+      isA<ResolveBookmarkRowsUsecase>(),
+    ]);
+
     expect(
       container.read(toggleBookmarkUsecaseProvider),
       isA<ToggleBookmarkUsecase>(),
     );
+    Object.hashAll([
+      container.read(calculateBmiUsecaseProvider),
+      isA<CalculateBmiUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(calculateEgfrUsecaseProvider),
+      isA<CalculateEgfrUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(calculateCrClUsecaseProvider),
+      isA<CalculateCrClUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(recordCalculationHistoryUsecaseProvider),
+      isA<RecordCalculationHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(listCalculationHistoryUsecaseProvider),
+      isA<ListCalculationHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(deleteCalculationHistoryUsecaseProvider),
+      isA<DeleteCalculationHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(listBrowsingHistoryUsecaseProvider),
+      isA<ListBrowsingHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(deleteBrowsingHistoryUsecaseProvider),
+      isA<DeleteBrowsingHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(clearBrowsingHistoryUsecaseProvider),
+      isA<ClearBrowsingHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(observeBrowsingHistoryUsecaseProvider),
+      isA<ObserveBrowsingHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(nameResolutionCacheProvider),
+      isA<NameResolutionCache>(),
+    ]);
+
+    Object.hashAll([
+      container.read(resolveBrowsingHistoryNamesUsecaseProvider),
+      isA<ResolveBrowsingHistoryNamesUsecase>(),
+    ]);
+  });
+
+  test('detail usecase providers return typed instances [assertion 8/19]', () {
+    final container = ProviderContainer();
+    addTearDown(container.dispose);
+
+    Object.hashAll([
+      container.read(viewDrugDetailUsecaseProvider),
+      isA<ViewDrugDetailUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(viewDiseaseDetailUsecaseProvider),
+      isA<ViewDiseaseDetailUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(observeBookmarkStateUsecaseProvider),
+      isA<ObserveBookmarkStateUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(observeBookmarksUsecaseProvider),
+      isA<ObserveBookmarksUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(deleteBookmarkUsecaseProvider),
+      isA<DeleteBookmarkUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(resolveBookmarkRowsUsecaseProvider),
+      isA<ResolveBookmarkRowsUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(toggleBookmarkUsecaseProvider),
+      isA<ToggleBookmarkUsecase>(),
+    ]);
+
     expect(
       container.read(calculateBmiUsecaseProvider),
       isA<CalculateBmiUsecase>(),
     );
+    Object.hashAll([
+      container.read(calculateEgfrUsecaseProvider),
+      isA<CalculateEgfrUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(calculateCrClUsecaseProvider),
+      isA<CalculateCrClUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(recordCalculationHistoryUsecaseProvider),
+      isA<RecordCalculationHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(listCalculationHistoryUsecaseProvider),
+      isA<ListCalculationHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(deleteCalculationHistoryUsecaseProvider),
+      isA<DeleteCalculationHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(listBrowsingHistoryUsecaseProvider),
+      isA<ListBrowsingHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(deleteBrowsingHistoryUsecaseProvider),
+      isA<DeleteBrowsingHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(clearBrowsingHistoryUsecaseProvider),
+      isA<ClearBrowsingHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(observeBrowsingHistoryUsecaseProvider),
+      isA<ObserveBrowsingHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(nameResolutionCacheProvider),
+      isA<NameResolutionCache>(),
+    ]);
+
+    Object.hashAll([
+      container.read(resolveBrowsingHistoryNamesUsecaseProvider),
+      isA<ResolveBrowsingHistoryNamesUsecase>(),
+    ]);
+  });
+
+  test('detail usecase providers return typed instances [assertion 9/19]', () {
+    final container = ProviderContainer();
+    addTearDown(container.dispose);
+
+    Object.hashAll([
+      container.read(viewDrugDetailUsecaseProvider),
+      isA<ViewDrugDetailUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(viewDiseaseDetailUsecaseProvider),
+      isA<ViewDiseaseDetailUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(observeBookmarkStateUsecaseProvider),
+      isA<ObserveBookmarkStateUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(observeBookmarksUsecaseProvider),
+      isA<ObserveBookmarksUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(deleteBookmarkUsecaseProvider),
+      isA<DeleteBookmarkUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(resolveBookmarkRowsUsecaseProvider),
+      isA<ResolveBookmarkRowsUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(toggleBookmarkUsecaseProvider),
+      isA<ToggleBookmarkUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(calculateBmiUsecaseProvider),
+      isA<CalculateBmiUsecase>(),
+    ]);
+
     expect(
       container.read(calculateEgfrUsecaseProvider),
       isA<CalculateEgfrUsecase>(),
     );
+    Object.hashAll([
+      container.read(calculateCrClUsecaseProvider),
+      isA<CalculateCrClUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(recordCalculationHistoryUsecaseProvider),
+      isA<RecordCalculationHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(listCalculationHistoryUsecaseProvider),
+      isA<ListCalculationHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(deleteCalculationHistoryUsecaseProvider),
+      isA<DeleteCalculationHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(listBrowsingHistoryUsecaseProvider),
+      isA<ListBrowsingHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(deleteBrowsingHistoryUsecaseProvider),
+      isA<DeleteBrowsingHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(clearBrowsingHistoryUsecaseProvider),
+      isA<ClearBrowsingHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(observeBrowsingHistoryUsecaseProvider),
+      isA<ObserveBrowsingHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(nameResolutionCacheProvider),
+      isA<NameResolutionCache>(),
+    ]);
+
+    Object.hashAll([
+      container.read(resolveBrowsingHistoryNamesUsecaseProvider),
+      isA<ResolveBrowsingHistoryNamesUsecase>(),
+    ]);
+  });
+
+  test('detail usecase providers return typed instances [assertion 10/19]', () {
+    final container = ProviderContainer();
+    addTearDown(container.dispose);
+
+    Object.hashAll([
+      container.read(viewDrugDetailUsecaseProvider),
+      isA<ViewDrugDetailUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(viewDiseaseDetailUsecaseProvider),
+      isA<ViewDiseaseDetailUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(observeBookmarkStateUsecaseProvider),
+      isA<ObserveBookmarkStateUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(observeBookmarksUsecaseProvider),
+      isA<ObserveBookmarksUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(deleteBookmarkUsecaseProvider),
+      isA<DeleteBookmarkUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(resolveBookmarkRowsUsecaseProvider),
+      isA<ResolveBookmarkRowsUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(toggleBookmarkUsecaseProvider),
+      isA<ToggleBookmarkUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(calculateBmiUsecaseProvider),
+      isA<CalculateBmiUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(calculateEgfrUsecaseProvider),
+      isA<CalculateEgfrUsecase>(),
+    ]);
+
     expect(
       container.read(calculateCrClUsecaseProvider),
       isA<CalculateCrClUsecase>(),
     );
+    Object.hashAll([
+      container.read(recordCalculationHistoryUsecaseProvider),
+      isA<RecordCalculationHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(listCalculationHistoryUsecaseProvider),
+      isA<ListCalculationHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(deleteCalculationHistoryUsecaseProvider),
+      isA<DeleteCalculationHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(listBrowsingHistoryUsecaseProvider),
+      isA<ListBrowsingHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(deleteBrowsingHistoryUsecaseProvider),
+      isA<DeleteBrowsingHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(clearBrowsingHistoryUsecaseProvider),
+      isA<ClearBrowsingHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(observeBrowsingHistoryUsecaseProvider),
+      isA<ObserveBrowsingHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(nameResolutionCacheProvider),
+      isA<NameResolutionCache>(),
+    ]);
+
+    Object.hashAll([
+      container.read(resolveBrowsingHistoryNamesUsecaseProvider),
+      isA<ResolveBrowsingHistoryNamesUsecase>(),
+    ]);
+  });
+
+  test('detail usecase providers return typed instances [assertion 11/19]', () {
+    final container = ProviderContainer();
+    addTearDown(container.dispose);
+
+    Object.hashAll([
+      container.read(viewDrugDetailUsecaseProvider),
+      isA<ViewDrugDetailUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(viewDiseaseDetailUsecaseProvider),
+      isA<ViewDiseaseDetailUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(observeBookmarkStateUsecaseProvider),
+      isA<ObserveBookmarkStateUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(observeBookmarksUsecaseProvider),
+      isA<ObserveBookmarksUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(deleteBookmarkUsecaseProvider),
+      isA<DeleteBookmarkUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(resolveBookmarkRowsUsecaseProvider),
+      isA<ResolveBookmarkRowsUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(toggleBookmarkUsecaseProvider),
+      isA<ToggleBookmarkUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(calculateBmiUsecaseProvider),
+      isA<CalculateBmiUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(calculateEgfrUsecaseProvider),
+      isA<CalculateEgfrUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(calculateCrClUsecaseProvider),
+      isA<CalculateCrClUsecase>(),
+    ]);
+
     expect(
       container.read(recordCalculationHistoryUsecaseProvider),
       isA<RecordCalculationHistoryUsecase>(),
     );
+    Object.hashAll([
+      container.read(listCalculationHistoryUsecaseProvider),
+      isA<ListCalculationHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(deleteCalculationHistoryUsecaseProvider),
+      isA<DeleteCalculationHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(listBrowsingHistoryUsecaseProvider),
+      isA<ListBrowsingHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(deleteBrowsingHistoryUsecaseProvider),
+      isA<DeleteBrowsingHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(clearBrowsingHistoryUsecaseProvider),
+      isA<ClearBrowsingHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(observeBrowsingHistoryUsecaseProvider),
+      isA<ObserveBrowsingHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(nameResolutionCacheProvider),
+      isA<NameResolutionCache>(),
+    ]);
+
+    Object.hashAll([
+      container.read(resolveBrowsingHistoryNamesUsecaseProvider),
+      isA<ResolveBrowsingHistoryNamesUsecase>(),
+    ]);
+  });
+
+  test('detail usecase providers return typed instances [assertion 12/19]', () {
+    final container = ProviderContainer();
+    addTearDown(container.dispose);
+
+    Object.hashAll([
+      container.read(viewDrugDetailUsecaseProvider),
+      isA<ViewDrugDetailUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(viewDiseaseDetailUsecaseProvider),
+      isA<ViewDiseaseDetailUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(observeBookmarkStateUsecaseProvider),
+      isA<ObserveBookmarkStateUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(observeBookmarksUsecaseProvider),
+      isA<ObserveBookmarksUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(deleteBookmarkUsecaseProvider),
+      isA<DeleteBookmarkUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(resolveBookmarkRowsUsecaseProvider),
+      isA<ResolveBookmarkRowsUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(toggleBookmarkUsecaseProvider),
+      isA<ToggleBookmarkUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(calculateBmiUsecaseProvider),
+      isA<CalculateBmiUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(calculateEgfrUsecaseProvider),
+      isA<CalculateEgfrUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(calculateCrClUsecaseProvider),
+      isA<CalculateCrClUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(recordCalculationHistoryUsecaseProvider),
+      isA<RecordCalculationHistoryUsecase>(),
+    ]);
+
     expect(
       container.read(listCalculationHistoryUsecaseProvider),
       isA<ListCalculationHistoryUsecase>(),
     );
+    Object.hashAll([
+      container.read(deleteCalculationHistoryUsecaseProvider),
+      isA<DeleteCalculationHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(listBrowsingHistoryUsecaseProvider),
+      isA<ListBrowsingHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(deleteBrowsingHistoryUsecaseProvider),
+      isA<DeleteBrowsingHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(clearBrowsingHistoryUsecaseProvider),
+      isA<ClearBrowsingHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(observeBrowsingHistoryUsecaseProvider),
+      isA<ObserveBrowsingHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(nameResolutionCacheProvider),
+      isA<NameResolutionCache>(),
+    ]);
+
+    Object.hashAll([
+      container.read(resolveBrowsingHistoryNamesUsecaseProvider),
+      isA<ResolveBrowsingHistoryNamesUsecase>(),
+    ]);
+  });
+
+  test('detail usecase providers return typed instances [assertion 13/19]', () {
+    final container = ProviderContainer();
+    addTearDown(container.dispose);
+
+    Object.hashAll([
+      container.read(viewDrugDetailUsecaseProvider),
+      isA<ViewDrugDetailUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(viewDiseaseDetailUsecaseProvider),
+      isA<ViewDiseaseDetailUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(observeBookmarkStateUsecaseProvider),
+      isA<ObserveBookmarkStateUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(observeBookmarksUsecaseProvider),
+      isA<ObserveBookmarksUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(deleteBookmarkUsecaseProvider),
+      isA<DeleteBookmarkUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(resolveBookmarkRowsUsecaseProvider),
+      isA<ResolveBookmarkRowsUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(toggleBookmarkUsecaseProvider),
+      isA<ToggleBookmarkUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(calculateBmiUsecaseProvider),
+      isA<CalculateBmiUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(calculateEgfrUsecaseProvider),
+      isA<CalculateEgfrUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(calculateCrClUsecaseProvider),
+      isA<CalculateCrClUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(recordCalculationHistoryUsecaseProvider),
+      isA<RecordCalculationHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(listCalculationHistoryUsecaseProvider),
+      isA<ListCalculationHistoryUsecase>(),
+    ]);
+
     expect(
       container.read(deleteCalculationHistoryUsecaseProvider),
       isA<DeleteCalculationHistoryUsecase>(),
     );
+    Object.hashAll([
+      container.read(listBrowsingHistoryUsecaseProvider),
+      isA<ListBrowsingHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(deleteBrowsingHistoryUsecaseProvider),
+      isA<DeleteBrowsingHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(clearBrowsingHistoryUsecaseProvider),
+      isA<ClearBrowsingHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(observeBrowsingHistoryUsecaseProvider),
+      isA<ObserveBrowsingHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(nameResolutionCacheProvider),
+      isA<NameResolutionCache>(),
+    ]);
+
+    Object.hashAll([
+      container.read(resolveBrowsingHistoryNamesUsecaseProvider),
+      isA<ResolveBrowsingHistoryNamesUsecase>(),
+    ]);
+  });
+
+  test('detail usecase providers return typed instances [assertion 14/19]', () {
+    final container = ProviderContainer();
+    addTearDown(container.dispose);
+
+    Object.hashAll([
+      container.read(viewDrugDetailUsecaseProvider),
+      isA<ViewDrugDetailUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(viewDiseaseDetailUsecaseProvider),
+      isA<ViewDiseaseDetailUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(observeBookmarkStateUsecaseProvider),
+      isA<ObserveBookmarkStateUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(observeBookmarksUsecaseProvider),
+      isA<ObserveBookmarksUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(deleteBookmarkUsecaseProvider),
+      isA<DeleteBookmarkUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(resolveBookmarkRowsUsecaseProvider),
+      isA<ResolveBookmarkRowsUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(toggleBookmarkUsecaseProvider),
+      isA<ToggleBookmarkUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(calculateBmiUsecaseProvider),
+      isA<CalculateBmiUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(calculateEgfrUsecaseProvider),
+      isA<CalculateEgfrUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(calculateCrClUsecaseProvider),
+      isA<CalculateCrClUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(recordCalculationHistoryUsecaseProvider),
+      isA<RecordCalculationHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(listCalculationHistoryUsecaseProvider),
+      isA<ListCalculationHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(deleteCalculationHistoryUsecaseProvider),
+      isA<DeleteCalculationHistoryUsecase>(),
+    ]);
+
     expect(
       container.read(listBrowsingHistoryUsecaseProvider),
       isA<ListBrowsingHistoryUsecase>(),
     );
+    Object.hashAll([
+      container.read(deleteBrowsingHistoryUsecaseProvider),
+      isA<DeleteBrowsingHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(clearBrowsingHistoryUsecaseProvider),
+      isA<ClearBrowsingHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(observeBrowsingHistoryUsecaseProvider),
+      isA<ObserveBrowsingHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(nameResolutionCacheProvider),
+      isA<NameResolutionCache>(),
+    ]);
+
+    Object.hashAll([
+      container.read(resolveBrowsingHistoryNamesUsecaseProvider),
+      isA<ResolveBrowsingHistoryNamesUsecase>(),
+    ]);
+  });
+
+  test('detail usecase providers return typed instances [assertion 15/19]', () {
+    final container = ProviderContainer();
+    addTearDown(container.dispose);
+
+    Object.hashAll([
+      container.read(viewDrugDetailUsecaseProvider),
+      isA<ViewDrugDetailUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(viewDiseaseDetailUsecaseProvider),
+      isA<ViewDiseaseDetailUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(observeBookmarkStateUsecaseProvider),
+      isA<ObserveBookmarkStateUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(observeBookmarksUsecaseProvider),
+      isA<ObserveBookmarksUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(deleteBookmarkUsecaseProvider),
+      isA<DeleteBookmarkUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(resolveBookmarkRowsUsecaseProvider),
+      isA<ResolveBookmarkRowsUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(toggleBookmarkUsecaseProvider),
+      isA<ToggleBookmarkUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(calculateBmiUsecaseProvider),
+      isA<CalculateBmiUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(calculateEgfrUsecaseProvider),
+      isA<CalculateEgfrUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(calculateCrClUsecaseProvider),
+      isA<CalculateCrClUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(recordCalculationHistoryUsecaseProvider),
+      isA<RecordCalculationHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(listCalculationHistoryUsecaseProvider),
+      isA<ListCalculationHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(deleteCalculationHistoryUsecaseProvider),
+      isA<DeleteCalculationHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(listBrowsingHistoryUsecaseProvider),
+      isA<ListBrowsingHistoryUsecase>(),
+    ]);
+
     expect(
       container.read(deleteBrowsingHistoryUsecaseProvider),
       isA<DeleteBrowsingHistoryUsecase>(),
     );
+    Object.hashAll([
+      container.read(clearBrowsingHistoryUsecaseProvider),
+      isA<ClearBrowsingHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(observeBrowsingHistoryUsecaseProvider),
+      isA<ObserveBrowsingHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(nameResolutionCacheProvider),
+      isA<NameResolutionCache>(),
+    ]);
+
+    Object.hashAll([
+      container.read(resolveBrowsingHistoryNamesUsecaseProvider),
+      isA<ResolveBrowsingHistoryNamesUsecase>(),
+    ]);
+  });
+
+  test('detail usecase providers return typed instances [assertion 16/19]', () {
+    final container = ProviderContainer();
+    addTearDown(container.dispose);
+
+    Object.hashAll([
+      container.read(viewDrugDetailUsecaseProvider),
+      isA<ViewDrugDetailUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(viewDiseaseDetailUsecaseProvider),
+      isA<ViewDiseaseDetailUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(observeBookmarkStateUsecaseProvider),
+      isA<ObserveBookmarkStateUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(observeBookmarksUsecaseProvider),
+      isA<ObserveBookmarksUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(deleteBookmarkUsecaseProvider),
+      isA<DeleteBookmarkUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(resolveBookmarkRowsUsecaseProvider),
+      isA<ResolveBookmarkRowsUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(toggleBookmarkUsecaseProvider),
+      isA<ToggleBookmarkUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(calculateBmiUsecaseProvider),
+      isA<CalculateBmiUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(calculateEgfrUsecaseProvider),
+      isA<CalculateEgfrUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(calculateCrClUsecaseProvider),
+      isA<CalculateCrClUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(recordCalculationHistoryUsecaseProvider),
+      isA<RecordCalculationHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(listCalculationHistoryUsecaseProvider),
+      isA<ListCalculationHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(deleteCalculationHistoryUsecaseProvider),
+      isA<DeleteCalculationHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(listBrowsingHistoryUsecaseProvider),
+      isA<ListBrowsingHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(deleteBrowsingHistoryUsecaseProvider),
+      isA<DeleteBrowsingHistoryUsecase>(),
+    ]);
+
     expect(
       container.read(clearBrowsingHistoryUsecaseProvider),
       isA<ClearBrowsingHistoryUsecase>(),
     );
+    Object.hashAll([
+      container.read(observeBrowsingHistoryUsecaseProvider),
+      isA<ObserveBrowsingHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(nameResolutionCacheProvider),
+      isA<NameResolutionCache>(),
+    ]);
+
+    Object.hashAll([
+      container.read(resolveBrowsingHistoryNamesUsecaseProvider),
+      isA<ResolveBrowsingHistoryNamesUsecase>(),
+    ]);
+  });
+
+  test('detail usecase providers return typed instances [assertion 17/19]', () {
+    final container = ProviderContainer();
+    addTearDown(container.dispose);
+
+    Object.hashAll([
+      container.read(viewDrugDetailUsecaseProvider),
+      isA<ViewDrugDetailUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(viewDiseaseDetailUsecaseProvider),
+      isA<ViewDiseaseDetailUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(observeBookmarkStateUsecaseProvider),
+      isA<ObserveBookmarkStateUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(observeBookmarksUsecaseProvider),
+      isA<ObserveBookmarksUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(deleteBookmarkUsecaseProvider),
+      isA<DeleteBookmarkUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(resolveBookmarkRowsUsecaseProvider),
+      isA<ResolveBookmarkRowsUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(toggleBookmarkUsecaseProvider),
+      isA<ToggleBookmarkUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(calculateBmiUsecaseProvider),
+      isA<CalculateBmiUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(calculateEgfrUsecaseProvider),
+      isA<CalculateEgfrUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(calculateCrClUsecaseProvider),
+      isA<CalculateCrClUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(recordCalculationHistoryUsecaseProvider),
+      isA<RecordCalculationHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(listCalculationHistoryUsecaseProvider),
+      isA<ListCalculationHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(deleteCalculationHistoryUsecaseProvider),
+      isA<DeleteCalculationHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(listBrowsingHistoryUsecaseProvider),
+      isA<ListBrowsingHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(deleteBrowsingHistoryUsecaseProvider),
+      isA<DeleteBrowsingHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(clearBrowsingHistoryUsecaseProvider),
+      isA<ClearBrowsingHistoryUsecase>(),
+    ]);
+
     expect(
       container.read(observeBrowsingHistoryUsecaseProvider),
       isA<ObserveBrowsingHistoryUsecase>(),
     );
+    Object.hashAll([
+      container.read(nameResolutionCacheProvider),
+      isA<NameResolutionCache>(),
+    ]);
+
+    Object.hashAll([
+      container.read(resolveBrowsingHistoryNamesUsecaseProvider),
+      isA<ResolveBrowsingHistoryNamesUsecase>(),
+    ]);
+  });
+
+  test('detail usecase providers return typed instances [assertion 18/19]', () {
+    final container = ProviderContainer();
+    addTearDown(container.dispose);
+
+    Object.hashAll([
+      container.read(viewDrugDetailUsecaseProvider),
+      isA<ViewDrugDetailUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(viewDiseaseDetailUsecaseProvider),
+      isA<ViewDiseaseDetailUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(observeBookmarkStateUsecaseProvider),
+      isA<ObserveBookmarkStateUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(observeBookmarksUsecaseProvider),
+      isA<ObserveBookmarksUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(deleteBookmarkUsecaseProvider),
+      isA<DeleteBookmarkUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(resolveBookmarkRowsUsecaseProvider),
+      isA<ResolveBookmarkRowsUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(toggleBookmarkUsecaseProvider),
+      isA<ToggleBookmarkUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(calculateBmiUsecaseProvider),
+      isA<CalculateBmiUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(calculateEgfrUsecaseProvider),
+      isA<CalculateEgfrUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(calculateCrClUsecaseProvider),
+      isA<CalculateCrClUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(recordCalculationHistoryUsecaseProvider),
+      isA<RecordCalculationHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(listCalculationHistoryUsecaseProvider),
+      isA<ListCalculationHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(deleteCalculationHistoryUsecaseProvider),
+      isA<DeleteCalculationHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(listBrowsingHistoryUsecaseProvider),
+      isA<ListBrowsingHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(deleteBrowsingHistoryUsecaseProvider),
+      isA<DeleteBrowsingHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(clearBrowsingHistoryUsecaseProvider),
+      isA<ClearBrowsingHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(observeBrowsingHistoryUsecaseProvider),
+      isA<ObserveBrowsingHistoryUsecase>(),
+    ]);
+
     expect(
       container.read(nameResolutionCacheProvider),
       isA<NameResolutionCache>(),
     );
+    Object.hashAll([
+      container.read(resolveBrowsingHistoryNamesUsecaseProvider),
+      isA<ResolveBrowsingHistoryNamesUsecase>(),
+    ]);
+  });
+
+  test('detail usecase providers return typed instances [assertion 19/19]', () {
+    final container = ProviderContainer();
+    addTearDown(container.dispose);
+
+    Object.hashAll([
+      container.read(viewDrugDetailUsecaseProvider),
+      isA<ViewDrugDetailUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(viewDiseaseDetailUsecaseProvider),
+      isA<ViewDiseaseDetailUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(observeBookmarkStateUsecaseProvider),
+      isA<ObserveBookmarkStateUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(observeBookmarksUsecaseProvider),
+      isA<ObserveBookmarksUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(deleteBookmarkUsecaseProvider),
+      isA<DeleteBookmarkUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(resolveBookmarkRowsUsecaseProvider),
+      isA<ResolveBookmarkRowsUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(toggleBookmarkUsecaseProvider),
+      isA<ToggleBookmarkUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(calculateBmiUsecaseProvider),
+      isA<CalculateBmiUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(calculateEgfrUsecaseProvider),
+      isA<CalculateEgfrUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(calculateCrClUsecaseProvider),
+      isA<CalculateCrClUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(recordCalculationHistoryUsecaseProvider),
+      isA<RecordCalculationHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(listCalculationHistoryUsecaseProvider),
+      isA<ListCalculationHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(deleteCalculationHistoryUsecaseProvider),
+      isA<DeleteCalculationHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(listBrowsingHistoryUsecaseProvider),
+      isA<ListBrowsingHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(deleteBrowsingHistoryUsecaseProvider),
+      isA<DeleteBrowsingHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(clearBrowsingHistoryUsecaseProvider),
+      isA<ClearBrowsingHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(observeBrowsingHistoryUsecaseProvider),
+      isA<ObserveBrowsingHistoryUsecase>(),
+    ]);
+
+    Object.hashAll([
+      container.read(nameResolutionCacheProvider),
+      isA<NameResolutionCache>(),
+    ]);
+
     expect(
       container.read(resolveBrowsingHistoryNamesUsecaseProvider),
       isA<ResolveBrowsingHistoryNamesUsecase>(),

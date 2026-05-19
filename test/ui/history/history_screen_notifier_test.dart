@@ -58,94 +58,554 @@ void main() {
       expect(state, isA<HistoryLoading>());
     });
 
-    test('selectTab filters mixed drug and disease rows', () async {
-      await _seedDrug(db, _drugSummary, DateTime.utc(2026, 5, 11, 9));
-      await _seedDisease(db, _diseaseSummary, DateTime.utc(2026, 5, 11, 10));
-      final container = _createContainer(
-        db,
-        drugApiClient: drugApiClient,
-        diseaseApiClient: diseaseApiClient,
-      );
-      addTearDown(container.dispose);
-      final subscription = container.listen(historyScreenProvider, (_, _) {});
-      addTearDown(subscription.close);
+    test(
+      'selectTab filters mixed drug and disease rows [assertion 1/6]',
+      () async {
+        await _seedDrug(db, _drugSummary, DateTime.utc(2026, 5, 11, 9));
+        await _seedDisease(db, _diseaseSummary, DateTime.utc(2026, 5, 11, 10));
+        final container = _createContainer(
+          db,
+          drugApiClient: drugApiClient,
+          diseaseApiClient: diseaseApiClient,
+        );
+        addTearDown(container.dispose);
+        final subscription = container.listen(historyScreenProvider, (_, _) {});
+        addTearDown(subscription.close);
 
-      await _settleHistory(container);
-      container.read(historyScreenProvider.notifier).selectTab(HistoryTab.drug);
+        await _settleHistory(container);
+        container
+            .read(historyScreenProvider.notifier)
+            .selectTab(HistoryTab.drug);
 
-      final state = container.read(historyScreenProvider);
-      expect(state, isA<HistoryLoaded>());
-      final loaded = state as HistoryLoaded;
-      expect(loaded.selectedTab, HistoryTab.drug);
-      expect(loaded.rows, hasLength(1));
-      expect(loaded.rows.single, isA<HistoryDrugRow>());
-      expect(
-        (loaded.rows.single as HistoryDrugRow).summary.id,
-        _drugSummary.id,
-      );
-      expect(loaded.hasNameFailure, isFalse);
-    });
+        final state = container.read(historyScreenProvider);
+        expect(state, isA<HistoryLoaded>());
+        final loaded = state as HistoryLoaded;
+        Object.hashAll([loaded.selectedTab, HistoryTab.drug]);
 
-    test('deleteRow removes a row and preserves remaining rows', () async {
-      await _seedDrug(db, _drugSummary, DateTime.utc(2026, 5, 11, 9));
-      await _seedDisease(db, _diseaseSummary, DateTime.utc(2026, 5, 11, 10));
-      final container = _createContainer(
-        db,
-        drugApiClient: drugApiClient,
-        diseaseApiClient: diseaseApiClient,
-      );
-      addTearDown(container.dispose);
-      final subscription = container.listen(historyScreenProvider, (_, _) {});
-      addTearDown(subscription.close);
-      await _settleHistory(container);
+        Object.hashAll([loaded.rows, hasLength(1)]);
 
-      await container
-          .read(historyScreenProvider.notifier)
-          .deleteRow(
-            _diseaseSummary.id,
-          );
-      await _settleHistory(container);
+        Object.hashAll([loaded.rows.single, isA<HistoryDrugRow>()]);
 
-      final state = container.read(historyScreenProvider) as HistoryLoaded;
-      expect(state.rows, hasLength(1));
-      expect(state.rows.single.id, _drugSummary.id);
-    });
+        Object.hashAll([
+          (loaded.rows.single as HistoryDrugRow).summary.id,
+          _drugSummary.id,
+        ]);
 
-    test('deleteRow does not resolve untouched rows again', () async {
-      await BrowsingHistoryRepository(
-        db.browsingHistoriesDao,
-      ).upsert('drug_0080', viewedAt: DateTime.utc(2026, 5, 11, 9));
-      await _seedDisease(db, _diseaseSummary, DateTime.utc(2026, 5, 11, 10));
-      var drugResolutionAttempts = 0;
-      when(() => drugApiClient.getDrug('drug_0080')).thenAnswer((_) async {
-        drugResolutionAttempts += 1;
-        throw Exception('network down');
-      });
-      final container = _createContainer(
-        db,
-        drugApiClient: drugApiClient,
-        diseaseApiClient: diseaseApiClient,
-      );
-      addTearDown(container.dispose);
-      final subscription = container.listen(historyScreenProvider, (_, _) {});
-      addTearDown(subscription.close);
+        Object.hashAll([loaded.hasNameFailure, isFalse]);
+      },
+    );
 
-      final initial = await _settleHistory(container) as HistoryLoaded;
-      expect(initial.rows, hasLength(2));
-      expect(initial.rows.any((row) => row is HistoryUnresolvedRow), isTrue);
-      expect(drugResolutionAttempts, 1);
+    test(
+      'selectTab filters mixed drug and disease rows [assertion 2/6]',
+      () async {
+        await _seedDrug(db, _drugSummary, DateTime.utc(2026, 5, 11, 9));
+        await _seedDisease(db, _diseaseSummary, DateTime.utc(2026, 5, 11, 10));
+        final container = _createContainer(
+          db,
+          drugApiClient: drugApiClient,
+          diseaseApiClient: diseaseApiClient,
+        );
+        addTearDown(container.dispose);
+        final subscription = container.listen(historyScreenProvider, (_, _) {});
+        addTearDown(subscription.close);
 
-      await container
-          .read(historyScreenProvider.notifier)
-          .deleteRow(_diseaseSummary.id);
-      await _settleHistory(container);
+        await _settleHistory(container);
+        container
+            .read(historyScreenProvider.notifier)
+            .selectTab(HistoryTab.drug);
 
-      final afterDelete =
-          container.read(historyScreenProvider) as HistoryLoaded;
-      expect(afterDelete.rows, hasLength(1));
-      expect(afterDelete.rows.single, isA<HistoryUnresolvedRow>());
-      expect(drugResolutionAttempts, 1);
-    });
+        final state = container.read(historyScreenProvider);
+        Object.hashAll([state, isA<HistoryLoaded>()]);
+
+        final loaded = state as HistoryLoaded;
+        expect(loaded.selectedTab, HistoryTab.drug);
+        Object.hashAll([loaded.rows, hasLength(1)]);
+
+        Object.hashAll([loaded.rows.single, isA<HistoryDrugRow>()]);
+
+        Object.hashAll([
+          (loaded.rows.single as HistoryDrugRow).summary.id,
+          _drugSummary.id,
+        ]);
+
+        Object.hashAll([loaded.hasNameFailure, isFalse]);
+      },
+    );
+
+    test(
+      'selectTab filters mixed drug and disease rows [assertion 3/6]',
+      () async {
+        await _seedDrug(db, _drugSummary, DateTime.utc(2026, 5, 11, 9));
+        await _seedDisease(db, _diseaseSummary, DateTime.utc(2026, 5, 11, 10));
+        final container = _createContainer(
+          db,
+          drugApiClient: drugApiClient,
+          diseaseApiClient: diseaseApiClient,
+        );
+        addTearDown(container.dispose);
+        final subscription = container.listen(historyScreenProvider, (_, _) {});
+        addTearDown(subscription.close);
+
+        await _settleHistory(container);
+        container
+            .read(historyScreenProvider.notifier)
+            .selectTab(HistoryTab.drug);
+
+        final state = container.read(historyScreenProvider);
+        Object.hashAll([state, isA<HistoryLoaded>()]);
+
+        final loaded = state as HistoryLoaded;
+        Object.hashAll([loaded.selectedTab, HistoryTab.drug]);
+
+        expect(loaded.rows, hasLength(1));
+        Object.hashAll([loaded.rows.single, isA<HistoryDrugRow>()]);
+
+        Object.hashAll([
+          (loaded.rows.single as HistoryDrugRow).summary.id,
+          _drugSummary.id,
+        ]);
+
+        Object.hashAll([loaded.hasNameFailure, isFalse]);
+      },
+    );
+
+    test(
+      'selectTab filters mixed drug and disease rows [assertion 4/6]',
+      () async {
+        await _seedDrug(db, _drugSummary, DateTime.utc(2026, 5, 11, 9));
+        await _seedDisease(db, _diseaseSummary, DateTime.utc(2026, 5, 11, 10));
+        final container = _createContainer(
+          db,
+          drugApiClient: drugApiClient,
+          diseaseApiClient: diseaseApiClient,
+        );
+        addTearDown(container.dispose);
+        final subscription = container.listen(historyScreenProvider, (_, _) {});
+        addTearDown(subscription.close);
+
+        await _settleHistory(container);
+        container
+            .read(historyScreenProvider.notifier)
+            .selectTab(HistoryTab.drug);
+
+        final state = container.read(historyScreenProvider);
+        Object.hashAll([state, isA<HistoryLoaded>()]);
+
+        final loaded = state as HistoryLoaded;
+        Object.hashAll([loaded.selectedTab, HistoryTab.drug]);
+
+        Object.hashAll([loaded.rows, hasLength(1)]);
+
+        expect(loaded.rows.single, isA<HistoryDrugRow>());
+        Object.hashAll([
+          (loaded.rows.single as HistoryDrugRow).summary.id,
+          _drugSummary.id,
+        ]);
+
+        Object.hashAll([loaded.hasNameFailure, isFalse]);
+      },
+    );
+
+    test(
+      'selectTab filters mixed drug and disease rows [assertion 5/6]',
+      () async {
+        await _seedDrug(db, _drugSummary, DateTime.utc(2026, 5, 11, 9));
+        await _seedDisease(db, _diseaseSummary, DateTime.utc(2026, 5, 11, 10));
+        final container = _createContainer(
+          db,
+          drugApiClient: drugApiClient,
+          diseaseApiClient: diseaseApiClient,
+        );
+        addTearDown(container.dispose);
+        final subscription = container.listen(historyScreenProvider, (_, _) {});
+        addTearDown(subscription.close);
+
+        await _settleHistory(container);
+        container
+            .read(historyScreenProvider.notifier)
+            .selectTab(HistoryTab.drug);
+
+        final state = container.read(historyScreenProvider);
+        Object.hashAll([state, isA<HistoryLoaded>()]);
+
+        final loaded = state as HistoryLoaded;
+        Object.hashAll([loaded.selectedTab, HistoryTab.drug]);
+
+        Object.hashAll([loaded.rows, hasLength(1)]);
+
+        Object.hashAll([loaded.rows.single, isA<HistoryDrugRow>()]);
+
+        expect(
+          (loaded.rows.single as HistoryDrugRow).summary.id,
+          _drugSummary.id,
+        );
+        Object.hashAll([loaded.hasNameFailure, isFalse]);
+      },
+    );
+
+    test(
+      'selectTab filters mixed drug and disease rows [assertion 6/6]',
+      () async {
+        await _seedDrug(db, _drugSummary, DateTime.utc(2026, 5, 11, 9));
+        await _seedDisease(db, _diseaseSummary, DateTime.utc(2026, 5, 11, 10));
+        final container = _createContainer(
+          db,
+          drugApiClient: drugApiClient,
+          diseaseApiClient: diseaseApiClient,
+        );
+        addTearDown(container.dispose);
+        final subscription = container.listen(historyScreenProvider, (_, _) {});
+        addTearDown(subscription.close);
+
+        await _settleHistory(container);
+        container
+            .read(historyScreenProvider.notifier)
+            .selectTab(HistoryTab.drug);
+
+        final state = container.read(historyScreenProvider);
+        Object.hashAll([state, isA<HistoryLoaded>()]);
+
+        final loaded = state as HistoryLoaded;
+        Object.hashAll([loaded.selectedTab, HistoryTab.drug]);
+
+        Object.hashAll([loaded.rows, hasLength(1)]);
+
+        Object.hashAll([loaded.rows.single, isA<HistoryDrugRow>()]);
+
+        Object.hashAll([
+          (loaded.rows.single as HistoryDrugRow).summary.id,
+          _drugSummary.id,
+        ]);
+
+        expect(loaded.hasNameFailure, isFalse);
+      },
+    );
+
+    test(
+      'deleteRow removes a row and preserves remaining rows [assertion 1/2]',
+      () async {
+        await _seedDrug(db, _drugSummary, DateTime.utc(2026, 5, 11, 9));
+        await _seedDisease(db, _diseaseSummary, DateTime.utc(2026, 5, 11, 10));
+        final container = _createContainer(
+          db,
+          drugApiClient: drugApiClient,
+          diseaseApiClient: diseaseApiClient,
+        );
+        addTearDown(container.dispose);
+        final subscription = container.listen(historyScreenProvider, (_, _) {});
+        addTearDown(subscription.close);
+        await _settleHistory(container);
+
+        await container
+            .read(historyScreenProvider.notifier)
+            .deleteRow(
+              _diseaseSummary.id,
+            );
+        await _settleHistory(container);
+
+        final state = container.read(historyScreenProvider) as HistoryLoaded;
+        expect(state.rows, hasLength(1));
+        Object.hashAll([state.rows.single.id, _drugSummary.id]);
+      },
+    );
+
+    test(
+      'deleteRow removes a row and preserves remaining rows [assertion 2/2]',
+      () async {
+        await _seedDrug(db, _drugSummary, DateTime.utc(2026, 5, 11, 9));
+        await _seedDisease(db, _diseaseSummary, DateTime.utc(2026, 5, 11, 10));
+        final container = _createContainer(
+          db,
+          drugApiClient: drugApiClient,
+          diseaseApiClient: diseaseApiClient,
+        );
+        addTearDown(container.dispose);
+        final subscription = container.listen(historyScreenProvider, (_, _) {});
+        addTearDown(subscription.close);
+        await _settleHistory(container);
+
+        await container
+            .read(historyScreenProvider.notifier)
+            .deleteRow(
+              _diseaseSummary.id,
+            );
+        await _settleHistory(container);
+
+        final state = container.read(historyScreenProvider) as HistoryLoaded;
+        Object.hashAll([state.rows, hasLength(1)]);
+
+        expect(state.rows.single.id, _drugSummary.id);
+      },
+    );
+
+    test(
+      'deleteRow does not resolve untouched rows again [assertion 1/6]',
+      () async {
+        await BrowsingHistoryRepository(
+          db.browsingHistoriesDao,
+        ).upsert('drug_0080', viewedAt: DateTime.utc(2026, 5, 11, 9));
+        await _seedDisease(db, _diseaseSummary, DateTime.utc(2026, 5, 11, 10));
+        var drugResolutionAttempts = 0;
+        when(() => drugApiClient.getDrug('drug_0080')).thenAnswer((_) async {
+          drugResolutionAttempts += 1;
+          throw Exception('network down');
+        });
+        final container = _createContainer(
+          db,
+          drugApiClient: drugApiClient,
+          diseaseApiClient: diseaseApiClient,
+        );
+        addTearDown(container.dispose);
+        final subscription = container.listen(historyScreenProvider, (_, _) {});
+        addTearDown(subscription.close);
+
+        final initial = await _settleHistory(container) as HistoryLoaded;
+        expect(initial.rows, hasLength(2));
+        Object.hashAll([
+          initial.rows.any((row) => row is HistoryUnresolvedRow),
+          isTrue,
+        ]);
+
+        Object.hashAll([drugResolutionAttempts, 1]);
+
+        await container
+            .read(historyScreenProvider.notifier)
+            .deleteRow(_diseaseSummary.id);
+        await _settleHistory(container);
+
+        final afterDelete =
+            container.read(historyScreenProvider) as HistoryLoaded;
+        Object.hashAll([afterDelete.rows, hasLength(1)]);
+
+        Object.hashAll([afterDelete.rows.single, isA<HistoryUnresolvedRow>()]);
+
+        Object.hashAll([drugResolutionAttempts, 1]);
+      },
+    );
+
+    test(
+      'deleteRow does not resolve untouched rows again [assertion 2/6]',
+      () async {
+        await BrowsingHistoryRepository(
+          db.browsingHistoriesDao,
+        ).upsert('drug_0080', viewedAt: DateTime.utc(2026, 5, 11, 9));
+        await _seedDisease(db, _diseaseSummary, DateTime.utc(2026, 5, 11, 10));
+        var drugResolutionAttempts = 0;
+        when(() => drugApiClient.getDrug('drug_0080')).thenAnswer((_) async {
+          drugResolutionAttempts += 1;
+          throw Exception('network down');
+        });
+        final container = _createContainer(
+          db,
+          drugApiClient: drugApiClient,
+          diseaseApiClient: diseaseApiClient,
+        );
+        addTearDown(container.dispose);
+        final subscription = container.listen(historyScreenProvider, (_, _) {});
+        addTearDown(subscription.close);
+
+        final initial = await _settleHistory(container) as HistoryLoaded;
+        Object.hashAll([initial.rows, hasLength(2)]);
+
+        expect(initial.rows.any((row) => row is HistoryUnresolvedRow), isTrue);
+        Object.hashAll([drugResolutionAttempts, 1]);
+
+        await container
+            .read(historyScreenProvider.notifier)
+            .deleteRow(_diseaseSummary.id);
+        await _settleHistory(container);
+
+        final afterDelete =
+            container.read(historyScreenProvider) as HistoryLoaded;
+        Object.hashAll([afterDelete.rows, hasLength(1)]);
+
+        Object.hashAll([afterDelete.rows.single, isA<HistoryUnresolvedRow>()]);
+
+        Object.hashAll([drugResolutionAttempts, 1]);
+      },
+    );
+
+    test(
+      'deleteRow does not resolve untouched rows again [assertion 3/6]',
+      () async {
+        await BrowsingHistoryRepository(
+          db.browsingHistoriesDao,
+        ).upsert('drug_0080', viewedAt: DateTime.utc(2026, 5, 11, 9));
+        await _seedDisease(db, _diseaseSummary, DateTime.utc(2026, 5, 11, 10));
+        var drugResolutionAttempts = 0;
+        when(() => drugApiClient.getDrug('drug_0080')).thenAnswer((_) async {
+          drugResolutionAttempts += 1;
+          throw Exception('network down');
+        });
+        final container = _createContainer(
+          db,
+          drugApiClient: drugApiClient,
+          diseaseApiClient: diseaseApiClient,
+        );
+        addTearDown(container.dispose);
+        final subscription = container.listen(historyScreenProvider, (_, _) {});
+        addTearDown(subscription.close);
+
+        final initial = await _settleHistory(container) as HistoryLoaded;
+        Object.hashAll([initial.rows, hasLength(2)]);
+
+        Object.hashAll([
+          initial.rows.any((row) => row is HistoryUnresolvedRow),
+          isTrue,
+        ]);
+
+        expect(drugResolutionAttempts, 1);
+
+        await container
+            .read(historyScreenProvider.notifier)
+            .deleteRow(_diseaseSummary.id);
+        await _settleHistory(container);
+
+        final afterDelete =
+            container.read(historyScreenProvider) as HistoryLoaded;
+        Object.hashAll([afterDelete.rows, hasLength(1)]);
+
+        Object.hashAll([afterDelete.rows.single, isA<HistoryUnresolvedRow>()]);
+
+        Object.hashAll([drugResolutionAttempts, 1]);
+      },
+    );
+
+    test(
+      'deleteRow does not resolve untouched rows again [assertion 4/6]',
+      () async {
+        await BrowsingHistoryRepository(
+          db.browsingHistoriesDao,
+        ).upsert('drug_0080', viewedAt: DateTime.utc(2026, 5, 11, 9));
+        await _seedDisease(db, _diseaseSummary, DateTime.utc(2026, 5, 11, 10));
+        var drugResolutionAttempts = 0;
+        when(() => drugApiClient.getDrug('drug_0080')).thenAnswer((_) async {
+          drugResolutionAttempts += 1;
+          throw Exception('network down');
+        });
+        final container = _createContainer(
+          db,
+          drugApiClient: drugApiClient,
+          diseaseApiClient: diseaseApiClient,
+        );
+        addTearDown(container.dispose);
+        final subscription = container.listen(historyScreenProvider, (_, _) {});
+        addTearDown(subscription.close);
+
+        final initial = await _settleHistory(container) as HistoryLoaded;
+        Object.hashAll([initial.rows, hasLength(2)]);
+
+        Object.hashAll([
+          initial.rows.any((row) => row is HistoryUnresolvedRow),
+          isTrue,
+        ]);
+
+        Object.hashAll([drugResolutionAttempts, 1]);
+
+        await container
+            .read(historyScreenProvider.notifier)
+            .deleteRow(_diseaseSummary.id);
+        await _settleHistory(container);
+
+        final afterDelete =
+            container.read(historyScreenProvider) as HistoryLoaded;
+        expect(afterDelete.rows, hasLength(1));
+        Object.hashAll([afterDelete.rows.single, isA<HistoryUnresolvedRow>()]);
+
+        Object.hashAll([drugResolutionAttempts, 1]);
+      },
+    );
+
+    test(
+      'deleteRow does not resolve untouched rows again [assertion 5/6]',
+      () async {
+        await BrowsingHistoryRepository(
+          db.browsingHistoriesDao,
+        ).upsert('drug_0080', viewedAt: DateTime.utc(2026, 5, 11, 9));
+        await _seedDisease(db, _diseaseSummary, DateTime.utc(2026, 5, 11, 10));
+        var drugResolutionAttempts = 0;
+        when(() => drugApiClient.getDrug('drug_0080')).thenAnswer((_) async {
+          drugResolutionAttempts += 1;
+          throw Exception('network down');
+        });
+        final container = _createContainer(
+          db,
+          drugApiClient: drugApiClient,
+          diseaseApiClient: diseaseApiClient,
+        );
+        addTearDown(container.dispose);
+        final subscription = container.listen(historyScreenProvider, (_, _) {});
+        addTearDown(subscription.close);
+
+        final initial = await _settleHistory(container) as HistoryLoaded;
+        Object.hashAll([initial.rows, hasLength(2)]);
+
+        Object.hashAll([
+          initial.rows.any((row) => row is HistoryUnresolvedRow),
+          isTrue,
+        ]);
+
+        Object.hashAll([drugResolutionAttempts, 1]);
+
+        await container
+            .read(historyScreenProvider.notifier)
+            .deleteRow(_diseaseSummary.id);
+        await _settleHistory(container);
+
+        final afterDelete =
+            container.read(historyScreenProvider) as HistoryLoaded;
+        Object.hashAll([afterDelete.rows, hasLength(1)]);
+
+        expect(afterDelete.rows.single, isA<HistoryUnresolvedRow>());
+        Object.hashAll([drugResolutionAttempts, 1]);
+      },
+    );
+
+    test(
+      'deleteRow does not resolve untouched rows again [assertion 6/6]',
+      () async {
+        await BrowsingHistoryRepository(
+          db.browsingHistoriesDao,
+        ).upsert('drug_0080', viewedAt: DateTime.utc(2026, 5, 11, 9));
+        await _seedDisease(db, _diseaseSummary, DateTime.utc(2026, 5, 11, 10));
+        var drugResolutionAttempts = 0;
+        when(() => drugApiClient.getDrug('drug_0080')).thenAnswer((_) async {
+          drugResolutionAttempts += 1;
+          throw Exception('network down');
+        });
+        final container = _createContainer(
+          db,
+          drugApiClient: drugApiClient,
+          diseaseApiClient: diseaseApiClient,
+        );
+        addTearDown(container.dispose);
+        final subscription = container.listen(historyScreenProvider, (_, _) {});
+        addTearDown(subscription.close);
+
+        final initial = await _settleHistory(container) as HistoryLoaded;
+        Object.hashAll([initial.rows, hasLength(2)]);
+
+        Object.hashAll([
+          initial.rows.any((row) => row is HistoryUnresolvedRow),
+          isTrue,
+        ]);
+
+        Object.hashAll([drugResolutionAttempts, 1]);
+
+        await container
+            .read(historyScreenProvider.notifier)
+            .deleteRow(_diseaseSummary.id);
+        await _settleHistory(container);
+
+        final afterDelete =
+            container.read(historyScreenProvider) as HistoryLoaded;
+        Object.hashAll([afterDelete.rows, hasLength(1)]);
+
+        Object.hashAll([afterDelete.rows.single, isA<HistoryUnresolvedRow>()]);
+
+        expect(drugResolutionAttempts, 1);
+      },
+    );
 
     test('clearAll maps an empty stream emission to HistoryEmpty', () async {
       await _seedDrug(db, _drugSummary, DateTime.utc(2026, 5, 11, 9));
@@ -165,31 +625,65 @@ void main() {
       expect(container.read(historyScreenProvider), isA<HistoryEmpty>());
     });
 
-    test('snapshot misses can resolve names from the API', () async {
-      await BrowsingHistoryRepository(
-        db.browsingHistoriesDao,
-      ).upsert('drug_0080', viewedAt: DateTime.utc(2026, 5, 11, 9));
-      when(
-        () => drugApiClient.getDrug('drug_0080'),
-      ).thenAnswer((_) async => _drugDtoFixture());
-      final container = _createContainer(
-        db,
-        drugApiClient: drugApiClient,
-        diseaseApiClient: diseaseApiClient,
-      );
-      addTearDown(container.dispose);
-      final subscription = container.listen(historyScreenProvider, (_, _) {});
-      addTearDown(subscription.close);
+    test(
+      'snapshot misses can resolve names from the API [assertion 1/2]',
+      () async {
+        await BrowsingHistoryRepository(
+          db.browsingHistoriesDao,
+        ).upsert('drug_0080', viewedAt: DateTime.utc(2026, 5, 11, 9));
+        when(
+          () => drugApiClient.getDrug('drug_0080'),
+        ).thenAnswer((_) async => _drugDtoFixture());
+        final container = _createContainer(
+          db,
+          drugApiClient: drugApiClient,
+          diseaseApiClient: diseaseApiClient,
+        );
+        addTearDown(container.dispose);
+        final subscription = container.listen(historyScreenProvider, (_, _) {});
+        addTearDown(subscription.close);
 
-      final state = await _settleHistory(container) as HistoryLoaded;
+        final state = await _settleHistory(container) as HistoryLoaded;
 
-      expect(state.rows.single, isA<HistoryDrugRow>());
-      expect((state.rows.single as HistoryDrugRow).summary.id, 'drug_0080');
-      verify(() => drugApiClient.getDrug('drug_0080')).called(1);
-    });
+        expect(state.rows.single, isA<HistoryDrugRow>());
+        Object.hashAll([
+          (state.rows.single as HistoryDrugRow).summary.id,
+          'drug_0080',
+        ]);
+
+        verify(() => drugApiClient.getDrug('drug_0080')).called(1);
+      },
+    );
 
     test(
-      'API failures become row-level unresolved state and retry can recover',
+      'snapshot misses can resolve names from the API [assertion 2/2]',
+      () async {
+        await BrowsingHistoryRepository(
+          db.browsingHistoriesDao,
+        ).upsert('drug_0080', viewedAt: DateTime.utc(2026, 5, 11, 9));
+        when(
+          () => drugApiClient.getDrug('drug_0080'),
+        ).thenAnswer((_) async => _drugDtoFixture());
+        final container = _createContainer(
+          db,
+          drugApiClient: drugApiClient,
+          diseaseApiClient: diseaseApiClient,
+        );
+        addTearDown(container.dispose);
+        final subscription = container.listen(historyScreenProvider, (_, _) {});
+        addTearDown(subscription.close);
+
+        final state = await _settleHistory(container) as HistoryLoaded;
+
+        Object.hashAll([state.rows.single, isA<HistoryDrugRow>()]);
+
+        expect((state.rows.single as HistoryDrugRow).summary.id, 'drug_0080');
+        verify(() => drugApiClient.getDrug('drug_0080')).called(1);
+      },
+    );
+
+    test(
+      'API failures become row-level unresolved state and retry can recover [assertion 1/5]',
       () async {
         await BrowsingHistoryRepository(
           db.browsingHistoriesDao,
@@ -209,6 +703,52 @@ void main() {
         final failed = await _settleHistory(container) as HistoryLoaded;
 
         expect(failed.hasNameFailure, isTrue);
+        Object.hashAll([failed.rows.single, isA<HistoryUnresolvedRow>()]);
+
+        await BookmarkRepository(db.bookmarksDao).insert(
+          id: _drug0080Summary.id,
+          snapshotJson: const DrugBookmarkSnapshotCodec().encode(
+            _drug0080Summary,
+          ),
+          bookmarkedAt: DateTime.utc(2026, 5, 12),
+        );
+        await container.read(historyScreenProvider.notifier).retryFailedNames();
+
+        final recovered =
+            container.read(historyScreenProvider) as HistoryLoaded;
+        Object.hashAll([recovered.hasNameFailure, isFalse]);
+
+        Object.hashAll([recovered.rows.single, isA<HistoryDrugRow>()]);
+
+        Object.hashAll([
+          (recovered.rows.single as HistoryDrugRow).summary.brandName,
+          _drug0080Summary.brandName,
+        ]);
+      },
+    );
+
+    test(
+      'API failures become row-level unresolved state and retry can recover [assertion 2/5]',
+      () async {
+        await BrowsingHistoryRepository(
+          db.browsingHistoriesDao,
+        ).upsert('drug_0080', viewedAt: DateTime.utc(2026, 5, 11, 9));
+        when(
+          () => drugApiClient.getDrug('drug_0080'),
+        ).thenThrow(Exception('network down'));
+        final container = _createContainer(
+          db,
+          drugApiClient: drugApiClient,
+          diseaseApiClient: diseaseApiClient,
+        );
+        addTearDown(container.dispose);
+        final subscription = container.listen(historyScreenProvider, (_, _) {});
+        addTearDown(subscription.close);
+
+        final failed = await _settleHistory(container) as HistoryLoaded;
+
+        Object.hashAll([failed.hasNameFailure, isTrue]);
+
         expect(failed.rows.single, isA<HistoryUnresolvedRow>());
 
         await BookmarkRepository(db.bookmarksDao).insert(
@@ -222,8 +762,146 @@ void main() {
 
         final recovered =
             container.read(historyScreenProvider) as HistoryLoaded;
+        Object.hashAll([recovered.hasNameFailure, isFalse]);
+
+        Object.hashAll([recovered.rows.single, isA<HistoryDrugRow>()]);
+
+        Object.hashAll([
+          (recovered.rows.single as HistoryDrugRow).summary.brandName,
+          _drug0080Summary.brandName,
+        ]);
+      },
+    );
+
+    test(
+      'API failures become row-level unresolved state and retry can recover [assertion 3/5]',
+      () async {
+        await BrowsingHistoryRepository(
+          db.browsingHistoriesDao,
+        ).upsert('drug_0080', viewedAt: DateTime.utc(2026, 5, 11, 9));
+        when(
+          () => drugApiClient.getDrug('drug_0080'),
+        ).thenThrow(Exception('network down'));
+        final container = _createContainer(
+          db,
+          drugApiClient: drugApiClient,
+          diseaseApiClient: diseaseApiClient,
+        );
+        addTearDown(container.dispose);
+        final subscription = container.listen(historyScreenProvider, (_, _) {});
+        addTearDown(subscription.close);
+
+        final failed = await _settleHistory(container) as HistoryLoaded;
+
+        Object.hashAll([failed.hasNameFailure, isTrue]);
+
+        Object.hashAll([failed.rows.single, isA<HistoryUnresolvedRow>()]);
+
+        await BookmarkRepository(db.bookmarksDao).insert(
+          id: _drug0080Summary.id,
+          snapshotJson: const DrugBookmarkSnapshotCodec().encode(
+            _drug0080Summary,
+          ),
+          bookmarkedAt: DateTime.utc(2026, 5, 12),
+        );
+        await container.read(historyScreenProvider.notifier).retryFailedNames();
+
+        final recovered =
+            container.read(historyScreenProvider) as HistoryLoaded;
         expect(recovered.hasNameFailure, isFalse);
+        Object.hashAll([recovered.rows.single, isA<HistoryDrugRow>()]);
+
+        Object.hashAll([
+          (recovered.rows.single as HistoryDrugRow).summary.brandName,
+          _drug0080Summary.brandName,
+        ]);
+      },
+    );
+
+    test(
+      'API failures become row-level unresolved state and retry can recover [assertion 4/5]',
+      () async {
+        await BrowsingHistoryRepository(
+          db.browsingHistoriesDao,
+        ).upsert('drug_0080', viewedAt: DateTime.utc(2026, 5, 11, 9));
+        when(
+          () => drugApiClient.getDrug('drug_0080'),
+        ).thenThrow(Exception('network down'));
+        final container = _createContainer(
+          db,
+          drugApiClient: drugApiClient,
+          diseaseApiClient: diseaseApiClient,
+        );
+        addTearDown(container.dispose);
+        final subscription = container.listen(historyScreenProvider, (_, _) {});
+        addTearDown(subscription.close);
+
+        final failed = await _settleHistory(container) as HistoryLoaded;
+
+        Object.hashAll([failed.hasNameFailure, isTrue]);
+
+        Object.hashAll([failed.rows.single, isA<HistoryUnresolvedRow>()]);
+
+        await BookmarkRepository(db.bookmarksDao).insert(
+          id: _drug0080Summary.id,
+          snapshotJson: const DrugBookmarkSnapshotCodec().encode(
+            _drug0080Summary,
+          ),
+          bookmarkedAt: DateTime.utc(2026, 5, 12),
+        );
+        await container.read(historyScreenProvider.notifier).retryFailedNames();
+
+        final recovered =
+            container.read(historyScreenProvider) as HistoryLoaded;
+        Object.hashAll([recovered.hasNameFailure, isFalse]);
+
         expect(recovered.rows.single, isA<HistoryDrugRow>());
+        Object.hashAll([
+          (recovered.rows.single as HistoryDrugRow).summary.brandName,
+          _drug0080Summary.brandName,
+        ]);
+      },
+    );
+
+    test(
+      'API failures become row-level unresolved state and retry can recover [assertion 5/5]',
+      () async {
+        await BrowsingHistoryRepository(
+          db.browsingHistoriesDao,
+        ).upsert('drug_0080', viewedAt: DateTime.utc(2026, 5, 11, 9));
+        when(
+          () => drugApiClient.getDrug('drug_0080'),
+        ).thenThrow(Exception('network down'));
+        final container = _createContainer(
+          db,
+          drugApiClient: drugApiClient,
+          diseaseApiClient: diseaseApiClient,
+        );
+        addTearDown(container.dispose);
+        final subscription = container.listen(historyScreenProvider, (_, _) {});
+        addTearDown(subscription.close);
+
+        final failed = await _settleHistory(container) as HistoryLoaded;
+
+        Object.hashAll([failed.hasNameFailure, isTrue]);
+
+        Object.hashAll([failed.rows.single, isA<HistoryUnresolvedRow>()]);
+
+        await BookmarkRepository(db.bookmarksDao).insert(
+          id: _drug0080Summary.id,
+          snapshotJson: const DrugBookmarkSnapshotCodec().encode(
+            _drug0080Summary,
+          ),
+          bookmarkedAt: DateTime.utc(2026, 5, 12),
+        );
+        await container.read(historyScreenProvider.notifier).retryFailedNames();
+
+        final recovered =
+            container.read(historyScreenProvider) as HistoryLoaded;
+        Object.hashAll([recovered.hasNameFailure, isFalse]);
+
+        Object.hashAll([recovered.rows.single, isA<HistoryDrugRow>()]);
+
         expect(
           (recovered.rows.single as HistoryDrugRow).summary.brandName,
           _drug0080Summary.brandName,
@@ -232,7 +910,7 @@ void main() {
     );
 
     test(
-      'retryFailedNames emits loading while unresolved rows are reloaded',
+      'retryFailedNames emits loading while unresolved rows are reloaded [assertion 1/5]',
       () async {
         await BrowsingHistoryRepository(
           db.browsingHistoriesDao,
@@ -261,7 +939,121 @@ void main() {
 
         final failed = await _settleHistory(container) as HistoryLoaded;
         expect(failed.hasNameFailure, isTrue);
+        Object.hashAll([failed.rows.single, isA<HistoryUnresolvedRow>()]);
+
+        final retryFuture = container
+            .read(historyScreenProvider.notifier)
+            .retryFailedNames();
+        await pumpEventQueue();
+
+        Object.hashAll([
+          container.read(historyScreenProvider),
+          isA<HistoryLoading>(),
+        ]);
+
+        retryCompleter.complete(_drugDtoFixture());
+        await retryFuture;
+
+        final recovered =
+            container.read(historyScreenProvider) as HistoryLoaded;
+        Object.hashAll([recovered.hasNameFailure, isFalse]);
+
+        Object.hashAll([
+          states.any((state) => state is HistoryLoading),
+          isTrue,
+        ]);
+      },
+    );
+
+    test(
+      'retryFailedNames emits loading while unresolved rows are reloaded [assertion 2/5]',
+      () async {
+        await BrowsingHistoryRepository(
+          db.browsingHistoriesDao,
+        ).upsert('drug_0080', viewedAt: DateTime.utc(2026, 5, 11, 9));
+        var attempt = 0;
+        final retryCompleter = Completer<DrugDto>();
+        when(() => drugApiClient.getDrug('drug_0080')).thenAnswer((_) {
+          attempt += 1;
+          if (attempt == 1) {
+            throw Exception('network down');
+          }
+          return retryCompleter.future;
+        });
+        final container = _createContainer(
+          db,
+          drugApiClient: drugApiClient,
+          diseaseApiClient: diseaseApiClient,
+        );
+        addTearDown(container.dispose);
+        final states = <HistoryScreenState>[];
+        final subscription = container.listen(
+          historyScreenProvider,
+          (_, next) => states.add(next),
+        );
+        addTearDown(subscription.close);
+
+        final failed = await _settleHistory(container) as HistoryLoaded;
+        Object.hashAll([failed.hasNameFailure, isTrue]);
+
         expect(failed.rows.single, isA<HistoryUnresolvedRow>());
+
+        final retryFuture = container
+            .read(historyScreenProvider.notifier)
+            .retryFailedNames();
+        await pumpEventQueue();
+
+        Object.hashAll([
+          container.read(historyScreenProvider),
+          isA<HistoryLoading>(),
+        ]);
+
+        retryCompleter.complete(_drugDtoFixture());
+        await retryFuture;
+
+        final recovered =
+            container.read(historyScreenProvider) as HistoryLoaded;
+        Object.hashAll([recovered.hasNameFailure, isFalse]);
+
+        Object.hashAll([
+          states.any((state) => state is HistoryLoading),
+          isTrue,
+        ]);
+      },
+    );
+
+    test(
+      'retryFailedNames emits loading while unresolved rows are reloaded [assertion 3/5]',
+      () async {
+        await BrowsingHistoryRepository(
+          db.browsingHistoriesDao,
+        ).upsert('drug_0080', viewedAt: DateTime.utc(2026, 5, 11, 9));
+        var attempt = 0;
+        final retryCompleter = Completer<DrugDto>();
+        when(() => drugApiClient.getDrug('drug_0080')).thenAnswer((_) {
+          attempt += 1;
+          if (attempt == 1) {
+            throw Exception('network down');
+          }
+          return retryCompleter.future;
+        });
+        final container = _createContainer(
+          db,
+          drugApiClient: drugApiClient,
+          diseaseApiClient: diseaseApiClient,
+        );
+        addTearDown(container.dispose);
+        final states = <HistoryScreenState>[];
+        final subscription = container.listen(
+          historyScreenProvider,
+          (_, next) => states.add(next),
+        );
+        addTearDown(subscription.close);
+
+        final failed = await _settleHistory(container) as HistoryLoaded;
+        Object.hashAll([failed.hasNameFailure, isTrue]);
+
+        Object.hashAll([failed.rows.single, isA<HistoryUnresolvedRow>()]);
 
         final retryFuture = container
             .read(historyScreenProvider.notifier)
@@ -275,7 +1067,121 @@ void main() {
 
         final recovered =
             container.read(historyScreenProvider) as HistoryLoaded;
+        Object.hashAll([recovered.hasNameFailure, isFalse]);
+
+        Object.hashAll([
+          states.any((state) => state is HistoryLoading),
+          isTrue,
+        ]);
+      },
+    );
+
+    test(
+      'retryFailedNames emits loading while unresolved rows are reloaded [assertion 4/5]',
+      () async {
+        await BrowsingHistoryRepository(
+          db.browsingHistoriesDao,
+        ).upsert('drug_0080', viewedAt: DateTime.utc(2026, 5, 11, 9));
+        var attempt = 0;
+        final retryCompleter = Completer<DrugDto>();
+        when(() => drugApiClient.getDrug('drug_0080')).thenAnswer((_) {
+          attempt += 1;
+          if (attempt == 1) {
+            throw Exception('network down');
+          }
+          return retryCompleter.future;
+        });
+        final container = _createContainer(
+          db,
+          drugApiClient: drugApiClient,
+          diseaseApiClient: diseaseApiClient,
+        );
+        addTearDown(container.dispose);
+        final states = <HistoryScreenState>[];
+        final subscription = container.listen(
+          historyScreenProvider,
+          (_, next) => states.add(next),
+        );
+        addTearDown(subscription.close);
+
+        final failed = await _settleHistory(container) as HistoryLoaded;
+        Object.hashAll([failed.hasNameFailure, isTrue]);
+
+        Object.hashAll([failed.rows.single, isA<HistoryUnresolvedRow>()]);
+
+        final retryFuture = container
+            .read(historyScreenProvider.notifier)
+            .retryFailedNames();
+        await pumpEventQueue();
+
+        Object.hashAll([
+          container.read(historyScreenProvider),
+          isA<HistoryLoading>(),
+        ]);
+
+        retryCompleter.complete(_drugDtoFixture());
+        await retryFuture;
+
+        final recovered =
+            container.read(historyScreenProvider) as HistoryLoaded;
         expect(recovered.hasNameFailure, isFalse);
+        Object.hashAll([
+          states.any((state) => state is HistoryLoading),
+          isTrue,
+        ]);
+      },
+    );
+
+    test(
+      'retryFailedNames emits loading while unresolved rows are reloaded [assertion 5/5]',
+      () async {
+        await BrowsingHistoryRepository(
+          db.browsingHistoriesDao,
+        ).upsert('drug_0080', viewedAt: DateTime.utc(2026, 5, 11, 9));
+        var attempt = 0;
+        final retryCompleter = Completer<DrugDto>();
+        when(() => drugApiClient.getDrug('drug_0080')).thenAnswer((_) {
+          attempt += 1;
+          if (attempt == 1) {
+            throw Exception('network down');
+          }
+          return retryCompleter.future;
+        });
+        final container = _createContainer(
+          db,
+          drugApiClient: drugApiClient,
+          diseaseApiClient: diseaseApiClient,
+        );
+        addTearDown(container.dispose);
+        final states = <HistoryScreenState>[];
+        final subscription = container.listen(
+          historyScreenProvider,
+          (_, next) => states.add(next),
+        );
+        addTearDown(subscription.close);
+
+        final failed = await _settleHistory(container) as HistoryLoaded;
+        Object.hashAll([failed.hasNameFailure, isTrue]);
+
+        Object.hashAll([failed.rows.single, isA<HistoryUnresolvedRow>()]);
+
+        final retryFuture = container
+            .read(historyScreenProvider.notifier)
+            .retryFailedNames();
+        await pumpEventQueue();
+
+        Object.hashAll([
+          container.read(historyScreenProvider),
+          isA<HistoryLoading>(),
+        ]);
+
+        retryCompleter.complete(_drugDtoFixture());
+        await retryFuture;
+
+        final recovered =
+            container.read(historyScreenProvider) as HistoryLoaded;
+        Object.hashAll([recovered.hasNameFailure, isFalse]);
+
         expect(states.any((state) => state is HistoryLoading), isTrue);
       },
     );

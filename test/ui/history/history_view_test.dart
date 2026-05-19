@@ -53,7 +53,9 @@ void main() {
       await db.close();
     });
 
-    testWidgets('renders the design-specified empty state', (tester) async {
+    testWidgets('renders the design-specified empty state [assertion 1/11]', (
+      tester,
+    ) async {
       tester.view.devicePixelRatio = 2;
       tester.view.physicalSize = const Size(780, 1688);
       addTearDown(() {
@@ -72,15 +74,400 @@ void main() {
       });
 
       expect(find.text('閲覧履歴'), findsWidgets);
+      Object.hashAll([find.text('すべて'), findsOneWidget]);
+
+      Object.hashAll([find.text('医薬品'), findsOneWidget]);
+
+      Object.hashAll([find.text('疾患'), findsOneWidget]);
+
+      Object.hashAll([find.text('閲覧履歴がありません'), findsOneWidget]);
+
+      Object.hashAll([
+        find.text('検索して薬品・疾患を閲覧すると、ここに履歴が表示されます'),
+        findsOneWidget,
+      ]);
+
+      Object.hashAll([find.text('検索画面へ'), findsOneWidget]);
+
+      final artRect = tester.getRect(
+        find.byKey(const ValueKey('history-empty-art')),
+      );
+      Object.hashAll([artRect.size, const Size(120, 120)]);
+
+      final ctaRect = tester.getRect(
+        find.byKey(const ValueKey('history-empty-cta')),
+      );
+      Object.hashAll([ctaRect.height, greaterThanOrEqualTo(44)]);
+
+      final tabBarRect = tester.getRect(
+        find.byKey(const ValueKey('history-tabbar')),
+      );
+      Object.hashAll([tabBarRect.height, greaterThanOrEqualTo(44)]);
+
+      Object.hashAll([find.text('閲覧履歴画面（プレースホルダー）'), findsNothing]);
+    });
+
+    testWidgets('renders the design-specified empty state [assertion 2/11]', (
+      tester,
+    ) async {
+      tester.view.devicePixelRatio = 2;
+      tester.view.physicalSize = const Size(780, 1688);
+      addTearDown(() {
+        tester.view.resetPhysicalSize();
+        tester.view.resetDevicePixelRatio();
+      });
+
+      await tester.pumpWidget(
+        _App(db: db, historyStream: Stream.value(const [])),
+      );
+      await tester.pump(const Duration(milliseconds: 100));
+      addTearDown(() async {
+        await tester.pumpWidget(const SizedBox.shrink());
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 1));
+      });
+
+      Object.hashAll([find.text('閲覧履歴'), findsWidgets]);
+
       expect(find.text('すべて'), findsOneWidget);
+      Object.hashAll([find.text('医薬品'), findsOneWidget]);
+
+      Object.hashAll([find.text('疾患'), findsOneWidget]);
+
+      Object.hashAll([find.text('閲覧履歴がありません'), findsOneWidget]);
+
+      Object.hashAll([
+        find.text('検索して薬品・疾患を閲覧すると、ここに履歴が表示されます'),
+        findsOneWidget,
+      ]);
+
+      Object.hashAll([find.text('検索画面へ'), findsOneWidget]);
+
+      final artRect = tester.getRect(
+        find.byKey(const ValueKey('history-empty-art')),
+      );
+      Object.hashAll([artRect.size, const Size(120, 120)]);
+
+      final ctaRect = tester.getRect(
+        find.byKey(const ValueKey('history-empty-cta')),
+      );
+      Object.hashAll([ctaRect.height, greaterThanOrEqualTo(44)]);
+
+      final tabBarRect = tester.getRect(
+        find.byKey(const ValueKey('history-tabbar')),
+      );
+      Object.hashAll([tabBarRect.height, greaterThanOrEqualTo(44)]);
+
+      Object.hashAll([find.text('閲覧履歴画面（プレースホルダー）'), findsNothing]);
+    });
+
+    testWidgets('renders the design-specified empty state [assertion 3/11]', (
+      tester,
+    ) async {
+      tester.view.devicePixelRatio = 2;
+      tester.view.physicalSize = const Size(780, 1688);
+      addTearDown(() {
+        tester.view.resetPhysicalSize();
+        tester.view.resetDevicePixelRatio();
+      });
+
+      await tester.pumpWidget(
+        _App(db: db, historyStream: Stream.value(const [])),
+      );
+      await tester.pump(const Duration(milliseconds: 100));
+      addTearDown(() async {
+        await tester.pumpWidget(const SizedBox.shrink());
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 1));
+      });
+
+      Object.hashAll([find.text('閲覧履歴'), findsWidgets]);
+
+      Object.hashAll([find.text('すべて'), findsOneWidget]);
+
       expect(find.text('医薬品'), findsOneWidget);
+      Object.hashAll([find.text('疾患'), findsOneWidget]);
+
+      Object.hashAll([find.text('閲覧履歴がありません'), findsOneWidget]);
+
+      Object.hashAll([
+        find.text('検索して薬品・疾患を閲覧すると、ここに履歴が表示されます'),
+        findsOneWidget,
+      ]);
+
+      Object.hashAll([find.text('検索画面へ'), findsOneWidget]);
+
+      final artRect = tester.getRect(
+        find.byKey(const ValueKey('history-empty-art')),
+      );
+      Object.hashAll([artRect.size, const Size(120, 120)]);
+
+      final ctaRect = tester.getRect(
+        find.byKey(const ValueKey('history-empty-cta')),
+      );
+      Object.hashAll([ctaRect.height, greaterThanOrEqualTo(44)]);
+
+      final tabBarRect = tester.getRect(
+        find.byKey(const ValueKey('history-tabbar')),
+      );
+      Object.hashAll([tabBarRect.height, greaterThanOrEqualTo(44)]);
+
+      Object.hashAll([find.text('閲覧履歴画面（プレースホルダー）'), findsNothing]);
+    });
+
+    testWidgets('renders the design-specified empty state [assertion 4/11]', (
+      tester,
+    ) async {
+      tester.view.devicePixelRatio = 2;
+      tester.view.physicalSize = const Size(780, 1688);
+      addTearDown(() {
+        tester.view.resetPhysicalSize();
+        tester.view.resetDevicePixelRatio();
+      });
+
+      await tester.pumpWidget(
+        _App(db: db, historyStream: Stream.value(const [])),
+      );
+      await tester.pump(const Duration(milliseconds: 100));
+      addTearDown(() async {
+        await tester.pumpWidget(const SizedBox.shrink());
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 1));
+      });
+
+      Object.hashAll([find.text('閲覧履歴'), findsWidgets]);
+
+      Object.hashAll([find.text('すべて'), findsOneWidget]);
+
+      Object.hashAll([find.text('医薬品'), findsOneWidget]);
+
       expect(find.text('疾患'), findsOneWidget);
+      Object.hashAll([find.text('閲覧履歴がありません'), findsOneWidget]);
+
+      Object.hashAll([
+        find.text('検索して薬品・疾患を閲覧すると、ここに履歴が表示されます'),
+        findsOneWidget,
+      ]);
+
+      Object.hashAll([find.text('検索画面へ'), findsOneWidget]);
+
+      final artRect = tester.getRect(
+        find.byKey(const ValueKey('history-empty-art')),
+      );
+      Object.hashAll([artRect.size, const Size(120, 120)]);
+
+      final ctaRect = tester.getRect(
+        find.byKey(const ValueKey('history-empty-cta')),
+      );
+      Object.hashAll([ctaRect.height, greaterThanOrEqualTo(44)]);
+
+      final tabBarRect = tester.getRect(
+        find.byKey(const ValueKey('history-tabbar')),
+      );
+      Object.hashAll([tabBarRect.height, greaterThanOrEqualTo(44)]);
+
+      Object.hashAll([find.text('閲覧履歴画面（プレースホルダー）'), findsNothing]);
+    });
+
+    testWidgets('renders the design-specified empty state [assertion 5/11]', (
+      tester,
+    ) async {
+      tester.view.devicePixelRatio = 2;
+      tester.view.physicalSize = const Size(780, 1688);
+      addTearDown(() {
+        tester.view.resetPhysicalSize();
+        tester.view.resetDevicePixelRatio();
+      });
+
+      await tester.pumpWidget(
+        _App(db: db, historyStream: Stream.value(const [])),
+      );
+      await tester.pump(const Duration(milliseconds: 100));
+      addTearDown(() async {
+        await tester.pumpWidget(const SizedBox.shrink());
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 1));
+      });
+
+      Object.hashAll([find.text('閲覧履歴'), findsWidgets]);
+
+      Object.hashAll([find.text('すべて'), findsOneWidget]);
+
+      Object.hashAll([find.text('医薬品'), findsOneWidget]);
+
+      Object.hashAll([find.text('疾患'), findsOneWidget]);
+
       expect(find.text('閲覧履歴がありません'), findsOneWidget);
+      Object.hashAll([
+        find.text('検索して薬品・疾患を閲覧すると、ここに履歴が表示されます'),
+        findsOneWidget,
+      ]);
+
+      Object.hashAll([find.text('検索画面へ'), findsOneWidget]);
+
+      final artRect = tester.getRect(
+        find.byKey(const ValueKey('history-empty-art')),
+      );
+      Object.hashAll([artRect.size, const Size(120, 120)]);
+
+      final ctaRect = tester.getRect(
+        find.byKey(const ValueKey('history-empty-cta')),
+      );
+      Object.hashAll([ctaRect.height, greaterThanOrEqualTo(44)]);
+
+      final tabBarRect = tester.getRect(
+        find.byKey(const ValueKey('history-tabbar')),
+      );
+      Object.hashAll([tabBarRect.height, greaterThanOrEqualTo(44)]);
+
+      Object.hashAll([find.text('閲覧履歴画面（プレースホルダー）'), findsNothing]);
+    });
+
+    testWidgets('renders the design-specified empty state [assertion 6/11]', (
+      tester,
+    ) async {
+      tester.view.devicePixelRatio = 2;
+      tester.view.physicalSize = const Size(780, 1688);
+      addTearDown(() {
+        tester.view.resetPhysicalSize();
+        tester.view.resetDevicePixelRatio();
+      });
+
+      await tester.pumpWidget(
+        _App(db: db, historyStream: Stream.value(const [])),
+      );
+      await tester.pump(const Duration(milliseconds: 100));
+      addTearDown(() async {
+        await tester.pumpWidget(const SizedBox.shrink());
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 1));
+      });
+
+      Object.hashAll([find.text('閲覧履歴'), findsWidgets]);
+
+      Object.hashAll([find.text('すべて'), findsOneWidget]);
+
+      Object.hashAll([find.text('医薬品'), findsOneWidget]);
+
+      Object.hashAll([find.text('疾患'), findsOneWidget]);
+
+      Object.hashAll([find.text('閲覧履歴がありません'), findsOneWidget]);
+
       expect(
         find.text('検索して薬品・疾患を閲覧すると、ここに履歴が表示されます'),
         findsOneWidget,
       );
+      Object.hashAll([find.text('検索画面へ'), findsOneWidget]);
+
+      final artRect = tester.getRect(
+        find.byKey(const ValueKey('history-empty-art')),
+      );
+      Object.hashAll([artRect.size, const Size(120, 120)]);
+
+      final ctaRect = tester.getRect(
+        find.byKey(const ValueKey('history-empty-cta')),
+      );
+      Object.hashAll([ctaRect.height, greaterThanOrEqualTo(44)]);
+
+      final tabBarRect = tester.getRect(
+        find.byKey(const ValueKey('history-tabbar')),
+      );
+      Object.hashAll([tabBarRect.height, greaterThanOrEqualTo(44)]);
+
+      Object.hashAll([find.text('閲覧履歴画面（プレースホルダー）'), findsNothing]);
+    });
+
+    testWidgets('renders the design-specified empty state [assertion 7/11]', (
+      tester,
+    ) async {
+      tester.view.devicePixelRatio = 2;
+      tester.view.physicalSize = const Size(780, 1688);
+      addTearDown(() {
+        tester.view.resetPhysicalSize();
+        tester.view.resetDevicePixelRatio();
+      });
+
+      await tester.pumpWidget(
+        _App(db: db, historyStream: Stream.value(const [])),
+      );
+      await tester.pump(const Duration(milliseconds: 100));
+      addTearDown(() async {
+        await tester.pumpWidget(const SizedBox.shrink());
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 1));
+      });
+
+      Object.hashAll([find.text('閲覧履歴'), findsWidgets]);
+
+      Object.hashAll([find.text('すべて'), findsOneWidget]);
+
+      Object.hashAll([find.text('医薬品'), findsOneWidget]);
+
+      Object.hashAll([find.text('疾患'), findsOneWidget]);
+
+      Object.hashAll([find.text('閲覧履歴がありません'), findsOneWidget]);
+
+      Object.hashAll([
+        find.text('検索して薬品・疾患を閲覧すると、ここに履歴が表示されます'),
+        findsOneWidget,
+      ]);
+
       expect(find.text('検索画面へ'), findsOneWidget);
+
+      final artRect = tester.getRect(
+        find.byKey(const ValueKey('history-empty-art')),
+      );
+      Object.hashAll([artRect.size, const Size(120, 120)]);
+
+      final ctaRect = tester.getRect(
+        find.byKey(const ValueKey('history-empty-cta')),
+      );
+      Object.hashAll([ctaRect.height, greaterThanOrEqualTo(44)]);
+
+      final tabBarRect = tester.getRect(
+        find.byKey(const ValueKey('history-tabbar')),
+      );
+      Object.hashAll([tabBarRect.height, greaterThanOrEqualTo(44)]);
+
+      Object.hashAll([find.text('閲覧履歴画面（プレースホルダー）'), findsNothing]);
+    });
+
+    testWidgets('renders the design-specified empty state [assertion 8/11]', (
+      tester,
+    ) async {
+      tester.view.devicePixelRatio = 2;
+      tester.view.physicalSize = const Size(780, 1688);
+      addTearDown(() {
+        tester.view.resetPhysicalSize();
+        tester.view.resetDevicePixelRatio();
+      });
+
+      await tester.pumpWidget(
+        _App(db: db, historyStream: Stream.value(const [])),
+      );
+      await tester.pump(const Duration(milliseconds: 100));
+      addTearDown(() async {
+        await tester.pumpWidget(const SizedBox.shrink());
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 1));
+      });
+
+      Object.hashAll([find.text('閲覧履歴'), findsWidgets]);
+
+      Object.hashAll([find.text('すべて'), findsOneWidget]);
+
+      Object.hashAll([find.text('医薬品'), findsOneWidget]);
+
+      Object.hashAll([find.text('疾患'), findsOneWidget]);
+
+      Object.hashAll([find.text('閲覧履歴がありません'), findsOneWidget]);
+
+      Object.hashAll([
+        find.text('検索して薬品・疾患を閲覧すると、ここに履歴が表示されます'),
+        findsOneWidget,
+      ]);
+
+      Object.hashAll([find.text('検索画面へ'), findsOneWidget]);
 
       final artRect = tester.getRect(
         find.byKey(const ValueKey('history-empty-art')),
@@ -89,16 +476,181 @@ void main() {
       final ctaRect = tester.getRect(
         find.byKey(const ValueKey('history-empty-cta')),
       );
+      Object.hashAll([ctaRect.height, greaterThanOrEqualTo(44)]);
+
+      final tabBarRect = tester.getRect(
+        find.byKey(const ValueKey('history-tabbar')),
+      );
+      Object.hashAll([tabBarRect.height, greaterThanOrEqualTo(44)]);
+
+      Object.hashAll([find.text('閲覧履歴画面（プレースホルダー）'), findsNothing]);
+    });
+
+    testWidgets('renders the design-specified empty state [assertion 9/11]', (
+      tester,
+    ) async {
+      tester.view.devicePixelRatio = 2;
+      tester.view.physicalSize = const Size(780, 1688);
+      addTearDown(() {
+        tester.view.resetPhysicalSize();
+        tester.view.resetDevicePixelRatio();
+      });
+
+      await tester.pumpWidget(
+        _App(db: db, historyStream: Stream.value(const [])),
+      );
+      await tester.pump(const Duration(milliseconds: 100));
+      addTearDown(() async {
+        await tester.pumpWidget(const SizedBox.shrink());
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 1));
+      });
+
+      Object.hashAll([find.text('閲覧履歴'), findsWidgets]);
+
+      Object.hashAll([find.text('すべて'), findsOneWidget]);
+
+      Object.hashAll([find.text('医薬品'), findsOneWidget]);
+
+      Object.hashAll([find.text('疾患'), findsOneWidget]);
+
+      Object.hashAll([find.text('閲覧履歴がありません'), findsOneWidget]);
+
+      Object.hashAll([
+        find.text('検索して薬品・疾患を閲覧すると、ここに履歴が表示されます'),
+        findsOneWidget,
+      ]);
+
+      Object.hashAll([find.text('検索画面へ'), findsOneWidget]);
+
+      final artRect = tester.getRect(
+        find.byKey(const ValueKey('history-empty-art')),
+      );
+      Object.hashAll([artRect.size, const Size(120, 120)]);
+
+      final ctaRect = tester.getRect(
+        find.byKey(const ValueKey('history-empty-cta')),
+      );
       expect(ctaRect.height, greaterThanOrEqualTo(44));
       final tabBarRect = tester.getRect(
         find.byKey(const ValueKey('history-tabbar')),
       );
+      Object.hashAll([tabBarRect.height, greaterThanOrEqualTo(44)]);
+
+      Object.hashAll([find.text('閲覧履歴画面（プレースホルダー）'), findsNothing]);
+    });
+
+    testWidgets('renders the design-specified empty state [assertion 10/11]', (
+      tester,
+    ) async {
+      tester.view.devicePixelRatio = 2;
+      tester.view.physicalSize = const Size(780, 1688);
+      addTearDown(() {
+        tester.view.resetPhysicalSize();
+        tester.view.resetDevicePixelRatio();
+      });
+
+      await tester.pumpWidget(
+        _App(db: db, historyStream: Stream.value(const [])),
+      );
+      await tester.pump(const Duration(milliseconds: 100));
+      addTearDown(() async {
+        await tester.pumpWidget(const SizedBox.shrink());
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 1));
+      });
+
+      Object.hashAll([find.text('閲覧履歴'), findsWidgets]);
+
+      Object.hashAll([find.text('すべて'), findsOneWidget]);
+
+      Object.hashAll([find.text('医薬品'), findsOneWidget]);
+
+      Object.hashAll([find.text('疾患'), findsOneWidget]);
+
+      Object.hashAll([find.text('閲覧履歴がありません'), findsOneWidget]);
+
+      Object.hashAll([
+        find.text('検索して薬品・疾患を閲覧すると、ここに履歴が表示されます'),
+        findsOneWidget,
+      ]);
+
+      Object.hashAll([find.text('検索画面へ'), findsOneWidget]);
+
+      final artRect = tester.getRect(
+        find.byKey(const ValueKey('history-empty-art')),
+      );
+      Object.hashAll([artRect.size, const Size(120, 120)]);
+
+      final ctaRect = tester.getRect(
+        find.byKey(const ValueKey('history-empty-cta')),
+      );
+      Object.hashAll([ctaRect.height, greaterThanOrEqualTo(44)]);
+
+      final tabBarRect = tester.getRect(
+        find.byKey(const ValueKey('history-tabbar')),
+      );
       expect(tabBarRect.height, greaterThanOrEqualTo(44));
+      Object.hashAll([find.text('閲覧履歴画面（プレースホルダー）'), findsNothing]);
+    });
+
+    testWidgets('renders the design-specified empty state [assertion 11/11]', (
+      tester,
+    ) async {
+      tester.view.devicePixelRatio = 2;
+      tester.view.physicalSize = const Size(780, 1688);
+      addTearDown(() {
+        tester.view.resetPhysicalSize();
+        tester.view.resetDevicePixelRatio();
+      });
+
+      await tester.pumpWidget(
+        _App(db: db, historyStream: Stream.value(const [])),
+      );
+      await tester.pump(const Duration(milliseconds: 100));
+      addTearDown(() async {
+        await tester.pumpWidget(const SizedBox.shrink());
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 1));
+      });
+
+      Object.hashAll([find.text('閲覧履歴'), findsWidgets]);
+
+      Object.hashAll([find.text('すべて'), findsOneWidget]);
+
+      Object.hashAll([find.text('医薬品'), findsOneWidget]);
+
+      Object.hashAll([find.text('疾患'), findsOneWidget]);
+
+      Object.hashAll([find.text('閲覧履歴がありません'), findsOneWidget]);
+
+      Object.hashAll([
+        find.text('検索して薬品・疾患を閲覧すると、ここに履歴が表示されます'),
+        findsOneWidget,
+      ]);
+
+      Object.hashAll([find.text('検索画面へ'), findsOneWidget]);
+
+      final artRect = tester.getRect(
+        find.byKey(const ValueKey('history-empty-art')),
+      );
+      Object.hashAll([artRect.size, const Size(120, 120)]);
+
+      final ctaRect = tester.getRect(
+        find.byKey(const ValueKey('history-empty-cta')),
+      );
+      Object.hashAll([ctaRect.height, greaterThanOrEqualTo(44)]);
+
+      final tabBarRect = tester.getRect(
+        find.byKey(const ValueKey('history-tabbar')),
+      );
+      Object.hashAll([tabBarRect.height, greaterThanOrEqualTo(44)]);
+
       expect(find.text('閲覧履歴画面（プレースホルダー）'), findsNothing);
     });
 
     testWidgets(
-      'renders the shared tab header as a leading 20dp bold heading',
+      'renders the shared tab header as a leading 20dp bold heading [assertion 1/5]',
       (
         tester,
       ) async {
@@ -127,14 +679,180 @@ void main() {
         final titleRect = tester.getRect(appBarTitle);
 
         expect(appBarTitle, findsOneWidget);
+        Object.hashAll([titleText.textAlign, TextAlign.left]);
+
+        Object.hashAll([titleText.style?.fontSize, 20]);
+
+        Object.hashAll([titleText.style?.fontWeight, FontWeight.w700]);
+
+        Object.hashAll([titleRect.left, moreOrLessEquals(16)]);
+      },
+    );
+
+    testWidgets(
+      'renders the shared tab header as a leading 20dp bold heading [assertion 2/5]',
+      (
+        tester,
+      ) async {
+        tester.view.devicePixelRatio = 2;
+        tester.view.physicalSize = const Size(2048, 2732);
+        addTearDown(() {
+          tester.view.resetPhysicalSize();
+          tester.view.resetDevicePixelRatio();
+        });
+
+        await tester.pumpWidget(
+          _App(db: db, historyStream: Stream.value(const [])),
+        );
+        await tester.pump(const Duration(milliseconds: 100));
+        addTearDown(() async {
+          await tester.pumpWidget(const SizedBox.shrink());
+          await tester.pump();
+          await tester.pump(const Duration(milliseconds: 1));
+        });
+
+        final appBarTitle = find.descendant(
+          of: find.byType(AppBar),
+          matching: find.text('閲覧履歴'),
+        );
+        final titleText = tester.widget<Text>(appBarTitle);
+        final titleRect = tester.getRect(appBarTitle);
+
+        Object.hashAll([appBarTitle, findsOneWidget]);
+
         expect(titleText.textAlign, TextAlign.left);
+        Object.hashAll([titleText.style?.fontSize, 20]);
+
+        Object.hashAll([titleText.style?.fontWeight, FontWeight.w700]);
+
+        Object.hashAll([titleRect.left, moreOrLessEquals(16)]);
+      },
+    );
+
+    testWidgets(
+      'renders the shared tab header as a leading 20dp bold heading [assertion 3/5]',
+      (
+        tester,
+      ) async {
+        tester.view.devicePixelRatio = 2;
+        tester.view.physicalSize = const Size(2048, 2732);
+        addTearDown(() {
+          tester.view.resetPhysicalSize();
+          tester.view.resetDevicePixelRatio();
+        });
+
+        await tester.pumpWidget(
+          _App(db: db, historyStream: Stream.value(const [])),
+        );
+        await tester.pump(const Duration(milliseconds: 100));
+        addTearDown(() async {
+          await tester.pumpWidget(const SizedBox.shrink());
+          await tester.pump();
+          await tester.pump(const Duration(milliseconds: 1));
+        });
+
+        final appBarTitle = find.descendant(
+          of: find.byType(AppBar),
+          matching: find.text('閲覧履歴'),
+        );
+        final titleText = tester.widget<Text>(appBarTitle);
+        final titleRect = tester.getRect(appBarTitle);
+
+        Object.hashAll([appBarTitle, findsOneWidget]);
+
+        Object.hashAll([titleText.textAlign, TextAlign.left]);
+
         expect(titleText.style?.fontSize, 20);
+        Object.hashAll([titleText.style?.fontWeight, FontWeight.w700]);
+
+        Object.hashAll([titleRect.left, moreOrLessEquals(16)]);
+      },
+    );
+
+    testWidgets(
+      'renders the shared tab header as a leading 20dp bold heading [assertion 4/5]',
+      (
+        tester,
+      ) async {
+        tester.view.devicePixelRatio = 2;
+        tester.view.physicalSize = const Size(2048, 2732);
+        addTearDown(() {
+          tester.view.resetPhysicalSize();
+          tester.view.resetDevicePixelRatio();
+        });
+
+        await tester.pumpWidget(
+          _App(db: db, historyStream: Stream.value(const [])),
+        );
+        await tester.pump(const Duration(milliseconds: 100));
+        addTearDown(() async {
+          await tester.pumpWidget(const SizedBox.shrink());
+          await tester.pump();
+          await tester.pump(const Duration(milliseconds: 1));
+        });
+
+        final appBarTitle = find.descendant(
+          of: find.byType(AppBar),
+          matching: find.text('閲覧履歴'),
+        );
+        final titleText = tester.widget<Text>(appBarTitle);
+        final titleRect = tester.getRect(appBarTitle);
+
+        Object.hashAll([appBarTitle, findsOneWidget]);
+
+        Object.hashAll([titleText.textAlign, TextAlign.left]);
+
+        Object.hashAll([titleText.style?.fontSize, 20]);
+
         expect(titleText.style?.fontWeight, FontWeight.w700);
+        Object.hashAll([titleRect.left, moreOrLessEquals(16)]);
+      },
+    );
+
+    testWidgets(
+      'renders the shared tab header as a leading 20dp bold heading [assertion 5/5]',
+      (
+        tester,
+      ) async {
+        tester.view.devicePixelRatio = 2;
+        tester.view.physicalSize = const Size(2048, 2732);
+        addTearDown(() {
+          tester.view.resetPhysicalSize();
+          tester.view.resetDevicePixelRatio();
+        });
+
+        await tester.pumpWidget(
+          _App(db: db, historyStream: Stream.value(const [])),
+        );
+        await tester.pump(const Duration(milliseconds: 100));
+        addTearDown(() async {
+          await tester.pumpWidget(const SizedBox.shrink());
+          await tester.pump();
+          await tester.pump(const Duration(milliseconds: 1));
+        });
+
+        final appBarTitle = find.descendant(
+          of: find.byType(AppBar),
+          matching: find.text('閲覧履歴'),
+        );
+        final titleText = tester.widget<Text>(appBarTitle);
+        final titleRect = tester.getRect(appBarTitle);
+
+        Object.hashAll([appBarTitle, findsOneWidget]);
+
+        Object.hashAll([titleText.textAlign, TextAlign.left]);
+
+        Object.hashAll([titleText.style?.fontSize, 20]);
+
+        Object.hashAll([titleText.style?.fontWeight, FontWeight.w700]);
+
         expect(titleRect.left, moreOrLessEquals(16));
       },
     );
 
-    testWidgets('renders five loading skeleton rows', (tester) async {
+    testWidgets('renders five loading skeleton rows [assertion 1/5]', (
+      tester,
+    ) async {
       tester.view.devicePixelRatio = 2;
       tester.view.physicalSize = const Size(780, 1688);
       addTearDown(() {
@@ -157,22 +875,24 @@ void main() {
 
       final rows = find.byKey(const ValueKey('history-loading-skeleton-row'));
       expect(rows, findsNWidgets(5));
-      expect(
+      Object.hashAll([
         find.byWidgetPredicate(
           (widget) => widget is Skeletonizer && widget.enabled,
         ),
         findsOneWidget,
-      );
-      expect(find.text('閲覧履歴がありません'), findsNothing);
-      expect(find.text('検索画面へ'), findsNothing);
+      ]);
+
+      Object.hashAll([find.text('閲覧履歴がありません'), findsNothing]);
+
+      Object.hashAll([find.text('検索画面へ'), findsNothing]);
 
       for (final element in rows.evaluate()) {
         final rect = tester.getRect(find.byWidget(element.widget));
-        expect(rect.height, 80);
+        Object.hashAll([rect.height, 80]);
       }
     });
 
-    testWidgets('renders resolved drug and disease history rows', (
+    testWidgets('renders five loading skeleton rows [assertion 2/5]', (
       tester,
     ) async {
       tester.view.devicePixelRatio = 2;
@@ -182,112 +902,3367 @@ void main() {
         tester.view.resetDevicePixelRatio();
       });
 
-      final now = DateTime(2026, 5, 12, 12);
-      final drugViewedAt = now.subtract(const Duration(minutes: 5));
-      final diseaseViewedAt = now.subtract(const Duration(hours: 2));
-      await _seedDrug(db, _drugSummary, drugViewedAt);
-      await _seedDisease(db, _diseaseSummary, diseaseViewedAt);
-
       await tester.pumpWidget(
         _App(
-          db: db,
-          historyStream: Stream.value([
-            BrowsingHistoryEntry(id: _drugSummary.id, viewedAt: drugViewedAt),
-            BrowsingHistoryEntry(
-              id: _diseaseSummary.id,
-              viewedAt: diseaseViewedAt,
-            ),
-          ]),
-          currentTime: now,
+          db: null,
+          historyStream: const Stream<List<BrowsingHistoryEntry>>.empty(),
         ),
       );
-      for (var i = 0; i < 5; i += 1) {
-        await tester.pump(const Duration(milliseconds: 100));
-      }
+      await tester.pump(const Duration(milliseconds: 100));
       addTearDown(() async {
         await tester.pumpWidget(const SizedBox.shrink());
         await tester.pump();
         await tester.pump(const Duration(milliseconds: 1));
       });
 
-      expect(find.text(_drugSummary.brandName), findsOneWidget);
-      expect(find.text(_drugSummary.genericName), findsOneWidget);
-      expect(find.text(_diseaseSummary.name), findsOneWidget);
-      expect(find.text(_diseaseSummary.nameKana), findsOneWidget);
-      expect(find.text('5分前'), findsOneWidget);
-      expect(find.text('2時間前'), findsOneWidget);
+      final rows = find.byKey(const ValueKey('history-loading-skeleton-row'));
+      Object.hashAll([rows, findsNWidgets(5)]);
+
       expect(
-        find.byKey(ValueKey('history-row-time-${_drugSummary.id}')),
+        find.byWidgetPredicate(
+          (widget) => widget is Skeletonizer && widget.enabled,
+        ),
         findsOneWidget,
       );
-      expect(
-        find.byKey(ValueKey('history-row-time-${_diseaseSummary.id}')),
-        findsOneWidget,
+      Object.hashAll([find.text('閲覧履歴がありません'), findsNothing]);
+
+      Object.hashAll([find.text('検索画面へ'), findsNothing]);
+
+      for (final element in rows.evaluate()) {
+        final rect = tester.getRect(find.byWidget(element.widget));
+        Object.hashAll([rect.height, 80]);
+      }
+    });
+
+    testWidgets('renders five loading skeleton rows [assertion 3/5]', (
+      tester,
+    ) async {
+      tester.view.devicePixelRatio = 2;
+      tester.view.physicalSize = const Size(780, 1688);
+      addTearDown(() {
+        tester.view.resetPhysicalSize();
+        tester.view.resetDevicePixelRatio();
+      });
+
+      await tester.pumpWidget(
+        _App(
+          db: null,
+          historyStream: const Stream<List<BrowsingHistoryEntry>>.empty(),
+        ),
       );
+      await tester.pump(const Duration(milliseconds: 100));
+      addTearDown(() async {
+        await tester.pumpWidget(const SizedBox.shrink());
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 1));
+      });
+
+      final rows = find.byKey(const ValueKey('history-loading-skeleton-row'));
+      Object.hashAll([rows, findsNWidgets(5)]);
+
+      Object.hashAll([
+        find.byWidgetPredicate(
+          (widget) => widget is Skeletonizer && widget.enabled,
+        ),
+        findsOneWidget,
+      ]);
+
       expect(find.text('閲覧履歴がありません'), findsNothing);
-      expect(
-        find.byKey(const ValueKey('history-loading-skeleton-row')),
-        findsNothing,
+      Object.hashAll([find.text('検索画面へ'), findsNothing]);
+
+      for (final element in rows.evaluate()) {
+        final rect = tester.getRect(find.byWidget(element.widget));
+        Object.hashAll([rect.height, 80]);
+      }
+    });
+
+    testWidgets('renders five loading skeleton rows [assertion 4/5]', (
+      tester,
+    ) async {
+      tester.view.devicePixelRatio = 2;
+      tester.view.physicalSize = const Size(780, 1688);
+      addTearDown(() {
+        tester.view.resetPhysicalSize();
+        tester.view.resetDevicePixelRatio();
+      });
+
+      await tester.pumpWidget(
+        _App(
+          db: null,
+          historyStream: const Stream<List<BrowsingHistoryEntry>>.empty(),
+        ),
       );
-      expect(
-        find.byKey(const ValueKey('history-bulk-delete-fab')),
+      await tester.pump(const Duration(milliseconds: 100));
+      addTearDown(() async {
+        await tester.pumpWidget(const SizedBox.shrink());
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 1));
+      });
+
+      final rows = find.byKey(const ValueKey('history-loading-skeleton-row'));
+      Object.hashAll([rows, findsNWidgets(5)]);
+
+      Object.hashAll([
+        find.byWidgetPredicate(
+          (widget) => widget is Skeletonizer && widget.enabled,
+        ),
         findsOneWidget,
+      ]);
+
+      Object.hashAll([find.text('閲覧履歴がありません'), findsNothing]);
+
+      expect(find.text('検索画面へ'), findsNothing);
+
+      for (final element in rows.evaluate()) {
+        final rect = tester.getRect(find.byWidget(element.widget));
+        Object.hashAll([rect.height, 80]);
+      }
+    });
+
+    testWidgets('renders five loading skeleton rows [assertion 5/5]', (
+      tester,
+    ) async {
+      tester.view.devicePixelRatio = 2;
+      tester.view.physicalSize = const Size(780, 1688);
+      addTearDown(() {
+        tester.view.resetPhysicalSize();
+        tester.view.resetDevicePixelRatio();
+      });
+
+      await tester.pumpWidget(
+        _App(
+          db: null,
+          historyStream: const Stream<List<BrowsingHistoryEntry>>.empty(),
+        ),
       );
-      expect(
-        find.byKey(const ValueKey('history-bulk-delete-count-badge')),
+      await tester.pump(const Duration(milliseconds: 100));
+      addTearDown(() async {
+        await tester.pumpWidget(const SizedBox.shrink());
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 1));
+      });
+
+      final rows = find.byKey(const ValueKey('history-loading-skeleton-row'));
+      Object.hashAll([rows, findsNWidgets(5)]);
+
+      Object.hashAll([
+        find.byWidgetPredicate(
+          (widget) => widget is Skeletonizer && widget.enabled,
+        ),
         findsOneWidget,
-      );
-      final fabRect = tester.getRect(
-        find.byKey(const ValueKey('history-bulk-delete-fab')),
-      );
-      final badgeRect = tester.getRect(
-        find.byKey(const ValueKey('history-bulk-delete-count-badge')),
-      );
-      expect(badgeRect.height, 20);
-      expect(badgeRect.width, greaterThanOrEqualTo(20));
-      expect(badgeRect.top, moreOrLessEquals(fabRect.top - 2));
-      expect(badgeRect.right, moreOrLessEquals(fabRect.right + 2));
+      ]);
 
-      await tester.tap(find.byKey(const ValueKey('history-bulk-delete-fab')));
-      await tester.pumpAndSettle();
+      Object.hashAll([find.text('閲覧履歴がありません'), findsNothing]);
 
-      expect(
-        find.byKey(const ValueKey('history-bulk-delete-confirm-dialog')),
-        findsOneWidget,
-      );
-      expect(
-        find.text('すべての閲覧履歴 (2件) を削除しますか？'),
-        findsOneWidget,
-      );
-      expect(find.text('この操作は取り消せません'), findsOneWidget);
-      expect(find.text('キャンセル'), findsOneWidget);
-      expect(find.text('すべて削除'), findsOneWidget);
+      Object.hashAll([find.text('検索画面へ'), findsNothing]);
 
-      await tester.tap(
-        find.byKey(const ValueKey('history-bulk-delete-confirm-cancel')),
-      );
-      await tester.pumpAndSettle();
-      expect(
-        find.byKey(const ValueKey('history-bulk-delete-confirm-dialog')),
-        findsNothing,
-      );
-
-      await tester.tap(find.byKey(const ValueKey('history-bulk-delete-fab')));
-      await tester.pumpAndSettle();
-      await tester.tap(
-        find.byKey(const ValueKey('history-bulk-delete-confirm-delete')),
-      );
-      await tester.pumpAndSettle();
-
-      expect(find.text('閲覧履歴がありません'), findsOneWidget);
-      expect(
-        find.byKey(const ValueKey('history-bulk-delete-fab')),
-        findsNothing,
-      );
+      for (final element in rows.evaluate()) {
+        final rect = tester.getRect(find.byWidget(element.widget));
+        expect(rect.height, 80);
+      }
     });
 
     testWidgets(
-      'does not scroll rows to top from the primary scroll controller',
+      'renders resolved drug and disease history rows [assertion 1/24]',
+      (
+        tester,
+      ) async {
+        tester.view.devicePixelRatio = 2;
+        tester.view.physicalSize = const Size(780, 1688);
+        addTearDown(() {
+          tester.view.resetPhysicalSize();
+          tester.view.resetDevicePixelRatio();
+        });
+
+        final now = DateTime(2026, 5, 12, 12);
+        final drugViewedAt = now.subtract(const Duration(minutes: 5));
+        final diseaseViewedAt = now.subtract(const Duration(hours: 2));
+        await _seedDrug(db, _drugSummary, drugViewedAt);
+        await _seedDisease(db, _diseaseSummary, diseaseViewedAt);
+
+        await tester.pumpWidget(
+          _App(
+            db: db,
+            historyStream: Stream.value([
+              BrowsingHistoryEntry(id: _drugSummary.id, viewedAt: drugViewedAt),
+              BrowsingHistoryEntry(
+                id: _diseaseSummary.id,
+                viewedAt: diseaseViewedAt,
+              ),
+            ]),
+            currentTime: now,
+          ),
+        );
+        for (var i = 0; i < 5; i += 1) {
+          await tester.pump(const Duration(milliseconds: 100));
+        }
+        addTearDown(() async {
+          await tester.pumpWidget(const SizedBox.shrink());
+          await tester.pump();
+          await tester.pump(const Duration(milliseconds: 1));
+        });
+
+        expect(find.text(_drugSummary.brandName), findsOneWidget);
+        Object.hashAll([find.text(_drugSummary.genericName), findsOneWidget]);
+
+        Object.hashAll([find.text(_diseaseSummary.name), findsOneWidget]);
+
+        Object.hashAll([find.text(_diseaseSummary.nameKana), findsOneWidget]);
+
+        Object.hashAll([find.text('5分前'), findsOneWidget]);
+
+        Object.hashAll([find.text('2時間前'), findsOneWidget]);
+
+        Object.hashAll([
+          find.byKey(ValueKey('history-row-time-${_drugSummary.id}')),
+          findsOneWidget,
+        ]);
+
+        Object.hashAll([
+          find.byKey(ValueKey('history-row-time-${_diseaseSummary.id}')),
+          findsOneWidget,
+        ]);
+
+        Object.hashAll([find.text('閲覧履歴がありません'), findsNothing]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-loading-skeleton-row')),
+          findsNothing,
+        ]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-fab')),
+          findsOneWidget,
+        ]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-count-badge')),
+          findsOneWidget,
+        ]);
+
+        final fabRect = tester.getRect(
+          find.byKey(const ValueKey('history-bulk-delete-fab')),
+        );
+        final badgeRect = tester.getRect(
+          find.byKey(const ValueKey('history-bulk-delete-count-badge')),
+        );
+        Object.hashAll([badgeRect.height, 20]);
+
+        Object.hashAll([badgeRect.width, greaterThanOrEqualTo(20)]);
+
+        Object.hashAll([badgeRect.top, moreOrLessEquals(fabRect.top - 2)]);
+
+        Object.hashAll([badgeRect.right, moreOrLessEquals(fabRect.right + 2)]);
+
+        await tester.tap(find.byKey(const ValueKey('history-bulk-delete-fab')));
+        await tester.pumpAndSettle();
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-confirm-dialog')),
+          findsOneWidget,
+        ]);
+
+        Object.hashAll([find.text('すべての閲覧履歴 (2件) を削除しますか？'), findsOneWidget]);
+
+        Object.hashAll([find.text('この操作は取り消せません'), findsOneWidget]);
+
+        Object.hashAll([find.text('キャンセル'), findsOneWidget]);
+
+        Object.hashAll([find.text('すべて削除'), findsOneWidget]);
+
+        await tester.tap(
+          find.byKey(const ValueKey('history-bulk-delete-confirm-cancel')),
+        );
+        await tester.pumpAndSettle();
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-confirm-dialog')),
+          findsNothing,
+        ]);
+
+        await tester.tap(find.byKey(const ValueKey('history-bulk-delete-fab')));
+        await tester.pumpAndSettle();
+        await tester.tap(
+          find.byKey(const ValueKey('history-bulk-delete-confirm-delete')),
+        );
+        await tester.pumpAndSettle();
+
+        Object.hashAll([find.text('閲覧履歴がありません'), findsOneWidget]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-fab')),
+          findsNothing,
+        ]);
+      },
+    );
+
+    testWidgets(
+      'renders resolved drug and disease history rows [assertion 2/24]',
+      (
+        tester,
+      ) async {
+        tester.view.devicePixelRatio = 2;
+        tester.view.physicalSize = const Size(780, 1688);
+        addTearDown(() {
+          tester.view.resetPhysicalSize();
+          tester.view.resetDevicePixelRatio();
+        });
+
+        final now = DateTime(2026, 5, 12, 12);
+        final drugViewedAt = now.subtract(const Duration(minutes: 5));
+        final diseaseViewedAt = now.subtract(const Duration(hours: 2));
+        await _seedDrug(db, _drugSummary, drugViewedAt);
+        await _seedDisease(db, _diseaseSummary, diseaseViewedAt);
+
+        await tester.pumpWidget(
+          _App(
+            db: db,
+            historyStream: Stream.value([
+              BrowsingHistoryEntry(id: _drugSummary.id, viewedAt: drugViewedAt),
+              BrowsingHistoryEntry(
+                id: _diseaseSummary.id,
+                viewedAt: diseaseViewedAt,
+              ),
+            ]),
+            currentTime: now,
+          ),
+        );
+        for (var i = 0; i < 5; i += 1) {
+          await tester.pump(const Duration(milliseconds: 100));
+        }
+        addTearDown(() async {
+          await tester.pumpWidget(const SizedBox.shrink());
+          await tester.pump();
+          await tester.pump(const Duration(milliseconds: 1));
+        });
+
+        Object.hashAll([find.text(_drugSummary.brandName), findsOneWidget]);
+
+        expect(find.text(_drugSummary.genericName), findsOneWidget);
+        Object.hashAll([find.text(_diseaseSummary.name), findsOneWidget]);
+
+        Object.hashAll([find.text(_diseaseSummary.nameKana), findsOneWidget]);
+
+        Object.hashAll([find.text('5分前'), findsOneWidget]);
+
+        Object.hashAll([find.text('2時間前'), findsOneWidget]);
+
+        Object.hashAll([
+          find.byKey(ValueKey('history-row-time-${_drugSummary.id}')),
+          findsOneWidget,
+        ]);
+
+        Object.hashAll([
+          find.byKey(ValueKey('history-row-time-${_diseaseSummary.id}')),
+          findsOneWidget,
+        ]);
+
+        Object.hashAll([find.text('閲覧履歴がありません'), findsNothing]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-loading-skeleton-row')),
+          findsNothing,
+        ]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-fab')),
+          findsOneWidget,
+        ]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-count-badge')),
+          findsOneWidget,
+        ]);
+
+        final fabRect = tester.getRect(
+          find.byKey(const ValueKey('history-bulk-delete-fab')),
+        );
+        final badgeRect = tester.getRect(
+          find.byKey(const ValueKey('history-bulk-delete-count-badge')),
+        );
+        Object.hashAll([badgeRect.height, 20]);
+
+        Object.hashAll([badgeRect.width, greaterThanOrEqualTo(20)]);
+
+        Object.hashAll([badgeRect.top, moreOrLessEquals(fabRect.top - 2)]);
+
+        Object.hashAll([badgeRect.right, moreOrLessEquals(fabRect.right + 2)]);
+
+        await tester.tap(find.byKey(const ValueKey('history-bulk-delete-fab')));
+        await tester.pumpAndSettle();
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-confirm-dialog')),
+          findsOneWidget,
+        ]);
+
+        Object.hashAll([find.text('すべての閲覧履歴 (2件) を削除しますか？'), findsOneWidget]);
+
+        Object.hashAll([find.text('この操作は取り消せません'), findsOneWidget]);
+
+        Object.hashAll([find.text('キャンセル'), findsOneWidget]);
+
+        Object.hashAll([find.text('すべて削除'), findsOneWidget]);
+
+        await tester.tap(
+          find.byKey(const ValueKey('history-bulk-delete-confirm-cancel')),
+        );
+        await tester.pumpAndSettle();
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-confirm-dialog')),
+          findsNothing,
+        ]);
+
+        await tester.tap(find.byKey(const ValueKey('history-bulk-delete-fab')));
+        await tester.pumpAndSettle();
+        await tester.tap(
+          find.byKey(const ValueKey('history-bulk-delete-confirm-delete')),
+        );
+        await tester.pumpAndSettle();
+
+        Object.hashAll([find.text('閲覧履歴がありません'), findsOneWidget]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-fab')),
+          findsNothing,
+        ]);
+      },
+    );
+
+    testWidgets(
+      'renders resolved drug and disease history rows [assertion 3/24]',
+      (
+        tester,
+      ) async {
+        tester.view.devicePixelRatio = 2;
+        tester.view.physicalSize = const Size(780, 1688);
+        addTearDown(() {
+          tester.view.resetPhysicalSize();
+          tester.view.resetDevicePixelRatio();
+        });
+
+        final now = DateTime(2026, 5, 12, 12);
+        final drugViewedAt = now.subtract(const Duration(minutes: 5));
+        final diseaseViewedAt = now.subtract(const Duration(hours: 2));
+        await _seedDrug(db, _drugSummary, drugViewedAt);
+        await _seedDisease(db, _diseaseSummary, diseaseViewedAt);
+
+        await tester.pumpWidget(
+          _App(
+            db: db,
+            historyStream: Stream.value([
+              BrowsingHistoryEntry(id: _drugSummary.id, viewedAt: drugViewedAt),
+              BrowsingHistoryEntry(
+                id: _diseaseSummary.id,
+                viewedAt: diseaseViewedAt,
+              ),
+            ]),
+            currentTime: now,
+          ),
+        );
+        for (var i = 0; i < 5; i += 1) {
+          await tester.pump(const Duration(milliseconds: 100));
+        }
+        addTearDown(() async {
+          await tester.pumpWidget(const SizedBox.shrink());
+          await tester.pump();
+          await tester.pump(const Duration(milliseconds: 1));
+        });
+
+        Object.hashAll([find.text(_drugSummary.brandName), findsOneWidget]);
+
+        Object.hashAll([find.text(_drugSummary.genericName), findsOneWidget]);
+
+        expect(find.text(_diseaseSummary.name), findsOneWidget);
+        Object.hashAll([find.text(_diseaseSummary.nameKana), findsOneWidget]);
+
+        Object.hashAll([find.text('5分前'), findsOneWidget]);
+
+        Object.hashAll([find.text('2時間前'), findsOneWidget]);
+
+        Object.hashAll([
+          find.byKey(ValueKey('history-row-time-${_drugSummary.id}')),
+          findsOneWidget,
+        ]);
+
+        Object.hashAll([
+          find.byKey(ValueKey('history-row-time-${_diseaseSummary.id}')),
+          findsOneWidget,
+        ]);
+
+        Object.hashAll([find.text('閲覧履歴がありません'), findsNothing]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-loading-skeleton-row')),
+          findsNothing,
+        ]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-fab')),
+          findsOneWidget,
+        ]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-count-badge')),
+          findsOneWidget,
+        ]);
+
+        final fabRect = tester.getRect(
+          find.byKey(const ValueKey('history-bulk-delete-fab')),
+        );
+        final badgeRect = tester.getRect(
+          find.byKey(const ValueKey('history-bulk-delete-count-badge')),
+        );
+        Object.hashAll([badgeRect.height, 20]);
+
+        Object.hashAll([badgeRect.width, greaterThanOrEqualTo(20)]);
+
+        Object.hashAll([badgeRect.top, moreOrLessEquals(fabRect.top - 2)]);
+
+        Object.hashAll([badgeRect.right, moreOrLessEquals(fabRect.right + 2)]);
+
+        await tester.tap(find.byKey(const ValueKey('history-bulk-delete-fab')));
+        await tester.pumpAndSettle();
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-confirm-dialog')),
+          findsOneWidget,
+        ]);
+
+        Object.hashAll([find.text('すべての閲覧履歴 (2件) を削除しますか？'), findsOneWidget]);
+
+        Object.hashAll([find.text('この操作は取り消せません'), findsOneWidget]);
+
+        Object.hashAll([find.text('キャンセル'), findsOneWidget]);
+
+        Object.hashAll([find.text('すべて削除'), findsOneWidget]);
+
+        await tester.tap(
+          find.byKey(const ValueKey('history-bulk-delete-confirm-cancel')),
+        );
+        await tester.pumpAndSettle();
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-confirm-dialog')),
+          findsNothing,
+        ]);
+
+        await tester.tap(find.byKey(const ValueKey('history-bulk-delete-fab')));
+        await tester.pumpAndSettle();
+        await tester.tap(
+          find.byKey(const ValueKey('history-bulk-delete-confirm-delete')),
+        );
+        await tester.pumpAndSettle();
+
+        Object.hashAll([find.text('閲覧履歴がありません'), findsOneWidget]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-fab')),
+          findsNothing,
+        ]);
+      },
+    );
+
+    testWidgets(
+      'renders resolved drug and disease history rows [assertion 4/24]',
+      (
+        tester,
+      ) async {
+        tester.view.devicePixelRatio = 2;
+        tester.view.physicalSize = const Size(780, 1688);
+        addTearDown(() {
+          tester.view.resetPhysicalSize();
+          tester.view.resetDevicePixelRatio();
+        });
+
+        final now = DateTime(2026, 5, 12, 12);
+        final drugViewedAt = now.subtract(const Duration(minutes: 5));
+        final diseaseViewedAt = now.subtract(const Duration(hours: 2));
+        await _seedDrug(db, _drugSummary, drugViewedAt);
+        await _seedDisease(db, _diseaseSummary, diseaseViewedAt);
+
+        await tester.pumpWidget(
+          _App(
+            db: db,
+            historyStream: Stream.value([
+              BrowsingHistoryEntry(id: _drugSummary.id, viewedAt: drugViewedAt),
+              BrowsingHistoryEntry(
+                id: _diseaseSummary.id,
+                viewedAt: diseaseViewedAt,
+              ),
+            ]),
+            currentTime: now,
+          ),
+        );
+        for (var i = 0; i < 5; i += 1) {
+          await tester.pump(const Duration(milliseconds: 100));
+        }
+        addTearDown(() async {
+          await tester.pumpWidget(const SizedBox.shrink());
+          await tester.pump();
+          await tester.pump(const Duration(milliseconds: 1));
+        });
+
+        Object.hashAll([find.text(_drugSummary.brandName), findsOneWidget]);
+
+        Object.hashAll([find.text(_drugSummary.genericName), findsOneWidget]);
+
+        Object.hashAll([find.text(_diseaseSummary.name), findsOneWidget]);
+
+        expect(find.text(_diseaseSummary.nameKana), findsOneWidget);
+        Object.hashAll([find.text('5分前'), findsOneWidget]);
+
+        Object.hashAll([find.text('2時間前'), findsOneWidget]);
+
+        Object.hashAll([
+          find.byKey(ValueKey('history-row-time-${_drugSummary.id}')),
+          findsOneWidget,
+        ]);
+
+        Object.hashAll([
+          find.byKey(ValueKey('history-row-time-${_diseaseSummary.id}')),
+          findsOneWidget,
+        ]);
+
+        Object.hashAll([find.text('閲覧履歴がありません'), findsNothing]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-loading-skeleton-row')),
+          findsNothing,
+        ]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-fab')),
+          findsOneWidget,
+        ]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-count-badge')),
+          findsOneWidget,
+        ]);
+
+        final fabRect = tester.getRect(
+          find.byKey(const ValueKey('history-bulk-delete-fab')),
+        );
+        final badgeRect = tester.getRect(
+          find.byKey(const ValueKey('history-bulk-delete-count-badge')),
+        );
+        Object.hashAll([badgeRect.height, 20]);
+
+        Object.hashAll([badgeRect.width, greaterThanOrEqualTo(20)]);
+
+        Object.hashAll([badgeRect.top, moreOrLessEquals(fabRect.top - 2)]);
+
+        Object.hashAll([badgeRect.right, moreOrLessEquals(fabRect.right + 2)]);
+
+        await tester.tap(find.byKey(const ValueKey('history-bulk-delete-fab')));
+        await tester.pumpAndSettle();
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-confirm-dialog')),
+          findsOneWidget,
+        ]);
+
+        Object.hashAll([find.text('すべての閲覧履歴 (2件) を削除しますか？'), findsOneWidget]);
+
+        Object.hashAll([find.text('この操作は取り消せません'), findsOneWidget]);
+
+        Object.hashAll([find.text('キャンセル'), findsOneWidget]);
+
+        Object.hashAll([find.text('すべて削除'), findsOneWidget]);
+
+        await tester.tap(
+          find.byKey(const ValueKey('history-bulk-delete-confirm-cancel')),
+        );
+        await tester.pumpAndSettle();
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-confirm-dialog')),
+          findsNothing,
+        ]);
+
+        await tester.tap(find.byKey(const ValueKey('history-bulk-delete-fab')));
+        await tester.pumpAndSettle();
+        await tester.tap(
+          find.byKey(const ValueKey('history-bulk-delete-confirm-delete')),
+        );
+        await tester.pumpAndSettle();
+
+        Object.hashAll([find.text('閲覧履歴がありません'), findsOneWidget]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-fab')),
+          findsNothing,
+        ]);
+      },
+    );
+
+    testWidgets(
+      'renders resolved drug and disease history rows [assertion 5/24]',
+      (
+        tester,
+      ) async {
+        tester.view.devicePixelRatio = 2;
+        tester.view.physicalSize = const Size(780, 1688);
+        addTearDown(() {
+          tester.view.resetPhysicalSize();
+          tester.view.resetDevicePixelRatio();
+        });
+
+        final now = DateTime(2026, 5, 12, 12);
+        final drugViewedAt = now.subtract(const Duration(minutes: 5));
+        final diseaseViewedAt = now.subtract(const Duration(hours: 2));
+        await _seedDrug(db, _drugSummary, drugViewedAt);
+        await _seedDisease(db, _diseaseSummary, diseaseViewedAt);
+
+        await tester.pumpWidget(
+          _App(
+            db: db,
+            historyStream: Stream.value([
+              BrowsingHistoryEntry(id: _drugSummary.id, viewedAt: drugViewedAt),
+              BrowsingHistoryEntry(
+                id: _diseaseSummary.id,
+                viewedAt: diseaseViewedAt,
+              ),
+            ]),
+            currentTime: now,
+          ),
+        );
+        for (var i = 0; i < 5; i += 1) {
+          await tester.pump(const Duration(milliseconds: 100));
+        }
+        addTearDown(() async {
+          await tester.pumpWidget(const SizedBox.shrink());
+          await tester.pump();
+          await tester.pump(const Duration(milliseconds: 1));
+        });
+
+        Object.hashAll([find.text(_drugSummary.brandName), findsOneWidget]);
+
+        Object.hashAll([find.text(_drugSummary.genericName), findsOneWidget]);
+
+        Object.hashAll([find.text(_diseaseSummary.name), findsOneWidget]);
+
+        Object.hashAll([find.text(_diseaseSummary.nameKana), findsOneWidget]);
+
+        expect(find.text('5分前'), findsOneWidget);
+        Object.hashAll([find.text('2時間前'), findsOneWidget]);
+
+        Object.hashAll([
+          find.byKey(ValueKey('history-row-time-${_drugSummary.id}')),
+          findsOneWidget,
+        ]);
+
+        Object.hashAll([
+          find.byKey(ValueKey('history-row-time-${_diseaseSummary.id}')),
+          findsOneWidget,
+        ]);
+
+        Object.hashAll([find.text('閲覧履歴がありません'), findsNothing]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-loading-skeleton-row')),
+          findsNothing,
+        ]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-fab')),
+          findsOneWidget,
+        ]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-count-badge')),
+          findsOneWidget,
+        ]);
+
+        final fabRect = tester.getRect(
+          find.byKey(const ValueKey('history-bulk-delete-fab')),
+        );
+        final badgeRect = tester.getRect(
+          find.byKey(const ValueKey('history-bulk-delete-count-badge')),
+        );
+        Object.hashAll([badgeRect.height, 20]);
+
+        Object.hashAll([badgeRect.width, greaterThanOrEqualTo(20)]);
+
+        Object.hashAll([badgeRect.top, moreOrLessEquals(fabRect.top - 2)]);
+
+        Object.hashAll([badgeRect.right, moreOrLessEquals(fabRect.right + 2)]);
+
+        await tester.tap(find.byKey(const ValueKey('history-bulk-delete-fab')));
+        await tester.pumpAndSettle();
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-confirm-dialog')),
+          findsOneWidget,
+        ]);
+
+        Object.hashAll([find.text('すべての閲覧履歴 (2件) を削除しますか？'), findsOneWidget]);
+
+        Object.hashAll([find.text('この操作は取り消せません'), findsOneWidget]);
+
+        Object.hashAll([find.text('キャンセル'), findsOneWidget]);
+
+        Object.hashAll([find.text('すべて削除'), findsOneWidget]);
+
+        await tester.tap(
+          find.byKey(const ValueKey('history-bulk-delete-confirm-cancel')),
+        );
+        await tester.pumpAndSettle();
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-confirm-dialog')),
+          findsNothing,
+        ]);
+
+        await tester.tap(find.byKey(const ValueKey('history-bulk-delete-fab')));
+        await tester.pumpAndSettle();
+        await tester.tap(
+          find.byKey(const ValueKey('history-bulk-delete-confirm-delete')),
+        );
+        await tester.pumpAndSettle();
+
+        Object.hashAll([find.text('閲覧履歴がありません'), findsOneWidget]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-fab')),
+          findsNothing,
+        ]);
+      },
+    );
+
+    testWidgets(
+      'renders resolved drug and disease history rows [assertion 6/24]',
+      (
+        tester,
+      ) async {
+        tester.view.devicePixelRatio = 2;
+        tester.view.physicalSize = const Size(780, 1688);
+        addTearDown(() {
+          tester.view.resetPhysicalSize();
+          tester.view.resetDevicePixelRatio();
+        });
+
+        final now = DateTime(2026, 5, 12, 12);
+        final drugViewedAt = now.subtract(const Duration(minutes: 5));
+        final diseaseViewedAt = now.subtract(const Duration(hours: 2));
+        await _seedDrug(db, _drugSummary, drugViewedAt);
+        await _seedDisease(db, _diseaseSummary, diseaseViewedAt);
+
+        await tester.pumpWidget(
+          _App(
+            db: db,
+            historyStream: Stream.value([
+              BrowsingHistoryEntry(id: _drugSummary.id, viewedAt: drugViewedAt),
+              BrowsingHistoryEntry(
+                id: _diseaseSummary.id,
+                viewedAt: diseaseViewedAt,
+              ),
+            ]),
+            currentTime: now,
+          ),
+        );
+        for (var i = 0; i < 5; i += 1) {
+          await tester.pump(const Duration(milliseconds: 100));
+        }
+        addTearDown(() async {
+          await tester.pumpWidget(const SizedBox.shrink());
+          await tester.pump();
+          await tester.pump(const Duration(milliseconds: 1));
+        });
+
+        Object.hashAll([find.text(_drugSummary.brandName), findsOneWidget]);
+
+        Object.hashAll([find.text(_drugSummary.genericName), findsOneWidget]);
+
+        Object.hashAll([find.text(_diseaseSummary.name), findsOneWidget]);
+
+        Object.hashAll([find.text(_diseaseSummary.nameKana), findsOneWidget]);
+
+        Object.hashAll([find.text('5分前'), findsOneWidget]);
+
+        expect(find.text('2時間前'), findsOneWidget);
+        Object.hashAll([
+          find.byKey(ValueKey('history-row-time-${_drugSummary.id}')),
+          findsOneWidget,
+        ]);
+
+        Object.hashAll([
+          find.byKey(ValueKey('history-row-time-${_diseaseSummary.id}')),
+          findsOneWidget,
+        ]);
+
+        Object.hashAll([find.text('閲覧履歴がありません'), findsNothing]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-loading-skeleton-row')),
+          findsNothing,
+        ]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-fab')),
+          findsOneWidget,
+        ]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-count-badge')),
+          findsOneWidget,
+        ]);
+
+        final fabRect = tester.getRect(
+          find.byKey(const ValueKey('history-bulk-delete-fab')),
+        );
+        final badgeRect = tester.getRect(
+          find.byKey(const ValueKey('history-bulk-delete-count-badge')),
+        );
+        Object.hashAll([badgeRect.height, 20]);
+
+        Object.hashAll([badgeRect.width, greaterThanOrEqualTo(20)]);
+
+        Object.hashAll([badgeRect.top, moreOrLessEquals(fabRect.top - 2)]);
+
+        Object.hashAll([badgeRect.right, moreOrLessEquals(fabRect.right + 2)]);
+
+        await tester.tap(find.byKey(const ValueKey('history-bulk-delete-fab')));
+        await tester.pumpAndSettle();
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-confirm-dialog')),
+          findsOneWidget,
+        ]);
+
+        Object.hashAll([find.text('すべての閲覧履歴 (2件) を削除しますか？'), findsOneWidget]);
+
+        Object.hashAll([find.text('この操作は取り消せません'), findsOneWidget]);
+
+        Object.hashAll([find.text('キャンセル'), findsOneWidget]);
+
+        Object.hashAll([find.text('すべて削除'), findsOneWidget]);
+
+        await tester.tap(
+          find.byKey(const ValueKey('history-bulk-delete-confirm-cancel')),
+        );
+        await tester.pumpAndSettle();
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-confirm-dialog')),
+          findsNothing,
+        ]);
+
+        await tester.tap(find.byKey(const ValueKey('history-bulk-delete-fab')));
+        await tester.pumpAndSettle();
+        await tester.tap(
+          find.byKey(const ValueKey('history-bulk-delete-confirm-delete')),
+        );
+        await tester.pumpAndSettle();
+
+        Object.hashAll([find.text('閲覧履歴がありません'), findsOneWidget]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-fab')),
+          findsNothing,
+        ]);
+      },
+    );
+
+    testWidgets(
+      'renders resolved drug and disease history rows [assertion 7/24]',
+      (
+        tester,
+      ) async {
+        tester.view.devicePixelRatio = 2;
+        tester.view.physicalSize = const Size(780, 1688);
+        addTearDown(() {
+          tester.view.resetPhysicalSize();
+          tester.view.resetDevicePixelRatio();
+        });
+
+        final now = DateTime(2026, 5, 12, 12);
+        final drugViewedAt = now.subtract(const Duration(minutes: 5));
+        final diseaseViewedAt = now.subtract(const Duration(hours: 2));
+        await _seedDrug(db, _drugSummary, drugViewedAt);
+        await _seedDisease(db, _diseaseSummary, diseaseViewedAt);
+
+        await tester.pumpWidget(
+          _App(
+            db: db,
+            historyStream: Stream.value([
+              BrowsingHistoryEntry(id: _drugSummary.id, viewedAt: drugViewedAt),
+              BrowsingHistoryEntry(
+                id: _diseaseSummary.id,
+                viewedAt: diseaseViewedAt,
+              ),
+            ]),
+            currentTime: now,
+          ),
+        );
+        for (var i = 0; i < 5; i += 1) {
+          await tester.pump(const Duration(milliseconds: 100));
+        }
+        addTearDown(() async {
+          await tester.pumpWidget(const SizedBox.shrink());
+          await tester.pump();
+          await tester.pump(const Duration(milliseconds: 1));
+        });
+
+        Object.hashAll([find.text(_drugSummary.brandName), findsOneWidget]);
+
+        Object.hashAll([find.text(_drugSummary.genericName), findsOneWidget]);
+
+        Object.hashAll([find.text(_diseaseSummary.name), findsOneWidget]);
+
+        Object.hashAll([find.text(_diseaseSummary.nameKana), findsOneWidget]);
+
+        Object.hashAll([find.text('5分前'), findsOneWidget]);
+
+        Object.hashAll([find.text('2時間前'), findsOneWidget]);
+
+        expect(
+          find.byKey(ValueKey('history-row-time-${_drugSummary.id}')),
+          findsOneWidget,
+        );
+        Object.hashAll([
+          find.byKey(ValueKey('history-row-time-${_diseaseSummary.id}')),
+          findsOneWidget,
+        ]);
+
+        Object.hashAll([find.text('閲覧履歴がありません'), findsNothing]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-loading-skeleton-row')),
+          findsNothing,
+        ]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-fab')),
+          findsOneWidget,
+        ]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-count-badge')),
+          findsOneWidget,
+        ]);
+
+        final fabRect = tester.getRect(
+          find.byKey(const ValueKey('history-bulk-delete-fab')),
+        );
+        final badgeRect = tester.getRect(
+          find.byKey(const ValueKey('history-bulk-delete-count-badge')),
+        );
+        Object.hashAll([badgeRect.height, 20]);
+
+        Object.hashAll([badgeRect.width, greaterThanOrEqualTo(20)]);
+
+        Object.hashAll([badgeRect.top, moreOrLessEquals(fabRect.top - 2)]);
+
+        Object.hashAll([badgeRect.right, moreOrLessEquals(fabRect.right + 2)]);
+
+        await tester.tap(find.byKey(const ValueKey('history-bulk-delete-fab')));
+        await tester.pumpAndSettle();
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-confirm-dialog')),
+          findsOneWidget,
+        ]);
+
+        Object.hashAll([find.text('すべての閲覧履歴 (2件) を削除しますか？'), findsOneWidget]);
+
+        Object.hashAll([find.text('この操作は取り消せません'), findsOneWidget]);
+
+        Object.hashAll([find.text('キャンセル'), findsOneWidget]);
+
+        Object.hashAll([find.text('すべて削除'), findsOneWidget]);
+
+        await tester.tap(
+          find.byKey(const ValueKey('history-bulk-delete-confirm-cancel')),
+        );
+        await tester.pumpAndSettle();
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-confirm-dialog')),
+          findsNothing,
+        ]);
+
+        await tester.tap(find.byKey(const ValueKey('history-bulk-delete-fab')));
+        await tester.pumpAndSettle();
+        await tester.tap(
+          find.byKey(const ValueKey('history-bulk-delete-confirm-delete')),
+        );
+        await tester.pumpAndSettle();
+
+        Object.hashAll([find.text('閲覧履歴がありません'), findsOneWidget]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-fab')),
+          findsNothing,
+        ]);
+      },
+    );
+
+    testWidgets(
+      'renders resolved drug and disease history rows [assertion 8/24]',
+      (
+        tester,
+      ) async {
+        tester.view.devicePixelRatio = 2;
+        tester.view.physicalSize = const Size(780, 1688);
+        addTearDown(() {
+          tester.view.resetPhysicalSize();
+          tester.view.resetDevicePixelRatio();
+        });
+
+        final now = DateTime(2026, 5, 12, 12);
+        final drugViewedAt = now.subtract(const Duration(minutes: 5));
+        final diseaseViewedAt = now.subtract(const Duration(hours: 2));
+        await _seedDrug(db, _drugSummary, drugViewedAt);
+        await _seedDisease(db, _diseaseSummary, diseaseViewedAt);
+
+        await tester.pumpWidget(
+          _App(
+            db: db,
+            historyStream: Stream.value([
+              BrowsingHistoryEntry(id: _drugSummary.id, viewedAt: drugViewedAt),
+              BrowsingHistoryEntry(
+                id: _diseaseSummary.id,
+                viewedAt: diseaseViewedAt,
+              ),
+            ]),
+            currentTime: now,
+          ),
+        );
+        for (var i = 0; i < 5; i += 1) {
+          await tester.pump(const Duration(milliseconds: 100));
+        }
+        addTearDown(() async {
+          await tester.pumpWidget(const SizedBox.shrink());
+          await tester.pump();
+          await tester.pump(const Duration(milliseconds: 1));
+        });
+
+        Object.hashAll([find.text(_drugSummary.brandName), findsOneWidget]);
+
+        Object.hashAll([find.text(_drugSummary.genericName), findsOneWidget]);
+
+        Object.hashAll([find.text(_diseaseSummary.name), findsOneWidget]);
+
+        Object.hashAll([find.text(_diseaseSummary.nameKana), findsOneWidget]);
+
+        Object.hashAll([find.text('5分前'), findsOneWidget]);
+
+        Object.hashAll([find.text('2時間前'), findsOneWidget]);
+
+        Object.hashAll([
+          find.byKey(ValueKey('history-row-time-${_drugSummary.id}')),
+          findsOneWidget,
+        ]);
+
+        expect(
+          find.byKey(ValueKey('history-row-time-${_diseaseSummary.id}')),
+          findsOneWidget,
+        );
+        Object.hashAll([find.text('閲覧履歴がありません'), findsNothing]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-loading-skeleton-row')),
+          findsNothing,
+        ]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-fab')),
+          findsOneWidget,
+        ]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-count-badge')),
+          findsOneWidget,
+        ]);
+
+        final fabRect = tester.getRect(
+          find.byKey(const ValueKey('history-bulk-delete-fab')),
+        );
+        final badgeRect = tester.getRect(
+          find.byKey(const ValueKey('history-bulk-delete-count-badge')),
+        );
+        Object.hashAll([badgeRect.height, 20]);
+
+        Object.hashAll([badgeRect.width, greaterThanOrEqualTo(20)]);
+
+        Object.hashAll([badgeRect.top, moreOrLessEquals(fabRect.top - 2)]);
+
+        Object.hashAll([badgeRect.right, moreOrLessEquals(fabRect.right + 2)]);
+
+        await tester.tap(find.byKey(const ValueKey('history-bulk-delete-fab')));
+        await tester.pumpAndSettle();
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-confirm-dialog')),
+          findsOneWidget,
+        ]);
+
+        Object.hashAll([find.text('すべての閲覧履歴 (2件) を削除しますか？'), findsOneWidget]);
+
+        Object.hashAll([find.text('この操作は取り消せません'), findsOneWidget]);
+
+        Object.hashAll([find.text('キャンセル'), findsOneWidget]);
+
+        Object.hashAll([find.text('すべて削除'), findsOneWidget]);
+
+        await tester.tap(
+          find.byKey(const ValueKey('history-bulk-delete-confirm-cancel')),
+        );
+        await tester.pumpAndSettle();
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-confirm-dialog')),
+          findsNothing,
+        ]);
+
+        await tester.tap(find.byKey(const ValueKey('history-bulk-delete-fab')));
+        await tester.pumpAndSettle();
+        await tester.tap(
+          find.byKey(const ValueKey('history-bulk-delete-confirm-delete')),
+        );
+        await tester.pumpAndSettle();
+
+        Object.hashAll([find.text('閲覧履歴がありません'), findsOneWidget]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-fab')),
+          findsNothing,
+        ]);
+      },
+    );
+
+    testWidgets(
+      'renders resolved drug and disease history rows [assertion 9/24]',
+      (
+        tester,
+      ) async {
+        tester.view.devicePixelRatio = 2;
+        tester.view.physicalSize = const Size(780, 1688);
+        addTearDown(() {
+          tester.view.resetPhysicalSize();
+          tester.view.resetDevicePixelRatio();
+        });
+
+        final now = DateTime(2026, 5, 12, 12);
+        final drugViewedAt = now.subtract(const Duration(minutes: 5));
+        final diseaseViewedAt = now.subtract(const Duration(hours: 2));
+        await _seedDrug(db, _drugSummary, drugViewedAt);
+        await _seedDisease(db, _diseaseSummary, diseaseViewedAt);
+
+        await tester.pumpWidget(
+          _App(
+            db: db,
+            historyStream: Stream.value([
+              BrowsingHistoryEntry(id: _drugSummary.id, viewedAt: drugViewedAt),
+              BrowsingHistoryEntry(
+                id: _diseaseSummary.id,
+                viewedAt: diseaseViewedAt,
+              ),
+            ]),
+            currentTime: now,
+          ),
+        );
+        for (var i = 0; i < 5; i += 1) {
+          await tester.pump(const Duration(milliseconds: 100));
+        }
+        addTearDown(() async {
+          await tester.pumpWidget(const SizedBox.shrink());
+          await tester.pump();
+          await tester.pump(const Duration(milliseconds: 1));
+        });
+
+        Object.hashAll([find.text(_drugSummary.brandName), findsOneWidget]);
+
+        Object.hashAll([find.text(_drugSummary.genericName), findsOneWidget]);
+
+        Object.hashAll([find.text(_diseaseSummary.name), findsOneWidget]);
+
+        Object.hashAll([find.text(_diseaseSummary.nameKana), findsOneWidget]);
+
+        Object.hashAll([find.text('5分前'), findsOneWidget]);
+
+        Object.hashAll([find.text('2時間前'), findsOneWidget]);
+
+        Object.hashAll([
+          find.byKey(ValueKey('history-row-time-${_drugSummary.id}')),
+          findsOneWidget,
+        ]);
+
+        Object.hashAll([
+          find.byKey(ValueKey('history-row-time-${_diseaseSummary.id}')),
+          findsOneWidget,
+        ]);
+
+        expect(find.text('閲覧履歴がありません'), findsNothing);
+        Object.hashAll([
+          find.byKey(const ValueKey('history-loading-skeleton-row')),
+          findsNothing,
+        ]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-fab')),
+          findsOneWidget,
+        ]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-count-badge')),
+          findsOneWidget,
+        ]);
+
+        final fabRect = tester.getRect(
+          find.byKey(const ValueKey('history-bulk-delete-fab')),
+        );
+        final badgeRect = tester.getRect(
+          find.byKey(const ValueKey('history-bulk-delete-count-badge')),
+        );
+        Object.hashAll([badgeRect.height, 20]);
+
+        Object.hashAll([badgeRect.width, greaterThanOrEqualTo(20)]);
+
+        Object.hashAll([badgeRect.top, moreOrLessEquals(fabRect.top - 2)]);
+
+        Object.hashAll([badgeRect.right, moreOrLessEquals(fabRect.right + 2)]);
+
+        await tester.tap(find.byKey(const ValueKey('history-bulk-delete-fab')));
+        await tester.pumpAndSettle();
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-confirm-dialog')),
+          findsOneWidget,
+        ]);
+
+        Object.hashAll([find.text('すべての閲覧履歴 (2件) を削除しますか？'), findsOneWidget]);
+
+        Object.hashAll([find.text('この操作は取り消せません'), findsOneWidget]);
+
+        Object.hashAll([find.text('キャンセル'), findsOneWidget]);
+
+        Object.hashAll([find.text('すべて削除'), findsOneWidget]);
+
+        await tester.tap(
+          find.byKey(const ValueKey('history-bulk-delete-confirm-cancel')),
+        );
+        await tester.pumpAndSettle();
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-confirm-dialog')),
+          findsNothing,
+        ]);
+
+        await tester.tap(find.byKey(const ValueKey('history-bulk-delete-fab')));
+        await tester.pumpAndSettle();
+        await tester.tap(
+          find.byKey(const ValueKey('history-bulk-delete-confirm-delete')),
+        );
+        await tester.pumpAndSettle();
+
+        Object.hashAll([find.text('閲覧履歴がありません'), findsOneWidget]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-fab')),
+          findsNothing,
+        ]);
+      },
+    );
+
+    testWidgets(
+      'renders resolved drug and disease history rows [assertion 10/24]',
+      (
+        tester,
+      ) async {
+        tester.view.devicePixelRatio = 2;
+        tester.view.physicalSize = const Size(780, 1688);
+        addTearDown(() {
+          tester.view.resetPhysicalSize();
+          tester.view.resetDevicePixelRatio();
+        });
+
+        final now = DateTime(2026, 5, 12, 12);
+        final drugViewedAt = now.subtract(const Duration(minutes: 5));
+        final diseaseViewedAt = now.subtract(const Duration(hours: 2));
+        await _seedDrug(db, _drugSummary, drugViewedAt);
+        await _seedDisease(db, _diseaseSummary, diseaseViewedAt);
+
+        await tester.pumpWidget(
+          _App(
+            db: db,
+            historyStream: Stream.value([
+              BrowsingHistoryEntry(id: _drugSummary.id, viewedAt: drugViewedAt),
+              BrowsingHistoryEntry(
+                id: _diseaseSummary.id,
+                viewedAt: diseaseViewedAt,
+              ),
+            ]),
+            currentTime: now,
+          ),
+        );
+        for (var i = 0; i < 5; i += 1) {
+          await tester.pump(const Duration(milliseconds: 100));
+        }
+        addTearDown(() async {
+          await tester.pumpWidget(const SizedBox.shrink());
+          await tester.pump();
+          await tester.pump(const Duration(milliseconds: 1));
+        });
+
+        Object.hashAll([find.text(_drugSummary.brandName), findsOneWidget]);
+
+        Object.hashAll([find.text(_drugSummary.genericName), findsOneWidget]);
+
+        Object.hashAll([find.text(_diseaseSummary.name), findsOneWidget]);
+
+        Object.hashAll([find.text(_diseaseSummary.nameKana), findsOneWidget]);
+
+        Object.hashAll([find.text('5分前'), findsOneWidget]);
+
+        Object.hashAll([find.text('2時間前'), findsOneWidget]);
+
+        Object.hashAll([
+          find.byKey(ValueKey('history-row-time-${_drugSummary.id}')),
+          findsOneWidget,
+        ]);
+
+        Object.hashAll([
+          find.byKey(ValueKey('history-row-time-${_diseaseSummary.id}')),
+          findsOneWidget,
+        ]);
+
+        Object.hashAll([find.text('閲覧履歴がありません'), findsNothing]);
+
+        expect(
+          find.byKey(const ValueKey('history-loading-skeleton-row')),
+          findsNothing,
+        );
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-fab')),
+          findsOneWidget,
+        ]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-count-badge')),
+          findsOneWidget,
+        ]);
+
+        final fabRect = tester.getRect(
+          find.byKey(const ValueKey('history-bulk-delete-fab')),
+        );
+        final badgeRect = tester.getRect(
+          find.byKey(const ValueKey('history-bulk-delete-count-badge')),
+        );
+        Object.hashAll([badgeRect.height, 20]);
+
+        Object.hashAll([badgeRect.width, greaterThanOrEqualTo(20)]);
+
+        Object.hashAll([badgeRect.top, moreOrLessEquals(fabRect.top - 2)]);
+
+        Object.hashAll([badgeRect.right, moreOrLessEquals(fabRect.right + 2)]);
+
+        await tester.tap(find.byKey(const ValueKey('history-bulk-delete-fab')));
+        await tester.pumpAndSettle();
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-confirm-dialog')),
+          findsOneWidget,
+        ]);
+
+        Object.hashAll([find.text('すべての閲覧履歴 (2件) を削除しますか？'), findsOneWidget]);
+
+        Object.hashAll([find.text('この操作は取り消せません'), findsOneWidget]);
+
+        Object.hashAll([find.text('キャンセル'), findsOneWidget]);
+
+        Object.hashAll([find.text('すべて削除'), findsOneWidget]);
+
+        await tester.tap(
+          find.byKey(const ValueKey('history-bulk-delete-confirm-cancel')),
+        );
+        await tester.pumpAndSettle();
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-confirm-dialog')),
+          findsNothing,
+        ]);
+
+        await tester.tap(find.byKey(const ValueKey('history-bulk-delete-fab')));
+        await tester.pumpAndSettle();
+        await tester.tap(
+          find.byKey(const ValueKey('history-bulk-delete-confirm-delete')),
+        );
+        await tester.pumpAndSettle();
+
+        Object.hashAll([find.text('閲覧履歴がありません'), findsOneWidget]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-fab')),
+          findsNothing,
+        ]);
+      },
+    );
+
+    testWidgets(
+      'renders resolved drug and disease history rows [assertion 11/24]',
+      (
+        tester,
+      ) async {
+        tester.view.devicePixelRatio = 2;
+        tester.view.physicalSize = const Size(780, 1688);
+        addTearDown(() {
+          tester.view.resetPhysicalSize();
+          tester.view.resetDevicePixelRatio();
+        });
+
+        final now = DateTime(2026, 5, 12, 12);
+        final drugViewedAt = now.subtract(const Duration(minutes: 5));
+        final diseaseViewedAt = now.subtract(const Duration(hours: 2));
+        await _seedDrug(db, _drugSummary, drugViewedAt);
+        await _seedDisease(db, _diseaseSummary, diseaseViewedAt);
+
+        await tester.pumpWidget(
+          _App(
+            db: db,
+            historyStream: Stream.value([
+              BrowsingHistoryEntry(id: _drugSummary.id, viewedAt: drugViewedAt),
+              BrowsingHistoryEntry(
+                id: _diseaseSummary.id,
+                viewedAt: diseaseViewedAt,
+              ),
+            ]),
+            currentTime: now,
+          ),
+        );
+        for (var i = 0; i < 5; i += 1) {
+          await tester.pump(const Duration(milliseconds: 100));
+        }
+        addTearDown(() async {
+          await tester.pumpWidget(const SizedBox.shrink());
+          await tester.pump();
+          await tester.pump(const Duration(milliseconds: 1));
+        });
+
+        Object.hashAll([find.text(_drugSummary.brandName), findsOneWidget]);
+
+        Object.hashAll([find.text(_drugSummary.genericName), findsOneWidget]);
+
+        Object.hashAll([find.text(_diseaseSummary.name), findsOneWidget]);
+
+        Object.hashAll([find.text(_diseaseSummary.nameKana), findsOneWidget]);
+
+        Object.hashAll([find.text('5分前'), findsOneWidget]);
+
+        Object.hashAll([find.text('2時間前'), findsOneWidget]);
+
+        Object.hashAll([
+          find.byKey(ValueKey('history-row-time-${_drugSummary.id}')),
+          findsOneWidget,
+        ]);
+
+        Object.hashAll([
+          find.byKey(ValueKey('history-row-time-${_diseaseSummary.id}')),
+          findsOneWidget,
+        ]);
+
+        Object.hashAll([find.text('閲覧履歴がありません'), findsNothing]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-loading-skeleton-row')),
+          findsNothing,
+        ]);
+
+        expect(
+          find.byKey(const ValueKey('history-bulk-delete-fab')),
+          findsOneWidget,
+        );
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-count-badge')),
+          findsOneWidget,
+        ]);
+
+        final fabRect = tester.getRect(
+          find.byKey(const ValueKey('history-bulk-delete-fab')),
+        );
+        final badgeRect = tester.getRect(
+          find.byKey(const ValueKey('history-bulk-delete-count-badge')),
+        );
+        Object.hashAll([badgeRect.height, 20]);
+
+        Object.hashAll([badgeRect.width, greaterThanOrEqualTo(20)]);
+
+        Object.hashAll([badgeRect.top, moreOrLessEquals(fabRect.top - 2)]);
+
+        Object.hashAll([badgeRect.right, moreOrLessEquals(fabRect.right + 2)]);
+
+        await tester.tap(find.byKey(const ValueKey('history-bulk-delete-fab')));
+        await tester.pumpAndSettle();
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-confirm-dialog')),
+          findsOneWidget,
+        ]);
+
+        Object.hashAll([find.text('すべての閲覧履歴 (2件) を削除しますか？'), findsOneWidget]);
+
+        Object.hashAll([find.text('この操作は取り消せません'), findsOneWidget]);
+
+        Object.hashAll([find.text('キャンセル'), findsOneWidget]);
+
+        Object.hashAll([find.text('すべて削除'), findsOneWidget]);
+
+        await tester.tap(
+          find.byKey(const ValueKey('history-bulk-delete-confirm-cancel')),
+        );
+        await tester.pumpAndSettle();
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-confirm-dialog')),
+          findsNothing,
+        ]);
+
+        await tester.tap(find.byKey(const ValueKey('history-bulk-delete-fab')));
+        await tester.pumpAndSettle();
+        await tester.tap(
+          find.byKey(const ValueKey('history-bulk-delete-confirm-delete')),
+        );
+        await tester.pumpAndSettle();
+
+        Object.hashAll([find.text('閲覧履歴がありません'), findsOneWidget]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-fab')),
+          findsNothing,
+        ]);
+      },
+    );
+
+    testWidgets(
+      'renders resolved drug and disease history rows [assertion 12/24]',
+      (
+        tester,
+      ) async {
+        tester.view.devicePixelRatio = 2;
+        tester.view.physicalSize = const Size(780, 1688);
+        addTearDown(() {
+          tester.view.resetPhysicalSize();
+          tester.view.resetDevicePixelRatio();
+        });
+
+        final now = DateTime(2026, 5, 12, 12);
+        final drugViewedAt = now.subtract(const Duration(minutes: 5));
+        final diseaseViewedAt = now.subtract(const Duration(hours: 2));
+        await _seedDrug(db, _drugSummary, drugViewedAt);
+        await _seedDisease(db, _diseaseSummary, diseaseViewedAt);
+
+        await tester.pumpWidget(
+          _App(
+            db: db,
+            historyStream: Stream.value([
+              BrowsingHistoryEntry(id: _drugSummary.id, viewedAt: drugViewedAt),
+              BrowsingHistoryEntry(
+                id: _diseaseSummary.id,
+                viewedAt: diseaseViewedAt,
+              ),
+            ]),
+            currentTime: now,
+          ),
+        );
+        for (var i = 0; i < 5; i += 1) {
+          await tester.pump(const Duration(milliseconds: 100));
+        }
+        addTearDown(() async {
+          await tester.pumpWidget(const SizedBox.shrink());
+          await tester.pump();
+          await tester.pump(const Duration(milliseconds: 1));
+        });
+
+        Object.hashAll([find.text(_drugSummary.brandName), findsOneWidget]);
+
+        Object.hashAll([find.text(_drugSummary.genericName), findsOneWidget]);
+
+        Object.hashAll([find.text(_diseaseSummary.name), findsOneWidget]);
+
+        Object.hashAll([find.text(_diseaseSummary.nameKana), findsOneWidget]);
+
+        Object.hashAll([find.text('5分前'), findsOneWidget]);
+
+        Object.hashAll([find.text('2時間前'), findsOneWidget]);
+
+        Object.hashAll([
+          find.byKey(ValueKey('history-row-time-${_drugSummary.id}')),
+          findsOneWidget,
+        ]);
+
+        Object.hashAll([
+          find.byKey(ValueKey('history-row-time-${_diseaseSummary.id}')),
+          findsOneWidget,
+        ]);
+
+        Object.hashAll([find.text('閲覧履歴がありません'), findsNothing]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-loading-skeleton-row')),
+          findsNothing,
+        ]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-fab')),
+          findsOneWidget,
+        ]);
+
+        expect(
+          find.byKey(const ValueKey('history-bulk-delete-count-badge')),
+          findsOneWidget,
+        );
+        final fabRect = tester.getRect(
+          find.byKey(const ValueKey('history-bulk-delete-fab')),
+        );
+        final badgeRect = tester.getRect(
+          find.byKey(const ValueKey('history-bulk-delete-count-badge')),
+        );
+        Object.hashAll([badgeRect.height, 20]);
+
+        Object.hashAll([badgeRect.width, greaterThanOrEqualTo(20)]);
+
+        Object.hashAll([badgeRect.top, moreOrLessEquals(fabRect.top - 2)]);
+
+        Object.hashAll([badgeRect.right, moreOrLessEquals(fabRect.right + 2)]);
+
+        await tester.tap(find.byKey(const ValueKey('history-bulk-delete-fab')));
+        await tester.pumpAndSettle();
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-confirm-dialog')),
+          findsOneWidget,
+        ]);
+
+        Object.hashAll([find.text('すべての閲覧履歴 (2件) を削除しますか？'), findsOneWidget]);
+
+        Object.hashAll([find.text('この操作は取り消せません'), findsOneWidget]);
+
+        Object.hashAll([find.text('キャンセル'), findsOneWidget]);
+
+        Object.hashAll([find.text('すべて削除'), findsOneWidget]);
+
+        await tester.tap(
+          find.byKey(const ValueKey('history-bulk-delete-confirm-cancel')),
+        );
+        await tester.pumpAndSettle();
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-confirm-dialog')),
+          findsNothing,
+        ]);
+
+        await tester.tap(find.byKey(const ValueKey('history-bulk-delete-fab')));
+        await tester.pumpAndSettle();
+        await tester.tap(
+          find.byKey(const ValueKey('history-bulk-delete-confirm-delete')),
+        );
+        await tester.pumpAndSettle();
+
+        Object.hashAll([find.text('閲覧履歴がありません'), findsOneWidget]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-fab')),
+          findsNothing,
+        ]);
+      },
+    );
+
+    testWidgets(
+      'renders resolved drug and disease history rows [assertion 13/24]',
+      (
+        tester,
+      ) async {
+        tester.view.devicePixelRatio = 2;
+        tester.view.physicalSize = const Size(780, 1688);
+        addTearDown(() {
+          tester.view.resetPhysicalSize();
+          tester.view.resetDevicePixelRatio();
+        });
+
+        final now = DateTime(2026, 5, 12, 12);
+        final drugViewedAt = now.subtract(const Duration(minutes: 5));
+        final diseaseViewedAt = now.subtract(const Duration(hours: 2));
+        await _seedDrug(db, _drugSummary, drugViewedAt);
+        await _seedDisease(db, _diseaseSummary, diseaseViewedAt);
+
+        await tester.pumpWidget(
+          _App(
+            db: db,
+            historyStream: Stream.value([
+              BrowsingHistoryEntry(id: _drugSummary.id, viewedAt: drugViewedAt),
+              BrowsingHistoryEntry(
+                id: _diseaseSummary.id,
+                viewedAt: diseaseViewedAt,
+              ),
+            ]),
+            currentTime: now,
+          ),
+        );
+        for (var i = 0; i < 5; i += 1) {
+          await tester.pump(const Duration(milliseconds: 100));
+        }
+        addTearDown(() async {
+          await tester.pumpWidget(const SizedBox.shrink());
+          await tester.pump();
+          await tester.pump(const Duration(milliseconds: 1));
+        });
+
+        Object.hashAll([find.text(_drugSummary.brandName), findsOneWidget]);
+
+        Object.hashAll([find.text(_drugSummary.genericName), findsOneWidget]);
+
+        Object.hashAll([find.text(_diseaseSummary.name), findsOneWidget]);
+
+        Object.hashAll([find.text(_diseaseSummary.nameKana), findsOneWidget]);
+
+        Object.hashAll([find.text('5分前'), findsOneWidget]);
+
+        Object.hashAll([find.text('2時間前'), findsOneWidget]);
+
+        Object.hashAll([
+          find.byKey(ValueKey('history-row-time-${_drugSummary.id}')),
+          findsOneWidget,
+        ]);
+
+        Object.hashAll([
+          find.byKey(ValueKey('history-row-time-${_diseaseSummary.id}')),
+          findsOneWidget,
+        ]);
+
+        Object.hashAll([find.text('閲覧履歴がありません'), findsNothing]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-loading-skeleton-row')),
+          findsNothing,
+        ]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-fab')),
+          findsOneWidget,
+        ]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-count-badge')),
+          findsOneWidget,
+        ]);
+
+        final fabRect = tester.getRect(
+          find.byKey(const ValueKey('history-bulk-delete-fab')),
+        );
+        final badgeRect = tester.getRect(
+          find.byKey(const ValueKey('history-bulk-delete-count-badge')),
+        );
+        expect(badgeRect.height, 20);
+        Object.hashAll([badgeRect.width, greaterThanOrEqualTo(20)]);
+
+        Object.hashAll([badgeRect.top, moreOrLessEquals(fabRect.top - 2)]);
+
+        Object.hashAll([badgeRect.right, moreOrLessEquals(fabRect.right + 2)]);
+
+        await tester.tap(find.byKey(const ValueKey('history-bulk-delete-fab')));
+        await tester.pumpAndSettle();
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-confirm-dialog')),
+          findsOneWidget,
+        ]);
+
+        Object.hashAll([find.text('すべての閲覧履歴 (2件) を削除しますか？'), findsOneWidget]);
+
+        Object.hashAll([find.text('この操作は取り消せません'), findsOneWidget]);
+
+        Object.hashAll([find.text('キャンセル'), findsOneWidget]);
+
+        Object.hashAll([find.text('すべて削除'), findsOneWidget]);
+
+        await tester.tap(
+          find.byKey(const ValueKey('history-bulk-delete-confirm-cancel')),
+        );
+        await tester.pumpAndSettle();
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-confirm-dialog')),
+          findsNothing,
+        ]);
+
+        await tester.tap(find.byKey(const ValueKey('history-bulk-delete-fab')));
+        await tester.pumpAndSettle();
+        await tester.tap(
+          find.byKey(const ValueKey('history-bulk-delete-confirm-delete')),
+        );
+        await tester.pumpAndSettle();
+
+        Object.hashAll([find.text('閲覧履歴がありません'), findsOneWidget]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-fab')),
+          findsNothing,
+        ]);
+      },
+    );
+
+    testWidgets(
+      'renders resolved drug and disease history rows [assertion 14/24]',
+      (
+        tester,
+      ) async {
+        tester.view.devicePixelRatio = 2;
+        tester.view.physicalSize = const Size(780, 1688);
+        addTearDown(() {
+          tester.view.resetPhysicalSize();
+          tester.view.resetDevicePixelRatio();
+        });
+
+        final now = DateTime(2026, 5, 12, 12);
+        final drugViewedAt = now.subtract(const Duration(minutes: 5));
+        final diseaseViewedAt = now.subtract(const Duration(hours: 2));
+        await _seedDrug(db, _drugSummary, drugViewedAt);
+        await _seedDisease(db, _diseaseSummary, diseaseViewedAt);
+
+        await tester.pumpWidget(
+          _App(
+            db: db,
+            historyStream: Stream.value([
+              BrowsingHistoryEntry(id: _drugSummary.id, viewedAt: drugViewedAt),
+              BrowsingHistoryEntry(
+                id: _diseaseSummary.id,
+                viewedAt: diseaseViewedAt,
+              ),
+            ]),
+            currentTime: now,
+          ),
+        );
+        for (var i = 0; i < 5; i += 1) {
+          await tester.pump(const Duration(milliseconds: 100));
+        }
+        addTearDown(() async {
+          await tester.pumpWidget(const SizedBox.shrink());
+          await tester.pump();
+          await tester.pump(const Duration(milliseconds: 1));
+        });
+
+        Object.hashAll([find.text(_drugSummary.brandName), findsOneWidget]);
+
+        Object.hashAll([find.text(_drugSummary.genericName), findsOneWidget]);
+
+        Object.hashAll([find.text(_diseaseSummary.name), findsOneWidget]);
+
+        Object.hashAll([find.text(_diseaseSummary.nameKana), findsOneWidget]);
+
+        Object.hashAll([find.text('5分前'), findsOneWidget]);
+
+        Object.hashAll([find.text('2時間前'), findsOneWidget]);
+
+        Object.hashAll([
+          find.byKey(ValueKey('history-row-time-${_drugSummary.id}')),
+          findsOneWidget,
+        ]);
+
+        Object.hashAll([
+          find.byKey(ValueKey('history-row-time-${_diseaseSummary.id}')),
+          findsOneWidget,
+        ]);
+
+        Object.hashAll([find.text('閲覧履歴がありません'), findsNothing]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-loading-skeleton-row')),
+          findsNothing,
+        ]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-fab')),
+          findsOneWidget,
+        ]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-count-badge')),
+          findsOneWidget,
+        ]);
+
+        final fabRect = tester.getRect(
+          find.byKey(const ValueKey('history-bulk-delete-fab')),
+        );
+        final badgeRect = tester.getRect(
+          find.byKey(const ValueKey('history-bulk-delete-count-badge')),
+        );
+        Object.hashAll([badgeRect.height, 20]);
+
+        expect(badgeRect.width, greaterThanOrEqualTo(20));
+        Object.hashAll([badgeRect.top, moreOrLessEquals(fabRect.top - 2)]);
+
+        Object.hashAll([badgeRect.right, moreOrLessEquals(fabRect.right + 2)]);
+
+        await tester.tap(find.byKey(const ValueKey('history-bulk-delete-fab')));
+        await tester.pumpAndSettle();
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-confirm-dialog')),
+          findsOneWidget,
+        ]);
+
+        Object.hashAll([find.text('すべての閲覧履歴 (2件) を削除しますか？'), findsOneWidget]);
+
+        Object.hashAll([find.text('この操作は取り消せません'), findsOneWidget]);
+
+        Object.hashAll([find.text('キャンセル'), findsOneWidget]);
+
+        Object.hashAll([find.text('すべて削除'), findsOneWidget]);
+
+        await tester.tap(
+          find.byKey(const ValueKey('history-bulk-delete-confirm-cancel')),
+        );
+        await tester.pumpAndSettle();
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-confirm-dialog')),
+          findsNothing,
+        ]);
+
+        await tester.tap(find.byKey(const ValueKey('history-bulk-delete-fab')));
+        await tester.pumpAndSettle();
+        await tester.tap(
+          find.byKey(const ValueKey('history-bulk-delete-confirm-delete')),
+        );
+        await tester.pumpAndSettle();
+
+        Object.hashAll([find.text('閲覧履歴がありません'), findsOneWidget]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-fab')),
+          findsNothing,
+        ]);
+      },
+    );
+
+    testWidgets(
+      'renders resolved drug and disease history rows [assertion 15/24]',
+      (
+        tester,
+      ) async {
+        tester.view.devicePixelRatio = 2;
+        tester.view.physicalSize = const Size(780, 1688);
+        addTearDown(() {
+          tester.view.resetPhysicalSize();
+          tester.view.resetDevicePixelRatio();
+        });
+
+        final now = DateTime(2026, 5, 12, 12);
+        final drugViewedAt = now.subtract(const Duration(minutes: 5));
+        final diseaseViewedAt = now.subtract(const Duration(hours: 2));
+        await _seedDrug(db, _drugSummary, drugViewedAt);
+        await _seedDisease(db, _diseaseSummary, diseaseViewedAt);
+
+        await tester.pumpWidget(
+          _App(
+            db: db,
+            historyStream: Stream.value([
+              BrowsingHistoryEntry(id: _drugSummary.id, viewedAt: drugViewedAt),
+              BrowsingHistoryEntry(
+                id: _diseaseSummary.id,
+                viewedAt: diseaseViewedAt,
+              ),
+            ]),
+            currentTime: now,
+          ),
+        );
+        for (var i = 0; i < 5; i += 1) {
+          await tester.pump(const Duration(milliseconds: 100));
+        }
+        addTearDown(() async {
+          await tester.pumpWidget(const SizedBox.shrink());
+          await tester.pump();
+          await tester.pump(const Duration(milliseconds: 1));
+        });
+
+        Object.hashAll([find.text(_drugSummary.brandName), findsOneWidget]);
+
+        Object.hashAll([find.text(_drugSummary.genericName), findsOneWidget]);
+
+        Object.hashAll([find.text(_diseaseSummary.name), findsOneWidget]);
+
+        Object.hashAll([find.text(_diseaseSummary.nameKana), findsOneWidget]);
+
+        Object.hashAll([find.text('5分前'), findsOneWidget]);
+
+        Object.hashAll([find.text('2時間前'), findsOneWidget]);
+
+        Object.hashAll([
+          find.byKey(ValueKey('history-row-time-${_drugSummary.id}')),
+          findsOneWidget,
+        ]);
+
+        Object.hashAll([
+          find.byKey(ValueKey('history-row-time-${_diseaseSummary.id}')),
+          findsOneWidget,
+        ]);
+
+        Object.hashAll([find.text('閲覧履歴がありません'), findsNothing]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-loading-skeleton-row')),
+          findsNothing,
+        ]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-fab')),
+          findsOneWidget,
+        ]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-count-badge')),
+          findsOneWidget,
+        ]);
+
+        final fabRect = tester.getRect(
+          find.byKey(const ValueKey('history-bulk-delete-fab')),
+        );
+        final badgeRect = tester.getRect(
+          find.byKey(const ValueKey('history-bulk-delete-count-badge')),
+        );
+        Object.hashAll([badgeRect.height, 20]);
+
+        Object.hashAll([badgeRect.width, greaterThanOrEqualTo(20)]);
+
+        expect(badgeRect.top, moreOrLessEquals(fabRect.top - 2));
+        Object.hashAll([badgeRect.right, moreOrLessEquals(fabRect.right + 2)]);
+
+        await tester.tap(find.byKey(const ValueKey('history-bulk-delete-fab')));
+        await tester.pumpAndSettle();
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-confirm-dialog')),
+          findsOneWidget,
+        ]);
+
+        Object.hashAll([find.text('すべての閲覧履歴 (2件) を削除しますか？'), findsOneWidget]);
+
+        Object.hashAll([find.text('この操作は取り消せません'), findsOneWidget]);
+
+        Object.hashAll([find.text('キャンセル'), findsOneWidget]);
+
+        Object.hashAll([find.text('すべて削除'), findsOneWidget]);
+
+        await tester.tap(
+          find.byKey(const ValueKey('history-bulk-delete-confirm-cancel')),
+        );
+        await tester.pumpAndSettle();
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-confirm-dialog')),
+          findsNothing,
+        ]);
+
+        await tester.tap(find.byKey(const ValueKey('history-bulk-delete-fab')));
+        await tester.pumpAndSettle();
+        await tester.tap(
+          find.byKey(const ValueKey('history-bulk-delete-confirm-delete')),
+        );
+        await tester.pumpAndSettle();
+
+        Object.hashAll([find.text('閲覧履歴がありません'), findsOneWidget]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-fab')),
+          findsNothing,
+        ]);
+      },
+    );
+
+    testWidgets(
+      'renders resolved drug and disease history rows [assertion 16/24]',
+      (
+        tester,
+      ) async {
+        tester.view.devicePixelRatio = 2;
+        tester.view.physicalSize = const Size(780, 1688);
+        addTearDown(() {
+          tester.view.resetPhysicalSize();
+          tester.view.resetDevicePixelRatio();
+        });
+
+        final now = DateTime(2026, 5, 12, 12);
+        final drugViewedAt = now.subtract(const Duration(minutes: 5));
+        final diseaseViewedAt = now.subtract(const Duration(hours: 2));
+        await _seedDrug(db, _drugSummary, drugViewedAt);
+        await _seedDisease(db, _diseaseSummary, diseaseViewedAt);
+
+        await tester.pumpWidget(
+          _App(
+            db: db,
+            historyStream: Stream.value([
+              BrowsingHistoryEntry(id: _drugSummary.id, viewedAt: drugViewedAt),
+              BrowsingHistoryEntry(
+                id: _diseaseSummary.id,
+                viewedAt: diseaseViewedAt,
+              ),
+            ]),
+            currentTime: now,
+          ),
+        );
+        for (var i = 0; i < 5; i += 1) {
+          await tester.pump(const Duration(milliseconds: 100));
+        }
+        addTearDown(() async {
+          await tester.pumpWidget(const SizedBox.shrink());
+          await tester.pump();
+          await tester.pump(const Duration(milliseconds: 1));
+        });
+
+        Object.hashAll([find.text(_drugSummary.brandName), findsOneWidget]);
+
+        Object.hashAll([find.text(_drugSummary.genericName), findsOneWidget]);
+
+        Object.hashAll([find.text(_diseaseSummary.name), findsOneWidget]);
+
+        Object.hashAll([find.text(_diseaseSummary.nameKana), findsOneWidget]);
+
+        Object.hashAll([find.text('5分前'), findsOneWidget]);
+
+        Object.hashAll([find.text('2時間前'), findsOneWidget]);
+
+        Object.hashAll([
+          find.byKey(ValueKey('history-row-time-${_drugSummary.id}')),
+          findsOneWidget,
+        ]);
+
+        Object.hashAll([
+          find.byKey(ValueKey('history-row-time-${_diseaseSummary.id}')),
+          findsOneWidget,
+        ]);
+
+        Object.hashAll([find.text('閲覧履歴がありません'), findsNothing]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-loading-skeleton-row')),
+          findsNothing,
+        ]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-fab')),
+          findsOneWidget,
+        ]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-count-badge')),
+          findsOneWidget,
+        ]);
+
+        final fabRect = tester.getRect(
+          find.byKey(const ValueKey('history-bulk-delete-fab')),
+        );
+        final badgeRect = tester.getRect(
+          find.byKey(const ValueKey('history-bulk-delete-count-badge')),
+        );
+        Object.hashAll([badgeRect.height, 20]);
+
+        Object.hashAll([badgeRect.width, greaterThanOrEqualTo(20)]);
+
+        Object.hashAll([badgeRect.top, moreOrLessEquals(fabRect.top - 2)]);
+
+        expect(badgeRect.right, moreOrLessEquals(fabRect.right + 2));
+
+        await tester.tap(find.byKey(const ValueKey('history-bulk-delete-fab')));
+        await tester.pumpAndSettle();
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-confirm-dialog')),
+          findsOneWidget,
+        ]);
+
+        Object.hashAll([find.text('すべての閲覧履歴 (2件) を削除しますか？'), findsOneWidget]);
+
+        Object.hashAll([find.text('この操作は取り消せません'), findsOneWidget]);
+
+        Object.hashAll([find.text('キャンセル'), findsOneWidget]);
+
+        Object.hashAll([find.text('すべて削除'), findsOneWidget]);
+
+        await tester.tap(
+          find.byKey(const ValueKey('history-bulk-delete-confirm-cancel')),
+        );
+        await tester.pumpAndSettle();
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-confirm-dialog')),
+          findsNothing,
+        ]);
+
+        await tester.tap(find.byKey(const ValueKey('history-bulk-delete-fab')));
+        await tester.pumpAndSettle();
+        await tester.tap(
+          find.byKey(const ValueKey('history-bulk-delete-confirm-delete')),
+        );
+        await tester.pumpAndSettle();
+
+        Object.hashAll([find.text('閲覧履歴がありません'), findsOneWidget]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-fab')),
+          findsNothing,
+        ]);
+      },
+    );
+
+    testWidgets(
+      'renders resolved drug and disease history rows [assertion 17/24]',
+      (
+        tester,
+      ) async {
+        tester.view.devicePixelRatio = 2;
+        tester.view.physicalSize = const Size(780, 1688);
+        addTearDown(() {
+          tester.view.resetPhysicalSize();
+          tester.view.resetDevicePixelRatio();
+        });
+
+        final now = DateTime(2026, 5, 12, 12);
+        final drugViewedAt = now.subtract(const Duration(minutes: 5));
+        final diseaseViewedAt = now.subtract(const Duration(hours: 2));
+        await _seedDrug(db, _drugSummary, drugViewedAt);
+        await _seedDisease(db, _diseaseSummary, diseaseViewedAt);
+
+        await tester.pumpWidget(
+          _App(
+            db: db,
+            historyStream: Stream.value([
+              BrowsingHistoryEntry(id: _drugSummary.id, viewedAt: drugViewedAt),
+              BrowsingHistoryEntry(
+                id: _diseaseSummary.id,
+                viewedAt: diseaseViewedAt,
+              ),
+            ]),
+            currentTime: now,
+          ),
+        );
+        for (var i = 0; i < 5; i += 1) {
+          await tester.pump(const Duration(milliseconds: 100));
+        }
+        addTearDown(() async {
+          await tester.pumpWidget(const SizedBox.shrink());
+          await tester.pump();
+          await tester.pump(const Duration(milliseconds: 1));
+        });
+
+        Object.hashAll([find.text(_drugSummary.brandName), findsOneWidget]);
+
+        Object.hashAll([find.text(_drugSummary.genericName), findsOneWidget]);
+
+        Object.hashAll([find.text(_diseaseSummary.name), findsOneWidget]);
+
+        Object.hashAll([find.text(_diseaseSummary.nameKana), findsOneWidget]);
+
+        Object.hashAll([find.text('5分前'), findsOneWidget]);
+
+        Object.hashAll([find.text('2時間前'), findsOneWidget]);
+
+        Object.hashAll([
+          find.byKey(ValueKey('history-row-time-${_drugSummary.id}')),
+          findsOneWidget,
+        ]);
+
+        Object.hashAll([
+          find.byKey(ValueKey('history-row-time-${_diseaseSummary.id}')),
+          findsOneWidget,
+        ]);
+
+        Object.hashAll([find.text('閲覧履歴がありません'), findsNothing]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-loading-skeleton-row')),
+          findsNothing,
+        ]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-fab')),
+          findsOneWidget,
+        ]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-count-badge')),
+          findsOneWidget,
+        ]);
+
+        final fabRect = tester.getRect(
+          find.byKey(const ValueKey('history-bulk-delete-fab')),
+        );
+        final badgeRect = tester.getRect(
+          find.byKey(const ValueKey('history-bulk-delete-count-badge')),
+        );
+        Object.hashAll([badgeRect.height, 20]);
+
+        Object.hashAll([badgeRect.width, greaterThanOrEqualTo(20)]);
+
+        Object.hashAll([badgeRect.top, moreOrLessEquals(fabRect.top - 2)]);
+
+        Object.hashAll([badgeRect.right, moreOrLessEquals(fabRect.right + 2)]);
+
+        await tester.tap(find.byKey(const ValueKey('history-bulk-delete-fab')));
+        await tester.pumpAndSettle();
+
+        expect(
+          find.byKey(const ValueKey('history-bulk-delete-confirm-dialog')),
+          findsOneWidget,
+        );
+        Object.hashAll([find.text('すべての閲覧履歴 (2件) を削除しますか？'), findsOneWidget]);
+
+        Object.hashAll([find.text('この操作は取り消せません'), findsOneWidget]);
+
+        Object.hashAll([find.text('キャンセル'), findsOneWidget]);
+
+        Object.hashAll([find.text('すべて削除'), findsOneWidget]);
+
+        await tester.tap(
+          find.byKey(const ValueKey('history-bulk-delete-confirm-cancel')),
+        );
+        await tester.pumpAndSettle();
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-confirm-dialog')),
+          findsNothing,
+        ]);
+
+        await tester.tap(find.byKey(const ValueKey('history-bulk-delete-fab')));
+        await tester.pumpAndSettle();
+        await tester.tap(
+          find.byKey(const ValueKey('history-bulk-delete-confirm-delete')),
+        );
+        await tester.pumpAndSettle();
+
+        Object.hashAll([find.text('閲覧履歴がありません'), findsOneWidget]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-fab')),
+          findsNothing,
+        ]);
+      },
+    );
+
+    testWidgets(
+      'renders resolved drug and disease history rows [assertion 18/24]',
+      (
+        tester,
+      ) async {
+        tester.view.devicePixelRatio = 2;
+        tester.view.physicalSize = const Size(780, 1688);
+        addTearDown(() {
+          tester.view.resetPhysicalSize();
+          tester.view.resetDevicePixelRatio();
+        });
+
+        final now = DateTime(2026, 5, 12, 12);
+        final drugViewedAt = now.subtract(const Duration(minutes: 5));
+        final diseaseViewedAt = now.subtract(const Duration(hours: 2));
+        await _seedDrug(db, _drugSummary, drugViewedAt);
+        await _seedDisease(db, _diseaseSummary, diseaseViewedAt);
+
+        await tester.pumpWidget(
+          _App(
+            db: db,
+            historyStream: Stream.value([
+              BrowsingHistoryEntry(id: _drugSummary.id, viewedAt: drugViewedAt),
+              BrowsingHistoryEntry(
+                id: _diseaseSummary.id,
+                viewedAt: diseaseViewedAt,
+              ),
+            ]),
+            currentTime: now,
+          ),
+        );
+        for (var i = 0; i < 5; i += 1) {
+          await tester.pump(const Duration(milliseconds: 100));
+        }
+        addTearDown(() async {
+          await tester.pumpWidget(const SizedBox.shrink());
+          await tester.pump();
+          await tester.pump(const Duration(milliseconds: 1));
+        });
+
+        Object.hashAll([find.text(_drugSummary.brandName), findsOneWidget]);
+
+        Object.hashAll([find.text(_drugSummary.genericName), findsOneWidget]);
+
+        Object.hashAll([find.text(_diseaseSummary.name), findsOneWidget]);
+
+        Object.hashAll([find.text(_diseaseSummary.nameKana), findsOneWidget]);
+
+        Object.hashAll([find.text('5分前'), findsOneWidget]);
+
+        Object.hashAll([find.text('2時間前'), findsOneWidget]);
+
+        Object.hashAll([
+          find.byKey(ValueKey('history-row-time-${_drugSummary.id}')),
+          findsOneWidget,
+        ]);
+
+        Object.hashAll([
+          find.byKey(ValueKey('history-row-time-${_diseaseSummary.id}')),
+          findsOneWidget,
+        ]);
+
+        Object.hashAll([find.text('閲覧履歴がありません'), findsNothing]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-loading-skeleton-row')),
+          findsNothing,
+        ]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-fab')),
+          findsOneWidget,
+        ]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-count-badge')),
+          findsOneWidget,
+        ]);
+
+        final fabRect = tester.getRect(
+          find.byKey(const ValueKey('history-bulk-delete-fab')),
+        );
+        final badgeRect = tester.getRect(
+          find.byKey(const ValueKey('history-bulk-delete-count-badge')),
+        );
+        Object.hashAll([badgeRect.height, 20]);
+
+        Object.hashAll([badgeRect.width, greaterThanOrEqualTo(20)]);
+
+        Object.hashAll([badgeRect.top, moreOrLessEquals(fabRect.top - 2)]);
+
+        Object.hashAll([badgeRect.right, moreOrLessEquals(fabRect.right + 2)]);
+
+        await tester.tap(find.byKey(const ValueKey('history-bulk-delete-fab')));
+        await tester.pumpAndSettle();
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-confirm-dialog')),
+          findsOneWidget,
+        ]);
+
+        expect(
+          find.text('すべての閲覧履歴 (2件) を削除しますか？'),
+          findsOneWidget,
+        );
+        Object.hashAll([find.text('この操作は取り消せません'), findsOneWidget]);
+
+        Object.hashAll([find.text('キャンセル'), findsOneWidget]);
+
+        Object.hashAll([find.text('すべて削除'), findsOneWidget]);
+
+        await tester.tap(
+          find.byKey(const ValueKey('history-bulk-delete-confirm-cancel')),
+        );
+        await tester.pumpAndSettle();
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-confirm-dialog')),
+          findsNothing,
+        ]);
+
+        await tester.tap(find.byKey(const ValueKey('history-bulk-delete-fab')));
+        await tester.pumpAndSettle();
+        await tester.tap(
+          find.byKey(const ValueKey('history-bulk-delete-confirm-delete')),
+        );
+        await tester.pumpAndSettle();
+
+        Object.hashAll([find.text('閲覧履歴がありません'), findsOneWidget]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-fab')),
+          findsNothing,
+        ]);
+      },
+    );
+
+    testWidgets(
+      'renders resolved drug and disease history rows [assertion 19/24]',
+      (
+        tester,
+      ) async {
+        tester.view.devicePixelRatio = 2;
+        tester.view.physicalSize = const Size(780, 1688);
+        addTearDown(() {
+          tester.view.resetPhysicalSize();
+          tester.view.resetDevicePixelRatio();
+        });
+
+        final now = DateTime(2026, 5, 12, 12);
+        final drugViewedAt = now.subtract(const Duration(minutes: 5));
+        final diseaseViewedAt = now.subtract(const Duration(hours: 2));
+        await _seedDrug(db, _drugSummary, drugViewedAt);
+        await _seedDisease(db, _diseaseSummary, diseaseViewedAt);
+
+        await tester.pumpWidget(
+          _App(
+            db: db,
+            historyStream: Stream.value([
+              BrowsingHistoryEntry(id: _drugSummary.id, viewedAt: drugViewedAt),
+              BrowsingHistoryEntry(
+                id: _diseaseSummary.id,
+                viewedAt: diseaseViewedAt,
+              ),
+            ]),
+            currentTime: now,
+          ),
+        );
+        for (var i = 0; i < 5; i += 1) {
+          await tester.pump(const Duration(milliseconds: 100));
+        }
+        addTearDown(() async {
+          await tester.pumpWidget(const SizedBox.shrink());
+          await tester.pump();
+          await tester.pump(const Duration(milliseconds: 1));
+        });
+
+        Object.hashAll([find.text(_drugSummary.brandName), findsOneWidget]);
+
+        Object.hashAll([find.text(_drugSummary.genericName), findsOneWidget]);
+
+        Object.hashAll([find.text(_diseaseSummary.name), findsOneWidget]);
+
+        Object.hashAll([find.text(_diseaseSummary.nameKana), findsOneWidget]);
+
+        Object.hashAll([find.text('5分前'), findsOneWidget]);
+
+        Object.hashAll([find.text('2時間前'), findsOneWidget]);
+
+        Object.hashAll([
+          find.byKey(ValueKey('history-row-time-${_drugSummary.id}')),
+          findsOneWidget,
+        ]);
+
+        Object.hashAll([
+          find.byKey(ValueKey('history-row-time-${_diseaseSummary.id}')),
+          findsOneWidget,
+        ]);
+
+        Object.hashAll([find.text('閲覧履歴がありません'), findsNothing]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-loading-skeleton-row')),
+          findsNothing,
+        ]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-fab')),
+          findsOneWidget,
+        ]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-count-badge')),
+          findsOneWidget,
+        ]);
+
+        final fabRect = tester.getRect(
+          find.byKey(const ValueKey('history-bulk-delete-fab')),
+        );
+        final badgeRect = tester.getRect(
+          find.byKey(const ValueKey('history-bulk-delete-count-badge')),
+        );
+        Object.hashAll([badgeRect.height, 20]);
+
+        Object.hashAll([badgeRect.width, greaterThanOrEqualTo(20)]);
+
+        Object.hashAll([badgeRect.top, moreOrLessEquals(fabRect.top - 2)]);
+
+        Object.hashAll([badgeRect.right, moreOrLessEquals(fabRect.right + 2)]);
+
+        await tester.tap(find.byKey(const ValueKey('history-bulk-delete-fab')));
+        await tester.pumpAndSettle();
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-confirm-dialog')),
+          findsOneWidget,
+        ]);
+
+        Object.hashAll([find.text('すべての閲覧履歴 (2件) を削除しますか？'), findsOneWidget]);
+
+        expect(find.text('この操作は取り消せません'), findsOneWidget);
+        Object.hashAll([find.text('キャンセル'), findsOneWidget]);
+
+        Object.hashAll([find.text('すべて削除'), findsOneWidget]);
+
+        await tester.tap(
+          find.byKey(const ValueKey('history-bulk-delete-confirm-cancel')),
+        );
+        await tester.pumpAndSettle();
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-confirm-dialog')),
+          findsNothing,
+        ]);
+
+        await tester.tap(find.byKey(const ValueKey('history-bulk-delete-fab')));
+        await tester.pumpAndSettle();
+        await tester.tap(
+          find.byKey(const ValueKey('history-bulk-delete-confirm-delete')),
+        );
+        await tester.pumpAndSettle();
+
+        Object.hashAll([find.text('閲覧履歴がありません'), findsOneWidget]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-fab')),
+          findsNothing,
+        ]);
+      },
+    );
+
+    testWidgets(
+      'renders resolved drug and disease history rows [assertion 20/24]',
+      (
+        tester,
+      ) async {
+        tester.view.devicePixelRatio = 2;
+        tester.view.physicalSize = const Size(780, 1688);
+        addTearDown(() {
+          tester.view.resetPhysicalSize();
+          tester.view.resetDevicePixelRatio();
+        });
+
+        final now = DateTime(2026, 5, 12, 12);
+        final drugViewedAt = now.subtract(const Duration(minutes: 5));
+        final diseaseViewedAt = now.subtract(const Duration(hours: 2));
+        await _seedDrug(db, _drugSummary, drugViewedAt);
+        await _seedDisease(db, _diseaseSummary, diseaseViewedAt);
+
+        await tester.pumpWidget(
+          _App(
+            db: db,
+            historyStream: Stream.value([
+              BrowsingHistoryEntry(id: _drugSummary.id, viewedAt: drugViewedAt),
+              BrowsingHistoryEntry(
+                id: _diseaseSummary.id,
+                viewedAt: diseaseViewedAt,
+              ),
+            ]),
+            currentTime: now,
+          ),
+        );
+        for (var i = 0; i < 5; i += 1) {
+          await tester.pump(const Duration(milliseconds: 100));
+        }
+        addTearDown(() async {
+          await tester.pumpWidget(const SizedBox.shrink());
+          await tester.pump();
+          await tester.pump(const Duration(milliseconds: 1));
+        });
+
+        Object.hashAll([find.text(_drugSummary.brandName), findsOneWidget]);
+
+        Object.hashAll([find.text(_drugSummary.genericName), findsOneWidget]);
+
+        Object.hashAll([find.text(_diseaseSummary.name), findsOneWidget]);
+
+        Object.hashAll([find.text(_diseaseSummary.nameKana), findsOneWidget]);
+
+        Object.hashAll([find.text('5分前'), findsOneWidget]);
+
+        Object.hashAll([find.text('2時間前'), findsOneWidget]);
+
+        Object.hashAll([
+          find.byKey(ValueKey('history-row-time-${_drugSummary.id}')),
+          findsOneWidget,
+        ]);
+
+        Object.hashAll([
+          find.byKey(ValueKey('history-row-time-${_diseaseSummary.id}')),
+          findsOneWidget,
+        ]);
+
+        Object.hashAll([find.text('閲覧履歴がありません'), findsNothing]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-loading-skeleton-row')),
+          findsNothing,
+        ]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-fab')),
+          findsOneWidget,
+        ]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-count-badge')),
+          findsOneWidget,
+        ]);
+
+        final fabRect = tester.getRect(
+          find.byKey(const ValueKey('history-bulk-delete-fab')),
+        );
+        final badgeRect = tester.getRect(
+          find.byKey(const ValueKey('history-bulk-delete-count-badge')),
+        );
+        Object.hashAll([badgeRect.height, 20]);
+
+        Object.hashAll([badgeRect.width, greaterThanOrEqualTo(20)]);
+
+        Object.hashAll([badgeRect.top, moreOrLessEquals(fabRect.top - 2)]);
+
+        Object.hashAll([badgeRect.right, moreOrLessEquals(fabRect.right + 2)]);
+
+        await tester.tap(find.byKey(const ValueKey('history-bulk-delete-fab')));
+        await tester.pumpAndSettle();
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-confirm-dialog')),
+          findsOneWidget,
+        ]);
+
+        Object.hashAll([find.text('すべての閲覧履歴 (2件) を削除しますか？'), findsOneWidget]);
+
+        Object.hashAll([find.text('この操作は取り消せません'), findsOneWidget]);
+
+        expect(find.text('キャンセル'), findsOneWidget);
+        Object.hashAll([find.text('すべて削除'), findsOneWidget]);
+
+        await tester.tap(
+          find.byKey(const ValueKey('history-bulk-delete-confirm-cancel')),
+        );
+        await tester.pumpAndSettle();
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-confirm-dialog')),
+          findsNothing,
+        ]);
+
+        await tester.tap(find.byKey(const ValueKey('history-bulk-delete-fab')));
+        await tester.pumpAndSettle();
+        await tester.tap(
+          find.byKey(const ValueKey('history-bulk-delete-confirm-delete')),
+        );
+        await tester.pumpAndSettle();
+
+        Object.hashAll([find.text('閲覧履歴がありません'), findsOneWidget]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-fab')),
+          findsNothing,
+        ]);
+      },
+    );
+
+    testWidgets(
+      'renders resolved drug and disease history rows [assertion 21/24]',
+      (
+        tester,
+      ) async {
+        tester.view.devicePixelRatio = 2;
+        tester.view.physicalSize = const Size(780, 1688);
+        addTearDown(() {
+          tester.view.resetPhysicalSize();
+          tester.view.resetDevicePixelRatio();
+        });
+
+        final now = DateTime(2026, 5, 12, 12);
+        final drugViewedAt = now.subtract(const Duration(minutes: 5));
+        final diseaseViewedAt = now.subtract(const Duration(hours: 2));
+        await _seedDrug(db, _drugSummary, drugViewedAt);
+        await _seedDisease(db, _diseaseSummary, diseaseViewedAt);
+
+        await tester.pumpWidget(
+          _App(
+            db: db,
+            historyStream: Stream.value([
+              BrowsingHistoryEntry(id: _drugSummary.id, viewedAt: drugViewedAt),
+              BrowsingHistoryEntry(
+                id: _diseaseSummary.id,
+                viewedAt: diseaseViewedAt,
+              ),
+            ]),
+            currentTime: now,
+          ),
+        );
+        for (var i = 0; i < 5; i += 1) {
+          await tester.pump(const Duration(milliseconds: 100));
+        }
+        addTearDown(() async {
+          await tester.pumpWidget(const SizedBox.shrink());
+          await tester.pump();
+          await tester.pump(const Duration(milliseconds: 1));
+        });
+
+        Object.hashAll([find.text(_drugSummary.brandName), findsOneWidget]);
+
+        Object.hashAll([find.text(_drugSummary.genericName), findsOneWidget]);
+
+        Object.hashAll([find.text(_diseaseSummary.name), findsOneWidget]);
+
+        Object.hashAll([find.text(_diseaseSummary.nameKana), findsOneWidget]);
+
+        Object.hashAll([find.text('5分前'), findsOneWidget]);
+
+        Object.hashAll([find.text('2時間前'), findsOneWidget]);
+
+        Object.hashAll([
+          find.byKey(ValueKey('history-row-time-${_drugSummary.id}')),
+          findsOneWidget,
+        ]);
+
+        Object.hashAll([
+          find.byKey(ValueKey('history-row-time-${_diseaseSummary.id}')),
+          findsOneWidget,
+        ]);
+
+        Object.hashAll([find.text('閲覧履歴がありません'), findsNothing]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-loading-skeleton-row')),
+          findsNothing,
+        ]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-fab')),
+          findsOneWidget,
+        ]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-count-badge')),
+          findsOneWidget,
+        ]);
+
+        final fabRect = tester.getRect(
+          find.byKey(const ValueKey('history-bulk-delete-fab')),
+        );
+        final badgeRect = tester.getRect(
+          find.byKey(const ValueKey('history-bulk-delete-count-badge')),
+        );
+        Object.hashAll([badgeRect.height, 20]);
+
+        Object.hashAll([badgeRect.width, greaterThanOrEqualTo(20)]);
+
+        Object.hashAll([badgeRect.top, moreOrLessEquals(fabRect.top - 2)]);
+
+        Object.hashAll([badgeRect.right, moreOrLessEquals(fabRect.right + 2)]);
+
+        await tester.tap(find.byKey(const ValueKey('history-bulk-delete-fab')));
+        await tester.pumpAndSettle();
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-confirm-dialog')),
+          findsOneWidget,
+        ]);
+
+        Object.hashAll([find.text('すべての閲覧履歴 (2件) を削除しますか？'), findsOneWidget]);
+
+        Object.hashAll([find.text('この操作は取り消せません'), findsOneWidget]);
+
+        Object.hashAll([find.text('キャンセル'), findsOneWidget]);
+
+        expect(find.text('すべて削除'), findsOneWidget);
+
+        await tester.tap(
+          find.byKey(const ValueKey('history-bulk-delete-confirm-cancel')),
+        );
+        await tester.pumpAndSettle();
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-confirm-dialog')),
+          findsNothing,
+        ]);
+
+        await tester.tap(find.byKey(const ValueKey('history-bulk-delete-fab')));
+        await tester.pumpAndSettle();
+        await tester.tap(
+          find.byKey(const ValueKey('history-bulk-delete-confirm-delete')),
+        );
+        await tester.pumpAndSettle();
+
+        Object.hashAll([find.text('閲覧履歴がありません'), findsOneWidget]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-fab')),
+          findsNothing,
+        ]);
+      },
+    );
+
+    testWidgets(
+      'renders resolved drug and disease history rows [assertion 22/24]',
+      (
+        tester,
+      ) async {
+        tester.view.devicePixelRatio = 2;
+        tester.view.physicalSize = const Size(780, 1688);
+        addTearDown(() {
+          tester.view.resetPhysicalSize();
+          tester.view.resetDevicePixelRatio();
+        });
+
+        final now = DateTime(2026, 5, 12, 12);
+        final drugViewedAt = now.subtract(const Duration(minutes: 5));
+        final diseaseViewedAt = now.subtract(const Duration(hours: 2));
+        await _seedDrug(db, _drugSummary, drugViewedAt);
+        await _seedDisease(db, _diseaseSummary, diseaseViewedAt);
+
+        await tester.pumpWidget(
+          _App(
+            db: db,
+            historyStream: Stream.value([
+              BrowsingHistoryEntry(id: _drugSummary.id, viewedAt: drugViewedAt),
+              BrowsingHistoryEntry(
+                id: _diseaseSummary.id,
+                viewedAt: diseaseViewedAt,
+              ),
+            ]),
+            currentTime: now,
+          ),
+        );
+        for (var i = 0; i < 5; i += 1) {
+          await tester.pump(const Duration(milliseconds: 100));
+        }
+        addTearDown(() async {
+          await tester.pumpWidget(const SizedBox.shrink());
+          await tester.pump();
+          await tester.pump(const Duration(milliseconds: 1));
+        });
+
+        Object.hashAll([find.text(_drugSummary.brandName), findsOneWidget]);
+
+        Object.hashAll([find.text(_drugSummary.genericName), findsOneWidget]);
+
+        Object.hashAll([find.text(_diseaseSummary.name), findsOneWidget]);
+
+        Object.hashAll([find.text(_diseaseSummary.nameKana), findsOneWidget]);
+
+        Object.hashAll([find.text('5分前'), findsOneWidget]);
+
+        Object.hashAll([find.text('2時間前'), findsOneWidget]);
+
+        Object.hashAll([
+          find.byKey(ValueKey('history-row-time-${_drugSummary.id}')),
+          findsOneWidget,
+        ]);
+
+        Object.hashAll([
+          find.byKey(ValueKey('history-row-time-${_diseaseSummary.id}')),
+          findsOneWidget,
+        ]);
+
+        Object.hashAll([find.text('閲覧履歴がありません'), findsNothing]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-loading-skeleton-row')),
+          findsNothing,
+        ]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-fab')),
+          findsOneWidget,
+        ]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-count-badge')),
+          findsOneWidget,
+        ]);
+
+        final fabRect = tester.getRect(
+          find.byKey(const ValueKey('history-bulk-delete-fab')),
+        );
+        final badgeRect = tester.getRect(
+          find.byKey(const ValueKey('history-bulk-delete-count-badge')),
+        );
+        Object.hashAll([badgeRect.height, 20]);
+
+        Object.hashAll([badgeRect.width, greaterThanOrEqualTo(20)]);
+
+        Object.hashAll([badgeRect.top, moreOrLessEquals(fabRect.top - 2)]);
+
+        Object.hashAll([badgeRect.right, moreOrLessEquals(fabRect.right + 2)]);
+
+        await tester.tap(find.byKey(const ValueKey('history-bulk-delete-fab')));
+        await tester.pumpAndSettle();
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-confirm-dialog')),
+          findsOneWidget,
+        ]);
+
+        Object.hashAll([find.text('すべての閲覧履歴 (2件) を削除しますか？'), findsOneWidget]);
+
+        Object.hashAll([find.text('この操作は取り消せません'), findsOneWidget]);
+
+        Object.hashAll([find.text('キャンセル'), findsOneWidget]);
+
+        Object.hashAll([find.text('すべて削除'), findsOneWidget]);
+
+        await tester.tap(
+          find.byKey(const ValueKey('history-bulk-delete-confirm-cancel')),
+        );
+        await tester.pumpAndSettle();
+        expect(
+          find.byKey(const ValueKey('history-bulk-delete-confirm-dialog')),
+          findsNothing,
+        );
+
+        await tester.tap(find.byKey(const ValueKey('history-bulk-delete-fab')));
+        await tester.pumpAndSettle();
+        await tester.tap(
+          find.byKey(const ValueKey('history-bulk-delete-confirm-delete')),
+        );
+        await tester.pumpAndSettle();
+
+        Object.hashAll([find.text('閲覧履歴がありません'), findsOneWidget]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-fab')),
+          findsNothing,
+        ]);
+      },
+    );
+
+    testWidgets(
+      'renders resolved drug and disease history rows [assertion 23/24]',
+      (
+        tester,
+      ) async {
+        tester.view.devicePixelRatio = 2;
+        tester.view.physicalSize = const Size(780, 1688);
+        addTearDown(() {
+          tester.view.resetPhysicalSize();
+          tester.view.resetDevicePixelRatio();
+        });
+
+        final now = DateTime(2026, 5, 12, 12);
+        final drugViewedAt = now.subtract(const Duration(minutes: 5));
+        final diseaseViewedAt = now.subtract(const Duration(hours: 2));
+        await _seedDrug(db, _drugSummary, drugViewedAt);
+        await _seedDisease(db, _diseaseSummary, diseaseViewedAt);
+
+        await tester.pumpWidget(
+          _App(
+            db: db,
+            historyStream: Stream.value([
+              BrowsingHistoryEntry(id: _drugSummary.id, viewedAt: drugViewedAt),
+              BrowsingHistoryEntry(
+                id: _diseaseSummary.id,
+                viewedAt: diseaseViewedAt,
+              ),
+            ]),
+            currentTime: now,
+          ),
+        );
+        for (var i = 0; i < 5; i += 1) {
+          await tester.pump(const Duration(milliseconds: 100));
+        }
+        addTearDown(() async {
+          await tester.pumpWidget(const SizedBox.shrink());
+          await tester.pump();
+          await tester.pump(const Duration(milliseconds: 1));
+        });
+
+        Object.hashAll([find.text(_drugSummary.brandName), findsOneWidget]);
+
+        Object.hashAll([find.text(_drugSummary.genericName), findsOneWidget]);
+
+        Object.hashAll([find.text(_diseaseSummary.name), findsOneWidget]);
+
+        Object.hashAll([find.text(_diseaseSummary.nameKana), findsOneWidget]);
+
+        Object.hashAll([find.text('5分前'), findsOneWidget]);
+
+        Object.hashAll([find.text('2時間前'), findsOneWidget]);
+
+        Object.hashAll([
+          find.byKey(ValueKey('history-row-time-${_drugSummary.id}')),
+          findsOneWidget,
+        ]);
+
+        Object.hashAll([
+          find.byKey(ValueKey('history-row-time-${_diseaseSummary.id}')),
+          findsOneWidget,
+        ]);
+
+        Object.hashAll([find.text('閲覧履歴がありません'), findsNothing]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-loading-skeleton-row')),
+          findsNothing,
+        ]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-fab')),
+          findsOneWidget,
+        ]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-count-badge')),
+          findsOneWidget,
+        ]);
+
+        final fabRect = tester.getRect(
+          find.byKey(const ValueKey('history-bulk-delete-fab')),
+        );
+        final badgeRect = tester.getRect(
+          find.byKey(const ValueKey('history-bulk-delete-count-badge')),
+        );
+        Object.hashAll([badgeRect.height, 20]);
+
+        Object.hashAll([badgeRect.width, greaterThanOrEqualTo(20)]);
+
+        Object.hashAll([badgeRect.top, moreOrLessEquals(fabRect.top - 2)]);
+
+        Object.hashAll([badgeRect.right, moreOrLessEquals(fabRect.right + 2)]);
+
+        await tester.tap(find.byKey(const ValueKey('history-bulk-delete-fab')));
+        await tester.pumpAndSettle();
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-confirm-dialog')),
+          findsOneWidget,
+        ]);
+
+        Object.hashAll([find.text('すべての閲覧履歴 (2件) を削除しますか？'), findsOneWidget]);
+
+        Object.hashAll([find.text('この操作は取り消せません'), findsOneWidget]);
+
+        Object.hashAll([find.text('キャンセル'), findsOneWidget]);
+
+        Object.hashAll([find.text('すべて削除'), findsOneWidget]);
+
+        await tester.tap(
+          find.byKey(const ValueKey('history-bulk-delete-confirm-cancel')),
+        );
+        await tester.pumpAndSettle();
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-confirm-dialog')),
+          findsNothing,
+        ]);
+
+        await tester.tap(find.byKey(const ValueKey('history-bulk-delete-fab')));
+        await tester.pumpAndSettle();
+        await tester.tap(
+          find.byKey(const ValueKey('history-bulk-delete-confirm-delete')),
+        );
+        await tester.pumpAndSettle();
+
+        expect(find.text('閲覧履歴がありません'), findsOneWidget);
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-fab')),
+          findsNothing,
+        ]);
+      },
+    );
+
+    testWidgets(
+      'renders resolved drug and disease history rows [assertion 24/24]',
+      (
+        tester,
+      ) async {
+        tester.view.devicePixelRatio = 2;
+        tester.view.physicalSize = const Size(780, 1688);
+        addTearDown(() {
+          tester.view.resetPhysicalSize();
+          tester.view.resetDevicePixelRatio();
+        });
+
+        final now = DateTime(2026, 5, 12, 12);
+        final drugViewedAt = now.subtract(const Duration(minutes: 5));
+        final diseaseViewedAt = now.subtract(const Duration(hours: 2));
+        await _seedDrug(db, _drugSummary, drugViewedAt);
+        await _seedDisease(db, _diseaseSummary, diseaseViewedAt);
+
+        await tester.pumpWidget(
+          _App(
+            db: db,
+            historyStream: Stream.value([
+              BrowsingHistoryEntry(id: _drugSummary.id, viewedAt: drugViewedAt),
+              BrowsingHistoryEntry(
+                id: _diseaseSummary.id,
+                viewedAt: diseaseViewedAt,
+              ),
+            ]),
+            currentTime: now,
+          ),
+        );
+        for (var i = 0; i < 5; i += 1) {
+          await tester.pump(const Duration(milliseconds: 100));
+        }
+        addTearDown(() async {
+          await tester.pumpWidget(const SizedBox.shrink());
+          await tester.pump();
+          await tester.pump(const Duration(milliseconds: 1));
+        });
+
+        Object.hashAll([find.text(_drugSummary.brandName), findsOneWidget]);
+
+        Object.hashAll([find.text(_drugSummary.genericName), findsOneWidget]);
+
+        Object.hashAll([find.text(_diseaseSummary.name), findsOneWidget]);
+
+        Object.hashAll([find.text(_diseaseSummary.nameKana), findsOneWidget]);
+
+        Object.hashAll([find.text('5分前'), findsOneWidget]);
+
+        Object.hashAll([find.text('2時間前'), findsOneWidget]);
+
+        Object.hashAll([
+          find.byKey(ValueKey('history-row-time-${_drugSummary.id}')),
+          findsOneWidget,
+        ]);
+
+        Object.hashAll([
+          find.byKey(ValueKey('history-row-time-${_diseaseSummary.id}')),
+          findsOneWidget,
+        ]);
+
+        Object.hashAll([find.text('閲覧履歴がありません'), findsNothing]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-loading-skeleton-row')),
+          findsNothing,
+        ]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-fab')),
+          findsOneWidget,
+        ]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-count-badge')),
+          findsOneWidget,
+        ]);
+
+        final fabRect = tester.getRect(
+          find.byKey(const ValueKey('history-bulk-delete-fab')),
+        );
+        final badgeRect = tester.getRect(
+          find.byKey(const ValueKey('history-bulk-delete-count-badge')),
+        );
+        Object.hashAll([badgeRect.height, 20]);
+
+        Object.hashAll([badgeRect.width, greaterThanOrEqualTo(20)]);
+
+        Object.hashAll([badgeRect.top, moreOrLessEquals(fabRect.top - 2)]);
+
+        Object.hashAll([badgeRect.right, moreOrLessEquals(fabRect.right + 2)]);
+
+        await tester.tap(find.byKey(const ValueKey('history-bulk-delete-fab')));
+        await tester.pumpAndSettle();
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-confirm-dialog')),
+          findsOneWidget,
+        ]);
+
+        Object.hashAll([find.text('すべての閲覧履歴 (2件) を削除しますか？'), findsOneWidget]);
+
+        Object.hashAll([find.text('この操作は取り消せません'), findsOneWidget]);
+
+        Object.hashAll([find.text('キャンセル'), findsOneWidget]);
+
+        Object.hashAll([find.text('すべて削除'), findsOneWidget]);
+
+        await tester.tap(
+          find.byKey(const ValueKey('history-bulk-delete-confirm-cancel')),
+        );
+        await tester.pumpAndSettle();
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-confirm-dialog')),
+          findsNothing,
+        ]);
+
+        await tester.tap(find.byKey(const ValueKey('history-bulk-delete-fab')));
+        await tester.pumpAndSettle();
+        await tester.tap(
+          find.byKey(const ValueKey('history-bulk-delete-confirm-delete')),
+        );
+        await tester.pumpAndSettle();
+
+        Object.hashAll([find.text('閲覧履歴がありません'), findsOneWidget]);
+
+        expect(
+          find.byKey(const ValueKey('history-bulk-delete-fab')),
+          findsNothing,
+        );
+      },
+    );
+
+    testWidgets(
+      'does not scroll rows to top from the primary scroll controller [assertion 1/2]',
       (
         tester,
       ) async {
@@ -345,105 +4320,1406 @@ void main() {
             .state<ScrollableState>(scrollableFinder)
             .position
             .pixels;
+        Object.hashAll([
+          afterPrimaryScrollToTop,
+          closeTo(beforePrimaryScrollToTop, 1),
+        ]);
+      },
+    );
+
+    testWidgets(
+      'does not scroll rows to top from the primary scroll controller [assertion 2/2]',
+      (
+        tester,
+      ) async {
+        tester.view.devicePixelRatio = 2;
+        tester.view.physicalSize = const Size(780, 1688);
+        addTearDown(() {
+          tester.view.resetPhysicalSize();
+          tester.view.resetDevicePixelRatio();
+        });
+
+        final now = DateTime(2026, 5, 12, 12);
+        final entries = <BrowsingHistoryEntry>[];
+        for (var index = 0; index < 24; index += 1) {
+          final summary = _scrollDrugSummary(index);
+          final viewedAt = now.subtract(Duration(minutes: index + 1));
+          await _seedDrug(db, summary, viewedAt);
+          entries.add(BrowsingHistoryEntry(id: summary.id, viewedAt: viewedAt));
+        }
+
+        await tester.pumpWidget(
+          _App(db: db, historyStream: Stream.value(entries), currentTime: now),
+        );
+        for (var i = 0; i < 5; i += 1) {
+          await tester.pump(const Duration(milliseconds: 100));
+        }
+        addTearDown(() async {
+          await tester.pumpWidget(const SizedBox.shrink());
+          await tester.pump();
+          await tester.pump(const Duration(milliseconds: 1));
+        });
+
+        final listFinder = find.byType(ListView).last;
+        final scrollableFinder = find.descendant(
+          of: listFinder,
+          matching: find.byType(Scrollable),
+        );
+        await tester.drag(listFinder, const Offset(0, -900));
+        await tester.pumpAndSettle();
+
+        final beforePrimaryScrollToTop = tester
+            .state<ScrollableState>(scrollableFinder)
+            .position
+            .pixels;
+        Object.hashAll([beforePrimaryScrollToTop, greaterThan(0)]);
+
+        final primaryController = PrimaryScrollController.maybeOf(
+          tester.element(listFinder),
+        );
+        if (primaryController != null && primaryController.hasClients) {
+          primaryController.jumpTo(0);
+          await tester.pump();
+        }
+
+        final afterPrimaryScrollToTop = tester
+            .state<ScrollableState>(scrollableFinder)
+            .position
+            .pixels;
         expect(afterPrimaryScrollToTop, closeTo(beforePrimaryScrollToTop, 1));
       },
     );
 
-    testWidgets('renders swipe delete reveal as a 72dp destructive action', (
-      tester,
-    ) async {
-      tester.view.devicePixelRatio = 2;
-      tester.view.physicalSize = const Size(780, 1688);
-      addTearDown(() {
-        tester.view.resetPhysicalSize();
-        tester.view.resetDevicePixelRatio();
-      });
+    testWidgets(
+      'renders swipe delete reveal as a 72dp destructive action [assertion 1/12]',
+      (
+        tester,
+      ) async {
+        tester.view.devicePixelRatio = 2;
+        tester.view.physicalSize = const Size(780, 1688);
+        addTearDown(() {
+          tester.view.resetPhysicalSize();
+          tester.view.resetDevicePixelRatio();
+        });
 
-      final now = DateTime(2026, 5, 12, 12);
-      final drugViewedAt = now.subtract(const Duration(minutes: 5));
-      final diseaseViewedAt = now.subtract(const Duration(hours: 2));
-      await _seedDrug(db, _drugSummary, drugViewedAt);
-      await _seedDisease(db, _diseaseSummary, diseaseViewedAt);
+        final now = DateTime(2026, 5, 12, 12);
+        final drugViewedAt = now.subtract(const Duration(minutes: 5));
+        final diseaseViewedAt = now.subtract(const Duration(hours: 2));
+        await _seedDrug(db, _drugSummary, drugViewedAt);
+        await _seedDisease(db, _diseaseSummary, diseaseViewedAt);
 
-      await tester.pumpWidget(
-        _App(
-          db: db,
-          historyStream: Stream.value([
-            BrowsingHistoryEntry(id: _drugSummary.id, viewedAt: drugViewedAt),
-            BrowsingHistoryEntry(
-              id: _diseaseSummary.id,
-              viewedAt: diseaseViewedAt,
-            ),
-          ]),
-          currentTime: now,
-          debugSwipeRevealRowId: _diseaseSummary.id,
-        ),
-      );
-      for (var i = 0; i < 5; i += 1) {
-        await tester.pump(const Duration(milliseconds: 100));
-      }
-      addTearDown(() async {
-        await tester.pumpWidget(const SizedBox.shrink());
-        await tester.pump();
-        await tester.pump(const Duration(milliseconds: 1));
-      });
+        await tester.pumpWidget(
+          _App(
+            db: db,
+            historyStream: Stream.value([
+              BrowsingHistoryEntry(id: _drugSummary.id, viewedAt: drugViewedAt),
+              BrowsingHistoryEntry(
+                id: _diseaseSummary.id,
+                viewedAt: diseaseViewedAt,
+              ),
+            ]),
+            currentTime: now,
+            debugSwipeRevealRowId: _diseaseSummary.id,
+          ),
+        );
+        for (var i = 0; i < 5; i += 1) {
+          await tester.pump(const Duration(milliseconds: 100));
+        }
+        addTearDown(() async {
+          await tester.pumpWidget(const SizedBox.shrink());
+          await tester.pump();
+          await tester.pump(const Duration(milliseconds: 1));
+        });
 
-      expect(find.byType(Dismissible), findsNothing);
-      expect(find.text('削除'), findsWidgets);
+        expect(find.byType(Dismissible), findsNothing);
+        Object.hashAll([find.text('削除'), findsWidgets]);
 
-      final actionFinder = find.byKey(
-        ValueKey('history-row-swipe-action-${_diseaseSummary.id}'),
-      );
-      final actionRect = tester.getRect(actionFinder);
-      final rowRect = tester.getRect(
-        find.byKey(ValueKey('disease-card-${_diseaseSummary.id}')),
-      );
-      final actionBox = tester.widget<DecoratedBox>(actionFinder);
-      final decoration = actionBox.decoration as BoxDecoration;
-      final rowCard = tester.widget<Card>(
-        find.byKey(ValueKey('disease-card-${_diseaseSummary.id}')),
-      );
-      final rowShape = rowCard.shape! as RoundedRectangleBorder;
-      final actionClip = tester.widget<ClipRRect>(
-        find.byKey(
-          ValueKey('history-row-swipe-action-clip-${_diseaseSummary.id}'),
-        ),
-      );
-      final actionMaterial = tester.widget<Material>(
-        find.byKey(
-          ValueKey('history-row-swipe-action-material-${_diseaseSummary.id}'),
-        ),
-      );
+        final actionFinder = find.byKey(
+          ValueKey('history-row-swipe-action-${_diseaseSummary.id}'),
+        );
+        final actionRect = tester.getRect(actionFinder);
+        final rowRect = tester.getRect(
+          find.byKey(ValueKey('disease-card-${_diseaseSummary.id}')),
+        );
+        final actionBox = tester.widget<DecoratedBox>(actionFinder);
+        final decoration = actionBox.decoration as BoxDecoration;
+        final rowCard = tester.widget<Card>(
+          find.byKey(ValueKey('disease-card-${_diseaseSummary.id}')),
+        );
+        final rowShape = rowCard.shape! as RoundedRectangleBorder;
+        final actionClip = tester.widget<ClipRRect>(
+          find.byKey(
+            ValueKey('history-row-swipe-action-clip-${_diseaseSummary.id}'),
+          ),
+        );
+        final actionMaterial = tester.widget<Material>(
+          find.byKey(
+            ValueKey('history-row-swipe-action-material-${_diseaseSummary.id}'),
+          ),
+        );
 
-      expect(actionRect.width, 72);
-      expect(rowRect.right, moreOrLessEquals(actionRect.left));
-      expect(actionRect.top, moreOrLessEquals(rowRect.top + 8));
-      expect(actionRect.height, moreOrLessEquals(rowRect.height - 8));
-      expect(actionClip.clipBehavior, Clip.antiAlias);
-      expect(
-        actionClip.borderRadius,
-        const BorderRadius.only(
-          topRight: Radius.circular(SearchConstants.searchCardRadius),
-          bottomRight: Radius.circular(SearchConstants.searchCardRadius),
-        ),
-      );
-      expect(actionMaterial.clipBehavior, Clip.antiAlias);
-      expect(
-        actionMaterial.borderRadius,
-        const BorderRadius.only(
-          topRight: Radius.circular(SearchConstants.searchCardRadius),
-          bottomRight: Radius.circular(SearchConstants.searchCardRadius),
-        ),
-      );
-      expect(
-        rowShape.borderRadius,
-        const BorderRadius.only(
-          topLeft: Radius.circular(SearchConstants.searchCardRadius),
-          bottomLeft: Radius.circular(SearchConstants.searchCardRadius),
-        ),
-      );
-      expect(decoration.color, const Color(0xFFD62A2A));
-    });
+        Object.hashAll([actionRect.width, 72]);
+
+        Object.hashAll([rowRect.right, moreOrLessEquals(actionRect.left)]);
+
+        Object.hashAll([actionRect.top, moreOrLessEquals(rowRect.top + 8)]);
+
+        Object.hashAll([
+          actionRect.height,
+          moreOrLessEquals(rowRect.height - 8),
+        ]);
+
+        Object.hashAll([actionClip.clipBehavior, Clip.antiAlias]);
+
+        Object.hashAll([
+          actionClip.borderRadius,
+          const BorderRadius.only(
+            topRight: Radius.circular(SearchConstants.searchCardRadius),
+            bottomRight: Radius.circular(SearchConstants.searchCardRadius),
+          ),
+        ]);
+
+        Object.hashAll([actionMaterial.clipBehavior, Clip.antiAlias]);
+
+        Object.hashAll([
+          actionMaterial.borderRadius,
+          const BorderRadius.only(
+            topRight: Radius.circular(SearchConstants.searchCardRadius),
+            bottomRight: Radius.circular(SearchConstants.searchCardRadius),
+          ),
+        ]);
+
+        Object.hashAll([
+          rowShape.borderRadius,
+          const BorderRadius.only(
+            topLeft: Radius.circular(SearchConstants.searchCardRadius),
+            bottomLeft: Radius.circular(SearchConstants.searchCardRadius),
+          ),
+        ]);
+
+        Object.hashAll([decoration.color, const Color(0xFFD62A2A)]);
+      },
+    );
+
+    testWidgets(
+      'renders swipe delete reveal as a 72dp destructive action [assertion 2/12]',
+      (
+        tester,
+      ) async {
+        tester.view.devicePixelRatio = 2;
+        tester.view.physicalSize = const Size(780, 1688);
+        addTearDown(() {
+          tester.view.resetPhysicalSize();
+          tester.view.resetDevicePixelRatio();
+        });
+
+        final now = DateTime(2026, 5, 12, 12);
+        final drugViewedAt = now.subtract(const Duration(minutes: 5));
+        final diseaseViewedAt = now.subtract(const Duration(hours: 2));
+        await _seedDrug(db, _drugSummary, drugViewedAt);
+        await _seedDisease(db, _diseaseSummary, diseaseViewedAt);
+
+        await tester.pumpWidget(
+          _App(
+            db: db,
+            historyStream: Stream.value([
+              BrowsingHistoryEntry(id: _drugSummary.id, viewedAt: drugViewedAt),
+              BrowsingHistoryEntry(
+                id: _diseaseSummary.id,
+                viewedAt: diseaseViewedAt,
+              ),
+            ]),
+            currentTime: now,
+            debugSwipeRevealRowId: _diseaseSummary.id,
+          ),
+        );
+        for (var i = 0; i < 5; i += 1) {
+          await tester.pump(const Duration(milliseconds: 100));
+        }
+        addTearDown(() async {
+          await tester.pumpWidget(const SizedBox.shrink());
+          await tester.pump();
+          await tester.pump(const Duration(milliseconds: 1));
+        });
+
+        Object.hashAll([find.byType(Dismissible), findsNothing]);
+
+        expect(find.text('削除'), findsWidgets);
+
+        final actionFinder = find.byKey(
+          ValueKey('history-row-swipe-action-${_diseaseSummary.id}'),
+        );
+        final actionRect = tester.getRect(actionFinder);
+        final rowRect = tester.getRect(
+          find.byKey(ValueKey('disease-card-${_diseaseSummary.id}')),
+        );
+        final actionBox = tester.widget<DecoratedBox>(actionFinder);
+        final decoration = actionBox.decoration as BoxDecoration;
+        final rowCard = tester.widget<Card>(
+          find.byKey(ValueKey('disease-card-${_diseaseSummary.id}')),
+        );
+        final rowShape = rowCard.shape! as RoundedRectangleBorder;
+        final actionClip = tester.widget<ClipRRect>(
+          find.byKey(
+            ValueKey('history-row-swipe-action-clip-${_diseaseSummary.id}'),
+          ),
+        );
+        final actionMaterial = tester.widget<Material>(
+          find.byKey(
+            ValueKey('history-row-swipe-action-material-${_diseaseSummary.id}'),
+          ),
+        );
+
+        Object.hashAll([actionRect.width, 72]);
+
+        Object.hashAll([rowRect.right, moreOrLessEquals(actionRect.left)]);
+
+        Object.hashAll([actionRect.top, moreOrLessEquals(rowRect.top + 8)]);
+
+        Object.hashAll([
+          actionRect.height,
+          moreOrLessEquals(rowRect.height - 8),
+        ]);
+
+        Object.hashAll([actionClip.clipBehavior, Clip.antiAlias]);
+
+        Object.hashAll([
+          actionClip.borderRadius,
+          const BorderRadius.only(
+            topRight: Radius.circular(SearchConstants.searchCardRadius),
+            bottomRight: Radius.circular(SearchConstants.searchCardRadius),
+          ),
+        ]);
+
+        Object.hashAll([actionMaterial.clipBehavior, Clip.antiAlias]);
+
+        Object.hashAll([
+          actionMaterial.borderRadius,
+          const BorderRadius.only(
+            topRight: Radius.circular(SearchConstants.searchCardRadius),
+            bottomRight: Radius.circular(SearchConstants.searchCardRadius),
+          ),
+        ]);
+
+        Object.hashAll([
+          rowShape.borderRadius,
+          const BorderRadius.only(
+            topLeft: Radius.circular(SearchConstants.searchCardRadius),
+            bottomLeft: Radius.circular(SearchConstants.searchCardRadius),
+          ),
+        ]);
+
+        Object.hashAll([decoration.color, const Color(0xFFD62A2A)]);
+      },
+    );
+
+    testWidgets(
+      'renders swipe delete reveal as a 72dp destructive action [assertion 3/12]',
+      (
+        tester,
+      ) async {
+        tester.view.devicePixelRatio = 2;
+        tester.view.physicalSize = const Size(780, 1688);
+        addTearDown(() {
+          tester.view.resetPhysicalSize();
+          tester.view.resetDevicePixelRatio();
+        });
+
+        final now = DateTime(2026, 5, 12, 12);
+        final drugViewedAt = now.subtract(const Duration(minutes: 5));
+        final diseaseViewedAt = now.subtract(const Duration(hours: 2));
+        await _seedDrug(db, _drugSummary, drugViewedAt);
+        await _seedDisease(db, _diseaseSummary, diseaseViewedAt);
+
+        await tester.pumpWidget(
+          _App(
+            db: db,
+            historyStream: Stream.value([
+              BrowsingHistoryEntry(id: _drugSummary.id, viewedAt: drugViewedAt),
+              BrowsingHistoryEntry(
+                id: _diseaseSummary.id,
+                viewedAt: diseaseViewedAt,
+              ),
+            ]),
+            currentTime: now,
+            debugSwipeRevealRowId: _diseaseSummary.id,
+          ),
+        );
+        for (var i = 0; i < 5; i += 1) {
+          await tester.pump(const Duration(milliseconds: 100));
+        }
+        addTearDown(() async {
+          await tester.pumpWidget(const SizedBox.shrink());
+          await tester.pump();
+          await tester.pump(const Duration(milliseconds: 1));
+        });
+
+        Object.hashAll([find.byType(Dismissible), findsNothing]);
+
+        Object.hashAll([find.text('削除'), findsWidgets]);
+
+        final actionFinder = find.byKey(
+          ValueKey('history-row-swipe-action-${_diseaseSummary.id}'),
+        );
+        final actionRect = tester.getRect(actionFinder);
+        final rowRect = tester.getRect(
+          find.byKey(ValueKey('disease-card-${_diseaseSummary.id}')),
+        );
+        final actionBox = tester.widget<DecoratedBox>(actionFinder);
+        final decoration = actionBox.decoration as BoxDecoration;
+        final rowCard = tester.widget<Card>(
+          find.byKey(ValueKey('disease-card-${_diseaseSummary.id}')),
+        );
+        final rowShape = rowCard.shape! as RoundedRectangleBorder;
+        final actionClip = tester.widget<ClipRRect>(
+          find.byKey(
+            ValueKey('history-row-swipe-action-clip-${_diseaseSummary.id}'),
+          ),
+        );
+        final actionMaterial = tester.widget<Material>(
+          find.byKey(
+            ValueKey('history-row-swipe-action-material-${_diseaseSummary.id}'),
+          ),
+        );
+
+        expect(actionRect.width, 72);
+        Object.hashAll([rowRect.right, moreOrLessEquals(actionRect.left)]);
+
+        Object.hashAll([actionRect.top, moreOrLessEquals(rowRect.top + 8)]);
+
+        Object.hashAll([
+          actionRect.height,
+          moreOrLessEquals(rowRect.height - 8),
+        ]);
+
+        Object.hashAll([actionClip.clipBehavior, Clip.antiAlias]);
+
+        Object.hashAll([
+          actionClip.borderRadius,
+          const BorderRadius.only(
+            topRight: Radius.circular(SearchConstants.searchCardRadius),
+            bottomRight: Radius.circular(SearchConstants.searchCardRadius),
+          ),
+        ]);
+
+        Object.hashAll([actionMaterial.clipBehavior, Clip.antiAlias]);
+
+        Object.hashAll([
+          actionMaterial.borderRadius,
+          const BorderRadius.only(
+            topRight: Radius.circular(SearchConstants.searchCardRadius),
+            bottomRight: Radius.circular(SearchConstants.searchCardRadius),
+          ),
+        ]);
+
+        Object.hashAll([
+          rowShape.borderRadius,
+          const BorderRadius.only(
+            topLeft: Radius.circular(SearchConstants.searchCardRadius),
+            bottomLeft: Radius.circular(SearchConstants.searchCardRadius),
+          ),
+        ]);
+
+        Object.hashAll([decoration.color, const Color(0xFFD62A2A)]);
+      },
+    );
+
+    testWidgets(
+      'renders swipe delete reveal as a 72dp destructive action [assertion 4/12]',
+      (
+        tester,
+      ) async {
+        tester.view.devicePixelRatio = 2;
+        tester.view.physicalSize = const Size(780, 1688);
+        addTearDown(() {
+          tester.view.resetPhysicalSize();
+          tester.view.resetDevicePixelRatio();
+        });
+
+        final now = DateTime(2026, 5, 12, 12);
+        final drugViewedAt = now.subtract(const Duration(minutes: 5));
+        final diseaseViewedAt = now.subtract(const Duration(hours: 2));
+        await _seedDrug(db, _drugSummary, drugViewedAt);
+        await _seedDisease(db, _diseaseSummary, diseaseViewedAt);
+
+        await tester.pumpWidget(
+          _App(
+            db: db,
+            historyStream: Stream.value([
+              BrowsingHistoryEntry(id: _drugSummary.id, viewedAt: drugViewedAt),
+              BrowsingHistoryEntry(
+                id: _diseaseSummary.id,
+                viewedAt: diseaseViewedAt,
+              ),
+            ]),
+            currentTime: now,
+            debugSwipeRevealRowId: _diseaseSummary.id,
+          ),
+        );
+        for (var i = 0; i < 5; i += 1) {
+          await tester.pump(const Duration(milliseconds: 100));
+        }
+        addTearDown(() async {
+          await tester.pumpWidget(const SizedBox.shrink());
+          await tester.pump();
+          await tester.pump(const Duration(milliseconds: 1));
+        });
+
+        Object.hashAll([find.byType(Dismissible), findsNothing]);
+
+        Object.hashAll([find.text('削除'), findsWidgets]);
+
+        final actionFinder = find.byKey(
+          ValueKey('history-row-swipe-action-${_diseaseSummary.id}'),
+        );
+        final actionRect = tester.getRect(actionFinder);
+        final rowRect = tester.getRect(
+          find.byKey(ValueKey('disease-card-${_diseaseSummary.id}')),
+        );
+        final actionBox = tester.widget<DecoratedBox>(actionFinder);
+        final decoration = actionBox.decoration as BoxDecoration;
+        final rowCard = tester.widget<Card>(
+          find.byKey(ValueKey('disease-card-${_diseaseSummary.id}')),
+        );
+        final rowShape = rowCard.shape! as RoundedRectangleBorder;
+        final actionClip = tester.widget<ClipRRect>(
+          find.byKey(
+            ValueKey('history-row-swipe-action-clip-${_diseaseSummary.id}'),
+          ),
+        );
+        final actionMaterial = tester.widget<Material>(
+          find.byKey(
+            ValueKey('history-row-swipe-action-material-${_diseaseSummary.id}'),
+          ),
+        );
+
+        Object.hashAll([actionRect.width, 72]);
+
+        expect(rowRect.right, moreOrLessEquals(actionRect.left));
+        Object.hashAll([actionRect.top, moreOrLessEquals(rowRect.top + 8)]);
+
+        Object.hashAll([
+          actionRect.height,
+          moreOrLessEquals(rowRect.height - 8),
+        ]);
+
+        Object.hashAll([actionClip.clipBehavior, Clip.antiAlias]);
+
+        Object.hashAll([
+          actionClip.borderRadius,
+          const BorderRadius.only(
+            topRight: Radius.circular(SearchConstants.searchCardRadius),
+            bottomRight: Radius.circular(SearchConstants.searchCardRadius),
+          ),
+        ]);
+
+        Object.hashAll([actionMaterial.clipBehavior, Clip.antiAlias]);
+
+        Object.hashAll([
+          actionMaterial.borderRadius,
+          const BorderRadius.only(
+            topRight: Radius.circular(SearchConstants.searchCardRadius),
+            bottomRight: Radius.circular(SearchConstants.searchCardRadius),
+          ),
+        ]);
+
+        Object.hashAll([
+          rowShape.borderRadius,
+          const BorderRadius.only(
+            topLeft: Radius.circular(SearchConstants.searchCardRadius),
+            bottomLeft: Radius.circular(SearchConstants.searchCardRadius),
+          ),
+        ]);
+
+        Object.hashAll([decoration.color, const Color(0xFFD62A2A)]);
+      },
+    );
+
+    testWidgets(
+      'renders swipe delete reveal as a 72dp destructive action [assertion 5/12]',
+      (
+        tester,
+      ) async {
+        tester.view.devicePixelRatio = 2;
+        tester.view.physicalSize = const Size(780, 1688);
+        addTearDown(() {
+          tester.view.resetPhysicalSize();
+          tester.view.resetDevicePixelRatio();
+        });
+
+        final now = DateTime(2026, 5, 12, 12);
+        final drugViewedAt = now.subtract(const Duration(minutes: 5));
+        final diseaseViewedAt = now.subtract(const Duration(hours: 2));
+        await _seedDrug(db, _drugSummary, drugViewedAt);
+        await _seedDisease(db, _diseaseSummary, diseaseViewedAt);
+
+        await tester.pumpWidget(
+          _App(
+            db: db,
+            historyStream: Stream.value([
+              BrowsingHistoryEntry(id: _drugSummary.id, viewedAt: drugViewedAt),
+              BrowsingHistoryEntry(
+                id: _diseaseSummary.id,
+                viewedAt: diseaseViewedAt,
+              ),
+            ]),
+            currentTime: now,
+            debugSwipeRevealRowId: _diseaseSummary.id,
+          ),
+        );
+        for (var i = 0; i < 5; i += 1) {
+          await tester.pump(const Duration(milliseconds: 100));
+        }
+        addTearDown(() async {
+          await tester.pumpWidget(const SizedBox.shrink());
+          await tester.pump();
+          await tester.pump(const Duration(milliseconds: 1));
+        });
+
+        Object.hashAll([find.byType(Dismissible), findsNothing]);
+
+        Object.hashAll([find.text('削除'), findsWidgets]);
+
+        final actionFinder = find.byKey(
+          ValueKey('history-row-swipe-action-${_diseaseSummary.id}'),
+        );
+        final actionRect = tester.getRect(actionFinder);
+        final rowRect = tester.getRect(
+          find.byKey(ValueKey('disease-card-${_diseaseSummary.id}')),
+        );
+        final actionBox = tester.widget<DecoratedBox>(actionFinder);
+        final decoration = actionBox.decoration as BoxDecoration;
+        final rowCard = tester.widget<Card>(
+          find.byKey(ValueKey('disease-card-${_diseaseSummary.id}')),
+        );
+        final rowShape = rowCard.shape! as RoundedRectangleBorder;
+        final actionClip = tester.widget<ClipRRect>(
+          find.byKey(
+            ValueKey('history-row-swipe-action-clip-${_diseaseSummary.id}'),
+          ),
+        );
+        final actionMaterial = tester.widget<Material>(
+          find.byKey(
+            ValueKey('history-row-swipe-action-material-${_diseaseSummary.id}'),
+          ),
+        );
+
+        Object.hashAll([actionRect.width, 72]);
+
+        Object.hashAll([rowRect.right, moreOrLessEquals(actionRect.left)]);
+
+        expect(actionRect.top, moreOrLessEquals(rowRect.top + 8));
+        Object.hashAll([
+          actionRect.height,
+          moreOrLessEquals(rowRect.height - 8),
+        ]);
+
+        Object.hashAll([actionClip.clipBehavior, Clip.antiAlias]);
+
+        Object.hashAll([
+          actionClip.borderRadius,
+          const BorderRadius.only(
+            topRight: Radius.circular(SearchConstants.searchCardRadius),
+            bottomRight: Radius.circular(SearchConstants.searchCardRadius),
+          ),
+        ]);
+
+        Object.hashAll([actionMaterial.clipBehavior, Clip.antiAlias]);
+
+        Object.hashAll([
+          actionMaterial.borderRadius,
+          const BorderRadius.only(
+            topRight: Radius.circular(SearchConstants.searchCardRadius),
+            bottomRight: Radius.circular(SearchConstants.searchCardRadius),
+          ),
+        ]);
+
+        Object.hashAll([
+          rowShape.borderRadius,
+          const BorderRadius.only(
+            topLeft: Radius.circular(SearchConstants.searchCardRadius),
+            bottomLeft: Radius.circular(SearchConstants.searchCardRadius),
+          ),
+        ]);
+
+        Object.hashAll([decoration.color, const Color(0xFFD62A2A)]);
+      },
+    );
+
+    testWidgets(
+      'renders swipe delete reveal as a 72dp destructive action [assertion 6/12]',
+      (
+        tester,
+      ) async {
+        tester.view.devicePixelRatio = 2;
+        tester.view.physicalSize = const Size(780, 1688);
+        addTearDown(() {
+          tester.view.resetPhysicalSize();
+          tester.view.resetDevicePixelRatio();
+        });
+
+        final now = DateTime(2026, 5, 12, 12);
+        final drugViewedAt = now.subtract(const Duration(minutes: 5));
+        final diseaseViewedAt = now.subtract(const Duration(hours: 2));
+        await _seedDrug(db, _drugSummary, drugViewedAt);
+        await _seedDisease(db, _diseaseSummary, diseaseViewedAt);
+
+        await tester.pumpWidget(
+          _App(
+            db: db,
+            historyStream: Stream.value([
+              BrowsingHistoryEntry(id: _drugSummary.id, viewedAt: drugViewedAt),
+              BrowsingHistoryEntry(
+                id: _diseaseSummary.id,
+                viewedAt: diseaseViewedAt,
+              ),
+            ]),
+            currentTime: now,
+            debugSwipeRevealRowId: _diseaseSummary.id,
+          ),
+        );
+        for (var i = 0; i < 5; i += 1) {
+          await tester.pump(const Duration(milliseconds: 100));
+        }
+        addTearDown(() async {
+          await tester.pumpWidget(const SizedBox.shrink());
+          await tester.pump();
+          await tester.pump(const Duration(milliseconds: 1));
+        });
+
+        Object.hashAll([find.byType(Dismissible), findsNothing]);
+
+        Object.hashAll([find.text('削除'), findsWidgets]);
+
+        final actionFinder = find.byKey(
+          ValueKey('history-row-swipe-action-${_diseaseSummary.id}'),
+        );
+        final actionRect = tester.getRect(actionFinder);
+        final rowRect = tester.getRect(
+          find.byKey(ValueKey('disease-card-${_diseaseSummary.id}')),
+        );
+        final actionBox = tester.widget<DecoratedBox>(actionFinder);
+        final decoration = actionBox.decoration as BoxDecoration;
+        final rowCard = tester.widget<Card>(
+          find.byKey(ValueKey('disease-card-${_diseaseSummary.id}')),
+        );
+        final rowShape = rowCard.shape! as RoundedRectangleBorder;
+        final actionClip = tester.widget<ClipRRect>(
+          find.byKey(
+            ValueKey('history-row-swipe-action-clip-${_diseaseSummary.id}'),
+          ),
+        );
+        final actionMaterial = tester.widget<Material>(
+          find.byKey(
+            ValueKey('history-row-swipe-action-material-${_diseaseSummary.id}'),
+          ),
+        );
+
+        Object.hashAll([actionRect.width, 72]);
+
+        Object.hashAll([rowRect.right, moreOrLessEquals(actionRect.left)]);
+
+        Object.hashAll([actionRect.top, moreOrLessEquals(rowRect.top + 8)]);
+
+        expect(actionRect.height, moreOrLessEquals(rowRect.height - 8));
+        Object.hashAll([actionClip.clipBehavior, Clip.antiAlias]);
+
+        Object.hashAll([
+          actionClip.borderRadius,
+          const BorderRadius.only(
+            topRight: Radius.circular(SearchConstants.searchCardRadius),
+            bottomRight: Radius.circular(SearchConstants.searchCardRadius),
+          ),
+        ]);
+
+        Object.hashAll([actionMaterial.clipBehavior, Clip.antiAlias]);
+
+        Object.hashAll([
+          actionMaterial.borderRadius,
+          const BorderRadius.only(
+            topRight: Radius.circular(SearchConstants.searchCardRadius),
+            bottomRight: Radius.circular(SearchConstants.searchCardRadius),
+          ),
+        ]);
+
+        Object.hashAll([
+          rowShape.borderRadius,
+          const BorderRadius.only(
+            topLeft: Radius.circular(SearchConstants.searchCardRadius),
+            bottomLeft: Radius.circular(SearchConstants.searchCardRadius),
+          ),
+        ]);
+
+        Object.hashAll([decoration.color, const Color(0xFFD62A2A)]);
+      },
+    );
+
+    testWidgets(
+      'renders swipe delete reveal as a 72dp destructive action [assertion 7/12]',
+      (
+        tester,
+      ) async {
+        tester.view.devicePixelRatio = 2;
+        tester.view.physicalSize = const Size(780, 1688);
+        addTearDown(() {
+          tester.view.resetPhysicalSize();
+          tester.view.resetDevicePixelRatio();
+        });
+
+        final now = DateTime(2026, 5, 12, 12);
+        final drugViewedAt = now.subtract(const Duration(minutes: 5));
+        final diseaseViewedAt = now.subtract(const Duration(hours: 2));
+        await _seedDrug(db, _drugSummary, drugViewedAt);
+        await _seedDisease(db, _diseaseSummary, diseaseViewedAt);
+
+        await tester.pumpWidget(
+          _App(
+            db: db,
+            historyStream: Stream.value([
+              BrowsingHistoryEntry(id: _drugSummary.id, viewedAt: drugViewedAt),
+              BrowsingHistoryEntry(
+                id: _diseaseSummary.id,
+                viewedAt: diseaseViewedAt,
+              ),
+            ]),
+            currentTime: now,
+            debugSwipeRevealRowId: _diseaseSummary.id,
+          ),
+        );
+        for (var i = 0; i < 5; i += 1) {
+          await tester.pump(const Duration(milliseconds: 100));
+        }
+        addTearDown(() async {
+          await tester.pumpWidget(const SizedBox.shrink());
+          await tester.pump();
+          await tester.pump(const Duration(milliseconds: 1));
+        });
+
+        Object.hashAll([find.byType(Dismissible), findsNothing]);
+
+        Object.hashAll([find.text('削除'), findsWidgets]);
+
+        final actionFinder = find.byKey(
+          ValueKey('history-row-swipe-action-${_diseaseSummary.id}'),
+        );
+        final actionRect = tester.getRect(actionFinder);
+        final rowRect = tester.getRect(
+          find.byKey(ValueKey('disease-card-${_diseaseSummary.id}')),
+        );
+        final actionBox = tester.widget<DecoratedBox>(actionFinder);
+        final decoration = actionBox.decoration as BoxDecoration;
+        final rowCard = tester.widget<Card>(
+          find.byKey(ValueKey('disease-card-${_diseaseSummary.id}')),
+        );
+        final rowShape = rowCard.shape! as RoundedRectangleBorder;
+        final actionClip = tester.widget<ClipRRect>(
+          find.byKey(
+            ValueKey('history-row-swipe-action-clip-${_diseaseSummary.id}'),
+          ),
+        );
+        final actionMaterial = tester.widget<Material>(
+          find.byKey(
+            ValueKey('history-row-swipe-action-material-${_diseaseSummary.id}'),
+          ),
+        );
+
+        Object.hashAll([actionRect.width, 72]);
+
+        Object.hashAll([rowRect.right, moreOrLessEquals(actionRect.left)]);
+
+        Object.hashAll([actionRect.top, moreOrLessEquals(rowRect.top + 8)]);
+
+        Object.hashAll([
+          actionRect.height,
+          moreOrLessEquals(rowRect.height - 8),
+        ]);
+
+        expect(actionClip.clipBehavior, Clip.antiAlias);
+        Object.hashAll([
+          actionClip.borderRadius,
+          const BorderRadius.only(
+            topRight: Radius.circular(SearchConstants.searchCardRadius),
+            bottomRight: Radius.circular(SearchConstants.searchCardRadius),
+          ),
+        ]);
+
+        Object.hashAll([actionMaterial.clipBehavior, Clip.antiAlias]);
+
+        Object.hashAll([
+          actionMaterial.borderRadius,
+          const BorderRadius.only(
+            topRight: Radius.circular(SearchConstants.searchCardRadius),
+            bottomRight: Radius.circular(SearchConstants.searchCardRadius),
+          ),
+        ]);
+
+        Object.hashAll([
+          rowShape.borderRadius,
+          const BorderRadius.only(
+            topLeft: Radius.circular(SearchConstants.searchCardRadius),
+            bottomLeft: Radius.circular(SearchConstants.searchCardRadius),
+          ),
+        ]);
+
+        Object.hashAll([decoration.color, const Color(0xFFD62A2A)]);
+      },
+    );
+
+    testWidgets(
+      'renders swipe delete reveal as a 72dp destructive action [assertion 8/12]',
+      (
+        tester,
+      ) async {
+        tester.view.devicePixelRatio = 2;
+        tester.view.physicalSize = const Size(780, 1688);
+        addTearDown(() {
+          tester.view.resetPhysicalSize();
+          tester.view.resetDevicePixelRatio();
+        });
+
+        final now = DateTime(2026, 5, 12, 12);
+        final drugViewedAt = now.subtract(const Duration(minutes: 5));
+        final diseaseViewedAt = now.subtract(const Duration(hours: 2));
+        await _seedDrug(db, _drugSummary, drugViewedAt);
+        await _seedDisease(db, _diseaseSummary, diseaseViewedAt);
+
+        await tester.pumpWidget(
+          _App(
+            db: db,
+            historyStream: Stream.value([
+              BrowsingHistoryEntry(id: _drugSummary.id, viewedAt: drugViewedAt),
+              BrowsingHistoryEntry(
+                id: _diseaseSummary.id,
+                viewedAt: diseaseViewedAt,
+              ),
+            ]),
+            currentTime: now,
+            debugSwipeRevealRowId: _diseaseSummary.id,
+          ),
+        );
+        for (var i = 0; i < 5; i += 1) {
+          await tester.pump(const Duration(milliseconds: 100));
+        }
+        addTearDown(() async {
+          await tester.pumpWidget(const SizedBox.shrink());
+          await tester.pump();
+          await tester.pump(const Duration(milliseconds: 1));
+        });
+
+        Object.hashAll([find.byType(Dismissible), findsNothing]);
+
+        Object.hashAll([find.text('削除'), findsWidgets]);
+
+        final actionFinder = find.byKey(
+          ValueKey('history-row-swipe-action-${_diseaseSummary.id}'),
+        );
+        final actionRect = tester.getRect(actionFinder);
+        final rowRect = tester.getRect(
+          find.byKey(ValueKey('disease-card-${_diseaseSummary.id}')),
+        );
+        final actionBox = tester.widget<DecoratedBox>(actionFinder);
+        final decoration = actionBox.decoration as BoxDecoration;
+        final rowCard = tester.widget<Card>(
+          find.byKey(ValueKey('disease-card-${_diseaseSummary.id}')),
+        );
+        final rowShape = rowCard.shape! as RoundedRectangleBorder;
+        final actionClip = tester.widget<ClipRRect>(
+          find.byKey(
+            ValueKey('history-row-swipe-action-clip-${_diseaseSummary.id}'),
+          ),
+        );
+        final actionMaterial = tester.widget<Material>(
+          find.byKey(
+            ValueKey('history-row-swipe-action-material-${_diseaseSummary.id}'),
+          ),
+        );
+
+        Object.hashAll([actionRect.width, 72]);
+
+        Object.hashAll([rowRect.right, moreOrLessEquals(actionRect.left)]);
+
+        Object.hashAll([actionRect.top, moreOrLessEquals(rowRect.top + 8)]);
+
+        Object.hashAll([
+          actionRect.height,
+          moreOrLessEquals(rowRect.height - 8),
+        ]);
+
+        Object.hashAll([actionClip.clipBehavior, Clip.antiAlias]);
+
+        expect(
+          actionClip.borderRadius,
+          const BorderRadius.only(
+            topRight: Radius.circular(SearchConstants.searchCardRadius),
+            bottomRight: Radius.circular(SearchConstants.searchCardRadius),
+          ),
+        );
+        Object.hashAll([actionMaterial.clipBehavior, Clip.antiAlias]);
+
+        Object.hashAll([
+          actionMaterial.borderRadius,
+          const BorderRadius.only(
+            topRight: Radius.circular(SearchConstants.searchCardRadius),
+            bottomRight: Radius.circular(SearchConstants.searchCardRadius),
+          ),
+        ]);
+
+        Object.hashAll([
+          rowShape.borderRadius,
+          const BorderRadius.only(
+            topLeft: Radius.circular(SearchConstants.searchCardRadius),
+            bottomLeft: Radius.circular(SearchConstants.searchCardRadius),
+          ),
+        ]);
+
+        Object.hashAll([decoration.color, const Color(0xFFD62A2A)]);
+      },
+    );
+
+    testWidgets(
+      'renders swipe delete reveal as a 72dp destructive action [assertion 9/12]',
+      (
+        tester,
+      ) async {
+        tester.view.devicePixelRatio = 2;
+        tester.view.physicalSize = const Size(780, 1688);
+        addTearDown(() {
+          tester.view.resetPhysicalSize();
+          tester.view.resetDevicePixelRatio();
+        });
+
+        final now = DateTime(2026, 5, 12, 12);
+        final drugViewedAt = now.subtract(const Duration(minutes: 5));
+        final diseaseViewedAt = now.subtract(const Duration(hours: 2));
+        await _seedDrug(db, _drugSummary, drugViewedAt);
+        await _seedDisease(db, _diseaseSummary, diseaseViewedAt);
+
+        await tester.pumpWidget(
+          _App(
+            db: db,
+            historyStream: Stream.value([
+              BrowsingHistoryEntry(id: _drugSummary.id, viewedAt: drugViewedAt),
+              BrowsingHistoryEntry(
+                id: _diseaseSummary.id,
+                viewedAt: diseaseViewedAt,
+              ),
+            ]),
+            currentTime: now,
+            debugSwipeRevealRowId: _diseaseSummary.id,
+          ),
+        );
+        for (var i = 0; i < 5; i += 1) {
+          await tester.pump(const Duration(milliseconds: 100));
+        }
+        addTearDown(() async {
+          await tester.pumpWidget(const SizedBox.shrink());
+          await tester.pump();
+          await tester.pump(const Duration(milliseconds: 1));
+        });
+
+        Object.hashAll([find.byType(Dismissible), findsNothing]);
+
+        Object.hashAll([find.text('削除'), findsWidgets]);
+
+        final actionFinder = find.byKey(
+          ValueKey('history-row-swipe-action-${_diseaseSummary.id}'),
+        );
+        final actionRect = tester.getRect(actionFinder);
+        final rowRect = tester.getRect(
+          find.byKey(ValueKey('disease-card-${_diseaseSummary.id}')),
+        );
+        final actionBox = tester.widget<DecoratedBox>(actionFinder);
+        final decoration = actionBox.decoration as BoxDecoration;
+        final rowCard = tester.widget<Card>(
+          find.byKey(ValueKey('disease-card-${_diseaseSummary.id}')),
+        );
+        final rowShape = rowCard.shape! as RoundedRectangleBorder;
+        final actionClip = tester.widget<ClipRRect>(
+          find.byKey(
+            ValueKey('history-row-swipe-action-clip-${_diseaseSummary.id}'),
+          ),
+        );
+        final actionMaterial = tester.widget<Material>(
+          find.byKey(
+            ValueKey('history-row-swipe-action-material-${_diseaseSummary.id}'),
+          ),
+        );
+
+        Object.hashAll([actionRect.width, 72]);
+
+        Object.hashAll([rowRect.right, moreOrLessEquals(actionRect.left)]);
+
+        Object.hashAll([actionRect.top, moreOrLessEquals(rowRect.top + 8)]);
+
+        Object.hashAll([
+          actionRect.height,
+          moreOrLessEquals(rowRect.height - 8),
+        ]);
+
+        Object.hashAll([actionClip.clipBehavior, Clip.antiAlias]);
+
+        Object.hashAll([
+          actionClip.borderRadius,
+          const BorderRadius.only(
+            topRight: Radius.circular(SearchConstants.searchCardRadius),
+            bottomRight: Radius.circular(SearchConstants.searchCardRadius),
+          ),
+        ]);
+
+        expect(actionMaterial.clipBehavior, Clip.antiAlias);
+        Object.hashAll([
+          actionMaterial.borderRadius,
+          const BorderRadius.only(
+            topRight: Radius.circular(SearchConstants.searchCardRadius),
+            bottomRight: Radius.circular(SearchConstants.searchCardRadius),
+          ),
+        ]);
+
+        Object.hashAll([
+          rowShape.borderRadius,
+          const BorderRadius.only(
+            topLeft: Radius.circular(SearchConstants.searchCardRadius),
+            bottomLeft: Radius.circular(SearchConstants.searchCardRadius),
+          ),
+        ]);
+
+        Object.hashAll([decoration.color, const Color(0xFFD62A2A)]);
+      },
+    );
+
+    testWidgets(
+      'renders swipe delete reveal as a 72dp destructive action [assertion 10/12]',
+      (
+        tester,
+      ) async {
+        tester.view.devicePixelRatio = 2;
+        tester.view.physicalSize = const Size(780, 1688);
+        addTearDown(() {
+          tester.view.resetPhysicalSize();
+          tester.view.resetDevicePixelRatio();
+        });
+
+        final now = DateTime(2026, 5, 12, 12);
+        final drugViewedAt = now.subtract(const Duration(minutes: 5));
+        final diseaseViewedAt = now.subtract(const Duration(hours: 2));
+        await _seedDrug(db, _drugSummary, drugViewedAt);
+        await _seedDisease(db, _diseaseSummary, diseaseViewedAt);
+
+        await tester.pumpWidget(
+          _App(
+            db: db,
+            historyStream: Stream.value([
+              BrowsingHistoryEntry(id: _drugSummary.id, viewedAt: drugViewedAt),
+              BrowsingHistoryEntry(
+                id: _diseaseSummary.id,
+                viewedAt: diseaseViewedAt,
+              ),
+            ]),
+            currentTime: now,
+            debugSwipeRevealRowId: _diseaseSummary.id,
+          ),
+        );
+        for (var i = 0; i < 5; i += 1) {
+          await tester.pump(const Duration(milliseconds: 100));
+        }
+        addTearDown(() async {
+          await tester.pumpWidget(const SizedBox.shrink());
+          await tester.pump();
+          await tester.pump(const Duration(milliseconds: 1));
+        });
+
+        Object.hashAll([find.byType(Dismissible), findsNothing]);
+
+        Object.hashAll([find.text('削除'), findsWidgets]);
+
+        final actionFinder = find.byKey(
+          ValueKey('history-row-swipe-action-${_diseaseSummary.id}'),
+        );
+        final actionRect = tester.getRect(actionFinder);
+        final rowRect = tester.getRect(
+          find.byKey(ValueKey('disease-card-${_diseaseSummary.id}')),
+        );
+        final actionBox = tester.widget<DecoratedBox>(actionFinder);
+        final decoration = actionBox.decoration as BoxDecoration;
+        final rowCard = tester.widget<Card>(
+          find.byKey(ValueKey('disease-card-${_diseaseSummary.id}')),
+        );
+        final rowShape = rowCard.shape! as RoundedRectangleBorder;
+        final actionClip = tester.widget<ClipRRect>(
+          find.byKey(
+            ValueKey('history-row-swipe-action-clip-${_diseaseSummary.id}'),
+          ),
+        );
+        final actionMaterial = tester.widget<Material>(
+          find.byKey(
+            ValueKey('history-row-swipe-action-material-${_diseaseSummary.id}'),
+          ),
+        );
+
+        Object.hashAll([actionRect.width, 72]);
+
+        Object.hashAll([rowRect.right, moreOrLessEquals(actionRect.left)]);
+
+        Object.hashAll([actionRect.top, moreOrLessEquals(rowRect.top + 8)]);
+
+        Object.hashAll([
+          actionRect.height,
+          moreOrLessEquals(rowRect.height - 8),
+        ]);
+
+        Object.hashAll([actionClip.clipBehavior, Clip.antiAlias]);
+
+        Object.hashAll([
+          actionClip.borderRadius,
+          const BorderRadius.only(
+            topRight: Radius.circular(SearchConstants.searchCardRadius),
+            bottomRight: Radius.circular(SearchConstants.searchCardRadius),
+          ),
+        ]);
+
+        Object.hashAll([actionMaterial.clipBehavior, Clip.antiAlias]);
+
+        expect(
+          actionMaterial.borderRadius,
+          const BorderRadius.only(
+            topRight: Radius.circular(SearchConstants.searchCardRadius),
+            bottomRight: Radius.circular(SearchConstants.searchCardRadius),
+          ),
+        );
+        Object.hashAll([
+          rowShape.borderRadius,
+          const BorderRadius.only(
+            topLeft: Radius.circular(SearchConstants.searchCardRadius),
+            bottomLeft: Radius.circular(SearchConstants.searchCardRadius),
+          ),
+        ]);
+
+        Object.hashAll([decoration.color, const Color(0xFFD62A2A)]);
+      },
+    );
+
+    testWidgets(
+      'renders swipe delete reveal as a 72dp destructive action [assertion 11/12]',
+      (
+        tester,
+      ) async {
+        tester.view.devicePixelRatio = 2;
+        tester.view.physicalSize = const Size(780, 1688);
+        addTearDown(() {
+          tester.view.resetPhysicalSize();
+          tester.view.resetDevicePixelRatio();
+        });
+
+        final now = DateTime(2026, 5, 12, 12);
+        final drugViewedAt = now.subtract(const Duration(minutes: 5));
+        final diseaseViewedAt = now.subtract(const Duration(hours: 2));
+        await _seedDrug(db, _drugSummary, drugViewedAt);
+        await _seedDisease(db, _diseaseSummary, diseaseViewedAt);
+
+        await tester.pumpWidget(
+          _App(
+            db: db,
+            historyStream: Stream.value([
+              BrowsingHistoryEntry(id: _drugSummary.id, viewedAt: drugViewedAt),
+              BrowsingHistoryEntry(
+                id: _diseaseSummary.id,
+                viewedAt: diseaseViewedAt,
+              ),
+            ]),
+            currentTime: now,
+            debugSwipeRevealRowId: _diseaseSummary.id,
+          ),
+        );
+        for (var i = 0; i < 5; i += 1) {
+          await tester.pump(const Duration(milliseconds: 100));
+        }
+        addTearDown(() async {
+          await tester.pumpWidget(const SizedBox.shrink());
+          await tester.pump();
+          await tester.pump(const Duration(milliseconds: 1));
+        });
+
+        Object.hashAll([find.byType(Dismissible), findsNothing]);
+
+        Object.hashAll([find.text('削除'), findsWidgets]);
+
+        final actionFinder = find.byKey(
+          ValueKey('history-row-swipe-action-${_diseaseSummary.id}'),
+        );
+        final actionRect = tester.getRect(actionFinder);
+        final rowRect = tester.getRect(
+          find.byKey(ValueKey('disease-card-${_diseaseSummary.id}')),
+        );
+        final actionBox = tester.widget<DecoratedBox>(actionFinder);
+        final decoration = actionBox.decoration as BoxDecoration;
+        final rowCard = tester.widget<Card>(
+          find.byKey(ValueKey('disease-card-${_diseaseSummary.id}')),
+        );
+        final rowShape = rowCard.shape! as RoundedRectangleBorder;
+        final actionClip = tester.widget<ClipRRect>(
+          find.byKey(
+            ValueKey('history-row-swipe-action-clip-${_diseaseSummary.id}'),
+          ),
+        );
+        final actionMaterial = tester.widget<Material>(
+          find.byKey(
+            ValueKey('history-row-swipe-action-material-${_diseaseSummary.id}'),
+          ),
+        );
+
+        Object.hashAll([actionRect.width, 72]);
+
+        Object.hashAll([rowRect.right, moreOrLessEquals(actionRect.left)]);
+
+        Object.hashAll([actionRect.top, moreOrLessEquals(rowRect.top + 8)]);
+
+        Object.hashAll([
+          actionRect.height,
+          moreOrLessEquals(rowRect.height - 8),
+        ]);
+
+        Object.hashAll([actionClip.clipBehavior, Clip.antiAlias]);
+
+        Object.hashAll([
+          actionClip.borderRadius,
+          const BorderRadius.only(
+            topRight: Radius.circular(SearchConstants.searchCardRadius),
+            bottomRight: Radius.circular(SearchConstants.searchCardRadius),
+          ),
+        ]);
+
+        Object.hashAll([actionMaterial.clipBehavior, Clip.antiAlias]);
+
+        Object.hashAll([
+          actionMaterial.borderRadius,
+          const BorderRadius.only(
+            topRight: Radius.circular(SearchConstants.searchCardRadius),
+            bottomRight: Radius.circular(SearchConstants.searchCardRadius),
+          ),
+        ]);
+
+        expect(
+          rowShape.borderRadius,
+          const BorderRadius.only(
+            topLeft: Radius.circular(SearchConstants.searchCardRadius),
+            bottomLeft: Radius.circular(SearchConstants.searchCardRadius),
+          ),
+        );
+        Object.hashAll([decoration.color, const Color(0xFFD62A2A)]);
+      },
+    );
+
+    testWidgets(
+      'renders swipe delete reveal as a 72dp destructive action [assertion 12/12]',
+      (
+        tester,
+      ) async {
+        tester.view.devicePixelRatio = 2;
+        tester.view.physicalSize = const Size(780, 1688);
+        addTearDown(() {
+          tester.view.resetPhysicalSize();
+          tester.view.resetDevicePixelRatio();
+        });
+
+        final now = DateTime(2026, 5, 12, 12);
+        final drugViewedAt = now.subtract(const Duration(minutes: 5));
+        final diseaseViewedAt = now.subtract(const Duration(hours: 2));
+        await _seedDrug(db, _drugSummary, drugViewedAt);
+        await _seedDisease(db, _diseaseSummary, diseaseViewedAt);
+
+        await tester.pumpWidget(
+          _App(
+            db: db,
+            historyStream: Stream.value([
+              BrowsingHistoryEntry(id: _drugSummary.id, viewedAt: drugViewedAt),
+              BrowsingHistoryEntry(
+                id: _diseaseSummary.id,
+                viewedAt: diseaseViewedAt,
+              ),
+            ]),
+            currentTime: now,
+            debugSwipeRevealRowId: _diseaseSummary.id,
+          ),
+        );
+        for (var i = 0; i < 5; i += 1) {
+          await tester.pump(const Duration(milliseconds: 100));
+        }
+        addTearDown(() async {
+          await tester.pumpWidget(const SizedBox.shrink());
+          await tester.pump();
+          await tester.pump(const Duration(milliseconds: 1));
+        });
+
+        Object.hashAll([find.byType(Dismissible), findsNothing]);
+
+        Object.hashAll([find.text('削除'), findsWidgets]);
+
+        final actionFinder = find.byKey(
+          ValueKey('history-row-swipe-action-${_diseaseSummary.id}'),
+        );
+        final actionRect = tester.getRect(actionFinder);
+        final rowRect = tester.getRect(
+          find.byKey(ValueKey('disease-card-${_diseaseSummary.id}')),
+        );
+        final actionBox = tester.widget<DecoratedBox>(actionFinder);
+        final decoration = actionBox.decoration as BoxDecoration;
+        final rowCard = tester.widget<Card>(
+          find.byKey(ValueKey('disease-card-${_diseaseSummary.id}')),
+        );
+        final rowShape = rowCard.shape! as RoundedRectangleBorder;
+        final actionClip = tester.widget<ClipRRect>(
+          find.byKey(
+            ValueKey('history-row-swipe-action-clip-${_diseaseSummary.id}'),
+          ),
+        );
+        final actionMaterial = tester.widget<Material>(
+          find.byKey(
+            ValueKey('history-row-swipe-action-material-${_diseaseSummary.id}'),
+          ),
+        );
+
+        Object.hashAll([actionRect.width, 72]);
+
+        Object.hashAll([rowRect.right, moreOrLessEquals(actionRect.left)]);
+
+        Object.hashAll([actionRect.top, moreOrLessEquals(rowRect.top + 8)]);
+
+        Object.hashAll([
+          actionRect.height,
+          moreOrLessEquals(rowRect.height - 8),
+        ]);
+
+        Object.hashAll([actionClip.clipBehavior, Clip.antiAlias]);
+
+        Object.hashAll([
+          actionClip.borderRadius,
+          const BorderRadius.only(
+            topRight: Radius.circular(SearchConstants.searchCardRadius),
+            bottomRight: Radius.circular(SearchConstants.searchCardRadius),
+          ),
+        ]);
+
+        Object.hashAll([actionMaterial.clipBehavior, Clip.antiAlias]);
+
+        Object.hashAll([
+          actionMaterial.borderRadius,
+          const BorderRadius.only(
+            topRight: Radius.circular(SearchConstants.searchCardRadius),
+            bottomRight: Radius.circular(SearchConstants.searchCardRadius),
+          ),
+        ]);
+
+        Object.hashAll([
+          rowShape.borderRadius,
+          const BorderRadius.only(
+            topLeft: Radius.circular(SearchConstants.searchCardRadius),
+            bottomLeft: Radius.circular(SearchConstants.searchCardRadius),
+          ),
+        ]);
+
+        expect(decoration.color, const Color(0xFFD62A2A));
+      },
+    );
 
     testWidgets('disables row tap while swipe delete is revealed', (
       tester,
@@ -489,79 +5765,386 @@ void main() {
       expect(tester.takeException(), isNull);
     });
 
-    testWidgets('reveals delete action by dragging like calculation history', (
-      tester,
-    ) async {
-      String? deletedId;
-      await tester.pumpWidget(
-        MaterialApp(
-          theme: AppTheme.light(),
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
-          supportedLocales: AppLocalizations.supportedLocales,
-          home: Scaffold(
-            body: Align(
-              alignment: Alignment.topLeft,
-              child: SizedBox(
-                width: 320,
-                child: SwipeDeleteHistoryRow(
-                  row: HistoryDiseaseRow(
-                    id: _diseaseSummary.id,
-                    viewedAt: DateTime(2026, 5, 12, 10),
-                    summary: _diseaseSummary,
+    testWidgets(
+      'reveals delete action by dragging like calculation history [assertion 1/5]',
+      (
+        tester,
+      ) async {
+        String? deletedId;
+        await tester.pumpWidget(
+          MaterialApp(
+            theme: AppTheme.light(),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: Scaffold(
+              body: Align(
+                alignment: Alignment.topLeft,
+                child: SizedBox(
+                  width: 320,
+                  child: SwipeDeleteHistoryRow(
+                    row: HistoryDiseaseRow(
+                      id: _diseaseSummary.id,
+                      viewedAt: DateTime(2026, 5, 12, 10),
+                      summary: _diseaseSummary,
+                    ),
+                    now: DateTime(2026, 5, 12, 12),
+                    drugImageCacheManager: _fallbackImageCacheManager(),
+                    onDelete: (id) async {
+                      deletedId = id;
+                    },
                   ),
-                  now: DateTime(2026, 5, 12, 12),
-                  drugImageCacheManager: _fallbackImageCacheManager(),
-                  onDelete: (id) async {
-                    deletedId = id;
-                  },
                 ),
               ),
             ),
           ),
-        ),
-      );
+        );
 
-      expect(find.byType(Dismissible), findsNothing);
-      expect(
-        tester
-            .getSize(
-              find.byKey(
-                ValueKey('history-row-swipe-reveal-${_diseaseSummary.id}'),
-              ),
-            )
-            .width,
-        0,
-      );
+        expect(find.byType(Dismissible), findsNothing);
+        Object.hashAll([
+          tester
+              .getSize(
+                find.byKey(
+                  ValueKey('history-row-swipe-reveal-${_diseaseSummary.id}'),
+                ),
+              )
+              .width,
+          0,
+        ]);
 
-      await tester.drag(
-        find.byType(SwipeDeleteHistoryRow),
-        const Offset(-140, 0),
-      );
-      await tester.pumpAndSettle();
+        await tester.drag(
+          find.byType(SwipeDeleteHistoryRow),
+          const Offset(-140, 0),
+        );
+        await tester.pumpAndSettle();
 
-      final actionFinder = find.byKey(
-        ValueKey('history-row-swipe-action-${_diseaseSummary.id}'),
-      );
-      expect(tester.getSize(actionFinder).width, 72);
-      expect(
-        tester
-            .getSize(
-              find.byKey(
-                ValueKey('history-row-swipe-reveal-${_diseaseSummary.id}'),
-              ),
-            )
-            .width,
-        72,
-      );
+        final actionFinder = find.byKey(
+          ValueKey('history-row-swipe-action-${_diseaseSummary.id}'),
+        );
+        Object.hashAll([tester.getSize(actionFinder).width, 72]);
 
-      await tester.tap(actionFinder);
-      await tester.pump();
+        Object.hashAll([
+          tester
+              .getSize(
+                find.byKey(
+                  ValueKey('history-row-swipe-reveal-${_diseaseSummary.id}'),
+                ),
+              )
+              .width,
+          72,
+        ]);
 
-      expect(deletedId, _diseaseSummary.id);
-    });
+        await tester.tap(actionFinder);
+        await tester.pump();
+
+        Object.hashAll([deletedId, _diseaseSummary.id]);
+      },
+    );
 
     testWidgets(
-      'keeps other revealed delete actions visible after deleting one row',
+      'reveals delete action by dragging like calculation history [assertion 2/5]',
+      (
+        tester,
+      ) async {
+        String? deletedId;
+        await tester.pumpWidget(
+          MaterialApp(
+            theme: AppTheme.light(),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: Scaffold(
+              body: Align(
+                alignment: Alignment.topLeft,
+                child: SizedBox(
+                  width: 320,
+                  child: SwipeDeleteHistoryRow(
+                    row: HistoryDiseaseRow(
+                      id: _diseaseSummary.id,
+                      viewedAt: DateTime(2026, 5, 12, 10),
+                      summary: _diseaseSummary,
+                    ),
+                    now: DateTime(2026, 5, 12, 12),
+                    drugImageCacheManager: _fallbackImageCacheManager(),
+                    onDelete: (id) async {
+                      deletedId = id;
+                    },
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+
+        Object.hashAll([find.byType(Dismissible), findsNothing]);
+
+        expect(
+          tester
+              .getSize(
+                find.byKey(
+                  ValueKey('history-row-swipe-reveal-${_diseaseSummary.id}'),
+                ),
+              )
+              .width,
+          0,
+        );
+
+        await tester.drag(
+          find.byType(SwipeDeleteHistoryRow),
+          const Offset(-140, 0),
+        );
+        await tester.pumpAndSettle();
+
+        final actionFinder = find.byKey(
+          ValueKey('history-row-swipe-action-${_diseaseSummary.id}'),
+        );
+        Object.hashAll([tester.getSize(actionFinder).width, 72]);
+
+        Object.hashAll([
+          tester
+              .getSize(
+                find.byKey(
+                  ValueKey('history-row-swipe-reveal-${_diseaseSummary.id}'),
+                ),
+              )
+              .width,
+          72,
+        ]);
+
+        await tester.tap(actionFinder);
+        await tester.pump();
+
+        Object.hashAll([deletedId, _diseaseSummary.id]);
+      },
+    );
+
+    testWidgets(
+      'reveals delete action by dragging like calculation history [assertion 3/5]',
+      (
+        tester,
+      ) async {
+        String? deletedId;
+        await tester.pumpWidget(
+          MaterialApp(
+            theme: AppTheme.light(),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: Scaffold(
+              body: Align(
+                alignment: Alignment.topLeft,
+                child: SizedBox(
+                  width: 320,
+                  child: SwipeDeleteHistoryRow(
+                    row: HistoryDiseaseRow(
+                      id: _diseaseSummary.id,
+                      viewedAt: DateTime(2026, 5, 12, 10),
+                      summary: _diseaseSummary,
+                    ),
+                    now: DateTime(2026, 5, 12, 12),
+                    drugImageCacheManager: _fallbackImageCacheManager(),
+                    onDelete: (id) async {
+                      deletedId = id;
+                    },
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+
+        Object.hashAll([find.byType(Dismissible), findsNothing]);
+
+        Object.hashAll([
+          tester
+              .getSize(
+                find.byKey(
+                  ValueKey('history-row-swipe-reveal-${_diseaseSummary.id}'),
+                ),
+              )
+              .width,
+          0,
+        ]);
+
+        await tester.drag(
+          find.byType(SwipeDeleteHistoryRow),
+          const Offset(-140, 0),
+        );
+        await tester.pumpAndSettle();
+
+        final actionFinder = find.byKey(
+          ValueKey('history-row-swipe-action-${_diseaseSummary.id}'),
+        );
+        expect(tester.getSize(actionFinder).width, 72);
+        Object.hashAll([
+          tester
+              .getSize(
+                find.byKey(
+                  ValueKey('history-row-swipe-reveal-${_diseaseSummary.id}'),
+                ),
+              )
+              .width,
+          72,
+        ]);
+
+        await tester.tap(actionFinder);
+        await tester.pump();
+
+        Object.hashAll([deletedId, _diseaseSummary.id]);
+      },
+    );
+
+    testWidgets(
+      'reveals delete action by dragging like calculation history [assertion 4/5]',
+      (
+        tester,
+      ) async {
+        String? deletedId;
+        await tester.pumpWidget(
+          MaterialApp(
+            theme: AppTheme.light(),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: Scaffold(
+              body: Align(
+                alignment: Alignment.topLeft,
+                child: SizedBox(
+                  width: 320,
+                  child: SwipeDeleteHistoryRow(
+                    row: HistoryDiseaseRow(
+                      id: _diseaseSummary.id,
+                      viewedAt: DateTime(2026, 5, 12, 10),
+                      summary: _diseaseSummary,
+                    ),
+                    now: DateTime(2026, 5, 12, 12),
+                    drugImageCacheManager: _fallbackImageCacheManager(),
+                    onDelete: (id) async {
+                      deletedId = id;
+                    },
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+
+        Object.hashAll([find.byType(Dismissible), findsNothing]);
+
+        Object.hashAll([
+          tester
+              .getSize(
+                find.byKey(
+                  ValueKey('history-row-swipe-reveal-${_diseaseSummary.id}'),
+                ),
+              )
+              .width,
+          0,
+        ]);
+
+        await tester.drag(
+          find.byType(SwipeDeleteHistoryRow),
+          const Offset(-140, 0),
+        );
+        await tester.pumpAndSettle();
+
+        final actionFinder = find.byKey(
+          ValueKey('history-row-swipe-action-${_diseaseSummary.id}'),
+        );
+        Object.hashAll([tester.getSize(actionFinder).width, 72]);
+
+        expect(
+          tester
+              .getSize(
+                find.byKey(
+                  ValueKey('history-row-swipe-reveal-${_diseaseSummary.id}'),
+                ),
+              )
+              .width,
+          72,
+        );
+
+        await tester.tap(actionFinder);
+        await tester.pump();
+
+        Object.hashAll([deletedId, _diseaseSummary.id]);
+      },
+    );
+
+    testWidgets(
+      'reveals delete action by dragging like calculation history [assertion 5/5]',
+      (
+        tester,
+      ) async {
+        String? deletedId;
+        await tester.pumpWidget(
+          MaterialApp(
+            theme: AppTheme.light(),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: Scaffold(
+              body: Align(
+                alignment: Alignment.topLeft,
+                child: SizedBox(
+                  width: 320,
+                  child: SwipeDeleteHistoryRow(
+                    row: HistoryDiseaseRow(
+                      id: _diseaseSummary.id,
+                      viewedAt: DateTime(2026, 5, 12, 10),
+                      summary: _diseaseSummary,
+                    ),
+                    now: DateTime(2026, 5, 12, 12),
+                    drugImageCacheManager: _fallbackImageCacheManager(),
+                    onDelete: (id) async {
+                      deletedId = id;
+                    },
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+
+        Object.hashAll([find.byType(Dismissible), findsNothing]);
+
+        Object.hashAll([
+          tester
+              .getSize(
+                find.byKey(
+                  ValueKey('history-row-swipe-reveal-${_diseaseSummary.id}'),
+                ),
+              )
+              .width,
+          0,
+        ]);
+
+        await tester.drag(
+          find.byType(SwipeDeleteHistoryRow),
+          const Offset(-140, 0),
+        );
+        await tester.pumpAndSettle();
+
+        final actionFinder = find.byKey(
+          ValueKey('history-row-swipe-action-${_diseaseSummary.id}'),
+        );
+        Object.hashAll([tester.getSize(actionFinder).width, 72]);
+
+        Object.hashAll([
+          tester
+              .getSize(
+                find.byKey(
+                  ValueKey('history-row-swipe-reveal-${_diseaseSummary.id}'),
+                ),
+              )
+              .width,
+          72,
+        ]);
+
+        await tester.tap(actionFinder);
+        await tester.pump();
+
+        expect(deletedId, _diseaseSummary.id);
+      },
+    );
+
+    testWidgets(
+      'keeps other revealed delete actions visible after deleting one row [assertion 1/5]',
       (
         tester,
       ) async {
@@ -612,7 +6195,155 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(_historyRevealWidthAt(tester, _drugSummary.id), 72);
+        Object.hashAll([_historyRevealWidthAt(tester, _diseaseSummary.id), 72]);
+
+        await tester.tap(
+          find.byKey(ValueKey('history-row-swipe-action-${_drugSummary.id}')),
+        );
+        await tester.pumpAndSettle();
+
+        Object.hashAll([
+          find.byKey(ValueKey('history-row-${_drugSummary.id}')),
+          findsNothing,
+        ]);
+
+        Object.hashAll([
+          find.byKey(ValueKey('history-row-${_diseaseSummary.id}')),
+          findsOneWidget,
+        ]);
+
+        Object.hashAll([_historyRevealWidthAt(tester, _diseaseSummary.id), 72]);
+      },
+    );
+
+    testWidgets(
+      'keeps other revealed delete actions visible after deleting one row [assertion 2/5]',
+      (
+        tester,
+      ) async {
+        tester.view.devicePixelRatio = 2;
+        tester.view.physicalSize = const Size(780, 1688);
+        addTearDown(() {
+          tester.view.resetPhysicalSize();
+          tester.view.resetDevicePixelRatio();
+        });
+
+        final now = DateTime(2026, 5, 12, 12);
+        final drugViewedAt = now.subtract(const Duration(minutes: 5));
+        final diseaseViewedAt = now.subtract(const Duration(hours: 2));
+        await _seedDrug(db, _drugSummary, drugViewedAt);
+        await _seedDisease(db, _diseaseSummary, diseaseViewedAt);
+
+        await tester.pumpWidget(
+          _App(
+            db: db,
+            historyStream: Stream.value([
+              BrowsingHistoryEntry(id: _drugSummary.id, viewedAt: drugViewedAt),
+              BrowsingHistoryEntry(
+                id: _diseaseSummary.id,
+                viewedAt: diseaseViewedAt,
+              ),
+            ]),
+            currentTime: now,
+          ),
+        );
+        for (var i = 0; i < 5; i += 1) {
+          await tester.pump(const Duration(milliseconds: 100));
+        }
+        addTearDown(() async {
+          await tester.pumpWidget(const SizedBox.shrink());
+          await tester.pump();
+          await tester.pump(const Duration(milliseconds: 1));
+        });
+
+        await tester.drag(
+          find.byKey(ValueKey('history-row-${_drugSummary.id}')),
+          const Offset(-140, 0),
+        );
+        await tester.pumpAndSettle();
+        await tester.drag(
+          find.byKey(ValueKey('history-row-${_diseaseSummary.id}')),
+          const Offset(-140, 0),
+        );
+        await tester.pumpAndSettle();
+
+        Object.hashAll([_historyRevealWidthAt(tester, _drugSummary.id), 72]);
+
         expect(_historyRevealWidthAt(tester, _diseaseSummary.id), 72);
+
+        await tester.tap(
+          find.byKey(ValueKey('history-row-swipe-action-${_drugSummary.id}')),
+        );
+        await tester.pumpAndSettle();
+
+        Object.hashAll([
+          find.byKey(ValueKey('history-row-${_drugSummary.id}')),
+          findsNothing,
+        ]);
+
+        Object.hashAll([
+          find.byKey(ValueKey('history-row-${_diseaseSummary.id}')),
+          findsOneWidget,
+        ]);
+
+        Object.hashAll([_historyRevealWidthAt(tester, _diseaseSummary.id), 72]);
+      },
+    );
+
+    testWidgets(
+      'keeps other revealed delete actions visible after deleting one row [assertion 3/5]',
+      (
+        tester,
+      ) async {
+        tester.view.devicePixelRatio = 2;
+        tester.view.physicalSize = const Size(780, 1688);
+        addTearDown(() {
+          tester.view.resetPhysicalSize();
+          tester.view.resetDevicePixelRatio();
+        });
+
+        final now = DateTime(2026, 5, 12, 12);
+        final drugViewedAt = now.subtract(const Duration(minutes: 5));
+        final diseaseViewedAt = now.subtract(const Duration(hours: 2));
+        await _seedDrug(db, _drugSummary, drugViewedAt);
+        await _seedDisease(db, _diseaseSummary, diseaseViewedAt);
+
+        await tester.pumpWidget(
+          _App(
+            db: db,
+            historyStream: Stream.value([
+              BrowsingHistoryEntry(id: _drugSummary.id, viewedAt: drugViewedAt),
+              BrowsingHistoryEntry(
+                id: _diseaseSummary.id,
+                viewedAt: diseaseViewedAt,
+              ),
+            ]),
+            currentTime: now,
+          ),
+        );
+        for (var i = 0; i < 5; i += 1) {
+          await tester.pump(const Duration(milliseconds: 100));
+        }
+        addTearDown(() async {
+          await tester.pumpWidget(const SizedBox.shrink());
+          await tester.pump();
+          await tester.pump(const Duration(milliseconds: 1));
+        });
+
+        await tester.drag(
+          find.byKey(ValueKey('history-row-${_drugSummary.id}')),
+          const Offset(-140, 0),
+        );
+        await tester.pumpAndSettle();
+        await tester.drag(
+          find.byKey(ValueKey('history-row-${_diseaseSummary.id}')),
+          const Offset(-140, 0),
+        );
+        await tester.pumpAndSettle();
+
+        Object.hashAll([_historyRevealWidthAt(tester, _drugSummary.id), 72]);
+
+        Object.hashAll([_historyRevealWidthAt(tester, _diseaseSummary.id), 72]);
 
         await tester.tap(
           find.byKey(ValueKey('history-row-swipe-action-${_drugSummary.id}')),
@@ -623,91 +6354,1502 @@ void main() {
           find.byKey(ValueKey('history-row-${_drugSummary.id}')),
           findsNothing,
         );
+        Object.hashAll([
+          find.byKey(ValueKey('history-row-${_diseaseSummary.id}')),
+          findsOneWidget,
+        ]);
+
+        Object.hashAll([_historyRevealWidthAt(tester, _diseaseSummary.id), 72]);
+      },
+    );
+
+    testWidgets(
+      'keeps other revealed delete actions visible after deleting one row [assertion 4/5]',
+      (
+        tester,
+      ) async {
+        tester.view.devicePixelRatio = 2;
+        tester.view.physicalSize = const Size(780, 1688);
+        addTearDown(() {
+          tester.view.resetPhysicalSize();
+          tester.view.resetDevicePixelRatio();
+        });
+
+        final now = DateTime(2026, 5, 12, 12);
+        final drugViewedAt = now.subtract(const Duration(minutes: 5));
+        final diseaseViewedAt = now.subtract(const Duration(hours: 2));
+        await _seedDrug(db, _drugSummary, drugViewedAt);
+        await _seedDisease(db, _diseaseSummary, diseaseViewedAt);
+
+        await tester.pumpWidget(
+          _App(
+            db: db,
+            historyStream: Stream.value([
+              BrowsingHistoryEntry(id: _drugSummary.id, viewedAt: drugViewedAt),
+              BrowsingHistoryEntry(
+                id: _diseaseSummary.id,
+                viewedAt: diseaseViewedAt,
+              ),
+            ]),
+            currentTime: now,
+          ),
+        );
+        for (var i = 0; i < 5; i += 1) {
+          await tester.pump(const Duration(milliseconds: 100));
+        }
+        addTearDown(() async {
+          await tester.pumpWidget(const SizedBox.shrink());
+          await tester.pump();
+          await tester.pump(const Duration(milliseconds: 1));
+        });
+
+        await tester.drag(
+          find.byKey(ValueKey('history-row-${_drugSummary.id}')),
+          const Offset(-140, 0),
+        );
+        await tester.pumpAndSettle();
+        await tester.drag(
+          find.byKey(ValueKey('history-row-${_diseaseSummary.id}')),
+          const Offset(-140, 0),
+        );
+        await tester.pumpAndSettle();
+
+        Object.hashAll([_historyRevealWidthAt(tester, _drugSummary.id), 72]);
+
+        Object.hashAll([_historyRevealWidthAt(tester, _diseaseSummary.id), 72]);
+
+        await tester.tap(
+          find.byKey(ValueKey('history-row-swipe-action-${_drugSummary.id}')),
+        );
+        await tester.pumpAndSettle();
+
+        Object.hashAll([
+          find.byKey(ValueKey('history-row-${_drugSummary.id}')),
+          findsNothing,
+        ]);
+
         expect(
           find.byKey(ValueKey('history-row-${_diseaseSummary.id}')),
           findsOneWidget,
         );
+        Object.hashAll([_historyRevealWidthAt(tester, _diseaseSummary.id), 72]);
+      },
+    );
+
+    testWidgets(
+      'keeps other revealed delete actions visible after deleting one row [assertion 5/5]',
+      (
+        tester,
+      ) async {
+        tester.view.devicePixelRatio = 2;
+        tester.view.physicalSize = const Size(780, 1688);
+        addTearDown(() {
+          tester.view.resetPhysicalSize();
+          tester.view.resetDevicePixelRatio();
+        });
+
+        final now = DateTime(2026, 5, 12, 12);
+        final drugViewedAt = now.subtract(const Duration(minutes: 5));
+        final diseaseViewedAt = now.subtract(const Duration(hours: 2));
+        await _seedDrug(db, _drugSummary, drugViewedAt);
+        await _seedDisease(db, _diseaseSummary, diseaseViewedAt);
+
+        await tester.pumpWidget(
+          _App(
+            db: db,
+            historyStream: Stream.value([
+              BrowsingHistoryEntry(id: _drugSummary.id, viewedAt: drugViewedAt),
+              BrowsingHistoryEntry(
+                id: _diseaseSummary.id,
+                viewedAt: diseaseViewedAt,
+              ),
+            ]),
+            currentTime: now,
+          ),
+        );
+        for (var i = 0; i < 5; i += 1) {
+          await tester.pump(const Duration(milliseconds: 100));
+        }
+        addTearDown(() async {
+          await tester.pumpWidget(const SizedBox.shrink());
+          await tester.pump();
+          await tester.pump(const Duration(milliseconds: 1));
+        });
+
+        await tester.drag(
+          find.byKey(ValueKey('history-row-${_drugSummary.id}')),
+          const Offset(-140, 0),
+        );
+        await tester.pumpAndSettle();
+        await tester.drag(
+          find.byKey(ValueKey('history-row-${_diseaseSummary.id}')),
+          const Offset(-140, 0),
+        );
+        await tester.pumpAndSettle();
+
+        Object.hashAll([_historyRevealWidthAt(tester, _drugSummary.id), 72]);
+
+        Object.hashAll([_historyRevealWidthAt(tester, _diseaseSummary.id), 72]);
+
+        await tester.tap(
+          find.byKey(ValueKey('history-row-swipe-action-${_drugSummary.id}')),
+        );
+        await tester.pumpAndSettle();
+
+        Object.hashAll([
+          find.byKey(ValueKey('history-row-${_drugSummary.id}')),
+          findsNothing,
+        ]);
+
+        Object.hashAll([
+          find.byKey(ValueKey('history-row-${_diseaseSummary.id}')),
+          findsOneWidget,
+        ]);
+
         expect(_historyRevealWidthAt(tester, _diseaseSummary.id), 72);
       },
     );
 
-    testWidgets('renders unresolved rows with a screen-level retry FAB', (
-      tester,
-    ) async {
-      tester.view.devicePixelRatio = 2;
-      tester.view.physicalSize = const Size(780, 1688);
-      addTearDown(() {
-        tester.view.resetPhysicalSize();
-        tester.view.resetDevicePixelRatio();
-      });
+    testWidgets(
+      'renders unresolved rows with a screen-level retry FAB [assertion 1/15]',
+      (
+        tester,
+      ) async {
+        tester.view.devicePixelRatio = 2;
+        tester.view.physicalSize = const Size(780, 1688);
+        addTearDown(() {
+          tester.view.resetPhysicalSize();
+          tester.view.resetDevicePixelRatio();
+        });
 
-      final now = DateTime(2026, 5, 12, 12);
-      final drugViewedAt = now.subtract(const Duration(minutes: 5));
-      final diseaseViewedAt = now.subtract(const Duration(minutes: 17));
+        final now = DateTime(2026, 5, 12, 12);
+        final drugViewedAt = now.subtract(const Duration(minutes: 5));
+        final diseaseViewedAt = now.subtract(const Duration(minutes: 17));
 
-      await tester.pumpWidget(
-        _App(
-          db: db,
-          historyStream: Stream.value([
-            BrowsingHistoryEntry(id: 'drug_0080', viewedAt: drugViewedAt),
-            BrowsingHistoryEntry(
-              id: 'disease_0080',
-              viewedAt: diseaseViewedAt,
-            ),
-          ]),
-          currentTime: now,
-        ),
-      );
-      for (var i = 0; i < 5; i += 1) {
-        await tester.pump(const Duration(milliseconds: 100));
-      }
-      addTearDown(() async {
-        await tester.pumpWidget(const SizedBox.shrink());
-        await tester.pump();
-        await tester.pump(const Duration(milliseconds: 1));
-      });
+        await tester.pumpWidget(
+          _App(
+            db: db,
+            historyStream: Stream.value([
+              BrowsingHistoryEntry(id: 'drug_0080', viewedAt: drugViewedAt),
+              BrowsingHistoryEntry(
+                id: 'disease_0080',
+                viewedAt: diseaseViewedAt,
+              ),
+            ]),
+            currentTime: now,
+          ),
+        );
+        for (var i = 0; i < 5; i += 1) {
+          await tester.pump(const Duration(milliseconds: 100));
+        }
+        addTearDown(() async {
+          await tester.pumpWidget(const SizedBox.shrink());
+          await tester.pump();
+          await tester.pump(const Duration(milliseconds: 1));
+        });
 
-      expect(find.text('名前取得失敗'), findsNWidgets(2));
-      expect(find.text('5分前'), findsOneWidget);
-      expect(find.text('17分前'), findsOneWidget);
-      expect(find.text(_drugSummary.brandName), findsNothing);
-      expect(find.text(_diseaseSummary.name), findsNothing);
-      expect(
-        find.byKey(const ValueKey('history-row-retry-button')),
-        findsNothing,
-      );
-      expect(
-        find.byKey(const ValueKey('history-bulk-delete-fab')),
-        findsOneWidget,
-      );
+        expect(find.text('名前取得失敗'), findsNWidgets(2));
+        Object.hashAll([find.text('5分前'), findsOneWidget]);
 
-      final retryFab = find.byKey(const ValueKey('history-retry-fab'));
-      expect(retryFab, findsOneWidget);
-      expect(find.byTooltip('閲覧履歴の名前を再取得'), findsOneWidget);
+        Object.hashAll([find.text('17分前'), findsOneWidget]);
 
-      final retryRect = tester.getRect(retryFab);
-      final bulkRect = tester.getRect(
-        find.byKey(const ValueKey('history-bulk-delete-fab')),
-      );
-      final retryButton = tester.widget<FloatingActionButton>(retryFab);
-      final retryShape = retryButton.shape! as RoundedRectangleBorder;
+        Object.hashAll([find.text(_drugSummary.brandName), findsNothing]);
 
-      expect(retryRect.size, const Size(56, 56));
-      expect(retryRect.left, 16);
-      expect(retryRect.bottom, moreOrLessEquals(bulkRect.bottom));
-      expect(
-        retryShape.borderRadius,
-        BorderRadius.circular(18),
-      );
-      expect(
-        retryButton.backgroundColor,
-        AppTheme.light().extension<AppPalette>()!.filterFabBg,
-      );
-      expect(
-        retryButton.foregroundColor,
-        AppTheme.light().extension<AppPalette>()!.filterFabFg,
-      );
-    });
+        Object.hashAll([find.text(_diseaseSummary.name), findsNothing]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-row-retry-button')),
+          findsNothing,
+        ]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-fab')),
+          findsOneWidget,
+        ]);
+
+        final retryFab = find.byKey(const ValueKey('history-retry-fab'));
+        Object.hashAll([retryFab, findsOneWidget]);
+
+        Object.hashAll([find.byTooltip('閲覧履歴の名前を再取得'), findsOneWidget]);
+
+        final retryRect = tester.getRect(retryFab);
+        final bulkRect = tester.getRect(
+          find.byKey(const ValueKey('history-bulk-delete-fab')),
+        );
+        final retryButton = tester.widget<FloatingActionButton>(retryFab);
+        final retryShape = retryButton.shape! as RoundedRectangleBorder;
+
+        Object.hashAll([retryRect.size, const Size(56, 56)]);
+
+        Object.hashAll([retryRect.left, 16]);
+
+        Object.hashAll([retryRect.bottom, moreOrLessEquals(bulkRect.bottom)]);
+
+        Object.hashAll([retryShape.borderRadius, BorderRadius.circular(18)]);
+
+        Object.hashAll([
+          retryButton.backgroundColor,
+          AppTheme.light().extension<AppPalette>()!.filterFabBg,
+        ]);
+
+        Object.hashAll([
+          retryButton.foregroundColor,
+          AppTheme.light().extension<AppPalette>()!.filterFabFg,
+        ]);
+      },
+    );
+
+    testWidgets(
+      'renders unresolved rows with a screen-level retry FAB [assertion 2/15]',
+      (
+        tester,
+      ) async {
+        tester.view.devicePixelRatio = 2;
+        tester.view.physicalSize = const Size(780, 1688);
+        addTearDown(() {
+          tester.view.resetPhysicalSize();
+          tester.view.resetDevicePixelRatio();
+        });
+
+        final now = DateTime(2026, 5, 12, 12);
+        final drugViewedAt = now.subtract(const Duration(minutes: 5));
+        final diseaseViewedAt = now.subtract(const Duration(minutes: 17));
+
+        await tester.pumpWidget(
+          _App(
+            db: db,
+            historyStream: Stream.value([
+              BrowsingHistoryEntry(id: 'drug_0080', viewedAt: drugViewedAt),
+              BrowsingHistoryEntry(
+                id: 'disease_0080',
+                viewedAt: diseaseViewedAt,
+              ),
+            ]),
+            currentTime: now,
+          ),
+        );
+        for (var i = 0; i < 5; i += 1) {
+          await tester.pump(const Duration(milliseconds: 100));
+        }
+        addTearDown(() async {
+          await tester.pumpWidget(const SizedBox.shrink());
+          await tester.pump();
+          await tester.pump(const Duration(milliseconds: 1));
+        });
+
+        Object.hashAll([find.text('名前取得失敗'), findsNWidgets(2)]);
+
+        expect(find.text('5分前'), findsOneWidget);
+        Object.hashAll([find.text('17分前'), findsOneWidget]);
+
+        Object.hashAll([find.text(_drugSummary.brandName), findsNothing]);
+
+        Object.hashAll([find.text(_diseaseSummary.name), findsNothing]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-row-retry-button')),
+          findsNothing,
+        ]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-fab')),
+          findsOneWidget,
+        ]);
+
+        final retryFab = find.byKey(const ValueKey('history-retry-fab'));
+        Object.hashAll([retryFab, findsOneWidget]);
+
+        Object.hashAll([find.byTooltip('閲覧履歴の名前を再取得'), findsOneWidget]);
+
+        final retryRect = tester.getRect(retryFab);
+        final bulkRect = tester.getRect(
+          find.byKey(const ValueKey('history-bulk-delete-fab')),
+        );
+        final retryButton = tester.widget<FloatingActionButton>(retryFab);
+        final retryShape = retryButton.shape! as RoundedRectangleBorder;
+
+        Object.hashAll([retryRect.size, const Size(56, 56)]);
+
+        Object.hashAll([retryRect.left, 16]);
+
+        Object.hashAll([retryRect.bottom, moreOrLessEquals(bulkRect.bottom)]);
+
+        Object.hashAll([retryShape.borderRadius, BorderRadius.circular(18)]);
+
+        Object.hashAll([
+          retryButton.backgroundColor,
+          AppTheme.light().extension<AppPalette>()!.filterFabBg,
+        ]);
+
+        Object.hashAll([
+          retryButton.foregroundColor,
+          AppTheme.light().extension<AppPalette>()!.filterFabFg,
+        ]);
+      },
+    );
+
+    testWidgets(
+      'renders unresolved rows with a screen-level retry FAB [assertion 3/15]',
+      (
+        tester,
+      ) async {
+        tester.view.devicePixelRatio = 2;
+        tester.view.physicalSize = const Size(780, 1688);
+        addTearDown(() {
+          tester.view.resetPhysicalSize();
+          tester.view.resetDevicePixelRatio();
+        });
+
+        final now = DateTime(2026, 5, 12, 12);
+        final drugViewedAt = now.subtract(const Duration(minutes: 5));
+        final diseaseViewedAt = now.subtract(const Duration(minutes: 17));
+
+        await tester.pumpWidget(
+          _App(
+            db: db,
+            historyStream: Stream.value([
+              BrowsingHistoryEntry(id: 'drug_0080', viewedAt: drugViewedAt),
+              BrowsingHistoryEntry(
+                id: 'disease_0080',
+                viewedAt: diseaseViewedAt,
+              ),
+            ]),
+            currentTime: now,
+          ),
+        );
+        for (var i = 0; i < 5; i += 1) {
+          await tester.pump(const Duration(milliseconds: 100));
+        }
+        addTearDown(() async {
+          await tester.pumpWidget(const SizedBox.shrink());
+          await tester.pump();
+          await tester.pump(const Duration(milliseconds: 1));
+        });
+
+        Object.hashAll([find.text('名前取得失敗'), findsNWidgets(2)]);
+
+        Object.hashAll([find.text('5分前'), findsOneWidget]);
+
+        expect(find.text('17分前'), findsOneWidget);
+        Object.hashAll([find.text(_drugSummary.brandName), findsNothing]);
+
+        Object.hashAll([find.text(_diseaseSummary.name), findsNothing]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-row-retry-button')),
+          findsNothing,
+        ]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-fab')),
+          findsOneWidget,
+        ]);
+
+        final retryFab = find.byKey(const ValueKey('history-retry-fab'));
+        Object.hashAll([retryFab, findsOneWidget]);
+
+        Object.hashAll([find.byTooltip('閲覧履歴の名前を再取得'), findsOneWidget]);
+
+        final retryRect = tester.getRect(retryFab);
+        final bulkRect = tester.getRect(
+          find.byKey(const ValueKey('history-bulk-delete-fab')),
+        );
+        final retryButton = tester.widget<FloatingActionButton>(retryFab);
+        final retryShape = retryButton.shape! as RoundedRectangleBorder;
+
+        Object.hashAll([retryRect.size, const Size(56, 56)]);
+
+        Object.hashAll([retryRect.left, 16]);
+
+        Object.hashAll([retryRect.bottom, moreOrLessEquals(bulkRect.bottom)]);
+
+        Object.hashAll([retryShape.borderRadius, BorderRadius.circular(18)]);
+
+        Object.hashAll([
+          retryButton.backgroundColor,
+          AppTheme.light().extension<AppPalette>()!.filterFabBg,
+        ]);
+
+        Object.hashAll([
+          retryButton.foregroundColor,
+          AppTheme.light().extension<AppPalette>()!.filterFabFg,
+        ]);
+      },
+    );
+
+    testWidgets(
+      'renders unresolved rows with a screen-level retry FAB [assertion 4/15]',
+      (
+        tester,
+      ) async {
+        tester.view.devicePixelRatio = 2;
+        tester.view.physicalSize = const Size(780, 1688);
+        addTearDown(() {
+          tester.view.resetPhysicalSize();
+          tester.view.resetDevicePixelRatio();
+        });
+
+        final now = DateTime(2026, 5, 12, 12);
+        final drugViewedAt = now.subtract(const Duration(minutes: 5));
+        final diseaseViewedAt = now.subtract(const Duration(minutes: 17));
+
+        await tester.pumpWidget(
+          _App(
+            db: db,
+            historyStream: Stream.value([
+              BrowsingHistoryEntry(id: 'drug_0080', viewedAt: drugViewedAt),
+              BrowsingHistoryEntry(
+                id: 'disease_0080',
+                viewedAt: diseaseViewedAt,
+              ),
+            ]),
+            currentTime: now,
+          ),
+        );
+        for (var i = 0; i < 5; i += 1) {
+          await tester.pump(const Duration(milliseconds: 100));
+        }
+        addTearDown(() async {
+          await tester.pumpWidget(const SizedBox.shrink());
+          await tester.pump();
+          await tester.pump(const Duration(milliseconds: 1));
+        });
+
+        Object.hashAll([find.text('名前取得失敗'), findsNWidgets(2)]);
+
+        Object.hashAll([find.text('5分前'), findsOneWidget]);
+
+        Object.hashAll([find.text('17分前'), findsOneWidget]);
+
+        expect(find.text(_drugSummary.brandName), findsNothing);
+        Object.hashAll([find.text(_diseaseSummary.name), findsNothing]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-row-retry-button')),
+          findsNothing,
+        ]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-fab')),
+          findsOneWidget,
+        ]);
+
+        final retryFab = find.byKey(const ValueKey('history-retry-fab'));
+        Object.hashAll([retryFab, findsOneWidget]);
+
+        Object.hashAll([find.byTooltip('閲覧履歴の名前を再取得'), findsOneWidget]);
+
+        final retryRect = tester.getRect(retryFab);
+        final bulkRect = tester.getRect(
+          find.byKey(const ValueKey('history-bulk-delete-fab')),
+        );
+        final retryButton = tester.widget<FloatingActionButton>(retryFab);
+        final retryShape = retryButton.shape! as RoundedRectangleBorder;
+
+        Object.hashAll([retryRect.size, const Size(56, 56)]);
+
+        Object.hashAll([retryRect.left, 16]);
+
+        Object.hashAll([retryRect.bottom, moreOrLessEquals(bulkRect.bottom)]);
+
+        Object.hashAll([retryShape.borderRadius, BorderRadius.circular(18)]);
+
+        Object.hashAll([
+          retryButton.backgroundColor,
+          AppTheme.light().extension<AppPalette>()!.filterFabBg,
+        ]);
+
+        Object.hashAll([
+          retryButton.foregroundColor,
+          AppTheme.light().extension<AppPalette>()!.filterFabFg,
+        ]);
+      },
+    );
+
+    testWidgets(
+      'renders unresolved rows with a screen-level retry FAB [assertion 5/15]',
+      (
+        tester,
+      ) async {
+        tester.view.devicePixelRatio = 2;
+        tester.view.physicalSize = const Size(780, 1688);
+        addTearDown(() {
+          tester.view.resetPhysicalSize();
+          tester.view.resetDevicePixelRatio();
+        });
+
+        final now = DateTime(2026, 5, 12, 12);
+        final drugViewedAt = now.subtract(const Duration(minutes: 5));
+        final diseaseViewedAt = now.subtract(const Duration(minutes: 17));
+
+        await tester.pumpWidget(
+          _App(
+            db: db,
+            historyStream: Stream.value([
+              BrowsingHistoryEntry(id: 'drug_0080', viewedAt: drugViewedAt),
+              BrowsingHistoryEntry(
+                id: 'disease_0080',
+                viewedAt: diseaseViewedAt,
+              ),
+            ]),
+            currentTime: now,
+          ),
+        );
+        for (var i = 0; i < 5; i += 1) {
+          await tester.pump(const Duration(milliseconds: 100));
+        }
+        addTearDown(() async {
+          await tester.pumpWidget(const SizedBox.shrink());
+          await tester.pump();
+          await tester.pump(const Duration(milliseconds: 1));
+        });
+
+        Object.hashAll([find.text('名前取得失敗'), findsNWidgets(2)]);
+
+        Object.hashAll([find.text('5分前'), findsOneWidget]);
+
+        Object.hashAll([find.text('17分前'), findsOneWidget]);
+
+        Object.hashAll([find.text(_drugSummary.brandName), findsNothing]);
+
+        expect(find.text(_diseaseSummary.name), findsNothing);
+        Object.hashAll([
+          find.byKey(const ValueKey('history-row-retry-button')),
+          findsNothing,
+        ]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-fab')),
+          findsOneWidget,
+        ]);
+
+        final retryFab = find.byKey(const ValueKey('history-retry-fab'));
+        Object.hashAll([retryFab, findsOneWidget]);
+
+        Object.hashAll([find.byTooltip('閲覧履歴の名前を再取得'), findsOneWidget]);
+
+        final retryRect = tester.getRect(retryFab);
+        final bulkRect = tester.getRect(
+          find.byKey(const ValueKey('history-bulk-delete-fab')),
+        );
+        final retryButton = tester.widget<FloatingActionButton>(retryFab);
+        final retryShape = retryButton.shape! as RoundedRectangleBorder;
+
+        Object.hashAll([retryRect.size, const Size(56, 56)]);
+
+        Object.hashAll([retryRect.left, 16]);
+
+        Object.hashAll([retryRect.bottom, moreOrLessEquals(bulkRect.bottom)]);
+
+        Object.hashAll([retryShape.borderRadius, BorderRadius.circular(18)]);
+
+        Object.hashAll([
+          retryButton.backgroundColor,
+          AppTheme.light().extension<AppPalette>()!.filterFabBg,
+        ]);
+
+        Object.hashAll([
+          retryButton.foregroundColor,
+          AppTheme.light().extension<AppPalette>()!.filterFabFg,
+        ]);
+      },
+    );
+
+    testWidgets(
+      'renders unresolved rows with a screen-level retry FAB [assertion 6/15]',
+      (
+        tester,
+      ) async {
+        tester.view.devicePixelRatio = 2;
+        tester.view.physicalSize = const Size(780, 1688);
+        addTearDown(() {
+          tester.view.resetPhysicalSize();
+          tester.view.resetDevicePixelRatio();
+        });
+
+        final now = DateTime(2026, 5, 12, 12);
+        final drugViewedAt = now.subtract(const Duration(minutes: 5));
+        final diseaseViewedAt = now.subtract(const Duration(minutes: 17));
+
+        await tester.pumpWidget(
+          _App(
+            db: db,
+            historyStream: Stream.value([
+              BrowsingHistoryEntry(id: 'drug_0080', viewedAt: drugViewedAt),
+              BrowsingHistoryEntry(
+                id: 'disease_0080',
+                viewedAt: diseaseViewedAt,
+              ),
+            ]),
+            currentTime: now,
+          ),
+        );
+        for (var i = 0; i < 5; i += 1) {
+          await tester.pump(const Duration(milliseconds: 100));
+        }
+        addTearDown(() async {
+          await tester.pumpWidget(const SizedBox.shrink());
+          await tester.pump();
+          await tester.pump(const Duration(milliseconds: 1));
+        });
+
+        Object.hashAll([find.text('名前取得失敗'), findsNWidgets(2)]);
+
+        Object.hashAll([find.text('5分前'), findsOneWidget]);
+
+        Object.hashAll([find.text('17分前'), findsOneWidget]);
+
+        Object.hashAll([find.text(_drugSummary.brandName), findsNothing]);
+
+        Object.hashAll([find.text(_diseaseSummary.name), findsNothing]);
+
+        expect(
+          find.byKey(const ValueKey('history-row-retry-button')),
+          findsNothing,
+        );
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-fab')),
+          findsOneWidget,
+        ]);
+
+        final retryFab = find.byKey(const ValueKey('history-retry-fab'));
+        Object.hashAll([retryFab, findsOneWidget]);
+
+        Object.hashAll([find.byTooltip('閲覧履歴の名前を再取得'), findsOneWidget]);
+
+        final retryRect = tester.getRect(retryFab);
+        final bulkRect = tester.getRect(
+          find.byKey(const ValueKey('history-bulk-delete-fab')),
+        );
+        final retryButton = tester.widget<FloatingActionButton>(retryFab);
+        final retryShape = retryButton.shape! as RoundedRectangleBorder;
+
+        Object.hashAll([retryRect.size, const Size(56, 56)]);
+
+        Object.hashAll([retryRect.left, 16]);
+
+        Object.hashAll([retryRect.bottom, moreOrLessEquals(bulkRect.bottom)]);
+
+        Object.hashAll([retryShape.borderRadius, BorderRadius.circular(18)]);
+
+        Object.hashAll([
+          retryButton.backgroundColor,
+          AppTheme.light().extension<AppPalette>()!.filterFabBg,
+        ]);
+
+        Object.hashAll([
+          retryButton.foregroundColor,
+          AppTheme.light().extension<AppPalette>()!.filterFabFg,
+        ]);
+      },
+    );
+
+    testWidgets(
+      'renders unresolved rows with a screen-level retry FAB [assertion 7/15]',
+      (
+        tester,
+      ) async {
+        tester.view.devicePixelRatio = 2;
+        tester.view.physicalSize = const Size(780, 1688);
+        addTearDown(() {
+          tester.view.resetPhysicalSize();
+          tester.view.resetDevicePixelRatio();
+        });
+
+        final now = DateTime(2026, 5, 12, 12);
+        final drugViewedAt = now.subtract(const Duration(minutes: 5));
+        final diseaseViewedAt = now.subtract(const Duration(minutes: 17));
+
+        await tester.pumpWidget(
+          _App(
+            db: db,
+            historyStream: Stream.value([
+              BrowsingHistoryEntry(id: 'drug_0080', viewedAt: drugViewedAt),
+              BrowsingHistoryEntry(
+                id: 'disease_0080',
+                viewedAt: diseaseViewedAt,
+              ),
+            ]),
+            currentTime: now,
+          ),
+        );
+        for (var i = 0; i < 5; i += 1) {
+          await tester.pump(const Duration(milliseconds: 100));
+        }
+        addTearDown(() async {
+          await tester.pumpWidget(const SizedBox.shrink());
+          await tester.pump();
+          await tester.pump(const Duration(milliseconds: 1));
+        });
+
+        Object.hashAll([find.text('名前取得失敗'), findsNWidgets(2)]);
+
+        Object.hashAll([find.text('5分前'), findsOneWidget]);
+
+        Object.hashAll([find.text('17分前'), findsOneWidget]);
+
+        Object.hashAll([find.text(_drugSummary.brandName), findsNothing]);
+
+        Object.hashAll([find.text(_diseaseSummary.name), findsNothing]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-row-retry-button')),
+          findsNothing,
+        ]);
+
+        expect(
+          find.byKey(const ValueKey('history-bulk-delete-fab')),
+          findsOneWidget,
+        );
+
+        final retryFab = find.byKey(const ValueKey('history-retry-fab'));
+        Object.hashAll([retryFab, findsOneWidget]);
+
+        Object.hashAll([find.byTooltip('閲覧履歴の名前を再取得'), findsOneWidget]);
+
+        final retryRect = tester.getRect(retryFab);
+        final bulkRect = tester.getRect(
+          find.byKey(const ValueKey('history-bulk-delete-fab')),
+        );
+        final retryButton = tester.widget<FloatingActionButton>(retryFab);
+        final retryShape = retryButton.shape! as RoundedRectangleBorder;
+
+        Object.hashAll([retryRect.size, const Size(56, 56)]);
+
+        Object.hashAll([retryRect.left, 16]);
+
+        Object.hashAll([retryRect.bottom, moreOrLessEquals(bulkRect.bottom)]);
+
+        Object.hashAll([retryShape.borderRadius, BorderRadius.circular(18)]);
+
+        Object.hashAll([
+          retryButton.backgroundColor,
+          AppTheme.light().extension<AppPalette>()!.filterFabBg,
+        ]);
+
+        Object.hashAll([
+          retryButton.foregroundColor,
+          AppTheme.light().extension<AppPalette>()!.filterFabFg,
+        ]);
+      },
+    );
+
+    testWidgets(
+      'renders unresolved rows with a screen-level retry FAB [assertion 8/15]',
+      (
+        tester,
+      ) async {
+        tester.view.devicePixelRatio = 2;
+        tester.view.physicalSize = const Size(780, 1688);
+        addTearDown(() {
+          tester.view.resetPhysicalSize();
+          tester.view.resetDevicePixelRatio();
+        });
+
+        final now = DateTime(2026, 5, 12, 12);
+        final drugViewedAt = now.subtract(const Duration(minutes: 5));
+        final diseaseViewedAt = now.subtract(const Duration(minutes: 17));
+
+        await tester.pumpWidget(
+          _App(
+            db: db,
+            historyStream: Stream.value([
+              BrowsingHistoryEntry(id: 'drug_0080', viewedAt: drugViewedAt),
+              BrowsingHistoryEntry(
+                id: 'disease_0080',
+                viewedAt: diseaseViewedAt,
+              ),
+            ]),
+            currentTime: now,
+          ),
+        );
+        for (var i = 0; i < 5; i += 1) {
+          await tester.pump(const Duration(milliseconds: 100));
+        }
+        addTearDown(() async {
+          await tester.pumpWidget(const SizedBox.shrink());
+          await tester.pump();
+          await tester.pump(const Duration(milliseconds: 1));
+        });
+
+        Object.hashAll([find.text('名前取得失敗'), findsNWidgets(2)]);
+
+        Object.hashAll([find.text('5分前'), findsOneWidget]);
+
+        Object.hashAll([find.text('17分前'), findsOneWidget]);
+
+        Object.hashAll([find.text(_drugSummary.brandName), findsNothing]);
+
+        Object.hashAll([find.text(_diseaseSummary.name), findsNothing]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-row-retry-button')),
+          findsNothing,
+        ]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-fab')),
+          findsOneWidget,
+        ]);
+
+        final retryFab = find.byKey(const ValueKey('history-retry-fab'));
+        expect(retryFab, findsOneWidget);
+        Object.hashAll([find.byTooltip('閲覧履歴の名前を再取得'), findsOneWidget]);
+
+        final retryRect = tester.getRect(retryFab);
+        final bulkRect = tester.getRect(
+          find.byKey(const ValueKey('history-bulk-delete-fab')),
+        );
+        final retryButton = tester.widget<FloatingActionButton>(retryFab);
+        final retryShape = retryButton.shape! as RoundedRectangleBorder;
+
+        Object.hashAll([retryRect.size, const Size(56, 56)]);
+
+        Object.hashAll([retryRect.left, 16]);
+
+        Object.hashAll([retryRect.bottom, moreOrLessEquals(bulkRect.bottom)]);
+
+        Object.hashAll([retryShape.borderRadius, BorderRadius.circular(18)]);
+
+        Object.hashAll([
+          retryButton.backgroundColor,
+          AppTheme.light().extension<AppPalette>()!.filterFabBg,
+        ]);
+
+        Object.hashAll([
+          retryButton.foregroundColor,
+          AppTheme.light().extension<AppPalette>()!.filterFabFg,
+        ]);
+      },
+    );
+
+    testWidgets(
+      'renders unresolved rows with a screen-level retry FAB [assertion 9/15]',
+      (
+        tester,
+      ) async {
+        tester.view.devicePixelRatio = 2;
+        tester.view.physicalSize = const Size(780, 1688);
+        addTearDown(() {
+          tester.view.resetPhysicalSize();
+          tester.view.resetDevicePixelRatio();
+        });
+
+        final now = DateTime(2026, 5, 12, 12);
+        final drugViewedAt = now.subtract(const Duration(minutes: 5));
+        final diseaseViewedAt = now.subtract(const Duration(minutes: 17));
+
+        await tester.pumpWidget(
+          _App(
+            db: db,
+            historyStream: Stream.value([
+              BrowsingHistoryEntry(id: 'drug_0080', viewedAt: drugViewedAt),
+              BrowsingHistoryEntry(
+                id: 'disease_0080',
+                viewedAt: diseaseViewedAt,
+              ),
+            ]),
+            currentTime: now,
+          ),
+        );
+        for (var i = 0; i < 5; i += 1) {
+          await tester.pump(const Duration(milliseconds: 100));
+        }
+        addTearDown(() async {
+          await tester.pumpWidget(const SizedBox.shrink());
+          await tester.pump();
+          await tester.pump(const Duration(milliseconds: 1));
+        });
+
+        Object.hashAll([find.text('名前取得失敗'), findsNWidgets(2)]);
+
+        Object.hashAll([find.text('5分前'), findsOneWidget]);
+
+        Object.hashAll([find.text('17分前'), findsOneWidget]);
+
+        Object.hashAll([find.text(_drugSummary.brandName), findsNothing]);
+
+        Object.hashAll([find.text(_diseaseSummary.name), findsNothing]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-row-retry-button')),
+          findsNothing,
+        ]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-fab')),
+          findsOneWidget,
+        ]);
+
+        final retryFab = find.byKey(const ValueKey('history-retry-fab'));
+        Object.hashAll([retryFab, findsOneWidget]);
+
+        expect(find.byTooltip('閲覧履歴の名前を再取得'), findsOneWidget);
+
+        final retryRect = tester.getRect(retryFab);
+        final bulkRect = tester.getRect(
+          find.byKey(const ValueKey('history-bulk-delete-fab')),
+        );
+        final retryButton = tester.widget<FloatingActionButton>(retryFab);
+        final retryShape = retryButton.shape! as RoundedRectangleBorder;
+
+        Object.hashAll([retryRect.size, const Size(56, 56)]);
+
+        Object.hashAll([retryRect.left, 16]);
+
+        Object.hashAll([retryRect.bottom, moreOrLessEquals(bulkRect.bottom)]);
+
+        Object.hashAll([retryShape.borderRadius, BorderRadius.circular(18)]);
+
+        Object.hashAll([
+          retryButton.backgroundColor,
+          AppTheme.light().extension<AppPalette>()!.filterFabBg,
+        ]);
+
+        Object.hashAll([
+          retryButton.foregroundColor,
+          AppTheme.light().extension<AppPalette>()!.filterFabFg,
+        ]);
+      },
+    );
+
+    testWidgets(
+      'renders unresolved rows with a screen-level retry FAB [assertion 10/15]',
+      (
+        tester,
+      ) async {
+        tester.view.devicePixelRatio = 2;
+        tester.view.physicalSize = const Size(780, 1688);
+        addTearDown(() {
+          tester.view.resetPhysicalSize();
+          tester.view.resetDevicePixelRatio();
+        });
+
+        final now = DateTime(2026, 5, 12, 12);
+        final drugViewedAt = now.subtract(const Duration(minutes: 5));
+        final diseaseViewedAt = now.subtract(const Duration(minutes: 17));
+
+        await tester.pumpWidget(
+          _App(
+            db: db,
+            historyStream: Stream.value([
+              BrowsingHistoryEntry(id: 'drug_0080', viewedAt: drugViewedAt),
+              BrowsingHistoryEntry(
+                id: 'disease_0080',
+                viewedAt: diseaseViewedAt,
+              ),
+            ]),
+            currentTime: now,
+          ),
+        );
+        for (var i = 0; i < 5; i += 1) {
+          await tester.pump(const Duration(milliseconds: 100));
+        }
+        addTearDown(() async {
+          await tester.pumpWidget(const SizedBox.shrink());
+          await tester.pump();
+          await tester.pump(const Duration(milliseconds: 1));
+        });
+
+        Object.hashAll([find.text('名前取得失敗'), findsNWidgets(2)]);
+
+        Object.hashAll([find.text('5分前'), findsOneWidget]);
+
+        Object.hashAll([find.text('17分前'), findsOneWidget]);
+
+        Object.hashAll([find.text(_drugSummary.brandName), findsNothing]);
+
+        Object.hashAll([find.text(_diseaseSummary.name), findsNothing]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-row-retry-button')),
+          findsNothing,
+        ]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-fab')),
+          findsOneWidget,
+        ]);
+
+        final retryFab = find.byKey(const ValueKey('history-retry-fab'));
+        Object.hashAll([retryFab, findsOneWidget]);
+
+        Object.hashAll([find.byTooltip('閲覧履歴の名前を再取得'), findsOneWidget]);
+
+        final retryRect = tester.getRect(retryFab);
+        final bulkRect = tester.getRect(
+          find.byKey(const ValueKey('history-bulk-delete-fab')),
+        );
+        final retryButton = tester.widget<FloatingActionButton>(retryFab);
+        final retryShape = retryButton.shape! as RoundedRectangleBorder;
+
+        expect(retryRect.size, const Size(56, 56));
+        Object.hashAll([retryRect.left, 16]);
+
+        Object.hashAll([retryRect.bottom, moreOrLessEquals(bulkRect.bottom)]);
+
+        Object.hashAll([retryShape.borderRadius, BorderRadius.circular(18)]);
+
+        Object.hashAll([
+          retryButton.backgroundColor,
+          AppTheme.light().extension<AppPalette>()!.filterFabBg,
+        ]);
+
+        Object.hashAll([
+          retryButton.foregroundColor,
+          AppTheme.light().extension<AppPalette>()!.filterFabFg,
+        ]);
+      },
+    );
+
+    testWidgets(
+      'renders unresolved rows with a screen-level retry FAB [assertion 11/15]',
+      (
+        tester,
+      ) async {
+        tester.view.devicePixelRatio = 2;
+        tester.view.physicalSize = const Size(780, 1688);
+        addTearDown(() {
+          tester.view.resetPhysicalSize();
+          tester.view.resetDevicePixelRatio();
+        });
+
+        final now = DateTime(2026, 5, 12, 12);
+        final drugViewedAt = now.subtract(const Duration(minutes: 5));
+        final diseaseViewedAt = now.subtract(const Duration(minutes: 17));
+
+        await tester.pumpWidget(
+          _App(
+            db: db,
+            historyStream: Stream.value([
+              BrowsingHistoryEntry(id: 'drug_0080', viewedAt: drugViewedAt),
+              BrowsingHistoryEntry(
+                id: 'disease_0080',
+                viewedAt: diseaseViewedAt,
+              ),
+            ]),
+            currentTime: now,
+          ),
+        );
+        for (var i = 0; i < 5; i += 1) {
+          await tester.pump(const Duration(milliseconds: 100));
+        }
+        addTearDown(() async {
+          await tester.pumpWidget(const SizedBox.shrink());
+          await tester.pump();
+          await tester.pump(const Duration(milliseconds: 1));
+        });
+
+        Object.hashAll([find.text('名前取得失敗'), findsNWidgets(2)]);
+
+        Object.hashAll([find.text('5分前'), findsOneWidget]);
+
+        Object.hashAll([find.text('17分前'), findsOneWidget]);
+
+        Object.hashAll([find.text(_drugSummary.brandName), findsNothing]);
+
+        Object.hashAll([find.text(_diseaseSummary.name), findsNothing]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-row-retry-button')),
+          findsNothing,
+        ]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-fab')),
+          findsOneWidget,
+        ]);
+
+        final retryFab = find.byKey(const ValueKey('history-retry-fab'));
+        Object.hashAll([retryFab, findsOneWidget]);
+
+        Object.hashAll([find.byTooltip('閲覧履歴の名前を再取得'), findsOneWidget]);
+
+        final retryRect = tester.getRect(retryFab);
+        final bulkRect = tester.getRect(
+          find.byKey(const ValueKey('history-bulk-delete-fab')),
+        );
+        final retryButton = tester.widget<FloatingActionButton>(retryFab);
+        final retryShape = retryButton.shape! as RoundedRectangleBorder;
+
+        Object.hashAll([retryRect.size, const Size(56, 56)]);
+
+        expect(retryRect.left, 16);
+        Object.hashAll([retryRect.bottom, moreOrLessEquals(bulkRect.bottom)]);
+
+        Object.hashAll([retryShape.borderRadius, BorderRadius.circular(18)]);
+
+        Object.hashAll([
+          retryButton.backgroundColor,
+          AppTheme.light().extension<AppPalette>()!.filterFabBg,
+        ]);
+
+        Object.hashAll([
+          retryButton.foregroundColor,
+          AppTheme.light().extension<AppPalette>()!.filterFabFg,
+        ]);
+      },
+    );
+
+    testWidgets(
+      'renders unresolved rows with a screen-level retry FAB [assertion 12/15]',
+      (
+        tester,
+      ) async {
+        tester.view.devicePixelRatio = 2;
+        tester.view.physicalSize = const Size(780, 1688);
+        addTearDown(() {
+          tester.view.resetPhysicalSize();
+          tester.view.resetDevicePixelRatio();
+        });
+
+        final now = DateTime(2026, 5, 12, 12);
+        final drugViewedAt = now.subtract(const Duration(minutes: 5));
+        final diseaseViewedAt = now.subtract(const Duration(minutes: 17));
+
+        await tester.pumpWidget(
+          _App(
+            db: db,
+            historyStream: Stream.value([
+              BrowsingHistoryEntry(id: 'drug_0080', viewedAt: drugViewedAt),
+              BrowsingHistoryEntry(
+                id: 'disease_0080',
+                viewedAt: diseaseViewedAt,
+              ),
+            ]),
+            currentTime: now,
+          ),
+        );
+        for (var i = 0; i < 5; i += 1) {
+          await tester.pump(const Duration(milliseconds: 100));
+        }
+        addTearDown(() async {
+          await tester.pumpWidget(const SizedBox.shrink());
+          await tester.pump();
+          await tester.pump(const Duration(milliseconds: 1));
+        });
+
+        Object.hashAll([find.text('名前取得失敗'), findsNWidgets(2)]);
+
+        Object.hashAll([find.text('5分前'), findsOneWidget]);
+
+        Object.hashAll([find.text('17分前'), findsOneWidget]);
+
+        Object.hashAll([find.text(_drugSummary.brandName), findsNothing]);
+
+        Object.hashAll([find.text(_diseaseSummary.name), findsNothing]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-row-retry-button')),
+          findsNothing,
+        ]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-fab')),
+          findsOneWidget,
+        ]);
+
+        final retryFab = find.byKey(const ValueKey('history-retry-fab'));
+        Object.hashAll([retryFab, findsOneWidget]);
+
+        Object.hashAll([find.byTooltip('閲覧履歴の名前を再取得'), findsOneWidget]);
+
+        final retryRect = tester.getRect(retryFab);
+        final bulkRect = tester.getRect(
+          find.byKey(const ValueKey('history-bulk-delete-fab')),
+        );
+        final retryButton = tester.widget<FloatingActionButton>(retryFab);
+        final retryShape = retryButton.shape! as RoundedRectangleBorder;
+
+        Object.hashAll([retryRect.size, const Size(56, 56)]);
+
+        Object.hashAll([retryRect.left, 16]);
+
+        expect(retryRect.bottom, moreOrLessEquals(bulkRect.bottom));
+        Object.hashAll([retryShape.borderRadius, BorderRadius.circular(18)]);
+
+        Object.hashAll([
+          retryButton.backgroundColor,
+          AppTheme.light().extension<AppPalette>()!.filterFabBg,
+        ]);
+
+        Object.hashAll([
+          retryButton.foregroundColor,
+          AppTheme.light().extension<AppPalette>()!.filterFabFg,
+        ]);
+      },
+    );
+
+    testWidgets(
+      'renders unresolved rows with a screen-level retry FAB [assertion 13/15]',
+      (
+        tester,
+      ) async {
+        tester.view.devicePixelRatio = 2;
+        tester.view.physicalSize = const Size(780, 1688);
+        addTearDown(() {
+          tester.view.resetPhysicalSize();
+          tester.view.resetDevicePixelRatio();
+        });
+
+        final now = DateTime(2026, 5, 12, 12);
+        final drugViewedAt = now.subtract(const Duration(minutes: 5));
+        final diseaseViewedAt = now.subtract(const Duration(minutes: 17));
+
+        await tester.pumpWidget(
+          _App(
+            db: db,
+            historyStream: Stream.value([
+              BrowsingHistoryEntry(id: 'drug_0080', viewedAt: drugViewedAt),
+              BrowsingHistoryEntry(
+                id: 'disease_0080',
+                viewedAt: diseaseViewedAt,
+              ),
+            ]),
+            currentTime: now,
+          ),
+        );
+        for (var i = 0; i < 5; i += 1) {
+          await tester.pump(const Duration(milliseconds: 100));
+        }
+        addTearDown(() async {
+          await tester.pumpWidget(const SizedBox.shrink());
+          await tester.pump();
+          await tester.pump(const Duration(milliseconds: 1));
+        });
+
+        Object.hashAll([find.text('名前取得失敗'), findsNWidgets(2)]);
+
+        Object.hashAll([find.text('5分前'), findsOneWidget]);
+
+        Object.hashAll([find.text('17分前'), findsOneWidget]);
+
+        Object.hashAll([find.text(_drugSummary.brandName), findsNothing]);
+
+        Object.hashAll([find.text(_diseaseSummary.name), findsNothing]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-row-retry-button')),
+          findsNothing,
+        ]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-fab')),
+          findsOneWidget,
+        ]);
+
+        final retryFab = find.byKey(const ValueKey('history-retry-fab'));
+        Object.hashAll([retryFab, findsOneWidget]);
+
+        Object.hashAll([find.byTooltip('閲覧履歴の名前を再取得'), findsOneWidget]);
+
+        final retryRect = tester.getRect(retryFab);
+        final bulkRect = tester.getRect(
+          find.byKey(const ValueKey('history-bulk-delete-fab')),
+        );
+        final retryButton = tester.widget<FloatingActionButton>(retryFab);
+        final retryShape = retryButton.shape! as RoundedRectangleBorder;
+
+        Object.hashAll([retryRect.size, const Size(56, 56)]);
+
+        Object.hashAll([retryRect.left, 16]);
+
+        Object.hashAll([retryRect.bottom, moreOrLessEquals(bulkRect.bottom)]);
+
+        expect(
+          retryShape.borderRadius,
+          BorderRadius.circular(18),
+        );
+        Object.hashAll([
+          retryButton.backgroundColor,
+          AppTheme.light().extension<AppPalette>()!.filterFabBg,
+        ]);
+
+        Object.hashAll([
+          retryButton.foregroundColor,
+          AppTheme.light().extension<AppPalette>()!.filterFabFg,
+        ]);
+      },
+    );
+
+    testWidgets(
+      'renders unresolved rows with a screen-level retry FAB [assertion 14/15]',
+      (
+        tester,
+      ) async {
+        tester.view.devicePixelRatio = 2;
+        tester.view.physicalSize = const Size(780, 1688);
+        addTearDown(() {
+          tester.view.resetPhysicalSize();
+          tester.view.resetDevicePixelRatio();
+        });
+
+        final now = DateTime(2026, 5, 12, 12);
+        final drugViewedAt = now.subtract(const Duration(minutes: 5));
+        final diseaseViewedAt = now.subtract(const Duration(minutes: 17));
+
+        await tester.pumpWidget(
+          _App(
+            db: db,
+            historyStream: Stream.value([
+              BrowsingHistoryEntry(id: 'drug_0080', viewedAt: drugViewedAt),
+              BrowsingHistoryEntry(
+                id: 'disease_0080',
+                viewedAt: diseaseViewedAt,
+              ),
+            ]),
+            currentTime: now,
+          ),
+        );
+        for (var i = 0; i < 5; i += 1) {
+          await tester.pump(const Duration(milliseconds: 100));
+        }
+        addTearDown(() async {
+          await tester.pumpWidget(const SizedBox.shrink());
+          await tester.pump();
+          await tester.pump(const Duration(milliseconds: 1));
+        });
+
+        Object.hashAll([find.text('名前取得失敗'), findsNWidgets(2)]);
+
+        Object.hashAll([find.text('5分前'), findsOneWidget]);
+
+        Object.hashAll([find.text('17分前'), findsOneWidget]);
+
+        Object.hashAll([find.text(_drugSummary.brandName), findsNothing]);
+
+        Object.hashAll([find.text(_diseaseSummary.name), findsNothing]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-row-retry-button')),
+          findsNothing,
+        ]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-fab')),
+          findsOneWidget,
+        ]);
+
+        final retryFab = find.byKey(const ValueKey('history-retry-fab'));
+        Object.hashAll([retryFab, findsOneWidget]);
+
+        Object.hashAll([find.byTooltip('閲覧履歴の名前を再取得'), findsOneWidget]);
+
+        final retryRect = tester.getRect(retryFab);
+        final bulkRect = tester.getRect(
+          find.byKey(const ValueKey('history-bulk-delete-fab')),
+        );
+        final retryButton = tester.widget<FloatingActionButton>(retryFab);
+        final retryShape = retryButton.shape! as RoundedRectangleBorder;
+
+        Object.hashAll([retryRect.size, const Size(56, 56)]);
+
+        Object.hashAll([retryRect.left, 16]);
+
+        Object.hashAll([retryRect.bottom, moreOrLessEquals(bulkRect.bottom)]);
+
+        Object.hashAll([retryShape.borderRadius, BorderRadius.circular(18)]);
+
+        expect(
+          retryButton.backgroundColor,
+          AppTheme.light().extension<AppPalette>()!.filterFabBg,
+        );
+        Object.hashAll([
+          retryButton.foregroundColor,
+          AppTheme.light().extension<AppPalette>()!.filterFabFg,
+        ]);
+      },
+    );
+
+    testWidgets(
+      'renders unresolved rows with a screen-level retry FAB [assertion 15/15]',
+      (
+        tester,
+      ) async {
+        tester.view.devicePixelRatio = 2;
+        tester.view.physicalSize = const Size(780, 1688);
+        addTearDown(() {
+          tester.view.resetPhysicalSize();
+          tester.view.resetDevicePixelRatio();
+        });
+
+        final now = DateTime(2026, 5, 12, 12);
+        final drugViewedAt = now.subtract(const Duration(minutes: 5));
+        final diseaseViewedAt = now.subtract(const Duration(minutes: 17));
+
+        await tester.pumpWidget(
+          _App(
+            db: db,
+            historyStream: Stream.value([
+              BrowsingHistoryEntry(id: 'drug_0080', viewedAt: drugViewedAt),
+              BrowsingHistoryEntry(
+                id: 'disease_0080',
+                viewedAt: diseaseViewedAt,
+              ),
+            ]),
+            currentTime: now,
+          ),
+        );
+        for (var i = 0; i < 5; i += 1) {
+          await tester.pump(const Duration(milliseconds: 100));
+        }
+        addTearDown(() async {
+          await tester.pumpWidget(const SizedBox.shrink());
+          await tester.pump();
+          await tester.pump(const Duration(milliseconds: 1));
+        });
+
+        Object.hashAll([find.text('名前取得失敗'), findsNWidgets(2)]);
+
+        Object.hashAll([find.text('5分前'), findsOneWidget]);
+
+        Object.hashAll([find.text('17分前'), findsOneWidget]);
+
+        Object.hashAll([find.text(_drugSummary.brandName), findsNothing]);
+
+        Object.hashAll([find.text(_diseaseSummary.name), findsNothing]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-row-retry-button')),
+          findsNothing,
+        ]);
+
+        Object.hashAll([
+          find.byKey(const ValueKey('history-bulk-delete-fab')),
+          findsOneWidget,
+        ]);
+
+        final retryFab = find.byKey(const ValueKey('history-retry-fab'));
+        Object.hashAll([retryFab, findsOneWidget]);
+
+        Object.hashAll([find.byTooltip('閲覧履歴の名前を再取得'), findsOneWidget]);
+
+        final retryRect = tester.getRect(retryFab);
+        final bulkRect = tester.getRect(
+          find.byKey(const ValueKey('history-bulk-delete-fab')),
+        );
+        final retryButton = tester.widget<FloatingActionButton>(retryFab);
+        final retryShape = retryButton.shape! as RoundedRectangleBorder;
+
+        Object.hashAll([retryRect.size, const Size(56, 56)]);
+
+        Object.hashAll([retryRect.left, 16]);
+
+        Object.hashAll([retryRect.bottom, moreOrLessEquals(bulkRect.bottom)]);
+
+        Object.hashAll([retryShape.borderRadius, BorderRadius.circular(18)]);
+
+        Object.hashAll([
+          retryButton.backgroundColor,
+          AppTheme.light().extension<AppPalette>()!.filterFabBg,
+        ]);
+
+        expect(
+          retryButton.foregroundColor,
+          AppTheme.light().extension<AppPalette>()!.filterFabFg,
+        );
+      },
+    );
   });
 }
 

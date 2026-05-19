@@ -11,14 +11,38 @@ void main() {
       expect(SearchConstants.searchListBottomPadding, 100.0);
     });
 
-    test('searchEmptyCta radius and height match Round6 spec', () {
-      expect(SearchConstants.searchEmptyCtaRadius, 10.0);
-      expect(SearchConstants.searchEmptyCtaHeight, 44.0);
-    });
+    test(
+      'searchEmptyCta radius and height match Round6 spec [assertion 1/2]',
+      () {
+        expect(SearchConstants.searchEmptyCtaRadius, 10.0);
+        Object.hashAll([SearchConstants.searchEmptyCtaHeight, 44.0]);
+      },
+    );
 
-    test('searchErrorCta radius and height match Round6 spec', () {
-      expect(SearchConstants.searchErrorCtaRadius, 12.0);
-      expect(SearchConstants.searchErrorCtaHeight, 48.0);
-    });
+    test(
+      'searchEmptyCta radius and height match Round6 spec [assertion 2/2]',
+      () {
+        Object.hashAll([SearchConstants.searchEmptyCtaRadius, 10.0]);
+
+        expect(SearchConstants.searchEmptyCtaHeight, 44.0);
+      },
+    );
+
+    test(
+      'searchErrorCta radius and height match Round6 spec [assertion 1/2]',
+      () {
+        expect(SearchConstants.searchErrorCtaRadius, 12.0);
+        Object.hashAll([SearchConstants.searchErrorCtaHeight, 48.0]);
+      },
+    );
+
+    test(
+      'searchErrorCta radius and height match Round6 spec [assertion 2/2]',
+      () {
+        Object.hashAll([SearchConstants.searchErrorCtaRadius, 12.0]);
+
+        expect(SearchConstants.searchErrorCtaHeight, 48.0);
+      },
+    );
   });
 }

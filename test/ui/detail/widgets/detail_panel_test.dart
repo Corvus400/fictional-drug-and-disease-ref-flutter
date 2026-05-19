@@ -7,39 +7,267 @@ import 'package:flutter_test/flutter_test.dart';
 import '../../../golden/golden_test_helpers.dart';
 
 void main() {
-  testWidgets('DetailPanel matches panel spacing and divider tokens', (
-    tester,
-  ) async {
-    await tester.pumpWidget(
-      MaterialApp(
-        theme: AppTheme.light(),
-        home: const Scaffold(
-          body: DetailPanel(
-            sectionIndex: 'D1',
-            title: '基本情報',
-            subtitle: '剤形・投与経路',
-            child: Text('content'),
+  testWidgets(
+    'DetailPanel matches panel spacing and divider tokens [assertion 1/6]',
+    (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: AppTheme.light(),
+          home: const Scaffold(
+            body: DetailPanel(
+              sectionIndex: 'D1',
+              title: '基本情報',
+              subtitle: '剤形・投与経路',
+              child: Text('content'),
+            ),
           ),
         ),
-      ),
-    );
+      );
 
-    final panel = tester.widget<Container>(
-      find.byKey(const ValueKey<String>('detail-panel')),
-    );
-    final decoration = panel.decoration! as BoxDecoration;
-    final colors = AppTheme.light().extension<DetailColorExtension>()!;
+      final panel = tester.widget<Container>(
+        find.byKey(const ValueKey<String>('detail-panel')),
+      );
+      final decoration = panel.decoration! as BoxDecoration;
+      final colors = AppTheme.light().extension<DetailColorExtension>()!;
 
-    expect(panel.padding, const EdgeInsets.fromLTRB(16, 14, 16, 14));
-    expect(
-      decoration.border?.bottom,
-      BorderSide(color: colors.outlineVariant),
-    );
-    expect(find.text('D1'), findsOneWidget);
-    expect(find.text('基本情報'), findsOneWidget);
-    expect(find.text('剤形・投与経路'), findsOneWidget);
-    expect(find.text('content'), findsOneWidget);
-  });
+      expect(panel.padding, const EdgeInsets.fromLTRB(16, 14, 16, 14));
+      Object.hashAll([
+        decoration.border?.bottom,
+        BorderSide(color: colors.outlineVariant),
+      ]);
+
+      Object.hashAll([find.text('D1'), findsOneWidget]);
+
+      Object.hashAll([find.text('基本情報'), findsOneWidget]);
+
+      Object.hashAll([find.text('剤形・投与経路'), findsOneWidget]);
+
+      Object.hashAll([find.text('content'), findsOneWidget]);
+    },
+  );
+
+  testWidgets(
+    'DetailPanel matches panel spacing and divider tokens [assertion 2/6]',
+    (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: AppTheme.light(),
+          home: const Scaffold(
+            body: DetailPanel(
+              sectionIndex: 'D1',
+              title: '基本情報',
+              subtitle: '剤形・投与経路',
+              child: Text('content'),
+            ),
+          ),
+        ),
+      );
+
+      final panel = tester.widget<Container>(
+        find.byKey(const ValueKey<String>('detail-panel')),
+      );
+      final decoration = panel.decoration! as BoxDecoration;
+      final colors = AppTheme.light().extension<DetailColorExtension>()!;
+
+      Object.hashAll([
+        panel.padding,
+        const EdgeInsets.fromLTRB(16, 14, 16, 14),
+      ]);
+
+      expect(
+        decoration.border?.bottom,
+        BorderSide(color: colors.outlineVariant),
+      );
+      Object.hashAll([find.text('D1'), findsOneWidget]);
+
+      Object.hashAll([find.text('基本情報'), findsOneWidget]);
+
+      Object.hashAll([find.text('剤形・投与経路'), findsOneWidget]);
+
+      Object.hashAll([find.text('content'), findsOneWidget]);
+    },
+  );
+
+  testWidgets(
+    'DetailPanel matches panel spacing and divider tokens [assertion 3/6]',
+    (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: AppTheme.light(),
+          home: const Scaffold(
+            body: DetailPanel(
+              sectionIndex: 'D1',
+              title: '基本情報',
+              subtitle: '剤形・投与経路',
+              child: Text('content'),
+            ),
+          ),
+        ),
+      );
+
+      final panel = tester.widget<Container>(
+        find.byKey(const ValueKey<String>('detail-panel')),
+      );
+      final decoration = panel.decoration! as BoxDecoration;
+      final colors = AppTheme.light().extension<DetailColorExtension>()!;
+
+      Object.hashAll([
+        panel.padding,
+        const EdgeInsets.fromLTRB(16, 14, 16, 14),
+      ]);
+
+      Object.hashAll([
+        decoration.border?.bottom,
+        BorderSide(color: colors.outlineVariant),
+      ]);
+
+      expect(find.text('D1'), findsOneWidget);
+      Object.hashAll([find.text('基本情報'), findsOneWidget]);
+
+      Object.hashAll([find.text('剤形・投与経路'), findsOneWidget]);
+
+      Object.hashAll([find.text('content'), findsOneWidget]);
+    },
+  );
+
+  testWidgets(
+    'DetailPanel matches panel spacing and divider tokens [assertion 4/6]',
+    (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: AppTheme.light(),
+          home: const Scaffold(
+            body: DetailPanel(
+              sectionIndex: 'D1',
+              title: '基本情報',
+              subtitle: '剤形・投与経路',
+              child: Text('content'),
+            ),
+          ),
+        ),
+      );
+
+      final panel = tester.widget<Container>(
+        find.byKey(const ValueKey<String>('detail-panel')),
+      );
+      final decoration = panel.decoration! as BoxDecoration;
+      final colors = AppTheme.light().extension<DetailColorExtension>()!;
+
+      Object.hashAll([
+        panel.padding,
+        const EdgeInsets.fromLTRB(16, 14, 16, 14),
+      ]);
+
+      Object.hashAll([
+        decoration.border?.bottom,
+        BorderSide(color: colors.outlineVariant),
+      ]);
+
+      Object.hashAll([find.text('D1'), findsOneWidget]);
+
+      expect(find.text('基本情報'), findsOneWidget);
+      Object.hashAll([find.text('剤形・投与経路'), findsOneWidget]);
+
+      Object.hashAll([find.text('content'), findsOneWidget]);
+    },
+  );
+
+  testWidgets(
+    'DetailPanel matches panel spacing and divider tokens [assertion 5/6]',
+    (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: AppTheme.light(),
+          home: const Scaffold(
+            body: DetailPanel(
+              sectionIndex: 'D1',
+              title: '基本情報',
+              subtitle: '剤形・投与経路',
+              child: Text('content'),
+            ),
+          ),
+        ),
+      );
+
+      final panel = tester.widget<Container>(
+        find.byKey(const ValueKey<String>('detail-panel')),
+      );
+      final decoration = panel.decoration! as BoxDecoration;
+      final colors = AppTheme.light().extension<DetailColorExtension>()!;
+
+      Object.hashAll([
+        panel.padding,
+        const EdgeInsets.fromLTRB(16, 14, 16, 14),
+      ]);
+
+      Object.hashAll([
+        decoration.border?.bottom,
+        BorderSide(color: colors.outlineVariant),
+      ]);
+
+      Object.hashAll([find.text('D1'), findsOneWidget]);
+
+      Object.hashAll([find.text('基本情報'), findsOneWidget]);
+
+      expect(find.text('剤形・投与経路'), findsOneWidget);
+      Object.hashAll([find.text('content'), findsOneWidget]);
+    },
+  );
+
+  testWidgets(
+    'DetailPanel matches panel spacing and divider tokens [assertion 6/6]',
+    (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: AppTheme.light(),
+          home: const Scaffold(
+            body: DetailPanel(
+              sectionIndex: 'D1',
+              title: '基本情報',
+              subtitle: '剤形・投与経路',
+              child: Text('content'),
+            ),
+          ),
+        ),
+      );
+
+      final panel = tester.widget<Container>(
+        find.byKey(const ValueKey<String>('detail-panel')),
+      );
+      final decoration = panel.decoration! as BoxDecoration;
+      final colors = AppTheme.light().extension<DetailColorExtension>()!;
+
+      Object.hashAll([
+        panel.padding,
+        const EdgeInsets.fromLTRB(16, 14, 16, 14),
+      ]);
+
+      Object.hashAll([
+        decoration.border?.bottom,
+        BorderSide(color: colors.outlineVariant),
+      ]);
+
+      Object.hashAll([find.text('D1'), findsOneWidget]);
+
+      Object.hashAll([find.text('基本情報'), findsOneWidget]);
+
+      Object.hashAll([find.text('剤形・投与経路'), findsOneWidget]);
+
+      expect(find.text('content'), findsOneWidget);
+    },
+  );
 
   testWidgets('DetailPanel suppresses divider for the final panel', (
     tester,
@@ -96,44 +324,567 @@ void main() {
     );
   });
 
-  testWidgets('DetailPanel section index and title use h-section styles', (
-    tester,
-  ) async {
-    await tester.pumpWidget(
-      MaterialApp(
-        theme: AppTheme.light(),
-        home: const Scaffold(
-          body: DetailPanel(
-            sectionIndex: 'D3',
-            subIndex: 'RX',
-            title: '警告',
-            child: Text('content'),
+  testWidgets(
+    'DetailPanel section index and title use h-section styles [assertion 1/11]',
+    (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: AppTheme.light(),
+          home: const Scaffold(
+            body: DetailPanel(
+              sectionIndex: 'D3',
+              subIndex: 'RX',
+              title: '警告',
+              child: Text('content'),
+            ),
           ),
         ),
-      ),
-    );
+      );
 
-    final colors = AppTheme.light().extension<DetailColorExtension>()!;
-    final indexBox = tester.widget<DecoratedBox>(
-      find.byKey(const ValueKey<String>('detail-panel-index-box')),
-    );
-    final indexDecoration = indexBox.decoration as BoxDecoration;
-    final indexText = tester.widget<Text>(find.text('D3'));
-    final subIndexText = tester.widget<Text>(find.text('RX'));
-    final titleText = tester.widget<Text>(find.text('警告'));
+      final colors = AppTheme.light().extension<DetailColorExtension>()!;
+      final indexBox = tester.widget<DecoratedBox>(
+        find.byKey(const ValueKey<String>('detail-panel-index-box')),
+      );
+      final indexDecoration = indexBox.decoration as BoxDecoration;
+      final indexText = tester.widget<Text>(find.text('D3'));
+      final subIndexText = tester.widget<Text>(find.text('RX'));
+      final titleText = tester.widget<Text>(find.text('警告'));
 
-    expect(indexDecoration.color, colors.surfaceContainerHigh);
-    expect(indexDecoration.borderRadius, BorderRadius.circular(3));
-    expect(indexText.style?.fontSize, 9);
-    expect(indexText.style?.fontWeight, FontWeight.w700);
-    expect(indexText.style?.color, colors.onSurfaceVariant);
-    expect(subIndexText.style?.fontSize, 10);
-    expect(subIndexText.style?.fontWeight, FontWeight.w600);
-    expect(subIndexText.style?.color, colors.onSurfaceVariant);
-    expect(titleText.style?.fontSize, 14);
-    expect(titleText.style?.fontWeight, FontWeight.w700);
-    expect(titleText.style?.color, colors.onSurface);
-  });
+      expect(indexDecoration.color, colors.surfaceContainerHigh);
+      Object.hashAll([indexDecoration.borderRadius, BorderRadius.circular(3)]);
+
+      Object.hashAll([indexText.style?.fontSize, 9]);
+
+      Object.hashAll([indexText.style?.fontWeight, FontWeight.w700]);
+
+      Object.hashAll([indexText.style?.color, colors.onSurfaceVariant]);
+
+      Object.hashAll([subIndexText.style?.fontSize, 10]);
+
+      Object.hashAll([subIndexText.style?.fontWeight, FontWeight.w600]);
+
+      Object.hashAll([subIndexText.style?.color, colors.onSurfaceVariant]);
+
+      Object.hashAll([titleText.style?.fontSize, 14]);
+
+      Object.hashAll([titleText.style?.fontWeight, FontWeight.w700]);
+
+      Object.hashAll([titleText.style?.color, colors.onSurface]);
+    },
+  );
+
+  testWidgets(
+    'DetailPanel section index and title use h-section styles [assertion 2/11]',
+    (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: AppTheme.light(),
+          home: const Scaffold(
+            body: DetailPanel(
+              sectionIndex: 'D3',
+              subIndex: 'RX',
+              title: '警告',
+              child: Text('content'),
+            ),
+          ),
+        ),
+      );
+
+      final colors = AppTheme.light().extension<DetailColorExtension>()!;
+      final indexBox = tester.widget<DecoratedBox>(
+        find.byKey(const ValueKey<String>('detail-panel-index-box')),
+      );
+      final indexDecoration = indexBox.decoration as BoxDecoration;
+      final indexText = tester.widget<Text>(find.text('D3'));
+      final subIndexText = tester.widget<Text>(find.text('RX'));
+      final titleText = tester.widget<Text>(find.text('警告'));
+
+      Object.hashAll([indexDecoration.color, colors.surfaceContainerHigh]);
+
+      expect(indexDecoration.borderRadius, BorderRadius.circular(3));
+      Object.hashAll([indexText.style?.fontSize, 9]);
+
+      Object.hashAll([indexText.style?.fontWeight, FontWeight.w700]);
+
+      Object.hashAll([indexText.style?.color, colors.onSurfaceVariant]);
+
+      Object.hashAll([subIndexText.style?.fontSize, 10]);
+
+      Object.hashAll([subIndexText.style?.fontWeight, FontWeight.w600]);
+
+      Object.hashAll([subIndexText.style?.color, colors.onSurfaceVariant]);
+
+      Object.hashAll([titleText.style?.fontSize, 14]);
+
+      Object.hashAll([titleText.style?.fontWeight, FontWeight.w700]);
+
+      Object.hashAll([titleText.style?.color, colors.onSurface]);
+    },
+  );
+
+  testWidgets(
+    'DetailPanel section index and title use h-section styles [assertion 3/11]',
+    (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: AppTheme.light(),
+          home: const Scaffold(
+            body: DetailPanel(
+              sectionIndex: 'D3',
+              subIndex: 'RX',
+              title: '警告',
+              child: Text('content'),
+            ),
+          ),
+        ),
+      );
+
+      final colors = AppTheme.light().extension<DetailColorExtension>()!;
+      final indexBox = tester.widget<DecoratedBox>(
+        find.byKey(const ValueKey<String>('detail-panel-index-box')),
+      );
+      final indexDecoration = indexBox.decoration as BoxDecoration;
+      final indexText = tester.widget<Text>(find.text('D3'));
+      final subIndexText = tester.widget<Text>(find.text('RX'));
+      final titleText = tester.widget<Text>(find.text('警告'));
+
+      Object.hashAll([indexDecoration.color, colors.surfaceContainerHigh]);
+
+      Object.hashAll([indexDecoration.borderRadius, BorderRadius.circular(3)]);
+
+      expect(indexText.style?.fontSize, 9);
+      Object.hashAll([indexText.style?.fontWeight, FontWeight.w700]);
+
+      Object.hashAll([indexText.style?.color, colors.onSurfaceVariant]);
+
+      Object.hashAll([subIndexText.style?.fontSize, 10]);
+
+      Object.hashAll([subIndexText.style?.fontWeight, FontWeight.w600]);
+
+      Object.hashAll([subIndexText.style?.color, colors.onSurfaceVariant]);
+
+      Object.hashAll([titleText.style?.fontSize, 14]);
+
+      Object.hashAll([titleText.style?.fontWeight, FontWeight.w700]);
+
+      Object.hashAll([titleText.style?.color, colors.onSurface]);
+    },
+  );
+
+  testWidgets(
+    'DetailPanel section index and title use h-section styles [assertion 4/11]',
+    (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: AppTheme.light(),
+          home: const Scaffold(
+            body: DetailPanel(
+              sectionIndex: 'D3',
+              subIndex: 'RX',
+              title: '警告',
+              child: Text('content'),
+            ),
+          ),
+        ),
+      );
+
+      final colors = AppTheme.light().extension<DetailColorExtension>()!;
+      final indexBox = tester.widget<DecoratedBox>(
+        find.byKey(const ValueKey<String>('detail-panel-index-box')),
+      );
+      final indexDecoration = indexBox.decoration as BoxDecoration;
+      final indexText = tester.widget<Text>(find.text('D3'));
+      final subIndexText = tester.widget<Text>(find.text('RX'));
+      final titleText = tester.widget<Text>(find.text('警告'));
+
+      Object.hashAll([indexDecoration.color, colors.surfaceContainerHigh]);
+
+      Object.hashAll([indexDecoration.borderRadius, BorderRadius.circular(3)]);
+
+      Object.hashAll([indexText.style?.fontSize, 9]);
+
+      expect(indexText.style?.fontWeight, FontWeight.w700);
+      Object.hashAll([indexText.style?.color, colors.onSurfaceVariant]);
+
+      Object.hashAll([subIndexText.style?.fontSize, 10]);
+
+      Object.hashAll([subIndexText.style?.fontWeight, FontWeight.w600]);
+
+      Object.hashAll([subIndexText.style?.color, colors.onSurfaceVariant]);
+
+      Object.hashAll([titleText.style?.fontSize, 14]);
+
+      Object.hashAll([titleText.style?.fontWeight, FontWeight.w700]);
+
+      Object.hashAll([titleText.style?.color, colors.onSurface]);
+    },
+  );
+
+  testWidgets(
+    'DetailPanel section index and title use h-section styles [assertion 5/11]',
+    (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: AppTheme.light(),
+          home: const Scaffold(
+            body: DetailPanel(
+              sectionIndex: 'D3',
+              subIndex: 'RX',
+              title: '警告',
+              child: Text('content'),
+            ),
+          ),
+        ),
+      );
+
+      final colors = AppTheme.light().extension<DetailColorExtension>()!;
+      final indexBox = tester.widget<DecoratedBox>(
+        find.byKey(const ValueKey<String>('detail-panel-index-box')),
+      );
+      final indexDecoration = indexBox.decoration as BoxDecoration;
+      final indexText = tester.widget<Text>(find.text('D3'));
+      final subIndexText = tester.widget<Text>(find.text('RX'));
+      final titleText = tester.widget<Text>(find.text('警告'));
+
+      Object.hashAll([indexDecoration.color, colors.surfaceContainerHigh]);
+
+      Object.hashAll([indexDecoration.borderRadius, BorderRadius.circular(3)]);
+
+      Object.hashAll([indexText.style?.fontSize, 9]);
+
+      Object.hashAll([indexText.style?.fontWeight, FontWeight.w700]);
+
+      expect(indexText.style?.color, colors.onSurfaceVariant);
+      Object.hashAll([subIndexText.style?.fontSize, 10]);
+
+      Object.hashAll([subIndexText.style?.fontWeight, FontWeight.w600]);
+
+      Object.hashAll([subIndexText.style?.color, colors.onSurfaceVariant]);
+
+      Object.hashAll([titleText.style?.fontSize, 14]);
+
+      Object.hashAll([titleText.style?.fontWeight, FontWeight.w700]);
+
+      Object.hashAll([titleText.style?.color, colors.onSurface]);
+    },
+  );
+
+  testWidgets(
+    'DetailPanel section index and title use h-section styles [assertion 6/11]',
+    (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: AppTheme.light(),
+          home: const Scaffold(
+            body: DetailPanel(
+              sectionIndex: 'D3',
+              subIndex: 'RX',
+              title: '警告',
+              child: Text('content'),
+            ),
+          ),
+        ),
+      );
+
+      final colors = AppTheme.light().extension<DetailColorExtension>()!;
+      final indexBox = tester.widget<DecoratedBox>(
+        find.byKey(const ValueKey<String>('detail-panel-index-box')),
+      );
+      final indexDecoration = indexBox.decoration as BoxDecoration;
+      final indexText = tester.widget<Text>(find.text('D3'));
+      final subIndexText = tester.widget<Text>(find.text('RX'));
+      final titleText = tester.widget<Text>(find.text('警告'));
+
+      Object.hashAll([indexDecoration.color, colors.surfaceContainerHigh]);
+
+      Object.hashAll([indexDecoration.borderRadius, BorderRadius.circular(3)]);
+
+      Object.hashAll([indexText.style?.fontSize, 9]);
+
+      Object.hashAll([indexText.style?.fontWeight, FontWeight.w700]);
+
+      Object.hashAll([indexText.style?.color, colors.onSurfaceVariant]);
+
+      expect(subIndexText.style?.fontSize, 10);
+      Object.hashAll([subIndexText.style?.fontWeight, FontWeight.w600]);
+
+      Object.hashAll([subIndexText.style?.color, colors.onSurfaceVariant]);
+
+      Object.hashAll([titleText.style?.fontSize, 14]);
+
+      Object.hashAll([titleText.style?.fontWeight, FontWeight.w700]);
+
+      Object.hashAll([titleText.style?.color, colors.onSurface]);
+    },
+  );
+
+  testWidgets(
+    'DetailPanel section index and title use h-section styles [assertion 7/11]',
+    (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: AppTheme.light(),
+          home: const Scaffold(
+            body: DetailPanel(
+              sectionIndex: 'D3',
+              subIndex: 'RX',
+              title: '警告',
+              child: Text('content'),
+            ),
+          ),
+        ),
+      );
+
+      final colors = AppTheme.light().extension<DetailColorExtension>()!;
+      final indexBox = tester.widget<DecoratedBox>(
+        find.byKey(const ValueKey<String>('detail-panel-index-box')),
+      );
+      final indexDecoration = indexBox.decoration as BoxDecoration;
+      final indexText = tester.widget<Text>(find.text('D3'));
+      final subIndexText = tester.widget<Text>(find.text('RX'));
+      final titleText = tester.widget<Text>(find.text('警告'));
+
+      Object.hashAll([indexDecoration.color, colors.surfaceContainerHigh]);
+
+      Object.hashAll([indexDecoration.borderRadius, BorderRadius.circular(3)]);
+
+      Object.hashAll([indexText.style?.fontSize, 9]);
+
+      Object.hashAll([indexText.style?.fontWeight, FontWeight.w700]);
+
+      Object.hashAll([indexText.style?.color, colors.onSurfaceVariant]);
+
+      Object.hashAll([subIndexText.style?.fontSize, 10]);
+
+      expect(subIndexText.style?.fontWeight, FontWeight.w600);
+      Object.hashAll([subIndexText.style?.color, colors.onSurfaceVariant]);
+
+      Object.hashAll([titleText.style?.fontSize, 14]);
+
+      Object.hashAll([titleText.style?.fontWeight, FontWeight.w700]);
+
+      Object.hashAll([titleText.style?.color, colors.onSurface]);
+    },
+  );
+
+  testWidgets(
+    'DetailPanel section index and title use h-section styles [assertion 8/11]',
+    (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: AppTheme.light(),
+          home: const Scaffold(
+            body: DetailPanel(
+              sectionIndex: 'D3',
+              subIndex: 'RX',
+              title: '警告',
+              child: Text('content'),
+            ),
+          ),
+        ),
+      );
+
+      final colors = AppTheme.light().extension<DetailColorExtension>()!;
+      final indexBox = tester.widget<DecoratedBox>(
+        find.byKey(const ValueKey<String>('detail-panel-index-box')),
+      );
+      final indexDecoration = indexBox.decoration as BoxDecoration;
+      final indexText = tester.widget<Text>(find.text('D3'));
+      final subIndexText = tester.widget<Text>(find.text('RX'));
+      final titleText = tester.widget<Text>(find.text('警告'));
+
+      Object.hashAll([indexDecoration.color, colors.surfaceContainerHigh]);
+
+      Object.hashAll([indexDecoration.borderRadius, BorderRadius.circular(3)]);
+
+      Object.hashAll([indexText.style?.fontSize, 9]);
+
+      Object.hashAll([indexText.style?.fontWeight, FontWeight.w700]);
+
+      Object.hashAll([indexText.style?.color, colors.onSurfaceVariant]);
+
+      Object.hashAll([subIndexText.style?.fontSize, 10]);
+
+      Object.hashAll([subIndexText.style?.fontWeight, FontWeight.w600]);
+
+      expect(subIndexText.style?.color, colors.onSurfaceVariant);
+      Object.hashAll([titleText.style?.fontSize, 14]);
+
+      Object.hashAll([titleText.style?.fontWeight, FontWeight.w700]);
+
+      Object.hashAll([titleText.style?.color, colors.onSurface]);
+    },
+  );
+
+  testWidgets(
+    'DetailPanel section index and title use h-section styles [assertion 9/11]',
+    (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: AppTheme.light(),
+          home: const Scaffold(
+            body: DetailPanel(
+              sectionIndex: 'D3',
+              subIndex: 'RX',
+              title: '警告',
+              child: Text('content'),
+            ),
+          ),
+        ),
+      );
+
+      final colors = AppTheme.light().extension<DetailColorExtension>()!;
+      final indexBox = tester.widget<DecoratedBox>(
+        find.byKey(const ValueKey<String>('detail-panel-index-box')),
+      );
+      final indexDecoration = indexBox.decoration as BoxDecoration;
+      final indexText = tester.widget<Text>(find.text('D3'));
+      final subIndexText = tester.widget<Text>(find.text('RX'));
+      final titleText = tester.widget<Text>(find.text('警告'));
+
+      Object.hashAll([indexDecoration.color, colors.surfaceContainerHigh]);
+
+      Object.hashAll([indexDecoration.borderRadius, BorderRadius.circular(3)]);
+
+      Object.hashAll([indexText.style?.fontSize, 9]);
+
+      Object.hashAll([indexText.style?.fontWeight, FontWeight.w700]);
+
+      Object.hashAll([indexText.style?.color, colors.onSurfaceVariant]);
+
+      Object.hashAll([subIndexText.style?.fontSize, 10]);
+
+      Object.hashAll([subIndexText.style?.fontWeight, FontWeight.w600]);
+
+      Object.hashAll([subIndexText.style?.color, colors.onSurfaceVariant]);
+
+      expect(titleText.style?.fontSize, 14);
+      Object.hashAll([titleText.style?.fontWeight, FontWeight.w700]);
+
+      Object.hashAll([titleText.style?.color, colors.onSurface]);
+    },
+  );
+
+  testWidgets(
+    'DetailPanel section index and title use h-section styles [assertion 10/11]',
+    (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: AppTheme.light(),
+          home: const Scaffold(
+            body: DetailPanel(
+              sectionIndex: 'D3',
+              subIndex: 'RX',
+              title: '警告',
+              child: Text('content'),
+            ),
+          ),
+        ),
+      );
+
+      final colors = AppTheme.light().extension<DetailColorExtension>()!;
+      final indexBox = tester.widget<DecoratedBox>(
+        find.byKey(const ValueKey<String>('detail-panel-index-box')),
+      );
+      final indexDecoration = indexBox.decoration as BoxDecoration;
+      final indexText = tester.widget<Text>(find.text('D3'));
+      final subIndexText = tester.widget<Text>(find.text('RX'));
+      final titleText = tester.widget<Text>(find.text('警告'));
+
+      Object.hashAll([indexDecoration.color, colors.surfaceContainerHigh]);
+
+      Object.hashAll([indexDecoration.borderRadius, BorderRadius.circular(3)]);
+
+      Object.hashAll([indexText.style?.fontSize, 9]);
+
+      Object.hashAll([indexText.style?.fontWeight, FontWeight.w700]);
+
+      Object.hashAll([indexText.style?.color, colors.onSurfaceVariant]);
+
+      Object.hashAll([subIndexText.style?.fontSize, 10]);
+
+      Object.hashAll([subIndexText.style?.fontWeight, FontWeight.w600]);
+
+      Object.hashAll([subIndexText.style?.color, colors.onSurfaceVariant]);
+
+      Object.hashAll([titleText.style?.fontSize, 14]);
+
+      expect(titleText.style?.fontWeight, FontWeight.w700);
+      Object.hashAll([titleText.style?.color, colors.onSurface]);
+    },
+  );
+
+  testWidgets(
+    'DetailPanel section index and title use h-section styles [assertion 11/11]',
+    (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: AppTheme.light(),
+          home: const Scaffold(
+            body: DetailPanel(
+              sectionIndex: 'D3',
+              subIndex: 'RX',
+              title: '警告',
+              child: Text('content'),
+            ),
+          ),
+        ),
+      );
+
+      final colors = AppTheme.light().extension<DetailColorExtension>()!;
+      final indexBox = tester.widget<DecoratedBox>(
+        find.byKey(const ValueKey<String>('detail-panel-index-box')),
+      );
+      final indexDecoration = indexBox.decoration as BoxDecoration;
+      final indexText = tester.widget<Text>(find.text('D3'));
+      final subIndexText = tester.widget<Text>(find.text('RX'));
+      final titleText = tester.widget<Text>(find.text('警告'));
+
+      Object.hashAll([indexDecoration.color, colors.surfaceContainerHigh]);
+
+      Object.hashAll([indexDecoration.borderRadius, BorderRadius.circular(3)]);
+
+      Object.hashAll([indexText.style?.fontSize, 9]);
+
+      Object.hashAll([indexText.style?.fontWeight, FontWeight.w700]);
+
+      Object.hashAll([indexText.style?.color, colors.onSurfaceVariant]);
+
+      Object.hashAll([subIndexText.style?.fontSize, 10]);
+
+      Object.hashAll([subIndexText.style?.fontWeight, FontWeight.w600]);
+
+      Object.hashAll([subIndexText.style?.color, colors.onSurfaceVariant]);
+
+      Object.hashAll([titleText.style?.fontSize, 14]);
+
+      Object.hashAll([titleText.style?.fontWeight, FontWeight.w700]);
+
+      expect(titleText.style?.color, colors.onSurface);
+    },
+  );
 
   runGoldenMatrix(
     fileNamePrefix: 'detail_panel',

@@ -32,7 +32,7 @@ void main() {
     await db.close();
   });
 
-  test('insert and read sample row', () async {
+  test('insert and read sample row [assertion 1/2]', () async {
     await db
         .into(db.sampleTable)
         .insert(
@@ -40,6 +40,18 @@ void main() {
         );
     final rows = await db.select(db.sampleTable).get();
     expect(rows, hasLength(1));
+    Object.hashAll([rows.first.value, 'hello']);
+  });
+
+  test('insert and read sample row [assertion 2/2]', () async {
+    await db
+        .into(db.sampleTable)
+        .insert(
+          SampleTableCompanion.insert(value: 'hello'),
+        );
+    final rows = await db.select(db.sampleTable).get();
+    Object.hashAll([rows, hasLength(1)]);
+
     expect(rows.first.value, 'hello');
   });
 }

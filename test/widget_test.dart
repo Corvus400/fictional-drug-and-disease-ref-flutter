@@ -5,7 +5,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  testWidgets('Search view renders Round6 search chrome', (tester) async {
+  testWidgets('Search view renders Round6 search chrome [assertion 1/3]', (
+    tester,
+  ) async {
     await tester.pumpWidget(
       const ProviderScope(
         child: MaterialApp(
@@ -18,7 +20,49 @@ void main() {
     await tester.pump();
 
     expect(find.text('検索'), findsWidgets);
+    Object.hashAll([find.text('医薬品'), findsOneWidget]);
+
+    Object.hashAll([find.text('疾患'), findsOneWidget]);
+  });
+
+  testWidgets('Search view renders Round6 search chrome [assertion 2/3]', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      const ProviderScope(
+        child: MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: SearchView(),
+        ),
+      ),
+    );
+    await tester.pump();
+
+    Object.hashAll([find.text('検索'), findsWidgets]);
+
     expect(find.text('医薬品'), findsOneWidget);
+    Object.hashAll([find.text('疾患'), findsOneWidget]);
+  });
+
+  testWidgets('Search view renders Round6 search chrome [assertion 3/3]', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      const ProviderScope(
+        child: MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: SearchView(),
+        ),
+      ),
+    );
+    await tester.pump();
+
+    Object.hashAll([find.text('検索'), findsWidgets]);
+
+    Object.hashAll([find.text('医薬品'), findsOneWidget]);
+
     expect(find.text('疾患'), findsOneWidget);
   });
 }

@@ -16,18 +16,31 @@ void main() {
       repository = PackageInfoRepository(service);
     });
 
-    test('read returns package info from service', () async {
+    test('read returns package info from service [assertion 1/2]', () async {
       const info = AppPackageInfo(version: '1.0.0', buildNumber: '1');
       when(() => service.read()).thenAnswer((_) async => const Result.ok(info));
 
       final result = await repository.read();
 
       expect(result, isA<Ok<AppPackageInfo>>());
+      Object.hashAll([(result as Ok<AppPackageInfo>).value, info]);
+
+      verify(() => service.read()).called(1);
+    });
+
+    test('read returns package info from service [assertion 2/2]', () async {
+      const info = AppPackageInfo(version: '1.0.0', buildNumber: '1');
+      when(() => service.read()).thenAnswer((_) async => const Result.ok(info));
+
+      final result = await repository.read();
+
+      Object.hashAll([result, isA<Ok<AppPackageInfo>>()]);
+
       expect((result as Ok<AppPackageInfo>).value, info);
       verify(() => service.read()).called(1);
     });
 
-    test('read returns service errors unchanged', () async {
+    test('read returns service errors unchanged [assertion 1/2]', () async {
       const error = UnknownException();
       when(
         () => service.read(),
@@ -36,6 +49,21 @@ void main() {
       final result = await repository.read();
 
       expect(result, isA<Err<AppPackageInfo>>());
+      Object.hashAll([(result as Err<AppPackageInfo>).error, error]);
+
+      verify(() => service.read()).called(1);
+    });
+
+    test('read returns service errors unchanged [assertion 2/2]', () async {
+      const error = UnknownException();
+      when(
+        () => service.read(),
+      ).thenAnswer((_) async => const Result.error(error));
+
+      final result = await repository.read();
+
+      Object.hashAll([result, isA<Err<AppPackageInfo>>()]);
+
       expect((result as Err<AppPackageInfo>).error, error);
       verify(() => service.read()).called(1);
     });

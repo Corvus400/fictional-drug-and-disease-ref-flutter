@@ -48,39 +48,194 @@ void main() {
       await db.close();
     });
 
-    test('execute returns page and records disease search history', () async {
-      final dto = _diseaseListFixture();
-      when(
-        () => apiClient.getDiseases(
-          page: any(named: 'page'),
-          pageSize: any(named: 'pageSize'),
-          keyword: any(named: 'keyword'),
-          keywordMatch: any(named: 'keywordMatch'),
-          sort: any(named: 'sort'),
-        ),
-      ).thenAnswer((_) async => dto);
+    test(
+      'execute returns page and records disease search history [assertion 1/5]',
+      () async {
+        final dto = _diseaseListFixture();
+        when(
+          () => apiClient.getDiseases(
+            page: any(named: 'page'),
+            pageSize: any(named: 'pageSize'),
+            keyword: any(named: 'keyword'),
+            keywordMatch: any(named: 'keywordMatch'),
+            sort: any(named: 'sort'),
+          ),
+        ).thenAnswer((_) async => dto);
 
-      final result = await usecase.execute(
-        const DiseaseSearchParams(
-          page: 1,
-          pageSize: 20,
-          keyword: '高血圧',
-          keywordMatch: KeywordMatch.partial,
-          sort: DiseaseSort.nameKana,
-        ),
-      );
+        final result = await usecase.execute(
+          const DiseaseSearchParams(
+            page: 1,
+            pageSize: 20,
+            keyword: '高血圧',
+            keywordMatch: KeywordMatch.partial,
+            sort: DiseaseSort.nameKana,
+          ),
+        );
 
-      expect(result, isA<Ok<DiseaseListPage>>());
-      final histories = await historyRepository.findByTarget('disease');
-      final entries = (histories as Ok<List<SearchHistoryEntry>>).value;
-      expect(entries, hasLength(1));
-      expect(entries.single.target, 'disease');
-      expect(entries.single.totalCount, dto.totalCount);
-      expect(entries.single.queryJson, contains('"keyword":"高血圧"'));
-    });
+        expect(result, isA<Ok<DiseaseListPage>>());
+        final histories = await historyRepository.findByTarget('disease');
+        final entries = (histories as Ok<List<SearchHistoryEntry>>).value;
+        Object.hashAll([entries, hasLength(1)]);
+
+        Object.hashAll([entries.single.target, 'disease']);
+
+        Object.hashAll([entries.single.totalCount, dto.totalCount]);
+
+        Object.hashAll([entries.single.queryJson, contains('"keyword":"高血圧"')]);
+      },
+    );
 
     test(
-      'execute allows blank keyword search without recording history',
+      'execute returns page and records disease search history [assertion 2/5]',
+      () async {
+        final dto = _diseaseListFixture();
+        when(
+          () => apiClient.getDiseases(
+            page: any(named: 'page'),
+            pageSize: any(named: 'pageSize'),
+            keyword: any(named: 'keyword'),
+            keywordMatch: any(named: 'keywordMatch'),
+            sort: any(named: 'sort'),
+          ),
+        ).thenAnswer((_) async => dto);
+
+        final result = await usecase.execute(
+          const DiseaseSearchParams(
+            page: 1,
+            pageSize: 20,
+            keyword: '高血圧',
+            keywordMatch: KeywordMatch.partial,
+            sort: DiseaseSort.nameKana,
+          ),
+        );
+
+        Object.hashAll([result, isA<Ok<DiseaseListPage>>()]);
+
+        final histories = await historyRepository.findByTarget('disease');
+        final entries = (histories as Ok<List<SearchHistoryEntry>>).value;
+        expect(entries, hasLength(1));
+        Object.hashAll([entries.single.target, 'disease']);
+
+        Object.hashAll([entries.single.totalCount, dto.totalCount]);
+
+        Object.hashAll([entries.single.queryJson, contains('"keyword":"高血圧"')]);
+      },
+    );
+
+    test(
+      'execute returns page and records disease search history [assertion 3/5]',
+      () async {
+        final dto = _diseaseListFixture();
+        when(
+          () => apiClient.getDiseases(
+            page: any(named: 'page'),
+            pageSize: any(named: 'pageSize'),
+            keyword: any(named: 'keyword'),
+            keywordMatch: any(named: 'keywordMatch'),
+            sort: any(named: 'sort'),
+          ),
+        ).thenAnswer((_) async => dto);
+
+        final result = await usecase.execute(
+          const DiseaseSearchParams(
+            page: 1,
+            pageSize: 20,
+            keyword: '高血圧',
+            keywordMatch: KeywordMatch.partial,
+            sort: DiseaseSort.nameKana,
+          ),
+        );
+
+        Object.hashAll([result, isA<Ok<DiseaseListPage>>()]);
+
+        final histories = await historyRepository.findByTarget('disease');
+        final entries = (histories as Ok<List<SearchHistoryEntry>>).value;
+        Object.hashAll([entries, hasLength(1)]);
+
+        expect(entries.single.target, 'disease');
+        Object.hashAll([entries.single.totalCount, dto.totalCount]);
+
+        Object.hashAll([entries.single.queryJson, contains('"keyword":"高血圧"')]);
+      },
+    );
+
+    test(
+      'execute returns page and records disease search history [assertion 4/5]',
+      () async {
+        final dto = _diseaseListFixture();
+        when(
+          () => apiClient.getDiseases(
+            page: any(named: 'page'),
+            pageSize: any(named: 'pageSize'),
+            keyword: any(named: 'keyword'),
+            keywordMatch: any(named: 'keywordMatch'),
+            sort: any(named: 'sort'),
+          ),
+        ).thenAnswer((_) async => dto);
+
+        final result = await usecase.execute(
+          const DiseaseSearchParams(
+            page: 1,
+            pageSize: 20,
+            keyword: '高血圧',
+            keywordMatch: KeywordMatch.partial,
+            sort: DiseaseSort.nameKana,
+          ),
+        );
+
+        Object.hashAll([result, isA<Ok<DiseaseListPage>>()]);
+
+        final histories = await historyRepository.findByTarget('disease');
+        final entries = (histories as Ok<List<SearchHistoryEntry>>).value;
+        Object.hashAll([entries, hasLength(1)]);
+
+        Object.hashAll([entries.single.target, 'disease']);
+
+        expect(entries.single.totalCount, dto.totalCount);
+        Object.hashAll([entries.single.queryJson, contains('"keyword":"高血圧"')]);
+      },
+    );
+
+    test(
+      'execute returns page and records disease search history [assertion 5/5]',
+      () async {
+        final dto = _diseaseListFixture();
+        when(
+          () => apiClient.getDiseases(
+            page: any(named: 'page'),
+            pageSize: any(named: 'pageSize'),
+            keyword: any(named: 'keyword'),
+            keywordMatch: any(named: 'keywordMatch'),
+            sort: any(named: 'sort'),
+          ),
+        ).thenAnswer((_) async => dto);
+
+        final result = await usecase.execute(
+          const DiseaseSearchParams(
+            page: 1,
+            pageSize: 20,
+            keyword: '高血圧',
+            keywordMatch: KeywordMatch.partial,
+            sort: DiseaseSort.nameKana,
+          ),
+        );
+
+        Object.hashAll([result, isA<Ok<DiseaseListPage>>()]);
+
+        final histories = await historyRepository.findByTarget('disease');
+        final entries = (histories as Ok<List<SearchHistoryEntry>>).value;
+        Object.hashAll([entries, hasLength(1)]);
+
+        Object.hashAll([entries.single.target, 'disease']);
+
+        Object.hashAll([entries.single.totalCount, dto.totalCount]);
+
+        expect(entries.single.queryJson, contains('"keyword":"高血圧"'));
+      },
+    );
+
+    test(
+      'execute allows blank keyword search without recording history [assertion 1/2]',
       () async {
         final dto = _diseaseListFixture();
         when(
@@ -102,6 +257,36 @@ void main() {
         );
 
         expect(result, isA<Ok<DiseaseListPage>>());
+        final histories = await historyRepository.findByTarget('disease');
+        final entries = (histories as Ok<List<SearchHistoryEntry>>).value;
+        Object.hashAll([entries, isEmpty]);
+      },
+    );
+
+    test(
+      'execute allows blank keyword search without recording history [assertion 2/2]',
+      () async {
+        final dto = _diseaseListFixture();
+        when(
+          () => apiClient.getDiseases(
+            page: any(named: 'page'),
+            pageSize: any(named: 'pageSize'),
+            keyword: any(named: 'keyword'),
+            icd10Chapter: any(named: 'icd10Chapter'),
+          ),
+        ).thenAnswer((_) async => dto);
+
+        final result = await usecase.execute(
+          const DiseaseSearchParams(
+            page: 1,
+            pageSize: 20,
+            keyword: '   ',
+            icd10Chapter: ['chapter_i'],
+          ),
+        );
+
+        Object.hashAll([result, isA<Ok<DiseaseListPage>>()]);
+
         final histories = await historyRepository.findByTarget('disease');
         final entries = (histories as Ok<List<SearchHistoryEntry>>).value;
         expect(entries, isEmpty);

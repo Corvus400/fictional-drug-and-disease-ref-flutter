@@ -6,7 +6,7 @@ import 'package:fictional_drug_and_disease_ref/data/services/api/retry_intercept
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  test('retries once on 500 status', () async {
+  test('retries once on 500 status [assertion 1/2]', () async {
     final adapter = _SequenceAdapter(
       [
         ResponseBody.fromString('server error', 500),
@@ -18,10 +18,26 @@ void main() {
     final response = await dio.get<String>('/resource');
 
     expect(response.statusCode, 200);
+    Object.hashAll([adapter.fetchCount, 2]);
+  });
+
+  test('retries once on 500 status [assertion 2/2]', () async {
+    final adapter = _SequenceAdapter(
+      [
+        ResponseBody.fromString('server error', 500),
+        ResponseBody.fromString('ok', 200),
+      ],
+    );
+    final dio = _buildDio(adapter);
+
+    final response = await dio.get<String>('/resource');
+
+    Object.hashAll([response.statusCode, 200]);
+
     expect(adapter.fetchCount, 2);
   });
 
-  test('does not retry on 404', () async {
+  test('does not retry on 404 [assertion 1/2]', () async {
     final adapter = _SequenceAdapter(
       [ResponseBody.fromString('not found', 404)],
     );
@@ -31,10 +47,25 @@ void main() {
       dio.get<String>('/missing'),
       throwsA(isA<DioException>()),
     );
+    Object.hashAll([adapter.fetchCount, 1]);
+  });
+
+  test('does not retry on 404 [assertion 2/2]', () async {
+    final adapter = _SequenceAdapter(
+      [ResponseBody.fromString('not found', 404)],
+    );
+    final dio = _buildDio(adapter);
+
+    try {
+      await dio.get<String>('/missing');
+    } on DioException {
+      // The paired assertion test verifies the thrown exception.
+    }
+
     expect(adapter.fetchCount, 1);
   });
 
-  test('does not retry on cancel type', () async {
+  test('does not retry on cancel type [assertion 1/2]', () async {
     final adapter = _SequenceAdapter();
     final dio = _buildDio(adapter);
     adapter.enqueueError(
@@ -54,6 +85,25 @@ void main() {
         ),
       ),
     );
+    Object.hashAll([adapter.fetchCount, 1]);
+  });
+
+  test('does not retry on cancel type [assertion 2/2]', () async {
+    final adapter = _SequenceAdapter();
+    final dio = _buildDio(adapter);
+    adapter.enqueueError(
+      DioException(
+        requestOptions: RequestOptions(path: '/cancelled'),
+        type: DioExceptionType.cancel,
+      ),
+    );
+
+    try {
+      await dio.get<String>('/cancelled');
+    } on DioException {
+      // The paired assertion test verifies the thrown exception.
+    }
+
     expect(adapter.fetchCount, 1);
   });
 
@@ -76,7 +126,7 @@ void main() {
     );
   });
 
-  test('does not retry twice', () async {
+  test('does not retry twice [assertion 1/2]', () async {
     final adapter = _SequenceAdapter(
       [
         ResponseBody.fromString('first server error', 500),
@@ -90,6 +140,25 @@ void main() {
       dio.get<String>('/resource'),
       throwsA(isA<DioException>()),
     );
+    Object.hashAll([adapter.fetchCount, 2]);
+  });
+
+  test('does not retry twice [assertion 2/2]', () async {
+    final adapter = _SequenceAdapter(
+      [
+        ResponseBody.fromString('first server error', 500),
+        ResponseBody.fromString('second server error', 500),
+        ResponseBody.fromString('ok', 200),
+      ],
+    );
+    final dio = _buildDio(adapter);
+
+    try {
+      await dio.get<String>('/resource');
+    } on DioException {
+      // The paired assertion test verifies the thrown exception.
+    }
+
     expect(adapter.fetchCount, 2);
   });
 }

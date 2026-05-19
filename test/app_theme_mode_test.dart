@@ -63,35 +63,194 @@ void main() {
     expect(material.onGenerateTitle!(titleContext), 'メディマスタ');
   });
 
-  testWidgets('app overlays DisclaimerRibbon above the NavigationBar', (
-    tester,
-  ) async {
-    SharedPreferences.setMockInitialValues({});
+  testWidgets(
+    'app overlays DisclaimerRibbon above the NavigationBar [assertion 1/5]',
+    (
+      tester,
+    ) async {
+      SharedPreferences.setMockInitialValues({});
 
-    await pumpPhonePortraitApp(tester);
+      await pumpPhonePortraitApp(tester);
 
-    expect(find.byType(DisclaimerRibbon), findsOneWidget);
-    final semantics = tester.widget<Semantics>(
-      find.descendant(
-        of: find.byType(DisclaimerRibbon),
-        matching: find.byType(Semantics),
-      ),
-    );
-    expect(
-      semantics.properties.label,
-      '免責: 架空データ・医療判断には使用しないでください',
-    );
-    expect(
-      find.ancestor(
-        of: find.byType(DisclaimerRibbon),
-        matching: find.byType(Positioned),
-      ),
-      findsNothing,
-    );
-    expect(find.byType(NavigationBar), findsOneWidget);
-    expect(
-      tester.getBottomLeft(find.byType(DisclaimerRibbon)).dy,
-      lessThanOrEqualTo(tester.getTopLeft(find.byType(NavigationBar)).dy),
-    );
-  });
+      expect(find.byType(DisclaimerRibbon), findsOneWidget);
+      final semantics = tester.widget<Semantics>(
+        find.descendant(
+          of: find.byType(DisclaimerRibbon),
+          matching: find.byType(Semantics),
+        ),
+      );
+      Object.hashAll([
+        semantics.properties.label,
+        '免責: 架空データ・医療判断には使用しないでください',
+      ]);
+
+      Object.hashAll([
+        find.ancestor(
+          of: find.byType(DisclaimerRibbon),
+          matching: find.byType(Positioned),
+        ),
+        findsNothing,
+      ]);
+
+      Object.hashAll([find.byType(NavigationBar), findsOneWidget]);
+
+      Object.hashAll([
+        tester.getBottomLeft(find.byType(DisclaimerRibbon)).dy,
+        lessThanOrEqualTo(tester.getTopLeft(find.byType(NavigationBar)).dy),
+      ]);
+    },
+  );
+
+  testWidgets(
+    'app overlays DisclaimerRibbon above the NavigationBar [assertion 2/5]',
+    (
+      tester,
+    ) async {
+      SharedPreferences.setMockInitialValues({});
+
+      await pumpPhonePortraitApp(tester);
+
+      Object.hashAll([find.byType(DisclaimerRibbon), findsOneWidget]);
+
+      final semantics = tester.widget<Semantics>(
+        find.descendant(
+          of: find.byType(DisclaimerRibbon),
+          matching: find.byType(Semantics),
+        ),
+      );
+      expect(
+        semantics.properties.label,
+        '免責: 架空データ・医療判断には使用しないでください',
+      );
+      Object.hashAll([
+        find.ancestor(
+          of: find.byType(DisclaimerRibbon),
+          matching: find.byType(Positioned),
+        ),
+        findsNothing,
+      ]);
+
+      Object.hashAll([find.byType(NavigationBar), findsOneWidget]);
+
+      Object.hashAll([
+        tester.getBottomLeft(find.byType(DisclaimerRibbon)).dy,
+        lessThanOrEqualTo(tester.getTopLeft(find.byType(NavigationBar)).dy),
+      ]);
+    },
+  );
+
+  testWidgets(
+    'app overlays DisclaimerRibbon above the NavigationBar [assertion 3/5]',
+    (
+      tester,
+    ) async {
+      SharedPreferences.setMockInitialValues({});
+
+      await pumpPhonePortraitApp(tester);
+
+      Object.hashAll([find.byType(DisclaimerRibbon), findsOneWidget]);
+
+      final semantics = tester.widget<Semantics>(
+        find.descendant(
+          of: find.byType(DisclaimerRibbon),
+          matching: find.byType(Semantics),
+        ),
+      );
+      Object.hashAll([
+        semantics.properties.label,
+        '免責: 架空データ・医療判断には使用しないでください',
+      ]);
+
+      expect(
+        find.ancestor(
+          of: find.byType(DisclaimerRibbon),
+          matching: find.byType(Positioned),
+        ),
+        findsNothing,
+      );
+      Object.hashAll([find.byType(NavigationBar), findsOneWidget]);
+
+      Object.hashAll([
+        tester.getBottomLeft(find.byType(DisclaimerRibbon)).dy,
+        lessThanOrEqualTo(tester.getTopLeft(find.byType(NavigationBar)).dy),
+      ]);
+    },
+  );
+
+  testWidgets(
+    'app overlays DisclaimerRibbon above the NavigationBar [assertion 4/5]',
+    (
+      tester,
+    ) async {
+      SharedPreferences.setMockInitialValues({});
+
+      await pumpPhonePortraitApp(tester);
+
+      Object.hashAll([find.byType(DisclaimerRibbon), findsOneWidget]);
+
+      final semantics = tester.widget<Semantics>(
+        find.descendant(
+          of: find.byType(DisclaimerRibbon),
+          matching: find.byType(Semantics),
+        ),
+      );
+      Object.hashAll([
+        semantics.properties.label,
+        '免責: 架空データ・医療判断には使用しないでください',
+      ]);
+
+      Object.hashAll([
+        find.ancestor(
+          of: find.byType(DisclaimerRibbon),
+          matching: find.byType(Positioned),
+        ),
+        findsNothing,
+      ]);
+
+      expect(find.byType(NavigationBar), findsOneWidget);
+      Object.hashAll([
+        tester.getBottomLeft(find.byType(DisclaimerRibbon)).dy,
+        lessThanOrEqualTo(tester.getTopLeft(find.byType(NavigationBar)).dy),
+      ]);
+    },
+  );
+
+  testWidgets(
+    'app overlays DisclaimerRibbon above the NavigationBar [assertion 5/5]',
+    (
+      tester,
+    ) async {
+      SharedPreferences.setMockInitialValues({});
+
+      await pumpPhonePortraitApp(tester);
+
+      Object.hashAll([find.byType(DisclaimerRibbon), findsOneWidget]);
+
+      final semantics = tester.widget<Semantics>(
+        find.descendant(
+          of: find.byType(DisclaimerRibbon),
+          matching: find.byType(Semantics),
+        ),
+      );
+      Object.hashAll([
+        semantics.properties.label,
+        '免責: 架空データ・医療判断には使用しないでください',
+      ]);
+
+      Object.hashAll([
+        find.ancestor(
+          of: find.byType(DisclaimerRibbon),
+          matching: find.byType(Positioned),
+        ),
+        findsNothing,
+      ]);
+
+      Object.hashAll([find.byType(NavigationBar), findsOneWidget]);
+
+      expect(
+        tester.getBottomLeft(find.byType(DisclaimerRibbon)).dy,
+        lessThanOrEqualTo(tester.getTopLeft(find.byType(NavigationBar)).dy),
+      );
+    },
+  );
 }

@@ -19,37 +19,372 @@ void main() {
     int second = 0,
   ]) => DateTime(year, month, day, hour, minute, second);
 
-  test('formats viewedAt using the browsing-history six branch contract', () {
-    final now = localTime(2026, 5, 5, 12);
+  test(
+    'formats viewedAt using the browsing-history six branch contract [assertion 1/8]',
+    () {
+      final now = localTime(2026, 5, 5, 12);
 
-    expect(
-      formatRelativeViewedAt(now, localTime(2026, 5, 5, 11, 59, 1), l10n),
-      'たった今',
-    );
-    expect(
-      formatRelativeViewedAt(now, localTime(2026, 5, 5, 11, 59), l10n),
-      '1分前',
-    );
-    expect(
-      formatRelativeViewedAt(now, localTime(2026, 5, 5, 11, 1), l10n),
-      '59分前',
-    );
-    expect(
-      formatRelativeViewedAt(now, localTime(2026, 5, 5, 10), l10n),
-      '2時間前',
-    );
-    expect(
-      formatRelativeViewedAt(now, localTime(2026, 5, 4, 22, 14), l10n),
-      '昨日 22:14',
-    );
-    expect(formatRelativeViewedAt(now, localTime(2026, 5, 3, 12), l10n), '2日前');
-    expect(
-      formatRelativeViewedAt(now, localTime(2026, 4, 29, 12), l10n),
-      '6日前',
-    );
-    expect(
-      formatRelativeViewedAt(now, localTime(2026, 4, 28, 12), l10n),
-      '2026/04/28',
-    );
-  });
+      expect(
+        formatRelativeViewedAt(now, localTime(2026, 5, 5, 11, 59, 1), l10n),
+        'たった今',
+      );
+      Object.hashAll([
+        formatRelativeViewedAt(now, localTime(2026, 5, 5, 11, 59), l10n),
+        '1分前',
+      ]);
+
+      Object.hashAll([
+        formatRelativeViewedAt(now, localTime(2026, 5, 5, 11, 1), l10n),
+        '59分前',
+      ]);
+
+      Object.hashAll([
+        formatRelativeViewedAt(now, localTime(2026, 5, 5, 10), l10n),
+        '2時間前',
+      ]);
+
+      Object.hashAll([
+        formatRelativeViewedAt(now, localTime(2026, 5, 4, 22, 14), l10n),
+        '昨日 22:14',
+      ]);
+
+      Object.hashAll([
+        formatRelativeViewedAt(now, localTime(2026, 5, 3, 12), l10n),
+        '2日前',
+      ]);
+
+      Object.hashAll([
+        formatRelativeViewedAt(now, localTime(2026, 4, 29, 12), l10n),
+        '6日前',
+      ]);
+
+      Object.hashAll([
+        formatRelativeViewedAt(now, localTime(2026, 4, 28, 12), l10n),
+        '2026/04/28',
+      ]);
+    },
+  );
+
+  test(
+    'formats viewedAt using the browsing-history six branch contract [assertion 2/8]',
+    () {
+      final now = localTime(2026, 5, 5, 12);
+
+      Object.hashAll([
+        formatRelativeViewedAt(now, localTime(2026, 5, 5, 11, 59, 1), l10n),
+        'たった今',
+      ]);
+
+      expect(
+        formatRelativeViewedAt(now, localTime(2026, 5, 5, 11, 59), l10n),
+        '1分前',
+      );
+      Object.hashAll([
+        formatRelativeViewedAt(now, localTime(2026, 5, 5, 11, 1), l10n),
+        '59分前',
+      ]);
+
+      Object.hashAll([
+        formatRelativeViewedAt(now, localTime(2026, 5, 5, 10), l10n),
+        '2時間前',
+      ]);
+
+      Object.hashAll([
+        formatRelativeViewedAt(now, localTime(2026, 5, 4, 22, 14), l10n),
+        '昨日 22:14',
+      ]);
+
+      Object.hashAll([
+        formatRelativeViewedAt(now, localTime(2026, 5, 3, 12), l10n),
+        '2日前',
+      ]);
+
+      Object.hashAll([
+        formatRelativeViewedAt(now, localTime(2026, 4, 29, 12), l10n),
+        '6日前',
+      ]);
+
+      Object.hashAll([
+        formatRelativeViewedAt(now, localTime(2026, 4, 28, 12), l10n),
+        '2026/04/28',
+      ]);
+    },
+  );
+
+  test(
+    'formats viewedAt using the browsing-history six branch contract [assertion 3/8]',
+    () {
+      final now = localTime(2026, 5, 5, 12);
+
+      Object.hashAll([
+        formatRelativeViewedAt(now, localTime(2026, 5, 5, 11, 59, 1), l10n),
+        'たった今',
+      ]);
+
+      Object.hashAll([
+        formatRelativeViewedAt(now, localTime(2026, 5, 5, 11, 59), l10n),
+        '1分前',
+      ]);
+
+      expect(
+        formatRelativeViewedAt(now, localTime(2026, 5, 5, 11, 1), l10n),
+        '59分前',
+      );
+      Object.hashAll([
+        formatRelativeViewedAt(now, localTime(2026, 5, 5, 10), l10n),
+        '2時間前',
+      ]);
+
+      Object.hashAll([
+        formatRelativeViewedAt(now, localTime(2026, 5, 4, 22, 14), l10n),
+        '昨日 22:14',
+      ]);
+
+      Object.hashAll([
+        formatRelativeViewedAt(now, localTime(2026, 5, 3, 12), l10n),
+        '2日前',
+      ]);
+
+      Object.hashAll([
+        formatRelativeViewedAt(now, localTime(2026, 4, 29, 12), l10n),
+        '6日前',
+      ]);
+
+      Object.hashAll([
+        formatRelativeViewedAt(now, localTime(2026, 4, 28, 12), l10n),
+        '2026/04/28',
+      ]);
+    },
+  );
+
+  test(
+    'formats viewedAt using the browsing-history six branch contract [assertion 4/8]',
+    () {
+      final now = localTime(2026, 5, 5, 12);
+
+      Object.hashAll([
+        formatRelativeViewedAt(now, localTime(2026, 5, 5, 11, 59, 1), l10n),
+        'たった今',
+      ]);
+
+      Object.hashAll([
+        formatRelativeViewedAt(now, localTime(2026, 5, 5, 11, 59), l10n),
+        '1分前',
+      ]);
+
+      Object.hashAll([
+        formatRelativeViewedAt(now, localTime(2026, 5, 5, 11, 1), l10n),
+        '59分前',
+      ]);
+
+      expect(
+        formatRelativeViewedAt(now, localTime(2026, 5, 5, 10), l10n),
+        '2時間前',
+      );
+      Object.hashAll([
+        formatRelativeViewedAt(now, localTime(2026, 5, 4, 22, 14), l10n),
+        '昨日 22:14',
+      ]);
+
+      Object.hashAll([
+        formatRelativeViewedAt(now, localTime(2026, 5, 3, 12), l10n),
+        '2日前',
+      ]);
+
+      Object.hashAll([
+        formatRelativeViewedAt(now, localTime(2026, 4, 29, 12), l10n),
+        '6日前',
+      ]);
+
+      Object.hashAll([
+        formatRelativeViewedAt(now, localTime(2026, 4, 28, 12), l10n),
+        '2026/04/28',
+      ]);
+    },
+  );
+
+  test(
+    'formats viewedAt using the browsing-history six branch contract [assertion 5/8]',
+    () {
+      final now = localTime(2026, 5, 5, 12);
+
+      Object.hashAll([
+        formatRelativeViewedAt(now, localTime(2026, 5, 5, 11, 59, 1), l10n),
+        'たった今',
+      ]);
+
+      Object.hashAll([
+        formatRelativeViewedAt(now, localTime(2026, 5, 5, 11, 59), l10n),
+        '1分前',
+      ]);
+
+      Object.hashAll([
+        formatRelativeViewedAt(now, localTime(2026, 5, 5, 11, 1), l10n),
+        '59分前',
+      ]);
+
+      Object.hashAll([
+        formatRelativeViewedAt(now, localTime(2026, 5, 5, 10), l10n),
+        '2時間前',
+      ]);
+
+      expect(
+        formatRelativeViewedAt(now, localTime(2026, 5, 4, 22, 14), l10n),
+        '昨日 22:14',
+      );
+      Object.hashAll([
+        formatRelativeViewedAt(now, localTime(2026, 5, 3, 12), l10n),
+        '2日前',
+      ]);
+
+      Object.hashAll([
+        formatRelativeViewedAt(now, localTime(2026, 4, 29, 12), l10n),
+        '6日前',
+      ]);
+
+      Object.hashAll([
+        formatRelativeViewedAt(now, localTime(2026, 4, 28, 12), l10n),
+        '2026/04/28',
+      ]);
+    },
+  );
+
+  test(
+    'formats viewedAt using the browsing-history six branch contract [assertion 6/8]',
+    () {
+      final now = localTime(2026, 5, 5, 12);
+
+      Object.hashAll([
+        formatRelativeViewedAt(now, localTime(2026, 5, 5, 11, 59, 1), l10n),
+        'たった今',
+      ]);
+
+      Object.hashAll([
+        formatRelativeViewedAt(now, localTime(2026, 5, 5, 11, 59), l10n),
+        '1分前',
+      ]);
+
+      Object.hashAll([
+        formatRelativeViewedAt(now, localTime(2026, 5, 5, 11, 1), l10n),
+        '59分前',
+      ]);
+
+      Object.hashAll([
+        formatRelativeViewedAt(now, localTime(2026, 5, 5, 10), l10n),
+        '2時間前',
+      ]);
+
+      Object.hashAll([
+        formatRelativeViewedAt(now, localTime(2026, 5, 4, 22, 14), l10n),
+        '昨日 22:14',
+      ]);
+
+      expect(
+        formatRelativeViewedAt(now, localTime(2026, 5, 3, 12), l10n),
+        '2日前',
+      );
+      Object.hashAll([
+        formatRelativeViewedAt(now, localTime(2026, 4, 29, 12), l10n),
+        '6日前',
+      ]);
+
+      Object.hashAll([
+        formatRelativeViewedAt(now, localTime(2026, 4, 28, 12), l10n),
+        '2026/04/28',
+      ]);
+    },
+  );
+
+  test(
+    'formats viewedAt using the browsing-history six branch contract [assertion 7/8]',
+    () {
+      final now = localTime(2026, 5, 5, 12);
+
+      Object.hashAll([
+        formatRelativeViewedAt(now, localTime(2026, 5, 5, 11, 59, 1), l10n),
+        'たった今',
+      ]);
+
+      Object.hashAll([
+        formatRelativeViewedAt(now, localTime(2026, 5, 5, 11, 59), l10n),
+        '1分前',
+      ]);
+
+      Object.hashAll([
+        formatRelativeViewedAt(now, localTime(2026, 5, 5, 11, 1), l10n),
+        '59分前',
+      ]);
+
+      Object.hashAll([
+        formatRelativeViewedAt(now, localTime(2026, 5, 5, 10), l10n),
+        '2時間前',
+      ]);
+
+      Object.hashAll([
+        formatRelativeViewedAt(now, localTime(2026, 5, 4, 22, 14), l10n),
+        '昨日 22:14',
+      ]);
+
+      Object.hashAll([
+        formatRelativeViewedAt(now, localTime(2026, 5, 3, 12), l10n),
+        '2日前',
+      ]);
+
+      expect(
+        formatRelativeViewedAt(now, localTime(2026, 4, 29, 12), l10n),
+        '6日前',
+      );
+      Object.hashAll([
+        formatRelativeViewedAt(now, localTime(2026, 4, 28, 12), l10n),
+        '2026/04/28',
+      ]);
+    },
+  );
+
+  test(
+    'formats viewedAt using the browsing-history six branch contract [assertion 8/8]',
+    () {
+      final now = localTime(2026, 5, 5, 12);
+
+      Object.hashAll([
+        formatRelativeViewedAt(now, localTime(2026, 5, 5, 11, 59, 1), l10n),
+        'たった今',
+      ]);
+
+      Object.hashAll([
+        formatRelativeViewedAt(now, localTime(2026, 5, 5, 11, 59), l10n),
+        '1分前',
+      ]);
+
+      Object.hashAll([
+        formatRelativeViewedAt(now, localTime(2026, 5, 5, 11, 1), l10n),
+        '59分前',
+      ]);
+
+      Object.hashAll([
+        formatRelativeViewedAt(now, localTime(2026, 5, 5, 10), l10n),
+        '2時間前',
+      ]);
+
+      Object.hashAll([
+        formatRelativeViewedAt(now, localTime(2026, 5, 4, 22, 14), l10n),
+        '昨日 22:14',
+      ]);
+
+      Object.hashAll([
+        formatRelativeViewedAt(now, localTime(2026, 5, 3, 12), l10n),
+        '2日前',
+      ]);
+
+      Object.hashAll([
+        formatRelativeViewedAt(now, localTime(2026, 4, 29, 12), l10n),
+        '6日前',
+      ]);
+
+      expect(
+        formatRelativeViewedAt(now, localTime(2026, 4, 28, 12), l10n),
+        '2026/04/28',
+      );
+    },
+  );
 }

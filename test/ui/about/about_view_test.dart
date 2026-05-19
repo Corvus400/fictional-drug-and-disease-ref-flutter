@@ -12,46 +12,392 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  testWidgets('renders app metadata and navigates to licenses', (tester) async {
-    final router = buildRouter()..go(AppRoutes.about);
+  testWidgets(
+    'renders app metadata and navigates to licenses [assertion 1/8]',
+    (tester) async {
+      final router = buildRouter()..go(AppRoutes.about);
 
-    await tester.pumpWidget(
-      ProviderScope(
-        overrides: [
-          packageInfoProvider.overrideWith(
-            (ref) async => const AppPackageInfo(
-              version: '1.0.0',
-              buildNumber: '1',
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            packageInfoProvider.overrideWith(
+              (ref) async => const AppPackageInfo(
+                version: '1.0.0',
+                buildNumber: '1',
+              ),
             ),
+          ],
+          child: MaterialApp.router(
+            theme: AppTheme.light(),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            routerConfig: router,
           ),
-        ],
-        child: MaterialApp.router(
-          theme: AppTheme.light(),
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
-          supportedLocales: AppLocalizations.supportedLocales,
-          routerConfig: router,
         ),
-      ),
-    );
-    await tester.pumpAndSettle();
+      );
+      await tester.pumpAndSettle();
 
-    expect(find.byType(AboutView), findsOneWidget);
-    expect(find.text('アプリについて'), findsOneWidget);
-    expect(find.byType(ListTile), findsNWidgets(2));
-    expect(find.text('バージョン 1.0.0'), findsOneWidget);
-    expect(find.text('オープンソースライセンス'), findsOneWidget);
-    expect(find.text('使用しているオープンソースライブラリの一覧'), findsOneWidget);
+      expect(find.byType(AboutView), findsOneWidget);
+      Object.hashAll([find.text('アプリについて'), findsOneWidget]);
 
-    final versionTile = tester.widget<ListTile>(
-      find.widgetWithText(ListTile, 'バージョン 1.0.0'),
-    );
-    expect(versionTile.onTap, isNull);
+      Object.hashAll([find.byType(ListTile), findsNWidgets(2)]);
 
-    await tester.tap(find.text('オープンソースライセンス'));
-    await tester.pumpAndSettle();
+      Object.hashAll([find.text('バージョン 1.0.0'), findsOneWidget]);
 
-    expect(find.byType(LicensesView), findsOneWidget);
-  });
+      Object.hashAll([find.text('オープンソースライセンス'), findsOneWidget]);
+
+      Object.hashAll([find.text('使用しているオープンソースライブラリの一覧'), findsOneWidget]);
+
+      final versionTile = tester.widget<ListTile>(
+        find.widgetWithText(ListTile, 'バージョン 1.0.0'),
+      );
+      Object.hashAll([versionTile.onTap, isNull]);
+
+      await tester.tap(find.text('オープンソースライセンス'));
+      await tester.pumpAndSettle();
+
+      Object.hashAll([find.byType(LicensesView), findsOneWidget]);
+    },
+  );
+
+  testWidgets(
+    'renders app metadata and navigates to licenses [assertion 2/8]',
+    (tester) async {
+      final router = buildRouter()..go(AppRoutes.about);
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            packageInfoProvider.overrideWith(
+              (ref) async => const AppPackageInfo(
+                version: '1.0.0',
+                buildNumber: '1',
+              ),
+            ),
+          ],
+          child: MaterialApp.router(
+            theme: AppTheme.light(),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            routerConfig: router,
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      Object.hashAll([find.byType(AboutView), findsOneWidget]);
+
+      expect(find.text('アプリについて'), findsOneWidget);
+      Object.hashAll([find.byType(ListTile), findsNWidgets(2)]);
+
+      Object.hashAll([find.text('バージョン 1.0.0'), findsOneWidget]);
+
+      Object.hashAll([find.text('オープンソースライセンス'), findsOneWidget]);
+
+      Object.hashAll([find.text('使用しているオープンソースライブラリの一覧'), findsOneWidget]);
+
+      final versionTile = tester.widget<ListTile>(
+        find.widgetWithText(ListTile, 'バージョン 1.0.0'),
+      );
+      Object.hashAll([versionTile.onTap, isNull]);
+
+      await tester.tap(find.text('オープンソースライセンス'));
+      await tester.pumpAndSettle();
+
+      Object.hashAll([find.byType(LicensesView), findsOneWidget]);
+    },
+  );
+
+  testWidgets(
+    'renders app metadata and navigates to licenses [assertion 3/8]',
+    (tester) async {
+      final router = buildRouter()..go(AppRoutes.about);
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            packageInfoProvider.overrideWith(
+              (ref) async => const AppPackageInfo(
+                version: '1.0.0',
+                buildNumber: '1',
+              ),
+            ),
+          ],
+          child: MaterialApp.router(
+            theme: AppTheme.light(),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            routerConfig: router,
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      Object.hashAll([find.byType(AboutView), findsOneWidget]);
+
+      Object.hashAll([find.text('アプリについて'), findsOneWidget]);
+
+      expect(find.byType(ListTile), findsNWidgets(2));
+      Object.hashAll([find.text('バージョン 1.0.0'), findsOneWidget]);
+
+      Object.hashAll([find.text('オープンソースライセンス'), findsOneWidget]);
+
+      Object.hashAll([find.text('使用しているオープンソースライブラリの一覧'), findsOneWidget]);
+
+      final versionTile = tester.widget<ListTile>(
+        find.widgetWithText(ListTile, 'バージョン 1.0.0'),
+      );
+      Object.hashAll([versionTile.onTap, isNull]);
+
+      await tester.tap(find.text('オープンソースライセンス'));
+      await tester.pumpAndSettle();
+
+      Object.hashAll([find.byType(LicensesView), findsOneWidget]);
+    },
+  );
+
+  testWidgets(
+    'renders app metadata and navigates to licenses [assertion 4/8]',
+    (tester) async {
+      final router = buildRouter()..go(AppRoutes.about);
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            packageInfoProvider.overrideWith(
+              (ref) async => const AppPackageInfo(
+                version: '1.0.0',
+                buildNumber: '1',
+              ),
+            ),
+          ],
+          child: MaterialApp.router(
+            theme: AppTheme.light(),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            routerConfig: router,
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      Object.hashAll([find.byType(AboutView), findsOneWidget]);
+
+      Object.hashAll([find.text('アプリについて'), findsOneWidget]);
+
+      Object.hashAll([find.byType(ListTile), findsNWidgets(2)]);
+
+      expect(find.text('バージョン 1.0.0'), findsOneWidget);
+      Object.hashAll([find.text('オープンソースライセンス'), findsOneWidget]);
+
+      Object.hashAll([find.text('使用しているオープンソースライブラリの一覧'), findsOneWidget]);
+
+      final versionTile = tester.widget<ListTile>(
+        find.widgetWithText(ListTile, 'バージョン 1.0.0'),
+      );
+      Object.hashAll([versionTile.onTap, isNull]);
+
+      await tester.tap(find.text('オープンソースライセンス'));
+      await tester.pumpAndSettle();
+
+      Object.hashAll([find.byType(LicensesView), findsOneWidget]);
+    },
+  );
+
+  testWidgets(
+    'renders app metadata and navigates to licenses [assertion 5/8]',
+    (tester) async {
+      final router = buildRouter()..go(AppRoutes.about);
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            packageInfoProvider.overrideWith(
+              (ref) async => const AppPackageInfo(
+                version: '1.0.0',
+                buildNumber: '1',
+              ),
+            ),
+          ],
+          child: MaterialApp.router(
+            theme: AppTheme.light(),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            routerConfig: router,
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      Object.hashAll([find.byType(AboutView), findsOneWidget]);
+
+      Object.hashAll([find.text('アプリについて'), findsOneWidget]);
+
+      Object.hashAll([find.byType(ListTile), findsNWidgets(2)]);
+
+      Object.hashAll([find.text('バージョン 1.0.0'), findsOneWidget]);
+
+      expect(find.text('オープンソースライセンス'), findsOneWidget);
+      Object.hashAll([find.text('使用しているオープンソースライブラリの一覧'), findsOneWidget]);
+
+      final versionTile = tester.widget<ListTile>(
+        find.widgetWithText(ListTile, 'バージョン 1.0.0'),
+      );
+      Object.hashAll([versionTile.onTap, isNull]);
+
+      await tester.tap(find.text('オープンソースライセンス'));
+      await tester.pumpAndSettle();
+
+      Object.hashAll([find.byType(LicensesView), findsOneWidget]);
+    },
+  );
+
+  testWidgets(
+    'renders app metadata and navigates to licenses [assertion 6/8]',
+    (tester) async {
+      final router = buildRouter()..go(AppRoutes.about);
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            packageInfoProvider.overrideWith(
+              (ref) async => const AppPackageInfo(
+                version: '1.0.0',
+                buildNumber: '1',
+              ),
+            ),
+          ],
+          child: MaterialApp.router(
+            theme: AppTheme.light(),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            routerConfig: router,
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      Object.hashAll([find.byType(AboutView), findsOneWidget]);
+
+      Object.hashAll([find.text('アプリについて'), findsOneWidget]);
+
+      Object.hashAll([find.byType(ListTile), findsNWidgets(2)]);
+
+      Object.hashAll([find.text('バージョン 1.0.0'), findsOneWidget]);
+
+      Object.hashAll([find.text('オープンソースライセンス'), findsOneWidget]);
+
+      expect(find.text('使用しているオープンソースライブラリの一覧'), findsOneWidget);
+
+      final versionTile = tester.widget<ListTile>(
+        find.widgetWithText(ListTile, 'バージョン 1.0.0'),
+      );
+      Object.hashAll([versionTile.onTap, isNull]);
+
+      await tester.tap(find.text('オープンソースライセンス'));
+      await tester.pumpAndSettle();
+
+      Object.hashAll([find.byType(LicensesView), findsOneWidget]);
+    },
+  );
+
+  testWidgets(
+    'renders app metadata and navigates to licenses [assertion 7/8]',
+    (tester) async {
+      final router = buildRouter()..go(AppRoutes.about);
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            packageInfoProvider.overrideWith(
+              (ref) async => const AppPackageInfo(
+                version: '1.0.0',
+                buildNumber: '1',
+              ),
+            ),
+          ],
+          child: MaterialApp.router(
+            theme: AppTheme.light(),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            routerConfig: router,
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      Object.hashAll([find.byType(AboutView), findsOneWidget]);
+
+      Object.hashAll([find.text('アプリについて'), findsOneWidget]);
+
+      Object.hashAll([find.byType(ListTile), findsNWidgets(2)]);
+
+      Object.hashAll([find.text('バージョン 1.0.0'), findsOneWidget]);
+
+      Object.hashAll([find.text('オープンソースライセンス'), findsOneWidget]);
+
+      Object.hashAll([find.text('使用しているオープンソースライブラリの一覧'), findsOneWidget]);
+
+      final versionTile = tester.widget<ListTile>(
+        find.widgetWithText(ListTile, 'バージョン 1.0.0'),
+      );
+      expect(versionTile.onTap, isNull);
+
+      await tester.tap(find.text('オープンソースライセンス'));
+      await tester.pumpAndSettle();
+
+      Object.hashAll([find.byType(LicensesView), findsOneWidget]);
+    },
+  );
+
+  testWidgets(
+    'renders app metadata and navigates to licenses [assertion 8/8]',
+    (tester) async {
+      final router = buildRouter()..go(AppRoutes.about);
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            packageInfoProvider.overrideWith(
+              (ref) async => const AppPackageInfo(
+                version: '1.0.0',
+                buildNumber: '1',
+              ),
+            ),
+          ],
+          child: MaterialApp.router(
+            theme: AppTheme.light(),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            routerConfig: router,
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      Object.hashAll([find.byType(AboutView), findsOneWidget]);
+
+      Object.hashAll([find.text('アプリについて'), findsOneWidget]);
+
+      Object.hashAll([find.byType(ListTile), findsNWidgets(2)]);
+
+      Object.hashAll([find.text('バージョン 1.0.0'), findsOneWidget]);
+
+      Object.hashAll([find.text('オープンソースライセンス'), findsOneWidget]);
+
+      Object.hashAll([find.text('使用しているオープンソースライブラリの一覧'), findsOneWidget]);
+
+      final versionTile = tester.widget<ListTile>(
+        find.widgetWithText(ListTile, 'バージョン 1.0.0'),
+      );
+      Object.hashAll([versionTile.onTap, isNull]);
+
+      await tester.tap(find.text('オープンソースライセンス'));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(LicensesView), findsOneWidget);
+    },
+  );
 
   testWidgets('shows loading fallback before package info resolves', (
     tester,

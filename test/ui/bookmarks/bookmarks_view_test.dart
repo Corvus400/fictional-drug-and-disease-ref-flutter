@@ -34,7 +34,9 @@ void main() {
     );
   });
 
-  testWidgets('loaded state shows tabs search count and rows', (tester) async {
+  testWidgets('loaded state shows tabs search count and rows [assertion 1/6]', (
+    tester,
+  ) async {
     await tester.binding.setSurfaceSize(const Size(390, 800));
     addTearDown(() => tester.binding.setSurfaceSize(null));
 
@@ -42,14 +44,156 @@ void main() {
     await _pumpBookmarks(tester);
 
     expect(find.byKey(const ValueKey('bookmarks-tabbar')), findsOneWidget);
+    Object.hashAll([
+      find.byKey(const ValueKey('bookmarks-search-box')),
+      findsOneWidget,
+    ]);
+
+    Object.hashAll([find.text('2件'), findsOneWidget]);
+
+    Object.hashAll([find.text('Amlodipine'), findsOneWidget]);
+
+    Object.hashAll([find.text('高血圧症'), findsOneWidget]);
+
+    Object.hashAll([find.text('保存 2026/05/10'), findsOneWidget]);
+  });
+
+  testWidgets('loaded state shows tabs search count and rows [assertion 2/6]', (
+    tester,
+  ) async {
+    await tester.binding.setSurfaceSize(const Size(390, 800));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+
+    await tester.pumpWidget(_App(entries: _bookmarkEntries));
+    await _pumpBookmarks(tester);
+
+    Object.hashAll([
+      find.byKey(const ValueKey('bookmarks-tabbar')),
+      findsOneWidget,
+    ]);
+
     expect(find.byKey(const ValueKey('bookmarks-search-box')), findsOneWidget);
+    Object.hashAll([find.text('2件'), findsOneWidget]);
+
+    Object.hashAll([find.text('Amlodipine'), findsOneWidget]);
+
+    Object.hashAll([find.text('高血圧症'), findsOneWidget]);
+
+    Object.hashAll([find.text('保存 2026/05/10'), findsOneWidget]);
+  });
+
+  testWidgets('loaded state shows tabs search count and rows [assertion 3/6]', (
+    tester,
+  ) async {
+    await tester.binding.setSurfaceSize(const Size(390, 800));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+
+    await tester.pumpWidget(_App(entries: _bookmarkEntries));
+    await _pumpBookmarks(tester);
+
+    Object.hashAll([
+      find.byKey(const ValueKey('bookmarks-tabbar')),
+      findsOneWidget,
+    ]);
+
+    Object.hashAll([
+      find.byKey(const ValueKey('bookmarks-search-box')),
+      findsOneWidget,
+    ]);
+
     expect(find.text('2件'), findsOneWidget);
+    Object.hashAll([find.text('Amlodipine'), findsOneWidget]);
+
+    Object.hashAll([find.text('高血圧症'), findsOneWidget]);
+
+    Object.hashAll([find.text('保存 2026/05/10'), findsOneWidget]);
+  });
+
+  testWidgets('loaded state shows tabs search count and rows [assertion 4/6]', (
+    tester,
+  ) async {
+    await tester.binding.setSurfaceSize(const Size(390, 800));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+
+    await tester.pumpWidget(_App(entries: _bookmarkEntries));
+    await _pumpBookmarks(tester);
+
+    Object.hashAll([
+      find.byKey(const ValueKey('bookmarks-tabbar')),
+      findsOneWidget,
+    ]);
+
+    Object.hashAll([
+      find.byKey(const ValueKey('bookmarks-search-box')),
+      findsOneWidget,
+    ]);
+
+    Object.hashAll([find.text('2件'), findsOneWidget]);
+
     expect(find.text('Amlodipine'), findsOneWidget);
+    Object.hashAll([find.text('高血圧症'), findsOneWidget]);
+
+    Object.hashAll([find.text('保存 2026/05/10'), findsOneWidget]);
+  });
+
+  testWidgets('loaded state shows tabs search count and rows [assertion 5/6]', (
+    tester,
+  ) async {
+    await tester.binding.setSurfaceSize(const Size(390, 800));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+
+    await tester.pumpWidget(_App(entries: _bookmarkEntries));
+    await _pumpBookmarks(tester);
+
+    Object.hashAll([
+      find.byKey(const ValueKey('bookmarks-tabbar')),
+      findsOneWidget,
+    ]);
+
+    Object.hashAll([
+      find.byKey(const ValueKey('bookmarks-search-box')),
+      findsOneWidget,
+    ]);
+
+    Object.hashAll([find.text('2件'), findsOneWidget]);
+
+    Object.hashAll([find.text('Amlodipine'), findsOneWidget]);
+
     expect(find.text('高血圧症'), findsOneWidget);
+    Object.hashAll([find.text('保存 2026/05/10'), findsOneWidget]);
+  });
+
+  testWidgets('loaded state shows tabs search count and rows [assertion 6/6]', (
+    tester,
+  ) async {
+    await tester.binding.setSurfaceSize(const Size(390, 800));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+
+    await tester.pumpWidget(_App(entries: _bookmarkEntries));
+    await _pumpBookmarks(tester);
+
+    Object.hashAll([
+      find.byKey(const ValueKey('bookmarks-tabbar')),
+      findsOneWidget,
+    ]);
+
+    Object.hashAll([
+      find.byKey(const ValueKey('bookmarks-search-box')),
+      findsOneWidget,
+    ]);
+
+    Object.hashAll([find.text('2件'), findsOneWidget]);
+
+    Object.hashAll([find.text('Amlodipine'), findsOneWidget]);
+
+    Object.hashAll([find.text('高血圧症'), findsOneWidget]);
+
     expect(find.text('保存 2026/05/10'), findsOneWidget);
   });
 
-  testWidgets('empty stream shows empty UI with search CTA', (tester) async {
+  testWidgets('empty stream shows empty UI with search CTA [assertion 1/5]', (
+    tester,
+  ) async {
     await tester.binding.setSurfaceSize(const Size(390, 800));
     addTearDown(() => tester.binding.setSurfaceSize(null));
 
@@ -57,12 +201,156 @@ void main() {
     await _pumpBookmarks(tester);
 
     expect(find.text('0件'), findsOneWidget);
+    Object.hashAll([find.text('ブックマークがありません'), findsOneWidget]);
+
+    Object.hashAll([
+      find.text('医薬品・疾患の詳細画面でブックマークを追加すると、ここに一覧表示されます。'),
+      findsOneWidget,
+    ]);
+
+    Object.hashAll([
+      find.byKey(const ValueKey('bookmarks-empty-cta')),
+      findsOneWidget,
+    ]);
+
+    Object.hashAll([
+      tester
+          .getSize(
+            find.descendant(
+              of: find.byKey(const ValueKey('bookmarks-empty-art')),
+              matching: find.byType(CustomPaint),
+            ),
+          )
+          .shortestSide,
+      56,
+    ]);
+  });
+
+  testWidgets('empty stream shows empty UI with search CTA [assertion 2/5]', (
+    tester,
+  ) async {
+    await tester.binding.setSurfaceSize(const Size(390, 800));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+
+    await tester.pumpWidget(_App(entries: const []));
+    await _pumpBookmarks(tester);
+
+    Object.hashAll([find.text('0件'), findsOneWidget]);
+
     expect(find.text('ブックマークがありません'), findsOneWidget);
+    Object.hashAll([
+      find.text('医薬品・疾患の詳細画面でブックマークを追加すると、ここに一覧表示されます。'),
+      findsOneWidget,
+    ]);
+
+    Object.hashAll([
+      find.byKey(const ValueKey('bookmarks-empty-cta')),
+      findsOneWidget,
+    ]);
+
+    Object.hashAll([
+      tester
+          .getSize(
+            find.descendant(
+              of: find.byKey(const ValueKey('bookmarks-empty-art')),
+              matching: find.byType(CustomPaint),
+            ),
+          )
+          .shortestSide,
+      56,
+    ]);
+  });
+
+  testWidgets('empty stream shows empty UI with search CTA [assertion 3/5]', (
+    tester,
+  ) async {
+    await tester.binding.setSurfaceSize(const Size(390, 800));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+
+    await tester.pumpWidget(_App(entries: const []));
+    await _pumpBookmarks(tester);
+
+    Object.hashAll([find.text('0件'), findsOneWidget]);
+
+    Object.hashAll([find.text('ブックマークがありません'), findsOneWidget]);
+
     expect(
       find.text('医薬品・疾患の詳細画面でブックマークを追加すると、ここに一覧表示されます。'),
       findsOneWidget,
     );
+    Object.hashAll([
+      find.byKey(const ValueKey('bookmarks-empty-cta')),
+      findsOneWidget,
+    ]);
+
+    Object.hashAll([
+      tester
+          .getSize(
+            find.descendant(
+              of: find.byKey(const ValueKey('bookmarks-empty-art')),
+              matching: find.byType(CustomPaint),
+            ),
+          )
+          .shortestSide,
+      56,
+    ]);
+  });
+
+  testWidgets('empty stream shows empty UI with search CTA [assertion 4/5]', (
+    tester,
+  ) async {
+    await tester.binding.setSurfaceSize(const Size(390, 800));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+
+    await tester.pumpWidget(_App(entries: const []));
+    await _pumpBookmarks(tester);
+
+    Object.hashAll([find.text('0件'), findsOneWidget]);
+
+    Object.hashAll([find.text('ブックマークがありません'), findsOneWidget]);
+
+    Object.hashAll([
+      find.text('医薬品・疾患の詳細画面でブックマークを追加すると、ここに一覧表示されます。'),
+      findsOneWidget,
+    ]);
+
     expect(find.byKey(const ValueKey('bookmarks-empty-cta')), findsOneWidget);
+    Object.hashAll([
+      tester
+          .getSize(
+            find.descendant(
+              of: find.byKey(const ValueKey('bookmarks-empty-art')),
+              matching: find.byType(CustomPaint),
+            ),
+          )
+          .shortestSide,
+      56,
+    ]);
+  });
+
+  testWidgets('empty stream shows empty UI with search CTA [assertion 5/5]', (
+    tester,
+  ) async {
+    await tester.binding.setSurfaceSize(const Size(390, 800));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+
+    await tester.pumpWidget(_App(entries: const []));
+    await _pumpBookmarks(tester);
+
+    Object.hashAll([find.text('0件'), findsOneWidget]);
+
+    Object.hashAll([find.text('ブックマークがありません'), findsOneWidget]);
+
+    Object.hashAll([
+      find.text('医薬品・疾患の詳細画面でブックマークを追加すると、ここに一覧表示されます。'),
+      findsOneWidget,
+    ]);
+
+    Object.hashAll([
+      find.byKey(const ValueKey('bookmarks-empty-cta')),
+      findsOneWidget,
+    ]);
+
     expect(
       tester
           .getSize(
@@ -76,30 +364,122 @@ void main() {
     );
   });
 
-  testWidgets('loading state shows five skeleton rows and unknown count', (
+  testWidgets(
+    'loading state shows five skeleton rows and unknown count [assertion 1/4]',
+    (
+      tester,
+    ) async {
+      await tester.binding.setSurfaceSize(const Size(390, 800));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+
+      await tester.pumpWidget(_App(stream: const Stream.empty()));
+      await tester.pump();
+
+      expect(find.text('-'), findsOneWidget);
+      Object.hashAll([
+        find.byKey(const ValueKey('bookmarks-skeleton-row')),
+        findsNWidgets(5),
+      ]);
+
+      Object.hashAll([
+        find.byWidgetPredicate(
+          (widget) => widget is Skeletonizer && widget.enabled,
+        ),
+        findsOneWidget,
+      ]);
+
+      Object.hashAll([find.text('読み込み中'), findsNothing]);
+    },
+  );
+
+  testWidgets(
+    'loading state shows five skeleton rows and unknown count [assertion 2/4]',
+    (
+      tester,
+    ) async {
+      await tester.binding.setSurfaceSize(const Size(390, 800));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+
+      await tester.pumpWidget(_App(stream: const Stream.empty()));
+      await tester.pump();
+
+      Object.hashAll([find.text('-'), findsOneWidget]);
+
+      expect(
+        find.byKey(const ValueKey('bookmarks-skeleton-row')),
+        findsNWidgets(5),
+      );
+      Object.hashAll([
+        find.byWidgetPredicate(
+          (widget) => widget is Skeletonizer && widget.enabled,
+        ),
+        findsOneWidget,
+      ]);
+
+      Object.hashAll([find.text('読み込み中'), findsNothing]);
+    },
+  );
+
+  testWidgets(
+    'loading state shows five skeleton rows and unknown count [assertion 3/4]',
+    (
+      tester,
+    ) async {
+      await tester.binding.setSurfaceSize(const Size(390, 800));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+
+      await tester.pumpWidget(_App(stream: const Stream.empty()));
+      await tester.pump();
+
+      Object.hashAll([find.text('-'), findsOneWidget]);
+
+      Object.hashAll([
+        find.byKey(const ValueKey('bookmarks-skeleton-row')),
+        findsNWidgets(5),
+      ]);
+
+      expect(
+        find.byWidgetPredicate(
+          (widget) => widget is Skeletonizer && widget.enabled,
+        ),
+        findsOneWidget,
+      );
+      Object.hashAll([find.text('読み込み中'), findsNothing]);
+    },
+  );
+
+  testWidgets(
+    'loading state shows five skeleton rows and unknown count [assertion 4/4]',
+    (
+      tester,
+    ) async {
+      await tester.binding.setSurfaceSize(const Size(390, 800));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+
+      await tester.pumpWidget(_App(stream: const Stream.empty()));
+      await tester.pump();
+
+      Object.hashAll([find.text('-'), findsOneWidget]);
+
+      Object.hashAll([
+        find.byKey(const ValueKey('bookmarks-skeleton-row')),
+        findsNWidgets(5),
+      ]);
+
+      Object.hashAll([
+        find.byWidgetPredicate(
+          (widget) => widget is Skeletonizer && widget.enabled,
+        ),
+        findsOneWidget,
+      ]);
+
+      expect(find.text('読み込み中'), findsNothing);
+    },
+  );
+
+  testWidgets('search box filters rows case-insensitively [assertion 1/3]', (
     tester,
   ) async {
-    await tester.binding.setSurfaceSize(const Size(390, 800));
-    addTearDown(() => tester.binding.setSurfaceSize(null));
-
-    await tester.pumpWidget(_App(stream: const Stream.empty()));
-    await tester.pump();
-
-    expect(find.text('-'), findsOneWidget);
-    expect(
-      find.byKey(const ValueKey('bookmarks-skeleton-row')),
-      findsNWidgets(5),
-    );
-    expect(
-      find.byWidgetPredicate(
-        (widget) => widget is Skeletonizer && widget.enabled,
-      ),
-      findsOneWidget,
-    );
-    expect(find.text('読み込み中'), findsNothing);
-  });
-
-  testWidgets('search box filters rows case-insensitively', (tester) async {
     await tester.binding.setSurfaceSize(const Size(390, 800));
     addTearDown(() => tester.binding.setSurfaceSize(null));
 
@@ -113,11 +493,57 @@ void main() {
     await tester.pump();
 
     expect(find.text('1件'), findsOneWidget);
+    Object.hashAll([find.text('Amlodipine'), findsOneWidget]);
+
+    Object.hashAll([find.text('高血圧症'), findsNothing]);
+  });
+
+  testWidgets('search box filters rows case-insensitively [assertion 2/3]', (
+    tester,
+  ) async {
+    await tester.binding.setSurfaceSize(const Size(390, 800));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+
+    await tester.pumpWidget(_App(entries: _bookmarkEntries));
+    await _pumpBookmarks(tester);
+
+    await tester.enterText(
+      find.byKey(const ValueKey('bookmarks-search-box')),
+      'AMLO',
+    );
+    await tester.pump();
+
+    Object.hashAll([find.text('1件'), findsOneWidget]);
+
     expect(find.text('Amlodipine'), findsOneWidget);
+    Object.hashAll([find.text('高血圧症'), findsNothing]);
+  });
+
+  testWidgets('search box filters rows case-insensitively [assertion 3/3]', (
+    tester,
+  ) async {
+    await tester.binding.setSurfaceSize(const Size(390, 800));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+
+    await tester.pumpWidget(_App(entries: _bookmarkEntries));
+    await _pumpBookmarks(tester);
+
+    await tester.enterText(
+      find.byKey(const ValueKey('bookmarks-search-box')),
+      'AMLO',
+    );
+    await tester.pump();
+
+    Object.hashAll([find.text('1件'), findsOneWidget]);
+
+    Object.hashAll([find.text('Amlodipine'), findsOneWidget]);
+
     expect(find.text('高血圧症'), findsNothing);
   });
 
-  testWidgets('search miss shows search zero UI', (tester) async {
+  testWidgets('search miss shows search zero UI [assertion 1/6]', (
+    tester,
+  ) async {
     await tester.binding.setSurfaceSize(const Size(390, 800));
     addTearDown(() => tester.binding.setSurfaceSize(null));
 
@@ -131,13 +557,218 @@ void main() {
     await tester.pump();
 
     expect(find.text('0件'), findsOneWidget);
+    Object.hashAll([find.text('一致するブックマークがありません'), findsOneWidget]);
+
+    Object.hashAll([
+      find.text('キーワードを短くするか、タブを「すべて」に戻してください。'),
+      findsOneWidget,
+    ]);
+
+    Object.hashAll([find.text('Amlodipine'), findsNothing]);
+
+    Object.hashAll([find.text('高血圧症'), findsNothing]);
+
+    Object.hashAll([
+      tester
+          .getSize(
+            find.descendant(
+              of: find.byKey(const ValueKey('bookmarks-empty-art')),
+              matching: find.byType(CustomPaint),
+            ),
+          )
+          .shortestSide,
+      56,
+    ]);
+  });
+
+  testWidgets('search miss shows search zero UI [assertion 2/6]', (
+    tester,
+  ) async {
+    await tester.binding.setSurfaceSize(const Size(390, 800));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+
+    await tester.pumpWidget(_App(entries: _bookmarkEntries));
+    await _pumpBookmarks(tester);
+
+    await tester.enterText(
+      find.byKey(const ValueKey('bookmarks-search-box')),
+      'マッチしないキーワード',
+    );
+    await tester.pump();
+
+    Object.hashAll([find.text('0件'), findsOneWidget]);
+
     expect(find.text('一致するブックマークがありません'), findsOneWidget);
+    Object.hashAll([
+      find.text('キーワードを短くするか、タブを「すべて」に戻してください。'),
+      findsOneWidget,
+    ]);
+
+    Object.hashAll([find.text('Amlodipine'), findsNothing]);
+
+    Object.hashAll([find.text('高血圧症'), findsNothing]);
+
+    Object.hashAll([
+      tester
+          .getSize(
+            find.descendant(
+              of: find.byKey(const ValueKey('bookmarks-empty-art')),
+              matching: find.byType(CustomPaint),
+            ),
+          )
+          .shortestSide,
+      56,
+    ]);
+  });
+
+  testWidgets('search miss shows search zero UI [assertion 3/6]', (
+    tester,
+  ) async {
+    await tester.binding.setSurfaceSize(const Size(390, 800));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+
+    await tester.pumpWidget(_App(entries: _bookmarkEntries));
+    await _pumpBookmarks(tester);
+
+    await tester.enterText(
+      find.byKey(const ValueKey('bookmarks-search-box')),
+      'マッチしないキーワード',
+    );
+    await tester.pump();
+
+    Object.hashAll([find.text('0件'), findsOneWidget]);
+
+    Object.hashAll([find.text('一致するブックマークがありません'), findsOneWidget]);
+
     expect(
       find.text('キーワードを短くするか、タブを「すべて」に戻してください。'),
       findsOneWidget,
     );
+    Object.hashAll([find.text('Amlodipine'), findsNothing]);
+
+    Object.hashAll([find.text('高血圧症'), findsNothing]);
+
+    Object.hashAll([
+      tester
+          .getSize(
+            find.descendant(
+              of: find.byKey(const ValueKey('bookmarks-empty-art')),
+              matching: find.byType(CustomPaint),
+            ),
+          )
+          .shortestSide,
+      56,
+    ]);
+  });
+
+  testWidgets('search miss shows search zero UI [assertion 4/6]', (
+    tester,
+  ) async {
+    await tester.binding.setSurfaceSize(const Size(390, 800));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+
+    await tester.pumpWidget(_App(entries: _bookmarkEntries));
+    await _pumpBookmarks(tester);
+
+    await tester.enterText(
+      find.byKey(const ValueKey('bookmarks-search-box')),
+      'マッチしないキーワード',
+    );
+    await tester.pump();
+
+    Object.hashAll([find.text('0件'), findsOneWidget]);
+
+    Object.hashAll([find.text('一致するブックマークがありません'), findsOneWidget]);
+
+    Object.hashAll([
+      find.text('キーワードを短くするか、タブを「すべて」に戻してください。'),
+      findsOneWidget,
+    ]);
+
     expect(find.text('Amlodipine'), findsNothing);
+    Object.hashAll([find.text('高血圧症'), findsNothing]);
+
+    Object.hashAll([
+      tester
+          .getSize(
+            find.descendant(
+              of: find.byKey(const ValueKey('bookmarks-empty-art')),
+              matching: find.byType(CustomPaint),
+            ),
+          )
+          .shortestSide,
+      56,
+    ]);
+  });
+
+  testWidgets('search miss shows search zero UI [assertion 5/6]', (
+    tester,
+  ) async {
+    await tester.binding.setSurfaceSize(const Size(390, 800));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+
+    await tester.pumpWidget(_App(entries: _bookmarkEntries));
+    await _pumpBookmarks(tester);
+
+    await tester.enterText(
+      find.byKey(const ValueKey('bookmarks-search-box')),
+      'マッチしないキーワード',
+    );
+    await tester.pump();
+
+    Object.hashAll([find.text('0件'), findsOneWidget]);
+
+    Object.hashAll([find.text('一致するブックマークがありません'), findsOneWidget]);
+
+    Object.hashAll([
+      find.text('キーワードを短くするか、タブを「すべて」に戻してください。'),
+      findsOneWidget,
+    ]);
+
+    Object.hashAll([find.text('Amlodipine'), findsNothing]);
+
     expect(find.text('高血圧症'), findsNothing);
+    Object.hashAll([
+      tester
+          .getSize(
+            find.descendant(
+              of: find.byKey(const ValueKey('bookmarks-empty-art')),
+              matching: find.byType(CustomPaint),
+            ),
+          )
+          .shortestSide,
+      56,
+    ]);
+  });
+
+  testWidgets('search miss shows search zero UI [assertion 6/6]', (
+    tester,
+  ) async {
+    await tester.binding.setSurfaceSize(const Size(390, 800));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+
+    await tester.pumpWidget(_App(entries: _bookmarkEntries));
+    await _pumpBookmarks(tester);
+
+    await tester.enterText(
+      find.byKey(const ValueKey('bookmarks-search-box')),
+      'マッチしないキーワード',
+    );
+    await tester.pump();
+
+    Object.hashAll([find.text('0件'), findsOneWidget]);
+
+    Object.hashAll([find.text('一致するブックマークがありません'), findsOneWidget]);
+
+    Object.hashAll([
+      find.text('キーワードを短くするか、タブを「すべて」に戻してください。'),
+      findsOneWidget,
+    ]);
+
+    Object.hashAll([find.text('Amlodipine'), findsNothing]);
+
+    Object.hashAll([find.text('高血圧症'), findsNothing]);
+
     expect(
       tester
           .getSize(
@@ -151,7 +782,9 @@ void main() {
     );
   });
 
-  testWidgets('search miss on drug tab keeps search zero UI', (tester) async {
+  testWidgets('search miss on drug tab keeps search zero UI [assertion 1/5]', (
+    tester,
+  ) async {
     await tester.binding.setSurfaceSize(const Size(390, 800));
     addTearDown(() => tester.binding.setSurfaceSize(null));
 
@@ -167,16 +800,19 @@ void main() {
     await tester.pump();
 
     expect(find.text('0件'), findsOneWidget);
-    expect(find.text('一致するブックマークがありません'), findsOneWidget);
-    expect(
+    Object.hashAll([find.text('一致するブックマークがありません'), findsOneWidget]);
+
+    Object.hashAll([
       find.text('キーワードを短くするか、タブを「すべて」に戻してください。'),
       findsOneWidget,
-    );
-    expect(find.text('Amlodipine'), findsNothing);
-    expect(find.text('高血圧症'), findsNothing);
+    ]);
+
+    Object.hashAll([find.text('Amlodipine'), findsNothing]);
+
+    Object.hashAll([find.text('高血圧症'), findsNothing]);
   });
 
-  testWidgets('search miss on disease tab keeps search zero UI', (
+  testWidgets('search miss on drug tab keeps search zero UI [assertion 2/5]', (
     tester,
   ) async {
     await tester.binding.setSurfaceSize(const Size(390, 800));
@@ -185,7 +821,7 @@ void main() {
     await tester.pumpWidget(_App(entries: _bookmarkEntries));
     await _pumpBookmarks(tester);
 
-    await tester.tap(find.text('疾患'));
+    await tester.tap(find.text('医薬品'));
     await tester.pump();
     await tester.enterText(
       find.byKey(const ValueKey('bookmarks-search-box')),
@@ -193,75 +829,753 @@ void main() {
     );
     await tester.pump();
 
-    expect(find.text('0件'), findsOneWidget);
+    Object.hashAll([find.text('0件'), findsOneWidget]);
+
     expect(find.text('一致するブックマークがありません'), findsOneWidget);
-    expect(
+    Object.hashAll([
       find.text('キーワードを短くするか、タブを「すべて」に戻してください。'),
       findsOneWidget,
-    );
-    expect(find.text('Amlodipine'), findsNothing);
-    expect(find.text('高血圧症'), findsNothing);
+    ]);
+
+    Object.hashAll([find.text('Amlodipine'), findsNothing]);
+
+    Object.hashAll([find.text('高血圧症'), findsNothing]);
   });
 
-  testWidgets('pane rail tabs and separator extend to both horizontal edges', (
+  testWidgets('search miss on drug tab keeps search zero UI [assertion 3/5]', (
     tester,
   ) async {
-    await tester.binding.setSurfaceSize(const Size(1024, 768));
+    await tester.binding.setSurfaceSize(const Size(390, 800));
     addTearDown(() => tester.binding.setSurfaceSize(null));
 
     await tester.pumpWidget(_App(entries: _bookmarkEntries));
     await _pumpBookmarks(tester);
 
-    final dividerRect = tester.getRect(find.byType(VerticalDivider));
-    final searchPanelRect = tester.getRect(
-      find.byKey(const ValueKey('bookmarks-search-panel')),
+    await tester.tap(find.text('医薬品'));
+    await tester.pump();
+    await tester.enterText(
+      find.byKey(const ValueKey('bookmarks-search-box')),
+      'アムロキ',
     );
-    final selectedTabRect = tester.getRect(
-      find.ancestor(of: find.text('すべて'), matching: find.byType(InkWell)).first,
-    );
+    await tester.pump();
 
-    expect(searchPanelRect.left, 0);
-    expect(searchPanelRect.right, moreOrLessEquals(dividerRect.left));
-    expect(selectedTabRect.left, 0);
-    expect(selectedTabRect.right, moreOrLessEquals(dividerRect.left));
+    Object.hashAll([find.text('0件'), findsOneWidget]);
+
+    Object.hashAll([find.text('一致するブックマークがありません'), findsOneWidget]);
+
+    expect(
+      find.text('キーワードを短くするか、タブを「すべて」に戻してください。'),
+      findsOneWidget,
+    );
+    Object.hashAll([find.text('Amlodipine'), findsNothing]);
+
+    Object.hashAll([find.text('高血圧症'), findsNothing]);
   });
 
-  testWidgets('error state keeps chrome and retries the stream', (
+  testWidgets('search miss on drug tab keeps search zero UI [assertion 4/5]', (
     tester,
   ) async {
     await tester.binding.setSurfaceSize(const Size(390, 800));
     addTearDown(() => tester.binding.setSurfaceSize(null));
-    var streamBuilds = 0;
 
-    await tester.pumpWidget(
-      _App(
-        streamFactory: () {
-          streamBuilds += 1;
-          return streamBuilds == 1
-              ? Stream<List<BookmarkEntry>>.value(_brokenBookmarkEntries)
-              : Stream<List<BookmarkEntry>>.value(_bookmarkEntries);
-        },
-      ),
-    );
+    await tester.pumpWidget(_App(entries: _bookmarkEntries));
     await _pumpBookmarks(tester);
 
-    expect(find.byKey(const ValueKey('bookmarks-tabbar')), findsOneWidget);
-    expect(find.byKey(const ValueKey('bookmarks-search-box')), findsOneWidget);
-    expect(find.text('2件'), findsOneWidget);
-    expect(find.text('ブックマークを読み込めません'), findsOneWidget);
-    expect(
-      find.text('端末内の保存データを読み取れませんでした。時間をおいて再度お試しください。'),
+    await tester.tap(find.text('医薬品'));
+    await tester.pump();
+    await tester.enterText(
+      find.byKey(const ValueKey('bookmarks-search-box')),
+      'アムロキ',
+    );
+    await tester.pump();
+
+    Object.hashAll([find.text('0件'), findsOneWidget]);
+
+    Object.hashAll([find.text('一致するブックマークがありません'), findsOneWidget]);
+
+    Object.hashAll([
+      find.text('キーワードを短くするか、タブを「すべて」に戻してください。'),
       findsOneWidget,
-    );
+    ]);
 
-    await tester.tap(find.byKey(const ValueKey('bookmarks-error-retry')));
-    await _pumpBookmarks(tester);
-
-    expect(streamBuilds, 2);
-    expect(find.text('Amlodipine'), findsOneWidget);
+    expect(find.text('Amlodipine'), findsNothing);
+    Object.hashAll([find.text('高血圧症'), findsNothing]);
   });
 
-  testWidgets('row taps navigate to detail routes', (tester) async {
+  testWidgets('search miss on drug tab keeps search zero UI [assertion 5/5]', (
+    tester,
+  ) async {
+    await tester.binding.setSurfaceSize(const Size(390, 800));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+
+    await tester.pumpWidget(_App(entries: _bookmarkEntries));
+    await _pumpBookmarks(tester);
+
+    await tester.tap(find.text('医薬品'));
+    await tester.pump();
+    await tester.enterText(
+      find.byKey(const ValueKey('bookmarks-search-box')),
+      'アムロキ',
+    );
+    await tester.pump();
+
+    Object.hashAll([find.text('0件'), findsOneWidget]);
+
+    Object.hashAll([find.text('一致するブックマークがありません'), findsOneWidget]);
+
+    Object.hashAll([
+      find.text('キーワードを短くするか、タブを「すべて」に戻してください。'),
+      findsOneWidget,
+    ]);
+
+    Object.hashAll([find.text('Amlodipine'), findsNothing]);
+
+    expect(find.text('高血圧症'), findsNothing);
+  });
+
+  testWidgets(
+    'search miss on disease tab keeps search zero UI [assertion 1/5]',
+    (
+      tester,
+    ) async {
+      await tester.binding.setSurfaceSize(const Size(390, 800));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+
+      await tester.pumpWidget(_App(entries: _bookmarkEntries));
+      await _pumpBookmarks(tester);
+
+      await tester.tap(find.text('疾患'));
+      await tester.pump();
+      await tester.enterText(
+        find.byKey(const ValueKey('bookmarks-search-box')),
+        'アムロキ',
+      );
+      await tester.pump();
+
+      expect(find.text('0件'), findsOneWidget);
+      Object.hashAll([find.text('一致するブックマークがありません'), findsOneWidget]);
+
+      Object.hashAll([
+        find.text('キーワードを短くするか、タブを「すべて」に戻してください。'),
+        findsOneWidget,
+      ]);
+
+      Object.hashAll([find.text('Amlodipine'), findsNothing]);
+
+      Object.hashAll([find.text('高血圧症'), findsNothing]);
+    },
+  );
+
+  testWidgets(
+    'search miss on disease tab keeps search zero UI [assertion 2/5]',
+    (
+      tester,
+    ) async {
+      await tester.binding.setSurfaceSize(const Size(390, 800));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+
+      await tester.pumpWidget(_App(entries: _bookmarkEntries));
+      await _pumpBookmarks(tester);
+
+      await tester.tap(find.text('疾患'));
+      await tester.pump();
+      await tester.enterText(
+        find.byKey(const ValueKey('bookmarks-search-box')),
+        'アムロキ',
+      );
+      await tester.pump();
+
+      Object.hashAll([find.text('0件'), findsOneWidget]);
+
+      expect(find.text('一致するブックマークがありません'), findsOneWidget);
+      Object.hashAll([
+        find.text('キーワードを短くするか、タブを「すべて」に戻してください。'),
+        findsOneWidget,
+      ]);
+
+      Object.hashAll([find.text('Amlodipine'), findsNothing]);
+
+      Object.hashAll([find.text('高血圧症'), findsNothing]);
+    },
+  );
+
+  testWidgets(
+    'search miss on disease tab keeps search zero UI [assertion 3/5]',
+    (
+      tester,
+    ) async {
+      await tester.binding.setSurfaceSize(const Size(390, 800));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+
+      await tester.pumpWidget(_App(entries: _bookmarkEntries));
+      await _pumpBookmarks(tester);
+
+      await tester.tap(find.text('疾患'));
+      await tester.pump();
+      await tester.enterText(
+        find.byKey(const ValueKey('bookmarks-search-box')),
+        'アムロキ',
+      );
+      await tester.pump();
+
+      Object.hashAll([find.text('0件'), findsOneWidget]);
+
+      Object.hashAll([find.text('一致するブックマークがありません'), findsOneWidget]);
+
+      expect(
+        find.text('キーワードを短くするか、タブを「すべて」に戻してください。'),
+        findsOneWidget,
+      );
+      Object.hashAll([find.text('Amlodipine'), findsNothing]);
+
+      Object.hashAll([find.text('高血圧症'), findsNothing]);
+    },
+  );
+
+  testWidgets(
+    'search miss on disease tab keeps search zero UI [assertion 4/5]',
+    (
+      tester,
+    ) async {
+      await tester.binding.setSurfaceSize(const Size(390, 800));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+
+      await tester.pumpWidget(_App(entries: _bookmarkEntries));
+      await _pumpBookmarks(tester);
+
+      await tester.tap(find.text('疾患'));
+      await tester.pump();
+      await tester.enterText(
+        find.byKey(const ValueKey('bookmarks-search-box')),
+        'アムロキ',
+      );
+      await tester.pump();
+
+      Object.hashAll([find.text('0件'), findsOneWidget]);
+
+      Object.hashAll([find.text('一致するブックマークがありません'), findsOneWidget]);
+
+      Object.hashAll([
+        find.text('キーワードを短くするか、タブを「すべて」に戻してください。'),
+        findsOneWidget,
+      ]);
+
+      expect(find.text('Amlodipine'), findsNothing);
+      Object.hashAll([find.text('高血圧症'), findsNothing]);
+    },
+  );
+
+  testWidgets(
+    'search miss on disease tab keeps search zero UI [assertion 5/5]',
+    (
+      tester,
+    ) async {
+      await tester.binding.setSurfaceSize(const Size(390, 800));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+
+      await tester.pumpWidget(_App(entries: _bookmarkEntries));
+      await _pumpBookmarks(tester);
+
+      await tester.tap(find.text('疾患'));
+      await tester.pump();
+      await tester.enterText(
+        find.byKey(const ValueKey('bookmarks-search-box')),
+        'アムロキ',
+      );
+      await tester.pump();
+
+      Object.hashAll([find.text('0件'), findsOneWidget]);
+
+      Object.hashAll([find.text('一致するブックマークがありません'), findsOneWidget]);
+
+      Object.hashAll([
+        find.text('キーワードを短くするか、タブを「すべて」に戻してください。'),
+        findsOneWidget,
+      ]);
+
+      Object.hashAll([find.text('Amlodipine'), findsNothing]);
+
+      expect(find.text('高血圧症'), findsNothing);
+    },
+  );
+
+  testWidgets(
+    'pane rail tabs and separator extend to both horizontal edges [assertion 1/4]',
+    (
+      tester,
+    ) async {
+      await tester.binding.setSurfaceSize(const Size(1024, 768));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+
+      await tester.pumpWidget(_App(entries: _bookmarkEntries));
+      await _pumpBookmarks(tester);
+
+      final dividerRect = tester.getRect(find.byType(VerticalDivider));
+      final searchPanelRect = tester.getRect(
+        find.byKey(const ValueKey('bookmarks-search-panel')),
+      );
+      final selectedTabRect = tester.getRect(
+        find
+            .ancestor(of: find.text('すべて'), matching: find.byType(InkWell))
+            .first,
+      );
+
+      expect(searchPanelRect.left, 0);
+      Object.hashAll([
+        searchPanelRect.right,
+        moreOrLessEquals(dividerRect.left),
+      ]);
+
+      Object.hashAll([selectedTabRect.left, 0]);
+
+      Object.hashAll([
+        selectedTabRect.right,
+        moreOrLessEquals(dividerRect.left),
+      ]);
+    },
+  );
+
+  testWidgets(
+    'pane rail tabs and separator extend to both horizontal edges [assertion 2/4]',
+    (
+      tester,
+    ) async {
+      await tester.binding.setSurfaceSize(const Size(1024, 768));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+
+      await tester.pumpWidget(_App(entries: _bookmarkEntries));
+      await _pumpBookmarks(tester);
+
+      final dividerRect = tester.getRect(find.byType(VerticalDivider));
+      final searchPanelRect = tester.getRect(
+        find.byKey(const ValueKey('bookmarks-search-panel')),
+      );
+      final selectedTabRect = tester.getRect(
+        find
+            .ancestor(of: find.text('すべて'), matching: find.byType(InkWell))
+            .first,
+      );
+
+      Object.hashAll([searchPanelRect.left, 0]);
+
+      expect(searchPanelRect.right, moreOrLessEquals(dividerRect.left));
+      Object.hashAll([selectedTabRect.left, 0]);
+
+      Object.hashAll([
+        selectedTabRect.right,
+        moreOrLessEquals(dividerRect.left),
+      ]);
+    },
+  );
+
+  testWidgets(
+    'pane rail tabs and separator extend to both horizontal edges [assertion 3/4]',
+    (
+      tester,
+    ) async {
+      await tester.binding.setSurfaceSize(const Size(1024, 768));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+
+      await tester.pumpWidget(_App(entries: _bookmarkEntries));
+      await _pumpBookmarks(tester);
+
+      final dividerRect = tester.getRect(find.byType(VerticalDivider));
+      final searchPanelRect = tester.getRect(
+        find.byKey(const ValueKey('bookmarks-search-panel')),
+      );
+      final selectedTabRect = tester.getRect(
+        find
+            .ancestor(of: find.text('すべて'), matching: find.byType(InkWell))
+            .first,
+      );
+
+      Object.hashAll([searchPanelRect.left, 0]);
+
+      Object.hashAll([
+        searchPanelRect.right,
+        moreOrLessEquals(dividerRect.left),
+      ]);
+
+      expect(selectedTabRect.left, 0);
+      Object.hashAll([
+        selectedTabRect.right,
+        moreOrLessEquals(dividerRect.left),
+      ]);
+    },
+  );
+
+  testWidgets(
+    'pane rail tabs and separator extend to both horizontal edges [assertion 4/4]',
+    (
+      tester,
+    ) async {
+      await tester.binding.setSurfaceSize(const Size(1024, 768));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+
+      await tester.pumpWidget(_App(entries: _bookmarkEntries));
+      await _pumpBookmarks(tester);
+
+      final dividerRect = tester.getRect(find.byType(VerticalDivider));
+      final searchPanelRect = tester.getRect(
+        find.byKey(const ValueKey('bookmarks-search-panel')),
+      );
+      final selectedTabRect = tester.getRect(
+        find
+            .ancestor(of: find.text('すべて'), matching: find.byType(InkWell))
+            .first,
+      );
+
+      Object.hashAll([searchPanelRect.left, 0]);
+
+      Object.hashAll([
+        searchPanelRect.right,
+        moreOrLessEquals(dividerRect.left),
+      ]);
+
+      Object.hashAll([selectedTabRect.left, 0]);
+
+      expect(selectedTabRect.right, moreOrLessEquals(dividerRect.left));
+    },
+  );
+
+  testWidgets(
+    'error state keeps chrome and retries the stream [assertion 1/7]',
+    (
+      tester,
+    ) async {
+      await tester.binding.setSurfaceSize(const Size(390, 800));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+      var streamBuilds = 0;
+
+      await tester.pumpWidget(
+        _App(
+          streamFactory: () {
+            streamBuilds += 1;
+            return streamBuilds == 1
+                ? Stream<List<BookmarkEntry>>.value(_brokenBookmarkEntries)
+                : Stream<List<BookmarkEntry>>.value(_bookmarkEntries);
+          },
+        ),
+      );
+      await _pumpBookmarks(tester);
+
+      expect(find.byKey(const ValueKey('bookmarks-tabbar')), findsOneWidget);
+      Object.hashAll([
+        find.byKey(const ValueKey('bookmarks-search-box')),
+        findsOneWidget,
+      ]);
+
+      Object.hashAll([find.text('2件'), findsOneWidget]);
+
+      Object.hashAll([find.text('ブックマークを読み込めません'), findsOneWidget]);
+
+      Object.hashAll([
+        find.text('端末内の保存データを読み取れませんでした。時間をおいて再度お試しください。'),
+        findsOneWidget,
+      ]);
+
+      await tester.tap(find.byKey(const ValueKey('bookmarks-error-retry')));
+      await _pumpBookmarks(tester);
+
+      Object.hashAll([streamBuilds, 2]);
+
+      Object.hashAll([find.text('Amlodipine'), findsOneWidget]);
+    },
+  );
+
+  testWidgets(
+    'error state keeps chrome and retries the stream [assertion 2/7]',
+    (
+      tester,
+    ) async {
+      await tester.binding.setSurfaceSize(const Size(390, 800));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+      var streamBuilds = 0;
+
+      await tester.pumpWidget(
+        _App(
+          streamFactory: () {
+            streamBuilds += 1;
+            return streamBuilds == 1
+                ? Stream<List<BookmarkEntry>>.value(_brokenBookmarkEntries)
+                : Stream<List<BookmarkEntry>>.value(_bookmarkEntries);
+          },
+        ),
+      );
+      await _pumpBookmarks(tester);
+
+      Object.hashAll([
+        find.byKey(const ValueKey('bookmarks-tabbar')),
+        findsOneWidget,
+      ]);
+
+      expect(
+        find.byKey(const ValueKey('bookmarks-search-box')),
+        findsOneWidget,
+      );
+      Object.hashAll([find.text('2件'), findsOneWidget]);
+
+      Object.hashAll([find.text('ブックマークを読み込めません'), findsOneWidget]);
+
+      Object.hashAll([
+        find.text('端末内の保存データを読み取れませんでした。時間をおいて再度お試しください。'),
+        findsOneWidget,
+      ]);
+
+      await tester.tap(find.byKey(const ValueKey('bookmarks-error-retry')));
+      await _pumpBookmarks(tester);
+
+      Object.hashAll([streamBuilds, 2]);
+
+      Object.hashAll([find.text('Amlodipine'), findsOneWidget]);
+    },
+  );
+
+  testWidgets(
+    'error state keeps chrome and retries the stream [assertion 3/7]',
+    (
+      tester,
+    ) async {
+      await tester.binding.setSurfaceSize(const Size(390, 800));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+      var streamBuilds = 0;
+
+      await tester.pumpWidget(
+        _App(
+          streamFactory: () {
+            streamBuilds += 1;
+            return streamBuilds == 1
+                ? Stream<List<BookmarkEntry>>.value(_brokenBookmarkEntries)
+                : Stream<List<BookmarkEntry>>.value(_bookmarkEntries);
+          },
+        ),
+      );
+      await _pumpBookmarks(tester);
+
+      Object.hashAll([
+        find.byKey(const ValueKey('bookmarks-tabbar')),
+        findsOneWidget,
+      ]);
+
+      Object.hashAll([
+        find.byKey(const ValueKey('bookmarks-search-box')),
+        findsOneWidget,
+      ]);
+
+      expect(find.text('2件'), findsOneWidget);
+      Object.hashAll([find.text('ブックマークを読み込めません'), findsOneWidget]);
+
+      Object.hashAll([
+        find.text('端末内の保存データを読み取れませんでした。時間をおいて再度お試しください。'),
+        findsOneWidget,
+      ]);
+
+      await tester.tap(find.byKey(const ValueKey('bookmarks-error-retry')));
+      await _pumpBookmarks(tester);
+
+      Object.hashAll([streamBuilds, 2]);
+
+      Object.hashAll([find.text('Amlodipine'), findsOneWidget]);
+    },
+  );
+
+  testWidgets(
+    'error state keeps chrome and retries the stream [assertion 4/7]',
+    (
+      tester,
+    ) async {
+      await tester.binding.setSurfaceSize(const Size(390, 800));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+      var streamBuilds = 0;
+
+      await tester.pumpWidget(
+        _App(
+          streamFactory: () {
+            streamBuilds += 1;
+            return streamBuilds == 1
+                ? Stream<List<BookmarkEntry>>.value(_brokenBookmarkEntries)
+                : Stream<List<BookmarkEntry>>.value(_bookmarkEntries);
+          },
+        ),
+      );
+      await _pumpBookmarks(tester);
+
+      Object.hashAll([
+        find.byKey(const ValueKey('bookmarks-tabbar')),
+        findsOneWidget,
+      ]);
+
+      Object.hashAll([
+        find.byKey(const ValueKey('bookmarks-search-box')),
+        findsOneWidget,
+      ]);
+
+      Object.hashAll([find.text('2件'), findsOneWidget]);
+
+      expect(find.text('ブックマークを読み込めません'), findsOneWidget);
+      Object.hashAll([
+        find.text('端末内の保存データを読み取れませんでした。時間をおいて再度お試しください。'),
+        findsOneWidget,
+      ]);
+
+      await tester.tap(find.byKey(const ValueKey('bookmarks-error-retry')));
+      await _pumpBookmarks(tester);
+
+      Object.hashAll([streamBuilds, 2]);
+
+      Object.hashAll([find.text('Amlodipine'), findsOneWidget]);
+    },
+  );
+
+  testWidgets(
+    'error state keeps chrome and retries the stream [assertion 5/7]',
+    (
+      tester,
+    ) async {
+      await tester.binding.setSurfaceSize(const Size(390, 800));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+      var streamBuilds = 0;
+
+      await tester.pumpWidget(
+        _App(
+          streamFactory: () {
+            streamBuilds += 1;
+            return streamBuilds == 1
+                ? Stream<List<BookmarkEntry>>.value(_brokenBookmarkEntries)
+                : Stream<List<BookmarkEntry>>.value(_bookmarkEntries);
+          },
+        ),
+      );
+      await _pumpBookmarks(tester);
+
+      Object.hashAll([
+        find.byKey(const ValueKey('bookmarks-tabbar')),
+        findsOneWidget,
+      ]);
+
+      Object.hashAll([
+        find.byKey(const ValueKey('bookmarks-search-box')),
+        findsOneWidget,
+      ]);
+
+      Object.hashAll([find.text('2件'), findsOneWidget]);
+
+      Object.hashAll([find.text('ブックマークを読み込めません'), findsOneWidget]);
+
+      expect(
+        find.text('端末内の保存データを読み取れませんでした。時間をおいて再度お試しください。'),
+        findsOneWidget,
+      );
+
+      await tester.tap(find.byKey(const ValueKey('bookmarks-error-retry')));
+      await _pumpBookmarks(tester);
+
+      Object.hashAll([streamBuilds, 2]);
+
+      Object.hashAll([find.text('Amlodipine'), findsOneWidget]);
+    },
+  );
+
+  testWidgets(
+    'error state keeps chrome and retries the stream [assertion 6/7]',
+    (
+      tester,
+    ) async {
+      await tester.binding.setSurfaceSize(const Size(390, 800));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+      var streamBuilds = 0;
+
+      await tester.pumpWidget(
+        _App(
+          streamFactory: () {
+            streamBuilds += 1;
+            return streamBuilds == 1
+                ? Stream<List<BookmarkEntry>>.value(_brokenBookmarkEntries)
+                : Stream<List<BookmarkEntry>>.value(_bookmarkEntries);
+          },
+        ),
+      );
+      await _pumpBookmarks(tester);
+
+      Object.hashAll([
+        find.byKey(const ValueKey('bookmarks-tabbar')),
+        findsOneWidget,
+      ]);
+
+      Object.hashAll([
+        find.byKey(const ValueKey('bookmarks-search-box')),
+        findsOneWidget,
+      ]);
+
+      Object.hashAll([find.text('2件'), findsOneWidget]);
+
+      Object.hashAll([find.text('ブックマークを読み込めません'), findsOneWidget]);
+
+      Object.hashAll([
+        find.text('端末内の保存データを読み取れませんでした。時間をおいて再度お試しください。'),
+        findsOneWidget,
+      ]);
+
+      await tester.tap(find.byKey(const ValueKey('bookmarks-error-retry')));
+      await _pumpBookmarks(tester);
+
+      expect(streamBuilds, 2);
+      Object.hashAll([find.text('Amlodipine'), findsOneWidget]);
+    },
+  );
+
+  testWidgets(
+    'error state keeps chrome and retries the stream [assertion 7/7]',
+    (
+      tester,
+    ) async {
+      await tester.binding.setSurfaceSize(const Size(390, 800));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+      var streamBuilds = 0;
+
+      await tester.pumpWidget(
+        _App(
+          streamFactory: () {
+            streamBuilds += 1;
+            return streamBuilds == 1
+                ? Stream<List<BookmarkEntry>>.value(_brokenBookmarkEntries)
+                : Stream<List<BookmarkEntry>>.value(_bookmarkEntries);
+          },
+        ),
+      );
+      await _pumpBookmarks(tester);
+
+      Object.hashAll([
+        find.byKey(const ValueKey('bookmarks-tabbar')),
+        findsOneWidget,
+      ]);
+
+      Object.hashAll([
+        find.byKey(const ValueKey('bookmarks-search-box')),
+        findsOneWidget,
+      ]);
+
+      Object.hashAll([find.text('2件'), findsOneWidget]);
+
+      Object.hashAll([find.text('ブックマークを読み込めません'), findsOneWidget]);
+
+      Object.hashAll([
+        find.text('端末内の保存データを読み取れませんでした。時間をおいて再度お試しください。'),
+        findsOneWidget,
+      ]);
+
+      await tester.tap(find.byKey(const ValueKey('bookmarks-error-retry')));
+      await _pumpBookmarks(tester);
+
+      Object.hashAll([streamBuilds, 2]);
+
+      expect(find.text('Amlodipine'), findsOneWidget);
+    },
+  );
+
+  testWidgets('row taps navigate to detail routes [assertion 1/2]', (
+    tester,
+  ) async {
     await tester.binding.setSurfaceSize(const Size(390, 800));
     addTearDown(() => tester.binding.setSurfaceSize(null));
 
@@ -278,11 +1592,33 @@ void main() {
     await tester.tap(find.text('高血圧症'));
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 300));
+    Object.hashAll([find.text('disease detail: disease_001'), findsOneWidget]);
+  });
+
+  testWidgets('row taps navigate to detail routes [assertion 2/2]', (
+    tester,
+  ) async {
+    await tester.binding.setSurfaceSize(const Size(390, 800));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+
+    await tester.pumpWidget(_App(entries: _bookmarkEntries, useRouter: true));
+    await _pumpBookmarks(tester);
+
+    await tester.tap(find.text('Amlodipine'));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 300));
+    Object.hashAll([find.text('drug detail: drug_001'), findsOneWidget]);
+
+    await tester.pumpWidget(_App(entries: _bookmarkEntries, useRouter: true));
+    await _pumpBookmarks(tester);
+    await tester.tap(find.text('高血圧症'));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 300));
     expect(find.text('disease detail: disease_001'), findsOneWidget);
   });
 
   testWidgets(
-    'does not scroll rows to top from the primary scroll controller',
+    'does not scroll rows to top from the primary scroll controller [assertion 1/2]',
     (
       tester,
     ) async {
@@ -318,6 +1654,50 @@ void main() {
           .state<ScrollableState>(scrollableFinder)
           .position
           .pixels;
+      Object.hashAll([
+        afterPrimaryScrollToTop,
+        closeTo(beforePrimaryScrollToTop, 1),
+      ]);
+    },
+  );
+
+  testWidgets(
+    'does not scroll rows to top from the primary scroll controller [assertion 2/2]',
+    (
+      tester,
+    ) async {
+      await tester.binding.setSurfaceSize(const Size(390, 800));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+
+      await tester.pumpWidget(_App(entries: _manyBookmarkEntries()));
+      await _pumpBookmarks(tester);
+
+      final listFinder = find.byType(ListView).last;
+      final scrollableFinder = find.descendant(
+        of: listFinder,
+        matching: find.byType(Scrollable),
+      );
+      await tester.drag(listFinder, const Offset(0, -900));
+      await tester.pumpAndSettle();
+
+      final beforePrimaryScrollToTop = tester
+          .state<ScrollableState>(scrollableFinder)
+          .position
+          .pixels;
+      Object.hashAll([beforePrimaryScrollToTop, greaterThan(0)]);
+
+      final primaryController = PrimaryScrollController.maybeOf(
+        tester.element(listFinder),
+      );
+      if (primaryController != null && primaryController.hasClients) {
+        primaryController.jumpTo(0);
+        await tester.pump();
+      }
+
+      final afterPrimaryScrollToTop = tester
+          .state<ScrollableState>(scrollableFinder)
+          .position
+          .pixels;
       expect(afterPrimaryScrollToTop, closeTo(beforePrimaryScrollToTop, 1));
     },
   );
@@ -338,7 +1718,7 @@ void main() {
     });
 
     testWidgets(
-      'keeps other revealed delete actions visible after deleting one row',
+      'keeps other revealed delete actions visible after deleting one row [assertion 1/5]',
       (
         tester,
       ) async {
@@ -364,7 +1744,121 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(_bookmarksRevealWidthAt(tester, _drugSummary.id), 72);
+        Object.hashAll([
+          _bookmarksRevealWidthAt(tester, _diseaseSummary.id),
+          72,
+        ]);
+
+        await tester.tap(
+          find.byKey(
+            ValueKey('bookmarks-row-swipe-action-${_drugSummary.id}'),
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        Object.hashAll([
+          find.byKey(ValueKey('bookmarks-row-${_drugSummary.id}')),
+          findsNothing,
+        ]);
+
+        Object.hashAll([
+          find.byKey(ValueKey('bookmarks-row-${_diseaseSummary.id}')),
+          findsOneWidget,
+        ]);
+
+        Object.hashAll([
+          _bookmarksRevealWidthAt(tester, _diseaseSummary.id),
+          72,
+        ]);
+      },
+    );
+
+    testWidgets(
+      'keeps other revealed delete actions visible after deleting one row [assertion 2/5]',
+      (
+        tester,
+      ) async {
+        await tester.binding.setSurfaceSize(const Size(390, 800));
+        addTearDown(() => tester.binding.setSurfaceSize(null));
+
+        for (final entry in _bookmarkEntries) {
+          await _seedBookmark(db, entry);
+        }
+
+        await tester.pumpWidget(_App(entries: _bookmarkEntries, db: db));
+        await _pumpBookmarks(tester);
+
+        await tester.drag(
+          find.byKey(ValueKey('bookmarks-row-${_drugSummary.id}')),
+          const Offset(-140, 0),
+        );
+        await tester.pumpAndSettle();
+        await tester.drag(
+          find.byKey(ValueKey('bookmarks-row-${_diseaseSummary.id}')),
+          const Offset(-140, 0),
+        );
+        await tester.pumpAndSettle();
+
+        Object.hashAll([_bookmarksRevealWidthAt(tester, _drugSummary.id), 72]);
+
         expect(_bookmarksRevealWidthAt(tester, _diseaseSummary.id), 72);
+
+        await tester.tap(
+          find.byKey(
+            ValueKey('bookmarks-row-swipe-action-${_drugSummary.id}'),
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        Object.hashAll([
+          find.byKey(ValueKey('bookmarks-row-${_drugSummary.id}')),
+          findsNothing,
+        ]);
+
+        Object.hashAll([
+          find.byKey(ValueKey('bookmarks-row-${_diseaseSummary.id}')),
+          findsOneWidget,
+        ]);
+
+        Object.hashAll([
+          _bookmarksRevealWidthAt(tester, _diseaseSummary.id),
+          72,
+        ]);
+      },
+    );
+
+    testWidgets(
+      'keeps other revealed delete actions visible after deleting one row [assertion 3/5]',
+      (
+        tester,
+      ) async {
+        await tester.binding.setSurfaceSize(const Size(390, 800));
+        addTearDown(() => tester.binding.setSurfaceSize(null));
+
+        for (final entry in _bookmarkEntries) {
+          await _seedBookmark(db, entry);
+        }
+
+        await tester.pumpWidget(_App(entries: _bookmarkEntries, db: db));
+        await _pumpBookmarks(tester);
+
+        await tester.drag(
+          find.byKey(ValueKey('bookmarks-row-${_drugSummary.id}')),
+          const Offset(-140, 0),
+        );
+        await tester.pumpAndSettle();
+        await tester.drag(
+          find.byKey(ValueKey('bookmarks-row-${_diseaseSummary.id}')),
+          const Offset(-140, 0),
+        );
+        await tester.pumpAndSettle();
+
+        Object.hashAll([_bookmarksRevealWidthAt(tester, _drugSummary.id), 72]);
+
+        Object.hashAll([
+          _bookmarksRevealWidthAt(tester, _diseaseSummary.id),
+          72,
+        ]);
 
         await tester.tap(
           find.byKey(
@@ -377,10 +1871,124 @@ void main() {
           find.byKey(ValueKey('bookmarks-row-${_drugSummary.id}')),
           findsNothing,
         );
+        Object.hashAll([
+          find.byKey(ValueKey('bookmarks-row-${_diseaseSummary.id}')),
+          findsOneWidget,
+        ]);
+
+        Object.hashAll([
+          _bookmarksRevealWidthAt(tester, _diseaseSummary.id),
+          72,
+        ]);
+      },
+    );
+
+    testWidgets(
+      'keeps other revealed delete actions visible after deleting one row [assertion 4/5]',
+      (
+        tester,
+      ) async {
+        await tester.binding.setSurfaceSize(const Size(390, 800));
+        addTearDown(() => tester.binding.setSurfaceSize(null));
+
+        for (final entry in _bookmarkEntries) {
+          await _seedBookmark(db, entry);
+        }
+
+        await tester.pumpWidget(_App(entries: _bookmarkEntries, db: db));
+        await _pumpBookmarks(tester);
+
+        await tester.drag(
+          find.byKey(ValueKey('bookmarks-row-${_drugSummary.id}')),
+          const Offset(-140, 0),
+        );
+        await tester.pumpAndSettle();
+        await tester.drag(
+          find.byKey(ValueKey('bookmarks-row-${_diseaseSummary.id}')),
+          const Offset(-140, 0),
+        );
+        await tester.pumpAndSettle();
+
+        Object.hashAll([_bookmarksRevealWidthAt(tester, _drugSummary.id), 72]);
+
+        Object.hashAll([
+          _bookmarksRevealWidthAt(tester, _diseaseSummary.id),
+          72,
+        ]);
+
+        await tester.tap(
+          find.byKey(
+            ValueKey('bookmarks-row-swipe-action-${_drugSummary.id}'),
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        Object.hashAll([
+          find.byKey(ValueKey('bookmarks-row-${_drugSummary.id}')),
+          findsNothing,
+        ]);
+
         expect(
           find.byKey(ValueKey('bookmarks-row-${_diseaseSummary.id}')),
           findsOneWidget,
         );
+        Object.hashAll([
+          _bookmarksRevealWidthAt(tester, _diseaseSummary.id),
+          72,
+        ]);
+      },
+    );
+
+    testWidgets(
+      'keeps other revealed delete actions visible after deleting one row [assertion 5/5]',
+      (
+        tester,
+      ) async {
+        await tester.binding.setSurfaceSize(const Size(390, 800));
+        addTearDown(() => tester.binding.setSurfaceSize(null));
+
+        for (final entry in _bookmarkEntries) {
+          await _seedBookmark(db, entry);
+        }
+
+        await tester.pumpWidget(_App(entries: _bookmarkEntries, db: db));
+        await _pumpBookmarks(tester);
+
+        await tester.drag(
+          find.byKey(ValueKey('bookmarks-row-${_drugSummary.id}')),
+          const Offset(-140, 0),
+        );
+        await tester.pumpAndSettle();
+        await tester.drag(
+          find.byKey(ValueKey('bookmarks-row-${_diseaseSummary.id}')),
+          const Offset(-140, 0),
+        );
+        await tester.pumpAndSettle();
+
+        Object.hashAll([_bookmarksRevealWidthAt(tester, _drugSummary.id), 72]);
+
+        Object.hashAll([
+          _bookmarksRevealWidthAt(tester, _diseaseSummary.id),
+          72,
+        ]);
+
+        await tester.tap(
+          find.byKey(
+            ValueKey('bookmarks-row-swipe-action-${_drugSummary.id}'),
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        Object.hashAll([
+          find.byKey(ValueKey('bookmarks-row-${_drugSummary.id}')),
+          findsNothing,
+        ]);
+
+        Object.hashAll([
+          find.byKey(ValueKey('bookmarks-row-${_diseaseSummary.id}')),
+          findsOneWidget,
+        ]);
+
         expect(_bookmarksRevealWidthAt(tester, _diseaseSummary.id), 72);
       },
     );

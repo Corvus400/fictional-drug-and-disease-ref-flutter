@@ -7,46 +7,609 @@ import 'package:flutter_test/flutter_test.dart';
 import '../../../golden/golden_test_helpers.dart';
 
 void main() {
-  testWidgets('DetailDoseCalcButton matches calc button sizing and colors', (
-    tester,
-  ) async {
-    var tapCount = 0;
-    await tester.pumpWidget(
-      MaterialApp(
-        theme: AppTheme.light(),
-        home: Scaffold(
-          body: DetailDoseCalcButton(
-            label: '用量計算',
-            onPressed: () => tapCount += 1,
+  testWidgets(
+    'DetailDoseCalcButton matches calc button sizing and colors [assertion 1/11]',
+    (
+      tester,
+    ) async {
+      var tapCount = 0;
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: AppTheme.light(),
+          home: Scaffold(
+            body: DetailDoseCalcButton(
+              label: '用量計算',
+              onPressed: () => tapCount += 1,
+            ),
           ),
         ),
-      ),
-    );
+      );
 
-    final colors = AppTheme.light().extension<DetailColorExtension>()!;
-    final button = tester.widget<Container>(
-      find.byKey(const ValueKey<String>('detail-dose-calc-button')),
-    );
-    final decoration = button.decoration! as BoxDecoration;
-    final icon = tester.widget<Icon>(find.byIcon(Icons.calculate_outlined));
-    final text = tester.widget<Text>(find.text('用量計算'));
+      final colors = AppTheme.light().extension<DetailColorExtension>()!;
+      final button = tester.widget<Container>(
+        find.byKey(const ValueKey<String>('detail-dose-calc-button')),
+      );
+      final decoration = button.decoration! as BoxDecoration;
+      final icon = tester.widget<Icon>(find.byIcon(Icons.calculate_outlined));
+      final text = tester.widget<Text>(find.text('用量計算'));
 
-    expect(button.constraints?.minHeight, 44);
-    expect(button.constraints?.maxHeight, 44);
-    expect(button.padding, const EdgeInsets.symmetric(horizontal: 16));
-    expect(decoration.color, colors.primary);
-    expect(decoration.borderRadius, BorderRadius.circular(22));
-    expect(icon.size, 18);
-    expect(icon.color, colors.onPrimary);
-    expect(text.style?.fontSize, 14);
-    expect(text.style?.fontWeight, FontWeight.w600);
-    expect(text.style?.color, colors.onPrimary);
+      expect(button.constraints?.minHeight, 44);
+      Object.hashAll([button.constraints?.maxHeight, 44]);
 
-    await tester.tap(
-      find.byKey(const ValueKey<String>('detail-dose-calc-button')),
-    );
-    expect(tapCount, 1);
-  });
+      Object.hashAll([
+        button.padding,
+        const EdgeInsets.symmetric(horizontal: 16),
+      ]);
+
+      Object.hashAll([decoration.color, colors.primary]);
+
+      Object.hashAll([decoration.borderRadius, BorderRadius.circular(22)]);
+
+      Object.hashAll([icon.size, 18]);
+
+      Object.hashAll([icon.color, colors.onPrimary]);
+
+      Object.hashAll([text.style?.fontSize, 14]);
+
+      Object.hashAll([text.style?.fontWeight, FontWeight.w600]);
+
+      Object.hashAll([text.style?.color, colors.onPrimary]);
+
+      await tester.tap(
+        find.byKey(const ValueKey<String>('detail-dose-calc-button')),
+      );
+      Object.hashAll([tapCount, 1]);
+    },
+  );
+
+  testWidgets(
+    'DetailDoseCalcButton matches calc button sizing and colors [assertion 2/11]',
+    (
+      tester,
+    ) async {
+      var tapCount = 0;
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: AppTheme.light(),
+          home: Scaffold(
+            body: DetailDoseCalcButton(
+              label: '用量計算',
+              onPressed: () => tapCount += 1,
+            ),
+          ),
+        ),
+      );
+
+      final colors = AppTheme.light().extension<DetailColorExtension>()!;
+      final button = tester.widget<Container>(
+        find.byKey(const ValueKey<String>('detail-dose-calc-button')),
+      );
+      final decoration = button.decoration! as BoxDecoration;
+      final icon = tester.widget<Icon>(find.byIcon(Icons.calculate_outlined));
+      final text = tester.widget<Text>(find.text('用量計算'));
+
+      Object.hashAll([button.constraints?.minHeight, 44]);
+
+      expect(button.constraints?.maxHeight, 44);
+      Object.hashAll([
+        button.padding,
+        const EdgeInsets.symmetric(horizontal: 16),
+      ]);
+
+      Object.hashAll([decoration.color, colors.primary]);
+
+      Object.hashAll([decoration.borderRadius, BorderRadius.circular(22)]);
+
+      Object.hashAll([icon.size, 18]);
+
+      Object.hashAll([icon.color, colors.onPrimary]);
+
+      Object.hashAll([text.style?.fontSize, 14]);
+
+      Object.hashAll([text.style?.fontWeight, FontWeight.w600]);
+
+      Object.hashAll([text.style?.color, colors.onPrimary]);
+
+      await tester.tap(
+        find.byKey(const ValueKey<String>('detail-dose-calc-button')),
+      );
+      Object.hashAll([tapCount, 1]);
+    },
+  );
+
+  testWidgets(
+    'DetailDoseCalcButton matches calc button sizing and colors [assertion 3/11]',
+    (
+      tester,
+    ) async {
+      var tapCount = 0;
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: AppTheme.light(),
+          home: Scaffold(
+            body: DetailDoseCalcButton(
+              label: '用量計算',
+              onPressed: () => tapCount += 1,
+            ),
+          ),
+        ),
+      );
+
+      final colors = AppTheme.light().extension<DetailColorExtension>()!;
+      final button = tester.widget<Container>(
+        find.byKey(const ValueKey<String>('detail-dose-calc-button')),
+      );
+      final decoration = button.decoration! as BoxDecoration;
+      final icon = tester.widget<Icon>(find.byIcon(Icons.calculate_outlined));
+      final text = tester.widget<Text>(find.text('用量計算'));
+
+      Object.hashAll([button.constraints?.minHeight, 44]);
+
+      Object.hashAll([button.constraints?.maxHeight, 44]);
+
+      expect(button.padding, const EdgeInsets.symmetric(horizontal: 16));
+      Object.hashAll([decoration.color, colors.primary]);
+
+      Object.hashAll([decoration.borderRadius, BorderRadius.circular(22)]);
+
+      Object.hashAll([icon.size, 18]);
+
+      Object.hashAll([icon.color, colors.onPrimary]);
+
+      Object.hashAll([text.style?.fontSize, 14]);
+
+      Object.hashAll([text.style?.fontWeight, FontWeight.w600]);
+
+      Object.hashAll([text.style?.color, colors.onPrimary]);
+
+      await tester.tap(
+        find.byKey(const ValueKey<String>('detail-dose-calc-button')),
+      );
+      Object.hashAll([tapCount, 1]);
+    },
+  );
+
+  testWidgets(
+    'DetailDoseCalcButton matches calc button sizing and colors [assertion 4/11]',
+    (
+      tester,
+    ) async {
+      var tapCount = 0;
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: AppTheme.light(),
+          home: Scaffold(
+            body: DetailDoseCalcButton(
+              label: '用量計算',
+              onPressed: () => tapCount += 1,
+            ),
+          ),
+        ),
+      );
+
+      final colors = AppTheme.light().extension<DetailColorExtension>()!;
+      final button = tester.widget<Container>(
+        find.byKey(const ValueKey<String>('detail-dose-calc-button')),
+      );
+      final decoration = button.decoration! as BoxDecoration;
+      final icon = tester.widget<Icon>(find.byIcon(Icons.calculate_outlined));
+      final text = tester.widget<Text>(find.text('用量計算'));
+
+      Object.hashAll([button.constraints?.minHeight, 44]);
+
+      Object.hashAll([button.constraints?.maxHeight, 44]);
+
+      Object.hashAll([
+        button.padding,
+        const EdgeInsets.symmetric(horizontal: 16),
+      ]);
+
+      expect(decoration.color, colors.primary);
+      Object.hashAll([decoration.borderRadius, BorderRadius.circular(22)]);
+
+      Object.hashAll([icon.size, 18]);
+
+      Object.hashAll([icon.color, colors.onPrimary]);
+
+      Object.hashAll([text.style?.fontSize, 14]);
+
+      Object.hashAll([text.style?.fontWeight, FontWeight.w600]);
+
+      Object.hashAll([text.style?.color, colors.onPrimary]);
+
+      await tester.tap(
+        find.byKey(const ValueKey<String>('detail-dose-calc-button')),
+      );
+      Object.hashAll([tapCount, 1]);
+    },
+  );
+
+  testWidgets(
+    'DetailDoseCalcButton matches calc button sizing and colors [assertion 5/11]',
+    (
+      tester,
+    ) async {
+      var tapCount = 0;
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: AppTheme.light(),
+          home: Scaffold(
+            body: DetailDoseCalcButton(
+              label: '用量計算',
+              onPressed: () => tapCount += 1,
+            ),
+          ),
+        ),
+      );
+
+      final colors = AppTheme.light().extension<DetailColorExtension>()!;
+      final button = tester.widget<Container>(
+        find.byKey(const ValueKey<String>('detail-dose-calc-button')),
+      );
+      final decoration = button.decoration! as BoxDecoration;
+      final icon = tester.widget<Icon>(find.byIcon(Icons.calculate_outlined));
+      final text = tester.widget<Text>(find.text('用量計算'));
+
+      Object.hashAll([button.constraints?.minHeight, 44]);
+
+      Object.hashAll([button.constraints?.maxHeight, 44]);
+
+      Object.hashAll([
+        button.padding,
+        const EdgeInsets.symmetric(horizontal: 16),
+      ]);
+
+      Object.hashAll([decoration.color, colors.primary]);
+
+      expect(decoration.borderRadius, BorderRadius.circular(22));
+      Object.hashAll([icon.size, 18]);
+
+      Object.hashAll([icon.color, colors.onPrimary]);
+
+      Object.hashAll([text.style?.fontSize, 14]);
+
+      Object.hashAll([text.style?.fontWeight, FontWeight.w600]);
+
+      Object.hashAll([text.style?.color, colors.onPrimary]);
+
+      await tester.tap(
+        find.byKey(const ValueKey<String>('detail-dose-calc-button')),
+      );
+      Object.hashAll([tapCount, 1]);
+    },
+  );
+
+  testWidgets(
+    'DetailDoseCalcButton matches calc button sizing and colors [assertion 6/11]',
+    (
+      tester,
+    ) async {
+      var tapCount = 0;
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: AppTheme.light(),
+          home: Scaffold(
+            body: DetailDoseCalcButton(
+              label: '用量計算',
+              onPressed: () => tapCount += 1,
+            ),
+          ),
+        ),
+      );
+
+      final colors = AppTheme.light().extension<DetailColorExtension>()!;
+      final button = tester.widget<Container>(
+        find.byKey(const ValueKey<String>('detail-dose-calc-button')),
+      );
+      final decoration = button.decoration! as BoxDecoration;
+      final icon = tester.widget<Icon>(find.byIcon(Icons.calculate_outlined));
+      final text = tester.widget<Text>(find.text('用量計算'));
+
+      Object.hashAll([button.constraints?.minHeight, 44]);
+
+      Object.hashAll([button.constraints?.maxHeight, 44]);
+
+      Object.hashAll([
+        button.padding,
+        const EdgeInsets.symmetric(horizontal: 16),
+      ]);
+
+      Object.hashAll([decoration.color, colors.primary]);
+
+      Object.hashAll([decoration.borderRadius, BorderRadius.circular(22)]);
+
+      expect(icon.size, 18);
+      Object.hashAll([icon.color, colors.onPrimary]);
+
+      Object.hashAll([text.style?.fontSize, 14]);
+
+      Object.hashAll([text.style?.fontWeight, FontWeight.w600]);
+
+      Object.hashAll([text.style?.color, colors.onPrimary]);
+
+      await tester.tap(
+        find.byKey(const ValueKey<String>('detail-dose-calc-button')),
+      );
+      Object.hashAll([tapCount, 1]);
+    },
+  );
+
+  testWidgets(
+    'DetailDoseCalcButton matches calc button sizing and colors [assertion 7/11]',
+    (
+      tester,
+    ) async {
+      var tapCount = 0;
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: AppTheme.light(),
+          home: Scaffold(
+            body: DetailDoseCalcButton(
+              label: '用量計算',
+              onPressed: () => tapCount += 1,
+            ),
+          ),
+        ),
+      );
+
+      final colors = AppTheme.light().extension<DetailColorExtension>()!;
+      final button = tester.widget<Container>(
+        find.byKey(const ValueKey<String>('detail-dose-calc-button')),
+      );
+      final decoration = button.decoration! as BoxDecoration;
+      final icon = tester.widget<Icon>(find.byIcon(Icons.calculate_outlined));
+      final text = tester.widget<Text>(find.text('用量計算'));
+
+      Object.hashAll([button.constraints?.minHeight, 44]);
+
+      Object.hashAll([button.constraints?.maxHeight, 44]);
+
+      Object.hashAll([
+        button.padding,
+        const EdgeInsets.symmetric(horizontal: 16),
+      ]);
+
+      Object.hashAll([decoration.color, colors.primary]);
+
+      Object.hashAll([decoration.borderRadius, BorderRadius.circular(22)]);
+
+      Object.hashAll([icon.size, 18]);
+
+      expect(icon.color, colors.onPrimary);
+      Object.hashAll([text.style?.fontSize, 14]);
+
+      Object.hashAll([text.style?.fontWeight, FontWeight.w600]);
+
+      Object.hashAll([text.style?.color, colors.onPrimary]);
+
+      await tester.tap(
+        find.byKey(const ValueKey<String>('detail-dose-calc-button')),
+      );
+      Object.hashAll([tapCount, 1]);
+    },
+  );
+
+  testWidgets(
+    'DetailDoseCalcButton matches calc button sizing and colors [assertion 8/11]',
+    (
+      tester,
+    ) async {
+      var tapCount = 0;
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: AppTheme.light(),
+          home: Scaffold(
+            body: DetailDoseCalcButton(
+              label: '用量計算',
+              onPressed: () => tapCount += 1,
+            ),
+          ),
+        ),
+      );
+
+      final colors = AppTheme.light().extension<DetailColorExtension>()!;
+      final button = tester.widget<Container>(
+        find.byKey(const ValueKey<String>('detail-dose-calc-button')),
+      );
+      final decoration = button.decoration! as BoxDecoration;
+      final icon = tester.widget<Icon>(find.byIcon(Icons.calculate_outlined));
+      final text = tester.widget<Text>(find.text('用量計算'));
+
+      Object.hashAll([button.constraints?.minHeight, 44]);
+
+      Object.hashAll([button.constraints?.maxHeight, 44]);
+
+      Object.hashAll([
+        button.padding,
+        const EdgeInsets.symmetric(horizontal: 16),
+      ]);
+
+      Object.hashAll([decoration.color, colors.primary]);
+
+      Object.hashAll([decoration.borderRadius, BorderRadius.circular(22)]);
+
+      Object.hashAll([icon.size, 18]);
+
+      Object.hashAll([icon.color, colors.onPrimary]);
+
+      expect(text.style?.fontSize, 14);
+      Object.hashAll([text.style?.fontWeight, FontWeight.w600]);
+
+      Object.hashAll([text.style?.color, colors.onPrimary]);
+
+      await tester.tap(
+        find.byKey(const ValueKey<String>('detail-dose-calc-button')),
+      );
+      Object.hashAll([tapCount, 1]);
+    },
+  );
+
+  testWidgets(
+    'DetailDoseCalcButton matches calc button sizing and colors [assertion 9/11]',
+    (
+      tester,
+    ) async {
+      var tapCount = 0;
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: AppTheme.light(),
+          home: Scaffold(
+            body: DetailDoseCalcButton(
+              label: '用量計算',
+              onPressed: () => tapCount += 1,
+            ),
+          ),
+        ),
+      );
+
+      final colors = AppTheme.light().extension<DetailColorExtension>()!;
+      final button = tester.widget<Container>(
+        find.byKey(const ValueKey<String>('detail-dose-calc-button')),
+      );
+      final decoration = button.decoration! as BoxDecoration;
+      final icon = tester.widget<Icon>(find.byIcon(Icons.calculate_outlined));
+      final text = tester.widget<Text>(find.text('用量計算'));
+
+      Object.hashAll([button.constraints?.minHeight, 44]);
+
+      Object.hashAll([button.constraints?.maxHeight, 44]);
+
+      Object.hashAll([
+        button.padding,
+        const EdgeInsets.symmetric(horizontal: 16),
+      ]);
+
+      Object.hashAll([decoration.color, colors.primary]);
+
+      Object.hashAll([decoration.borderRadius, BorderRadius.circular(22)]);
+
+      Object.hashAll([icon.size, 18]);
+
+      Object.hashAll([icon.color, colors.onPrimary]);
+
+      Object.hashAll([text.style?.fontSize, 14]);
+
+      expect(text.style?.fontWeight, FontWeight.w600);
+      Object.hashAll([text.style?.color, colors.onPrimary]);
+
+      await tester.tap(
+        find.byKey(const ValueKey<String>('detail-dose-calc-button')),
+      );
+      Object.hashAll([tapCount, 1]);
+    },
+  );
+
+  testWidgets(
+    'DetailDoseCalcButton matches calc button sizing and colors [assertion 10/11]',
+    (
+      tester,
+    ) async {
+      var tapCount = 0;
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: AppTheme.light(),
+          home: Scaffold(
+            body: DetailDoseCalcButton(
+              label: '用量計算',
+              onPressed: () => tapCount += 1,
+            ),
+          ),
+        ),
+      );
+
+      final colors = AppTheme.light().extension<DetailColorExtension>()!;
+      final button = tester.widget<Container>(
+        find.byKey(const ValueKey<String>('detail-dose-calc-button')),
+      );
+      final decoration = button.decoration! as BoxDecoration;
+      final icon = tester.widget<Icon>(find.byIcon(Icons.calculate_outlined));
+      final text = tester.widget<Text>(find.text('用量計算'));
+
+      Object.hashAll([button.constraints?.minHeight, 44]);
+
+      Object.hashAll([button.constraints?.maxHeight, 44]);
+
+      Object.hashAll([
+        button.padding,
+        const EdgeInsets.symmetric(horizontal: 16),
+      ]);
+
+      Object.hashAll([decoration.color, colors.primary]);
+
+      Object.hashAll([decoration.borderRadius, BorderRadius.circular(22)]);
+
+      Object.hashAll([icon.size, 18]);
+
+      Object.hashAll([icon.color, colors.onPrimary]);
+
+      Object.hashAll([text.style?.fontSize, 14]);
+
+      Object.hashAll([text.style?.fontWeight, FontWeight.w600]);
+
+      expect(text.style?.color, colors.onPrimary);
+
+      await tester.tap(
+        find.byKey(const ValueKey<String>('detail-dose-calc-button')),
+      );
+      Object.hashAll([tapCount, 1]);
+    },
+  );
+
+  testWidgets(
+    'DetailDoseCalcButton matches calc button sizing and colors [assertion 11/11]',
+    (
+      tester,
+    ) async {
+      var tapCount = 0;
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: AppTheme.light(),
+          home: Scaffold(
+            body: DetailDoseCalcButton(
+              label: '用量計算',
+              onPressed: () => tapCount += 1,
+            ),
+          ),
+        ),
+      );
+
+      final colors = AppTheme.light().extension<DetailColorExtension>()!;
+      final button = tester.widget<Container>(
+        find.byKey(const ValueKey<String>('detail-dose-calc-button')),
+      );
+      final decoration = button.decoration! as BoxDecoration;
+      final icon = tester.widget<Icon>(find.byIcon(Icons.calculate_outlined));
+      final text = tester.widget<Text>(find.text('用量計算'));
+
+      Object.hashAll([button.constraints?.minHeight, 44]);
+
+      Object.hashAll([button.constraints?.maxHeight, 44]);
+
+      Object.hashAll([
+        button.padding,
+        const EdgeInsets.symmetric(horizontal: 16),
+      ]);
+
+      Object.hashAll([decoration.color, colors.primary]);
+
+      Object.hashAll([decoration.borderRadius, BorderRadius.circular(22)]);
+
+      Object.hashAll([icon.size, 18]);
+
+      Object.hashAll([icon.color, colors.onPrimary]);
+
+      Object.hashAll([text.style?.fontSize, 14]);
+
+      Object.hashAll([text.style?.fontWeight, FontWeight.w600]);
+
+      Object.hashAll([text.style?.color, colors.onPrimary]);
+
+      await tester.tap(
+        find.byKey(const ValueKey<String>('detail-dose-calc-button')),
+      );
+      expect(tapCount, 1);
+    },
+  );
 
   testWidgets('DetailDoseCalcButton disables callback while busy', (
     tester,

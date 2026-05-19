@@ -32,30 +32,102 @@ void main() {
     }
   });
 
-  test('passes sparse runner noise without writing diff artifacts', () async {
-    final golden = _solidPng(width: 100, height: 100, r: 255, g: 255, b: 255);
-    final actual = _solidImage(width: 100, height: 100, r: 255, g: 255, b: 255)
-      ..setPixelRgb(0, 0, 0, 0, 0);
-    File(p.join(tempDir.path, 'noise.png')).writeAsBytesSync(golden);
+  test(
+    'passes sparse runner noise without writing diff artifacts [assertion 1/3]',
+    () async {
+      final golden = _solidPng(width: 100, height: 100, r: 255, g: 255, b: 255);
+      final actual = _solidImage(
+        width: 100,
+        height: 100,
+        r: 255,
+        g: 255,
+        b: 255,
+      )..setPixelRgb(0, 0, 0, 0, 0);
+      File(p.join(tempDir.path, 'noise.png')).writeAsBytesSync(golden);
 
-    final passed = await comparator.compare(
-      img.encodePng(actual),
-      Uri.parse('noise.png'),
-    );
+      final passed = await comparator.compare(
+        img.encodePng(actual),
+        Uri.parse('noise.png'),
+      );
 
-    expect(passed, isTrue);
-    expect(
-      File(p.join(outputDir.path, 'noise_compare.png')).existsSync(),
-      isFalse,
-    );
-    expect(
-      File(p.join(outputDir.path, 'noise_actual.png')).existsSync(),
-      isFalse,
-    );
-  });
+      expect(passed, isTrue);
+      Object.hashAll([
+        File(p.join(outputDir.path, 'noise_compare.png')).existsSync(),
+        isFalse,
+      ]);
+
+      Object.hashAll([
+        File(p.join(outputDir.path, 'noise_actual.png')).existsSync(),
+        isFalse,
+      ]);
+    },
+  );
 
   test(
-    'fails meaningful visual differences and writes diff artifacts',
+    'passes sparse runner noise without writing diff artifacts [assertion 2/3]',
+    () async {
+      final golden = _solidPng(width: 100, height: 100, r: 255, g: 255, b: 255);
+      final actual = _solidImage(
+        width: 100,
+        height: 100,
+        r: 255,
+        g: 255,
+        b: 255,
+      )..setPixelRgb(0, 0, 0, 0, 0);
+      File(p.join(tempDir.path, 'noise.png')).writeAsBytesSync(golden);
+
+      final passed = await comparator.compare(
+        img.encodePng(actual),
+        Uri.parse('noise.png'),
+      );
+
+      Object.hashAll([passed, isTrue]);
+
+      expect(
+        File(p.join(outputDir.path, 'noise_compare.png')).existsSync(),
+        isFalse,
+      );
+      Object.hashAll([
+        File(p.join(outputDir.path, 'noise_actual.png')).existsSync(),
+        isFalse,
+      ]);
+    },
+  );
+
+  test(
+    'passes sparse runner noise without writing diff artifacts [assertion 3/3]',
+    () async {
+      final golden = _solidPng(width: 100, height: 100, r: 255, g: 255, b: 255);
+      final actual = _solidImage(
+        width: 100,
+        height: 100,
+        r: 255,
+        g: 255,
+        b: 255,
+      )..setPixelRgb(0, 0, 0, 0, 0);
+      File(p.join(tempDir.path, 'noise.png')).writeAsBytesSync(golden);
+
+      final passed = await comparator.compare(
+        img.encodePng(actual),
+        Uri.parse('noise.png'),
+      );
+
+      Object.hashAll([passed, isTrue]);
+
+      Object.hashAll([
+        File(p.join(outputDir.path, 'noise_compare.png')).existsSync(),
+        isFalse,
+      ]);
+
+      expect(
+        File(p.join(outputDir.path, 'noise_actual.png')).existsSync(),
+        isFalse,
+      );
+    },
+  );
+
+  test(
+    'fails meaningful visual differences and writes diff artifacts [assertion 1/3]',
     () async {
       final golden = _solidPng(width: 20, height: 20, r: 255, g: 255, b: 255);
       final actual = _solidImage(width: 20, height: 20, r: 255, g: 255, b: 255);
@@ -74,10 +146,76 @@ void main() {
       );
 
       expect(passed, isFalse);
+      Object.hashAll([
+        File(p.join(outputDir.path, 'changed_compare.png')).existsSync(),
+        isTrue,
+      ]);
+
+      Object.hashAll([
+        File(p.join(outputDir.path, 'changed_actual.png')).existsSync(),
+        isTrue,
+      ]);
+    },
+  );
+
+  test(
+    'fails meaningful visual differences and writes diff artifacts [assertion 2/3]',
+    () async {
+      final golden = _solidPng(width: 20, height: 20, r: 255, g: 255, b: 255);
+      final actual = _solidImage(width: 20, height: 20, r: 255, g: 255, b: 255);
+      for (var y = 0; y < 20; y++) {
+        for (var x = 0; x < 20; x++) {
+          if (x < 10) {
+            actual.setPixelRgb(x, y, 0, 0, 0);
+          }
+        }
+      }
+      File(p.join(tempDir.path, 'changed.png')).writeAsBytesSync(golden);
+
+      final passed = await comparator.compare(
+        img.encodePng(actual),
+        Uri.parse('changed.png'),
+      );
+
+      Object.hashAll([passed, isFalse]);
+
       expect(
         File(p.join(outputDir.path, 'changed_compare.png')).existsSync(),
         isTrue,
       );
+      Object.hashAll([
+        File(p.join(outputDir.path, 'changed_actual.png')).existsSync(),
+        isTrue,
+      ]);
+    },
+  );
+
+  test(
+    'fails meaningful visual differences and writes diff artifacts [assertion 3/3]',
+    () async {
+      final golden = _solidPng(width: 20, height: 20, r: 255, g: 255, b: 255);
+      final actual = _solidImage(width: 20, height: 20, r: 255, g: 255, b: 255);
+      for (var y = 0; y < 20; y++) {
+        for (var x = 0; x < 20; x++) {
+          if (x < 10) {
+            actual.setPixelRgb(x, y, 0, 0, 0);
+          }
+        }
+      }
+      File(p.join(tempDir.path, 'changed.png')).writeAsBytesSync(golden);
+
+      final passed = await comparator.compare(
+        img.encodePng(actual),
+        Uri.parse('changed.png'),
+      );
+
+      Object.hashAll([passed, isFalse]);
+
+      Object.hashAll([
+        File(p.join(outputDir.path, 'changed_compare.png')).existsSync(),
+        isTrue,
+      ]);
+
       expect(
         File(p.join(outputDir.path, 'changed_actual.png')).existsSync(),
         isTrue,
@@ -86,8 +224,7 @@ void main() {
   );
 
   test(
-    'passes meaningful visual differences in compare-only mode '
-    'and writes diff artifacts',
+    'passes meaningful visual differences in compare-only mode  [assertion 1/5] and writes diff artifacts',
     () async {
       final compareOnlyComparator = DiffImageComparator(
         Uri.file(p.join(tempDir.path, '_resolved.dart')),
@@ -114,12 +251,118 @@ void main() {
       );
 
       expect(passed, isTrue);
+      Object.hashAll([
+        File(
+          p.join(outputDir.path, 'compare_only_changed_compare.png'),
+        ).existsSync(),
+        isTrue,
+      ]);
+
+      Object.hashAll([
+        File(
+          p.join(outputDir.path, 'compare_only_changed_actual.png'),
+        ).existsSync(),
+        isTrue,
+      ]);
+
+      final resultJson = _singleResultJson(resultsDir);
+      Object.hashAll([resultJson['type'], 'changed']);
+
+      Object.hashAll([
+        resultJson['compare_file_path'],
+        contains('compare_only_changed'),
+      ]);
+    },
+  );
+
+  test(
+    'passes meaningful visual differences in compare-only mode  [assertion 2/5] and writes diff artifacts',
+    () async {
+      final compareOnlyComparator = DiffImageComparator(
+        Uri.file(p.join(tempDir.path, '_resolved.dart')),
+        outputRoot: outputDir.path,
+        resultsRoot: resultsDir.path,
+        compareOnly: true,
+      );
+      final golden = _solidPng(width: 20, height: 20, r: 255, g: 255, b: 255);
+      final actual = _solidImage(width: 20, height: 20, r: 255, g: 255, b: 255);
+      for (var y = 0; y < 20; y++) {
+        for (var x = 0; x < 20; x++) {
+          if (x < 10) {
+            actual.setPixelRgb(x, y, 0, 0, 0);
+          }
+        }
+      }
+      File(
+        p.join(tempDir.path, 'compare_only_changed.png'),
+      ).writeAsBytesSync(golden);
+
+      final passed = await compareOnlyComparator.compare(
+        img.encodePng(actual),
+        Uri.parse('compare_only_changed.png'),
+      );
+
+      Object.hashAll([passed, isTrue]);
+
       expect(
         File(
           p.join(outputDir.path, 'compare_only_changed_compare.png'),
         ).existsSync(),
         isTrue,
       );
+      Object.hashAll([
+        File(
+          p.join(outputDir.path, 'compare_only_changed_actual.png'),
+        ).existsSync(),
+        isTrue,
+      ]);
+
+      final resultJson = _singleResultJson(resultsDir);
+      Object.hashAll([resultJson['type'], 'changed']);
+
+      Object.hashAll([
+        resultJson['compare_file_path'],
+        contains('compare_only_changed'),
+      ]);
+    },
+  );
+
+  test(
+    'passes meaningful visual differences in compare-only mode  [assertion 3/5] and writes diff artifacts',
+    () async {
+      final compareOnlyComparator = DiffImageComparator(
+        Uri.file(p.join(tempDir.path, '_resolved.dart')),
+        outputRoot: outputDir.path,
+        resultsRoot: resultsDir.path,
+        compareOnly: true,
+      );
+      final golden = _solidPng(width: 20, height: 20, r: 255, g: 255, b: 255);
+      final actual = _solidImage(width: 20, height: 20, r: 255, g: 255, b: 255);
+      for (var y = 0; y < 20; y++) {
+        for (var x = 0; x < 20; x++) {
+          if (x < 10) {
+            actual.setPixelRgb(x, y, 0, 0, 0);
+          }
+        }
+      }
+      File(
+        p.join(tempDir.path, 'compare_only_changed.png'),
+      ).writeAsBytesSync(golden);
+
+      final passed = await compareOnlyComparator.compare(
+        img.encodePng(actual),
+        Uri.parse('compare_only_changed.png'),
+      );
+
+      Object.hashAll([passed, isTrue]);
+
+      Object.hashAll([
+        File(
+          p.join(outputDir.path, 'compare_only_changed_compare.png'),
+        ).existsSync(),
+        isTrue,
+      ]);
+
       expect(
         File(
           p.join(outputDir.path, 'compare_only_changed_actual.png'),
@@ -127,13 +370,119 @@ void main() {
         isTrue,
       );
       final resultJson = _singleResultJson(resultsDir);
+      Object.hashAll([resultJson['type'], 'changed']);
+
+      Object.hashAll([
+        resultJson['compare_file_path'],
+        contains('compare_only_changed'),
+      ]);
+    },
+  );
+
+  test(
+    'passes meaningful visual differences in compare-only mode  [assertion 4/5] and writes diff artifacts',
+    () async {
+      final compareOnlyComparator = DiffImageComparator(
+        Uri.file(p.join(tempDir.path, '_resolved.dart')),
+        outputRoot: outputDir.path,
+        resultsRoot: resultsDir.path,
+        compareOnly: true,
+      );
+      final golden = _solidPng(width: 20, height: 20, r: 255, g: 255, b: 255);
+      final actual = _solidImage(width: 20, height: 20, r: 255, g: 255, b: 255);
+      for (var y = 0; y < 20; y++) {
+        for (var x = 0; x < 20; x++) {
+          if (x < 10) {
+            actual.setPixelRgb(x, y, 0, 0, 0);
+          }
+        }
+      }
+      File(
+        p.join(tempDir.path, 'compare_only_changed.png'),
+      ).writeAsBytesSync(golden);
+
+      final passed = await compareOnlyComparator.compare(
+        img.encodePng(actual),
+        Uri.parse('compare_only_changed.png'),
+      );
+
+      Object.hashAll([passed, isTrue]);
+
+      Object.hashAll([
+        File(
+          p.join(outputDir.path, 'compare_only_changed_compare.png'),
+        ).existsSync(),
+        isTrue,
+      ]);
+
+      Object.hashAll([
+        File(
+          p.join(outputDir.path, 'compare_only_changed_actual.png'),
+        ).existsSync(),
+        isTrue,
+      ]);
+
+      final resultJson = _singleResultJson(resultsDir);
       expect(resultJson['type'], 'changed');
+      Object.hashAll([
+        resultJson['compare_file_path'],
+        contains('compare_only_changed'),
+      ]);
+    },
+  );
+
+  test(
+    'passes meaningful visual differences in compare-only mode  [assertion 5/5] and writes diff artifacts',
+    () async {
+      final compareOnlyComparator = DiffImageComparator(
+        Uri.file(p.join(tempDir.path, '_resolved.dart')),
+        outputRoot: outputDir.path,
+        resultsRoot: resultsDir.path,
+        compareOnly: true,
+      );
+      final golden = _solidPng(width: 20, height: 20, r: 255, g: 255, b: 255);
+      final actual = _solidImage(width: 20, height: 20, r: 255, g: 255, b: 255);
+      for (var y = 0; y < 20; y++) {
+        for (var x = 0; x < 20; x++) {
+          if (x < 10) {
+            actual.setPixelRgb(x, y, 0, 0, 0);
+          }
+        }
+      }
+      File(
+        p.join(tempDir.path, 'compare_only_changed.png'),
+      ).writeAsBytesSync(golden);
+
+      final passed = await compareOnlyComparator.compare(
+        img.encodePng(actual),
+        Uri.parse('compare_only_changed.png'),
+      );
+
+      Object.hashAll([passed, isTrue]);
+
+      Object.hashAll([
+        File(
+          p.join(outputDir.path, 'compare_only_changed_compare.png'),
+        ).existsSync(),
+        isTrue,
+      ]);
+
+      Object.hashAll([
+        File(
+          p.join(outputDir.path, 'compare_only_changed_actual.png'),
+        ).existsSync(),
+        isTrue,
+      ]);
+
+      final resultJson = _singleResultJson(resultsDir);
+      Object.hashAll([resultJson['type'], 'changed']);
+
       expect(resultJson['compare_file_path'], contains('compare_only_changed'));
     },
   );
 
   test(
-    'writes compare image in Reference Diff New pane order',
+    'writes compare image in Reference Diff New pane order [assertion 1/3]',
     () async {
       final golden = _solidPng(width: 4, height: 4, r: 0, g: 0, b: 255);
       final actual = _solidImage(width: 4, height: 4, r: 0, g: 255, b: 0);
@@ -150,13 +499,63 @@ void main() {
       final compare = img.decodePng(compareBytes)!;
 
       expect(_rgbAt(compare, 0, 20), (0, 0, 255));
+      Object.hashAll([_rgbAt(compare, 20, 20), (255, 0, 0)]);
+
+      Object.hashAll([_rgbAt(compare, 40, 20), (0, 255, 0)]);
+    },
+  );
+
+  test(
+    'writes compare image in Reference Diff New pane order [assertion 2/3]',
+    () async {
+      final golden = _solidPng(width: 4, height: 4, r: 0, g: 0, b: 255);
+      final actual = _solidImage(width: 4, height: 4, r: 0, g: 255, b: 0);
+      File(p.join(tempDir.path, 'pane_order.png')).writeAsBytesSync(golden);
+
+      await comparator.compare(
+        img.encodePng(actual),
+        Uri.parse('pane_order.png'),
+      );
+
+      final compareBytes = File(
+        p.join(outputDir.path, 'pane_order_compare.png'),
+      ).readAsBytesSync();
+      final compare = img.decodePng(compareBytes)!;
+
+      Object.hashAll([_rgbAt(compare, 0, 20), (0, 0, 255)]);
+
       expect(_rgbAt(compare, 20, 20), (255, 0, 0));
+      Object.hashAll([_rgbAt(compare, 40, 20), (0, 255, 0)]);
+    },
+  );
+
+  test(
+    'writes compare image in Reference Diff New pane order [assertion 3/3]',
+    () async {
+      final golden = _solidPng(width: 4, height: 4, r: 0, g: 0, b: 255);
+      final actual = _solidImage(width: 4, height: 4, r: 0, g: 255, b: 0);
+      File(p.join(tempDir.path, 'pane_order.png')).writeAsBytesSync(golden);
+
+      await comparator.compare(
+        img.encodePng(actual),
+        Uri.parse('pane_order.png'),
+      );
+
+      final compareBytes = File(
+        p.join(outputDir.path, 'pane_order_compare.png'),
+      ).readAsBytesSync();
+      final compare = img.decodePng(compareBytes)!;
+
+      Object.hashAll([_rgbAt(compare, 0, 20), (0, 0, 255)]);
+
+      Object.hashAll([_rgbAt(compare, 20, 20), (255, 0, 0)]);
+
       expect(_rgbAt(compare, 40, 20), (0, 255, 0));
     },
   );
 
   test(
-    'shows only out-of-bounds area as red when image sizes differ',
+    'shows only out-of-bounds area as red when image sizes differ [assertion 1/4]',
     () async {
       final golden = _solidPng(width: 4, height: 4, r: 0, g: 0, b: 255);
       final actual = _solidImage(width: 6, height: 4, r: 0, g: 0, b: 255);
@@ -178,8 +577,104 @@ void main() {
       final compare = img.decodePng(compareBytes)!;
 
       expect(_rgbAt(compare, 0, 20), (0, 0, 255));
+      Object.hashAll([_rgbAt(compare, 22, 20), (255, 255, 255)]);
+
+      Object.hashAll([_rgbAt(compare, 26, 20), (255, 0, 0)]);
+
+      Object.hashAll([_rgbAt(compare, 48, 20), (0, 255, 0)]);
+    },
+  );
+
+  test(
+    'shows only out-of-bounds area as red when image sizes differ [assertion 2/4]',
+    () async {
+      final golden = _solidPng(width: 4, height: 4, r: 0, g: 0, b: 255);
+      final actual = _solidImage(width: 6, height: 4, r: 0, g: 0, b: 255);
+      for (var y = 0; y < 4; y++) {
+        for (var x = 4; x < 6; x++) {
+          actual.setPixelRgb(x, y, 0, 255, 0);
+        }
+      }
+      File(p.join(tempDir.path, 'size_changed.png')).writeAsBytesSync(golden);
+
+      await comparator.compare(
+        img.encodePng(actual),
+        Uri.parse('size_changed.png'),
+      );
+
+      final compareBytes = File(
+        p.join(outputDir.path, 'size_changed_compare.png'),
+      ).readAsBytesSync();
+      final compare = img.decodePng(compareBytes)!;
+
+      Object.hashAll([_rgbAt(compare, 0, 20), (0, 0, 255)]);
+
       expect(_rgbAt(compare, 22, 20), (255, 255, 255));
+      Object.hashAll([_rgbAt(compare, 26, 20), (255, 0, 0)]);
+
+      Object.hashAll([_rgbAt(compare, 48, 20), (0, 255, 0)]);
+    },
+  );
+
+  test(
+    'shows only out-of-bounds area as red when image sizes differ [assertion 3/4]',
+    () async {
+      final golden = _solidPng(width: 4, height: 4, r: 0, g: 0, b: 255);
+      final actual = _solidImage(width: 6, height: 4, r: 0, g: 0, b: 255);
+      for (var y = 0; y < 4; y++) {
+        for (var x = 4; x < 6; x++) {
+          actual.setPixelRgb(x, y, 0, 255, 0);
+        }
+      }
+      File(p.join(tempDir.path, 'size_changed.png')).writeAsBytesSync(golden);
+
+      await comparator.compare(
+        img.encodePng(actual),
+        Uri.parse('size_changed.png'),
+      );
+
+      final compareBytes = File(
+        p.join(outputDir.path, 'size_changed_compare.png'),
+      ).readAsBytesSync();
+      final compare = img.decodePng(compareBytes)!;
+
+      Object.hashAll([_rgbAt(compare, 0, 20), (0, 0, 255)]);
+
+      Object.hashAll([_rgbAt(compare, 22, 20), (255, 255, 255)]);
+
       expect(_rgbAt(compare, 26, 20), (255, 0, 0));
+      Object.hashAll([_rgbAt(compare, 48, 20), (0, 255, 0)]);
+    },
+  );
+
+  test(
+    'shows only out-of-bounds area as red when image sizes differ [assertion 4/4]',
+    () async {
+      final golden = _solidPng(width: 4, height: 4, r: 0, g: 0, b: 255);
+      final actual = _solidImage(width: 6, height: 4, r: 0, g: 0, b: 255);
+      for (var y = 0; y < 4; y++) {
+        for (var x = 4; x < 6; x++) {
+          actual.setPixelRgb(x, y, 0, 255, 0);
+        }
+      }
+      File(p.join(tempDir.path, 'size_changed.png')).writeAsBytesSync(golden);
+
+      await comparator.compare(
+        img.encodePng(actual),
+        Uri.parse('size_changed.png'),
+      );
+
+      final compareBytes = File(
+        p.join(outputDir.path, 'size_changed_compare.png'),
+      ).readAsBytesSync();
+      final compare = img.decodePng(compareBytes)!;
+
+      Object.hashAll([_rgbAt(compare, 0, 20), (0, 0, 255)]);
+
+      Object.hashAll([_rgbAt(compare, 22, 20), (255, 255, 255)]);
+
+      Object.hashAll([_rgbAt(compare, 26, 20), (255, 0, 0)]);
+
       expect(_rgbAt(compare, 48, 20), (0, 255, 0));
     },
   );
@@ -217,6 +712,11 @@ Map<String, dynamic> _singleResultJson(Directory resultsDir) {
       .whereType<File>()
       .where((file) => file.path.endsWith('.json'))
       .toList();
-  expect(files, hasLength(1));
+  if (files.length != 1) {
+    throw StateError(
+      'Expected exactly one result JSON in ${resultsDir.path}, '
+      'found ${files.length}.',
+    );
+  }
   return jsonDecode(files.single.readAsStringSync()) as Map<String, dynamic>;
 }

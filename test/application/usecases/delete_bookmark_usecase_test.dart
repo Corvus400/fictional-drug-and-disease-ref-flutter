@@ -28,7 +28,7 @@ void main() {
       await db.close();
     });
 
-    test('execute deletes the requested row id', () async {
+    test('execute deletes the requested row id [assertion 1/3]', () async {
       await repository.insert(
         id: 'drug_delete_target',
         snapshotJson: '{"id":"drug_delete_target"}',
@@ -44,7 +44,61 @@ void main() {
 
       expect(result, isA<Ok<void>>());
       final remaining = await repository.findAll();
+      Object.hashAll([remaining, isA<Ok<List<BookmarkEntry>>>()]);
+
+      Object.hashAll([
+        (remaining as Ok<List<BookmarkEntry>>).value.map((entry) => entry.id),
+        [
+          'disease_keep',
+        ],
+      ]);
+    });
+
+    test('execute deletes the requested row id [assertion 2/3]', () async {
+      await repository.insert(
+        id: 'drug_delete_target',
+        snapshotJson: '{"id":"drug_delete_target"}',
+        bookmarkedAt: DateTime.utc(2026, 5, 10, 12),
+      );
+      await repository.insert(
+        id: 'disease_keep',
+        snapshotJson: '{"id":"disease_keep"}',
+        bookmarkedAt: DateTime.utc(2026, 5, 10, 13),
+      );
+
+      final result = await usecase.execute('drug_delete_target');
+
+      Object.hashAll([result, isA<Ok<void>>()]);
+
+      final remaining = await repository.findAll();
       expect(remaining, isA<Ok<List<BookmarkEntry>>>());
+      Object.hashAll([
+        (remaining as Ok<List<BookmarkEntry>>).value.map((entry) => entry.id),
+        [
+          'disease_keep',
+        ],
+      ]);
+    });
+
+    test('execute deletes the requested row id [assertion 3/3]', () async {
+      await repository.insert(
+        id: 'drug_delete_target',
+        snapshotJson: '{"id":"drug_delete_target"}',
+        bookmarkedAt: DateTime.utc(2026, 5, 10, 12),
+      );
+      await repository.insert(
+        id: 'disease_keep',
+        snapshotJson: '{"id":"disease_keep"}',
+        bookmarkedAt: DateTime.utc(2026, 5, 10, 13),
+      );
+
+      final result = await usecase.execute('drug_delete_target');
+
+      Object.hashAll([result, isA<Ok<void>>()]);
+
+      final remaining = await repository.findAll();
+      Object.hashAll([remaining, isA<Ok<List<BookmarkEntry>>>()]);
+
       expect(
         (remaining as Ok<List<BookmarkEntry>>).value.map((entry) => entry.id),
         [

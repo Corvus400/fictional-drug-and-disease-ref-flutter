@@ -41,7 +41,7 @@ void main() {
     await db.close();
   });
 
-  testWidgets('ATC 第1階層軸の hint は単一選択ラベルになる', (tester) async {
+  testWidgets('ATC 第1階層軸の hint は単一選択ラベルになる [assertion 1/3]', (tester) async {
     await tester.binding.setSurfaceSize(const Size(390, 844));
     addTearDown(() => tester.binding.setSurfaceSize(null));
 
@@ -87,7 +87,111 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('ATC 第 1 階層'), findsOneWidget);
+    Object.hashAll([find.text('14 値・単一選択'), findsOneWidget]);
+
+    Object.hashAll([find.text('14 値・複数選択 OR'), findsNothing]);
+  });
+
+  testWidgets('ATC 第1階層軸の hint は単一選択ラベルになる [assertion 2/3]', (tester) async {
+    await tester.binding.setSurfaceSize(const Size(390, 844));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+
+    final categoryApiClient = _MockCategoryApiClient();
+    final drugApiClient = _MockDrugApiClient();
+    when(
+      categoryApiClient.getCategories,
+    ).thenAnswer((_) async => _categoriesFixture());
+    when(
+      () => drugApiClient.getDrugs(
+        page: any(named: 'page'),
+        pageSize: any(named: 'pageSize'),
+        categoryAtc: any(named: 'categoryAtc'),
+        therapeuticCategory: any(named: 'therapeuticCategory'),
+        regulatoryClass: any(named: 'regulatoryClass'),
+        dosageForm: any(named: 'dosageForm'),
+        route: any(named: 'route'),
+        keyword: any(named: 'keyword'),
+        keywordMatch: any(named: 'keywordMatch'),
+        keywordTarget: any(named: 'keywordTarget'),
+        adverseReactionKeyword: any(named: 'adverseReactionKeyword'),
+        precautionCategory: any(named: 'precautionCategory'),
+        sort: any(named: 'sort'),
+      ),
+    ).thenAnswer((_) async => _drugListFixture());
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          appDatabaseProvider.overrideWithValue(db),
+          categoryApiClientProvider.overrideWithValue(categoryApiClient),
+          drugApiClientProvider.overrideWithValue(drugApiClient),
+        ],
+        child: const MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: SearchView(),
+        ),
+      ),
+    );
+
+    await tester.tap(find.byType(FloatingActionButton));
+    await tester.pumpAndSettle();
+
+    Object.hashAll([find.text('ATC 第 1 階層'), findsOneWidget]);
+
     expect(find.text('14 値・単一選択'), findsOneWidget);
+    Object.hashAll([find.text('14 値・複数選択 OR'), findsNothing]);
+  });
+
+  testWidgets('ATC 第1階層軸の hint は単一選択ラベルになる [assertion 3/3]', (tester) async {
+    await tester.binding.setSurfaceSize(const Size(390, 844));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+
+    final categoryApiClient = _MockCategoryApiClient();
+    final drugApiClient = _MockDrugApiClient();
+    when(
+      categoryApiClient.getCategories,
+    ).thenAnswer((_) async => _categoriesFixture());
+    when(
+      () => drugApiClient.getDrugs(
+        page: any(named: 'page'),
+        pageSize: any(named: 'pageSize'),
+        categoryAtc: any(named: 'categoryAtc'),
+        therapeuticCategory: any(named: 'therapeuticCategory'),
+        regulatoryClass: any(named: 'regulatoryClass'),
+        dosageForm: any(named: 'dosageForm'),
+        route: any(named: 'route'),
+        keyword: any(named: 'keyword'),
+        keywordMatch: any(named: 'keywordMatch'),
+        keywordTarget: any(named: 'keywordTarget'),
+        adverseReactionKeyword: any(named: 'adverseReactionKeyword'),
+        precautionCategory: any(named: 'precautionCategory'),
+        sort: any(named: 'sort'),
+      ),
+    ).thenAnswer((_) async => _drugListFixture());
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          appDatabaseProvider.overrideWithValue(db),
+          categoryApiClientProvider.overrideWithValue(categoryApiClient),
+          drugApiClientProvider.overrideWithValue(drugApiClient),
+        ],
+        child: const MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: SearchView(),
+        ),
+      ),
+    );
+
+    await tester.tap(find.byType(FloatingActionButton));
+    await tester.pumpAndSettle();
+
+    Object.hashAll([find.text('ATC 第 1 階層'), findsOneWidget]);
+
+    Object.hashAll([find.text('14 値・単一選択'), findsOneWidget]);
+
     expect(find.text('14 値・複数選択 OR'), findsNothing);
   });
 }

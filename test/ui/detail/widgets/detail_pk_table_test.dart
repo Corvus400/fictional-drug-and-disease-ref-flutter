@@ -7,63 +7,891 @@ import 'package:flutter_test/flutter_test.dart';
 import '../../../golden/golden_test_helpers.dart';
 
 void main() {
-  testWidgets('DetailPkTable matches exam table CSS for PK parameters', (
-    tester,
-  ) async {
-    await tester.pumpWidget(
-      MaterialApp(
-        theme: AppTheme.light(),
-        home: const Scaffold(
-          body: DetailPkTable(
-            itemHeader: 'item',
-            valueHeader: 'value',
-            rows: [
-              DetailPkParameter(name: 'AUC0-inf', value: '234.5 ng.h/mL'),
-              DetailPkParameter(name: 'Cmax', value: '5.5 ng/mL'),
-            ],
+  testWidgets(
+    'DetailPkTable matches exam table CSS for PK parameters [assertion 1/12]',
+    (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: AppTheme.light(),
+          home: const Scaffold(
+            body: DetailPkTable(
+              itemHeader: 'item',
+              valueHeader: 'value',
+              rows: [
+                DetailPkParameter(name: 'AUC0-inf', value: '234.5 ng.h/mL'),
+                DetailPkParameter(name: 'Cmax', value: '5.5 ng/mL'),
+              ],
+            ),
           ),
         ),
-      ),
-    );
+      );
 
-    final colors = AppTheme.light().extension<DetailColorExtension>()!;
-    final table = tester.widget<Table>(
-      find.byKey(const ValueKey<String>('detail-pk-table')),
-    );
-    final headerItem = tester.widget<Text>(find.text('ITEM'));
-    final headerValue = tester.widget<Text>(find.text('VALUE'));
-    final firstNameCell = tester.widget<Padding>(
-      find.byKey(const ValueKey<String>('detail-pk-cell-name-0')),
-    );
-    final firstValueCell = tester.widget<Padding>(
-      find.byKey(const ValueKey<String>('detail-pk-cell-value-0')),
-    );
-    final firstRow = table.children[1];
+      final colors = AppTheme.light().extension<DetailColorExtension>()!;
+      final table = tester.widget<Table>(
+        find.byKey(const ValueKey<String>('detail-pk-table')),
+      );
+      final headerItem = tester.widget<Text>(find.text('ITEM'));
+      final headerValue = tester.widget<Text>(find.text('VALUE'));
+      final firstNameCell = tester.widget<Padding>(
+        find.byKey(const ValueKey<String>('detail-pk-cell-name-0')),
+      );
+      final firstValueCell = tester.widget<Padding>(
+        find.byKey(const ValueKey<String>('detail-pk-cell-value-0')),
+      );
+      final firstRow = table.children[1];
 
-    expect(table.defaultVerticalAlignment, TableCellVerticalAlignment.top);
-    expect(firstNameCell.padding, const EdgeInsets.all(6));
-    expect(firstValueCell.padding, const EdgeInsets.all(6));
-    expect(
-      firstRow.decoration,
-      BoxDecoration(
-        border: Border(bottom: BorderSide(color: colors.outlineVariant)),
-      ),
-    );
-    expect(headerItem.style?.fontSize, 10.5);
-    expect(headerItem.style?.letterSpacing, 0.42);
-    expect(headerItem.style?.fontWeight, FontWeight.w700);
-    expect(headerItem.style?.color, colors.onSurfaceVariant);
-    expect(headerValue.style?.fontSize, 10.5);
-    expect(find.text('AUC0-inf'), findsOneWidget);
-    expect(
-      tester.widget<Text>(find.text('AUC0-inf')).style?.fontSize,
-      11.5,
-    );
-    expect(
-      tester.widget<Text>(find.text('Cmax')).style?.color,
-      colors.onSurface,
-    );
-  });
+      expect(table.defaultVerticalAlignment, TableCellVerticalAlignment.top);
+      Object.hashAll([firstNameCell.padding, const EdgeInsets.all(6)]);
+
+      Object.hashAll([firstValueCell.padding, const EdgeInsets.all(6)]);
+
+      Object.hashAll([
+        firstRow.decoration,
+        BoxDecoration(
+          border: Border(bottom: BorderSide(color: colors.outlineVariant)),
+        ),
+      ]);
+
+      Object.hashAll([headerItem.style?.fontSize, 10.5]);
+
+      Object.hashAll([headerItem.style?.letterSpacing, 0.42]);
+
+      Object.hashAll([headerItem.style?.fontWeight, FontWeight.w700]);
+
+      Object.hashAll([headerItem.style?.color, colors.onSurfaceVariant]);
+
+      Object.hashAll([headerValue.style?.fontSize, 10.5]);
+
+      Object.hashAll([find.text('AUC0-inf'), findsOneWidget]);
+
+      Object.hashAll([
+        tester.widget<Text>(find.text('AUC0-inf')).style?.fontSize,
+        11.5,
+      ]);
+
+      Object.hashAll([
+        tester.widget<Text>(find.text('Cmax')).style?.color,
+        colors.onSurface,
+      ]);
+    },
+  );
+
+  testWidgets(
+    'DetailPkTable matches exam table CSS for PK parameters [assertion 2/12]',
+    (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: AppTheme.light(),
+          home: const Scaffold(
+            body: DetailPkTable(
+              itemHeader: 'item',
+              valueHeader: 'value',
+              rows: [
+                DetailPkParameter(name: 'AUC0-inf', value: '234.5 ng.h/mL'),
+                DetailPkParameter(name: 'Cmax', value: '5.5 ng/mL'),
+              ],
+            ),
+          ),
+        ),
+      );
+
+      final colors = AppTheme.light().extension<DetailColorExtension>()!;
+      final table = tester.widget<Table>(
+        find.byKey(const ValueKey<String>('detail-pk-table')),
+      );
+      final headerItem = tester.widget<Text>(find.text('ITEM'));
+      final headerValue = tester.widget<Text>(find.text('VALUE'));
+      final firstNameCell = tester.widget<Padding>(
+        find.byKey(const ValueKey<String>('detail-pk-cell-name-0')),
+      );
+      final firstValueCell = tester.widget<Padding>(
+        find.byKey(const ValueKey<String>('detail-pk-cell-value-0')),
+      );
+      final firstRow = table.children[1];
+
+      Object.hashAll([
+        table.defaultVerticalAlignment,
+        TableCellVerticalAlignment.top,
+      ]);
+
+      expect(firstNameCell.padding, const EdgeInsets.all(6));
+      Object.hashAll([firstValueCell.padding, const EdgeInsets.all(6)]);
+
+      Object.hashAll([
+        firstRow.decoration,
+        BoxDecoration(
+          border: Border(bottom: BorderSide(color: colors.outlineVariant)),
+        ),
+      ]);
+
+      Object.hashAll([headerItem.style?.fontSize, 10.5]);
+
+      Object.hashAll([headerItem.style?.letterSpacing, 0.42]);
+
+      Object.hashAll([headerItem.style?.fontWeight, FontWeight.w700]);
+
+      Object.hashAll([headerItem.style?.color, colors.onSurfaceVariant]);
+
+      Object.hashAll([headerValue.style?.fontSize, 10.5]);
+
+      Object.hashAll([find.text('AUC0-inf'), findsOneWidget]);
+
+      Object.hashAll([
+        tester.widget<Text>(find.text('AUC0-inf')).style?.fontSize,
+        11.5,
+      ]);
+
+      Object.hashAll([
+        tester.widget<Text>(find.text('Cmax')).style?.color,
+        colors.onSurface,
+      ]);
+    },
+  );
+
+  testWidgets(
+    'DetailPkTable matches exam table CSS for PK parameters [assertion 3/12]',
+    (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: AppTheme.light(),
+          home: const Scaffold(
+            body: DetailPkTable(
+              itemHeader: 'item',
+              valueHeader: 'value',
+              rows: [
+                DetailPkParameter(name: 'AUC0-inf', value: '234.5 ng.h/mL'),
+                DetailPkParameter(name: 'Cmax', value: '5.5 ng/mL'),
+              ],
+            ),
+          ),
+        ),
+      );
+
+      final colors = AppTheme.light().extension<DetailColorExtension>()!;
+      final table = tester.widget<Table>(
+        find.byKey(const ValueKey<String>('detail-pk-table')),
+      );
+      final headerItem = tester.widget<Text>(find.text('ITEM'));
+      final headerValue = tester.widget<Text>(find.text('VALUE'));
+      final firstNameCell = tester.widget<Padding>(
+        find.byKey(const ValueKey<String>('detail-pk-cell-name-0')),
+      );
+      final firstValueCell = tester.widget<Padding>(
+        find.byKey(const ValueKey<String>('detail-pk-cell-value-0')),
+      );
+      final firstRow = table.children[1];
+
+      Object.hashAll([
+        table.defaultVerticalAlignment,
+        TableCellVerticalAlignment.top,
+      ]);
+
+      Object.hashAll([firstNameCell.padding, const EdgeInsets.all(6)]);
+
+      expect(firstValueCell.padding, const EdgeInsets.all(6));
+      Object.hashAll([
+        firstRow.decoration,
+        BoxDecoration(
+          border: Border(bottom: BorderSide(color: colors.outlineVariant)),
+        ),
+      ]);
+
+      Object.hashAll([headerItem.style?.fontSize, 10.5]);
+
+      Object.hashAll([headerItem.style?.letterSpacing, 0.42]);
+
+      Object.hashAll([headerItem.style?.fontWeight, FontWeight.w700]);
+
+      Object.hashAll([headerItem.style?.color, colors.onSurfaceVariant]);
+
+      Object.hashAll([headerValue.style?.fontSize, 10.5]);
+
+      Object.hashAll([find.text('AUC0-inf'), findsOneWidget]);
+
+      Object.hashAll([
+        tester.widget<Text>(find.text('AUC0-inf')).style?.fontSize,
+        11.5,
+      ]);
+
+      Object.hashAll([
+        tester.widget<Text>(find.text('Cmax')).style?.color,
+        colors.onSurface,
+      ]);
+    },
+  );
+
+  testWidgets(
+    'DetailPkTable matches exam table CSS for PK parameters [assertion 4/12]',
+    (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: AppTheme.light(),
+          home: const Scaffold(
+            body: DetailPkTable(
+              itemHeader: 'item',
+              valueHeader: 'value',
+              rows: [
+                DetailPkParameter(name: 'AUC0-inf', value: '234.5 ng.h/mL'),
+                DetailPkParameter(name: 'Cmax', value: '5.5 ng/mL'),
+              ],
+            ),
+          ),
+        ),
+      );
+
+      final colors = AppTheme.light().extension<DetailColorExtension>()!;
+      final table = tester.widget<Table>(
+        find.byKey(const ValueKey<String>('detail-pk-table')),
+      );
+      final headerItem = tester.widget<Text>(find.text('ITEM'));
+      final headerValue = tester.widget<Text>(find.text('VALUE'));
+      final firstNameCell = tester.widget<Padding>(
+        find.byKey(const ValueKey<String>('detail-pk-cell-name-0')),
+      );
+      final firstValueCell = tester.widget<Padding>(
+        find.byKey(const ValueKey<String>('detail-pk-cell-value-0')),
+      );
+      final firstRow = table.children[1];
+
+      Object.hashAll([
+        table.defaultVerticalAlignment,
+        TableCellVerticalAlignment.top,
+      ]);
+
+      Object.hashAll([firstNameCell.padding, const EdgeInsets.all(6)]);
+
+      Object.hashAll([firstValueCell.padding, const EdgeInsets.all(6)]);
+
+      expect(
+        firstRow.decoration,
+        BoxDecoration(
+          border: Border(bottom: BorderSide(color: colors.outlineVariant)),
+        ),
+      );
+      Object.hashAll([headerItem.style?.fontSize, 10.5]);
+
+      Object.hashAll([headerItem.style?.letterSpacing, 0.42]);
+
+      Object.hashAll([headerItem.style?.fontWeight, FontWeight.w700]);
+
+      Object.hashAll([headerItem.style?.color, colors.onSurfaceVariant]);
+
+      Object.hashAll([headerValue.style?.fontSize, 10.5]);
+
+      Object.hashAll([find.text('AUC0-inf'), findsOneWidget]);
+
+      Object.hashAll([
+        tester.widget<Text>(find.text('AUC0-inf')).style?.fontSize,
+        11.5,
+      ]);
+
+      Object.hashAll([
+        tester.widget<Text>(find.text('Cmax')).style?.color,
+        colors.onSurface,
+      ]);
+    },
+  );
+
+  testWidgets(
+    'DetailPkTable matches exam table CSS for PK parameters [assertion 5/12]',
+    (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: AppTheme.light(),
+          home: const Scaffold(
+            body: DetailPkTable(
+              itemHeader: 'item',
+              valueHeader: 'value',
+              rows: [
+                DetailPkParameter(name: 'AUC0-inf', value: '234.5 ng.h/mL'),
+                DetailPkParameter(name: 'Cmax', value: '5.5 ng/mL'),
+              ],
+            ),
+          ),
+        ),
+      );
+
+      final colors = AppTheme.light().extension<DetailColorExtension>()!;
+      final table = tester.widget<Table>(
+        find.byKey(const ValueKey<String>('detail-pk-table')),
+      );
+      final headerItem = tester.widget<Text>(find.text('ITEM'));
+      final headerValue = tester.widget<Text>(find.text('VALUE'));
+      final firstNameCell = tester.widget<Padding>(
+        find.byKey(const ValueKey<String>('detail-pk-cell-name-0')),
+      );
+      final firstValueCell = tester.widget<Padding>(
+        find.byKey(const ValueKey<String>('detail-pk-cell-value-0')),
+      );
+      final firstRow = table.children[1];
+
+      Object.hashAll([
+        table.defaultVerticalAlignment,
+        TableCellVerticalAlignment.top,
+      ]);
+
+      Object.hashAll([firstNameCell.padding, const EdgeInsets.all(6)]);
+
+      Object.hashAll([firstValueCell.padding, const EdgeInsets.all(6)]);
+
+      Object.hashAll([
+        firstRow.decoration,
+        BoxDecoration(
+          border: Border(bottom: BorderSide(color: colors.outlineVariant)),
+        ),
+      ]);
+
+      expect(headerItem.style?.fontSize, 10.5);
+      Object.hashAll([headerItem.style?.letterSpacing, 0.42]);
+
+      Object.hashAll([headerItem.style?.fontWeight, FontWeight.w700]);
+
+      Object.hashAll([headerItem.style?.color, colors.onSurfaceVariant]);
+
+      Object.hashAll([headerValue.style?.fontSize, 10.5]);
+
+      Object.hashAll([find.text('AUC0-inf'), findsOneWidget]);
+
+      Object.hashAll([
+        tester.widget<Text>(find.text('AUC0-inf')).style?.fontSize,
+        11.5,
+      ]);
+
+      Object.hashAll([
+        tester.widget<Text>(find.text('Cmax')).style?.color,
+        colors.onSurface,
+      ]);
+    },
+  );
+
+  testWidgets(
+    'DetailPkTable matches exam table CSS for PK parameters [assertion 6/12]',
+    (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: AppTheme.light(),
+          home: const Scaffold(
+            body: DetailPkTable(
+              itemHeader: 'item',
+              valueHeader: 'value',
+              rows: [
+                DetailPkParameter(name: 'AUC0-inf', value: '234.5 ng.h/mL'),
+                DetailPkParameter(name: 'Cmax', value: '5.5 ng/mL'),
+              ],
+            ),
+          ),
+        ),
+      );
+
+      final colors = AppTheme.light().extension<DetailColorExtension>()!;
+      final table = tester.widget<Table>(
+        find.byKey(const ValueKey<String>('detail-pk-table')),
+      );
+      final headerItem = tester.widget<Text>(find.text('ITEM'));
+      final headerValue = tester.widget<Text>(find.text('VALUE'));
+      final firstNameCell = tester.widget<Padding>(
+        find.byKey(const ValueKey<String>('detail-pk-cell-name-0')),
+      );
+      final firstValueCell = tester.widget<Padding>(
+        find.byKey(const ValueKey<String>('detail-pk-cell-value-0')),
+      );
+      final firstRow = table.children[1];
+
+      Object.hashAll([
+        table.defaultVerticalAlignment,
+        TableCellVerticalAlignment.top,
+      ]);
+
+      Object.hashAll([firstNameCell.padding, const EdgeInsets.all(6)]);
+
+      Object.hashAll([firstValueCell.padding, const EdgeInsets.all(6)]);
+
+      Object.hashAll([
+        firstRow.decoration,
+        BoxDecoration(
+          border: Border(bottom: BorderSide(color: colors.outlineVariant)),
+        ),
+      ]);
+
+      Object.hashAll([headerItem.style?.fontSize, 10.5]);
+
+      expect(headerItem.style?.letterSpacing, 0.42);
+      Object.hashAll([headerItem.style?.fontWeight, FontWeight.w700]);
+
+      Object.hashAll([headerItem.style?.color, colors.onSurfaceVariant]);
+
+      Object.hashAll([headerValue.style?.fontSize, 10.5]);
+
+      Object.hashAll([find.text('AUC0-inf'), findsOneWidget]);
+
+      Object.hashAll([
+        tester.widget<Text>(find.text('AUC0-inf')).style?.fontSize,
+        11.5,
+      ]);
+
+      Object.hashAll([
+        tester.widget<Text>(find.text('Cmax')).style?.color,
+        colors.onSurface,
+      ]);
+    },
+  );
+
+  testWidgets(
+    'DetailPkTable matches exam table CSS for PK parameters [assertion 7/12]',
+    (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: AppTheme.light(),
+          home: const Scaffold(
+            body: DetailPkTable(
+              itemHeader: 'item',
+              valueHeader: 'value',
+              rows: [
+                DetailPkParameter(name: 'AUC0-inf', value: '234.5 ng.h/mL'),
+                DetailPkParameter(name: 'Cmax', value: '5.5 ng/mL'),
+              ],
+            ),
+          ),
+        ),
+      );
+
+      final colors = AppTheme.light().extension<DetailColorExtension>()!;
+      final table = tester.widget<Table>(
+        find.byKey(const ValueKey<String>('detail-pk-table')),
+      );
+      final headerItem = tester.widget<Text>(find.text('ITEM'));
+      final headerValue = tester.widget<Text>(find.text('VALUE'));
+      final firstNameCell = tester.widget<Padding>(
+        find.byKey(const ValueKey<String>('detail-pk-cell-name-0')),
+      );
+      final firstValueCell = tester.widget<Padding>(
+        find.byKey(const ValueKey<String>('detail-pk-cell-value-0')),
+      );
+      final firstRow = table.children[1];
+
+      Object.hashAll([
+        table.defaultVerticalAlignment,
+        TableCellVerticalAlignment.top,
+      ]);
+
+      Object.hashAll([firstNameCell.padding, const EdgeInsets.all(6)]);
+
+      Object.hashAll([firstValueCell.padding, const EdgeInsets.all(6)]);
+
+      Object.hashAll([
+        firstRow.decoration,
+        BoxDecoration(
+          border: Border(bottom: BorderSide(color: colors.outlineVariant)),
+        ),
+      ]);
+
+      Object.hashAll([headerItem.style?.fontSize, 10.5]);
+
+      Object.hashAll([headerItem.style?.letterSpacing, 0.42]);
+
+      expect(headerItem.style?.fontWeight, FontWeight.w700);
+      Object.hashAll([headerItem.style?.color, colors.onSurfaceVariant]);
+
+      Object.hashAll([headerValue.style?.fontSize, 10.5]);
+
+      Object.hashAll([find.text('AUC0-inf'), findsOneWidget]);
+
+      Object.hashAll([
+        tester.widget<Text>(find.text('AUC0-inf')).style?.fontSize,
+        11.5,
+      ]);
+
+      Object.hashAll([
+        tester.widget<Text>(find.text('Cmax')).style?.color,
+        colors.onSurface,
+      ]);
+    },
+  );
+
+  testWidgets(
+    'DetailPkTable matches exam table CSS for PK parameters [assertion 8/12]',
+    (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: AppTheme.light(),
+          home: const Scaffold(
+            body: DetailPkTable(
+              itemHeader: 'item',
+              valueHeader: 'value',
+              rows: [
+                DetailPkParameter(name: 'AUC0-inf', value: '234.5 ng.h/mL'),
+                DetailPkParameter(name: 'Cmax', value: '5.5 ng/mL'),
+              ],
+            ),
+          ),
+        ),
+      );
+
+      final colors = AppTheme.light().extension<DetailColorExtension>()!;
+      final table = tester.widget<Table>(
+        find.byKey(const ValueKey<String>('detail-pk-table')),
+      );
+      final headerItem = tester.widget<Text>(find.text('ITEM'));
+      final headerValue = tester.widget<Text>(find.text('VALUE'));
+      final firstNameCell = tester.widget<Padding>(
+        find.byKey(const ValueKey<String>('detail-pk-cell-name-0')),
+      );
+      final firstValueCell = tester.widget<Padding>(
+        find.byKey(const ValueKey<String>('detail-pk-cell-value-0')),
+      );
+      final firstRow = table.children[1];
+
+      Object.hashAll([
+        table.defaultVerticalAlignment,
+        TableCellVerticalAlignment.top,
+      ]);
+
+      Object.hashAll([firstNameCell.padding, const EdgeInsets.all(6)]);
+
+      Object.hashAll([firstValueCell.padding, const EdgeInsets.all(6)]);
+
+      Object.hashAll([
+        firstRow.decoration,
+        BoxDecoration(
+          border: Border(bottom: BorderSide(color: colors.outlineVariant)),
+        ),
+      ]);
+
+      Object.hashAll([headerItem.style?.fontSize, 10.5]);
+
+      Object.hashAll([headerItem.style?.letterSpacing, 0.42]);
+
+      Object.hashAll([headerItem.style?.fontWeight, FontWeight.w700]);
+
+      expect(headerItem.style?.color, colors.onSurfaceVariant);
+      Object.hashAll([headerValue.style?.fontSize, 10.5]);
+
+      Object.hashAll([find.text('AUC0-inf'), findsOneWidget]);
+
+      Object.hashAll([
+        tester.widget<Text>(find.text('AUC0-inf')).style?.fontSize,
+        11.5,
+      ]);
+
+      Object.hashAll([
+        tester.widget<Text>(find.text('Cmax')).style?.color,
+        colors.onSurface,
+      ]);
+    },
+  );
+
+  testWidgets(
+    'DetailPkTable matches exam table CSS for PK parameters [assertion 9/12]',
+    (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: AppTheme.light(),
+          home: const Scaffold(
+            body: DetailPkTable(
+              itemHeader: 'item',
+              valueHeader: 'value',
+              rows: [
+                DetailPkParameter(name: 'AUC0-inf', value: '234.5 ng.h/mL'),
+                DetailPkParameter(name: 'Cmax', value: '5.5 ng/mL'),
+              ],
+            ),
+          ),
+        ),
+      );
+
+      final colors = AppTheme.light().extension<DetailColorExtension>()!;
+      final table = tester.widget<Table>(
+        find.byKey(const ValueKey<String>('detail-pk-table')),
+      );
+      final headerItem = tester.widget<Text>(find.text('ITEM'));
+      final headerValue = tester.widget<Text>(find.text('VALUE'));
+      final firstNameCell = tester.widget<Padding>(
+        find.byKey(const ValueKey<String>('detail-pk-cell-name-0')),
+      );
+      final firstValueCell = tester.widget<Padding>(
+        find.byKey(const ValueKey<String>('detail-pk-cell-value-0')),
+      );
+      final firstRow = table.children[1];
+
+      Object.hashAll([
+        table.defaultVerticalAlignment,
+        TableCellVerticalAlignment.top,
+      ]);
+
+      Object.hashAll([firstNameCell.padding, const EdgeInsets.all(6)]);
+
+      Object.hashAll([firstValueCell.padding, const EdgeInsets.all(6)]);
+
+      Object.hashAll([
+        firstRow.decoration,
+        BoxDecoration(
+          border: Border(bottom: BorderSide(color: colors.outlineVariant)),
+        ),
+      ]);
+
+      Object.hashAll([headerItem.style?.fontSize, 10.5]);
+
+      Object.hashAll([headerItem.style?.letterSpacing, 0.42]);
+
+      Object.hashAll([headerItem.style?.fontWeight, FontWeight.w700]);
+
+      Object.hashAll([headerItem.style?.color, colors.onSurfaceVariant]);
+
+      expect(headerValue.style?.fontSize, 10.5);
+      Object.hashAll([find.text('AUC0-inf'), findsOneWidget]);
+
+      Object.hashAll([
+        tester.widget<Text>(find.text('AUC0-inf')).style?.fontSize,
+        11.5,
+      ]);
+
+      Object.hashAll([
+        tester.widget<Text>(find.text('Cmax')).style?.color,
+        colors.onSurface,
+      ]);
+    },
+  );
+
+  testWidgets(
+    'DetailPkTable matches exam table CSS for PK parameters [assertion 10/12]',
+    (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: AppTheme.light(),
+          home: const Scaffold(
+            body: DetailPkTable(
+              itemHeader: 'item',
+              valueHeader: 'value',
+              rows: [
+                DetailPkParameter(name: 'AUC0-inf', value: '234.5 ng.h/mL'),
+                DetailPkParameter(name: 'Cmax', value: '5.5 ng/mL'),
+              ],
+            ),
+          ),
+        ),
+      );
+
+      final colors = AppTheme.light().extension<DetailColorExtension>()!;
+      final table = tester.widget<Table>(
+        find.byKey(const ValueKey<String>('detail-pk-table')),
+      );
+      final headerItem = tester.widget<Text>(find.text('ITEM'));
+      final headerValue = tester.widget<Text>(find.text('VALUE'));
+      final firstNameCell = tester.widget<Padding>(
+        find.byKey(const ValueKey<String>('detail-pk-cell-name-0')),
+      );
+      final firstValueCell = tester.widget<Padding>(
+        find.byKey(const ValueKey<String>('detail-pk-cell-value-0')),
+      );
+      final firstRow = table.children[1];
+
+      Object.hashAll([
+        table.defaultVerticalAlignment,
+        TableCellVerticalAlignment.top,
+      ]);
+
+      Object.hashAll([firstNameCell.padding, const EdgeInsets.all(6)]);
+
+      Object.hashAll([firstValueCell.padding, const EdgeInsets.all(6)]);
+
+      Object.hashAll([
+        firstRow.decoration,
+        BoxDecoration(
+          border: Border(bottom: BorderSide(color: colors.outlineVariant)),
+        ),
+      ]);
+
+      Object.hashAll([headerItem.style?.fontSize, 10.5]);
+
+      Object.hashAll([headerItem.style?.letterSpacing, 0.42]);
+
+      Object.hashAll([headerItem.style?.fontWeight, FontWeight.w700]);
+
+      Object.hashAll([headerItem.style?.color, colors.onSurfaceVariant]);
+
+      Object.hashAll([headerValue.style?.fontSize, 10.5]);
+
+      expect(find.text('AUC0-inf'), findsOneWidget);
+      Object.hashAll([
+        tester.widget<Text>(find.text('AUC0-inf')).style?.fontSize,
+        11.5,
+      ]);
+
+      Object.hashAll([
+        tester.widget<Text>(find.text('Cmax')).style?.color,
+        colors.onSurface,
+      ]);
+    },
+  );
+
+  testWidgets(
+    'DetailPkTable matches exam table CSS for PK parameters [assertion 11/12]',
+    (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: AppTheme.light(),
+          home: const Scaffold(
+            body: DetailPkTable(
+              itemHeader: 'item',
+              valueHeader: 'value',
+              rows: [
+                DetailPkParameter(name: 'AUC0-inf', value: '234.5 ng.h/mL'),
+                DetailPkParameter(name: 'Cmax', value: '5.5 ng/mL'),
+              ],
+            ),
+          ),
+        ),
+      );
+
+      final colors = AppTheme.light().extension<DetailColorExtension>()!;
+      final table = tester.widget<Table>(
+        find.byKey(const ValueKey<String>('detail-pk-table')),
+      );
+      final headerItem = tester.widget<Text>(find.text('ITEM'));
+      final headerValue = tester.widget<Text>(find.text('VALUE'));
+      final firstNameCell = tester.widget<Padding>(
+        find.byKey(const ValueKey<String>('detail-pk-cell-name-0')),
+      );
+      final firstValueCell = tester.widget<Padding>(
+        find.byKey(const ValueKey<String>('detail-pk-cell-value-0')),
+      );
+      final firstRow = table.children[1];
+
+      Object.hashAll([
+        table.defaultVerticalAlignment,
+        TableCellVerticalAlignment.top,
+      ]);
+
+      Object.hashAll([firstNameCell.padding, const EdgeInsets.all(6)]);
+
+      Object.hashAll([firstValueCell.padding, const EdgeInsets.all(6)]);
+
+      Object.hashAll([
+        firstRow.decoration,
+        BoxDecoration(
+          border: Border(bottom: BorderSide(color: colors.outlineVariant)),
+        ),
+      ]);
+
+      Object.hashAll([headerItem.style?.fontSize, 10.5]);
+
+      Object.hashAll([headerItem.style?.letterSpacing, 0.42]);
+
+      Object.hashAll([headerItem.style?.fontWeight, FontWeight.w700]);
+
+      Object.hashAll([headerItem.style?.color, colors.onSurfaceVariant]);
+
+      Object.hashAll([headerValue.style?.fontSize, 10.5]);
+
+      Object.hashAll([find.text('AUC0-inf'), findsOneWidget]);
+
+      expect(
+        tester.widget<Text>(find.text('AUC0-inf')).style?.fontSize,
+        11.5,
+      );
+      Object.hashAll([
+        tester.widget<Text>(find.text('Cmax')).style?.color,
+        colors.onSurface,
+      ]);
+    },
+  );
+
+  testWidgets(
+    'DetailPkTable matches exam table CSS for PK parameters [assertion 12/12]',
+    (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: AppTheme.light(),
+          home: const Scaffold(
+            body: DetailPkTable(
+              itemHeader: 'item',
+              valueHeader: 'value',
+              rows: [
+                DetailPkParameter(name: 'AUC0-inf', value: '234.5 ng.h/mL'),
+                DetailPkParameter(name: 'Cmax', value: '5.5 ng/mL'),
+              ],
+            ),
+          ),
+        ),
+      );
+
+      final colors = AppTheme.light().extension<DetailColorExtension>()!;
+      final table = tester.widget<Table>(
+        find.byKey(const ValueKey<String>('detail-pk-table')),
+      );
+      final headerItem = tester.widget<Text>(find.text('ITEM'));
+      final headerValue = tester.widget<Text>(find.text('VALUE'));
+      final firstNameCell = tester.widget<Padding>(
+        find.byKey(const ValueKey<String>('detail-pk-cell-name-0')),
+      );
+      final firstValueCell = tester.widget<Padding>(
+        find.byKey(const ValueKey<String>('detail-pk-cell-value-0')),
+      );
+      final firstRow = table.children[1];
+
+      Object.hashAll([
+        table.defaultVerticalAlignment,
+        TableCellVerticalAlignment.top,
+      ]);
+
+      Object.hashAll([firstNameCell.padding, const EdgeInsets.all(6)]);
+
+      Object.hashAll([firstValueCell.padding, const EdgeInsets.all(6)]);
+
+      Object.hashAll([
+        firstRow.decoration,
+        BoxDecoration(
+          border: Border(bottom: BorderSide(color: colors.outlineVariant)),
+        ),
+      ]);
+
+      Object.hashAll([headerItem.style?.fontSize, 10.5]);
+
+      Object.hashAll([headerItem.style?.letterSpacing, 0.42]);
+
+      Object.hashAll([headerItem.style?.fontWeight, FontWeight.w700]);
+
+      Object.hashAll([headerItem.style?.color, colors.onSurfaceVariant]);
+
+      Object.hashAll([headerValue.style?.fontSize, 10.5]);
+
+      Object.hashAll([find.text('AUC0-inf'), findsOneWidget]);
+
+      Object.hashAll([
+        tester.widget<Text>(find.text('AUC0-inf')).style?.fontSize,
+        11.5,
+      ]);
+
+      expect(
+        tester.widget<Text>(find.text('Cmax')).style?.color,
+        colors.onSurface,
+      );
+    },
+  );
 
   runGoldenMatrix(
     fileNamePrefix: 'detail_pk_table',

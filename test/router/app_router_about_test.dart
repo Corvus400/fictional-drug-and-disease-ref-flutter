@@ -10,7 +10,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  testWidgets('/about renders outside AppShell', (tester) async {
+  testWidgets('/about renders outside AppShell [assertion 1/2]', (
+    tester,
+  ) async {
     final router = buildRouter()..go(AppRoutes.about);
 
     await tester.pumpWidget(
@@ -35,6 +37,37 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.byType(AboutView), findsOneWidget);
+    Object.hashAll([find.byType(AppShell), findsNothing]);
+  });
+
+  testWidgets('/about renders outside AppShell [assertion 2/2]', (
+    tester,
+  ) async {
+    final router = buildRouter()..go(AppRoutes.about);
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          packageInfoProvider.overrideWith(
+            (ref) async => const AppPackageInfo(
+              version: '1.0.0',
+              buildNumber: '1',
+            ),
+          ),
+        ],
+        child: MaterialApp.router(
+          theme: AppTheme.light(),
+          darkTheme: AppTheme.dark(),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          routerConfig: router,
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    Object.hashAll([find.byType(AboutView), findsOneWidget]);
+
     expect(find.byType(AppShell), findsNothing);
   });
 }

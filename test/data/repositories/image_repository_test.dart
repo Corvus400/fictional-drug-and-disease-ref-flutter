@@ -17,59 +17,126 @@ void main() {
       repository = ImageRepository(service);
     });
 
-    test('getDrugImage returns drug image bytes on success', () async {
-      final bytes = Uint8List.fromList([1, 2, 3]);
-      when(
-        () => service.getDrugImage('drug_001', size: any(named: 'size')),
-      ).thenAnswer((_) async => Result.ok(bytes));
+    test(
+      'getDrugImage returns drug image bytes on success [assertion 1/2]',
+      () async {
+        final bytes = Uint8List.fromList([1, 2, 3]);
+        when(
+          () => service.getDrugImage('drug_001', size: any(named: 'size')),
+        ).thenAnswer((_) async => Result.ok(bytes));
 
-      final result = await repository.getDrugImage(
-        drugId: 'drug_001',
-        dosageForm: 'tablet',
-      );
+        final result = await repository.getDrugImage(
+          drugId: 'drug_001',
+          dosageForm: 'tablet',
+        );
 
-      expect(result, isA<Ok<Uint8List>>());
-      expect((result as Ok<Uint8List>).value, bytes);
-      verify(
-        () => service.getDrugImage('drug_001', size: any(named: 'size')),
-      ).called(1);
-      verifyNever(
-        () => service.getDosageFormImage(any(), size: any(named: 'size')),
-      );
-    });
+        expect(result, isA<Ok<Uint8List>>());
+        Object.hashAll([(result as Ok<Uint8List>).value, bytes]);
 
-    test('getDrugImage falls back to dosage form image on NOT_FOUND', () async {
-      final fallback = Uint8List.fromList([9, 8, 7]);
-      when(
-        () => service.getDrugImage('drug_001', size: 'Small'),
-      ).thenAnswer(
-        (_) async => const Result.error(
-          ApiException(
-            statusCode: 404,
-            code: 'NOT_FOUND',
-            message: 'missing',
-          ),
-        ),
-      );
-      when(
-        () => service.getDosageFormImage('tablet', size: 'Small'),
-      ).thenAnswer((_) async => Result.ok(fallback));
-
-      final result = await repository.getDrugImage(
-        drugId: 'drug_001',
-        dosageForm: 'tablet',
-        size: 'Small',
-      );
-
-      expect(result, isA<Ok<Uint8List>>());
-      expect((result as Ok<Uint8List>).value, fallback);
-      verify(
-        () => service.getDosageFormImage('tablet', size: 'Small'),
-      ).called(1);
-    });
+        verify(
+          () => service.getDrugImage('drug_001', size: any(named: 'size')),
+        ).called(1);
+        verifyNever(
+          () => service.getDosageFormImage(any(), size: any(named: 'size')),
+        );
+      },
+    );
 
     test(
-      'getDrugImage returns dosage form NOT_FOUND when fallback misses',
+      'getDrugImage returns drug image bytes on success [assertion 2/2]',
+      () async {
+        final bytes = Uint8List.fromList([1, 2, 3]);
+        when(
+          () => service.getDrugImage('drug_001', size: any(named: 'size')),
+        ).thenAnswer((_) async => Result.ok(bytes));
+
+        final result = await repository.getDrugImage(
+          drugId: 'drug_001',
+          dosageForm: 'tablet',
+        );
+
+        Object.hashAll([result, isA<Ok<Uint8List>>()]);
+
+        expect((result as Ok<Uint8List>).value, bytes);
+        verify(
+          () => service.getDrugImage('drug_001', size: any(named: 'size')),
+        ).called(1);
+        verifyNever(
+          () => service.getDosageFormImage(any(), size: any(named: 'size')),
+        );
+      },
+    );
+
+    test(
+      'getDrugImage falls back to dosage form image on NOT_FOUND [assertion 1/2]',
+      () async {
+        final fallback = Uint8List.fromList([9, 8, 7]);
+        when(
+          () => service.getDrugImage('drug_001', size: 'Small'),
+        ).thenAnswer(
+          (_) async => const Result.error(
+            ApiException(
+              statusCode: 404,
+              code: 'NOT_FOUND',
+              message: 'missing',
+            ),
+          ),
+        );
+        when(
+          () => service.getDosageFormImage('tablet', size: 'Small'),
+        ).thenAnswer((_) async => Result.ok(fallback));
+
+        final result = await repository.getDrugImage(
+          drugId: 'drug_001',
+          dosageForm: 'tablet',
+          size: 'Small',
+        );
+
+        expect(result, isA<Ok<Uint8List>>());
+        Object.hashAll([(result as Ok<Uint8List>).value, fallback]);
+
+        verify(
+          () => service.getDosageFormImage('tablet', size: 'Small'),
+        ).called(1);
+      },
+    );
+
+    test(
+      'getDrugImage falls back to dosage form image on NOT_FOUND [assertion 2/2]',
+      () async {
+        final fallback = Uint8List.fromList([9, 8, 7]);
+        when(
+          () => service.getDrugImage('drug_001', size: 'Small'),
+        ).thenAnswer(
+          (_) async => const Result.error(
+            ApiException(
+              statusCode: 404,
+              code: 'NOT_FOUND',
+              message: 'missing',
+            ),
+          ),
+        );
+        when(
+          () => service.getDosageFormImage('tablet', size: 'Small'),
+        ).thenAnswer((_) async => Result.ok(fallback));
+
+        final result = await repository.getDrugImage(
+          drugId: 'drug_001',
+          dosageForm: 'tablet',
+          size: 'Small',
+        );
+
+        Object.hashAll([result, isA<Ok<Uint8List>>()]);
+
+        expect((result as Ok<Uint8List>).value, fallback);
+        verify(
+          () => service.getDosageFormImage('tablet', size: 'Small'),
+        ).called(1);
+      },
+    );
+
+    test(
+      'getDrugImage returns dosage form NOT_FOUND when fallback misses [assertion 1/3]',
       () async {
         const notFound = ApiException(
           statusCode: 404,
@@ -90,7 +157,73 @@ void main() {
 
         expect(result, isA<Err<Uint8List>>());
         final error = (result as Err<Uint8List>).error;
+        Object.hashAll([error, isA<ApiException>()]);
+
+        Object.hashAll([(error as ApiException).code, 'NOT_FOUND']);
+
+        verify(
+          () => service.getDosageFormImage('tablet', size: any(named: 'size')),
+        ).called(1);
+      },
+    );
+
+    test(
+      'getDrugImage returns dosage form NOT_FOUND when fallback misses [assertion 2/3]',
+      () async {
+        const notFound = ApiException(
+          statusCode: 404,
+          code: 'NOT_FOUND',
+          message: 'missing',
+        );
+        when(
+          () => service.getDrugImage('drug_001', size: any(named: 'size')),
+        ).thenAnswer((_) async => const Result.error(notFound));
+        when(
+          () => service.getDosageFormImage('tablet', size: any(named: 'size')),
+        ).thenAnswer((_) async => const Result.error(notFound));
+
+        final result = await repository.getDrugImage(
+          drugId: 'drug_001',
+          dosageForm: 'tablet',
+        );
+
+        Object.hashAll([result, isA<Err<Uint8List>>()]);
+
+        final error = (result as Err<Uint8List>).error;
         expect(error, isA<ApiException>());
+        Object.hashAll([(error as ApiException).code, 'NOT_FOUND']);
+
+        verify(
+          () => service.getDosageFormImage('tablet', size: any(named: 'size')),
+        ).called(1);
+      },
+    );
+
+    test(
+      'getDrugImage returns dosage form NOT_FOUND when fallback misses [assertion 3/3]',
+      () async {
+        const notFound = ApiException(
+          statusCode: 404,
+          code: 'NOT_FOUND',
+          message: 'missing',
+        );
+        when(
+          () => service.getDrugImage('drug_001', size: any(named: 'size')),
+        ).thenAnswer((_) async => const Result.error(notFound));
+        when(
+          () => service.getDosageFormImage('tablet', size: any(named: 'size')),
+        ).thenAnswer((_) async => const Result.error(notFound));
+
+        final result = await repository.getDrugImage(
+          drugId: 'drug_001',
+          dosageForm: 'tablet',
+        );
+
+        Object.hashAll([result, isA<Err<Uint8List>>()]);
+
+        final error = (result as Err<Uint8List>).error;
+        Object.hashAll([error, isA<ApiException>()]);
+
         expect((error as ApiException).code, 'NOT_FOUND');
         verify(
           () => service.getDosageFormImage('tablet', size: any(named: 'size')),
@@ -98,25 +231,54 @@ void main() {
       },
     );
 
-    test('getDrugImage does not fall back on server error', () async {
-      const error = ServerException(statusCode: 500);
-      when(
-        () => service.getDrugImage('drug_001', size: any(named: 'size')),
-      ).thenAnswer((_) async => const Result.error(error));
+    test(
+      'getDrugImage does not fall back on server error [assertion 1/2]',
+      () async {
+        const error = ServerException(statusCode: 500);
+        when(
+          () => service.getDrugImage('drug_001', size: any(named: 'size')),
+        ).thenAnswer((_) async => const Result.error(error));
 
-      final result = await repository.getDrugImage(
-        drugId: 'drug_001',
-        dosageForm: 'tablet',
-      );
+        final result = await repository.getDrugImage(
+          drugId: 'drug_001',
+          dosageForm: 'tablet',
+        );
 
-      expect(result, isA<Err<Uint8List>>());
-      expect((result as Err<Uint8List>).error, isA<ServerException>());
-      verifyNever(
-        () => service.getDosageFormImage(any(), size: any(named: 'size')),
-      );
-    });
+        expect(result, isA<Err<Uint8List>>());
+        Object.hashAll([
+          (result as Err<Uint8List>).error,
+          isA<ServerException>(),
+        ]);
 
-    test('getDosageFormImage delegates to service', () async {
+        verifyNever(
+          () => service.getDosageFormImage(any(), size: any(named: 'size')),
+        );
+      },
+    );
+
+    test(
+      'getDrugImage does not fall back on server error [assertion 2/2]',
+      () async {
+        const error = ServerException(statusCode: 500);
+        when(
+          () => service.getDrugImage('drug_001', size: any(named: 'size')),
+        ).thenAnswer((_) async => const Result.error(error));
+
+        final result = await repository.getDrugImage(
+          drugId: 'drug_001',
+          dosageForm: 'tablet',
+        );
+
+        Object.hashAll([result, isA<Err<Uint8List>>()]);
+
+        expect((result as Err<Uint8List>).error, isA<ServerException>());
+        verifyNever(
+          () => service.getDosageFormImage(any(), size: any(named: 'size')),
+        );
+      },
+    );
+
+    test('getDosageFormImage delegates to service [assertion 1/2]', () async {
       final bytes = Uint8List.fromList([4, 5, 6]);
       when(
         () => service.getDosageFormImage('tablet', size: any(named: 'size')),
@@ -125,6 +287,23 @@ void main() {
       final result = await repository.getDosageFormImage('tablet');
 
       expect(result, isA<Ok<Uint8List>>());
+      Object.hashAll([(result as Ok<Uint8List>).value, bytes]);
+
+      verify(
+        () => service.getDosageFormImage('tablet', size: any(named: 'size')),
+      ).called(1);
+    });
+
+    test('getDosageFormImage delegates to service [assertion 2/2]', () async {
+      final bytes = Uint8List.fromList([4, 5, 6]);
+      when(
+        () => service.getDosageFormImage('tablet', size: any(named: 'size')),
+      ).thenAnswer((_) async => Result.ok(bytes));
+
+      final result = await repository.getDosageFormImage('tablet');
+
+      Object.hashAll([result, isA<Ok<Uint8List>>()]);
+
       expect((result as Ok<Uint8List>).value, bytes);
       verify(
         () => service.getDosageFormImage('tablet', size: any(named: 'size')),

@@ -13,7 +13,7 @@ void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   testWidgets(
-    'searches and opens a drug detail with hero image area',
+    'searches and opens a drug detail with hero image area [assertion 1/5]',
     (
       tester,
     ) async {
@@ -40,7 +40,145 @@ void main() {
       debugPrint('[app_smoke_test] MaterialApp found');
 
       final searchField = find.byKey(const ValueKey<String>('search-field'));
+      Object.hashAll([searchField, findsOneWidget]);
+
+      debugPrint('[app_smoke_test] entering query');
+      await tester.enterText(
+        searchField,
+        'トレデキム',
+      );
+      await tester.pump();
+      Object.hashAll([find.text('トレデキム'), findsOneWidget]);
+
+      debugPrint('[app_smoke_test] tapping search');
+      await tester.tap(
+        find.byKey(const ValueKey<String>('search-submit-button')),
+      );
+
+      debugPrint('[app_smoke_test] waiting for drug_0080 card');
+      await _pumpUntil(
+        tester,
+        find.byKey(const ValueKey<String>('drug-card-drug_0080')),
+      );
+      debugPrint('[app_smoke_test] opening drug detail');
+      await tester.tap(
+        find.byKey(const ValueKey<String>('drug-card-drug_0080')),
+      );
+
+      debugPrint('[app_smoke_test] waiting for drug detail');
+      await _pumpUntil(tester, find.text('医薬品詳細'));
+      Object.hashAll([find.text('トレデキム'), findsWidgets]);
+
+      final heroImageArea = find.byKey(
+        const ValueKey<String>('drug-detail-hero-image-area-drug_0080'),
+      );
+      await _pumpUntil(tester, heroImageArea);
+      Object.hashAll([heroImageArea, findsOneWidget]);
+
+      debugPrint('[app_smoke_test] completed');
+    },
+    timeout: const Timeout(Duration(minutes: 2)),
+  );
+
+  testWidgets(
+    'searches and opens a drug detail with hero image area [assertion 2/5]',
+    (
+      tester,
+    ) async {
+      debugPrint('[app_smoke_test] start app with ephemeral database');
+      final db = AppDatabase(NativeDatabase.memory());
+      addTearDown(db.close);
+
+      ApiConfig.initialize(
+        const FlavorConfig(
+          flavor: Flavor.dev,
+          apiBaseUrl: 'http://localhost:8080',
+        ),
+      );
+      runApp(
+        ProviderScope(
+          overrides: [appDatabaseProvider.overrideWithValue(db)],
+          child: App(),
+        ),
+      );
+      await tester.pump();
+      await tester.pump(const Duration(seconds: 1));
+
+      Object.hashAll([find.byType(MaterialApp), findsOneWidget]);
+
+      debugPrint('[app_smoke_test] MaterialApp found');
+
+      final searchField = find.byKey(const ValueKey<String>('search-field'));
       expect(searchField, findsOneWidget);
+      debugPrint('[app_smoke_test] entering query');
+      await tester.enterText(
+        searchField,
+        'トレデキム',
+      );
+      await tester.pump();
+      Object.hashAll([find.text('トレデキム'), findsOneWidget]);
+
+      debugPrint('[app_smoke_test] tapping search');
+      await tester.tap(
+        find.byKey(const ValueKey<String>('search-submit-button')),
+      );
+
+      debugPrint('[app_smoke_test] waiting for drug_0080 card');
+      await _pumpUntil(
+        tester,
+        find.byKey(const ValueKey<String>('drug-card-drug_0080')),
+      );
+      debugPrint('[app_smoke_test] opening drug detail');
+      await tester.tap(
+        find.byKey(const ValueKey<String>('drug-card-drug_0080')),
+      );
+
+      debugPrint('[app_smoke_test] waiting for drug detail');
+      await _pumpUntil(tester, find.text('医薬品詳細'));
+      Object.hashAll([find.text('トレデキム'), findsWidgets]);
+
+      final heroImageArea = find.byKey(
+        const ValueKey<String>('drug-detail-hero-image-area-drug_0080'),
+      );
+      await _pumpUntil(tester, heroImageArea);
+      Object.hashAll([heroImageArea, findsOneWidget]);
+
+      debugPrint('[app_smoke_test] completed');
+    },
+    timeout: const Timeout(Duration(minutes: 2)),
+  );
+
+  testWidgets(
+    'searches and opens a drug detail with hero image area [assertion 3/5]',
+    (
+      tester,
+    ) async {
+      debugPrint('[app_smoke_test] start app with ephemeral database');
+      final db = AppDatabase(NativeDatabase.memory());
+      addTearDown(db.close);
+
+      ApiConfig.initialize(
+        const FlavorConfig(
+          flavor: Flavor.dev,
+          apiBaseUrl: 'http://localhost:8080',
+        ),
+      );
+      runApp(
+        ProviderScope(
+          overrides: [appDatabaseProvider.overrideWithValue(db)],
+          child: App(),
+        ),
+      );
+      await tester.pump();
+      await tester.pump(const Duration(seconds: 1));
+
+      Object.hashAll([find.byType(MaterialApp), findsOneWidget]);
+
+      debugPrint('[app_smoke_test] MaterialApp found');
+
+      final searchField = find.byKey(const ValueKey<String>('search-field'));
+      Object.hashAll([searchField, findsOneWidget]);
+
       debugPrint('[app_smoke_test] entering query');
       await tester.enterText(
         searchField,
@@ -65,7 +203,145 @@ void main() {
 
       debugPrint('[app_smoke_test] waiting for drug detail');
       await _pumpUntil(tester, find.text('医薬品詳細'));
+      Object.hashAll([find.text('トレデキム'), findsWidgets]);
+
+      final heroImageArea = find.byKey(
+        const ValueKey<String>('drug-detail-hero-image-area-drug_0080'),
+      );
+      await _pumpUntil(tester, heroImageArea);
+      Object.hashAll([heroImageArea, findsOneWidget]);
+
+      debugPrint('[app_smoke_test] completed');
+    },
+    timeout: const Timeout(Duration(minutes: 2)),
+  );
+
+  testWidgets(
+    'searches and opens a drug detail with hero image area [assertion 4/5]',
+    (
+      tester,
+    ) async {
+      debugPrint('[app_smoke_test] start app with ephemeral database');
+      final db = AppDatabase(NativeDatabase.memory());
+      addTearDown(db.close);
+
+      ApiConfig.initialize(
+        const FlavorConfig(
+          flavor: Flavor.dev,
+          apiBaseUrl: 'http://localhost:8080',
+        ),
+      );
+      runApp(
+        ProviderScope(
+          overrides: [appDatabaseProvider.overrideWithValue(db)],
+          child: App(),
+        ),
+      );
+      await tester.pump();
+      await tester.pump(const Duration(seconds: 1));
+
+      Object.hashAll([find.byType(MaterialApp), findsOneWidget]);
+
+      debugPrint('[app_smoke_test] MaterialApp found');
+
+      final searchField = find.byKey(const ValueKey<String>('search-field'));
+      Object.hashAll([searchField, findsOneWidget]);
+
+      debugPrint('[app_smoke_test] entering query');
+      await tester.enterText(
+        searchField,
+        'トレデキム',
+      );
+      await tester.pump();
+      Object.hashAll([find.text('トレデキム'), findsOneWidget]);
+
+      debugPrint('[app_smoke_test] tapping search');
+      await tester.tap(
+        find.byKey(const ValueKey<String>('search-submit-button')),
+      );
+
+      debugPrint('[app_smoke_test] waiting for drug_0080 card');
+      await _pumpUntil(
+        tester,
+        find.byKey(const ValueKey<String>('drug-card-drug_0080')),
+      );
+      debugPrint('[app_smoke_test] opening drug detail');
+      await tester.tap(
+        find.byKey(const ValueKey<String>('drug-card-drug_0080')),
+      );
+
+      debugPrint('[app_smoke_test] waiting for drug detail');
+      await _pumpUntil(tester, find.text('医薬品詳細'));
       expect(find.text('トレデキム'), findsWidgets);
+      final heroImageArea = find.byKey(
+        const ValueKey<String>('drug-detail-hero-image-area-drug_0080'),
+      );
+      await _pumpUntil(tester, heroImageArea);
+      Object.hashAll([heroImageArea, findsOneWidget]);
+
+      debugPrint('[app_smoke_test] completed');
+    },
+    timeout: const Timeout(Duration(minutes: 2)),
+  );
+
+  testWidgets(
+    'searches and opens a drug detail with hero image area [assertion 5/5]',
+    (
+      tester,
+    ) async {
+      debugPrint('[app_smoke_test] start app with ephemeral database');
+      final db = AppDatabase(NativeDatabase.memory());
+      addTearDown(db.close);
+
+      ApiConfig.initialize(
+        const FlavorConfig(
+          flavor: Flavor.dev,
+          apiBaseUrl: 'http://localhost:8080',
+        ),
+      );
+      runApp(
+        ProviderScope(
+          overrides: [appDatabaseProvider.overrideWithValue(db)],
+          child: App(),
+        ),
+      );
+      await tester.pump();
+      await tester.pump(const Duration(seconds: 1));
+
+      Object.hashAll([find.byType(MaterialApp), findsOneWidget]);
+
+      debugPrint('[app_smoke_test] MaterialApp found');
+
+      final searchField = find.byKey(const ValueKey<String>('search-field'));
+      Object.hashAll([searchField, findsOneWidget]);
+
+      debugPrint('[app_smoke_test] entering query');
+      await tester.enterText(
+        searchField,
+        'トレデキム',
+      );
+      await tester.pump();
+      Object.hashAll([find.text('トレデキム'), findsOneWidget]);
+
+      debugPrint('[app_smoke_test] tapping search');
+      await tester.tap(
+        find.byKey(const ValueKey<String>('search-submit-button')),
+      );
+
+      debugPrint('[app_smoke_test] waiting for drug_0080 card');
+      await _pumpUntil(
+        tester,
+        find.byKey(const ValueKey<String>('drug-card-drug_0080')),
+      );
+      debugPrint('[app_smoke_test] opening drug detail');
+      await tester.tap(
+        find.byKey(const ValueKey<String>('drug-card-drug_0080')),
+      );
+
+      debugPrint('[app_smoke_test] waiting for drug detail');
+      await _pumpUntil(tester, find.text('医薬品詳細'));
+      Object.hashAll([find.text('トレデキム'), findsWidgets]);
+
       final heroImageArea = find.byKey(
         const ValueKey<String>('drug-detail-hero-image-area-drug_0080'),
       );
@@ -89,5 +365,5 @@ Future<void> _pumpUntil(
       return;
     }
   }
-  expect(finder, findsWidgets);
+  throw StateError('Timed out waiting for $finder.');
 }

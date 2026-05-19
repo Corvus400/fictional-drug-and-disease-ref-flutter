@@ -6,90 +6,124 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   group('DetailColorExtension', () {
     test('light colors match Detail Spec frame tokens', () {
-      _expectLightTokens(DetailColorExtension.light);
+      expect(_tokens(DetailColorExtension.light), _lightTokens);
     });
 
     test('dark colors match Detail Spec frame tokens', () {
-      _expectDarkTokens(DetailColorExtension.dark);
+      expect(_tokens(DetailColorExtension.dark), _darkTokens);
     });
 
-    test(
-      'AppTheme provides DetailColorExtension for light and dark themes',
-      () {
-        final lightColors = AppTheme.light().extension<DetailColorExtension>();
-        final darkColors = AppTheme.dark().extension<DetailColorExtension>();
+    test('AppTheme provides DetailColorExtension for light theme', () {
+      final lightColors = AppTheme.light().extension<DetailColorExtension>();
 
-        expect(lightColors, isNotNull);
-        expect(darkColors, isNotNull);
-        _expectLightTokens(lightColors!);
-        _expectDarkTokens(darkColors!);
-      },
-    );
+      expect(lightColors == null ? null : _tokens(lightColors), _lightTokens);
+    });
+
+    test('AppTheme provides DetailColorExtension for dark theme', () {
+      final darkColors = AppTheme.dark().extension<DetailColorExtension>();
+
+      expect(darkColors == null ? null : _tokens(darkColors), _darkTokens);
+    });
   });
 }
 
-void _expectLightTokens(DetailColorExtension colors) {
-  expect(colors.primary, const Color(0xFF1F5BB5));
-  expect(colors.onPrimary, const Color(0xFFFFFFFF));
-  expect(colors.secondary, const Color(0xFF525E78));
-  expect(colors.onSecondary, const Color(0xFFFFFFFF));
-  expect(colors.tertiary, const Color(0xFF705574));
-  expect(colors.onTertiary, const Color(0xFFFFFFFF));
-  expect(colors.error, const Color(0xFFB3261E));
-  expect(colors.onError, const Color(0xFFFFFFFF));
-  expect(colors.errorContainer, const Color(0xFFF9DEDC));
-  expect(colors.onErrorContainer, const Color(0xFF410E0B));
-  expect(colors.warnContainer, const Color(0xFFFFE0E0));
-  expect(colors.onWarnContainer, const Color(0xFF5B0A0A));
-  expect(colors.surface, const Color(0xFFFBFBFE));
-  expect(colors.onSurface, const Color(0xFF1A1B20));
-  expect(colors.onSurfaceVariant, const Color(0xFF44464E));
-  expect(colors.surfaceContainerLowest, const Color(0xFFFFFFFF));
-  expect(colors.surfaceContainerLow, const Color(0xFFF4F4F8));
-  expect(colors.surfaceContainer, const Color(0xFFEDEEF3));
-  expect(colors.surfaceContainerHigh, const Color(0xFFE7E8EE));
-  expect(colors.surfaceContainerHighest, const Color(0xFFE1E2E8));
-  expect(colors.surfaceTint, const Color(0xFF1F5BB5));
-  expect(colors.outline, const Color(0xFF75777F));
-  expect(colors.outlineVariant, const Color(0xFFC5C6CD));
-  expect(colors.primaryContainer, const Color(0xFFD8E2FF));
-  expect(colors.onPrimaryContainer, const Color(0xFF001A41));
-  expect(colors.tertiaryContainer, const Color(0xFFFBD8FF));
-  expect(colors.onTertiaryContainer, const Color(0xFF280A2D));
-  expect(colors.shadow, const Color(0x14171A2A));
-  expect(colors.frameGradientStart, const Color(0xFF0F172A));
-  expect(colors.frameGradientEnd, const Color(0xFF0B1220));
+Map<String, Color> _tokens(DetailColorExtension colors) {
+  return {
+    'primary': colors.primary,
+    'onPrimary': colors.onPrimary,
+    'secondary': colors.secondary,
+    'onSecondary': colors.onSecondary,
+    'tertiary': colors.tertiary,
+    'onTertiary': colors.onTertiary,
+    'error': colors.error,
+    'onError': colors.onError,
+    'errorContainer': colors.errorContainer,
+    'onErrorContainer': colors.onErrorContainer,
+    'warnContainer': colors.warnContainer,
+    'onWarnContainer': colors.onWarnContainer,
+    'surface': colors.surface,
+    'onSurface': colors.onSurface,
+    'onSurfaceVariant': colors.onSurfaceVariant,
+    'surfaceContainerLowest': colors.surfaceContainerLowest,
+    'surfaceContainerLow': colors.surfaceContainerLow,
+    'surfaceContainer': colors.surfaceContainer,
+    'surfaceContainerHigh': colors.surfaceContainerHigh,
+    'surfaceContainerHighest': colors.surfaceContainerHighest,
+    'surfaceTint': colors.surfaceTint,
+    'outline': colors.outline,
+    'outlineVariant': colors.outlineVariant,
+    'primaryContainer': colors.primaryContainer,
+    'onPrimaryContainer': colors.onPrimaryContainer,
+    'tertiaryContainer': colors.tertiaryContainer,
+    'onTertiaryContainer': colors.onTertiaryContainer,
+    'shadow': colors.shadow,
+    'frameGradientStart': colors.frameGradientStart,
+    'frameGradientEnd': colors.frameGradientEnd,
+  };
 }
 
-void _expectDarkTokens(DetailColorExtension colors) {
-  expect(colors.primary, const Color(0xFFAEC6FF));
-  expect(colors.onPrimary, const Color(0xFF002E69));
-  expect(colors.secondary, const Color(0xFFBBC6E4));
-  expect(colors.onSecondary, const Color(0xFF253048));
-  expect(colors.tertiary, const Color(0xFFDEBCDF));
-  expect(colors.onTertiary, const Color(0xFF3F2843));
-  expect(colors.error, const Color(0xFFF2B8B5));
-  expect(colors.onError, const Color(0xFF601410));
-  expect(colors.errorContainer, const Color(0xFF8C1D18));
-  expect(colors.onErrorContainer, const Color(0xFFF9DEDC));
-  expect(colors.warnContainer, const Color(0xFF5B0A0A));
-  expect(colors.onWarnContainer, const Color(0xFFFFE0E0));
-  expect(colors.surface, const Color(0xFF121318));
-  expect(colors.onSurface, const Color(0xFFE3E2E9));
-  expect(colors.onSurfaceVariant, const Color(0xFFC5C6CD));
-  expect(colors.surfaceContainerLowest, const Color(0xFF0D0E13));
-  expect(colors.surfaceContainerLow, const Color(0xFF1A1B20));
-  expect(colors.surfaceContainer, const Color(0xFF1E1F25));
-  expect(colors.surfaceContainerHigh, const Color(0xFF292A30));
-  expect(colors.surfaceContainerHighest, const Color(0xFF33343A));
-  expect(colors.surfaceTint, const Color(0xFFAEC6FF));
-  expect(colors.outline, const Color(0xFF8E9099));
-  expect(colors.outlineVariant, const Color(0xFF44464E));
-  expect(colors.primaryContainer, const Color(0xFF003494));
-  expect(colors.onPrimaryContainer, const Color(0xFFD8E2FF));
-  expect(colors.tertiaryContainer, const Color(0xFF573C5B));
-  expect(colors.onTertiaryContainer, const Color(0xFFFBD8FF));
-  expect(colors.shadow, const Color(0x80000000));
-  expect(colors.frameGradientStart, const Color(0xFF1E293B));
-  expect(colors.frameGradientEnd, const Color(0xFF0F172A));
-}
+const _lightTokens = {
+  'primary': Color(0xFF1F5BB5),
+  'onPrimary': Color(0xFFFFFFFF),
+  'secondary': Color(0xFF525E78),
+  'onSecondary': Color(0xFFFFFFFF),
+  'tertiary': Color(0xFF705574),
+  'onTertiary': Color(0xFFFFFFFF),
+  'error': Color(0xFFB3261E),
+  'onError': Color(0xFFFFFFFF),
+  'errorContainer': Color(0xFFF9DEDC),
+  'onErrorContainer': Color(0xFF410E0B),
+  'warnContainer': Color(0xFFFFE0E0),
+  'onWarnContainer': Color(0xFF5B0A0A),
+  'surface': Color(0xFFFBFBFE),
+  'onSurface': Color(0xFF1A1B20),
+  'onSurfaceVariant': Color(0xFF44464E),
+  'surfaceContainerLowest': Color(0xFFFFFFFF),
+  'surfaceContainerLow': Color(0xFFF4F4F8),
+  'surfaceContainer': Color(0xFFEDEEF3),
+  'surfaceContainerHigh': Color(0xFFE7E8EE),
+  'surfaceContainerHighest': Color(0xFFE1E2E8),
+  'surfaceTint': Color(0xFF1F5BB5),
+  'outline': Color(0xFF75777F),
+  'outlineVariant': Color(0xFFC5C6CD),
+  'primaryContainer': Color(0xFFD8E2FF),
+  'onPrimaryContainer': Color(0xFF001A41),
+  'tertiaryContainer': Color(0xFFFBD8FF),
+  'onTertiaryContainer': Color(0xFF280A2D),
+  'shadow': Color(0x14171A2A),
+  'frameGradientStart': Color(0xFF0F172A),
+  'frameGradientEnd': Color(0xFF0B1220),
+};
+
+const _darkTokens = {
+  'primary': Color(0xFFAEC6FF),
+  'onPrimary': Color(0xFF002E69),
+  'secondary': Color(0xFFBBC6E4),
+  'onSecondary': Color(0xFF253048),
+  'tertiary': Color(0xFFDEBCDF),
+  'onTertiary': Color(0xFF3F2843),
+  'error': Color(0xFFF2B8B5),
+  'onError': Color(0xFF601410),
+  'errorContainer': Color(0xFF8C1D18),
+  'onErrorContainer': Color(0xFFF9DEDC),
+  'warnContainer': Color(0xFF5B0A0A),
+  'onWarnContainer': Color(0xFFFFE0E0),
+  'surface': Color(0xFF121318),
+  'onSurface': Color(0xFFE3E2E9),
+  'onSurfaceVariant': Color(0xFFC5C6CD),
+  'surfaceContainerLowest': Color(0xFF0D0E13),
+  'surfaceContainerLow': Color(0xFF1A1B20),
+  'surfaceContainer': Color(0xFF1E1F25),
+  'surfaceContainerHigh': Color(0xFF292A30),
+  'surfaceContainerHighest': Color(0xFF33343A),
+  'surfaceTint': Color(0xFFAEC6FF),
+  'outline': Color(0xFF8E9099),
+  'outlineVariant': Color(0xFF44464E),
+  'primaryContainer': Color(0xFF003494),
+  'onPrimaryContainer': Color(0xFFD8E2FF),
+  'tertiaryContainer': Color(0xFF573C5B),
+  'onTertiaryContainer': Color(0xFFFBD8FF),
+  'shadow': Color(0x80000000),
+  'frameGradientStart': Color(0xFF1E293B),
+  'frameGradientEnd': Color(0xFF0F172A),
+};

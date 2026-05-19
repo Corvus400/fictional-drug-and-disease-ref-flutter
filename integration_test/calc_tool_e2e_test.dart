@@ -14,7 +14,7 @@ void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   testWidgets(
-    'completes BMI, eGFR, CrCl, restore, and delete flow',
+    'completes BMI, eGFR, CrCl, restore, and delete flow [assertion 1/11]',
     (
       tester,
     ) async {
@@ -38,8 +38,299 @@ void main() {
 
       expect(find.byType(MaterialApp), findsOneWidget);
       await _pumpUntil(tester, find.byType(DisclaimerRibbon));
+      Object.hashAll([find.byType(DisclaimerRibbon), findsOneWidget]);
+
+      Object.hashAll([find.byType(NavigationBar), findsOneWidget]);
+
+      Object.hashAll([
+        tester.getBottomLeft(find.byType(DisclaimerRibbon)).dy,
+        lessThanOrEqualTo(tester.getTopLeft(find.byType(NavigationBar)).dy),
+      ]);
+
+      await tester.tap(find.text('計算ツール').last);
+      await _pumpUntil(
+        tester,
+        find.byKey(const ValueKey<String>('calc-input-heightCm')),
+      );
+      await _pumpUntil(tester, find.textContaining('履歴 ('));
+
+      Object.hashAll([_visibleHistoryCount(tester), 0]);
+
+      await _enterInput(tester, 'calc-input-heightCm', '170');
+      Object.hashAll([_textFieldValue(tester, 'calc-input-heightCm'), '170']);
+
+      await _enterInput(tester, 'calc-input-weightKg', '65');
+      Object.hashAll([_textFieldValue(tester, 'calc-input-weightKg'), '65']);
+
+      await _pumpUntilResult(tester, '22.5');
+      Object.hashAll([find.text('普通体重'), findsWidgets]);
+
+      await _pumpUntilHistoryCount(tester, 1);
+
+      await _selectTool(tester, 'eGFR');
+      await _pumpUntilHistoryCount(tester, 0);
+      await _enterInput(tester, 'calc-input-ageYears', '45');
+      await _enterInput(tester, 'calc-input-serumCreatinineMgDl', '0.9');
+      await _pumpUntilResultNotPlaceholder(tester);
+      Object.hashAll([find.text('G2 軽度低下'), findsWidgets]);
+
+      await _pumpUntilHistoryCount(tester, 1);
+
+      await _selectTool(tester, 'CrCl');
+      await _pumpUntilHistoryCount(tester, 0);
+      await _enterInput(tester, 'calc-input-ageYears', '45');
+      await _enterInput(tester, 'calc-input-weightKg', '65');
+      await _enterInput(tester, 'calc-input-serumCreatinineMgDl', '0.9');
+      await _pumpUntilResultNotPlaceholder(tester);
+      await _pumpUntilHistoryCount(tester, 1);
+
+      await _selectTool(tester, 'BMI');
+      await _pumpUntilHistoryCount(tester, 1);
+
+      await _expandHistoryIfNeeded(tester);
+      final bmiRow = _richTextContaining('BMI 22.5').first;
+      await _pumpUntil(tester, bmiRow);
+      await tester.ensureVisible(bmiRow);
+      await tester.tap(bmiRow);
+      await _pumpUntilResult(tester, '22.5');
+      Object.hashAll([_textFieldValue(tester, 'calc-input-heightCm'), '170']);
+
+      Object.hashAll([_textFieldValue(tester, 'calc-input-weightKg'), '65']);
+
+      await _expandHistoryIfNeeded(tester);
+      final restoredBmiRow = _richTextContaining('BMI 22.5').first;
+      await _pumpUntil(tester, restoredBmiRow);
+      await tester.ensureVisible(restoredBmiRow);
+      await tester.drag(restoredBmiRow, const Offset(-320, 0));
+      await _pumpShort(tester);
+      await tester.tap(find.text('削除').first);
+      await _pumpUntilHistoryCount(tester, 0);
+    },
+    timeout: const Timeout(Duration(minutes: 2)),
+  );
+
+  testWidgets(
+    'completes BMI, eGFR, CrCl, restore, and delete flow [assertion 2/11]',
+    (
+      tester,
+    ) async {
+      final db = AppDatabase(NativeDatabase.memory());
+      addTearDown(db.close);
+
+      ApiConfig.initialize(
+        const FlavorConfig(
+          flavor: Flavor.dev,
+          apiBaseUrl: 'http://localhost:8080',
+        ),
+      );
+      runApp(
+        ProviderScope(
+          overrides: [appDatabaseProvider.overrideWithValue(db)],
+          child: App(),
+        ),
+      );
+      await tester.pump();
+      await tester.pump(const Duration(seconds: 1));
+
+      Object.hashAll([find.byType(MaterialApp), findsOneWidget]);
+
+      await _pumpUntil(tester, find.byType(DisclaimerRibbon));
       expect(find.byType(DisclaimerRibbon), findsOneWidget);
+      Object.hashAll([find.byType(NavigationBar), findsOneWidget]);
+
+      Object.hashAll([
+        tester.getBottomLeft(find.byType(DisclaimerRibbon)).dy,
+        lessThanOrEqualTo(tester.getTopLeft(find.byType(NavigationBar)).dy),
+      ]);
+
+      await tester.tap(find.text('計算ツール').last);
+      await _pumpUntil(
+        tester,
+        find.byKey(const ValueKey<String>('calc-input-heightCm')),
+      );
+      await _pumpUntil(tester, find.textContaining('履歴 ('));
+
+      Object.hashAll([_visibleHistoryCount(tester), 0]);
+
+      await _enterInput(tester, 'calc-input-heightCm', '170');
+      Object.hashAll([_textFieldValue(tester, 'calc-input-heightCm'), '170']);
+
+      await _enterInput(tester, 'calc-input-weightKg', '65');
+      Object.hashAll([_textFieldValue(tester, 'calc-input-weightKg'), '65']);
+
+      await _pumpUntilResult(tester, '22.5');
+      Object.hashAll([find.text('普通体重'), findsWidgets]);
+
+      await _pumpUntilHistoryCount(tester, 1);
+
+      await _selectTool(tester, 'eGFR');
+      await _pumpUntilHistoryCount(tester, 0);
+      await _enterInput(tester, 'calc-input-ageYears', '45');
+      await _enterInput(tester, 'calc-input-serumCreatinineMgDl', '0.9');
+      await _pumpUntilResultNotPlaceholder(tester);
+      Object.hashAll([find.text('G2 軽度低下'), findsWidgets]);
+
+      await _pumpUntilHistoryCount(tester, 1);
+
+      await _selectTool(tester, 'CrCl');
+      await _pumpUntilHistoryCount(tester, 0);
+      await _enterInput(tester, 'calc-input-ageYears', '45');
+      await _enterInput(tester, 'calc-input-weightKg', '65');
+      await _enterInput(tester, 'calc-input-serumCreatinineMgDl', '0.9');
+      await _pumpUntilResultNotPlaceholder(tester);
+      await _pumpUntilHistoryCount(tester, 1);
+
+      await _selectTool(tester, 'BMI');
+      await _pumpUntilHistoryCount(tester, 1);
+
+      await _expandHistoryIfNeeded(tester);
+      final bmiRow = _richTextContaining('BMI 22.5').first;
+      await _pumpUntil(tester, bmiRow);
+      await tester.ensureVisible(bmiRow);
+      await tester.tap(bmiRow);
+      await _pumpUntilResult(tester, '22.5');
+      Object.hashAll([_textFieldValue(tester, 'calc-input-heightCm'), '170']);
+
+      Object.hashAll([_textFieldValue(tester, 'calc-input-weightKg'), '65']);
+
+      await _expandHistoryIfNeeded(tester);
+      final restoredBmiRow = _richTextContaining('BMI 22.5').first;
+      await _pumpUntil(tester, restoredBmiRow);
+      await tester.ensureVisible(restoredBmiRow);
+      await tester.drag(restoredBmiRow, const Offset(-320, 0));
+      await _pumpShort(tester);
+      await tester.tap(find.text('削除').first);
+      await _pumpUntilHistoryCount(tester, 0);
+    },
+    timeout: const Timeout(Duration(minutes: 2)),
+  );
+
+  testWidgets(
+    'completes BMI, eGFR, CrCl, restore, and delete flow [assertion 3/11]',
+    (
+      tester,
+    ) async {
+      final db = AppDatabase(NativeDatabase.memory());
+      addTearDown(db.close);
+
+      ApiConfig.initialize(
+        const FlavorConfig(
+          flavor: Flavor.dev,
+          apiBaseUrl: 'http://localhost:8080',
+        ),
+      );
+      runApp(
+        ProviderScope(
+          overrides: [appDatabaseProvider.overrideWithValue(db)],
+          child: App(),
+        ),
+      );
+      await tester.pump();
+      await tester.pump(const Duration(seconds: 1));
+
+      Object.hashAll([find.byType(MaterialApp), findsOneWidget]);
+
+      await _pumpUntil(tester, find.byType(DisclaimerRibbon));
+      Object.hashAll([find.byType(DisclaimerRibbon), findsOneWidget]);
+
       expect(find.byType(NavigationBar), findsOneWidget);
+      Object.hashAll([
+        tester.getBottomLeft(find.byType(DisclaimerRibbon)).dy,
+        lessThanOrEqualTo(tester.getTopLeft(find.byType(NavigationBar)).dy),
+      ]);
+
+      await tester.tap(find.text('計算ツール').last);
+      await _pumpUntil(
+        tester,
+        find.byKey(const ValueKey<String>('calc-input-heightCm')),
+      );
+      await _pumpUntil(tester, find.textContaining('履歴 ('));
+
+      Object.hashAll([_visibleHistoryCount(tester), 0]);
+
+      await _enterInput(tester, 'calc-input-heightCm', '170');
+      Object.hashAll([_textFieldValue(tester, 'calc-input-heightCm'), '170']);
+
+      await _enterInput(tester, 'calc-input-weightKg', '65');
+      Object.hashAll([_textFieldValue(tester, 'calc-input-weightKg'), '65']);
+
+      await _pumpUntilResult(tester, '22.5');
+      Object.hashAll([find.text('普通体重'), findsWidgets]);
+
+      await _pumpUntilHistoryCount(tester, 1);
+
+      await _selectTool(tester, 'eGFR');
+      await _pumpUntilHistoryCount(tester, 0);
+      await _enterInput(tester, 'calc-input-ageYears', '45');
+      await _enterInput(tester, 'calc-input-serumCreatinineMgDl', '0.9');
+      await _pumpUntilResultNotPlaceholder(tester);
+      Object.hashAll([find.text('G2 軽度低下'), findsWidgets]);
+
+      await _pumpUntilHistoryCount(tester, 1);
+
+      await _selectTool(tester, 'CrCl');
+      await _pumpUntilHistoryCount(tester, 0);
+      await _enterInput(tester, 'calc-input-ageYears', '45');
+      await _enterInput(tester, 'calc-input-weightKg', '65');
+      await _enterInput(tester, 'calc-input-serumCreatinineMgDl', '0.9');
+      await _pumpUntilResultNotPlaceholder(tester);
+      await _pumpUntilHistoryCount(tester, 1);
+
+      await _selectTool(tester, 'BMI');
+      await _pumpUntilHistoryCount(tester, 1);
+
+      await _expandHistoryIfNeeded(tester);
+      final bmiRow = _richTextContaining('BMI 22.5').first;
+      await _pumpUntil(tester, bmiRow);
+      await tester.ensureVisible(bmiRow);
+      await tester.tap(bmiRow);
+      await _pumpUntilResult(tester, '22.5');
+      Object.hashAll([_textFieldValue(tester, 'calc-input-heightCm'), '170']);
+
+      Object.hashAll([_textFieldValue(tester, 'calc-input-weightKg'), '65']);
+
+      await _expandHistoryIfNeeded(tester);
+      final restoredBmiRow = _richTextContaining('BMI 22.5').first;
+      await _pumpUntil(tester, restoredBmiRow);
+      await tester.ensureVisible(restoredBmiRow);
+      await tester.drag(restoredBmiRow, const Offset(-320, 0));
+      await _pumpShort(tester);
+      await tester.tap(find.text('削除').first);
+      await _pumpUntilHistoryCount(tester, 0);
+    },
+    timeout: const Timeout(Duration(minutes: 2)),
+  );
+
+  testWidgets(
+    'completes BMI, eGFR, CrCl, restore, and delete flow [assertion 4/11]',
+    (
+      tester,
+    ) async {
+      final db = AppDatabase(NativeDatabase.memory());
+      addTearDown(db.close);
+
+      ApiConfig.initialize(
+        const FlavorConfig(
+          flavor: Flavor.dev,
+          apiBaseUrl: 'http://localhost:8080',
+        ),
+      );
+      runApp(
+        ProviderScope(
+          overrides: [appDatabaseProvider.overrideWithValue(db)],
+          child: App(),
+        ),
+      );
+      await tester.pump();
+      await tester.pump(const Duration(seconds: 1));
+
+      Object.hashAll([find.byType(MaterialApp), findsOneWidget]);
+
+      await _pumpUntil(tester, find.byType(DisclaimerRibbon));
+      Object.hashAll([find.byType(DisclaimerRibbon), findsOneWidget]);
+
+      Object.hashAll([find.byType(NavigationBar), findsOneWidget]);
+
       expect(
         tester.getBottomLeft(find.byType(DisclaimerRibbon)).dy,
         lessThanOrEqualTo(tester.getTopLeft(find.byType(NavigationBar)).dy),
@@ -52,14 +343,499 @@ void main() {
       );
       await _pumpUntil(tester, find.textContaining('履歴 ('));
 
+      Object.hashAll([_visibleHistoryCount(tester), 0]);
+
+      await _enterInput(tester, 'calc-input-heightCm', '170');
+      Object.hashAll([_textFieldValue(tester, 'calc-input-heightCm'), '170']);
+
+      await _enterInput(tester, 'calc-input-weightKg', '65');
+      Object.hashAll([_textFieldValue(tester, 'calc-input-weightKg'), '65']);
+
+      await _pumpUntilResult(tester, '22.5');
+      Object.hashAll([find.text('普通体重'), findsWidgets]);
+
+      await _pumpUntilHistoryCount(tester, 1);
+
+      await _selectTool(tester, 'eGFR');
+      await _pumpUntilHistoryCount(tester, 0);
+      await _enterInput(tester, 'calc-input-ageYears', '45');
+      await _enterInput(tester, 'calc-input-serumCreatinineMgDl', '0.9');
+      await _pumpUntilResultNotPlaceholder(tester);
+      Object.hashAll([find.text('G2 軽度低下'), findsWidgets]);
+
+      await _pumpUntilHistoryCount(tester, 1);
+
+      await _selectTool(tester, 'CrCl');
+      await _pumpUntilHistoryCount(tester, 0);
+      await _enterInput(tester, 'calc-input-ageYears', '45');
+      await _enterInput(tester, 'calc-input-weightKg', '65');
+      await _enterInput(tester, 'calc-input-serumCreatinineMgDl', '0.9');
+      await _pumpUntilResultNotPlaceholder(tester);
+      await _pumpUntilHistoryCount(tester, 1);
+
+      await _selectTool(tester, 'BMI');
+      await _pumpUntilHistoryCount(tester, 1);
+
+      await _expandHistoryIfNeeded(tester);
+      final bmiRow = _richTextContaining('BMI 22.5').first;
+      await _pumpUntil(tester, bmiRow);
+      await tester.ensureVisible(bmiRow);
+      await tester.tap(bmiRow);
+      await _pumpUntilResult(tester, '22.5');
+      Object.hashAll([_textFieldValue(tester, 'calc-input-heightCm'), '170']);
+
+      Object.hashAll([_textFieldValue(tester, 'calc-input-weightKg'), '65']);
+
+      await _expandHistoryIfNeeded(tester);
+      final restoredBmiRow = _richTextContaining('BMI 22.5').first;
+      await _pumpUntil(tester, restoredBmiRow);
+      await tester.ensureVisible(restoredBmiRow);
+      await tester.drag(restoredBmiRow, const Offset(-320, 0));
+      await _pumpShort(tester);
+      await tester.tap(find.text('削除').first);
+      await _pumpUntilHistoryCount(tester, 0);
+    },
+    timeout: const Timeout(Duration(minutes: 2)),
+  );
+
+  testWidgets(
+    'completes BMI, eGFR, CrCl, restore, and delete flow [assertion 5/11]',
+    (
+      tester,
+    ) async {
+      final db = AppDatabase(NativeDatabase.memory());
+      addTearDown(db.close);
+
+      ApiConfig.initialize(
+        const FlavorConfig(
+          flavor: Flavor.dev,
+          apiBaseUrl: 'http://localhost:8080',
+        ),
+      );
+      runApp(
+        ProviderScope(
+          overrides: [appDatabaseProvider.overrideWithValue(db)],
+          child: App(),
+        ),
+      );
+      await tester.pump();
+      await tester.pump(const Duration(seconds: 1));
+
+      Object.hashAll([find.byType(MaterialApp), findsOneWidget]);
+
+      await _pumpUntil(tester, find.byType(DisclaimerRibbon));
+      Object.hashAll([find.byType(DisclaimerRibbon), findsOneWidget]);
+
+      Object.hashAll([find.byType(NavigationBar), findsOneWidget]);
+
+      Object.hashAll([
+        tester.getBottomLeft(find.byType(DisclaimerRibbon)).dy,
+        lessThanOrEqualTo(tester.getTopLeft(find.byType(NavigationBar)).dy),
+      ]);
+
+      await tester.tap(find.text('計算ツール').last);
+      await _pumpUntil(
+        tester,
+        find.byKey(const ValueKey<String>('calc-input-heightCm')),
+      );
+      await _pumpUntil(tester, find.textContaining('履歴 ('));
+
       expect(_visibleHistoryCount(tester), 0);
+
+      await _enterInput(tester, 'calc-input-heightCm', '170');
+      Object.hashAll([_textFieldValue(tester, 'calc-input-heightCm'), '170']);
+
+      await _enterInput(tester, 'calc-input-weightKg', '65');
+      Object.hashAll([_textFieldValue(tester, 'calc-input-weightKg'), '65']);
+
+      await _pumpUntilResult(tester, '22.5');
+      Object.hashAll([find.text('普通体重'), findsWidgets]);
+
+      await _pumpUntilHistoryCount(tester, 1);
+
+      await _selectTool(tester, 'eGFR');
+      await _pumpUntilHistoryCount(tester, 0);
+      await _enterInput(tester, 'calc-input-ageYears', '45');
+      await _enterInput(tester, 'calc-input-serumCreatinineMgDl', '0.9');
+      await _pumpUntilResultNotPlaceholder(tester);
+      Object.hashAll([find.text('G2 軽度低下'), findsWidgets]);
+
+      await _pumpUntilHistoryCount(tester, 1);
+
+      await _selectTool(tester, 'CrCl');
+      await _pumpUntilHistoryCount(tester, 0);
+      await _enterInput(tester, 'calc-input-ageYears', '45');
+      await _enterInput(tester, 'calc-input-weightKg', '65');
+      await _enterInput(tester, 'calc-input-serumCreatinineMgDl', '0.9');
+      await _pumpUntilResultNotPlaceholder(tester);
+      await _pumpUntilHistoryCount(tester, 1);
+
+      await _selectTool(tester, 'BMI');
+      await _pumpUntilHistoryCount(tester, 1);
+
+      await _expandHistoryIfNeeded(tester);
+      final bmiRow = _richTextContaining('BMI 22.5').first;
+      await _pumpUntil(tester, bmiRow);
+      await tester.ensureVisible(bmiRow);
+      await tester.tap(bmiRow);
+      await _pumpUntilResult(tester, '22.5');
+      Object.hashAll([_textFieldValue(tester, 'calc-input-heightCm'), '170']);
+
+      Object.hashAll([_textFieldValue(tester, 'calc-input-weightKg'), '65']);
+
+      await _expandHistoryIfNeeded(tester);
+      final restoredBmiRow = _richTextContaining('BMI 22.5').first;
+      await _pumpUntil(tester, restoredBmiRow);
+      await tester.ensureVisible(restoredBmiRow);
+      await tester.drag(restoredBmiRow, const Offset(-320, 0));
+      await _pumpShort(tester);
+      await tester.tap(find.text('削除').first);
+      await _pumpUntilHistoryCount(tester, 0);
+    },
+    timeout: const Timeout(Duration(minutes: 2)),
+  );
+
+  testWidgets(
+    'completes BMI, eGFR, CrCl, restore, and delete flow [assertion 6/11]',
+    (
+      tester,
+    ) async {
+      final db = AppDatabase(NativeDatabase.memory());
+      addTearDown(db.close);
+
+      ApiConfig.initialize(
+        const FlavorConfig(
+          flavor: Flavor.dev,
+          apiBaseUrl: 'http://localhost:8080',
+        ),
+      );
+      runApp(
+        ProviderScope(
+          overrides: [appDatabaseProvider.overrideWithValue(db)],
+          child: App(),
+        ),
+      );
+      await tester.pump();
+      await tester.pump(const Duration(seconds: 1));
+
+      Object.hashAll([find.byType(MaterialApp), findsOneWidget]);
+
+      await _pumpUntil(tester, find.byType(DisclaimerRibbon));
+      Object.hashAll([find.byType(DisclaimerRibbon), findsOneWidget]);
+
+      Object.hashAll([find.byType(NavigationBar), findsOneWidget]);
+
+      Object.hashAll([
+        tester.getBottomLeft(find.byType(DisclaimerRibbon)).dy,
+        lessThanOrEqualTo(tester.getTopLeft(find.byType(NavigationBar)).dy),
+      ]);
+
+      await tester.tap(find.text('計算ツール').last);
+      await _pumpUntil(
+        tester,
+        find.byKey(const ValueKey<String>('calc-input-heightCm')),
+      );
+      await _pumpUntil(tester, find.textContaining('履歴 ('));
+
+      Object.hashAll([_visibleHistoryCount(tester), 0]);
 
       await _enterInput(tester, 'calc-input-heightCm', '170');
       expect(_textFieldValue(tester, 'calc-input-heightCm'), '170');
       await _enterInput(tester, 'calc-input-weightKg', '65');
+      Object.hashAll([_textFieldValue(tester, 'calc-input-weightKg'), '65']);
+
+      await _pumpUntilResult(tester, '22.5');
+      Object.hashAll([find.text('普通体重'), findsWidgets]);
+
+      await _pumpUntilHistoryCount(tester, 1);
+
+      await _selectTool(tester, 'eGFR');
+      await _pumpUntilHistoryCount(tester, 0);
+      await _enterInput(tester, 'calc-input-ageYears', '45');
+      await _enterInput(tester, 'calc-input-serumCreatinineMgDl', '0.9');
+      await _pumpUntilResultNotPlaceholder(tester);
+      Object.hashAll([find.text('G2 軽度低下'), findsWidgets]);
+
+      await _pumpUntilHistoryCount(tester, 1);
+
+      await _selectTool(tester, 'CrCl');
+      await _pumpUntilHistoryCount(tester, 0);
+      await _enterInput(tester, 'calc-input-ageYears', '45');
+      await _enterInput(tester, 'calc-input-weightKg', '65');
+      await _enterInput(tester, 'calc-input-serumCreatinineMgDl', '0.9');
+      await _pumpUntilResultNotPlaceholder(tester);
+      await _pumpUntilHistoryCount(tester, 1);
+
+      await _selectTool(tester, 'BMI');
+      await _pumpUntilHistoryCount(tester, 1);
+
+      await _expandHistoryIfNeeded(tester);
+      final bmiRow = _richTextContaining('BMI 22.5').first;
+      await _pumpUntil(tester, bmiRow);
+      await tester.ensureVisible(bmiRow);
+      await tester.tap(bmiRow);
+      await _pumpUntilResult(tester, '22.5');
+      Object.hashAll([_textFieldValue(tester, 'calc-input-heightCm'), '170']);
+
+      Object.hashAll([_textFieldValue(tester, 'calc-input-weightKg'), '65']);
+
+      await _expandHistoryIfNeeded(tester);
+      final restoredBmiRow = _richTextContaining('BMI 22.5').first;
+      await _pumpUntil(tester, restoredBmiRow);
+      await tester.ensureVisible(restoredBmiRow);
+      await tester.drag(restoredBmiRow, const Offset(-320, 0));
+      await _pumpShort(tester);
+      await tester.tap(find.text('削除').first);
+      await _pumpUntilHistoryCount(tester, 0);
+    },
+    timeout: const Timeout(Duration(minutes: 2)),
+  );
+
+  testWidgets(
+    'completes BMI, eGFR, CrCl, restore, and delete flow [assertion 7/11]',
+    (
+      tester,
+    ) async {
+      final db = AppDatabase(NativeDatabase.memory());
+      addTearDown(db.close);
+
+      ApiConfig.initialize(
+        const FlavorConfig(
+          flavor: Flavor.dev,
+          apiBaseUrl: 'http://localhost:8080',
+        ),
+      );
+      runApp(
+        ProviderScope(
+          overrides: [appDatabaseProvider.overrideWithValue(db)],
+          child: App(),
+        ),
+      );
+      await tester.pump();
+      await tester.pump(const Duration(seconds: 1));
+
+      Object.hashAll([find.byType(MaterialApp), findsOneWidget]);
+
+      await _pumpUntil(tester, find.byType(DisclaimerRibbon));
+      Object.hashAll([find.byType(DisclaimerRibbon), findsOneWidget]);
+
+      Object.hashAll([find.byType(NavigationBar), findsOneWidget]);
+
+      Object.hashAll([
+        tester.getBottomLeft(find.byType(DisclaimerRibbon)).dy,
+        lessThanOrEqualTo(tester.getTopLeft(find.byType(NavigationBar)).dy),
+      ]);
+
+      await tester.tap(find.text('計算ツール').last);
+      await _pumpUntil(
+        tester,
+        find.byKey(const ValueKey<String>('calc-input-heightCm')),
+      );
+      await _pumpUntil(tester, find.textContaining('履歴 ('));
+
+      Object.hashAll([_visibleHistoryCount(tester), 0]);
+
+      await _enterInput(tester, 'calc-input-heightCm', '170');
+      Object.hashAll([_textFieldValue(tester, 'calc-input-heightCm'), '170']);
+
+      await _enterInput(tester, 'calc-input-weightKg', '65');
       expect(_textFieldValue(tester, 'calc-input-weightKg'), '65');
       await _pumpUntilResult(tester, '22.5');
+      Object.hashAll([find.text('普通体重'), findsWidgets]);
+
+      await _pumpUntilHistoryCount(tester, 1);
+
+      await _selectTool(tester, 'eGFR');
+      await _pumpUntilHistoryCount(tester, 0);
+      await _enterInput(tester, 'calc-input-ageYears', '45');
+      await _enterInput(tester, 'calc-input-serumCreatinineMgDl', '0.9');
+      await _pumpUntilResultNotPlaceholder(tester);
+      Object.hashAll([find.text('G2 軽度低下'), findsWidgets]);
+
+      await _pumpUntilHistoryCount(tester, 1);
+
+      await _selectTool(tester, 'CrCl');
+      await _pumpUntilHistoryCount(tester, 0);
+      await _enterInput(tester, 'calc-input-ageYears', '45');
+      await _enterInput(tester, 'calc-input-weightKg', '65');
+      await _enterInput(tester, 'calc-input-serumCreatinineMgDl', '0.9');
+      await _pumpUntilResultNotPlaceholder(tester);
+      await _pumpUntilHistoryCount(tester, 1);
+
+      await _selectTool(tester, 'BMI');
+      await _pumpUntilHistoryCount(tester, 1);
+
+      await _expandHistoryIfNeeded(tester);
+      final bmiRow = _richTextContaining('BMI 22.5').first;
+      await _pumpUntil(tester, bmiRow);
+      await tester.ensureVisible(bmiRow);
+      await tester.tap(bmiRow);
+      await _pumpUntilResult(tester, '22.5');
+      Object.hashAll([_textFieldValue(tester, 'calc-input-heightCm'), '170']);
+
+      Object.hashAll([_textFieldValue(tester, 'calc-input-weightKg'), '65']);
+
+      await _expandHistoryIfNeeded(tester);
+      final restoredBmiRow = _richTextContaining('BMI 22.5').first;
+      await _pumpUntil(tester, restoredBmiRow);
+      await tester.ensureVisible(restoredBmiRow);
+      await tester.drag(restoredBmiRow, const Offset(-320, 0));
+      await _pumpShort(tester);
+      await tester.tap(find.text('削除').first);
+      await _pumpUntilHistoryCount(tester, 0);
+    },
+    timeout: const Timeout(Duration(minutes: 2)),
+  );
+
+  testWidgets(
+    'completes BMI, eGFR, CrCl, restore, and delete flow [assertion 8/11]',
+    (
+      tester,
+    ) async {
+      final db = AppDatabase(NativeDatabase.memory());
+      addTearDown(db.close);
+
+      ApiConfig.initialize(
+        const FlavorConfig(
+          flavor: Flavor.dev,
+          apiBaseUrl: 'http://localhost:8080',
+        ),
+      );
+      runApp(
+        ProviderScope(
+          overrides: [appDatabaseProvider.overrideWithValue(db)],
+          child: App(),
+        ),
+      );
+      await tester.pump();
+      await tester.pump(const Duration(seconds: 1));
+
+      Object.hashAll([find.byType(MaterialApp), findsOneWidget]);
+
+      await _pumpUntil(tester, find.byType(DisclaimerRibbon));
+      Object.hashAll([find.byType(DisclaimerRibbon), findsOneWidget]);
+
+      Object.hashAll([find.byType(NavigationBar), findsOneWidget]);
+
+      Object.hashAll([
+        tester.getBottomLeft(find.byType(DisclaimerRibbon)).dy,
+        lessThanOrEqualTo(tester.getTopLeft(find.byType(NavigationBar)).dy),
+      ]);
+
+      await tester.tap(find.text('計算ツール').last);
+      await _pumpUntil(
+        tester,
+        find.byKey(const ValueKey<String>('calc-input-heightCm')),
+      );
+      await _pumpUntil(tester, find.textContaining('履歴 ('));
+
+      Object.hashAll([_visibleHistoryCount(tester), 0]);
+
+      await _enterInput(tester, 'calc-input-heightCm', '170');
+      Object.hashAll([_textFieldValue(tester, 'calc-input-heightCm'), '170']);
+
+      await _enterInput(tester, 'calc-input-weightKg', '65');
+      Object.hashAll([_textFieldValue(tester, 'calc-input-weightKg'), '65']);
+
+      await _pumpUntilResult(tester, '22.5');
       expect(find.text('普通体重'), findsWidgets);
+      await _pumpUntilHistoryCount(tester, 1);
+
+      await _selectTool(tester, 'eGFR');
+      await _pumpUntilHistoryCount(tester, 0);
+      await _enterInput(tester, 'calc-input-ageYears', '45');
+      await _enterInput(tester, 'calc-input-serumCreatinineMgDl', '0.9');
+      await _pumpUntilResultNotPlaceholder(tester);
+      Object.hashAll([find.text('G2 軽度低下'), findsWidgets]);
+
+      await _pumpUntilHistoryCount(tester, 1);
+
+      await _selectTool(tester, 'CrCl');
+      await _pumpUntilHistoryCount(tester, 0);
+      await _enterInput(tester, 'calc-input-ageYears', '45');
+      await _enterInput(tester, 'calc-input-weightKg', '65');
+      await _enterInput(tester, 'calc-input-serumCreatinineMgDl', '0.9');
+      await _pumpUntilResultNotPlaceholder(tester);
+      await _pumpUntilHistoryCount(tester, 1);
+
+      await _selectTool(tester, 'BMI');
+      await _pumpUntilHistoryCount(tester, 1);
+
+      await _expandHistoryIfNeeded(tester);
+      final bmiRow = _richTextContaining('BMI 22.5').first;
+      await _pumpUntil(tester, bmiRow);
+      await tester.ensureVisible(bmiRow);
+      await tester.tap(bmiRow);
+      await _pumpUntilResult(tester, '22.5');
+      Object.hashAll([_textFieldValue(tester, 'calc-input-heightCm'), '170']);
+
+      Object.hashAll([_textFieldValue(tester, 'calc-input-weightKg'), '65']);
+
+      await _expandHistoryIfNeeded(tester);
+      final restoredBmiRow = _richTextContaining('BMI 22.5').first;
+      await _pumpUntil(tester, restoredBmiRow);
+      await tester.ensureVisible(restoredBmiRow);
+      await tester.drag(restoredBmiRow, const Offset(-320, 0));
+      await _pumpShort(tester);
+      await tester.tap(find.text('削除').first);
+      await _pumpUntilHistoryCount(tester, 0);
+    },
+    timeout: const Timeout(Duration(minutes: 2)),
+  );
+
+  testWidgets(
+    'completes BMI, eGFR, CrCl, restore, and delete flow [assertion 9/11]',
+    (
+      tester,
+    ) async {
+      final db = AppDatabase(NativeDatabase.memory());
+      addTearDown(db.close);
+
+      ApiConfig.initialize(
+        const FlavorConfig(
+          flavor: Flavor.dev,
+          apiBaseUrl: 'http://localhost:8080',
+        ),
+      );
+      runApp(
+        ProviderScope(
+          overrides: [appDatabaseProvider.overrideWithValue(db)],
+          child: App(),
+        ),
+      );
+      await tester.pump();
+      await tester.pump(const Duration(seconds: 1));
+
+      Object.hashAll([find.byType(MaterialApp), findsOneWidget]);
+
+      await _pumpUntil(tester, find.byType(DisclaimerRibbon));
+      Object.hashAll([find.byType(DisclaimerRibbon), findsOneWidget]);
+
+      Object.hashAll([find.byType(NavigationBar), findsOneWidget]);
+
+      Object.hashAll([
+        tester.getBottomLeft(find.byType(DisclaimerRibbon)).dy,
+        lessThanOrEqualTo(tester.getTopLeft(find.byType(NavigationBar)).dy),
+      ]);
+
+      await tester.tap(find.text('計算ツール').last);
+      await _pumpUntil(
+        tester,
+        find.byKey(const ValueKey<String>('calc-input-heightCm')),
+      );
+      await _pumpUntil(tester, find.textContaining('履歴 ('));
+
+      Object.hashAll([_visibleHistoryCount(tester), 0]);
+
+      await _enterInput(tester, 'calc-input-heightCm', '170');
+      Object.hashAll([_textFieldValue(tester, 'calc-input-heightCm'), '170']);
+
+      await _enterInput(tester, 'calc-input-weightKg', '65');
+      Object.hashAll([_textFieldValue(tester, 'calc-input-weightKg'), '65']);
+
+      await _pumpUntilResult(tester, '22.5');
+      Object.hashAll([find.text('普通体重'), findsWidgets]);
+
       await _pumpUntilHistoryCount(tester, 1);
 
       await _selectTool(tester, 'eGFR');
@@ -87,7 +863,201 @@ void main() {
       await tester.ensureVisible(bmiRow);
       await tester.tap(bmiRow);
       await _pumpUntilResult(tester, '22.5');
+      Object.hashAll([_textFieldValue(tester, 'calc-input-heightCm'), '170']);
+
+      Object.hashAll([_textFieldValue(tester, 'calc-input-weightKg'), '65']);
+
+      await _expandHistoryIfNeeded(tester);
+      final restoredBmiRow = _richTextContaining('BMI 22.5').first;
+      await _pumpUntil(tester, restoredBmiRow);
+      await tester.ensureVisible(restoredBmiRow);
+      await tester.drag(restoredBmiRow, const Offset(-320, 0));
+      await _pumpShort(tester);
+      await tester.tap(find.text('削除').first);
+      await _pumpUntilHistoryCount(tester, 0);
+    },
+    timeout: const Timeout(Duration(minutes: 2)),
+  );
+
+  testWidgets(
+    'completes BMI, eGFR, CrCl, restore, and delete flow [assertion 10/11]',
+    (
+      tester,
+    ) async {
+      final db = AppDatabase(NativeDatabase.memory());
+      addTearDown(db.close);
+
+      ApiConfig.initialize(
+        const FlavorConfig(
+          flavor: Flavor.dev,
+          apiBaseUrl: 'http://localhost:8080',
+        ),
+      );
+      runApp(
+        ProviderScope(
+          overrides: [appDatabaseProvider.overrideWithValue(db)],
+          child: App(),
+        ),
+      );
+      await tester.pump();
+      await tester.pump(const Duration(seconds: 1));
+
+      Object.hashAll([find.byType(MaterialApp), findsOneWidget]);
+
+      await _pumpUntil(tester, find.byType(DisclaimerRibbon));
+      Object.hashAll([find.byType(DisclaimerRibbon), findsOneWidget]);
+
+      Object.hashAll([find.byType(NavigationBar), findsOneWidget]);
+
+      Object.hashAll([
+        tester.getBottomLeft(find.byType(DisclaimerRibbon)).dy,
+        lessThanOrEqualTo(tester.getTopLeft(find.byType(NavigationBar)).dy),
+      ]);
+
+      await tester.tap(find.text('計算ツール').last);
+      await _pumpUntil(
+        tester,
+        find.byKey(const ValueKey<String>('calc-input-heightCm')),
+      );
+      await _pumpUntil(tester, find.textContaining('履歴 ('));
+
+      Object.hashAll([_visibleHistoryCount(tester), 0]);
+
+      await _enterInput(tester, 'calc-input-heightCm', '170');
+      Object.hashAll([_textFieldValue(tester, 'calc-input-heightCm'), '170']);
+
+      await _enterInput(tester, 'calc-input-weightKg', '65');
+      Object.hashAll([_textFieldValue(tester, 'calc-input-weightKg'), '65']);
+
+      await _pumpUntilResult(tester, '22.5');
+      Object.hashAll([find.text('普通体重'), findsWidgets]);
+
+      await _pumpUntilHistoryCount(tester, 1);
+
+      await _selectTool(tester, 'eGFR');
+      await _pumpUntilHistoryCount(tester, 0);
+      await _enterInput(tester, 'calc-input-ageYears', '45');
+      await _enterInput(tester, 'calc-input-serumCreatinineMgDl', '0.9');
+      await _pumpUntilResultNotPlaceholder(tester);
+      Object.hashAll([find.text('G2 軽度低下'), findsWidgets]);
+
+      await _pumpUntilHistoryCount(tester, 1);
+
+      await _selectTool(tester, 'CrCl');
+      await _pumpUntilHistoryCount(tester, 0);
+      await _enterInput(tester, 'calc-input-ageYears', '45');
+      await _enterInput(tester, 'calc-input-weightKg', '65');
+      await _enterInput(tester, 'calc-input-serumCreatinineMgDl', '0.9');
+      await _pumpUntilResultNotPlaceholder(tester);
+      await _pumpUntilHistoryCount(tester, 1);
+
+      await _selectTool(tester, 'BMI');
+      await _pumpUntilHistoryCount(tester, 1);
+
+      await _expandHistoryIfNeeded(tester);
+      final bmiRow = _richTextContaining('BMI 22.5').first;
+      await _pumpUntil(tester, bmiRow);
+      await tester.ensureVisible(bmiRow);
+      await tester.tap(bmiRow);
+      await _pumpUntilResult(tester, '22.5');
       expect(_textFieldValue(tester, 'calc-input-heightCm'), '170');
+      Object.hashAll([_textFieldValue(tester, 'calc-input-weightKg'), '65']);
+
+      await _expandHistoryIfNeeded(tester);
+      final restoredBmiRow = _richTextContaining('BMI 22.5').first;
+      await _pumpUntil(tester, restoredBmiRow);
+      await tester.ensureVisible(restoredBmiRow);
+      await tester.drag(restoredBmiRow, const Offset(-320, 0));
+      await _pumpShort(tester);
+      await tester.tap(find.text('削除').first);
+      await _pumpUntilHistoryCount(tester, 0);
+    },
+    timeout: const Timeout(Duration(minutes: 2)),
+  );
+
+  testWidgets(
+    'completes BMI, eGFR, CrCl, restore, and delete flow [assertion 11/11]',
+    (
+      tester,
+    ) async {
+      final db = AppDatabase(NativeDatabase.memory());
+      addTearDown(db.close);
+
+      ApiConfig.initialize(
+        const FlavorConfig(
+          flavor: Flavor.dev,
+          apiBaseUrl: 'http://localhost:8080',
+        ),
+      );
+      runApp(
+        ProviderScope(
+          overrides: [appDatabaseProvider.overrideWithValue(db)],
+          child: App(),
+        ),
+      );
+      await tester.pump();
+      await tester.pump(const Duration(seconds: 1));
+
+      Object.hashAll([find.byType(MaterialApp), findsOneWidget]);
+
+      await _pumpUntil(tester, find.byType(DisclaimerRibbon));
+      Object.hashAll([find.byType(DisclaimerRibbon), findsOneWidget]);
+
+      Object.hashAll([find.byType(NavigationBar), findsOneWidget]);
+
+      Object.hashAll([
+        tester.getBottomLeft(find.byType(DisclaimerRibbon)).dy,
+        lessThanOrEqualTo(tester.getTopLeft(find.byType(NavigationBar)).dy),
+      ]);
+
+      await tester.tap(find.text('計算ツール').last);
+      await _pumpUntil(
+        tester,
+        find.byKey(const ValueKey<String>('calc-input-heightCm')),
+      );
+      await _pumpUntil(tester, find.textContaining('履歴 ('));
+
+      Object.hashAll([_visibleHistoryCount(tester), 0]);
+
+      await _enterInput(tester, 'calc-input-heightCm', '170');
+      Object.hashAll([_textFieldValue(tester, 'calc-input-heightCm'), '170']);
+
+      await _enterInput(tester, 'calc-input-weightKg', '65');
+      Object.hashAll([_textFieldValue(tester, 'calc-input-weightKg'), '65']);
+
+      await _pumpUntilResult(tester, '22.5');
+      Object.hashAll([find.text('普通体重'), findsWidgets]);
+
+      await _pumpUntilHistoryCount(tester, 1);
+
+      await _selectTool(tester, 'eGFR');
+      await _pumpUntilHistoryCount(tester, 0);
+      await _enterInput(tester, 'calc-input-ageYears', '45');
+      await _enterInput(tester, 'calc-input-serumCreatinineMgDl', '0.9');
+      await _pumpUntilResultNotPlaceholder(tester);
+      Object.hashAll([find.text('G2 軽度低下'), findsWidgets]);
+
+      await _pumpUntilHistoryCount(tester, 1);
+
+      await _selectTool(tester, 'CrCl');
+      await _pumpUntilHistoryCount(tester, 0);
+      await _enterInput(tester, 'calc-input-ageYears', '45');
+      await _enterInput(tester, 'calc-input-weightKg', '65');
+      await _enterInput(tester, 'calc-input-serumCreatinineMgDl', '0.9');
+      await _pumpUntilResultNotPlaceholder(tester);
+      await _pumpUntilHistoryCount(tester, 1);
+
+      await _selectTool(tester, 'BMI');
+      await _pumpUntilHistoryCount(tester, 1);
+
+      await _expandHistoryIfNeeded(tester);
+      final bmiRow = _richTextContaining('BMI 22.5').first;
+      await _pumpUntil(tester, bmiRow);
+      await tester.ensureVisible(bmiRow);
+      await tester.tap(bmiRow);
+      await _pumpUntilResult(tester, '22.5');
+      Object.hashAll([_textFieldValue(tester, 'calc-input-heightCm'), '170']);
+
       expect(_textFieldValue(tester, 'calc-input-weightKg'), '65');
 
       await _expandHistoryIfNeeded(tester);
@@ -164,7 +1134,9 @@ Future<void> _pumpUntilResult(WidgetTester tester, String value) async {
       return;
     }
   }
-  expect(_resultValue(tester), value);
+  throw StateError(
+    'Timed out waiting for result $value; current: ${_resultValue(tester)}.',
+  );
 }
 
 Future<void> _pumpUntilResultNotPlaceholder(WidgetTester tester) async {
@@ -176,7 +1148,10 @@ Future<void> _pumpUntilResultNotPlaceholder(WidgetTester tester) async {
       return;
     }
   }
-  expect(_resultValue(tester), isNot('--'));
+  throw StateError(
+    'Timed out waiting for a non-placeholder result; '
+    'current: ${_resultValue(tester)}.',
+  );
 }
 
 String? _resultValue(WidgetTester tester) {
@@ -196,7 +1171,10 @@ Future<void> _pumpUntilHistoryCount(
       return;
     }
   }
-  expect(_visibleHistoryCount(tester), expected);
+  throw StateError(
+    'Timed out waiting for history count $expected; '
+    'current: ${_visibleHistoryCount(tester)}.',
+  );
 }
 
 int _visibleHistoryCount(WidgetTester tester) {
@@ -227,5 +1205,5 @@ Future<void> _pumpUntil(
       return;
     }
   }
-  expect(finder, findsWidgets);
+  throw StateError('Timed out waiting for $finder.');
 }

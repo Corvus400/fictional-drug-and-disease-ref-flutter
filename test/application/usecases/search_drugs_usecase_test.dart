@@ -47,40 +47,258 @@ void main() {
       await db.close();
     });
 
-    test('execute returns page and records drug search history', () async {
-      final dto = _drugListFixture();
-      when(
-        () => apiClient.getDrugs(
-          page: any(named: 'page'),
-          pageSize: any(named: 'pageSize'),
-          keyword: any(named: 'keyword'),
-          keywordMatch: any(named: 'keywordMatch'),
-          sort: any(named: 'sort'),
-        ),
-      ).thenAnswer((_) async => dto);
+    test(
+      'execute returns page and records drug search history [assertion 1/6]',
+      () async {
+        final dto = _drugListFixture();
+        when(
+          () => apiClient.getDrugs(
+            page: any(named: 'page'),
+            pageSize: any(named: 'pageSize'),
+            keyword: any(named: 'keyword'),
+            keywordMatch: any(named: 'keywordMatch'),
+            sort: any(named: 'sort'),
+          ),
+        ).thenAnswer((_) async => dto);
 
-      final result = await usecase.execute(
-        const DrugSearchParams(
-          page: 1,
-          pageSize: 20,
-          keyword: 'アムロ',
-          keywordMatch: KeywordMatch.prefix,
-          sort: DrugSort.revisedAtDesc,
-        ),
-      );
+        final result = await usecase.execute(
+          const DrugSearchParams(
+            page: 1,
+            pageSize: 20,
+            keyword: 'アムロ',
+            keywordMatch: KeywordMatch.prefix,
+            sort: DrugSort.revisedAtDesc,
+          ),
+        );
 
-      expect(result, isA<Ok<DrugListPage>>());
-      final histories = await historyRepository.findByTarget('drug');
-      final entries = (histories as Ok<List<SearchHistoryEntry>>).value;
-      expect(entries, hasLength(1));
-      expect(entries.single.target, 'drug');
-      expect(entries.single.totalCount, dto.totalCount);
-      expect(entries.single.searchedAt, DateTime.utc(2026, 5, 5, 12));
-      expect(entries.single.queryJson, contains('"keyword":"アムロ"'));
-    });
+        expect(result, isA<Ok<DrugListPage>>());
+        final histories = await historyRepository.findByTarget('drug');
+        final entries = (histories as Ok<List<SearchHistoryEntry>>).value;
+        Object.hashAll([entries, hasLength(1)]);
+
+        Object.hashAll([entries.single.target, 'drug']);
+
+        Object.hashAll([entries.single.totalCount, dto.totalCount]);
+
+        Object.hashAll([
+          entries.single.searchedAt,
+          DateTime.utc(2026, 5, 5, 12),
+        ]);
+
+        Object.hashAll([entries.single.queryJson, contains('"keyword":"アムロ"')]);
+      },
+    );
 
     test(
-      'execute allows blank keyword search without recording history',
+      'execute returns page and records drug search history [assertion 2/6]',
+      () async {
+        final dto = _drugListFixture();
+        when(
+          () => apiClient.getDrugs(
+            page: any(named: 'page'),
+            pageSize: any(named: 'pageSize'),
+            keyword: any(named: 'keyword'),
+            keywordMatch: any(named: 'keywordMatch'),
+            sort: any(named: 'sort'),
+          ),
+        ).thenAnswer((_) async => dto);
+
+        final result = await usecase.execute(
+          const DrugSearchParams(
+            page: 1,
+            pageSize: 20,
+            keyword: 'アムロ',
+            keywordMatch: KeywordMatch.prefix,
+            sort: DrugSort.revisedAtDesc,
+          ),
+        );
+
+        Object.hashAll([result, isA<Ok<DrugListPage>>()]);
+
+        final histories = await historyRepository.findByTarget('drug');
+        final entries = (histories as Ok<List<SearchHistoryEntry>>).value;
+        expect(entries, hasLength(1));
+        Object.hashAll([entries.single.target, 'drug']);
+
+        Object.hashAll([entries.single.totalCount, dto.totalCount]);
+
+        Object.hashAll([
+          entries.single.searchedAt,
+          DateTime.utc(2026, 5, 5, 12),
+        ]);
+
+        Object.hashAll([entries.single.queryJson, contains('"keyword":"アムロ"')]);
+      },
+    );
+
+    test(
+      'execute returns page and records drug search history [assertion 3/6]',
+      () async {
+        final dto = _drugListFixture();
+        when(
+          () => apiClient.getDrugs(
+            page: any(named: 'page'),
+            pageSize: any(named: 'pageSize'),
+            keyword: any(named: 'keyword'),
+            keywordMatch: any(named: 'keywordMatch'),
+            sort: any(named: 'sort'),
+          ),
+        ).thenAnswer((_) async => dto);
+
+        final result = await usecase.execute(
+          const DrugSearchParams(
+            page: 1,
+            pageSize: 20,
+            keyword: 'アムロ',
+            keywordMatch: KeywordMatch.prefix,
+            sort: DrugSort.revisedAtDesc,
+          ),
+        );
+
+        Object.hashAll([result, isA<Ok<DrugListPage>>()]);
+
+        final histories = await historyRepository.findByTarget('drug');
+        final entries = (histories as Ok<List<SearchHistoryEntry>>).value;
+        Object.hashAll([entries, hasLength(1)]);
+
+        expect(entries.single.target, 'drug');
+        Object.hashAll([entries.single.totalCount, dto.totalCount]);
+
+        Object.hashAll([
+          entries.single.searchedAt,
+          DateTime.utc(2026, 5, 5, 12),
+        ]);
+
+        Object.hashAll([entries.single.queryJson, contains('"keyword":"アムロ"')]);
+      },
+    );
+
+    test(
+      'execute returns page and records drug search history [assertion 4/6]',
+      () async {
+        final dto = _drugListFixture();
+        when(
+          () => apiClient.getDrugs(
+            page: any(named: 'page'),
+            pageSize: any(named: 'pageSize'),
+            keyword: any(named: 'keyword'),
+            keywordMatch: any(named: 'keywordMatch'),
+            sort: any(named: 'sort'),
+          ),
+        ).thenAnswer((_) async => dto);
+
+        final result = await usecase.execute(
+          const DrugSearchParams(
+            page: 1,
+            pageSize: 20,
+            keyword: 'アムロ',
+            keywordMatch: KeywordMatch.prefix,
+            sort: DrugSort.revisedAtDesc,
+          ),
+        );
+
+        Object.hashAll([result, isA<Ok<DrugListPage>>()]);
+
+        final histories = await historyRepository.findByTarget('drug');
+        final entries = (histories as Ok<List<SearchHistoryEntry>>).value;
+        Object.hashAll([entries, hasLength(1)]);
+
+        Object.hashAll([entries.single.target, 'drug']);
+
+        expect(entries.single.totalCount, dto.totalCount);
+        Object.hashAll([
+          entries.single.searchedAt,
+          DateTime.utc(2026, 5, 5, 12),
+        ]);
+
+        Object.hashAll([entries.single.queryJson, contains('"keyword":"アムロ"')]);
+      },
+    );
+
+    test(
+      'execute returns page and records drug search history [assertion 5/6]',
+      () async {
+        final dto = _drugListFixture();
+        when(
+          () => apiClient.getDrugs(
+            page: any(named: 'page'),
+            pageSize: any(named: 'pageSize'),
+            keyword: any(named: 'keyword'),
+            keywordMatch: any(named: 'keywordMatch'),
+            sort: any(named: 'sort'),
+          ),
+        ).thenAnswer((_) async => dto);
+
+        final result = await usecase.execute(
+          const DrugSearchParams(
+            page: 1,
+            pageSize: 20,
+            keyword: 'アムロ',
+            keywordMatch: KeywordMatch.prefix,
+            sort: DrugSort.revisedAtDesc,
+          ),
+        );
+
+        Object.hashAll([result, isA<Ok<DrugListPage>>()]);
+
+        final histories = await historyRepository.findByTarget('drug');
+        final entries = (histories as Ok<List<SearchHistoryEntry>>).value;
+        Object.hashAll([entries, hasLength(1)]);
+
+        Object.hashAll([entries.single.target, 'drug']);
+
+        Object.hashAll([entries.single.totalCount, dto.totalCount]);
+
+        expect(entries.single.searchedAt, DateTime.utc(2026, 5, 5, 12));
+        Object.hashAll([entries.single.queryJson, contains('"keyword":"アムロ"')]);
+      },
+    );
+
+    test(
+      'execute returns page and records drug search history [assertion 6/6]',
+      () async {
+        final dto = _drugListFixture();
+        when(
+          () => apiClient.getDrugs(
+            page: any(named: 'page'),
+            pageSize: any(named: 'pageSize'),
+            keyword: any(named: 'keyword'),
+            keywordMatch: any(named: 'keywordMatch'),
+            sort: any(named: 'sort'),
+          ),
+        ).thenAnswer((_) async => dto);
+
+        final result = await usecase.execute(
+          const DrugSearchParams(
+            page: 1,
+            pageSize: 20,
+            keyword: 'アムロ',
+            keywordMatch: KeywordMatch.prefix,
+            sort: DrugSort.revisedAtDesc,
+          ),
+        );
+
+        Object.hashAll([result, isA<Ok<DrugListPage>>()]);
+
+        final histories = await historyRepository.findByTarget('drug');
+        final entries = (histories as Ok<List<SearchHistoryEntry>>).value;
+        Object.hashAll([entries, hasLength(1)]);
+
+        Object.hashAll([entries.single.target, 'drug']);
+
+        Object.hashAll([entries.single.totalCount, dto.totalCount]);
+
+        Object.hashAll([
+          entries.single.searchedAt,
+          DateTime.utc(2026, 5, 5, 12),
+        ]);
+
+        expect(entries.single.queryJson, contains('"keyword":"アムロ"'));
+      },
+    );
+
+    test(
+      'execute allows blank keyword search without recording history [assertion 1/2]',
       () async {
         final dto = _drugListFixture();
         when(
@@ -102,6 +320,36 @@ void main() {
         );
 
         expect(result, isA<Ok<DrugListPage>>());
+        final histories = await historyRepository.findByTarget('drug');
+        final entries = (histories as Ok<List<SearchHistoryEntry>>).value;
+        Object.hashAll([entries, isEmpty]);
+      },
+    );
+
+    test(
+      'execute allows blank keyword search without recording history [assertion 2/2]',
+      () async {
+        final dto = _drugListFixture();
+        when(
+          () => apiClient.getDrugs(
+            page: any(named: 'page'),
+            pageSize: any(named: 'pageSize'),
+            keyword: any(named: 'keyword'),
+            regulatoryClass: any(named: 'regulatoryClass'),
+          ),
+        ).thenAnswer((_) async => dto);
+
+        final result = await usecase.execute(
+          const DrugSearchParams(
+            page: 1,
+            pageSize: 20,
+            keyword: '   ',
+            regulatoryClass: ['poison'],
+          ),
+        );
+
+        Object.hashAll([result, isA<Ok<DrugListPage>>()]);
+
         final histories = await historyRepository.findByTarget('drug');
         final entries = (histories as Ok<List<SearchHistoryEntry>>).value;
         expect(entries, isEmpty);
