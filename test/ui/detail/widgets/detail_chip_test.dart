@@ -106,8 +106,6 @@ void main() {
   runGoldenMatrix(
     fileNamePrefix: 'detail_chip',
     description: 'DetailChip follows Detail Spec chip CSS',
-    sizes: const ['phone'],
-    textScalers: const ['normal'],
     builder: (theme, size, textScaler) {
       return MaterialApp(
         theme: theme,

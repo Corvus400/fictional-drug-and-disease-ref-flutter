@@ -102,18 +102,15 @@ void main() {
   );
   _searchGoldenMatrix(
     name: 's8_filter_drugs',
-    sizes: _phoneModalGoldenSizes,
     whilePerforming: _openDrugFilter,
   );
   _searchGoldenMatrix(
     name: 's9_filter_diseases',
-    sizes: _phoneModalGoldenSizes,
     whilePerforming: _openDiseaseFilter,
   );
   _searchGoldenMatrix(
     name: 's10_sort',
     response: _drugListFixture(),
-    sizes: _phoneModalGoldenSizes,
     whilePerforming: _openSort,
   );
   _searchGoldenMatrix(
@@ -148,7 +145,6 @@ void main() {
   _searchGoldenMatrix(
     name: 's15_disease_sort',
     diseaseResponse: _diseaseListFixture(),
-    sizes: _phoneModalGoldenSizes,
     whilePerforming: _openDiseaseSort,
   );
   _searchGoldenMatrix(
@@ -183,14 +179,11 @@ void _searchGoldenMatrix({
   Completer<DiseaseListResponseDto>? diseasePage2Completer,
   Object? error,
   Object? diseaseError,
-  Iterable<String>? sizes,
   GoldenInteraction? whilePerforming,
 }) {
   runGoldenMatrix(
     fileNamePrefix: 'search_$name',
     description: 'Search $name',
-    sizes: sizes ?? _searchSpecGoldenSizes,
-    customSizes: _searchSpecCustomSizes,
     builder: (theme, size, scaler) {
       final drugApiClient = _MockDrugApiClient();
       final diseaseApiClient = _MockDiseaseApiClient();
@@ -326,22 +319,6 @@ void _searchGoldenMatrix({
     whilePerforming: whilePerforming,
   );
 }
-
-const _phoneModalGoldenSizes = ['phone'];
-
-const _searchSpecGoldenSizes = [
-  'phone',
-  'iphone_landscape',
-  'tablet',
-  'ipad_landscape',
-  'ipad_split_view',
-];
-
-const _searchSpecCustomSizes = {
-  'iphone_landscape': Size(844, 390),
-  'ipad_landscape': Size(1194, 834),
-  'ipad_split_view': Size(960, 700),
-};
 
 Future<Future<void> Function()?> _openHistory(WidgetTester tester) async {
   await _seedDrugHistory(tester);

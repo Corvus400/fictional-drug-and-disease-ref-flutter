@@ -1,21 +1,18 @@
 import 'package:fictional_drug_and_disease_ref/theme/app_palette.dart';
 import 'package:fictional_drug_and_disease_ref/theme/app_radii.dart';
-import 'package:fictional_drug_and_disease_ref/theme/app_theme.dart';
 import 'package:fictional_drug_and_disease_ref/ui/calc/widgets/calc_history_empty_state.dart';
 import 'package:fictional_drug_and_disease_ref/ui/calc/widgets/calc_history_row.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_test/flutter_test.dart';
 
 import '../../../golden/golden_test_helpers.dart';
 
 void main() {
-  testWidgets('Calc history atoms match wide spec references', (tester) async {
-    await tester.binding.setSurfaceSize(const Size(1432, 1020));
-    addTearDown(() => tester.binding.setSurfaceSize(null));
-
-    await tester.pumpWidget(
-      MaterialApp(
-        theme: AppTheme.light(),
+  runGoldenMatrix(
+    fileNamePrefix: 'calc_history_atoms',
+    description: 'Calc history atoms match wide spec references',
+    builder: (theme, size, scaler) {
+      return MaterialApp(
+        theme: theme,
         home: Material(
           child: RepaintBoundary(
             key: const ValueKey<String>('history-atoms-reference-boundary'),
@@ -40,21 +37,13 @@ void main() {
             ),
           ),
         ),
-      ),
-    );
-
-    await expectLater(
-      find.byKey(const ValueKey<String>('history-atoms-reference-boundary')),
-      matchesGoldenFile('goldens/macos/calc_history_atoms_light.png'),
-    );
-  }, tags: const ['golden']);
+      );
+    },
+  );
 
   runGoldenMatrix(
     fileNamePrefix: 'calc_swipe_to_delete',
     description: 'Calc swipe to delete',
-    sizes: const ['history_row'],
-    customSizes: const {'history_row': Size(320, 80)},
-    textScalers: const ['normal'],
     builder: (theme, size, scaler) => MaterialApp(
       theme: theme,
       darkTheme: theme,

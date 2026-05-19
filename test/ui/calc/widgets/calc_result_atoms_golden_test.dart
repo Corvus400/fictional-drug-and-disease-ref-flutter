@@ -1,31 +1,23 @@
 import 'package:fictional_drug_and_disease_ref/domain/calc/bmi.dart';
 import 'package:fictional_drug_and_disease_ref/domain/calc/egfr.dart';
-import 'package:fictional_drug_and_disease_ref/theme/app_theme.dart';
 import 'package:fictional_drug_and_disease_ref/ui/calc/widgets/calc_category_badge.dart';
 import 'package:fictional_drug_and_disease_ref/ui/calc/widgets/calc_result_card.dart';
 import 'package:fictional_drug_and_disease_ref/ui/calc/widgets/calc_tool_meta_strip.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_test/flutter_test.dart';
+
+import '../../../golden/golden_test_helpers.dart';
 
 void main() {
   _badgePatternGolden(
-    description: 'Calc category badge patterns match light spec',
-    theme: AppTheme.light(),
-    fileName: 'goldens/macos/calc_category_badges_all_light.png',
-  );
-  _badgePatternGolden(
-    description: 'Calc category badge patterns match dark spec',
-    theme: AppTheme.dark(),
-    fileName: 'goldens/macos/calc_category_badges_all_dark.png',
+    description: 'Calc category badge patterns match spec',
   );
 
-  testWidgets('Calc result atoms match spec reference card', (tester) async {
-    await tester.binding.setSurfaceSize(const Size(270, 524));
-    addTearDown(() => tester.binding.setSurfaceSize(null));
-
-    await tester.pumpWidget(
-      MaterialApp(
-        theme: AppTheme.light(),
+  runGoldenMatrix(
+    fileNamePrefix: 'calc_result_atoms',
+    description: 'Calc result atoms match spec reference card',
+    builder: (theme, size, scaler) {
+      return MaterialApp(
+        theme: theme,
         home: const Material(
           child: RepaintBoundary(
             key: ValueKey<String>('result-atoms-reference-boundary'),
@@ -36,22 +28,16 @@ void main() {
             ),
           ),
         ),
-      ),
-    );
+      );
+    },
+  );
 
-    await expectLater(
-      find.byKey(const ValueKey<String>('result-atoms-reference-boundary')),
-      matchesGoldenFile('goldens/macos/calc_result_atoms_light.png'),
-    );
-  }, tags: const ['golden']);
-
-  testWidgets('Calc tool meta strip matches CSS spec', (tester) async {
-    await tester.binding.setSurfaceSize(const Size(358, 48));
-    addTearDown(() => tester.binding.setSurfaceSize(null));
-
-    await tester.pumpWidget(
-      MaterialApp(
-        theme: AppTheme.light(),
+  runGoldenMatrix(
+    fileNamePrefix: 'calc_tool_meta_strip',
+    description: 'Calc tool meta strip matches CSS spec',
+    builder: (theme, size, scaler) {
+      return MaterialApp(
+        theme: theme,
         home: const Scaffold(
           body: RepaintBoundary(
             key: ValueKey<String>('tool-meta-strip-boundary'),
@@ -70,27 +56,19 @@ void main() {
             ),
           ),
         ),
-      ),
-    );
-
-    await expectLater(
-      find.byKey(const ValueKey<String>('tool-meta-strip-boundary')),
-      matchesGoldenFile('goldens/macos/calc_tool_meta_strip_light.png'),
-    );
-  }, tags: const ['golden']);
+      );
+    },
+  );
 }
 
 void _badgePatternGolden({
   required String description,
-  required ThemeData theme,
-  required String fileName,
 }) {
-  testWidgets(description, (tester) async {
-    await tester.binding.setSurfaceSize(const Size(390, 280));
-    addTearDown(() => tester.binding.setSurfaceSize(null));
-
-    await tester.pumpWidget(
-      MaterialApp(
+  runGoldenMatrix(
+    fileNamePrefix: 'calc_category_badges_all',
+    description: description,
+    builder: (theme, size, scaler) {
+      return MaterialApp(
         theme: theme,
         home: const Material(
           child: RepaintBoundary(
@@ -102,14 +80,9 @@ void _badgePatternGolden({
             ),
           ),
         ),
-      ),
-    );
-
-    await expectLater(
-      find.byKey(const ValueKey<String>('category-badges-boundary')),
-      matchesGoldenFile(fileName),
-    );
-  }, tags: const ['golden']);
+      );
+    },
+  );
 }
 
 class _BadgePatternCard extends StatelessWidget {

@@ -120,8 +120,6 @@ void main() {
   runGoldenMatrix(
     fileNamePrefix: 'detail_carousel',
     description: 'DetailCarousel follows Detail Spec carousel CSS',
-    sizes: const ['phone'],
-    textScalers: const ['normal'],
     builder: (theme, size, textScaler) {
       return MaterialApp(
         theme: theme,

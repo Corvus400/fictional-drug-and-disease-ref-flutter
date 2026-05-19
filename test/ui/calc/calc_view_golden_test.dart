@@ -1,6 +1,3 @@
-import 'dart:async';
-
-import 'package:alchemist/alchemist.dart';
 import 'package:fictional_drug_and_disease_ref/application/usecases/record_calculation_history_usecase.dart';
 import 'package:fictional_drug_and_disease_ref/data/local/app_database.dart';
 import 'package:fictional_drug_and_disease_ref/data/providers/local_providers.dart';
@@ -14,7 +11,6 @@ import 'package:fictional_drug_and_disease_ref/domain/calc/egfr.dart';
 import 'package:fictional_drug_and_disease_ref/domain/calc/sex.dart';
 import 'package:fictional_drug_and_disease_ref/domain/calculation_history/calculation_history_entry.dart';
 import 'package:fictional_drug_and_disease_ref/l10n/app_localizations.dart';
-import 'package:fictional_drug_and_disease_ref/theme/app_theme.dart';
 import 'package:fictional_drug_and_disease_ref/ui/calc/calc_screen_notifier.dart';
 import 'package:fictional_drug_and_disease_ref/ui/calc/calc_screen_state.dart';
 import 'package:fictional_drug_and_disease_ref/ui/calc/calc_view.dart';
@@ -77,7 +73,6 @@ void main() {
     _calcHistoryBoundaryGolden(count: 51, expectedCount: 50, mode: mode);
   }
   _calcResponsiveGoldens();
-  _calcResponsiveMatrixGolden();
 }
 
 void _calcInputBoundaryGoldens() {
@@ -220,8 +215,6 @@ void _calcInputBoundaryGoldens() {
       fileNamePrefix:
           'calc_boundary_${boundaryCase.tool.key}_${boundaryCase.key}',
       description: 'Calc boundary ${boundaryCase.tool.key} ${boundaryCase.key}',
-      sizes: const ['phone'],
-      textScalers: const ['normal'],
       builder: _calcViewBuilder,
       whilePerforming: (tester) async {
         await _selectTool(tester, boundaryCase.tool);
@@ -271,8 +264,6 @@ void _calcImmediateErrorGoldens() {
           'calc_immediate_error_${immediateCase.tool.key}_${immediateCase.key}',
       description:
           'Calc immediate error ${immediateCase.tool.key} ${immediateCase.key}',
-      sizes: const ['phone'],
-      textScalers: const ['normal'],
       builder: _calcViewBuilder,
       whilePerforming: (tester) async {
         await _selectTool(tester, immediateCase.tool);
@@ -357,8 +348,6 @@ void _calcPartialSubsetGoldens() {
     runGoldenMatrix(
       fileNamePrefix: 'calc_partial_${partialCase.tool.key}_${partialCase.key}',
       description: 'Calc partial ${partialCase.tool.key} ${partialCase.key}',
-      sizes: const ['phone'],
-      textScalers: const ['normal'],
       builder: _calcViewBuilder,
       whilePerforming: (tester) async {
         await _selectTool(tester, partialCase.tool);
@@ -374,10 +363,8 @@ void _calcPartialSubsetGoldens() {
 
 void _calcIosInputToolbarGolden() {
   runGoldenMatrix(
-    fileNamePrefix: 'calc_ios_input_toolbar_phone',
-    description: 'Calc iOS input toolbar phone',
-    sizes: const ['phone'],
-    textScalers: const ['normal'],
+    fileNamePrefix: 'calc_ios_input_toolbar',
+    description: 'Calc iOS input toolbar',
     builder: _calcIosViewBuilder,
     whilePerforming: (tester) async {
       await tester.tap(
@@ -389,9 +376,13 @@ void _calcIosInputToolbarGolden() {
             .first,
       );
       await tester.pumpAndSettle();
+      final size = MediaQuery.sizeOf(tester.element(find.byType(CalcView)));
+      final expectedMatcher = size.shortestSide >= 600
+          ? findsNothing
+          : findsOneWidget;
       expect(
         find.byKey(const ValueKey<String>('calc-input-toolbar')),
-        findsOneWidget,
+        expectedMatcher,
       );
       return null;
     },
@@ -405,8 +396,6 @@ void _calcGolden({
   runGoldenMatrix(
     fileNamePrefix: 'calc_${tool.key}_${state.key}',
     description: 'Calc ${tool.key} ${state.key}',
-    sizes: const ['phone'],
-    textScalers: const ['normal'],
     builder: (theme, size, scaler) {
       return ProviderScope(
         overrides: [appDatabaseProvider.overrideWithValue(_db)],

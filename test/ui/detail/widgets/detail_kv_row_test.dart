@@ -109,8 +109,6 @@ void main() {
   runGoldenMatrix(
     fileNamePrefix: 'detail_kv_row',
     description: 'DetailKvRow follows Detail Spec kv CSS',
-    sizes: const ['phone'],
-    textScalers: const ['normal'],
     builder: (theme, size, textScaler) {
       return MaterialApp(
         theme: theme,

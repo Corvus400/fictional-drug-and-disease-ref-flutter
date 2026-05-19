@@ -62,8 +62,6 @@ void main() {
   runGoldenMatrix(
     fileNamePrefix: 'detail_warn_banner',
     description: 'DetailWarnBanner follows Detail Spec warn-banner CSS',
-    sizes: const ['phone'],
-    textScalers: const ['normal'],
     builder: (theme, size, textScaler) {
       return MaterialApp(
         theme: theme,

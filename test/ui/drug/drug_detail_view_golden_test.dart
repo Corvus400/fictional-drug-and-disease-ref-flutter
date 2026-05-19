@@ -13,7 +13,6 @@ import 'package:fictional_drug_and_disease_ref/data/providers/local_providers.da
 import 'package:fictional_drug_and_disease_ref/data/services/api/disease_api_client.dart';
 import 'package:fictional_drug_and_disease_ref/data/services/api/drug_api_client.dart';
 import 'package:fictional_drug_and_disease_ref/l10n/app_localizations.dart';
-import 'package:fictional_drug_and_disease_ref/theme/app_theme.dart';
 import 'package:fictional_drug_and_disease_ref/ui/drug/drug_detail_screen_notifier.dart';
 import 'package:fictional_drug_and_disease_ref/ui/drug/drug_detail_screen_state.dart';
 import 'package:fictional_drug_and_disease_ref/ui/drug/drug_detail_view.dart';
@@ -25,7 +24,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
-import '../../golden/golden_test_config.dart';
 import '../../golden/golden_test_helpers.dart';
 import '../../helpers/test_app_database.dart';
 
@@ -75,7 +73,10 @@ void main() {
           theme: theme,
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
-          home: const DrugDetailView(id: 'drug_001'),
+          home: const TickerMode(
+            enabled: false,
+            child: DrugDetailView(id: 'drug_001'),
+          ),
         ),
       );
     },
@@ -236,8 +237,7 @@ void main() {
   );
 }
 
-int get _goldenMatrixScenarioCount =>
-    GoldenMatrix.sizes.length * GoldenMatrix.textScalers.length;
+const _goldenMatrixScenarioCount = 1;
 
 void _detailStateGolden({
   required String fileNamePrefix,
@@ -246,48 +246,15 @@ void _detailStateGolden({
   builder,
   required Future<void> Function(WidgetTester tester) whilePerforming,
 }) {
-  const size = Size(390, 844);
-  for (final MapEntry(key: themeName, value: theme) in {
-    'light': AppTheme.light(),
-    'dark': AppTheme.dark(),
-  }.entries) {
-    testWidgets(
-      '$description / $themeName',
-      (tester) async {
-        await tester.binding.setSurfaceSize(size);
-        addTearDown(() => tester.binding.setSurfaceSize(null));
-        final rootKey = ValueKey<String>('$fileNamePrefix-$themeName-root');
-
-        await tester.pumpWidget(
-          RepaintBoundary(
-            key: rootKey,
-            child: MediaQuery(
-              data: const MediaQueryData(
-                size: size,
-                devicePixelRatio: GoldenMatrix.devicePixelRatio,
-                textScaler: TextScaler.noScaling,
-              ),
-              child: SizedBox(
-                width: size.width,
-                height: size.height,
-                child: builder(theme, size, TextScaler.noScaling),
-              ),
-            ),
-          ),
-        );
-        await whilePerforming(tester);
-
-        await expectLater(
-          find.byKey(rootKey),
-          matchesGoldenFile('goldens/macos/${fileNamePrefix}_$themeName.png'),
-        );
-
-        await tester.pumpWidget(const SizedBox.shrink());
-        await tester.pump();
-      },
-      tags: const ['golden'],
-    );
-  }
+  runGoldenMatrix(
+    fileNamePrefix: fileNamePrefix,
+    description: description,
+    builder: builder,
+    whilePerforming: (tester) async {
+      await whilePerforming(tester);
+      return null;
+    },
+  );
 }
 
 final class _MockDrugApiClient extends Mock implements DrugApiClient {}

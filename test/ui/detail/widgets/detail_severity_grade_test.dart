@@ -61,8 +61,6 @@ void main() {
   runGoldenMatrix(
     fileNamePrefix: 'detail_severity_grade',
     description: 'DetailSeverityGrade follows Detail Spec grade CSS',
-    sizes: const ['phone'],
-    textScalers: const ['normal'],
     builder: (theme, size, textScaler) {
       return MaterialApp(
         theme: theme,

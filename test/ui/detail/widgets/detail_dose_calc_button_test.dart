@@ -74,8 +74,6 @@ void main() {
   runGoldenMatrix(
     fileNamePrefix: 'detail_dose_calc_button',
     description: 'DetailDoseCalcButton follows Detail Spec calc CSS',
-    sizes: const ['phone'],
-    textScalers: const ['normal'],
     builder: (theme, size, textScaler) {
       return MaterialApp(
         theme: theme,

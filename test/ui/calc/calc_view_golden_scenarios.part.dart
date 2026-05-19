@@ -105,8 +105,6 @@ void _calcMultiErrorGoldens() {
           'calc_multi_error_${multiErrorCase.tool.key}_${multiErrorCase.key}',
       description:
           'Calc multi error ${multiErrorCase.tool.key} ${multiErrorCase.key}',
-      sizes: const ['phone'],
-      textScalers: const ['normal'],
       builder: _calcViewBuilder,
       whilePerforming: (tester) async {
         await _selectTool(tester, multiErrorCase.tool);
@@ -126,8 +124,6 @@ void _calcBmiUnderweightEdgeGolden() {
   runGoldenMatrix(
     fileNamePrefix: 'calc_bmi_underweight-edge',
     description: 'Calc bmi underweight edge',
-    sizes: const ['phone'],
-    textScalers: const ['normal'],
     builder: (theme, size, scaler) {
       return ProviderScope(
         overrides: [appDatabaseProvider.overrideWithValue(_db)],
@@ -153,8 +149,6 @@ void _calcEgfrLowEdgeGolden() {
   runGoldenMatrix(
     fileNamePrefix: 'calc_egfr_low-edge',
     description: 'Calc egfr low edge',
-    sizes: const ['phone'],
-    textScalers: const ['normal'],
     builder: (theme, size, scaler) {
       return ProviderScope(
         overrides: [appDatabaseProvider.overrideWithValue(_db)],
@@ -181,8 +175,6 @@ void _calcBmiMinEdgeGolden() {
   runGoldenMatrix(
     fileNamePrefix: 'calc_bmi_min-edge',
     description: 'Calc bmi min edge',
-    sizes: const ['phone'],
-    textScalers: const ['normal'],
     builder: _calcViewBuilder,
     whilePerforming: (tester) async {
       await _enterText(tester, 'calc-input-heightCm', '200');
@@ -197,8 +189,6 @@ void _calcBmiMaxEdgeGolden() {
   runGoldenMatrix(
     fileNamePrefix: 'calc_bmi_max-edge',
     description: 'Calc bmi max edge',
-    sizes: const ['phone'],
-    textScalers: const ['normal'],
     builder: _calcViewBuilder,
     whilePerforming: (tester) async {
       await _enterText(tester, 'calc-input-heightCm', '170');
@@ -213,8 +203,6 @@ void _calcEgfrMinEdgeGolden() {
   runGoldenMatrix(
     fileNamePrefix: 'calc_egfr_min-edge',
     description: 'Calc egfr min edge',
-    sizes: const ['phone'],
-    textScalers: const ['normal'],
     builder: _calcViewBuilder,
     whilePerforming: (tester) async {
       await _selectTool(tester, _CalcGoldenTool.egfr);
@@ -230,8 +218,6 @@ void _calcEgfrMaxEdgeGolden() {
   runGoldenMatrix(
     fileNamePrefix: 'calc_egfr_max-edge',
     description: 'Calc egfr max edge',
-    sizes: const ['phone'],
-    textScalers: const ['normal'],
     builder: _calcViewBuilder,
     whilePerforming: (tester) async {
       await _selectTool(tester, _CalcGoldenTool.egfr);
@@ -247,8 +233,6 @@ void _calcCrclMinEdgeGolden() {
   runGoldenMatrix(
     fileNamePrefix: 'calc_crcl_min-edge',
     description: 'Calc crcl min edge',
-    sizes: const ['phone'],
-    textScalers: const ['normal'],
     builder: _calcViewBuilder,
     whilePerforming: (tester) async {
       await _selectTool(tester, _CalcGoldenTool.crcl);
@@ -265,8 +249,6 @@ void _calcCrclMaxEdgeGolden() {
   runGoldenMatrix(
     fileNamePrefix: 'calc_crcl_max-edge',
     description: 'Calc crcl max edge',
-    sizes: const ['phone'],
-    textScalers: const ['normal'],
     builder: _calcViewBuilder,
     whilePerforming: (tester) async {
       await _selectTool(tester, _CalcGoldenTool.crcl);
@@ -283,8 +265,6 @@ void _calcEgfrFemaleGolden() {
   runGoldenMatrix(
     fileNamePrefix: 'calc_egfr_female',
     description: 'Calc egfr female',
-    sizes: const ['phone'],
-    textScalers: const ['normal'],
     builder: _calcViewBuilder,
     whilePerforming: (tester) async {
       await _selectTool(tester, _CalcGoldenTool.egfr);
@@ -302,8 +282,6 @@ void _calcCrclFemaleGolden() {
   runGoldenMatrix(
     fileNamePrefix: 'calc_crcl_female',
     description: 'Calc crcl female',
-    sizes: const ['phone'],
-    textScalers: const ['normal'],
     builder: _calcViewBuilder,
     whilePerforming: (tester) async {
       await _selectTool(tester, _CalcGoldenTool.crcl);
@@ -322,8 +300,6 @@ void _calcHistoryCollapsedGolden() {
   runGoldenMatrix(
     fileNamePrefix: 'calc_history_collapsed',
     description: 'Calc history collapsed',
-    sizes: const ['phone'],
-    textScalers: const ['normal'],
     builder: _calcViewBuilder,
     whilePerforming: (tester) async {
       await _seedBmiHistory();
@@ -337,8 +313,6 @@ void _calcHistoryExpandedGolden() {
   runGoldenMatrix(
     fileNamePrefix: 'calc_history_expanded',
     description: 'Calc history expanded',
-    sizes: const ['phone'],
-    textScalers: const ['normal'],
     builder: _calcViewBuilder,
     whilePerforming: (tester) async {
       await _seedBmiHistory();
@@ -354,66 +328,30 @@ void _calcHistoryRestoringGolden() {
   runGoldenMatrix(
     fileNamePrefix: 'calc_history_restoring_after',
     description: 'Calc history restoring after',
-    sizes: const ['phone'],
-    textScalers: const ['normal'],
     builder: _calcRestoringOverlayBuilder,
   );
 }
 
 void _calcHistoryRestoringMatrixGolden() {
-  const tools = _CalcGoldenTool.values;
-  const devices =
-      <
-        ({
-          String label,
-          Size size,
-        })
-      >[
-        (label: 'iPhone portrait', size: Size(390, 844)),
-        (label: 'iPhone landscape', size: Size(844, 390)),
-        (label: 'iPad portrait', size: Size(834, 1194)),
-        (label: 'iPad landscape', size: Size(1194, 834)),
-      ];
-  const modes = <({String label, Brightness brightness})>[
-    (label: 'light', brightness: Brightness.light),
-    (label: 'dark', brightness: Brightness.dark),
-  ];
-
-  unawaited(
-    goldenTest(
-      'Calc history restoring 24-state matrix',
-      fileName: 'calc_history_restoring_matrix',
-      // ignore: avoid_redundant_argument_values, keep the golden tag explicit.
-      tags: const ['golden'],
-      builder: () => GoldenTestGroup(
-        columns: 3,
-        children: [
-          for (final mode in modes)
-            for (final device in devices)
-              for (final tool in tools)
-                GoldenTestScenario(
-                  name: '${tool.key} / ${device.label} / ${mode.label}',
-                  constraints: BoxConstraints.tight(device.size),
-                  child: _calcRestoringMatrixCell(
-                    tool: tool,
-                    theme: mode.brightness == Brightness.light
-                        ? AppTheme.light()
-                        : AppTheme.dark(),
-                    size: device.size,
-                  ),
-                ),
-        ],
-      ),
-    ),
-  );
+  for (final tool in _CalcGoldenTool.values) {
+    runGoldenMatrix(
+      fileNamePrefix: 'calc_history_restoring_${tool.key}',
+      description: 'Calc history restoring ${tool.key}',
+      builder: (theme, size, scaler) {
+        return _calcRestoringMatrixCell(
+          tool: tool,
+          theme: theme,
+          size: size,
+        );
+      },
+    );
+  }
 }
 
 void _calcHistoryEmptyGolden() {
   runGoldenMatrix(
     fileNamePrefix: 'calc_history_empty',
     description: 'Calc history empty',
-    sizes: const ['phone'],
-    textScalers: const ['normal'],
     builder: _calcViewBuilder,
     whilePerforming: (tester) async {
       await tester.pumpAndSettle();
@@ -428,8 +366,6 @@ void _calcHistoryBoundaryEmptyGolden() {
   runGoldenMatrix(
     fileNamePrefix: 'calc_history_boundary_empty_0',
     description: 'Calc history boundary empty 0',
-    sizes: const ['phone'],
-    textScalers: const ['normal'],
     builder: _calcViewBuilder,
     whilePerforming: (tester) async {
       await _seedBmiHistory(count: 0);
@@ -457,8 +393,6 @@ void _calcHistoryBoundaryGolden({
   runGoldenMatrix(
     fileNamePrefix: 'calc_history_boundary_${mode.key}_$count',
     description: 'Calc history boundary ${mode.key} $count',
-    sizes: const ['phone'],
-    textScalers: const ['normal'],
     builder: _calcViewBuilder,
     whilePerforming: (tester) async {
       await _seedBmiHistory(count: count);

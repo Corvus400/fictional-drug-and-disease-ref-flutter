@@ -1,173 +1,16 @@
 part of 'calc_view_golden_test.dart';
 
 void _calcResponsiveGoldens() {
-  const responsiveSizes = <String, Size>{
-    'iphone_portrait': Size(390, 844),
-    'iphone_landscape': Size(844, 390),
-    'ipad_portrait': Size(834, 1194),
-    'ipad_landscape': Size(1194, 834),
-    'split_view_compact': Size(480, 900),
-  };
-  final cases =
-      <
-        ({
-          String fileNamePrefix,
-          String description,
-          String sizeKey,
-          String layoutKey,
-          bool expandHistory,
-        })
-      >[
-        (
-          fileNamePrefix: 'calc_iphone_portrait',
-          description: 'Calc iPhone portrait',
-          sizeKey: 'iphone_portrait',
-          layoutKey: 'calc-layout-compact',
-          expandHistory: false,
-        ),
-        (
-          fileNamePrefix: 'calc_iphone_landscape',
-          description: 'Calc iPhone landscape',
-          sizeKey: 'iphone_landscape',
-          layoutKey: 'calc-layout-landscape-phone',
-          expandHistory: false,
-        ),
-        (
-          fileNamePrefix: 'calc_ipad_portrait',
-          description: 'Calc iPad portrait',
-          sizeKey: 'ipad_portrait',
-          layoutKey: 'calc-layout-ipad-portrait',
-          expandHistory: true,
-        ),
-        (
-          fileNamePrefix: 'calc_ipad_landscape',
-          description: 'Calc iPad landscape',
-          sizeKey: 'ipad_landscape',
-          layoutKey: 'calc-layout-ipad-landscape',
-          expandHistory: true,
-        ),
-        (
-          fileNamePrefix: 'calc_split_view_compact',
-          description: 'Calc split view compact',
-          sizeKey: 'split_view_compact',
-          layoutKey: 'calc-layout-compact',
-          expandHistory: false,
-        ),
-      ];
-
-  for (final responsiveCase in cases) {
-    runGoldenMatrix(
-      fileNamePrefix: responsiveCase.fileNamePrefix,
-      description: responsiveCase.description,
-      sizes: [responsiveCase.sizeKey],
-      customSizes: responsiveSizes,
-      textScalers: const ['normal'],
-      builder: _calcViewBuilder,
-      whilePerforming: (tester) async {
-        await _enterValid(tester, _CalcGoldenTool.bmi);
-        await tester.pump(const Duration(milliseconds: 250));
-        await clearTestAppDatabase(_db);
-        await _seedBmiHistory();
-        await _loadHistory(tester);
-        if (responsiveCase.expandHistory) {
-          await _expandHistory(tester);
-        }
-        await tester.pump();
-        expect(
-          find.byKey(ValueKey<String>(responsiveCase.layoutKey)),
-          findsOneWidget,
-        );
-        return null;
-      },
-    );
-  }
-
   runGoldenMatrix(
-    fileNamePrefix: 'calc_large_text',
-    description: 'Calc large text',
-    sizes: const ['phone'],
-    textScalers: const ['large'],
-    builder: _calcViewBuilder,
-    whilePerforming: (tester) async {
-      await _enterValid(tester, _CalcGoldenTool.bmi);
-      await tester.pump(const Duration(milliseconds: 250));
-      await clearTestAppDatabase(_db);
-      await _seedBmiHistory();
-      await _loadHistory(tester);
-      await tester.pump();
-      expect(
-        tester
-            .getSize(
-              find.byKey(const ValueKey<String>('calc-input-heightCm-box')),
-            )
-            .height,
-        56,
+    fileNamePrefix: 'calc_responsive',
+    description: 'Calc responsive layout',
+    builder: (theme, size, scaler) {
+      return _calcResponsiveMatrixCell(
+        theme: theme,
+        size: size,
+        expandHistory: size.shortestSide >= 600,
       );
-      return null;
     },
-  );
-}
-
-void _calcResponsiveMatrixGolden() {
-  const devices =
-      <
-        ({
-          String label,
-          Size size,
-          bool expandHistory,
-        })
-      >[
-        (
-          label: 'iPhone portrait',
-          size: Size(390, 844),
-          expandHistory: false,
-        ),
-        (
-          label: 'iPhone landscape',
-          size: Size(844, 390),
-          expandHistory: false,
-        ),
-        (
-          label: 'iPad portrait',
-          size: Size(834, 1194),
-          expandHistory: true,
-        ),
-        (
-          label: 'iPad landscape',
-          size: Size(1194, 834),
-          expandHistory: true,
-        ),
-      ];
-  const modes = <({String label, Brightness brightness})>[
-    (label: 'Light', brightness: Brightness.light),
-    (label: 'Dark', brightness: Brightness.dark),
-  ];
-
-  unawaited(
-    goldenTest(
-      'Calc responsive 8-state matrix',
-      fileName: 'calc_responsive_matrix',
-      // ignore: avoid_redundant_argument_values, keep the golden tag explicit.
-      tags: const ['golden'],
-      builder: () => GoldenTestGroup(
-        columns: 2,
-        children: [
-          for (final device in devices)
-            for (final mode in modes)
-              GoldenTestScenario(
-                name: '${device.label} / ${mode.label}',
-                constraints: BoxConstraints.tight(device.size),
-                child: _calcResponsiveMatrixCell(
-                  theme: mode.brightness == Brightness.light
-                      ? AppTheme.light()
-                      : AppTheme.dark(),
-                  size: device.size,
-                  expandHistory: device.expandHistory,
-                ),
-              ),
-        ],
-      ),
-    ),
   );
 }
 
@@ -425,14 +268,6 @@ Future<void> _loadHistory(WidgetTester tester) async {
     tester.element(find.byType(CalcView)),
   );
   await container.read(calcScreenProvider.notifier).loadHistory();
-  await tester.pumpAndSettle();
-}
-
-Future<void> _expandHistory(WidgetTester tester) async {
-  final container = ProviderScope.containerOf(
-    tester.element(find.byType(CalcView)),
-  );
-  container.read(calcScreenProvider.notifier).toggleHistory();
   await tester.pumpAndSettle();
 }
 

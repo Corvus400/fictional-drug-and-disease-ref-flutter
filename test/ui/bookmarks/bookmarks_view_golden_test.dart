@@ -28,10 +28,10 @@ void main() {
     );
   });
 
-  runHistoryGoldenMatrix(
+  runGoldenMatrix(
     fileNamePrefix: 'bookmarks_normal',
     description: 'Bookmarks normal state',
-    builder: (theme, size, deviceName, textScaler, textScalerName) {
+    builder: (theme, size, scaler) {
       return _BookmarksGoldenApp(
         theme: theme,
         stream: Stream.value(_normalEntries),
@@ -40,10 +40,10 @@ void main() {
     whilePerforming: _settleBookmarksGolden,
   );
 
-  runHistoryGoldenMatrix(
+  runGoldenMatrix(
     fileNamePrefix: 'bookmarks_drug_tab',
     description: 'Bookmarks drug tab state',
-    builder: (theme, size, deviceName, textScaler, textScalerName) {
+    builder: (theme, size, scaler) {
       return _BookmarksGoldenApp(
         theme: theme,
         stream: Stream.value(_normalEntries),
@@ -52,10 +52,10 @@ void main() {
     whilePerforming: _selectBookmarksDrugTab,
   );
 
-  runHistoryGoldenMatrix(
+  runGoldenMatrix(
     fileNamePrefix: 'bookmarks_disease_tab',
     description: 'Bookmarks disease tab state',
-    builder: (theme, size, deviceName, textScaler, textScalerName) {
+    builder: (theme, size, scaler) {
       return _BookmarksGoldenApp(
         theme: theme,
         stream: Stream.value(_normalEntries),
@@ -64,10 +64,10 @@ void main() {
     whilePerforming: _selectBookmarksDiseaseTab,
   );
 
-  runHistoryGoldenMatrix(
+  runGoldenMatrix(
     fileNamePrefix: 'bookmarks_empty',
     description: 'Bookmarks empty state',
-    builder: (theme, size, deviceName, textScaler, textScalerName) {
+    builder: (theme, size, scaler) {
       return _BookmarksGoldenApp(
         theme: theme,
         stream: Stream<List<BookmarkEntry>>.value(const []),
@@ -76,10 +76,10 @@ void main() {
     whilePerforming: _settleBookmarksGolden,
   );
 
-  runHistoryGoldenMatrix(
+  runGoldenMatrix(
     fileNamePrefix: 'bookmarks_loading',
     description: 'Bookmarks loading state',
-    builder: (theme, size, deviceName, textScaler, textScalerName) {
+    builder: (theme, size, scaler) {
       return _BookmarksGoldenApp(
         theme: theme,
         stream: const Stream<List<BookmarkEntry>>.empty(),
@@ -89,10 +89,10 @@ void main() {
     whilePerforming: _settleBookmarksGolden,
   );
 
-  runHistoryGoldenMatrix(
+  runGoldenMatrix(
     fileNamePrefix: 'bookmarks_search_zero',
     description: 'Bookmarks search zero state',
-    builder: (theme, size, deviceName, textScaler, textScalerName) {
+    builder: (theme, size, scaler) {
       return _BookmarksGoldenApp(
         theme: theme,
         stream: Stream.value(_normalEntries),
@@ -101,10 +101,10 @@ void main() {
     whilePerforming: _enterSearchZeroQuery,
   );
 
-  runHistoryGoldenMatrix(
+  runGoldenMatrix(
     fileNamePrefix: 'bookmarks_swipe_delete',
     description: 'Bookmarks swipe delete reveal',
-    builder: (theme, size, deviceName, textScaler, textScalerName) {
+    builder: (theme, size, scaler) {
       return _BookmarksGoldenApp(
         theme: theme,
         stream: Stream.value(_normalEntries),
@@ -114,10 +114,10 @@ void main() {
     whilePerforming: _settleBookmarksGolden,
   );
 
-  runHistoryGoldenMatrix(
+  runGoldenMatrix(
     fileNamePrefix: 'bookmarks_error',
     description: 'Bookmarks error state',
-    builder: (theme, size, deviceName, textScaler, textScalerName) {
+    builder: (theme, size, scaler) {
       return _BookmarksGoldenApp(
         theme: theme,
         stream: Stream<List<BookmarkEntry>>.value(_brokenEntries),

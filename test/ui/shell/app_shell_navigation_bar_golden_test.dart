@@ -15,11 +15,6 @@ void main() {
   runGoldenMatrix(
     fileNamePrefix: 'app_shell_navigation_rail',
     description: 'App shell NavigationRail landscape states',
-    sizes: const ['iphone_landscape', 'ipad_landscape'],
-    customSizes: const {
-      'iphone_landscape': Size(844, 390),
-      'ipad_landscape': Size(1194, 834),
-    },
     builder: (theme, size, scaler) => MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: theme,

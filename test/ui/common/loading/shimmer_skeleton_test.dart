@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
+import '../../../golden/golden_test_helpers.dart';
+
 void main() {
   testWidgets('enabled skeleton wraps child in an active Skeletonizer', (
     tester,
@@ -104,60 +106,52 @@ void main() {
     },
   );
 
-  testWidgets(
-    'list row skeleton shape matches the golden baseline',
-    (tester) async {
-      await tester.pumpWidget(
-        _localizedApp(
-          child: Center(
-            child: SizedBox(
-              width: 320,
-              child: ShimmerSkeleton(
-                child: ShimmerSkeletonShapes.listRow(),
-              ),
-            ),
+  runGoldenMatrix(
+    fileNamePrefix: 'shimmer_skeleton__list_row',
+    description: 'List row skeleton shape',
+    builder: (theme, size, scaler) => _localizedApp(
+      theme: theme,
+      tickerModeEnabled: false,
+      child: Center(
+        child: SizedBox(
+          width: 320,
+          child: ShimmerSkeleton(
+            child: ShimmerSkeletonShapes.listRow(),
           ),
         ),
-      );
-
-      await expectLater(
-        find.byType(ShimmerSkeleton),
-        matchesGoldenFile('goldens/macos/shimmer_skeleton__list_row.png'),
-      );
-    },
-    tags: const ['golden'],
+      ),
+    ),
   );
 
-  testWidgets(
-    'detail block skeleton shape matches the golden baseline',
-    (tester) async {
-      await tester.pumpWidget(
-        _localizedApp(
-          child: Center(
-            child: SizedBox(
-              width: 320,
-              child: ShimmerSkeleton(
-                child: ShimmerSkeletonShapes.detailBlock(),
-              ),
-            ),
+  runGoldenMatrix(
+    fileNamePrefix: 'shimmer_skeleton__detail_block',
+    description: 'Detail block skeleton shape',
+    builder: (theme, size, scaler) => _localizedApp(
+      theme: theme,
+      tickerModeEnabled: false,
+      child: Center(
+        child: SizedBox(
+          width: 320,
+          child: ShimmerSkeleton(
+            child: ShimmerSkeletonShapes.detailBlock(),
           ),
         ),
-      );
-
-      await expectLater(
-        find.byType(ShimmerSkeleton),
-        matchesGoldenFile('goldens/macos/shimmer_skeleton__detail_block.png'),
-      );
-    },
-    tags: const ['golden'],
+      ),
+    ),
   );
 }
 
-Widget _localizedApp({required Widget child}) {
+Widget _localizedApp({
+  required Widget child,
+  ThemeData? theme,
+  bool tickerModeEnabled = true,
+}) {
   return MaterialApp(
-    theme: AppTheme.light(),
+    theme: theme ?? AppTheme.light(),
     localizationsDelegates: AppLocalizations.localizationsDelegates,
     supportedLocales: AppLocalizations.supportedLocales,
-    home: Scaffold(body: child),
+    home: Scaffold(
+      body: TickerMode(enabled: tickerModeEnabled, child: child),
+    ),
   );
 }

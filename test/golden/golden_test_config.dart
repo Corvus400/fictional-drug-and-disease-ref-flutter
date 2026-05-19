@@ -10,43 +10,17 @@ class GoldenMatrix {
     'dark': Brightness.dark,
   };
 
-  /// Size axis: phone / tablet.
-  static const sizes = <String, Size>{
-    'phone': Size(390, 844),
-    'tablet': Size(834, 1194),
+  /// Device/orientation axis required by Issue #32.
+  static const devices = <String, Size>{
+    'ipad_portrait': Size(834, 1194),
+    'ipad_landscape': Size(1194, 834),
+    'iphone_portrait': Size(390, 844),
+    'iphone_landscape': Size(844, 390),
   };
 
-  /// Text scale axis: normal / large.
-  static const textScalers = <String, TextScaler>{
-    'normal': TextScaler.noScaling,
-    'large': TextScaler.linear(1.3),
-  };
+  /// Golden VRT text scale is fixed so every PNG has one visual concern.
+  static const TextScaler textScaler = TextScaler.noScaling;
 
   /// Golden capture device pixel ratio.
   static const devicePixelRatio = 2.0;
-}
-
-/// Browsing-history design matrix SSOT.
-class HistoryGoldenMatrix {
-  const HistoryGoldenMatrix._();
-
-  /// Theme axis required by the browsing-history design contract.
-  static const Map<String, Brightness> themes = GoldenMatrix.themes;
-
-  /// Device and orientation axis required by the browsing-history design.
-  static const devices = <String, Size>{
-    'iphone_portrait': Size(390, 844),
-    'iphone_landscape': Size(844, 390),
-    'ipad_portrait': Size(834, 1194),
-    'ipad_landscape': Size(1194, 834),
-  };
-
-  /// Text scale axis required for Phase 4 browsing-history goldens.
-  static const textScalers = <String, TextScaler>{
-    ...GoldenMatrix.textScalers,
-    'accessibility': TextScaler.linear(2),
-  };
-
-  /// Golden capture device pixel ratio.
-  static const double devicePixelRatio = GoldenMatrix.devicePixelRatio;
 }

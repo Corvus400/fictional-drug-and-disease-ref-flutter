@@ -53,10 +53,10 @@ void main() {
     await _db.close();
   });
 
-  runHistoryGoldenMatrix(
+  runGoldenMatrix(
     fileNamePrefix: 'history_empty',
     description: 'History empty state',
-    builder: (theme, size, deviceName, textScaler, textScalerName) {
+    builder: (theme, size, scaler) {
       return ProviderScope(
         overrides: [
           appDatabaseProvider.overrideWithValue(_db),
@@ -93,10 +93,10 @@ void main() {
     },
   );
 
-  runHistoryGoldenMatrix(
+  runGoldenMatrix(
     fileNamePrefix: 'history_loading',
     description: 'History loading state',
-    builder: (theme, size, deviceName, textScaler, textScalerName) {
+    builder: (theme, size, scaler) {
       return ProviderScope(
         overrides: [
           appDatabaseProvider.overrideWithValue(_db),
@@ -136,10 +136,10 @@ void main() {
     },
   );
 
-  runHistoryGoldenMatrix(
+  runGoldenMatrix(
     fileNamePrefix: 'history_normal',
     description: 'History normal rows',
-    builder: (theme, size, deviceName, textScaler, textScalerName) {
+    builder: (theme, size, scaler) {
       return _normalHistoryGoldenApp(theme);
     },
     whilePerforming: (tester) async {
@@ -155,28 +155,28 @@ void main() {
     },
   );
 
-  runHistoryGoldenMatrix(
+  runGoldenMatrix(
     fileNamePrefix: 'history_drug_tab',
     description: 'History drug tab rows',
-    builder: (theme, size, deviceName, textScaler, textScalerName) {
+    builder: (theme, size, scaler) {
       return _normalHistoryGoldenApp(theme);
     },
     whilePerforming: _selectHistoryDrugTab,
   );
 
-  runHistoryGoldenMatrix(
+  runGoldenMatrix(
     fileNamePrefix: 'history_disease_tab',
     description: 'History disease tab rows',
-    builder: (theme, size, deviceName, textScaler, textScalerName) {
+    builder: (theme, size, scaler) {
       return _normalHistoryGoldenApp(theme);
     },
     whilePerforming: _selectHistoryDiseaseTab,
   );
 
-  runHistoryGoldenMatrix(
+  runGoldenMatrix(
     fileNamePrefix: 'history_swipe_delete',
     description: 'History swipe delete reveal',
-    builder: (theme, size, deviceName, textScaler, textScalerName) {
+    builder: (theme, size, scaler) {
       final now = _normalNow;
       final drugViewedAt = now.subtract(const Duration(minutes: 5));
       final diseaseViewedAt = now.subtract(const Duration(hours: 2));
@@ -228,10 +228,10 @@ void main() {
     },
   );
 
-  runHistoryGoldenMatrix(
+  runGoldenMatrix(
     fileNamePrefix: 'history_bulk_delete_confirm',
     description: 'History bulk delete confirm',
-    builder: (theme, size, deviceName, textScaler, textScalerName) {
+    builder: (theme, size, scaler) {
       final now = _normalNow;
       final drugViewedAt = now.subtract(const Duration(minutes: 5));
       final diseaseViewedAt = now.subtract(const Duration(hours: 2));
@@ -295,10 +295,10 @@ void main() {
     },
   );
 
-  runHistoryGoldenMatrix(
+  runGoldenMatrix(
     fileNamePrefix: 'history_name_fetch_fail',
     description: 'History name fetch failure with retry',
-    builder: (theme, size, deviceName, textScaler, textScalerName) {
+    builder: (theme, size, scaler) {
       final now = _normalNow;
       return ProviderScope(
         overrides: [

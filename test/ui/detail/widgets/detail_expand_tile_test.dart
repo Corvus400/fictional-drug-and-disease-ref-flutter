@@ -70,8 +70,6 @@ void main() {
   runGoldenMatrix(
     fileNamePrefix: 'detail_expand_tile',
     description: 'DetailExpandTile follows Detail Spec ref-row CSS',
-    sizes: const ['phone'],
-    textScalers: const ['normal'],
     builder: (theme, size, textScaler) {
       return MaterialApp(
         theme: theme,

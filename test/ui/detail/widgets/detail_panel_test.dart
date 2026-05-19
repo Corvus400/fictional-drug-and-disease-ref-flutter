@@ -138,8 +138,6 @@ void main() {
   runGoldenMatrix(
     fileNamePrefix: 'detail_panel',
     description: 'DetailPanel follows Detail Spec panel CSS',
-    sizes: const ['phone'],
-    textScalers: const ['normal'],
     builder: (theme, size, textScaler) {
       return MaterialApp(
         theme: theme,

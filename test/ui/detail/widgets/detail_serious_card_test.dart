@@ -59,8 +59,6 @@ void main() {
   runGoldenMatrix(
     fileNamePrefix: 'detail_serious_card',
     description: 'DetailSeriousCard follows Detail Spec serious-card CSS',
-    sizes: const ['phone'],
-    textScalers: const ['normal'],
     builder: (theme, size, textScaler) {
       return MaterialApp(
         theme: theme,
