@@ -148,19 +148,19 @@ String _precautionCategoryLabel(AppLocalizations l10n, String value) {
 const _diseaseChronicityValues = ['acute', 'subacute', 'chronic', 'relapsing'];
 
 const _diseaseOnsetPatternValues = [
-  'acute',
-  'subacute',
-  'chronic',
-  'intermittent',
-  'relapsing',
+  'ACUTE',
+  'SUBACUTE',
+  'CHRONIC',
+  'INTERMITTENT',
+  'RELAPSING',
 ];
 
 const _diseaseExamCategoryValues = [
-  'blood_test',
-  'imaging',
-  'physiological',
-  'pathology',
-  'interview',
+  'BLOOD_TEST',
+  'IMAGING',
+  'PHYSIOLOGICAL',
+  'PATHOLOGY',
+  'INTERVIEW',
 ];
 
 String _chronicityLabel(AppLocalizations l10n, String value) {
@@ -175,22 +175,24 @@ String _chronicityLabel(AppLocalizations l10n, String value) {
 
 String _onsetPatternLabel(AppLocalizations l10n, String value) {
   return switch (value) {
-    'acute' => l10n.searchDiseaseOnsetPatternAcute,
-    'subacute' => l10n.searchDiseaseOnsetPatternSubacute,
-    'chronic' => l10n.searchDiseaseOnsetPatternChronic,
-    'intermittent' => l10n.searchDiseaseOnsetPatternIntermittent,
-    'relapsing' => l10n.searchDiseaseOnsetPatternRelapsing,
+    'acute' || 'ACUTE' => l10n.searchDiseaseOnsetPatternAcute,
+    'subacute' || 'SUBACUTE' => l10n.searchDiseaseOnsetPatternSubacute,
+    'chronic' || 'CHRONIC' => l10n.searchDiseaseOnsetPatternChronic,
+    'intermittent' ||
+    'INTERMITTENT' => l10n.searchDiseaseOnsetPatternIntermittent,
+    'relapsing' || 'RELAPSING' => l10n.searchDiseaseOnsetPatternRelapsing,
     _ => value,
   };
 }
 
 String _examCategoryLabel(AppLocalizations l10n, String value) {
   return switch (value) {
-    'blood_test' => l10n.searchDiseaseExamCategoryBloodTest,
-    'imaging' => l10n.searchDiseaseExamCategoryImaging,
-    'physiological' => l10n.searchDiseaseExamCategoryPhysiological,
-    'pathology' => l10n.searchDiseaseExamCategoryPathology,
-    'interview' => l10n.searchDiseaseExamCategoryInterview,
+    'blood_test' || 'BLOOD_TEST' => l10n.searchDiseaseExamCategoryBloodTest,
+    'imaging' || 'IMAGING' => l10n.searchDiseaseExamCategoryImaging,
+    'physiological' ||
+    'PHYSIOLOGICAL' => l10n.searchDiseaseExamCategoryPhysiological,
+    'pathology' || 'PATHOLOGY' => l10n.searchDiseaseExamCategoryPathology,
+    'interview' || 'INTERVIEW' => l10n.searchDiseaseExamCategoryInterview,
     _ => value,
   };
 }

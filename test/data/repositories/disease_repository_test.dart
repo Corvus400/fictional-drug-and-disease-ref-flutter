@@ -87,8 +87,8 @@ void main() {
           keywordMatch: KeywordMatch.partial,
           keywordTarget: DiseaseKeywordTarget.nameEnglish,
           symptomKeyword: '頭痛',
-          onsetPattern: ['gradual'],
-          examCategory: ['blood'],
+          onsetPattern: ['INTERMITTENT'],
+          examCategory: ['BLOOD_TEST'],
           hasPharmacologicalTreatment: true,
           hasSeverityGrading: true,
           sort: DiseaseSort.nameKana,
@@ -107,14 +107,41 @@ void main() {
           keywordMatch: 'partial',
           keywordTarget: 'name_english',
           symptomKeyword: '頭痛',
-          onsetPattern: ['gradual'],
-          examCategory: ['blood'],
+          onsetPattern: ['INTERMITTENT'],
+          examCategory: ['BLOOD_TEST'],
           hasPharmacologicalTreatment: true,
           hasSeverityGrading: true,
           sort: 'name_kana',
         ),
       ).called(1);
     });
+
+    test(
+      'getDiseases normalizes disease enum serial names to API enum constants',
+      () async {
+        final response = _diseaseListResponseFixture();
+        when(
+          () => apiClient.getDiseases(
+            onsetPattern: any(named: 'onsetPattern'),
+            examCategory: any(named: 'examCategory'),
+          ),
+        ).thenAnswer((_) async => response);
+
+        await repository.getDiseases(
+          const DiseaseSearchParams(
+            onsetPattern: ['intermittent'],
+            examCategory: ['blood_test'],
+          ),
+        );
+
+        verify(
+          () => apiClient.getDiseases(
+            onsetPattern: ['INTERMITTENT'],
+            examCategory: ['BLOOD_TEST'],
+          ),
+        ).called(1);
+      },
+    );
 
     test('getDisease maps 404 response to ApiException', () async {
       when(() => apiClient.getDisease('missing')).thenThrow(
