@@ -13,6 +13,7 @@ void main() {
             (file) =>
                 file.path != 'test/ui/golden_ui_state_coverage_guard_test.dart',
           )
+          .where((file) => !file.path.endsWith('.part.dart'))
           .where((file) {
             final source = file.readAsStringSync();
             return source.contains('runGoldenMatrix(') ||
@@ -35,7 +36,7 @@ void main() {
     test('all committed UI golden baselines are source-backed', () {
       final manifestSources = {
         for (final testFile in _goldenTestFiles)
-          testFile: File(testFile).readAsStringSync(),
+          testFile: _sourceWithParts(File(testFile)),
       };
       final stateBackedPrefixes = {
         for (final expectation in _expectations) expectation.baselinePrefix,
@@ -76,7 +77,7 @@ void main() {
 
     for (final expectation in _expectations) {
       test('${expectation.screen} covers ${expectation.state}', () {
-        final source = File(expectation.testFile).readAsStringSync();
+        final source = _sourceWithParts(File(expectation.testFile));
 
         expect(
           source,
@@ -688,6 +689,23 @@ String _themeStrippedPrefix(String stem) {
     return stem.substring(0, stem.length - '_dark'.length);
   }
   return stem;
+}
+
+String _sourceWithParts(File file) {
+  final source = file.readAsStringSync();
+  final partSources =
+      RegExp(
+        r"part\s+'([^']+)';",
+      ).allMatches(source).map((match) {
+        final partPath = '${file.parent.path}/${match.group(1)!}';
+        final partFile = File(partPath);
+        if (!partFile.existsSync()) {
+          return '';
+        }
+        return partFile.readAsStringSync();
+      });
+
+  return [source, ...partSources].join('\n');
 }
 
 bool _isDynamicallySourceBacked(

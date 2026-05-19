@@ -7,35 +7,17 @@ void main() {
     'SearchView does not contain fixed sample data or filter selections',
     () {
       final sources = [
-        File('lib/ui/search/search_view.dart').readAsStringSync(),
-        File('lib/ui/search/widgets/search_top_chrome.dart').readAsStringSync(),
-        File(
-          'lib/ui/search/widgets/search_phase_section.dart',
-        ).readAsStringSync(),
-        File(
-          'lib/ui/search/widgets/search_result_toolbar.dart',
-        ).readAsStringSync(),
+        ...Directory('lib/ui/search')
+            .listSync(recursive: true)
+            .whereType<File>()
+            .where((file) => file.path.endsWith('.dart'))
+            .map((file) => file.readAsStringSync()),
         File('lib/ui/_common/widgets/drug_result_card.dart').readAsStringSync(),
         File(
           'lib/ui/_common/widgets/disease_result_card.dart',
         ).readAsStringSync(),
-        File(
-          'lib/ui/search/widgets/search_history_dropdown.dart',
-        ).readAsStringSync(),
-        File(
-          'lib/ui/search/widgets/filter/drug_filter_sheet.dart',
-        ).readAsStringSync(),
-        File(
-          'lib/ui/search/widgets/filter/disease_filter_sheet.dart',
-        ).readAsStringSync(),
-        File(
-          'lib/ui/search/widgets/filter/round6_filter_sheet_scaffold.dart',
-        ).readAsStringSync(),
         File('lib/theme/app_palette.dart').readAsStringSync(),
-        File(
-          'lib/ui/search/format/search_label_formatters.dart',
-        ).readAsStringSync(),
-        File('lib/ui/search/format/search_sort_sheet.dart').readAsStringSync(),
+        File('lib/theme/app_palette_tokens.dart').readAsStringSync(),
       ];
       final source = sources.join('\n');
       const forbiddenFragments = [

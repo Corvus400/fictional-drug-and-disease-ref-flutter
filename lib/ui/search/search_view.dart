@@ -30,6 +30,11 @@ export 'package:fictional_drug_and_disease_ref/ui/search/providers/drug_card_ima
 
 part 'widgets/search_top_chrome.dart';
 part 'widgets/search_phase_section.dart';
+part 'widgets/search_idle_states.dart';
+part 'widgets/search_utility_pane.dart';
+part 'widgets/search_utility_history_section.dart';
+part 'widgets/search_utility_filter_section.dart';
+part 'widgets/search_utility_sort_section.dart';
 part 'widgets/search_result_toolbar.dart';
 part 'widgets/search_history_dropdown.dart';
 part 'widgets/filter/drug_filter_sheet.dart';

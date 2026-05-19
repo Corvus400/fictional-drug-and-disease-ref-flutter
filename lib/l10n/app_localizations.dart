@@ -538,6 +538,12 @@ abstract class AppLocalizations {
   /// **'絞り込み +{count}'**
   String searchHistoryFilterCount(int count);
 
+  /// No description provided for @searchResultCountShort.
+  ///
+  /// In ja, this message translates to:
+  /// **'{count} 件'**
+  String searchResultCountShort(int count);
+
   /// No description provided for @searchHistoryRxBadge.
   ///
   /// In ja, this message translates to:
@@ -820,6 +826,24 @@ abstract class AppLocalizations {
   /// **'階層選択'**
   String get searchFilterHintHierarchy;
 
+  /// No description provided for @searchFilterHintMedicalDepartment.
+  ///
+  /// In ja, this message translates to:
+  /// **'診療科・複数選択 OR'**
+  String get searchFilterHintMedicalDepartment;
+
+  /// No description provided for @searchFilterHintChronicity.
+  ///
+  /// In ja, this message translates to:
+  /// **'急性 / 慢性'**
+  String get searchFilterHintChronicity;
+
+  /// No description provided for @searchFilterHintMultiSelectOr.
+  ///
+  /// In ja, this message translates to:
+  /// **'複数選択 OR'**
+  String get searchFilterHintMultiSelectOr;
+
   /// No description provided for @searchFilterHintDrillIn.
   ///
   /// In ja, this message translates to:
@@ -993,6 +1017,24 @@ abstract class AppLocalizations {
   /// In ja, this message translates to:
   /// **'薬効分類名'**
   String get searchSortByTherapeuticCategory;
+
+  /// No description provided for @searchUtilityIdleTitle.
+  ///
+  /// In ja, this message translates to:
+  /// **'検索キーワードを入力'**
+  String get searchUtilityIdleTitle;
+
+  /// No description provided for @searchUtilityIdleEmptyHistoryDescription.
+  ///
+  /// In ja, this message translates to:
+  /// **'履歴はまだありません。検索すると右パネルに記録されます。'**
+  String get searchUtilityIdleEmptyHistoryDescription;
+
+  /// No description provided for @searchUtilityIdleWithHistoryDescription.
+  ///
+  /// In ja, this message translates to:
+  /// **'履歴やフィルタからも始められます。'**
+  String get searchUtilityIdleWithHistoryDescription;
 
   /// No description provided for @searchDrugRegulatoryPoison.
   ///

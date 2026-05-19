@@ -71,11 +71,24 @@ void main() {
           reason: coverage.source,
         );
         expect(
-          file.readAsStringSync(),
+          _sourceWithParts(file),
           contains(coverage.sourceFragment),
           reason: '${entry.label} must be backed by ${coverage.source}',
         );
       }
     }
   });
+}
+
+String _sourceWithParts(File file) {
+  final source = file.readAsStringSync();
+  final buffer = StringBuffer(source);
+  final partPattern = RegExp(r"^part '([^']+)';$", multiLine: true);
+  for (final match in partPattern.allMatches(source)) {
+    final part = File('${file.parent.path}/${match.group(1)}');
+    if (part.existsSync()) {
+      buffer.writeln(part.readAsStringSync());
+    }
+  }
+  return buffer.toString();
 }
