@@ -181,6 +181,14 @@
       }
     }
   },
+  "searchResultCountShort": "{count} 件",
+  "@searchResultCountShort": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "searchHistoryRxBadge": "Rx",
   "searchHistoryDxBadge": "Dx",
   "searchHistoryClearConfirmTitle": "検索履歴を削除しますか？",
@@ -322,6 +330,9 @@
   "searchFilterHintBool": "bool",
   "searchFilterHintPartialMatch": "部分一致",
   "searchFilterHintHierarchy": "階層選択",
+  "searchFilterHintMedicalDepartment": "診療科・複数選択 OR",
+  "searchFilterHintChronicity": "急性 / 慢性",
+  "searchFilterHintMultiSelectOr": "複数選択 OR",
   "searchFilterHintDrillIn": "{count} 章・ドリルイン",
   "@searchFilterHintDrillIn": {
     "placeholders": {
@@ -358,6 +369,9 @@
   "searchSortByBrandKana": "ブランド名カナ",
   "searchSortByAtcCode": "ATC コード",
   "searchSortByTherapeuticCategory": "薬効分類名",
+  "searchUtilityIdleTitle": "検索キーワードを入力",
+  "searchUtilityIdleEmptyHistoryDescription": "履歴はまだありません。検索すると右パネルに記録されます。",
+  "searchUtilityIdleWithHistoryDescription": "履歴やフィルタからも始められます。",
   "searchDrugRegulatoryPoison": "毒薬",
   "searchDrugRegulatoryPotent": "劇薬",
   "searchDrugRegulatoryPrescriptionRequired": "処方箋医薬品",

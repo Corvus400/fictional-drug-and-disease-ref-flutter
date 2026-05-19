@@ -259,6 +259,11 @@ class AppLocalizationsJa extends AppLocalizations {
   }
 
   @override
+  String searchResultCountShort(int count) {
+    return '$count 件';
+  }
+
+  @override
   String get searchHistoryRxBadge => 'Rx';
 
   @override
@@ -432,6 +437,15 @@ class AppLocalizationsJa extends AppLocalizations {
   String get searchFilterHintHierarchy => '階層選択';
 
   @override
+  String get searchFilterHintMedicalDepartment => '診療科・複数選択 OR';
+
+  @override
+  String get searchFilterHintChronicity => '急性 / 慢性';
+
+  @override
+  String get searchFilterHintMultiSelectOr => '複数選択 OR';
+
+  @override
   String searchFilterHintDrillIn(int count) {
     return '$count 章・ドリルイン';
   }
@@ -519,6 +533,16 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get searchSortByTherapeuticCategory => '薬効分類名';
+
+  @override
+  String get searchUtilityIdleTitle => '検索キーワードを入力';
+
+  @override
+  String get searchUtilityIdleEmptyHistoryDescription =>
+      '履歴はまだありません。検索すると右パネルに記録されます。';
+
+  @override
+  String get searchUtilityIdleWithHistoryDescription => '履歴やフィルタからも始められます。';
 
   @override
   String get searchDrugRegulatoryPoison => '毒薬';
