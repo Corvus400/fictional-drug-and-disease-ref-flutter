@@ -49,6 +49,7 @@ jobs:
 
     permissions:
       contents: read
+      statuses: write
 
     outputs:
       golden_vrt_required: ${{ steps.changed.outputs.golden_vrt_required }}
@@ -65,6 +66,9 @@ jobs:
         env:
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
           HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+          TARGET_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         run: |
           set -euo pipefail
 
@@ -92,6 +96,22 @@ jobs:
 
           echo "golden_vrt_required=$golden_vrt_required" >> "$GITHUB_OUTPUT"
           echo "golden_vrt_required=$golden_vrt_required"
+
+          if [ "$golden_vrt_required" = "true" ]; then
+            state="pending"
+            description="Waiting for VRT comment"
+          else
+            state="success"
+            description="Golden VRT not required for this PR scope"
+          fi
+
+          gh api \
+            --method POST \
+            "repos/$REPOSITORY/statuses/$HEAD_SHA" \
+            -f state="$state" \
+            -f context="vrt-comment" \
+            -f description="$description" \
+            -f target_url="$TARGET_URL"
 
   non-golden-tests:
     needs: [classify-ci-trust]

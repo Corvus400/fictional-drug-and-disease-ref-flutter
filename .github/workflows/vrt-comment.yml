@@ -72,6 +72,7 @@ jobs:
       contents: write
       issues: write
       pull-requests: write
+      statuses: write
 
     runs-on: ubuntu-latest
 
@@ -183,6 +184,24 @@ jobs:
           echo "baseline_change_count=$baseline_change_count" >> "$GITHUB_OUTPUT"
           echo "has_baseline_changes=$has_baseline_changes" >> "$GITHUB_OUTPUT"
           echo "baseline_change_count=$baseline_change_count"
+
+      - name: Mark VRT comment in progress
+        if: steps.download-pr.outcome == 'success'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+          HEAD_SHA: ${{ steps.collect-golden-baseline-changes.outputs.head_sha }}
+          TARGET_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh api \
+            --method POST \
+            "repos/$REPOSITORY/statuses/$HEAD_SHA" \
+            -f state="pending" \
+            -f context="vrt-comment" \
+            -f description="Generating VRT comment" \
+            -f target_url="$TARGET_URL"
 
       - id: push-screenshot-diff
         shell: bash
@@ -406,3 +425,30 @@ jobs:
               # git push origin --delete "$branch"
             fi
           done
+
+      - name: Mark VRT comment complete
+        if: always() && steps.download-pr.outcome == 'success'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+          HEAD_SHA: ${{ steps.collect-golden-baseline-changes.outputs.head_sha }}
+          TARGET_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          JOB_STATUS: ${{ job.status }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          state="success"
+          description="VRT comment posted"
+          if [ "$JOB_STATUS" != "success" ]; then
+            state="failure"
+            description="VRT comment failed"
+          fi
+
+          gh api \
+            --method POST \
+            "repos/$REPOSITORY/statuses/$HEAD_SHA" \
+            -f state="$state" \
+            -f context="vrt-comment" \
+            -f description="$description" \
+            -f target_url="$TARGET_URL"
