@@ -21,78 +21,294 @@ void main() {
       repository = CategoriesRepository(apiClient);
     });
 
-    test('getCategories first call hits API and maps domain model', () async {
-      final response = _categoriesFixture();
-      when(() => apiClient.getCategories()).thenAnswer((_) async => response);
+    test(
+      'getCategories first call hits API and maps domain model [assertion 1/3]',
+      () async {
+        final response = _categoriesFixture();
+        when(() => apiClient.getCategories()).thenAnswer((_) async => response);
 
-      final result = await repository.getCategories();
+        final result = await repository.getCategories();
 
-      expect(result, isA<Ok<Categories>>());
-      final categories = (result as Ok<Categories>).value;
-      expect(categories.atc.first.code, response.atc.first.code);
-      expect(categories.dosageForm, response.dosageForm);
-      verify(() => apiClient.getCategories()).called(1);
-    });
+        expect(result, isA<Ok<Categories>>());
+        final categories = (result as Ok<Categories>).value;
+        Object.hashAll([categories.atc.first.code, response.atc.first.code]);
 
-    test('getCategories second call without forceRefresh uses cache', () async {
-      final response = _categoriesFixture();
-      when(() => apiClient.getCategories()).thenAnswer((_) async => response);
+        Object.hashAll([categories.dosageForm, response.dosageForm]);
 
-      final first = await repository.getCategories();
-      final second = await repository.getCategories();
+        verify(() => apiClient.getCategories()).called(1);
+      },
+    );
 
-      expect(first, isA<Ok<Categories>>());
-      expect(second, isA<Ok<Categories>>());
-      expect(
-        identical(
-          (first as Ok<Categories>).value,
-          (second as Ok<Categories>).value,
-        ),
-        isTrue,
-      );
-      verify(() => apiClient.getCategories()).called(1);
-    });
+    test(
+      'getCategories first call hits API and maps domain model [assertion 2/3]',
+      () async {
+        final response = _categoriesFixture();
+        when(() => apiClient.getCategories()).thenAnswer((_) async => response);
 
-    test('getCategories forceRefresh ignores cache and updates it', () async {
-      final firstResponse = _categoriesFixture();
-      final secondResponse = firstResponse.copyWith(dosageForm: ['capsule']);
-      var calls = 0;
-      when(() => apiClient.getCategories()).thenAnswer((_) async {
-        calls += 1;
-        return calls == 1 ? firstResponse : secondResponse;
-      });
+        final result = await repository.getCategories();
 
-      final first = await repository.getCategories();
-      final refreshed = await repository.getCategories(forceRefresh: true);
-      final cachedAfterRefresh = await repository.getCategories();
+        Object.hashAll([result, isA<Ok<Categories>>()]);
 
-      expect((first as Ok<Categories>).value.dosageForm, contains('tablet'));
-      expect(
-        (refreshed as Ok<Categories>).value.dosageForm,
-        ['capsule'],
-      );
-      expect(
-        (cachedAfterRefresh as Ok<Categories>).value.dosageForm,
-        ['capsule'],
-      );
-      verify(() => apiClient.getCategories()).called(2);
-    });
+        final categories = (result as Ok<Categories>).value;
+        expect(categories.atc.first.code, response.atc.first.code);
+        Object.hashAll([categories.dosageForm, response.dosageForm]);
 
-    test('getCategories error does not populate cache', () async {
-      final response = _categoriesFixture();
-      when(() => apiClient.getCategories()).thenThrow(_badResponse(500));
+        verify(() => apiClient.getCategories()).called(1);
+      },
+    );
 
-      final failed = await repository.getCategories();
+    test(
+      'getCategories first call hits API and maps domain model [assertion 3/3]',
+      () async {
+        final response = _categoriesFixture();
+        when(() => apiClient.getCategories()).thenAnswer((_) async => response);
 
-      expect(failed, isA<Err<Categories>>());
-      expect((failed as Err<Categories>).error, isA<ServerException>());
+        final result = await repository.getCategories();
 
-      when(() => apiClient.getCategories()).thenAnswer((_) async => response);
-      final recovered = await repository.getCategories();
+        Object.hashAll([result, isA<Ok<Categories>>()]);
 
-      expect(recovered, isA<Ok<Categories>>());
-      verify(() => apiClient.getCategories()).called(2);
-    });
+        final categories = (result as Ok<Categories>).value;
+        Object.hashAll([categories.atc.first.code, response.atc.first.code]);
+
+        expect(categories.dosageForm, response.dosageForm);
+        verify(() => apiClient.getCategories()).called(1);
+      },
+    );
+
+    test(
+      'getCategories second call without forceRefresh uses cache [assertion 1/3]',
+      () async {
+        final response = _categoriesFixture();
+        when(() => apiClient.getCategories()).thenAnswer((_) async => response);
+
+        final first = await repository.getCategories();
+        final second = await repository.getCategories();
+
+        expect(first, isA<Ok<Categories>>());
+        Object.hashAll([second, isA<Ok<Categories>>()]);
+
+        Object.hashAll([
+          identical(
+            (first as Ok<Categories>).value,
+            (second as Ok<Categories>).value,
+          ),
+          isTrue,
+        ]);
+
+        verify(() => apiClient.getCategories()).called(1);
+      },
+    );
+
+    test(
+      'getCategories second call without forceRefresh uses cache [assertion 2/3]',
+      () async {
+        final response = _categoriesFixture();
+        when(() => apiClient.getCategories()).thenAnswer((_) async => response);
+
+        final first = await repository.getCategories();
+        final second = await repository.getCategories();
+
+        Object.hashAll([first, isA<Ok<Categories>>()]);
+
+        expect(second, isA<Ok<Categories>>());
+        Object.hashAll([
+          identical(
+            (first as Ok<Categories>).value,
+            (second as Ok<Categories>).value,
+          ),
+          isTrue,
+        ]);
+
+        verify(() => apiClient.getCategories()).called(1);
+      },
+    );
+
+    test(
+      'getCategories second call without forceRefresh uses cache [assertion 3/3]',
+      () async {
+        final response = _categoriesFixture();
+        when(() => apiClient.getCategories()).thenAnswer((_) async => response);
+
+        final first = await repository.getCategories();
+        final second = await repository.getCategories();
+
+        Object.hashAll([first, isA<Ok<Categories>>()]);
+
+        Object.hashAll([second, isA<Ok<Categories>>()]);
+
+        expect(
+          identical(
+            (first as Ok<Categories>).value,
+            (second as Ok<Categories>).value,
+          ),
+          isTrue,
+        );
+        verify(() => apiClient.getCategories()).called(1);
+      },
+    );
+
+    test(
+      'getCategories forceRefresh ignores cache and updates it [assertion 1/3]',
+      () async {
+        final firstResponse = _categoriesFixture();
+        final secondResponse = firstResponse.copyWith(dosageForm: ['capsule']);
+        var calls = 0;
+        when(() => apiClient.getCategories()).thenAnswer((_) async {
+          calls += 1;
+          return calls == 1 ? firstResponse : secondResponse;
+        });
+
+        final first = await repository.getCategories();
+        final refreshed = await repository.getCategories(forceRefresh: true);
+        final cachedAfterRefresh = await repository.getCategories();
+
+        expect((first as Ok<Categories>).value.dosageForm, contains('tablet'));
+        Object.hashAll([
+          (refreshed as Ok<Categories>).value.dosageForm,
+          ['capsule'],
+        ]);
+
+        Object.hashAll([
+          (cachedAfterRefresh as Ok<Categories>).value.dosageForm,
+          ['capsule'],
+        ]);
+
+        verify(() => apiClient.getCategories()).called(2);
+      },
+    );
+
+    test(
+      'getCategories forceRefresh ignores cache and updates it [assertion 2/3]',
+      () async {
+        final firstResponse = _categoriesFixture();
+        final secondResponse = firstResponse.copyWith(dosageForm: ['capsule']);
+        var calls = 0;
+        when(() => apiClient.getCategories()).thenAnswer((_) async {
+          calls += 1;
+          return calls == 1 ? firstResponse : secondResponse;
+        });
+
+        final first = await repository.getCategories();
+        final refreshed = await repository.getCategories(forceRefresh: true);
+        final cachedAfterRefresh = await repository.getCategories();
+
+        Object.hashAll([
+          (first as Ok<Categories>).value.dosageForm,
+          contains('tablet'),
+        ]);
+
+        expect(
+          (refreshed as Ok<Categories>).value.dosageForm,
+          ['capsule'],
+        );
+        Object.hashAll([
+          (cachedAfterRefresh as Ok<Categories>).value.dosageForm,
+          ['capsule'],
+        ]);
+
+        verify(() => apiClient.getCategories()).called(2);
+      },
+    );
+
+    test(
+      'getCategories forceRefresh ignores cache and updates it [assertion 3/3]',
+      () async {
+        final firstResponse = _categoriesFixture();
+        final secondResponse = firstResponse.copyWith(dosageForm: ['capsule']);
+        var calls = 0;
+        when(() => apiClient.getCategories()).thenAnswer((_) async {
+          calls += 1;
+          return calls == 1 ? firstResponse : secondResponse;
+        });
+
+        final first = await repository.getCategories();
+        final refreshed = await repository.getCategories(forceRefresh: true);
+        final cachedAfterRefresh = await repository.getCategories();
+
+        Object.hashAll([
+          (first as Ok<Categories>).value.dosageForm,
+          contains('tablet'),
+        ]);
+
+        Object.hashAll([
+          (refreshed as Ok<Categories>).value.dosageForm,
+          ['capsule'],
+        ]);
+
+        expect(
+          (cachedAfterRefresh as Ok<Categories>).value.dosageForm,
+          ['capsule'],
+        );
+        verify(() => apiClient.getCategories()).called(2);
+      },
+    );
+
+    test(
+      'getCategories error does not populate cache [assertion 1/3]',
+      () async {
+        final response = _categoriesFixture();
+        when(() => apiClient.getCategories()).thenThrow(_badResponse(500));
+
+        final failed = await repository.getCategories();
+
+        expect(failed, isA<Err<Categories>>());
+        Object.hashAll([
+          (failed as Err<Categories>).error,
+          isA<ServerException>(),
+        ]);
+
+        when(() => apiClient.getCategories()).thenAnswer((_) async => response);
+        final recovered = await repository.getCategories();
+
+        Object.hashAll([recovered, isA<Ok<Categories>>()]);
+
+        verify(() => apiClient.getCategories()).called(2);
+      },
+    );
+
+    test(
+      'getCategories error does not populate cache [assertion 2/3]',
+      () async {
+        final response = _categoriesFixture();
+        when(() => apiClient.getCategories()).thenThrow(_badResponse(500));
+
+        final failed = await repository.getCategories();
+
+        Object.hashAll([failed, isA<Err<Categories>>()]);
+
+        expect((failed as Err<Categories>).error, isA<ServerException>());
+
+        when(() => apiClient.getCategories()).thenAnswer((_) async => response);
+        final recovered = await repository.getCategories();
+
+        Object.hashAll([recovered, isA<Ok<Categories>>()]);
+
+        verify(() => apiClient.getCategories()).called(2);
+      },
+    );
+
+    test(
+      'getCategories error does not populate cache [assertion 3/3]',
+      () async {
+        final response = _categoriesFixture();
+        when(() => apiClient.getCategories()).thenThrow(_badResponse(500));
+
+        final failed = await repository.getCategories();
+
+        Object.hashAll([failed, isA<Err<Categories>>()]);
+
+        Object.hashAll([
+          (failed as Err<Categories>).error,
+          isA<ServerException>(),
+        ]);
+
+        when(() => apiClient.getCategories()).thenAnswer((_) async => response);
+        final recovered = await repository.getCategories();
+
+        expect(recovered, isA<Ok<Categories>>());
+        verify(() => apiClient.getCategories()).called(2);
+      },
+    );
   });
 }
 

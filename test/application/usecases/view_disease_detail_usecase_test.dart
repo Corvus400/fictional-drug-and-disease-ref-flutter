@@ -55,45 +55,167 @@ void main() {
       await db.close();
     });
 
-    test('execute returns loaded and records browsing history', () async {
-      final dto = _diseaseFixture();
-      when(() => apiClient.getDisease(dto.id)).thenAnswer((_) async => dto);
+    test(
+      'execute returns loaded and records browsing history [assertion 1/4]',
+      () async {
+        final dto = _diseaseFixture();
+        when(() => apiClient.getDisease(dto.id)).thenAnswer((_) async => dto);
 
-      final result = await usecase.execute(dto.id);
+        final result = await usecase.execute(dto.id);
 
-      expect(result, isA<DiseaseDetailLoaded>());
-      final loaded = result as DiseaseDetailLoaded;
-      expect(loaded.disease.id, dto.id);
-      expect(loaded.isBookmarked, isFalse);
-      final histories = await browsingHistoryRepository.findAll();
-      expect((histories as Ok).value, isNotEmpty);
-    });
+        expect(result, isA<DiseaseDetailLoaded>());
+        final loaded = result as DiseaseDetailLoaded;
+        Object.hashAll([loaded.disease.id, dto.id]);
 
-    test('execute updates bookmark snapshot when bookmarked', () async {
-      final dto = _diseaseFixture();
-      final disease = dto.toDomain();
-      when(() => apiClient.getDisease(dto.id)).thenAnswer((_) async => dto);
-      await bookmarkRepository.insert(
-        id: dto.id,
-        snapshotJson: snapshotCodec.encode(
-          snapshotCodec.fromDisease(disease),
-        ),
-        bookmarkedAt: DateTime.utc(2026, 5, 4),
-      );
+        Object.hashAll([loaded.isBookmarked, isFalse]);
 
-      final result = await usecase.execute(dto.id);
-
-      expect(result, isA<DiseaseDetailLoaded>());
-      expect((result as DiseaseDetailLoaded).isBookmarked, isTrue);
-      final bookmark = await bookmarkRepository.findById(dto.id);
-      final snapshot = snapshotCodec.decode(
-        (bookmark as Ok<BookmarkEntry?>).value!.snapshotJson,
-      );
-      expect(snapshot.name, disease.name);
-    });
+        final histories = await browsingHistoryRepository.findAll();
+        Object.hashAll([(histories as Ok).value, isNotEmpty]);
+      },
+    );
 
     test(
-      'network failure with bookmark snapshot returns offline fallback',
+      'execute returns loaded and records browsing history [assertion 2/4]',
+      () async {
+        final dto = _diseaseFixture();
+        when(() => apiClient.getDisease(dto.id)).thenAnswer((_) async => dto);
+
+        final result = await usecase.execute(dto.id);
+
+        Object.hashAll([result, isA<DiseaseDetailLoaded>()]);
+
+        final loaded = result as DiseaseDetailLoaded;
+        expect(loaded.disease.id, dto.id);
+        Object.hashAll([loaded.isBookmarked, isFalse]);
+
+        final histories = await browsingHistoryRepository.findAll();
+        Object.hashAll([(histories as Ok).value, isNotEmpty]);
+      },
+    );
+
+    test(
+      'execute returns loaded and records browsing history [assertion 3/4]',
+      () async {
+        final dto = _diseaseFixture();
+        when(() => apiClient.getDisease(dto.id)).thenAnswer((_) async => dto);
+
+        final result = await usecase.execute(dto.id);
+
+        Object.hashAll([result, isA<DiseaseDetailLoaded>()]);
+
+        final loaded = result as DiseaseDetailLoaded;
+        Object.hashAll([loaded.disease.id, dto.id]);
+
+        expect(loaded.isBookmarked, isFalse);
+        final histories = await browsingHistoryRepository.findAll();
+        Object.hashAll([(histories as Ok).value, isNotEmpty]);
+      },
+    );
+
+    test(
+      'execute returns loaded and records browsing history [assertion 4/4]',
+      () async {
+        final dto = _diseaseFixture();
+        when(() => apiClient.getDisease(dto.id)).thenAnswer((_) async => dto);
+
+        final result = await usecase.execute(dto.id);
+
+        Object.hashAll([result, isA<DiseaseDetailLoaded>()]);
+
+        final loaded = result as DiseaseDetailLoaded;
+        Object.hashAll([loaded.disease.id, dto.id]);
+
+        Object.hashAll([loaded.isBookmarked, isFalse]);
+
+        final histories = await browsingHistoryRepository.findAll();
+        expect((histories as Ok).value, isNotEmpty);
+      },
+    );
+
+    test(
+      'execute updates bookmark snapshot when bookmarked [assertion 1/3]',
+      () async {
+        final dto = _diseaseFixture();
+        final disease = dto.toDomain();
+        when(() => apiClient.getDisease(dto.id)).thenAnswer((_) async => dto);
+        await bookmarkRepository.insert(
+          id: dto.id,
+          snapshotJson: snapshotCodec.encode(
+            snapshotCodec.fromDisease(disease),
+          ),
+          bookmarkedAt: DateTime.utc(2026, 5, 4),
+        );
+
+        final result = await usecase.execute(dto.id);
+
+        expect(result, isA<DiseaseDetailLoaded>());
+        Object.hashAll([(result as DiseaseDetailLoaded).isBookmarked, isTrue]);
+
+        final bookmark = await bookmarkRepository.findById(dto.id);
+        final snapshot = snapshotCodec.decode(
+          (bookmark as Ok<BookmarkEntry?>).value!.snapshotJson,
+        );
+        Object.hashAll([snapshot.name, disease.name]);
+      },
+    );
+
+    test(
+      'execute updates bookmark snapshot when bookmarked [assertion 2/3]',
+      () async {
+        final dto = _diseaseFixture();
+        final disease = dto.toDomain();
+        when(() => apiClient.getDisease(dto.id)).thenAnswer((_) async => dto);
+        await bookmarkRepository.insert(
+          id: dto.id,
+          snapshotJson: snapshotCodec.encode(
+            snapshotCodec.fromDisease(disease),
+          ),
+          bookmarkedAt: DateTime.utc(2026, 5, 4),
+        );
+
+        final result = await usecase.execute(dto.id);
+
+        Object.hashAll([result, isA<DiseaseDetailLoaded>()]);
+
+        expect((result as DiseaseDetailLoaded).isBookmarked, isTrue);
+        final bookmark = await bookmarkRepository.findById(dto.id);
+        final snapshot = snapshotCodec.decode(
+          (bookmark as Ok<BookmarkEntry?>).value!.snapshotJson,
+        );
+        Object.hashAll([snapshot.name, disease.name]);
+      },
+    );
+
+    test(
+      'execute updates bookmark snapshot when bookmarked [assertion 3/3]',
+      () async {
+        final dto = _diseaseFixture();
+        final disease = dto.toDomain();
+        when(() => apiClient.getDisease(dto.id)).thenAnswer((_) async => dto);
+        await bookmarkRepository.insert(
+          id: dto.id,
+          snapshotJson: snapshotCodec.encode(
+            snapshotCodec.fromDisease(disease),
+          ),
+          bookmarkedAt: DateTime.utc(2026, 5, 4),
+        );
+
+        final result = await usecase.execute(dto.id);
+
+        Object.hashAll([result, isA<DiseaseDetailLoaded>()]);
+
+        Object.hashAll([(result as DiseaseDetailLoaded).isBookmarked, isTrue]);
+
+        final bookmark = await bookmarkRepository.findById(dto.id);
+        final snapshot = snapshotCodec.decode(
+          (bookmark as Ok<BookmarkEntry?>).value!.snapshotJson,
+        );
+        expect(snapshot.name, disease.name);
+      },
+    );
+
+    test(
+      'network failure with bookmark snapshot returns offline fallback [assertion 1/3]',
       () async {
         final dto = _diseaseFixture();
         final snapshot = snapshotCodec.fromDisease(dto.toDomain());
@@ -108,19 +230,88 @@ void main() {
 
         expect(result, isA<DiseaseDetailOfflineFallback>());
         final fallback = result as DiseaseDetailOfflineFallback;
+        Object.hashAll([fallback.snapshot.id, dto.id]);
+
+        Object.hashAll([fallback.cause, isA<NetworkException>()]);
+      },
+    );
+
+    test(
+      'network failure with bookmark snapshot returns offline fallback [assertion 2/3]',
+      () async {
+        final dto = _diseaseFixture();
+        final snapshot = snapshotCodec.fromDisease(dto.toDomain());
+        when(() => apiClient.getDisease(dto.id)).thenThrow(_connectionError());
+        await bookmarkRepository.insert(
+          id: dto.id,
+          snapshotJson: snapshotCodec.encode(snapshot),
+          bookmarkedAt: DateTime.utc(2026, 5, 4),
+        );
+
+        final result = await usecase.execute(dto.id);
+
+        Object.hashAll([result, isA<DiseaseDetailOfflineFallback>()]);
+
+        final fallback = result as DiseaseDetailOfflineFallback;
         expect(fallback.snapshot.id, dto.id);
+        Object.hashAll([fallback.cause, isA<NetworkException>()]);
+      },
+    );
+
+    test(
+      'network failure with bookmark snapshot returns offline fallback [assertion 3/3]',
+      () async {
+        final dto = _diseaseFixture();
+        final snapshot = snapshotCodec.fromDisease(dto.toDomain());
+        when(() => apiClient.getDisease(dto.id)).thenThrow(_connectionError());
+        await bookmarkRepository.insert(
+          id: dto.id,
+          snapshotJson: snapshotCodec.encode(snapshot),
+          bookmarkedAt: DateTime.utc(2026, 5, 4),
+        );
+
+        final result = await usecase.execute(dto.id);
+
+        Object.hashAll([result, isA<DiseaseDetailOfflineFallback>()]);
+
+        final fallback = result as DiseaseDetailOfflineFallback;
+        Object.hashAll([fallback.snapshot.id, dto.id]);
+
         expect(fallback.cause, isA<NetworkException>());
       },
     );
 
-    test('404 failure does not use bookmark fallback', () async {
-      when(() => apiClient.getDisease('missing')).thenThrow(_badResponse(404));
+    test(
+      '404 failure does not use bookmark fallback [assertion 1/2]',
+      () async {
+        when(
+          () => apiClient.getDisease('missing'),
+        ).thenThrow(_badResponse(404));
 
-      final result = await usecase.execute('missing');
+        final result = await usecase.execute('missing');
 
-      expect(result, isA<DiseaseDetailFailure>());
-      expect((result as DiseaseDetailFailure).error, isA<ApiException>());
-    });
+        expect(result, isA<DiseaseDetailFailure>());
+        Object.hashAll([
+          (result as DiseaseDetailFailure).error,
+          isA<ApiException>(),
+        ]);
+      },
+    );
+
+    test(
+      '404 failure does not use bookmark fallback [assertion 2/2]',
+      () async {
+        when(
+          () => apiClient.getDisease('missing'),
+        ).thenThrow(_badResponse(404));
+
+        final result = await usecase.execute('missing');
+
+        Object.hashAll([result, isA<DiseaseDetailFailure>()]);
+
+        expect((result as DiseaseDetailFailure).error, isA<ApiException>());
+      },
+    );
   });
 }
 

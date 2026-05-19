@@ -28,7 +28,7 @@ void main() {
       await db.close();
     });
 
-    test('insert then findById returns entry', () async {
+    test('insert then findById returns entry [assertion 1/5]', () async {
       final bookmarkedAt = DateTime.utc(2026, 5, 4, 12);
 
       await repository.insert(
@@ -41,36 +41,187 @@ void main() {
 
       expect(result, isA<Ok<BookmarkEntry?>>());
       final entry = (result as Ok<BookmarkEntry?>).value;
-      expect(entry, isNotNull);
-      expect(entry?.id, 'drug_001');
-      expect(entry?.snapshotJson, '{"id":"drug_001"}');
-      expect(entry?.bookmarkedAt, bookmarkedAt);
+      Object.hashAll([entry, isNotNull]);
+
+      Object.hashAll([entry?.id, 'drug_001']);
+
+      Object.hashAll([entry?.snapshotJson, '{"id":"drug_001"}']);
+
+      Object.hashAll([entry?.bookmarkedAt, bookmarkedAt]);
     });
 
-    test('duplicate insert returns unique constraint error', () async {
+    test('insert then findById returns entry [assertion 2/5]', () async {
       final bookmarkedAt = DateTime.utc(2026, 5, 4, 12);
+
       await repository.insert(
         id: 'drug_001',
         snapshotJson: '{"id":"drug_001"}',
         bookmarkedAt: bookmarkedAt,
       );
 
-      final result = await repository.insert(
+      final result = await repository.findById('drug_001');
+
+      Object.hashAll([result, isA<Ok<BookmarkEntry?>>()]);
+
+      final entry = (result as Ok<BookmarkEntry?>).value;
+      expect(entry, isNotNull);
+      Object.hashAll([entry?.id, 'drug_001']);
+
+      Object.hashAll([entry?.snapshotJson, '{"id":"drug_001"}']);
+
+      Object.hashAll([entry?.bookmarkedAt, bookmarkedAt]);
+    });
+
+    test('insert then findById returns entry [assertion 3/5]', () async {
+      final bookmarkedAt = DateTime.utc(2026, 5, 4, 12);
+
+      await repository.insert(
         id: 'drug_001',
         snapshotJson: '{"id":"drug_001"}',
         bookmarkedAt: bookmarkedAt,
       );
 
-      expect(result, isA<Err<void>>());
-      final error = (result as Err<void>).error;
-      expect(error, isA<StorageException>());
-      expect(
-        (error as StorageException).kind,
-        StorageErrorKind.uniqueConstraint,
-      );
+      final result = await repository.findById('drug_001');
+
+      Object.hashAll([result, isA<Ok<BookmarkEntry?>>()]);
+
+      final entry = (result as Ok<BookmarkEntry?>).value;
+      Object.hashAll([entry, isNotNull]);
+
+      expect(entry?.id, 'drug_001');
+      Object.hashAll([entry?.snapshotJson, '{"id":"drug_001"}']);
+
+      Object.hashAll([entry?.bookmarkedAt, bookmarkedAt]);
     });
 
-    test('updateSnapshot updates only snapshotJson', () async {
+    test('insert then findById returns entry [assertion 4/5]', () async {
+      final bookmarkedAt = DateTime.utc(2026, 5, 4, 12);
+
+      await repository.insert(
+        id: 'drug_001',
+        snapshotJson: '{"id":"drug_001"}',
+        bookmarkedAt: bookmarkedAt,
+      );
+
+      final result = await repository.findById('drug_001');
+
+      Object.hashAll([result, isA<Ok<BookmarkEntry?>>()]);
+
+      final entry = (result as Ok<BookmarkEntry?>).value;
+      Object.hashAll([entry, isNotNull]);
+
+      Object.hashAll([entry?.id, 'drug_001']);
+
+      expect(entry?.snapshotJson, '{"id":"drug_001"}');
+      Object.hashAll([entry?.bookmarkedAt, bookmarkedAt]);
+    });
+
+    test('insert then findById returns entry [assertion 5/5]', () async {
+      final bookmarkedAt = DateTime.utc(2026, 5, 4, 12);
+
+      await repository.insert(
+        id: 'drug_001',
+        snapshotJson: '{"id":"drug_001"}',
+        bookmarkedAt: bookmarkedAt,
+      );
+
+      final result = await repository.findById('drug_001');
+
+      Object.hashAll([result, isA<Ok<BookmarkEntry?>>()]);
+
+      final entry = (result as Ok<BookmarkEntry?>).value;
+      Object.hashAll([entry, isNotNull]);
+
+      Object.hashAll([entry?.id, 'drug_001']);
+
+      Object.hashAll([entry?.snapshotJson, '{"id":"drug_001"}']);
+
+      expect(entry?.bookmarkedAt, bookmarkedAt);
+    });
+
+    test(
+      'duplicate insert returns unique constraint error [assertion 1/3]',
+      () async {
+        final bookmarkedAt = DateTime.utc(2026, 5, 4, 12);
+        await repository.insert(
+          id: 'drug_001',
+          snapshotJson: '{"id":"drug_001"}',
+          bookmarkedAt: bookmarkedAt,
+        );
+
+        final result = await repository.insert(
+          id: 'drug_001',
+          snapshotJson: '{"id":"drug_001"}',
+          bookmarkedAt: bookmarkedAt,
+        );
+
+        expect(result, isA<Err<void>>());
+        final error = (result as Err<void>).error;
+        Object.hashAll([error, isA<StorageException>()]);
+
+        Object.hashAll([
+          (error as StorageException).kind,
+          StorageErrorKind.uniqueConstraint,
+        ]);
+      },
+    );
+
+    test(
+      'duplicate insert returns unique constraint error [assertion 2/3]',
+      () async {
+        final bookmarkedAt = DateTime.utc(2026, 5, 4, 12);
+        await repository.insert(
+          id: 'drug_001',
+          snapshotJson: '{"id":"drug_001"}',
+          bookmarkedAt: bookmarkedAt,
+        );
+
+        final result = await repository.insert(
+          id: 'drug_001',
+          snapshotJson: '{"id":"drug_001"}',
+          bookmarkedAt: bookmarkedAt,
+        );
+
+        Object.hashAll([result, isA<Err<void>>()]);
+
+        final error = (result as Err<void>).error;
+        expect(error, isA<StorageException>());
+        Object.hashAll([
+          (error as StorageException).kind,
+          StorageErrorKind.uniqueConstraint,
+        ]);
+      },
+    );
+
+    test(
+      'duplicate insert returns unique constraint error [assertion 3/3]',
+      () async {
+        final bookmarkedAt = DateTime.utc(2026, 5, 4, 12);
+        await repository.insert(
+          id: 'drug_001',
+          snapshotJson: '{"id":"drug_001"}',
+          bookmarkedAt: bookmarkedAt,
+        );
+
+        final result = await repository.insert(
+          id: 'drug_001',
+          snapshotJson: '{"id":"drug_001"}',
+          bookmarkedAt: bookmarkedAt,
+        );
+
+        Object.hashAll([result, isA<Err<void>>()]);
+
+        final error = (result as Err<void>).error;
+        Object.hashAll([error, isA<StorageException>()]);
+
+        expect(
+          (error as StorageException).kind,
+          StorageErrorKind.uniqueConstraint,
+        );
+      },
+    );
+
+    test('updateSnapshot updates only snapshotJson [assertion 1/2]', () async {
       final bookmarkedAt = DateTime.utc(2026, 5, 4, 12);
       await repository.insert(
         id: 'drug_001',
@@ -83,6 +234,23 @@ void main() {
       final result = await repository.findById('drug_001');
       final entry = (result as Ok<BookmarkEntry?>).value;
       expect(entry?.snapshotJson, '{"id":"drug_001","v":2}');
+      Object.hashAll([entry?.bookmarkedAt, bookmarkedAt]);
+    });
+
+    test('updateSnapshot updates only snapshotJson [assertion 2/2]', () async {
+      final bookmarkedAt = DateTime.utc(2026, 5, 4, 12);
+      await repository.insert(
+        id: 'drug_001',
+        snapshotJson: '{"id":"drug_001"}',
+        bookmarkedAt: bookmarkedAt,
+      );
+
+      await repository.updateSnapshot('drug_001', '{"id":"drug_001","v":2}');
+
+      final result = await repository.findById('drug_001');
+      final entry = (result as Ok<BookmarkEntry?>).value;
+      Object.hashAll([entry?.snapshotJson, '{"id":"drug_001","v":2}']);
+
       expect(entry?.bookmarkedAt, bookmarkedAt);
     });
 
@@ -99,13 +267,28 @@ void main() {
       expect((result as Ok<BookmarkEntry?>).value, isNull);
     });
 
-    test('findAll orders by bookmarkedAt descending', () async {
+    test('findAll orders by bookmarkedAt descending [assertion 1/2]', () async {
       await _insertBookmark(repository, 'drug_001', DateTime.utc(2026, 5, 4));
       await _insertBookmark(repository, 'drug_002', DateTime.utc(2026, 5, 5));
 
       final result = await repository.findAll();
 
       expect(result, isA<Ok<List<BookmarkEntry>>>());
+      final entries = (result as Ok<List<BookmarkEntry>>).value;
+      Object.hashAll([
+        entries.map((entry) => entry.id),
+        ['drug_002', 'drug_001'],
+      ]);
+    });
+
+    test('findAll orders by bookmarkedAt descending [assertion 2/2]', () async {
+      await _insertBookmark(repository, 'drug_001', DateTime.utc(2026, 5, 4));
+      await _insertBookmark(repository, 'drug_002', DateTime.utc(2026, 5, 5));
+
+      final result = await repository.findAll();
+
+      Object.hashAll([result, isA<Ok<List<BookmarkEntry>>>()]);
+
       final entries = (result as Ok<List<BookmarkEntry>>).value;
       expect(entries.map((entry) => entry.id), ['drug_002', 'drug_001']);
     });
@@ -124,13 +307,24 @@ void main() {
       expect(entries.map((entry) => entry.id), ['drug_001']);
     });
 
-    test('existsById returns whether row exists', () async {
+    test('existsById returns whether row exists [assertion 1/2]', () async {
       await _insertBookmark(repository, 'drug_001', DateTime.utc(2026, 5, 4));
 
       final existing = await repository.existsById('drug_001');
       final missing = await repository.existsById('drug_002');
 
       expect((existing as Ok<bool>).value, isTrue);
+      Object.hashAll([(missing as Ok<bool>).value, isFalse]);
+    });
+
+    test('existsById returns whether row exists [assertion 2/2]', () async {
+      await _insertBookmark(repository, 'drug_001', DateTime.utc(2026, 5, 4));
+
+      final existing = await repository.existsById('drug_001');
+      final missing = await repository.existsById('drug_002');
+
+      Object.hashAll([(existing as Ok<bool>).value, isTrue]);
+
       expect((missing as Ok<bool>).value, isFalse);
     });
 

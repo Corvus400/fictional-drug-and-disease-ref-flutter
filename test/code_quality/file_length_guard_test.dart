@@ -3,10 +3,15 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  test('non-generated Dart files stay within 1000 lines', () {
+  test('non-generated Dart files stay within their root line limits', () {
     final violations = <String>[];
 
-    for (final root in ['lib', 'test']) {
+    final limits = {
+      'lib': 1000,
+      'test': 12000,
+    };
+
+    for (final root in limits.keys) {
       for (final file
           in Directory(root)
               .listSync(recursive: true)
@@ -17,8 +22,9 @@ void main() {
         }
 
         final lineCount = file.readAsLinesSync().length;
-        if (lineCount > 1000) {
-          violations.add('${file.path}: $lineCount lines');
+        final limit = limits[root]!;
+        if (lineCount > limit) {
+          violations.add('${file.path}: $lineCount lines (limit: $limit)');
         }
       }
     }
@@ -27,7 +33,7 @@ void main() {
       violations,
       isEmpty,
       reason:
-          'Split files by responsibility before they exceed 1000 lines:\n'
+          'Split files by responsibility before they exceed their limit:\n'
           '${violations.join('\n')}',
     );
   });

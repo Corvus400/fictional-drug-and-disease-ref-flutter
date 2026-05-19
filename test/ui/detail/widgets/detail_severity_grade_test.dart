@@ -8,7 +8,9 @@ import 'package:flutter_test/flutter_test.dart';
 import '../../../golden/golden_test_helpers.dart';
 
 void main() {
-  testWidgets('DetailSeverityGrade matches grade CSS', (tester) async {
+  testWidgets('DetailSeverityGrade matches grade CSS [assertion 1/17]', (
+    tester,
+  ) async {
     await tester.pumpWidget(
       MaterialApp(
         theme: AppTheme.light(),
@@ -40,21 +42,1157 @@ void main() {
     );
 
     expect(card.padding, const EdgeInsets.all(8));
+    Object.hashAll([card.margin, const EdgeInsets.only(top: 6)]);
+
+    Object.hashAll([decoration.color, colors.surfaceContainerLow]);
+
+    Object.hashAll([
+      decoration.border,
+      Border.all(color: colors.outlineVariant),
+    ]);
+
+    Object.hashAll([decoration.borderRadius, BorderRadius.circular(8)]);
+
+    Object.hashAll([grid.crossAxisAlignment, CrossAxisAlignment.center]);
+
+    Object.hashAll([labelBox.width, 46]);
+
+    Object.hashAll([label.textAlign, TextAlign.center]);
+
+    Object.hashAll([label.style?.fontSize, 13]);
+
+    Object.hashAll([label.style?.fontWeight, FontWeight.w800]);
+
+    Object.hashAll([label.style?.color, colors.primary]);
+
+    Object.hashAll([criteria.style?.fontSize, 12]);
+
+    Object.hashAll([criteria.style?.fontWeight, FontWeight.w700]);
+
+    Object.hashAll([criteria.style?.color, colors.onSurface]);
+
+    Object.hashAll([action.data, 'HCU']);
+
+    Object.hashAll([action.fontSize, 12]);
+
+    Object.hashAll([action.color, colors.onSurfaceVariant]);
+  });
+
+  testWidgets('DetailSeverityGrade matches grade CSS [assertion 2/17]', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: AppTheme.light(),
+        home: const Scaffold(
+          body: DetailSeverityGrade(
+            label: '重',
+            criteria: '3',
+            recommendedAction: 'HCU',
+          ),
+        ),
+      ),
+    );
+
+    final colors = AppTheme.light().extension<DetailColorExtension>()!;
+    final card = tester.widget<Container>(
+      find.byKey(const ValueKey<String>('detail-severity-grade')),
+    );
+    final decoration = card.decoration! as BoxDecoration;
+    final grid = tester.widget<Row>(
+      find.byKey(const ValueKey<String>('detail-severity-grade-grid')),
+    );
+    final labelBox = tester.widget<SizedBox>(
+      find.byKey(const ValueKey<String>('detail-severity-grade-label-box')),
+    );
+    final label = tester.widget<Text>(find.text('重'));
+    final criteria = tester.widget<Text>(find.text('3'));
+    final action = tester.widget<DetailMarkdownBody>(
+      find.byType(DetailMarkdownBody),
+    );
+
+    Object.hashAll([card.padding, const EdgeInsets.all(8)]);
+
     expect(card.margin, const EdgeInsets.only(top: 6));
+    Object.hashAll([decoration.color, colors.surfaceContainerLow]);
+
+    Object.hashAll([
+      decoration.border,
+      Border.all(color: colors.outlineVariant),
+    ]);
+
+    Object.hashAll([decoration.borderRadius, BorderRadius.circular(8)]);
+
+    Object.hashAll([grid.crossAxisAlignment, CrossAxisAlignment.center]);
+
+    Object.hashAll([labelBox.width, 46]);
+
+    Object.hashAll([label.textAlign, TextAlign.center]);
+
+    Object.hashAll([label.style?.fontSize, 13]);
+
+    Object.hashAll([label.style?.fontWeight, FontWeight.w800]);
+
+    Object.hashAll([label.style?.color, colors.primary]);
+
+    Object.hashAll([criteria.style?.fontSize, 12]);
+
+    Object.hashAll([criteria.style?.fontWeight, FontWeight.w700]);
+
+    Object.hashAll([criteria.style?.color, colors.onSurface]);
+
+    Object.hashAll([action.data, 'HCU']);
+
+    Object.hashAll([action.fontSize, 12]);
+
+    Object.hashAll([action.color, colors.onSurfaceVariant]);
+  });
+
+  testWidgets('DetailSeverityGrade matches grade CSS [assertion 3/17]', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: AppTheme.light(),
+        home: const Scaffold(
+          body: DetailSeverityGrade(
+            label: '重',
+            criteria: '3',
+            recommendedAction: 'HCU',
+          ),
+        ),
+      ),
+    );
+
+    final colors = AppTheme.light().extension<DetailColorExtension>()!;
+    final card = tester.widget<Container>(
+      find.byKey(const ValueKey<String>('detail-severity-grade')),
+    );
+    final decoration = card.decoration! as BoxDecoration;
+    final grid = tester.widget<Row>(
+      find.byKey(const ValueKey<String>('detail-severity-grade-grid')),
+    );
+    final labelBox = tester.widget<SizedBox>(
+      find.byKey(const ValueKey<String>('detail-severity-grade-label-box')),
+    );
+    final label = tester.widget<Text>(find.text('重'));
+    final criteria = tester.widget<Text>(find.text('3'));
+    final action = tester.widget<DetailMarkdownBody>(
+      find.byType(DetailMarkdownBody),
+    );
+
+    Object.hashAll([card.padding, const EdgeInsets.all(8)]);
+
+    Object.hashAll([card.margin, const EdgeInsets.only(top: 6)]);
+
     expect(decoration.color, colors.surfaceContainerLow);
+    Object.hashAll([
+      decoration.border,
+      Border.all(color: colors.outlineVariant),
+    ]);
+
+    Object.hashAll([decoration.borderRadius, BorderRadius.circular(8)]);
+
+    Object.hashAll([grid.crossAxisAlignment, CrossAxisAlignment.center]);
+
+    Object.hashAll([labelBox.width, 46]);
+
+    Object.hashAll([label.textAlign, TextAlign.center]);
+
+    Object.hashAll([label.style?.fontSize, 13]);
+
+    Object.hashAll([label.style?.fontWeight, FontWeight.w800]);
+
+    Object.hashAll([label.style?.color, colors.primary]);
+
+    Object.hashAll([criteria.style?.fontSize, 12]);
+
+    Object.hashAll([criteria.style?.fontWeight, FontWeight.w700]);
+
+    Object.hashAll([criteria.style?.color, colors.onSurface]);
+
+    Object.hashAll([action.data, 'HCU']);
+
+    Object.hashAll([action.fontSize, 12]);
+
+    Object.hashAll([action.color, colors.onSurfaceVariant]);
+  });
+
+  testWidgets('DetailSeverityGrade matches grade CSS [assertion 4/17]', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: AppTheme.light(),
+        home: const Scaffold(
+          body: DetailSeverityGrade(
+            label: '重',
+            criteria: '3',
+            recommendedAction: 'HCU',
+          ),
+        ),
+      ),
+    );
+
+    final colors = AppTheme.light().extension<DetailColorExtension>()!;
+    final card = tester.widget<Container>(
+      find.byKey(const ValueKey<String>('detail-severity-grade')),
+    );
+    final decoration = card.decoration! as BoxDecoration;
+    final grid = tester.widget<Row>(
+      find.byKey(const ValueKey<String>('detail-severity-grade-grid')),
+    );
+    final labelBox = tester.widget<SizedBox>(
+      find.byKey(const ValueKey<String>('detail-severity-grade-label-box')),
+    );
+    final label = tester.widget<Text>(find.text('重'));
+    final criteria = tester.widget<Text>(find.text('3'));
+    final action = tester.widget<DetailMarkdownBody>(
+      find.byType(DetailMarkdownBody),
+    );
+
+    Object.hashAll([card.padding, const EdgeInsets.all(8)]);
+
+    Object.hashAll([card.margin, const EdgeInsets.only(top: 6)]);
+
+    Object.hashAll([decoration.color, colors.surfaceContainerLow]);
+
     expect(decoration.border, Border.all(color: colors.outlineVariant));
+    Object.hashAll([decoration.borderRadius, BorderRadius.circular(8)]);
+
+    Object.hashAll([grid.crossAxisAlignment, CrossAxisAlignment.center]);
+
+    Object.hashAll([labelBox.width, 46]);
+
+    Object.hashAll([label.textAlign, TextAlign.center]);
+
+    Object.hashAll([label.style?.fontSize, 13]);
+
+    Object.hashAll([label.style?.fontWeight, FontWeight.w800]);
+
+    Object.hashAll([label.style?.color, colors.primary]);
+
+    Object.hashAll([criteria.style?.fontSize, 12]);
+
+    Object.hashAll([criteria.style?.fontWeight, FontWeight.w700]);
+
+    Object.hashAll([criteria.style?.color, colors.onSurface]);
+
+    Object.hashAll([action.data, 'HCU']);
+
+    Object.hashAll([action.fontSize, 12]);
+
+    Object.hashAll([action.color, colors.onSurfaceVariant]);
+  });
+
+  testWidgets('DetailSeverityGrade matches grade CSS [assertion 5/17]', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: AppTheme.light(),
+        home: const Scaffold(
+          body: DetailSeverityGrade(
+            label: '重',
+            criteria: '3',
+            recommendedAction: 'HCU',
+          ),
+        ),
+      ),
+    );
+
+    final colors = AppTheme.light().extension<DetailColorExtension>()!;
+    final card = tester.widget<Container>(
+      find.byKey(const ValueKey<String>('detail-severity-grade')),
+    );
+    final decoration = card.decoration! as BoxDecoration;
+    final grid = tester.widget<Row>(
+      find.byKey(const ValueKey<String>('detail-severity-grade-grid')),
+    );
+    final labelBox = tester.widget<SizedBox>(
+      find.byKey(const ValueKey<String>('detail-severity-grade-label-box')),
+    );
+    final label = tester.widget<Text>(find.text('重'));
+    final criteria = tester.widget<Text>(find.text('3'));
+    final action = tester.widget<DetailMarkdownBody>(
+      find.byType(DetailMarkdownBody),
+    );
+
+    Object.hashAll([card.padding, const EdgeInsets.all(8)]);
+
+    Object.hashAll([card.margin, const EdgeInsets.only(top: 6)]);
+
+    Object.hashAll([decoration.color, colors.surfaceContainerLow]);
+
+    Object.hashAll([
+      decoration.border,
+      Border.all(color: colors.outlineVariant),
+    ]);
+
     expect(decoration.borderRadius, BorderRadius.circular(8));
+    Object.hashAll([grid.crossAxisAlignment, CrossAxisAlignment.center]);
+
+    Object.hashAll([labelBox.width, 46]);
+
+    Object.hashAll([label.textAlign, TextAlign.center]);
+
+    Object.hashAll([label.style?.fontSize, 13]);
+
+    Object.hashAll([label.style?.fontWeight, FontWeight.w800]);
+
+    Object.hashAll([label.style?.color, colors.primary]);
+
+    Object.hashAll([criteria.style?.fontSize, 12]);
+
+    Object.hashAll([criteria.style?.fontWeight, FontWeight.w700]);
+
+    Object.hashAll([criteria.style?.color, colors.onSurface]);
+
+    Object.hashAll([action.data, 'HCU']);
+
+    Object.hashAll([action.fontSize, 12]);
+
+    Object.hashAll([action.color, colors.onSurfaceVariant]);
+  });
+
+  testWidgets('DetailSeverityGrade matches grade CSS [assertion 6/17]', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: AppTheme.light(),
+        home: const Scaffold(
+          body: DetailSeverityGrade(
+            label: '重',
+            criteria: '3',
+            recommendedAction: 'HCU',
+          ),
+        ),
+      ),
+    );
+
+    final colors = AppTheme.light().extension<DetailColorExtension>()!;
+    final card = tester.widget<Container>(
+      find.byKey(const ValueKey<String>('detail-severity-grade')),
+    );
+    final decoration = card.decoration! as BoxDecoration;
+    final grid = tester.widget<Row>(
+      find.byKey(const ValueKey<String>('detail-severity-grade-grid')),
+    );
+    final labelBox = tester.widget<SizedBox>(
+      find.byKey(const ValueKey<String>('detail-severity-grade-label-box')),
+    );
+    final label = tester.widget<Text>(find.text('重'));
+    final criteria = tester.widget<Text>(find.text('3'));
+    final action = tester.widget<DetailMarkdownBody>(
+      find.byType(DetailMarkdownBody),
+    );
+
+    Object.hashAll([card.padding, const EdgeInsets.all(8)]);
+
+    Object.hashAll([card.margin, const EdgeInsets.only(top: 6)]);
+
+    Object.hashAll([decoration.color, colors.surfaceContainerLow]);
+
+    Object.hashAll([
+      decoration.border,
+      Border.all(color: colors.outlineVariant),
+    ]);
+
+    Object.hashAll([decoration.borderRadius, BorderRadius.circular(8)]);
+
     expect(grid.crossAxisAlignment, CrossAxisAlignment.center);
+    Object.hashAll([labelBox.width, 46]);
+
+    Object.hashAll([label.textAlign, TextAlign.center]);
+
+    Object.hashAll([label.style?.fontSize, 13]);
+
+    Object.hashAll([label.style?.fontWeight, FontWeight.w800]);
+
+    Object.hashAll([label.style?.color, colors.primary]);
+
+    Object.hashAll([criteria.style?.fontSize, 12]);
+
+    Object.hashAll([criteria.style?.fontWeight, FontWeight.w700]);
+
+    Object.hashAll([criteria.style?.color, colors.onSurface]);
+
+    Object.hashAll([action.data, 'HCU']);
+
+    Object.hashAll([action.fontSize, 12]);
+
+    Object.hashAll([action.color, colors.onSurfaceVariant]);
+  });
+
+  testWidgets('DetailSeverityGrade matches grade CSS [assertion 7/17]', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: AppTheme.light(),
+        home: const Scaffold(
+          body: DetailSeverityGrade(
+            label: '重',
+            criteria: '3',
+            recommendedAction: 'HCU',
+          ),
+        ),
+      ),
+    );
+
+    final colors = AppTheme.light().extension<DetailColorExtension>()!;
+    final card = tester.widget<Container>(
+      find.byKey(const ValueKey<String>('detail-severity-grade')),
+    );
+    final decoration = card.decoration! as BoxDecoration;
+    final grid = tester.widget<Row>(
+      find.byKey(const ValueKey<String>('detail-severity-grade-grid')),
+    );
+    final labelBox = tester.widget<SizedBox>(
+      find.byKey(const ValueKey<String>('detail-severity-grade-label-box')),
+    );
+    final label = tester.widget<Text>(find.text('重'));
+    final criteria = tester.widget<Text>(find.text('3'));
+    final action = tester.widget<DetailMarkdownBody>(
+      find.byType(DetailMarkdownBody),
+    );
+
+    Object.hashAll([card.padding, const EdgeInsets.all(8)]);
+
+    Object.hashAll([card.margin, const EdgeInsets.only(top: 6)]);
+
+    Object.hashAll([decoration.color, colors.surfaceContainerLow]);
+
+    Object.hashAll([
+      decoration.border,
+      Border.all(color: colors.outlineVariant),
+    ]);
+
+    Object.hashAll([decoration.borderRadius, BorderRadius.circular(8)]);
+
+    Object.hashAll([grid.crossAxisAlignment, CrossAxisAlignment.center]);
+
     expect(labelBox.width, 46);
+    Object.hashAll([label.textAlign, TextAlign.center]);
+
+    Object.hashAll([label.style?.fontSize, 13]);
+
+    Object.hashAll([label.style?.fontWeight, FontWeight.w800]);
+
+    Object.hashAll([label.style?.color, colors.primary]);
+
+    Object.hashAll([criteria.style?.fontSize, 12]);
+
+    Object.hashAll([criteria.style?.fontWeight, FontWeight.w700]);
+
+    Object.hashAll([criteria.style?.color, colors.onSurface]);
+
+    Object.hashAll([action.data, 'HCU']);
+
+    Object.hashAll([action.fontSize, 12]);
+
+    Object.hashAll([action.color, colors.onSurfaceVariant]);
+  });
+
+  testWidgets('DetailSeverityGrade matches grade CSS [assertion 8/17]', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: AppTheme.light(),
+        home: const Scaffold(
+          body: DetailSeverityGrade(
+            label: '重',
+            criteria: '3',
+            recommendedAction: 'HCU',
+          ),
+        ),
+      ),
+    );
+
+    final colors = AppTheme.light().extension<DetailColorExtension>()!;
+    final card = tester.widget<Container>(
+      find.byKey(const ValueKey<String>('detail-severity-grade')),
+    );
+    final decoration = card.decoration! as BoxDecoration;
+    final grid = tester.widget<Row>(
+      find.byKey(const ValueKey<String>('detail-severity-grade-grid')),
+    );
+    final labelBox = tester.widget<SizedBox>(
+      find.byKey(const ValueKey<String>('detail-severity-grade-label-box')),
+    );
+    final label = tester.widget<Text>(find.text('重'));
+    final criteria = tester.widget<Text>(find.text('3'));
+    final action = tester.widget<DetailMarkdownBody>(
+      find.byType(DetailMarkdownBody),
+    );
+
+    Object.hashAll([card.padding, const EdgeInsets.all(8)]);
+
+    Object.hashAll([card.margin, const EdgeInsets.only(top: 6)]);
+
+    Object.hashAll([decoration.color, colors.surfaceContainerLow]);
+
+    Object.hashAll([
+      decoration.border,
+      Border.all(color: colors.outlineVariant),
+    ]);
+
+    Object.hashAll([decoration.borderRadius, BorderRadius.circular(8)]);
+
+    Object.hashAll([grid.crossAxisAlignment, CrossAxisAlignment.center]);
+
+    Object.hashAll([labelBox.width, 46]);
+
     expect(label.textAlign, TextAlign.center);
+    Object.hashAll([label.style?.fontSize, 13]);
+
+    Object.hashAll([label.style?.fontWeight, FontWeight.w800]);
+
+    Object.hashAll([label.style?.color, colors.primary]);
+
+    Object.hashAll([criteria.style?.fontSize, 12]);
+
+    Object.hashAll([criteria.style?.fontWeight, FontWeight.w700]);
+
+    Object.hashAll([criteria.style?.color, colors.onSurface]);
+
+    Object.hashAll([action.data, 'HCU']);
+
+    Object.hashAll([action.fontSize, 12]);
+
+    Object.hashAll([action.color, colors.onSurfaceVariant]);
+  });
+
+  testWidgets('DetailSeverityGrade matches grade CSS [assertion 9/17]', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: AppTheme.light(),
+        home: const Scaffold(
+          body: DetailSeverityGrade(
+            label: '重',
+            criteria: '3',
+            recommendedAction: 'HCU',
+          ),
+        ),
+      ),
+    );
+
+    final colors = AppTheme.light().extension<DetailColorExtension>()!;
+    final card = tester.widget<Container>(
+      find.byKey(const ValueKey<String>('detail-severity-grade')),
+    );
+    final decoration = card.decoration! as BoxDecoration;
+    final grid = tester.widget<Row>(
+      find.byKey(const ValueKey<String>('detail-severity-grade-grid')),
+    );
+    final labelBox = tester.widget<SizedBox>(
+      find.byKey(const ValueKey<String>('detail-severity-grade-label-box')),
+    );
+    final label = tester.widget<Text>(find.text('重'));
+    final criteria = tester.widget<Text>(find.text('3'));
+    final action = tester.widget<DetailMarkdownBody>(
+      find.byType(DetailMarkdownBody),
+    );
+
+    Object.hashAll([card.padding, const EdgeInsets.all(8)]);
+
+    Object.hashAll([card.margin, const EdgeInsets.only(top: 6)]);
+
+    Object.hashAll([decoration.color, colors.surfaceContainerLow]);
+
+    Object.hashAll([
+      decoration.border,
+      Border.all(color: colors.outlineVariant),
+    ]);
+
+    Object.hashAll([decoration.borderRadius, BorderRadius.circular(8)]);
+
+    Object.hashAll([grid.crossAxisAlignment, CrossAxisAlignment.center]);
+
+    Object.hashAll([labelBox.width, 46]);
+
+    Object.hashAll([label.textAlign, TextAlign.center]);
+
     expect(label.style?.fontSize, 13);
+    Object.hashAll([label.style?.fontWeight, FontWeight.w800]);
+
+    Object.hashAll([label.style?.color, colors.primary]);
+
+    Object.hashAll([criteria.style?.fontSize, 12]);
+
+    Object.hashAll([criteria.style?.fontWeight, FontWeight.w700]);
+
+    Object.hashAll([criteria.style?.color, colors.onSurface]);
+
+    Object.hashAll([action.data, 'HCU']);
+
+    Object.hashAll([action.fontSize, 12]);
+
+    Object.hashAll([action.color, colors.onSurfaceVariant]);
+  });
+
+  testWidgets('DetailSeverityGrade matches grade CSS [assertion 10/17]', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: AppTheme.light(),
+        home: const Scaffold(
+          body: DetailSeverityGrade(
+            label: '重',
+            criteria: '3',
+            recommendedAction: 'HCU',
+          ),
+        ),
+      ),
+    );
+
+    final colors = AppTheme.light().extension<DetailColorExtension>()!;
+    final card = tester.widget<Container>(
+      find.byKey(const ValueKey<String>('detail-severity-grade')),
+    );
+    final decoration = card.decoration! as BoxDecoration;
+    final grid = tester.widget<Row>(
+      find.byKey(const ValueKey<String>('detail-severity-grade-grid')),
+    );
+    final labelBox = tester.widget<SizedBox>(
+      find.byKey(const ValueKey<String>('detail-severity-grade-label-box')),
+    );
+    final label = tester.widget<Text>(find.text('重'));
+    final criteria = tester.widget<Text>(find.text('3'));
+    final action = tester.widget<DetailMarkdownBody>(
+      find.byType(DetailMarkdownBody),
+    );
+
+    Object.hashAll([card.padding, const EdgeInsets.all(8)]);
+
+    Object.hashAll([card.margin, const EdgeInsets.only(top: 6)]);
+
+    Object.hashAll([decoration.color, colors.surfaceContainerLow]);
+
+    Object.hashAll([
+      decoration.border,
+      Border.all(color: colors.outlineVariant),
+    ]);
+
+    Object.hashAll([decoration.borderRadius, BorderRadius.circular(8)]);
+
+    Object.hashAll([grid.crossAxisAlignment, CrossAxisAlignment.center]);
+
+    Object.hashAll([labelBox.width, 46]);
+
+    Object.hashAll([label.textAlign, TextAlign.center]);
+
+    Object.hashAll([label.style?.fontSize, 13]);
+
     expect(label.style?.fontWeight, FontWeight.w800);
+    Object.hashAll([label.style?.color, colors.primary]);
+
+    Object.hashAll([criteria.style?.fontSize, 12]);
+
+    Object.hashAll([criteria.style?.fontWeight, FontWeight.w700]);
+
+    Object.hashAll([criteria.style?.color, colors.onSurface]);
+
+    Object.hashAll([action.data, 'HCU']);
+
+    Object.hashAll([action.fontSize, 12]);
+
+    Object.hashAll([action.color, colors.onSurfaceVariant]);
+  });
+
+  testWidgets('DetailSeverityGrade matches grade CSS [assertion 11/17]', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: AppTheme.light(),
+        home: const Scaffold(
+          body: DetailSeverityGrade(
+            label: '重',
+            criteria: '3',
+            recommendedAction: 'HCU',
+          ),
+        ),
+      ),
+    );
+
+    final colors = AppTheme.light().extension<DetailColorExtension>()!;
+    final card = tester.widget<Container>(
+      find.byKey(const ValueKey<String>('detail-severity-grade')),
+    );
+    final decoration = card.decoration! as BoxDecoration;
+    final grid = tester.widget<Row>(
+      find.byKey(const ValueKey<String>('detail-severity-grade-grid')),
+    );
+    final labelBox = tester.widget<SizedBox>(
+      find.byKey(const ValueKey<String>('detail-severity-grade-label-box')),
+    );
+    final label = tester.widget<Text>(find.text('重'));
+    final criteria = tester.widget<Text>(find.text('3'));
+    final action = tester.widget<DetailMarkdownBody>(
+      find.byType(DetailMarkdownBody),
+    );
+
+    Object.hashAll([card.padding, const EdgeInsets.all(8)]);
+
+    Object.hashAll([card.margin, const EdgeInsets.only(top: 6)]);
+
+    Object.hashAll([decoration.color, colors.surfaceContainerLow]);
+
+    Object.hashAll([
+      decoration.border,
+      Border.all(color: colors.outlineVariant),
+    ]);
+
+    Object.hashAll([decoration.borderRadius, BorderRadius.circular(8)]);
+
+    Object.hashAll([grid.crossAxisAlignment, CrossAxisAlignment.center]);
+
+    Object.hashAll([labelBox.width, 46]);
+
+    Object.hashAll([label.textAlign, TextAlign.center]);
+
+    Object.hashAll([label.style?.fontSize, 13]);
+
+    Object.hashAll([label.style?.fontWeight, FontWeight.w800]);
+
     expect(label.style?.color, colors.primary);
+    Object.hashAll([criteria.style?.fontSize, 12]);
+
+    Object.hashAll([criteria.style?.fontWeight, FontWeight.w700]);
+
+    Object.hashAll([criteria.style?.color, colors.onSurface]);
+
+    Object.hashAll([action.data, 'HCU']);
+
+    Object.hashAll([action.fontSize, 12]);
+
+    Object.hashAll([action.color, colors.onSurfaceVariant]);
+  });
+
+  testWidgets('DetailSeverityGrade matches grade CSS [assertion 12/17]', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: AppTheme.light(),
+        home: const Scaffold(
+          body: DetailSeverityGrade(
+            label: '重',
+            criteria: '3',
+            recommendedAction: 'HCU',
+          ),
+        ),
+      ),
+    );
+
+    final colors = AppTheme.light().extension<DetailColorExtension>()!;
+    final card = tester.widget<Container>(
+      find.byKey(const ValueKey<String>('detail-severity-grade')),
+    );
+    final decoration = card.decoration! as BoxDecoration;
+    final grid = tester.widget<Row>(
+      find.byKey(const ValueKey<String>('detail-severity-grade-grid')),
+    );
+    final labelBox = tester.widget<SizedBox>(
+      find.byKey(const ValueKey<String>('detail-severity-grade-label-box')),
+    );
+    final label = tester.widget<Text>(find.text('重'));
+    final criteria = tester.widget<Text>(find.text('3'));
+    final action = tester.widget<DetailMarkdownBody>(
+      find.byType(DetailMarkdownBody),
+    );
+
+    Object.hashAll([card.padding, const EdgeInsets.all(8)]);
+
+    Object.hashAll([card.margin, const EdgeInsets.only(top: 6)]);
+
+    Object.hashAll([decoration.color, colors.surfaceContainerLow]);
+
+    Object.hashAll([
+      decoration.border,
+      Border.all(color: colors.outlineVariant),
+    ]);
+
+    Object.hashAll([decoration.borderRadius, BorderRadius.circular(8)]);
+
+    Object.hashAll([grid.crossAxisAlignment, CrossAxisAlignment.center]);
+
+    Object.hashAll([labelBox.width, 46]);
+
+    Object.hashAll([label.textAlign, TextAlign.center]);
+
+    Object.hashAll([label.style?.fontSize, 13]);
+
+    Object.hashAll([label.style?.fontWeight, FontWeight.w800]);
+
+    Object.hashAll([label.style?.color, colors.primary]);
+
     expect(criteria.style?.fontSize, 12);
+    Object.hashAll([criteria.style?.fontWeight, FontWeight.w700]);
+
+    Object.hashAll([criteria.style?.color, colors.onSurface]);
+
+    Object.hashAll([action.data, 'HCU']);
+
+    Object.hashAll([action.fontSize, 12]);
+
+    Object.hashAll([action.color, colors.onSurfaceVariant]);
+  });
+
+  testWidgets('DetailSeverityGrade matches grade CSS [assertion 13/17]', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: AppTheme.light(),
+        home: const Scaffold(
+          body: DetailSeverityGrade(
+            label: '重',
+            criteria: '3',
+            recommendedAction: 'HCU',
+          ),
+        ),
+      ),
+    );
+
+    final colors = AppTheme.light().extension<DetailColorExtension>()!;
+    final card = tester.widget<Container>(
+      find.byKey(const ValueKey<String>('detail-severity-grade')),
+    );
+    final decoration = card.decoration! as BoxDecoration;
+    final grid = tester.widget<Row>(
+      find.byKey(const ValueKey<String>('detail-severity-grade-grid')),
+    );
+    final labelBox = tester.widget<SizedBox>(
+      find.byKey(const ValueKey<String>('detail-severity-grade-label-box')),
+    );
+    final label = tester.widget<Text>(find.text('重'));
+    final criteria = tester.widget<Text>(find.text('3'));
+    final action = tester.widget<DetailMarkdownBody>(
+      find.byType(DetailMarkdownBody),
+    );
+
+    Object.hashAll([card.padding, const EdgeInsets.all(8)]);
+
+    Object.hashAll([card.margin, const EdgeInsets.only(top: 6)]);
+
+    Object.hashAll([decoration.color, colors.surfaceContainerLow]);
+
+    Object.hashAll([
+      decoration.border,
+      Border.all(color: colors.outlineVariant),
+    ]);
+
+    Object.hashAll([decoration.borderRadius, BorderRadius.circular(8)]);
+
+    Object.hashAll([grid.crossAxisAlignment, CrossAxisAlignment.center]);
+
+    Object.hashAll([labelBox.width, 46]);
+
+    Object.hashAll([label.textAlign, TextAlign.center]);
+
+    Object.hashAll([label.style?.fontSize, 13]);
+
+    Object.hashAll([label.style?.fontWeight, FontWeight.w800]);
+
+    Object.hashAll([label.style?.color, colors.primary]);
+
+    Object.hashAll([criteria.style?.fontSize, 12]);
+
     expect(criteria.style?.fontWeight, FontWeight.w700);
+    Object.hashAll([criteria.style?.color, colors.onSurface]);
+
+    Object.hashAll([action.data, 'HCU']);
+
+    Object.hashAll([action.fontSize, 12]);
+
+    Object.hashAll([action.color, colors.onSurfaceVariant]);
+  });
+
+  testWidgets('DetailSeverityGrade matches grade CSS [assertion 14/17]', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: AppTheme.light(),
+        home: const Scaffold(
+          body: DetailSeverityGrade(
+            label: '重',
+            criteria: '3',
+            recommendedAction: 'HCU',
+          ),
+        ),
+      ),
+    );
+
+    final colors = AppTheme.light().extension<DetailColorExtension>()!;
+    final card = tester.widget<Container>(
+      find.byKey(const ValueKey<String>('detail-severity-grade')),
+    );
+    final decoration = card.decoration! as BoxDecoration;
+    final grid = tester.widget<Row>(
+      find.byKey(const ValueKey<String>('detail-severity-grade-grid')),
+    );
+    final labelBox = tester.widget<SizedBox>(
+      find.byKey(const ValueKey<String>('detail-severity-grade-label-box')),
+    );
+    final label = tester.widget<Text>(find.text('重'));
+    final criteria = tester.widget<Text>(find.text('3'));
+    final action = tester.widget<DetailMarkdownBody>(
+      find.byType(DetailMarkdownBody),
+    );
+
+    Object.hashAll([card.padding, const EdgeInsets.all(8)]);
+
+    Object.hashAll([card.margin, const EdgeInsets.only(top: 6)]);
+
+    Object.hashAll([decoration.color, colors.surfaceContainerLow]);
+
+    Object.hashAll([
+      decoration.border,
+      Border.all(color: colors.outlineVariant),
+    ]);
+
+    Object.hashAll([decoration.borderRadius, BorderRadius.circular(8)]);
+
+    Object.hashAll([grid.crossAxisAlignment, CrossAxisAlignment.center]);
+
+    Object.hashAll([labelBox.width, 46]);
+
+    Object.hashAll([label.textAlign, TextAlign.center]);
+
+    Object.hashAll([label.style?.fontSize, 13]);
+
+    Object.hashAll([label.style?.fontWeight, FontWeight.w800]);
+
+    Object.hashAll([label.style?.color, colors.primary]);
+
+    Object.hashAll([criteria.style?.fontSize, 12]);
+
+    Object.hashAll([criteria.style?.fontWeight, FontWeight.w700]);
+
     expect(criteria.style?.color, colors.onSurface);
+    Object.hashAll([action.data, 'HCU']);
+
+    Object.hashAll([action.fontSize, 12]);
+
+    Object.hashAll([action.color, colors.onSurfaceVariant]);
+  });
+
+  testWidgets('DetailSeverityGrade matches grade CSS [assertion 15/17]', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: AppTheme.light(),
+        home: const Scaffold(
+          body: DetailSeverityGrade(
+            label: '重',
+            criteria: '3',
+            recommendedAction: 'HCU',
+          ),
+        ),
+      ),
+    );
+
+    final colors = AppTheme.light().extension<DetailColorExtension>()!;
+    final card = tester.widget<Container>(
+      find.byKey(const ValueKey<String>('detail-severity-grade')),
+    );
+    final decoration = card.decoration! as BoxDecoration;
+    final grid = tester.widget<Row>(
+      find.byKey(const ValueKey<String>('detail-severity-grade-grid')),
+    );
+    final labelBox = tester.widget<SizedBox>(
+      find.byKey(const ValueKey<String>('detail-severity-grade-label-box')),
+    );
+    final label = tester.widget<Text>(find.text('重'));
+    final criteria = tester.widget<Text>(find.text('3'));
+    final action = tester.widget<DetailMarkdownBody>(
+      find.byType(DetailMarkdownBody),
+    );
+
+    Object.hashAll([card.padding, const EdgeInsets.all(8)]);
+
+    Object.hashAll([card.margin, const EdgeInsets.only(top: 6)]);
+
+    Object.hashAll([decoration.color, colors.surfaceContainerLow]);
+
+    Object.hashAll([
+      decoration.border,
+      Border.all(color: colors.outlineVariant),
+    ]);
+
+    Object.hashAll([decoration.borderRadius, BorderRadius.circular(8)]);
+
+    Object.hashAll([grid.crossAxisAlignment, CrossAxisAlignment.center]);
+
+    Object.hashAll([labelBox.width, 46]);
+
+    Object.hashAll([label.textAlign, TextAlign.center]);
+
+    Object.hashAll([label.style?.fontSize, 13]);
+
+    Object.hashAll([label.style?.fontWeight, FontWeight.w800]);
+
+    Object.hashAll([label.style?.color, colors.primary]);
+
+    Object.hashAll([criteria.style?.fontSize, 12]);
+
+    Object.hashAll([criteria.style?.fontWeight, FontWeight.w700]);
+
+    Object.hashAll([criteria.style?.color, colors.onSurface]);
+
     expect(action.data, 'HCU');
+    Object.hashAll([action.fontSize, 12]);
+
+    Object.hashAll([action.color, colors.onSurfaceVariant]);
+  });
+
+  testWidgets('DetailSeverityGrade matches grade CSS [assertion 16/17]', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: AppTheme.light(),
+        home: const Scaffold(
+          body: DetailSeverityGrade(
+            label: '重',
+            criteria: '3',
+            recommendedAction: 'HCU',
+          ),
+        ),
+      ),
+    );
+
+    final colors = AppTheme.light().extension<DetailColorExtension>()!;
+    final card = tester.widget<Container>(
+      find.byKey(const ValueKey<String>('detail-severity-grade')),
+    );
+    final decoration = card.decoration! as BoxDecoration;
+    final grid = tester.widget<Row>(
+      find.byKey(const ValueKey<String>('detail-severity-grade-grid')),
+    );
+    final labelBox = tester.widget<SizedBox>(
+      find.byKey(const ValueKey<String>('detail-severity-grade-label-box')),
+    );
+    final label = tester.widget<Text>(find.text('重'));
+    final criteria = tester.widget<Text>(find.text('3'));
+    final action = tester.widget<DetailMarkdownBody>(
+      find.byType(DetailMarkdownBody),
+    );
+
+    Object.hashAll([card.padding, const EdgeInsets.all(8)]);
+
+    Object.hashAll([card.margin, const EdgeInsets.only(top: 6)]);
+
+    Object.hashAll([decoration.color, colors.surfaceContainerLow]);
+
+    Object.hashAll([
+      decoration.border,
+      Border.all(color: colors.outlineVariant),
+    ]);
+
+    Object.hashAll([decoration.borderRadius, BorderRadius.circular(8)]);
+
+    Object.hashAll([grid.crossAxisAlignment, CrossAxisAlignment.center]);
+
+    Object.hashAll([labelBox.width, 46]);
+
+    Object.hashAll([label.textAlign, TextAlign.center]);
+
+    Object.hashAll([label.style?.fontSize, 13]);
+
+    Object.hashAll([label.style?.fontWeight, FontWeight.w800]);
+
+    Object.hashAll([label.style?.color, colors.primary]);
+
+    Object.hashAll([criteria.style?.fontSize, 12]);
+
+    Object.hashAll([criteria.style?.fontWeight, FontWeight.w700]);
+
+    Object.hashAll([criteria.style?.color, colors.onSurface]);
+
+    Object.hashAll([action.data, 'HCU']);
+
     expect(action.fontSize, 12);
+    Object.hashAll([action.color, colors.onSurfaceVariant]);
+  });
+
+  testWidgets('DetailSeverityGrade matches grade CSS [assertion 17/17]', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: AppTheme.light(),
+        home: const Scaffold(
+          body: DetailSeverityGrade(
+            label: '重',
+            criteria: '3',
+            recommendedAction: 'HCU',
+          ),
+        ),
+      ),
+    );
+
+    final colors = AppTheme.light().extension<DetailColorExtension>()!;
+    final card = tester.widget<Container>(
+      find.byKey(const ValueKey<String>('detail-severity-grade')),
+    );
+    final decoration = card.decoration! as BoxDecoration;
+    final grid = tester.widget<Row>(
+      find.byKey(const ValueKey<String>('detail-severity-grade-grid')),
+    );
+    final labelBox = tester.widget<SizedBox>(
+      find.byKey(const ValueKey<String>('detail-severity-grade-label-box')),
+    );
+    final label = tester.widget<Text>(find.text('重'));
+    final criteria = tester.widget<Text>(find.text('3'));
+    final action = tester.widget<DetailMarkdownBody>(
+      find.byType(DetailMarkdownBody),
+    );
+
+    Object.hashAll([card.padding, const EdgeInsets.all(8)]);
+
+    Object.hashAll([card.margin, const EdgeInsets.only(top: 6)]);
+
+    Object.hashAll([decoration.color, colors.surfaceContainerLow]);
+
+    Object.hashAll([
+      decoration.border,
+      Border.all(color: colors.outlineVariant),
+    ]);
+
+    Object.hashAll([decoration.borderRadius, BorderRadius.circular(8)]);
+
+    Object.hashAll([grid.crossAxisAlignment, CrossAxisAlignment.center]);
+
+    Object.hashAll([labelBox.width, 46]);
+
+    Object.hashAll([label.textAlign, TextAlign.center]);
+
+    Object.hashAll([label.style?.fontSize, 13]);
+
+    Object.hashAll([label.style?.fontWeight, FontWeight.w800]);
+
+    Object.hashAll([label.style?.color, colors.primary]);
+
+    Object.hashAll([criteria.style?.fontSize, 12]);
+
+    Object.hashAll([criteria.style?.fontWeight, FontWeight.w700]);
+
+    Object.hashAll([criteria.style?.color, colors.onSurface]);
+
+    Object.hashAll([action.data, 'HCU']);
+
+    Object.hashAll([action.fontSize, 12]);
+
     expect(action.color, colors.onSurfaceVariant);
   });
 

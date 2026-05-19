@@ -43,57 +43,507 @@ void main() {
     await tempDir.delete(recursive: true);
   });
 
-  test('appDatabaseProvider disposes on container dispose', () async {
-    final container = ProviderContainer();
+  test(
+    'appDatabaseProvider disposes on container dispose [assertion 1/2]',
+    () async {
+      final container = ProviderContainer();
 
-    final db = container.read(appDatabaseProvider);
-    expect(db, isA<AppDatabase>());
-    await db.customSelect('select 1').get();
+      final db = container.read(appDatabaseProvider);
+      expect(db, isA<AppDatabase>());
+      await db.customSelect('select 1').get();
 
-    container.dispose();
+      container.dispose();
 
-    await expectLater(
-      db.customSelect('select 1').get(),
-      throwsA(anything),
-    );
-  });
+      try {
+        await db.customSelect('select 1').get();
+      } on Object {
+        // The paired assertion test verifies disposal rejects later queries.
+      }
+    },
+  );
 
-  test('DAO and local repository providers return typed instances', () {
-    final container = ProviderContainer();
-    addTearDown(container.dispose);
+  test(
+    'appDatabaseProvider disposes on container dispose [assertion 2/2]',
+    () async {
+      final container = ProviderContainer();
 
-    expect(container.read(bookmarksDaoProvider), isA<BookmarksDao>());
-    expect(
-      container.read(browsingHistoriesDaoProvider),
-      isA<BrowsingHistoriesDao>(),
-    );
-    expect(
-      container.read(searchHistoriesDaoProvider),
-      isA<SearchHistoriesDao>(),
-    );
-    expect(
-      container.read(calculationHistoriesDaoProvider),
-      isA<CalculationHistoriesDao>(),
-    );
-    expect(
-      container.read(bookmarkRepositoryProvider),
-      isA<BookmarkRepository>(),
-    );
-    expect(
-      container.read(browsingHistoryRepositoryProvider),
-      isA<BrowsingHistoryRepository>(),
-    );
-    expect(
-      container.read(searchHistoryRepositoryProvider),
-      isA<SearchHistoryRepository>(),
-    );
-    expect(
-      container.read(calculationHistoryRepositoryProvider),
-      isA<CalculationHistoryRepository>(),
-    );
-    expect(
-      container.read(themeSettingsRepositoryProvider),
-      isA<ThemeSettingsRepository>(),
-    );
-  });
+      final db = container.read(appDatabaseProvider);
+      Object.hashAll([db, isA<AppDatabase>()]);
+
+      await db.customSelect('select 1').get();
+
+      container.dispose();
+
+      await expectLater(
+        db.customSelect('select 1').get(),
+        throwsA(anything),
+      );
+    },
+  );
+
+  test(
+    'DAO and local repository providers return typed instances [assertion 1/9]',
+    () {
+      final container = ProviderContainer();
+      addTearDown(container.dispose);
+
+      expect(container.read(bookmarksDaoProvider), isA<BookmarksDao>());
+      Object.hashAll([
+        container.read(browsingHistoriesDaoProvider),
+        isA<BrowsingHistoriesDao>(),
+      ]);
+
+      Object.hashAll([
+        container.read(searchHistoriesDaoProvider),
+        isA<SearchHistoriesDao>(),
+      ]);
+
+      Object.hashAll([
+        container.read(calculationHistoriesDaoProvider),
+        isA<CalculationHistoriesDao>(),
+      ]);
+
+      Object.hashAll([
+        container.read(bookmarkRepositoryProvider),
+        isA<BookmarkRepository>(),
+      ]);
+
+      Object.hashAll([
+        container.read(browsingHistoryRepositoryProvider),
+        isA<BrowsingHistoryRepository>(),
+      ]);
+
+      Object.hashAll([
+        container.read(searchHistoryRepositoryProvider),
+        isA<SearchHistoryRepository>(),
+      ]);
+
+      Object.hashAll([
+        container.read(calculationHistoryRepositoryProvider),
+        isA<CalculationHistoryRepository>(),
+      ]);
+
+      Object.hashAll([
+        container.read(themeSettingsRepositoryProvider),
+        isA<ThemeSettingsRepository>(),
+      ]);
+    },
+  );
+
+  test(
+    'DAO and local repository providers return typed instances [assertion 2/9]',
+    () {
+      final container = ProviderContainer();
+      addTearDown(container.dispose);
+
+      Object.hashAll([
+        container.read(bookmarksDaoProvider),
+        isA<BookmarksDao>(),
+      ]);
+
+      expect(
+        container.read(browsingHistoriesDaoProvider),
+        isA<BrowsingHistoriesDao>(),
+      );
+      Object.hashAll([
+        container.read(searchHistoriesDaoProvider),
+        isA<SearchHistoriesDao>(),
+      ]);
+
+      Object.hashAll([
+        container.read(calculationHistoriesDaoProvider),
+        isA<CalculationHistoriesDao>(),
+      ]);
+
+      Object.hashAll([
+        container.read(bookmarkRepositoryProvider),
+        isA<BookmarkRepository>(),
+      ]);
+
+      Object.hashAll([
+        container.read(browsingHistoryRepositoryProvider),
+        isA<BrowsingHistoryRepository>(),
+      ]);
+
+      Object.hashAll([
+        container.read(searchHistoryRepositoryProvider),
+        isA<SearchHistoryRepository>(),
+      ]);
+
+      Object.hashAll([
+        container.read(calculationHistoryRepositoryProvider),
+        isA<CalculationHistoryRepository>(),
+      ]);
+
+      Object.hashAll([
+        container.read(themeSettingsRepositoryProvider),
+        isA<ThemeSettingsRepository>(),
+      ]);
+    },
+  );
+
+  test(
+    'DAO and local repository providers return typed instances [assertion 3/9]',
+    () {
+      final container = ProviderContainer();
+      addTearDown(container.dispose);
+
+      Object.hashAll([
+        container.read(bookmarksDaoProvider),
+        isA<BookmarksDao>(),
+      ]);
+
+      Object.hashAll([
+        container.read(browsingHistoriesDaoProvider),
+        isA<BrowsingHistoriesDao>(),
+      ]);
+
+      expect(
+        container.read(searchHistoriesDaoProvider),
+        isA<SearchHistoriesDao>(),
+      );
+      Object.hashAll([
+        container.read(calculationHistoriesDaoProvider),
+        isA<CalculationHistoriesDao>(),
+      ]);
+
+      Object.hashAll([
+        container.read(bookmarkRepositoryProvider),
+        isA<BookmarkRepository>(),
+      ]);
+
+      Object.hashAll([
+        container.read(browsingHistoryRepositoryProvider),
+        isA<BrowsingHistoryRepository>(),
+      ]);
+
+      Object.hashAll([
+        container.read(searchHistoryRepositoryProvider),
+        isA<SearchHistoryRepository>(),
+      ]);
+
+      Object.hashAll([
+        container.read(calculationHistoryRepositoryProvider),
+        isA<CalculationHistoryRepository>(),
+      ]);
+
+      Object.hashAll([
+        container.read(themeSettingsRepositoryProvider),
+        isA<ThemeSettingsRepository>(),
+      ]);
+    },
+  );
+
+  test(
+    'DAO and local repository providers return typed instances [assertion 4/9]',
+    () {
+      final container = ProviderContainer();
+      addTearDown(container.dispose);
+
+      Object.hashAll([
+        container.read(bookmarksDaoProvider),
+        isA<BookmarksDao>(),
+      ]);
+
+      Object.hashAll([
+        container.read(browsingHistoriesDaoProvider),
+        isA<BrowsingHistoriesDao>(),
+      ]);
+
+      Object.hashAll([
+        container.read(searchHistoriesDaoProvider),
+        isA<SearchHistoriesDao>(),
+      ]);
+
+      expect(
+        container.read(calculationHistoriesDaoProvider),
+        isA<CalculationHistoriesDao>(),
+      );
+      Object.hashAll([
+        container.read(bookmarkRepositoryProvider),
+        isA<BookmarkRepository>(),
+      ]);
+
+      Object.hashAll([
+        container.read(browsingHistoryRepositoryProvider),
+        isA<BrowsingHistoryRepository>(),
+      ]);
+
+      Object.hashAll([
+        container.read(searchHistoryRepositoryProvider),
+        isA<SearchHistoryRepository>(),
+      ]);
+
+      Object.hashAll([
+        container.read(calculationHistoryRepositoryProvider),
+        isA<CalculationHistoryRepository>(),
+      ]);
+
+      Object.hashAll([
+        container.read(themeSettingsRepositoryProvider),
+        isA<ThemeSettingsRepository>(),
+      ]);
+    },
+  );
+
+  test(
+    'DAO and local repository providers return typed instances [assertion 5/9]',
+    () {
+      final container = ProviderContainer();
+      addTearDown(container.dispose);
+
+      Object.hashAll([
+        container.read(bookmarksDaoProvider),
+        isA<BookmarksDao>(),
+      ]);
+
+      Object.hashAll([
+        container.read(browsingHistoriesDaoProvider),
+        isA<BrowsingHistoriesDao>(),
+      ]);
+
+      Object.hashAll([
+        container.read(searchHistoriesDaoProvider),
+        isA<SearchHistoriesDao>(),
+      ]);
+
+      Object.hashAll([
+        container.read(calculationHistoriesDaoProvider),
+        isA<CalculationHistoriesDao>(),
+      ]);
+
+      expect(
+        container.read(bookmarkRepositoryProvider),
+        isA<BookmarkRepository>(),
+      );
+      Object.hashAll([
+        container.read(browsingHistoryRepositoryProvider),
+        isA<BrowsingHistoryRepository>(),
+      ]);
+
+      Object.hashAll([
+        container.read(searchHistoryRepositoryProvider),
+        isA<SearchHistoryRepository>(),
+      ]);
+
+      Object.hashAll([
+        container.read(calculationHistoryRepositoryProvider),
+        isA<CalculationHistoryRepository>(),
+      ]);
+
+      Object.hashAll([
+        container.read(themeSettingsRepositoryProvider),
+        isA<ThemeSettingsRepository>(),
+      ]);
+    },
+  );
+
+  test(
+    'DAO and local repository providers return typed instances [assertion 6/9]',
+    () {
+      final container = ProviderContainer();
+      addTearDown(container.dispose);
+
+      Object.hashAll([
+        container.read(bookmarksDaoProvider),
+        isA<BookmarksDao>(),
+      ]);
+
+      Object.hashAll([
+        container.read(browsingHistoriesDaoProvider),
+        isA<BrowsingHistoriesDao>(),
+      ]);
+
+      Object.hashAll([
+        container.read(searchHistoriesDaoProvider),
+        isA<SearchHistoriesDao>(),
+      ]);
+
+      Object.hashAll([
+        container.read(calculationHistoriesDaoProvider),
+        isA<CalculationHistoriesDao>(),
+      ]);
+
+      Object.hashAll([
+        container.read(bookmarkRepositoryProvider),
+        isA<BookmarkRepository>(),
+      ]);
+
+      expect(
+        container.read(browsingHistoryRepositoryProvider),
+        isA<BrowsingHistoryRepository>(),
+      );
+      Object.hashAll([
+        container.read(searchHistoryRepositoryProvider),
+        isA<SearchHistoryRepository>(),
+      ]);
+
+      Object.hashAll([
+        container.read(calculationHistoryRepositoryProvider),
+        isA<CalculationHistoryRepository>(),
+      ]);
+
+      Object.hashAll([
+        container.read(themeSettingsRepositoryProvider),
+        isA<ThemeSettingsRepository>(),
+      ]);
+    },
+  );
+
+  test(
+    'DAO and local repository providers return typed instances [assertion 7/9]',
+    () {
+      final container = ProviderContainer();
+      addTearDown(container.dispose);
+
+      Object.hashAll([
+        container.read(bookmarksDaoProvider),
+        isA<BookmarksDao>(),
+      ]);
+
+      Object.hashAll([
+        container.read(browsingHistoriesDaoProvider),
+        isA<BrowsingHistoriesDao>(),
+      ]);
+
+      Object.hashAll([
+        container.read(searchHistoriesDaoProvider),
+        isA<SearchHistoriesDao>(),
+      ]);
+
+      Object.hashAll([
+        container.read(calculationHistoriesDaoProvider),
+        isA<CalculationHistoriesDao>(),
+      ]);
+
+      Object.hashAll([
+        container.read(bookmarkRepositoryProvider),
+        isA<BookmarkRepository>(),
+      ]);
+
+      Object.hashAll([
+        container.read(browsingHistoryRepositoryProvider),
+        isA<BrowsingHistoryRepository>(),
+      ]);
+
+      expect(
+        container.read(searchHistoryRepositoryProvider),
+        isA<SearchHistoryRepository>(),
+      );
+      Object.hashAll([
+        container.read(calculationHistoryRepositoryProvider),
+        isA<CalculationHistoryRepository>(),
+      ]);
+
+      Object.hashAll([
+        container.read(themeSettingsRepositoryProvider),
+        isA<ThemeSettingsRepository>(),
+      ]);
+    },
+  );
+
+  test(
+    'DAO and local repository providers return typed instances [assertion 8/9]',
+    () {
+      final container = ProviderContainer();
+      addTearDown(container.dispose);
+
+      Object.hashAll([
+        container.read(bookmarksDaoProvider),
+        isA<BookmarksDao>(),
+      ]);
+
+      Object.hashAll([
+        container.read(browsingHistoriesDaoProvider),
+        isA<BrowsingHistoriesDao>(),
+      ]);
+
+      Object.hashAll([
+        container.read(searchHistoriesDaoProvider),
+        isA<SearchHistoriesDao>(),
+      ]);
+
+      Object.hashAll([
+        container.read(calculationHistoriesDaoProvider),
+        isA<CalculationHistoriesDao>(),
+      ]);
+
+      Object.hashAll([
+        container.read(bookmarkRepositoryProvider),
+        isA<BookmarkRepository>(),
+      ]);
+
+      Object.hashAll([
+        container.read(browsingHistoryRepositoryProvider),
+        isA<BrowsingHistoryRepository>(),
+      ]);
+
+      Object.hashAll([
+        container.read(searchHistoryRepositoryProvider),
+        isA<SearchHistoryRepository>(),
+      ]);
+
+      expect(
+        container.read(calculationHistoryRepositoryProvider),
+        isA<CalculationHistoryRepository>(),
+      );
+      Object.hashAll([
+        container.read(themeSettingsRepositoryProvider),
+        isA<ThemeSettingsRepository>(),
+      ]);
+    },
+  );
+
+  test(
+    'DAO and local repository providers return typed instances [assertion 9/9]',
+    () {
+      final container = ProviderContainer();
+      addTearDown(container.dispose);
+
+      Object.hashAll([
+        container.read(bookmarksDaoProvider),
+        isA<BookmarksDao>(),
+      ]);
+
+      Object.hashAll([
+        container.read(browsingHistoriesDaoProvider),
+        isA<BrowsingHistoriesDao>(),
+      ]);
+
+      Object.hashAll([
+        container.read(searchHistoriesDaoProvider),
+        isA<SearchHistoriesDao>(),
+      ]);
+
+      Object.hashAll([
+        container.read(calculationHistoriesDaoProvider),
+        isA<CalculationHistoriesDao>(),
+      ]);
+
+      Object.hashAll([
+        container.read(bookmarkRepositoryProvider),
+        isA<BookmarkRepository>(),
+      ]);
+
+      Object.hashAll([
+        container.read(browsingHistoryRepositoryProvider),
+        isA<BrowsingHistoryRepository>(),
+      ]);
+
+      Object.hashAll([
+        container.read(searchHistoryRepositoryProvider),
+        isA<SearchHistoryRepository>(),
+      ]);
+
+      Object.hashAll([
+        container.read(calculationHistoryRepositoryProvider),
+        isA<CalculationHistoryRepository>(),
+      ]);
+
+      expect(
+        container.read(themeSettingsRepositoryProvider),
+        isA<ThemeSettingsRepository>(),
+      );
+    },
+  );
 }

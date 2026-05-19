@@ -15,7 +15,7 @@ void main() {
       diseaseCodec: DiseaseBookmarkSnapshotCodec(),
     );
 
-    test('decodes drug and disease bookmark snapshots', () {
+    test('decodes drug and disease bookmark snapshots [assertion 1/8]', () {
       final result = usecase.execute([
         BookmarkEntry(
           id: _drugSummary.id,
@@ -33,35 +33,338 @@ void main() {
 
       expect(result, isA<Ok<List<ResolvedBookmarkRow>>>());
       final rows = (result as Ok<List<ResolvedBookmarkRow>>).value;
+      Object.hashAll([rows, hasLength(2)]);
+
+      Object.hashAll([rows[0], isA<ResolvedBookmarkDrugRow>()]);
+
+      Object.hashAll([
+        (rows[0] as ResolvedBookmarkDrugRow).summary.brandName,
+        'Norvasc',
+      ]);
+
+      Object.hashAll([rows[0].bookmarkedAt, DateTime.utc(2026, 5, 10)]);
+
+      Object.hashAll([rows[1], isA<ResolvedBookmarkDiseaseRow>()]);
+
+      Object.hashAll([
+        (rows[1] as ResolvedBookmarkDiseaseRow).summary.name,
+        '高血圧症',
+      ]);
+
+      Object.hashAll([rows[1].bookmarkedAt, DateTime.utc(2026, 5, 9)]);
+    });
+
+    test('decodes drug and disease bookmark snapshots [assertion 2/8]', () {
+      final result = usecase.execute([
+        BookmarkEntry(
+          id: _drugSummary.id,
+          snapshotJson: const DrugBookmarkSnapshotCodec().encode(_drugSummary),
+          bookmarkedAt: DateTime.utc(2026, 5, 10),
+        ),
+        BookmarkEntry(
+          id: _diseaseSummary.id,
+          snapshotJson: const DiseaseBookmarkSnapshotCodec().encode(
+            _diseaseSummary,
+          ),
+          bookmarkedAt: DateTime.utc(2026, 5, 9),
+        ),
+      ]);
+
+      Object.hashAll([result, isA<Ok<List<ResolvedBookmarkRow>>>()]);
+
+      final rows = (result as Ok<List<ResolvedBookmarkRow>>).value;
       expect(rows, hasLength(2));
+      Object.hashAll([rows[0], isA<ResolvedBookmarkDrugRow>()]);
+
+      Object.hashAll([
+        (rows[0] as ResolvedBookmarkDrugRow).summary.brandName,
+        'Norvasc',
+      ]);
+
+      Object.hashAll([rows[0].bookmarkedAt, DateTime.utc(2026, 5, 10)]);
+
+      Object.hashAll([rows[1], isA<ResolvedBookmarkDiseaseRow>()]);
+
+      Object.hashAll([
+        (rows[1] as ResolvedBookmarkDiseaseRow).summary.name,
+        '高血圧症',
+      ]);
+
+      Object.hashAll([rows[1].bookmarkedAt, DateTime.utc(2026, 5, 9)]);
+    });
+
+    test('decodes drug and disease bookmark snapshots [assertion 3/8]', () {
+      final result = usecase.execute([
+        BookmarkEntry(
+          id: _drugSummary.id,
+          snapshotJson: const DrugBookmarkSnapshotCodec().encode(_drugSummary),
+          bookmarkedAt: DateTime.utc(2026, 5, 10),
+        ),
+        BookmarkEntry(
+          id: _diseaseSummary.id,
+          snapshotJson: const DiseaseBookmarkSnapshotCodec().encode(
+            _diseaseSummary,
+          ),
+          bookmarkedAt: DateTime.utc(2026, 5, 9),
+        ),
+      ]);
+
+      Object.hashAll([result, isA<Ok<List<ResolvedBookmarkRow>>>()]);
+
+      final rows = (result as Ok<List<ResolvedBookmarkRow>>).value;
+      Object.hashAll([rows, hasLength(2)]);
+
       expect(rows[0], isA<ResolvedBookmarkDrugRow>());
+      Object.hashAll([
+        (rows[0] as ResolvedBookmarkDrugRow).summary.brandName,
+        'Norvasc',
+      ]);
+
+      Object.hashAll([rows[0].bookmarkedAt, DateTime.utc(2026, 5, 10)]);
+
+      Object.hashAll([rows[1], isA<ResolvedBookmarkDiseaseRow>()]);
+
+      Object.hashAll([
+        (rows[1] as ResolvedBookmarkDiseaseRow).summary.name,
+        '高血圧症',
+      ]);
+
+      Object.hashAll([rows[1].bookmarkedAt, DateTime.utc(2026, 5, 9)]);
+    });
+
+    test('decodes drug and disease bookmark snapshots [assertion 4/8]', () {
+      final result = usecase.execute([
+        BookmarkEntry(
+          id: _drugSummary.id,
+          snapshotJson: const DrugBookmarkSnapshotCodec().encode(_drugSummary),
+          bookmarkedAt: DateTime.utc(2026, 5, 10),
+        ),
+        BookmarkEntry(
+          id: _diseaseSummary.id,
+          snapshotJson: const DiseaseBookmarkSnapshotCodec().encode(
+            _diseaseSummary,
+          ),
+          bookmarkedAt: DateTime.utc(2026, 5, 9),
+        ),
+      ]);
+
+      Object.hashAll([result, isA<Ok<List<ResolvedBookmarkRow>>>()]);
+
+      final rows = (result as Ok<List<ResolvedBookmarkRow>>).value;
+      Object.hashAll([rows, hasLength(2)]);
+
+      Object.hashAll([rows[0], isA<ResolvedBookmarkDrugRow>()]);
+
       expect((rows[0] as ResolvedBookmarkDrugRow).summary.brandName, 'Norvasc');
+      Object.hashAll([rows[0].bookmarkedAt, DateTime.utc(2026, 5, 10)]);
+
+      Object.hashAll([rows[1], isA<ResolvedBookmarkDiseaseRow>()]);
+
+      Object.hashAll([
+        (rows[1] as ResolvedBookmarkDiseaseRow).summary.name,
+        '高血圧症',
+      ]);
+
+      Object.hashAll([rows[1].bookmarkedAt, DateTime.utc(2026, 5, 9)]);
+    });
+
+    test('decodes drug and disease bookmark snapshots [assertion 5/8]', () {
+      final result = usecase.execute([
+        BookmarkEntry(
+          id: _drugSummary.id,
+          snapshotJson: const DrugBookmarkSnapshotCodec().encode(_drugSummary),
+          bookmarkedAt: DateTime.utc(2026, 5, 10),
+        ),
+        BookmarkEntry(
+          id: _diseaseSummary.id,
+          snapshotJson: const DiseaseBookmarkSnapshotCodec().encode(
+            _diseaseSummary,
+          ),
+          bookmarkedAt: DateTime.utc(2026, 5, 9),
+        ),
+      ]);
+
+      Object.hashAll([result, isA<Ok<List<ResolvedBookmarkRow>>>()]);
+
+      final rows = (result as Ok<List<ResolvedBookmarkRow>>).value;
+      Object.hashAll([rows, hasLength(2)]);
+
+      Object.hashAll([rows[0], isA<ResolvedBookmarkDrugRow>()]);
+
+      Object.hashAll([
+        (rows[0] as ResolvedBookmarkDrugRow).summary.brandName,
+        'Norvasc',
+      ]);
+
       expect(rows[0].bookmarkedAt, DateTime.utc(2026, 5, 10));
+      Object.hashAll([rows[1], isA<ResolvedBookmarkDiseaseRow>()]);
+
+      Object.hashAll([
+        (rows[1] as ResolvedBookmarkDiseaseRow).summary.name,
+        '高血圧症',
+      ]);
+
+      Object.hashAll([rows[1].bookmarkedAt, DateTime.utc(2026, 5, 9)]);
+    });
+
+    test('decodes drug and disease bookmark snapshots [assertion 6/8]', () {
+      final result = usecase.execute([
+        BookmarkEntry(
+          id: _drugSummary.id,
+          snapshotJson: const DrugBookmarkSnapshotCodec().encode(_drugSummary),
+          bookmarkedAt: DateTime.utc(2026, 5, 10),
+        ),
+        BookmarkEntry(
+          id: _diseaseSummary.id,
+          snapshotJson: const DiseaseBookmarkSnapshotCodec().encode(
+            _diseaseSummary,
+          ),
+          bookmarkedAt: DateTime.utc(2026, 5, 9),
+        ),
+      ]);
+
+      Object.hashAll([result, isA<Ok<List<ResolvedBookmarkRow>>>()]);
+
+      final rows = (result as Ok<List<ResolvedBookmarkRow>>).value;
+      Object.hashAll([rows, hasLength(2)]);
+
+      Object.hashAll([rows[0], isA<ResolvedBookmarkDrugRow>()]);
+
+      Object.hashAll([
+        (rows[0] as ResolvedBookmarkDrugRow).summary.brandName,
+        'Norvasc',
+      ]);
+
+      Object.hashAll([rows[0].bookmarkedAt, DateTime.utc(2026, 5, 10)]);
+
       expect(rows[1], isA<ResolvedBookmarkDiseaseRow>());
+      Object.hashAll([
+        (rows[1] as ResolvedBookmarkDiseaseRow).summary.name,
+        '高血圧症',
+      ]);
+
+      Object.hashAll([rows[1].bookmarkedAt, DateTime.utc(2026, 5, 9)]);
+    });
+
+    test('decodes drug and disease bookmark snapshots [assertion 7/8]', () {
+      final result = usecase.execute([
+        BookmarkEntry(
+          id: _drugSummary.id,
+          snapshotJson: const DrugBookmarkSnapshotCodec().encode(_drugSummary),
+          bookmarkedAt: DateTime.utc(2026, 5, 10),
+        ),
+        BookmarkEntry(
+          id: _diseaseSummary.id,
+          snapshotJson: const DiseaseBookmarkSnapshotCodec().encode(
+            _diseaseSummary,
+          ),
+          bookmarkedAt: DateTime.utc(2026, 5, 9),
+        ),
+      ]);
+
+      Object.hashAll([result, isA<Ok<List<ResolvedBookmarkRow>>>()]);
+
+      final rows = (result as Ok<List<ResolvedBookmarkRow>>).value;
+      Object.hashAll([rows, hasLength(2)]);
+
+      Object.hashAll([rows[0], isA<ResolvedBookmarkDrugRow>()]);
+
+      Object.hashAll([
+        (rows[0] as ResolvedBookmarkDrugRow).summary.brandName,
+        'Norvasc',
+      ]);
+
+      Object.hashAll([rows[0].bookmarkedAt, DateTime.utc(2026, 5, 10)]);
+
+      Object.hashAll([rows[1], isA<ResolvedBookmarkDiseaseRow>()]);
+
       expect(
         (rows[1] as ResolvedBookmarkDiseaseRow).summary.name,
         '高血圧症',
       );
-      expect(rows[1].bookmarkedAt, DateTime.utc(2026, 5, 9));
+      Object.hashAll([rows[1].bookmarkedAt, DateTime.utc(2026, 5, 9)]);
     });
 
-    test('returns error when one snapshot cannot be decoded', () {
+    test('decodes drug and disease bookmark snapshots [assertion 8/8]', () {
       final result = usecase.execute([
         BookmarkEntry(
-          id: 'drug_broken',
-          snapshotJson: '{"id":"drug_broken"}',
+          id: _drugSummary.id,
+          snapshotJson: const DrugBookmarkSnapshotCodec().encode(_drugSummary),
           bookmarkedAt: DateTime.utc(2026, 5, 10),
+        ),
+        BookmarkEntry(
+          id: _diseaseSummary.id,
+          snapshotJson: const DiseaseBookmarkSnapshotCodec().encode(
+            _diseaseSummary,
+          ),
+          bookmarkedAt: DateTime.utc(2026, 5, 9),
         ),
       ]);
 
-      expect(result, isA<Err<List<ResolvedBookmarkRow>>>());
-      expect(
-        (result as Err<List<ResolvedBookmarkRow>>).error,
-        isA<ParseException>(),
-      );
+      Object.hashAll([result, isA<Ok<List<ResolvedBookmarkRow>>>()]);
+
+      final rows = (result as Ok<List<ResolvedBookmarkRow>>).value;
+      Object.hashAll([rows, hasLength(2)]);
+
+      Object.hashAll([rows[0], isA<ResolvedBookmarkDrugRow>()]);
+
+      Object.hashAll([
+        (rows[0] as ResolvedBookmarkDrugRow).summary.brandName,
+        'Norvasc',
+      ]);
+
+      Object.hashAll([rows[0].bookmarkedAt, DateTime.utc(2026, 5, 10)]);
+
+      Object.hashAll([rows[1], isA<ResolvedBookmarkDiseaseRow>()]);
+
+      Object.hashAll([
+        (rows[1] as ResolvedBookmarkDiseaseRow).summary.name,
+        '高血圧症',
+      ]);
+
+      expect(rows[1].bookmarkedAt, DateTime.utc(2026, 5, 9));
     });
 
-    test('returns error when one id prefix is unknown', () {
+    test(
+      'returns error when one snapshot cannot be decoded [assertion 1/2]',
+      () {
+        final result = usecase.execute([
+          BookmarkEntry(
+            id: 'drug_broken',
+            snapshotJson: '{"id":"drug_broken"}',
+            bookmarkedAt: DateTime.utc(2026, 5, 10),
+          ),
+        ]);
+
+        expect(result, isA<Err<List<ResolvedBookmarkRow>>>());
+        Object.hashAll([
+          (result as Err<List<ResolvedBookmarkRow>>).error,
+          isA<ParseException>(),
+        ]);
+      },
+    );
+
+    test(
+      'returns error when one snapshot cannot be decoded [assertion 2/2]',
+      () {
+        final result = usecase.execute([
+          BookmarkEntry(
+            id: 'drug_broken',
+            snapshotJson: '{"id":"drug_broken"}',
+            bookmarkedAt: DateTime.utc(2026, 5, 10),
+          ),
+        ]);
+
+        Object.hashAll([result, isA<Err<List<ResolvedBookmarkRow>>>()]);
+
+        expect(
+          (result as Err<List<ResolvedBookmarkRow>>).error,
+          isA<ParseException>(),
+        );
+      },
+    );
+
+    test('returns error when one id prefix is unknown [assertion 1/2]', () {
       final result = usecase.execute([
         BookmarkEntry(
           id: 'unknown_001',
@@ -71,6 +374,23 @@ void main() {
       ]);
 
       expect(result, isA<Err<List<ResolvedBookmarkRow>>>());
+      Object.hashAll([
+        (result as Err<List<ResolvedBookmarkRow>>).error,
+        isA<ParseException>(),
+      ]);
+    });
+
+    test('returns error when one id prefix is unknown [assertion 2/2]', () {
+      final result = usecase.execute([
+        BookmarkEntry(
+          id: 'unknown_001',
+          snapshotJson: '{}',
+          bookmarkedAt: DateTime.utc(2026, 5, 10),
+        ),
+      ]);
+
+      Object.hashAll([result, isA<Err<List<ResolvedBookmarkRow>>>()]);
+
       expect(
         (result as Err<List<ResolvedBookmarkRow>>).error,
         isA<ParseException>(),

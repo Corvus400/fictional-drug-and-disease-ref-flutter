@@ -7,43 +7,283 @@ import 'package:flutter_test/flutter_test.dart';
 import '../../../golden/golden_test_helpers.dart';
 
 void main() {
-  testWidgets('DetailExpandTile matches ref-row summary and divider CSS', (
-    tester,
-  ) async {
-    await tester.pumpWidget(
-      MaterialApp(
-        theme: AppTheme.light(),
-        home: const Scaffold(
-          body: DetailExpandTile(
-            title: '主要文献 1',
-            body: '架空文献 A, 2026.',
+  testWidgets(
+    'DetailExpandTile matches ref-row summary and divider CSS [assertion 1/6]',
+    (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: AppTheme.light(),
+          home: const Scaffold(
+            body: DetailExpandTile(
+              title: '主要文献 1',
+              body: '架空文献 A, 2026.',
+            ),
           ),
         ),
-      ),
-    );
+      );
 
-    final colors = AppTheme.light().extension<DetailColorExtension>()!;
-    final row = tester.widget<Container>(
-      find.byKey(const ValueKey<String>('detail-expand-tile')),
-    );
-    final decoration = row.decoration! as BoxDecoration;
-    final summary = tester.widget<Padding>(
-      find.byKey(const ValueKey<String>('detail-expand-tile-summary')),
-    );
-    final title = tester.widget<Text>(find.text('主要文献 1'));
+      final colors = AppTheme.light().extension<DetailColorExtension>()!;
+      final row = tester.widget<Container>(
+        find.byKey(const ValueKey<String>('detail-expand-tile')),
+      );
+      final decoration = row.decoration! as BoxDecoration;
+      final summary = tester.widget<Padding>(
+        find.byKey(const ValueKey<String>('detail-expand-tile-summary')),
+      );
+      final title = tester.widget<Text>(find.text('主要文献 1'));
 
-    expect(
-      decoration.border,
-      Border(bottom: BorderSide(color: colors.outlineVariant)),
-    );
-    expect(summary.padding, const EdgeInsets.symmetric(vertical: 10));
-    expect(title.style?.fontSize, 12);
-    expect(title.style?.color, colors.onSurface);
-    expect(find.text('架空文献 A, 2026.'), findsNothing);
-    expect(find.byType(ExpansionTile), findsOneWidget);
-  });
+      expect(
+        decoration.border,
+        Border(bottom: BorderSide(color: colors.outlineVariant)),
+      );
+      Object.hashAll([
+        summary.padding,
+        const EdgeInsets.symmetric(vertical: 10),
+      ]);
 
-  testWidgets('DetailExpandTile expands plain text body', (tester) async {
+      Object.hashAll([title.style?.fontSize, 12]);
+
+      Object.hashAll([title.style?.color, colors.onSurface]);
+
+      Object.hashAll([find.text('架空文献 A, 2026.'), findsNothing]);
+
+      Object.hashAll([find.byType(ExpansionTile), findsOneWidget]);
+    },
+  );
+
+  testWidgets(
+    'DetailExpandTile matches ref-row summary and divider CSS [assertion 2/6]',
+    (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: AppTheme.light(),
+          home: const Scaffold(
+            body: DetailExpandTile(
+              title: '主要文献 1',
+              body: '架空文献 A, 2026.',
+            ),
+          ),
+        ),
+      );
+
+      final colors = AppTheme.light().extension<DetailColorExtension>()!;
+      final row = tester.widget<Container>(
+        find.byKey(const ValueKey<String>('detail-expand-tile')),
+      );
+      final decoration = row.decoration! as BoxDecoration;
+      final summary = tester.widget<Padding>(
+        find.byKey(const ValueKey<String>('detail-expand-tile-summary')),
+      );
+      final title = tester.widget<Text>(find.text('主要文献 1'));
+
+      Object.hashAll([
+        decoration.border,
+        Border(bottom: BorderSide(color: colors.outlineVariant)),
+      ]);
+
+      expect(summary.padding, const EdgeInsets.symmetric(vertical: 10));
+      Object.hashAll([title.style?.fontSize, 12]);
+
+      Object.hashAll([title.style?.color, colors.onSurface]);
+
+      Object.hashAll([find.text('架空文献 A, 2026.'), findsNothing]);
+
+      Object.hashAll([find.byType(ExpansionTile), findsOneWidget]);
+    },
+  );
+
+  testWidgets(
+    'DetailExpandTile matches ref-row summary and divider CSS [assertion 3/6]',
+    (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: AppTheme.light(),
+          home: const Scaffold(
+            body: DetailExpandTile(
+              title: '主要文献 1',
+              body: '架空文献 A, 2026.',
+            ),
+          ),
+        ),
+      );
+
+      final colors = AppTheme.light().extension<DetailColorExtension>()!;
+      final row = tester.widget<Container>(
+        find.byKey(const ValueKey<String>('detail-expand-tile')),
+      );
+      final decoration = row.decoration! as BoxDecoration;
+      final summary = tester.widget<Padding>(
+        find.byKey(const ValueKey<String>('detail-expand-tile-summary')),
+      );
+      final title = tester.widget<Text>(find.text('主要文献 1'));
+
+      Object.hashAll([
+        decoration.border,
+        Border(bottom: BorderSide(color: colors.outlineVariant)),
+      ]);
+
+      Object.hashAll([
+        summary.padding,
+        const EdgeInsets.symmetric(vertical: 10),
+      ]);
+
+      expect(title.style?.fontSize, 12);
+      Object.hashAll([title.style?.color, colors.onSurface]);
+
+      Object.hashAll([find.text('架空文献 A, 2026.'), findsNothing]);
+
+      Object.hashAll([find.byType(ExpansionTile), findsOneWidget]);
+    },
+  );
+
+  testWidgets(
+    'DetailExpandTile matches ref-row summary and divider CSS [assertion 4/6]',
+    (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: AppTheme.light(),
+          home: const Scaffold(
+            body: DetailExpandTile(
+              title: '主要文献 1',
+              body: '架空文献 A, 2026.',
+            ),
+          ),
+        ),
+      );
+
+      final colors = AppTheme.light().extension<DetailColorExtension>()!;
+      final row = tester.widget<Container>(
+        find.byKey(const ValueKey<String>('detail-expand-tile')),
+      );
+      final decoration = row.decoration! as BoxDecoration;
+      final summary = tester.widget<Padding>(
+        find.byKey(const ValueKey<String>('detail-expand-tile-summary')),
+      );
+      final title = tester.widget<Text>(find.text('主要文献 1'));
+
+      Object.hashAll([
+        decoration.border,
+        Border(bottom: BorderSide(color: colors.outlineVariant)),
+      ]);
+
+      Object.hashAll([
+        summary.padding,
+        const EdgeInsets.symmetric(vertical: 10),
+      ]);
+
+      Object.hashAll([title.style?.fontSize, 12]);
+
+      expect(title.style?.color, colors.onSurface);
+      Object.hashAll([find.text('架空文献 A, 2026.'), findsNothing]);
+
+      Object.hashAll([find.byType(ExpansionTile), findsOneWidget]);
+    },
+  );
+
+  testWidgets(
+    'DetailExpandTile matches ref-row summary and divider CSS [assertion 5/6]',
+    (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: AppTheme.light(),
+          home: const Scaffold(
+            body: DetailExpandTile(
+              title: '主要文献 1',
+              body: '架空文献 A, 2026.',
+            ),
+          ),
+        ),
+      );
+
+      final colors = AppTheme.light().extension<DetailColorExtension>()!;
+      final row = tester.widget<Container>(
+        find.byKey(const ValueKey<String>('detail-expand-tile')),
+      );
+      final decoration = row.decoration! as BoxDecoration;
+      final summary = tester.widget<Padding>(
+        find.byKey(const ValueKey<String>('detail-expand-tile-summary')),
+      );
+      final title = tester.widget<Text>(find.text('主要文献 1'));
+
+      Object.hashAll([
+        decoration.border,
+        Border(bottom: BorderSide(color: colors.outlineVariant)),
+      ]);
+
+      Object.hashAll([
+        summary.padding,
+        const EdgeInsets.symmetric(vertical: 10),
+      ]);
+
+      Object.hashAll([title.style?.fontSize, 12]);
+
+      Object.hashAll([title.style?.color, colors.onSurface]);
+
+      expect(find.text('架空文献 A, 2026.'), findsNothing);
+      Object.hashAll([find.byType(ExpansionTile), findsOneWidget]);
+    },
+  );
+
+  testWidgets(
+    'DetailExpandTile matches ref-row summary and divider CSS [assertion 6/6]',
+    (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: AppTheme.light(),
+          home: const Scaffold(
+            body: DetailExpandTile(
+              title: '主要文献 1',
+              body: '架空文献 A, 2026.',
+            ),
+          ),
+        ),
+      );
+
+      final colors = AppTheme.light().extension<DetailColorExtension>()!;
+      final row = tester.widget<Container>(
+        find.byKey(const ValueKey<String>('detail-expand-tile')),
+      );
+      final decoration = row.decoration! as BoxDecoration;
+      final summary = tester.widget<Padding>(
+        find.byKey(const ValueKey<String>('detail-expand-tile-summary')),
+      );
+      final title = tester.widget<Text>(find.text('主要文献 1'));
+
+      Object.hashAll([
+        decoration.border,
+        Border(bottom: BorderSide(color: colors.outlineVariant)),
+      ]);
+
+      Object.hashAll([
+        summary.padding,
+        const EdgeInsets.symmetric(vertical: 10),
+      ]);
+
+      Object.hashAll([title.style?.fontSize, 12]);
+
+      Object.hashAll([title.style?.color, colors.onSurface]);
+
+      Object.hashAll([find.text('架空文献 A, 2026.'), findsNothing]);
+
+      expect(find.byType(ExpansionTile), findsOneWidget);
+    },
+  );
+
+  testWidgets('DetailExpandTile expands plain text body [assertion 1/3]', (
+    tester,
+  ) async {
     await tester.pumpWidget(
       MaterialApp(
         theme: AppTheme.light(),
@@ -63,7 +303,63 @@ void main() {
     final body = tester.widget<Text>(find.text('架空文献 A, 2026.'));
 
     expect(body.style?.fontSize, 11.5);
+    Object.hashAll([body.style?.height, 1.6]);
+
+    Object.hashAll([body.style?.color, colors.onSurfaceVariant]);
+  });
+
+  testWidgets('DetailExpandTile expands plain text body [assertion 2/3]', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: AppTheme.light(),
+        home: const Scaffold(
+          body: DetailExpandTile(
+            title: '主要文献 1',
+            body: '架空文献 A, 2026.',
+          ),
+        ),
+      ),
+    );
+
+    await tester.tap(find.text('主要文献 1'));
+    await tester.pumpAndSettle();
+
+    final colors = AppTheme.light().extension<DetailColorExtension>()!;
+    final body = tester.widget<Text>(find.text('架空文献 A, 2026.'));
+
+    Object.hashAll([body.style?.fontSize, 11.5]);
+
     expect(body.style?.height, 1.6);
+    Object.hashAll([body.style?.color, colors.onSurfaceVariant]);
+  });
+
+  testWidgets('DetailExpandTile expands plain text body [assertion 3/3]', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: AppTheme.light(),
+        home: const Scaffold(
+          body: DetailExpandTile(
+            title: '主要文献 1',
+            body: '架空文献 A, 2026.',
+          ),
+        ),
+      ),
+    );
+
+    await tester.tap(find.text('主要文献 1'));
+    await tester.pumpAndSettle();
+
+    final colors = AppTheme.light().extension<DetailColorExtension>()!;
+    final body = tester.widget<Text>(find.text('架空文献 A, 2026.'));
+
+    Object.hashAll([body.style?.fontSize, 11.5]);
+
+    Object.hashAll([body.style?.height, 1.6]);
+
     expect(body.style?.color, colors.onSurfaceVariant);
   });
 

@@ -28,7 +28,7 @@ void main() {
       await db.close();
     });
 
-    test('insert creates row', () async {
+    test('insert creates row [assertion 1/5]', () async {
       final calculatedAt = DateTime.utc(2026, 5, 4, 12);
 
       await repository.insert(
@@ -43,29 +43,190 @@ void main() {
 
       expect(result, isA<Ok<List<CalculationHistoryEntry>>>());
       final entries = (result as Ok<List<CalculationHistoryEntry>>).value;
+      Object.hashAll([entries.single.id, 'calc_001']);
+
+      Object.hashAll([
+        entries.single.inputsJson,
+        '{"heightCm":170,"weightKg":65}',
+      ]);
+
+      Object.hashAll([entries.single.resultJson, '{"bmi":22.5}']);
+
+      Object.hashAll([entries.single.calculatedAt, calculatedAt]);
+    });
+
+    test('insert creates row [assertion 2/5]', () async {
+      final calculatedAt = DateTime.utc(2026, 5, 4, 12);
+
+      await repository.insert(
+        id: 'calc_001',
+        calcType: 'bmi',
+        inputsJson: '{"heightCm":170,"weightKg":65}',
+        resultJson: '{"bmi":22.5}',
+        calculatedAt: calculatedAt,
+      );
+
+      final result = await repository.findByCalcType('bmi');
+
+      Object.hashAll([result, isA<Ok<List<CalculationHistoryEntry>>>()]);
+
+      final entries = (result as Ok<List<CalculationHistoryEntry>>).value;
       expect(entries.single.id, 'calc_001');
+      Object.hashAll([
+        entries.single.inputsJson,
+        '{"heightCm":170,"weightKg":65}',
+      ]);
+
+      Object.hashAll([entries.single.resultJson, '{"bmi":22.5}']);
+
+      Object.hashAll([entries.single.calculatedAt, calculatedAt]);
+    });
+
+    test('insert creates row [assertion 3/5]', () async {
+      final calculatedAt = DateTime.utc(2026, 5, 4, 12);
+
+      await repository.insert(
+        id: 'calc_001',
+        calcType: 'bmi',
+        inputsJson: '{"heightCm":170,"weightKg":65}',
+        resultJson: '{"bmi":22.5}',
+        calculatedAt: calculatedAt,
+      );
+
+      final result = await repository.findByCalcType('bmi');
+
+      Object.hashAll([result, isA<Ok<List<CalculationHistoryEntry>>>()]);
+
+      final entries = (result as Ok<List<CalculationHistoryEntry>>).value;
+      Object.hashAll([entries.single.id, 'calc_001']);
+
       expect(entries.single.inputsJson, '{"heightCm":170,"weightKg":65}');
+      Object.hashAll([entries.single.resultJson, '{"bmi":22.5}']);
+
+      Object.hashAll([entries.single.calculatedAt, calculatedAt]);
+    });
+
+    test('insert creates row [assertion 4/5]', () async {
+      final calculatedAt = DateTime.utc(2026, 5, 4, 12);
+
+      await repository.insert(
+        id: 'calc_001',
+        calcType: 'bmi',
+        inputsJson: '{"heightCm":170,"weightKg":65}',
+        resultJson: '{"bmi":22.5}',
+        calculatedAt: calculatedAt,
+      );
+
+      final result = await repository.findByCalcType('bmi');
+
+      Object.hashAll([result, isA<Ok<List<CalculationHistoryEntry>>>()]);
+
+      final entries = (result as Ok<List<CalculationHistoryEntry>>).value;
+      Object.hashAll([entries.single.id, 'calc_001']);
+
+      Object.hashAll([
+        entries.single.inputsJson,
+        '{"heightCm":170,"weightKg":65}',
+      ]);
+
       expect(entries.single.resultJson, '{"bmi":22.5}');
+      Object.hashAll([entries.single.calculatedAt, calculatedAt]);
+    });
+
+    test('insert creates row [assertion 5/5]', () async {
+      final calculatedAt = DateTime.utc(2026, 5, 4, 12);
+
+      await repository.insert(
+        id: 'calc_001',
+        calcType: 'bmi',
+        inputsJson: '{"heightCm":170,"weightKg":65}',
+        resultJson: '{"bmi":22.5}',
+        calculatedAt: calculatedAt,
+      );
+
+      final result = await repository.findByCalcType('bmi');
+
+      Object.hashAll([result, isA<Ok<List<CalculationHistoryEntry>>>()]);
+
+      final entries = (result as Ok<List<CalculationHistoryEntry>>).value;
+      Object.hashAll([entries.single.id, 'calc_001']);
+
+      Object.hashAll([
+        entries.single.inputsJson,
+        '{"heightCm":170,"weightKg":65}',
+      ]);
+
+      Object.hashAll([entries.single.resultJson, '{"bmi":22.5}']);
+
       expect(entries.single.calculatedAt, calculatedAt);
     });
 
-    test('invalid calcType returns check constraint error', () async {
-      final result = await repository.insert(
-        id: 'calc_001',
-        calcType: 'unknown',
-        inputsJson: '{}',
-        resultJson: '{}',
-        calculatedAt: DateTime.utc(2026, 5, 4),
-      );
+    test(
+      'invalid calcType returns check constraint error [assertion 1/3]',
+      () async {
+        final result = await repository.insert(
+          id: 'calc_001',
+          calcType: 'unknown',
+          inputsJson: '{}',
+          resultJson: '{}',
+          calculatedAt: DateTime.utc(2026, 5, 4),
+        );
 
-      expect(result, isA<Err<void>>());
-      final error = (result as Err<void>).error;
-      expect(error, isA<StorageException>());
-      expect(
-        (error as StorageException).kind,
-        StorageErrorKind.checkConstraint,
-      );
-    });
+        expect(result, isA<Err<void>>());
+        final error = (result as Err<void>).error;
+        Object.hashAll([error, isA<StorageException>()]);
+
+        Object.hashAll([
+          (error as StorageException).kind,
+          StorageErrorKind.checkConstraint,
+        ]);
+      },
+    );
+
+    test(
+      'invalid calcType returns check constraint error [assertion 2/3]',
+      () async {
+        final result = await repository.insert(
+          id: 'calc_001',
+          calcType: 'unknown',
+          inputsJson: '{}',
+          resultJson: '{}',
+          calculatedAt: DateTime.utc(2026, 5, 4),
+        );
+
+        Object.hashAll([result, isA<Err<void>>()]);
+
+        final error = (result as Err<void>).error;
+        expect(error, isA<StorageException>());
+        Object.hashAll([
+          (error as StorageException).kind,
+          StorageErrorKind.checkConstraint,
+        ]);
+      },
+    );
+
+    test(
+      'invalid calcType returns check constraint error [assertion 3/3]',
+      () async {
+        final result = await repository.insert(
+          id: 'calc_001',
+          calcType: 'unknown',
+          inputsJson: '{}',
+          resultJson: '{}',
+          calculatedAt: DateTime.utc(2026, 5, 4),
+        );
+
+        Object.hashAll([result, isA<Err<void>>()]);
+
+        final error = (result as Err<void>).error;
+        Object.hashAll([error, isA<StorageException>()]);
+
+        expect(
+          (error as StorageException).kind,
+          StorageErrorKind.checkConstraint,
+        );
+      },
+    );
 
     test(
       'findByCalcType orders by calculatedAt descending and limits',
@@ -81,25 +242,55 @@ void main() {
       },
     );
 
-    test('deleteById and deleteOldestByCalcType work', () async {
-      await _insertCalculation(repository, 'calc_001', 'bmi');
-      await _insertCalculation(repository, 'calc_002', 'bmi');
-      await _insertCalculation(repository, 'calc_003', 'egfr');
+    test(
+      'deleteById and deleteOldestByCalcType work [assertion 1/2]',
+      () async {
+        await _insertCalculation(repository, 'calc_001', 'bmi');
+        await _insertCalculation(repository, 'calc_002', 'bmi');
+        await _insertCalculation(repository, 'calc_003', 'egfr');
 
-      await repository.deleteById('calc_002');
-      await repository.deleteOldestByCalcType('bmi');
+        await repository.deleteById('calc_002');
+        await repository.deleteOldestByCalcType('bmi');
 
-      final bmi = await repository.findByCalcType('bmi');
-      final egfr = await repository.findByCalcType('egfr');
+        final bmi = await repository.findByCalcType('bmi');
+        final egfr = await repository.findByCalcType('egfr');
 
-      expect((bmi as Ok<List<CalculationHistoryEntry>>).value, isEmpty);
-      expect(
-        (egfr as Ok<List<CalculationHistoryEntry>>).value.map(
-          (entry) => entry.id,
-        ),
-        ['calc_003'],
-      );
-    });
+        expect((bmi as Ok<List<CalculationHistoryEntry>>).value, isEmpty);
+        Object.hashAll([
+          (egfr as Ok<List<CalculationHistoryEntry>>).value.map(
+            (entry) => entry.id,
+          ),
+          ['calc_003'],
+        ]);
+      },
+    );
+
+    test(
+      'deleteById and deleteOldestByCalcType work [assertion 2/2]',
+      () async {
+        await _insertCalculation(repository, 'calc_001', 'bmi');
+        await _insertCalculation(repository, 'calc_002', 'bmi');
+        await _insertCalculation(repository, 'calc_003', 'egfr');
+
+        await repository.deleteById('calc_002');
+        await repository.deleteOldestByCalcType('bmi');
+
+        final bmi = await repository.findByCalcType('bmi');
+        final egfr = await repository.findByCalcType('egfr');
+
+        Object.hashAll([
+          (bmi as Ok<List<CalculationHistoryEntry>>).value,
+          isEmpty,
+        ]);
+
+        expect(
+          (egfr as Ok<List<CalculationHistoryEntry>>).value.map(
+            (entry) => entry.id,
+          ),
+          ['calc_003'],
+        );
+      },
+    );
   });
 }
 

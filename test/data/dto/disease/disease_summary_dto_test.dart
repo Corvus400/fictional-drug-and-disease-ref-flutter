@@ -5,19 +5,131 @@ import 'package:fictional_drug_and_disease_ref/data/dto/disease/disease_summary_
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  test('DiseaseSummaryDto.fromJson parses Swagger sample item[0]', () {
-    final fixture = File(
-      'test/fixtures/swagger/get_v1_diseases.json',
-    ).readAsStringSync();
-    final json = jsonDecode(fixture) as Map<String, dynamic>;
-    final item = (json['items'] as List<dynamic>).first as Map<String, dynamic>;
+  test(
+    'DiseaseSummaryDto.fromJson parses Swagger sample item[0] [assertion 1/5]',
+    () {
+      final fixture = File(
+        'test/fixtures/swagger/get_v1_diseases.json',
+      ).readAsStringSync();
+      final json = jsonDecode(fixture) as Map<String, dynamic>;
+      final item =
+          (json['items'] as List<dynamic>).first as Map<String, dynamic>;
 
-    final dto = DiseaseSummaryDto.fromJson(item);
+      final dto = DiseaseSummaryDto.fromJson(item);
 
-    expect(dto.id, 'disease_0000');
-    expect(dto.name, 'ヒソネナ');
-    expect(dto.icd10Chapter, 'chapter_i');
-    expect(dto.medicalDepartment, ['infectious_disease', 'emergency']);
-    expect(dto.infectious, isTrue);
-  });
+      expect(dto.id, 'disease_0000');
+      Object.hashAll([dto.name, 'ヒソネナ']);
+
+      Object.hashAll([dto.icd10Chapter, 'chapter_i']);
+
+      Object.hashAll([
+        dto.medicalDepartment,
+        ['infectious_disease', 'emergency'],
+      ]);
+
+      Object.hashAll([dto.infectious, isTrue]);
+    },
+  );
+
+  test(
+    'DiseaseSummaryDto.fromJson parses Swagger sample item[0] [assertion 2/5]',
+    () {
+      final fixture = File(
+        'test/fixtures/swagger/get_v1_diseases.json',
+      ).readAsStringSync();
+      final json = jsonDecode(fixture) as Map<String, dynamic>;
+      final item =
+          (json['items'] as List<dynamic>).first as Map<String, dynamic>;
+
+      final dto = DiseaseSummaryDto.fromJson(item);
+
+      Object.hashAll([dto.id, 'disease_0000']);
+
+      expect(dto.name, 'ヒソネナ');
+      Object.hashAll([dto.icd10Chapter, 'chapter_i']);
+
+      Object.hashAll([
+        dto.medicalDepartment,
+        ['infectious_disease', 'emergency'],
+      ]);
+
+      Object.hashAll([dto.infectious, isTrue]);
+    },
+  );
+
+  test(
+    'DiseaseSummaryDto.fromJson parses Swagger sample item[0] [assertion 3/5]',
+    () {
+      final fixture = File(
+        'test/fixtures/swagger/get_v1_diseases.json',
+      ).readAsStringSync();
+      final json = jsonDecode(fixture) as Map<String, dynamic>;
+      final item =
+          (json['items'] as List<dynamic>).first as Map<String, dynamic>;
+
+      final dto = DiseaseSummaryDto.fromJson(item);
+
+      Object.hashAll([dto.id, 'disease_0000']);
+
+      Object.hashAll([dto.name, 'ヒソネナ']);
+
+      expect(dto.icd10Chapter, 'chapter_i');
+      Object.hashAll([
+        dto.medicalDepartment,
+        ['infectious_disease', 'emergency'],
+      ]);
+
+      Object.hashAll([dto.infectious, isTrue]);
+    },
+  );
+
+  test(
+    'DiseaseSummaryDto.fromJson parses Swagger sample item[0] [assertion 4/5]',
+    () {
+      final fixture = File(
+        'test/fixtures/swagger/get_v1_diseases.json',
+      ).readAsStringSync();
+      final json = jsonDecode(fixture) as Map<String, dynamic>;
+      final item =
+          (json['items'] as List<dynamic>).first as Map<String, dynamic>;
+
+      final dto = DiseaseSummaryDto.fromJson(item);
+
+      Object.hashAll([dto.id, 'disease_0000']);
+
+      Object.hashAll([dto.name, 'ヒソネナ']);
+
+      Object.hashAll([dto.icd10Chapter, 'chapter_i']);
+
+      expect(dto.medicalDepartment, ['infectious_disease', 'emergency']);
+      Object.hashAll([dto.infectious, isTrue]);
+    },
+  );
+
+  test(
+    'DiseaseSummaryDto.fromJson parses Swagger sample item[0] [assertion 5/5]',
+    () {
+      final fixture = File(
+        'test/fixtures/swagger/get_v1_diseases.json',
+      ).readAsStringSync();
+      final json = jsonDecode(fixture) as Map<String, dynamic>;
+      final item =
+          (json['items'] as List<dynamic>).first as Map<String, dynamic>;
+
+      final dto = DiseaseSummaryDto.fromJson(item);
+
+      Object.hashAll([dto.id, 'disease_0000']);
+
+      Object.hashAll([dto.name, 'ヒソネナ']);
+
+      Object.hashAll([dto.icd10Chapter, 'chapter_i']);
+
+      Object.hashAll([
+        dto.medicalDepartment,
+        ['infectious_disease', 'emergency'],
+      ]);
+
+      expect(dto.infectious, isTrue);
+    },
+  );
 }

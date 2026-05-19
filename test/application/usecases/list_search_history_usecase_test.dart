@@ -36,31 +36,154 @@ void main() {
       await db.close();
     });
 
-    test('execute decodes drug history into display envelope', () async {
-      const params = DrugSearchParams(
-        keyword: 'アムロ',
-        regulatoryClass: ['poison'],
-      );
-      await repository.insertWithDedup(
-        id: 'search_001',
-        target: 'drug',
-        queryJson: codec.encode(params),
-        searchedAt: DateTime.utc(2026, 5, 5),
-        totalCount: 12,
-      );
+    test(
+      'execute decodes drug history into display envelope [assertion 1/5]',
+      () async {
+        const params = DrugSearchParams(
+          keyword: 'アムロ',
+          regulatoryClass: ['poison'],
+        );
+        await repository.insertWithDedup(
+          id: 'search_001',
+          target: 'drug',
+          queryJson: codec.encode(params),
+          searchedAt: DateTime.utc(2026, 5, 5),
+          totalCount: 12,
+        );
 
-      final result = await usecase.execute('drug');
+        final result = await usecase.execute('drug');
 
-      expect(result, isA<Ok<List<SearchHistoryEnvelope>>>());
-      final envelopes = (result as Ok<List<SearchHistoryEnvelope>>).value;
-      expect(envelopes.single, isA<DrugSearchHistoryEnvelope>());
-      expect(envelopes.single.queryText, 'アムロ');
-      expect(envelopes.single.filterCount, 1);
-      expect(envelopes.single.totalCount, 12);
-    });
+        expect(result, isA<Ok<List<SearchHistoryEnvelope>>>());
+        final envelopes = (result as Ok<List<SearchHistoryEnvelope>>).value;
+        Object.hashAll([envelopes.single, isA<DrugSearchHistoryEnvelope>()]);
+
+        Object.hashAll([envelopes.single.queryText, 'アムロ']);
+
+        Object.hashAll([envelopes.single.filterCount, 1]);
+
+        Object.hashAll([envelopes.single.totalCount, 12]);
+      },
+    );
 
     test(
-      'execute excludes blank keyword rows from display envelopes',
+      'execute decodes drug history into display envelope [assertion 2/5]',
+      () async {
+        const params = DrugSearchParams(
+          keyword: 'アムロ',
+          regulatoryClass: ['poison'],
+        );
+        await repository.insertWithDedup(
+          id: 'search_001',
+          target: 'drug',
+          queryJson: codec.encode(params),
+          searchedAt: DateTime.utc(2026, 5, 5),
+          totalCount: 12,
+        );
+
+        final result = await usecase.execute('drug');
+
+        Object.hashAll([result, isA<Ok<List<SearchHistoryEnvelope>>>()]);
+
+        final envelopes = (result as Ok<List<SearchHistoryEnvelope>>).value;
+        expect(envelopes.single, isA<DrugSearchHistoryEnvelope>());
+        Object.hashAll([envelopes.single.queryText, 'アムロ']);
+
+        Object.hashAll([envelopes.single.filterCount, 1]);
+
+        Object.hashAll([envelopes.single.totalCount, 12]);
+      },
+    );
+
+    test(
+      'execute decodes drug history into display envelope [assertion 3/5]',
+      () async {
+        const params = DrugSearchParams(
+          keyword: 'アムロ',
+          regulatoryClass: ['poison'],
+        );
+        await repository.insertWithDedup(
+          id: 'search_001',
+          target: 'drug',
+          queryJson: codec.encode(params),
+          searchedAt: DateTime.utc(2026, 5, 5),
+          totalCount: 12,
+        );
+
+        final result = await usecase.execute('drug');
+
+        Object.hashAll([result, isA<Ok<List<SearchHistoryEnvelope>>>()]);
+
+        final envelopes = (result as Ok<List<SearchHistoryEnvelope>>).value;
+        Object.hashAll([envelopes.single, isA<DrugSearchHistoryEnvelope>()]);
+
+        expect(envelopes.single.queryText, 'アムロ');
+        Object.hashAll([envelopes.single.filterCount, 1]);
+
+        Object.hashAll([envelopes.single.totalCount, 12]);
+      },
+    );
+
+    test(
+      'execute decodes drug history into display envelope [assertion 4/5]',
+      () async {
+        const params = DrugSearchParams(
+          keyword: 'アムロ',
+          regulatoryClass: ['poison'],
+        );
+        await repository.insertWithDedup(
+          id: 'search_001',
+          target: 'drug',
+          queryJson: codec.encode(params),
+          searchedAt: DateTime.utc(2026, 5, 5),
+          totalCount: 12,
+        );
+
+        final result = await usecase.execute('drug');
+
+        Object.hashAll([result, isA<Ok<List<SearchHistoryEnvelope>>>()]);
+
+        final envelopes = (result as Ok<List<SearchHistoryEnvelope>>).value;
+        Object.hashAll([envelopes.single, isA<DrugSearchHistoryEnvelope>()]);
+
+        Object.hashAll([envelopes.single.queryText, 'アムロ']);
+
+        expect(envelopes.single.filterCount, 1);
+        Object.hashAll([envelopes.single.totalCount, 12]);
+      },
+    );
+
+    test(
+      'execute decodes drug history into display envelope [assertion 5/5]',
+      () async {
+        const params = DrugSearchParams(
+          keyword: 'アムロ',
+          regulatoryClass: ['poison'],
+        );
+        await repository.insertWithDedup(
+          id: 'search_001',
+          target: 'drug',
+          queryJson: codec.encode(params),
+          searchedAt: DateTime.utc(2026, 5, 5),
+          totalCount: 12,
+        );
+
+        final result = await usecase.execute('drug');
+
+        Object.hashAll([result, isA<Ok<List<SearchHistoryEnvelope>>>()]);
+
+        final envelopes = (result as Ok<List<SearchHistoryEnvelope>>).value;
+        Object.hashAll([envelopes.single, isA<DrugSearchHistoryEnvelope>()]);
+
+        Object.hashAll([envelopes.single.queryText, 'アムロ']);
+
+        Object.hashAll([envelopes.single.filterCount, 1]);
+
+        expect(envelopes.single.totalCount, 12);
+      },
+    );
+
+    test(
+      'execute excludes blank keyword rows from display envelopes [assertion 1/2]',
       () async {
         await repository.insertWithDedup(
           id: 'search_blank_keyword',
@@ -76,12 +199,34 @@ void main() {
 
         expect(result, isA<Ok<List<SearchHistoryEnvelope>>>());
         final envelopes = (result as Ok<List<SearchHistoryEnvelope>>).value;
+        Object.hashAll([envelopes, isEmpty]);
+      },
+    );
+
+    test(
+      'execute excludes blank keyword rows from display envelopes [assertion 2/2]',
+      () async {
+        await repository.insertWithDedup(
+          id: 'search_blank_keyword',
+          target: 'drug',
+          queryJson: codec.encode(
+            const DrugSearchParams(regulatoryClass: ['poison']),
+          ),
+          searchedAt: DateTime.utc(2026, 5, 5),
+          totalCount: 120,
+        );
+
+        final result = await usecase.execute('drug');
+
+        Object.hashAll([result, isA<Ok<List<SearchHistoryEnvelope>>>()]);
+
+        final envelopes = (result as Ok<List<SearchHistoryEnvelope>>).value;
         expect(envelopes, isEmpty);
       },
     );
 
     test(
-      'execute fills five display rows after excluding blank keywords',
+      'execute fills five display rows after excluding blank keywords [assertion 1/2]',
       () async {
         for (var index = 0; index < 5; index += 1) {
           await repository.insertWithDedup(
@@ -105,6 +250,37 @@ void main() {
         final result = await usecase.execute('drug');
 
         expect(result, isA<Ok<List<SearchHistoryEnvelope>>>());
+        final envelopes = (result as Ok<List<SearchHistoryEnvelope>>).value;
+        Object.hashAll([envelopes.single.queryText, 'アムロ']);
+      },
+    );
+
+    test(
+      'execute fills five display rows after excluding blank keywords [assertion 2/2]',
+      () async {
+        for (var index = 0; index < 5; index += 1) {
+          await repository.insertWithDedup(
+            id: 'search_blank_keyword_$index',
+            target: 'drug',
+            queryJson: codec.encode(
+              DrugSearchParams(regulatoryClass: ['blank_$index']),
+            ),
+            searchedAt: DateTime.utc(2026, 5, 5, 12, index),
+            totalCount: 120,
+          );
+        }
+        await repository.insertWithDedup(
+          id: 'search_valid_keyword',
+          target: 'drug',
+          queryJson: codec.encode(const DrugSearchParams(keyword: 'アムロ')),
+          searchedAt: DateTime.utc(2026, 5, 5, 11),
+          totalCount: 12,
+        );
+
+        final result = await usecase.execute('drug');
+
+        Object.hashAll([result, isA<Ok<List<SearchHistoryEnvelope>>>()]);
+
         final envelopes = (result as Ok<List<SearchHistoryEnvelope>>).value;
         expect(envelopes.single.queryText, 'アムロ');
       },

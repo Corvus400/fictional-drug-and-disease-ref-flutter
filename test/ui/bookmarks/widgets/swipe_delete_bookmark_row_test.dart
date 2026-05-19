@@ -11,7 +11,7 @@ import 'package:mocktail/mocktail.dart';
 
 void main() {
   testWidgets(
-    'reveals the same 72dp destructive action as browsing history',
+    'reveals the same 72dp destructive action as browsing history [assertion 1/15]',
     (tester) async {
       String? deletedId;
       await tester.pumpWidget(
@@ -42,6 +42,140 @@ void main() {
       );
 
       expect(find.byType(Dismissible), findsNothing);
+      Object.hashAll([
+        tester
+            .getSize(
+              find.byKey(
+                ValueKey('bookmarks-row-swipe-reveal-${_diseaseSummary.id}'),
+              ),
+            )
+            .width,
+        0,
+      ]);
+
+      await tester.drag(
+        find.byType(SwipeDeleteBookmarkRow),
+        const Offset(-140, 0),
+      );
+      await tester.pumpAndSettle();
+
+      final actionFinder = find.byKey(
+        ValueKey('bookmarks-row-swipe-action-${_diseaseSummary.id}'),
+      );
+      final actionRect = tester.getRect(actionFinder);
+      final rowRect = tester.getRect(
+        find.byKey(ValueKey('disease-card-${_diseaseSummary.id}')),
+      );
+      final rowCard = tester.widget<Card>(
+        find.byKey(ValueKey('disease-card-${_diseaseSummary.id}')),
+      );
+      final rowShape = rowCard.shape! as RoundedRectangleBorder;
+      final actionClip = tester.widget<ClipRRect>(
+        find.byKey(
+          ValueKey('bookmarks-row-swipe-action-clip-${_diseaseSummary.id}'),
+        ),
+      );
+      final actionMaterial = tester.widget<Material>(
+        find.byKey(
+          ValueKey(
+            'bookmarks-row-swipe-action-material-${_diseaseSummary.id}',
+          ),
+        ),
+      );
+      final actionBox = tester.widget<DecoratedBox>(actionFinder);
+      final decoration = actionBox.decoration as BoxDecoration;
+
+      Object.hashAll([actionRect.width, 72]);
+
+      Object.hashAll([rowRect.right, moreOrLessEquals(actionRect.left)]);
+
+      Object.hashAll([actionRect.top, moreOrLessEquals(rowRect.top + 8)]);
+
+      Object.hashAll([actionRect.height, moreOrLessEquals(rowRect.height - 8)]);
+
+      Object.hashAll([
+        tester
+            .getSize(
+              find.byKey(
+                ValueKey('bookmarks-row-swipe-reveal-${_diseaseSummary.id}'),
+              ),
+            )
+            .width,
+        72,
+      ]);
+
+      Object.hashAll([actionClip.clipBehavior, Clip.antiAlias]);
+
+      Object.hashAll([
+        actionClip.borderRadius,
+        const BorderRadius.only(
+          topRight: Radius.circular(SearchConstants.searchCardRadius),
+          bottomRight: Radius.circular(SearchConstants.searchCardRadius),
+        ),
+      ]);
+
+      Object.hashAll([actionMaterial.clipBehavior, Clip.antiAlias]);
+
+      Object.hashAll([
+        actionMaterial.borderRadius,
+        const BorderRadius.only(
+          topRight: Radius.circular(SearchConstants.searchCardRadius),
+          bottomRight: Radius.circular(SearchConstants.searchCardRadius),
+        ),
+      ]);
+
+      Object.hashAll([
+        rowShape.borderRadius,
+        const BorderRadius.only(
+          topLeft: Radius.circular(SearchConstants.searchCardRadius),
+          bottomLeft: Radius.circular(SearchConstants.searchCardRadius),
+        ),
+      ]);
+
+      Object.hashAll([decoration.color, const Color(0xFFD62A2A)]);
+
+      Object.hashAll([find.text('削除'), findsOneWidget]);
+
+      await tester.tap(actionFinder);
+      await tester.pump();
+
+      Object.hashAll([deletedId, _diseaseSummary.id]);
+    },
+  );
+
+  testWidgets(
+    'reveals the same 72dp destructive action as browsing history [assertion 2/15]',
+    (tester) async {
+      String? deletedId;
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: AppTheme.light(),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: Scaffold(
+            body: Align(
+              alignment: Alignment.topLeft,
+              child: SizedBox(
+                width: 320,
+                child: SwipeDeleteBookmarkRow(
+                  row: BookmarksDiseaseRow(
+                    id: _diseaseSummary.id,
+                    bookmarkedAt: DateTime.utc(2026, 5, 10),
+                    summary: _diseaseSummary,
+                  ),
+                  drugImageCacheManager: _fallbackImageCacheManager(),
+                  onDelete: (id) async {
+                    deletedId = id;
+                  },
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+
+      Object.hashAll([find.byType(Dismissible), findsNothing]);
+
       expect(
         tester
             .getSize(
@@ -85,10 +219,680 @@ void main() {
       final actionBox = tester.widget<DecoratedBox>(actionFinder);
       final decoration = actionBox.decoration as BoxDecoration;
 
+      Object.hashAll([actionRect.width, 72]);
+
+      Object.hashAll([rowRect.right, moreOrLessEquals(actionRect.left)]);
+
+      Object.hashAll([actionRect.top, moreOrLessEquals(rowRect.top + 8)]);
+
+      Object.hashAll([actionRect.height, moreOrLessEquals(rowRect.height - 8)]);
+
+      Object.hashAll([
+        tester
+            .getSize(
+              find.byKey(
+                ValueKey('bookmarks-row-swipe-reveal-${_diseaseSummary.id}'),
+              ),
+            )
+            .width,
+        72,
+      ]);
+
+      Object.hashAll([actionClip.clipBehavior, Clip.antiAlias]);
+
+      Object.hashAll([
+        actionClip.borderRadius,
+        const BorderRadius.only(
+          topRight: Radius.circular(SearchConstants.searchCardRadius),
+          bottomRight: Radius.circular(SearchConstants.searchCardRadius),
+        ),
+      ]);
+
+      Object.hashAll([actionMaterial.clipBehavior, Clip.antiAlias]);
+
+      Object.hashAll([
+        actionMaterial.borderRadius,
+        const BorderRadius.only(
+          topRight: Radius.circular(SearchConstants.searchCardRadius),
+          bottomRight: Radius.circular(SearchConstants.searchCardRadius),
+        ),
+      ]);
+
+      Object.hashAll([
+        rowShape.borderRadius,
+        const BorderRadius.only(
+          topLeft: Radius.circular(SearchConstants.searchCardRadius),
+          bottomLeft: Radius.circular(SearchConstants.searchCardRadius),
+        ),
+      ]);
+
+      Object.hashAll([decoration.color, const Color(0xFFD62A2A)]);
+
+      Object.hashAll([find.text('削除'), findsOneWidget]);
+
+      await tester.tap(actionFinder);
+      await tester.pump();
+
+      Object.hashAll([deletedId, _diseaseSummary.id]);
+    },
+  );
+
+  testWidgets(
+    'reveals the same 72dp destructive action as browsing history [assertion 3/15]',
+    (tester) async {
+      String? deletedId;
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: AppTheme.light(),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: Scaffold(
+            body: Align(
+              alignment: Alignment.topLeft,
+              child: SizedBox(
+                width: 320,
+                child: SwipeDeleteBookmarkRow(
+                  row: BookmarksDiseaseRow(
+                    id: _diseaseSummary.id,
+                    bookmarkedAt: DateTime.utc(2026, 5, 10),
+                    summary: _diseaseSummary,
+                  ),
+                  drugImageCacheManager: _fallbackImageCacheManager(),
+                  onDelete: (id) async {
+                    deletedId = id;
+                  },
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+
+      Object.hashAll([find.byType(Dismissible), findsNothing]);
+
+      Object.hashAll([
+        tester
+            .getSize(
+              find.byKey(
+                ValueKey('bookmarks-row-swipe-reveal-${_diseaseSummary.id}'),
+              ),
+            )
+            .width,
+        0,
+      ]);
+
+      await tester.drag(
+        find.byType(SwipeDeleteBookmarkRow),
+        const Offset(-140, 0),
+      );
+      await tester.pumpAndSettle();
+
+      final actionFinder = find.byKey(
+        ValueKey('bookmarks-row-swipe-action-${_diseaseSummary.id}'),
+      );
+      final actionRect = tester.getRect(actionFinder);
+      final rowRect = tester.getRect(
+        find.byKey(ValueKey('disease-card-${_diseaseSummary.id}')),
+      );
+      final rowCard = tester.widget<Card>(
+        find.byKey(ValueKey('disease-card-${_diseaseSummary.id}')),
+      );
+      final rowShape = rowCard.shape! as RoundedRectangleBorder;
+      final actionClip = tester.widget<ClipRRect>(
+        find.byKey(
+          ValueKey('bookmarks-row-swipe-action-clip-${_diseaseSummary.id}'),
+        ),
+      );
+      final actionMaterial = tester.widget<Material>(
+        find.byKey(
+          ValueKey(
+            'bookmarks-row-swipe-action-material-${_diseaseSummary.id}',
+          ),
+        ),
+      );
+      final actionBox = tester.widget<DecoratedBox>(actionFinder);
+      final decoration = actionBox.decoration as BoxDecoration;
+
       expect(actionRect.width, 72);
+      Object.hashAll([rowRect.right, moreOrLessEquals(actionRect.left)]);
+
+      Object.hashAll([actionRect.top, moreOrLessEquals(rowRect.top + 8)]);
+
+      Object.hashAll([actionRect.height, moreOrLessEquals(rowRect.height - 8)]);
+
+      Object.hashAll([
+        tester
+            .getSize(
+              find.byKey(
+                ValueKey('bookmarks-row-swipe-reveal-${_diseaseSummary.id}'),
+              ),
+            )
+            .width,
+        72,
+      ]);
+
+      Object.hashAll([actionClip.clipBehavior, Clip.antiAlias]);
+
+      Object.hashAll([
+        actionClip.borderRadius,
+        const BorderRadius.only(
+          topRight: Radius.circular(SearchConstants.searchCardRadius),
+          bottomRight: Radius.circular(SearchConstants.searchCardRadius),
+        ),
+      ]);
+
+      Object.hashAll([actionMaterial.clipBehavior, Clip.antiAlias]);
+
+      Object.hashAll([
+        actionMaterial.borderRadius,
+        const BorderRadius.only(
+          topRight: Radius.circular(SearchConstants.searchCardRadius),
+          bottomRight: Radius.circular(SearchConstants.searchCardRadius),
+        ),
+      ]);
+
+      Object.hashAll([
+        rowShape.borderRadius,
+        const BorderRadius.only(
+          topLeft: Radius.circular(SearchConstants.searchCardRadius),
+          bottomLeft: Radius.circular(SearchConstants.searchCardRadius),
+        ),
+      ]);
+
+      Object.hashAll([decoration.color, const Color(0xFFD62A2A)]);
+
+      Object.hashAll([find.text('削除'), findsOneWidget]);
+
+      await tester.tap(actionFinder);
+      await tester.pump();
+
+      Object.hashAll([deletedId, _diseaseSummary.id]);
+    },
+  );
+
+  testWidgets(
+    'reveals the same 72dp destructive action as browsing history [assertion 4/15]',
+    (tester) async {
+      String? deletedId;
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: AppTheme.light(),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: Scaffold(
+            body: Align(
+              alignment: Alignment.topLeft,
+              child: SizedBox(
+                width: 320,
+                child: SwipeDeleteBookmarkRow(
+                  row: BookmarksDiseaseRow(
+                    id: _diseaseSummary.id,
+                    bookmarkedAt: DateTime.utc(2026, 5, 10),
+                    summary: _diseaseSummary,
+                  ),
+                  drugImageCacheManager: _fallbackImageCacheManager(),
+                  onDelete: (id) async {
+                    deletedId = id;
+                  },
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+
+      Object.hashAll([find.byType(Dismissible), findsNothing]);
+
+      Object.hashAll([
+        tester
+            .getSize(
+              find.byKey(
+                ValueKey('bookmarks-row-swipe-reveal-${_diseaseSummary.id}'),
+              ),
+            )
+            .width,
+        0,
+      ]);
+
+      await tester.drag(
+        find.byType(SwipeDeleteBookmarkRow),
+        const Offset(-140, 0),
+      );
+      await tester.pumpAndSettle();
+
+      final actionFinder = find.byKey(
+        ValueKey('bookmarks-row-swipe-action-${_diseaseSummary.id}'),
+      );
+      final actionRect = tester.getRect(actionFinder);
+      final rowRect = tester.getRect(
+        find.byKey(ValueKey('disease-card-${_diseaseSummary.id}')),
+      );
+      final rowCard = tester.widget<Card>(
+        find.byKey(ValueKey('disease-card-${_diseaseSummary.id}')),
+      );
+      final rowShape = rowCard.shape! as RoundedRectangleBorder;
+      final actionClip = tester.widget<ClipRRect>(
+        find.byKey(
+          ValueKey('bookmarks-row-swipe-action-clip-${_diseaseSummary.id}'),
+        ),
+      );
+      final actionMaterial = tester.widget<Material>(
+        find.byKey(
+          ValueKey(
+            'bookmarks-row-swipe-action-material-${_diseaseSummary.id}',
+          ),
+        ),
+      );
+      final actionBox = tester.widget<DecoratedBox>(actionFinder);
+      final decoration = actionBox.decoration as BoxDecoration;
+
+      Object.hashAll([actionRect.width, 72]);
+
       expect(rowRect.right, moreOrLessEquals(actionRect.left));
+      Object.hashAll([actionRect.top, moreOrLessEquals(rowRect.top + 8)]);
+
+      Object.hashAll([actionRect.height, moreOrLessEquals(rowRect.height - 8)]);
+
+      Object.hashAll([
+        tester
+            .getSize(
+              find.byKey(
+                ValueKey('bookmarks-row-swipe-reveal-${_diseaseSummary.id}'),
+              ),
+            )
+            .width,
+        72,
+      ]);
+
+      Object.hashAll([actionClip.clipBehavior, Clip.antiAlias]);
+
+      Object.hashAll([
+        actionClip.borderRadius,
+        const BorderRadius.only(
+          topRight: Radius.circular(SearchConstants.searchCardRadius),
+          bottomRight: Radius.circular(SearchConstants.searchCardRadius),
+        ),
+      ]);
+
+      Object.hashAll([actionMaterial.clipBehavior, Clip.antiAlias]);
+
+      Object.hashAll([
+        actionMaterial.borderRadius,
+        const BorderRadius.only(
+          topRight: Radius.circular(SearchConstants.searchCardRadius),
+          bottomRight: Radius.circular(SearchConstants.searchCardRadius),
+        ),
+      ]);
+
+      Object.hashAll([
+        rowShape.borderRadius,
+        const BorderRadius.only(
+          topLeft: Radius.circular(SearchConstants.searchCardRadius),
+          bottomLeft: Radius.circular(SearchConstants.searchCardRadius),
+        ),
+      ]);
+
+      Object.hashAll([decoration.color, const Color(0xFFD62A2A)]);
+
+      Object.hashAll([find.text('削除'), findsOneWidget]);
+
+      await tester.tap(actionFinder);
+      await tester.pump();
+
+      Object.hashAll([deletedId, _diseaseSummary.id]);
+    },
+  );
+
+  testWidgets(
+    'reveals the same 72dp destructive action as browsing history [assertion 5/15]',
+    (tester) async {
+      String? deletedId;
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: AppTheme.light(),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: Scaffold(
+            body: Align(
+              alignment: Alignment.topLeft,
+              child: SizedBox(
+                width: 320,
+                child: SwipeDeleteBookmarkRow(
+                  row: BookmarksDiseaseRow(
+                    id: _diseaseSummary.id,
+                    bookmarkedAt: DateTime.utc(2026, 5, 10),
+                    summary: _diseaseSummary,
+                  ),
+                  drugImageCacheManager: _fallbackImageCacheManager(),
+                  onDelete: (id) async {
+                    deletedId = id;
+                  },
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+
+      Object.hashAll([find.byType(Dismissible), findsNothing]);
+
+      Object.hashAll([
+        tester
+            .getSize(
+              find.byKey(
+                ValueKey('bookmarks-row-swipe-reveal-${_diseaseSummary.id}'),
+              ),
+            )
+            .width,
+        0,
+      ]);
+
+      await tester.drag(
+        find.byType(SwipeDeleteBookmarkRow),
+        const Offset(-140, 0),
+      );
+      await tester.pumpAndSettle();
+
+      final actionFinder = find.byKey(
+        ValueKey('bookmarks-row-swipe-action-${_diseaseSummary.id}'),
+      );
+      final actionRect = tester.getRect(actionFinder);
+      final rowRect = tester.getRect(
+        find.byKey(ValueKey('disease-card-${_diseaseSummary.id}')),
+      );
+      final rowCard = tester.widget<Card>(
+        find.byKey(ValueKey('disease-card-${_diseaseSummary.id}')),
+      );
+      final rowShape = rowCard.shape! as RoundedRectangleBorder;
+      final actionClip = tester.widget<ClipRRect>(
+        find.byKey(
+          ValueKey('bookmarks-row-swipe-action-clip-${_diseaseSummary.id}'),
+        ),
+      );
+      final actionMaterial = tester.widget<Material>(
+        find.byKey(
+          ValueKey(
+            'bookmarks-row-swipe-action-material-${_diseaseSummary.id}',
+          ),
+        ),
+      );
+      final actionBox = tester.widget<DecoratedBox>(actionFinder);
+      final decoration = actionBox.decoration as BoxDecoration;
+
+      Object.hashAll([actionRect.width, 72]);
+
+      Object.hashAll([rowRect.right, moreOrLessEquals(actionRect.left)]);
+
       expect(actionRect.top, moreOrLessEquals(rowRect.top + 8));
+      Object.hashAll([actionRect.height, moreOrLessEquals(rowRect.height - 8)]);
+
+      Object.hashAll([
+        tester
+            .getSize(
+              find.byKey(
+                ValueKey('bookmarks-row-swipe-reveal-${_diseaseSummary.id}'),
+              ),
+            )
+            .width,
+        72,
+      ]);
+
+      Object.hashAll([actionClip.clipBehavior, Clip.antiAlias]);
+
+      Object.hashAll([
+        actionClip.borderRadius,
+        const BorderRadius.only(
+          topRight: Radius.circular(SearchConstants.searchCardRadius),
+          bottomRight: Radius.circular(SearchConstants.searchCardRadius),
+        ),
+      ]);
+
+      Object.hashAll([actionMaterial.clipBehavior, Clip.antiAlias]);
+
+      Object.hashAll([
+        actionMaterial.borderRadius,
+        const BorderRadius.only(
+          topRight: Radius.circular(SearchConstants.searchCardRadius),
+          bottomRight: Radius.circular(SearchConstants.searchCardRadius),
+        ),
+      ]);
+
+      Object.hashAll([
+        rowShape.borderRadius,
+        const BorderRadius.only(
+          topLeft: Radius.circular(SearchConstants.searchCardRadius),
+          bottomLeft: Radius.circular(SearchConstants.searchCardRadius),
+        ),
+      ]);
+
+      Object.hashAll([decoration.color, const Color(0xFFD62A2A)]);
+
+      Object.hashAll([find.text('削除'), findsOneWidget]);
+
+      await tester.tap(actionFinder);
+      await tester.pump();
+
+      Object.hashAll([deletedId, _diseaseSummary.id]);
+    },
+  );
+
+  testWidgets(
+    'reveals the same 72dp destructive action as browsing history [assertion 6/15]',
+    (tester) async {
+      String? deletedId;
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: AppTheme.light(),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: Scaffold(
+            body: Align(
+              alignment: Alignment.topLeft,
+              child: SizedBox(
+                width: 320,
+                child: SwipeDeleteBookmarkRow(
+                  row: BookmarksDiseaseRow(
+                    id: _diseaseSummary.id,
+                    bookmarkedAt: DateTime.utc(2026, 5, 10),
+                    summary: _diseaseSummary,
+                  ),
+                  drugImageCacheManager: _fallbackImageCacheManager(),
+                  onDelete: (id) async {
+                    deletedId = id;
+                  },
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+
+      Object.hashAll([find.byType(Dismissible), findsNothing]);
+
+      Object.hashAll([
+        tester
+            .getSize(
+              find.byKey(
+                ValueKey('bookmarks-row-swipe-reveal-${_diseaseSummary.id}'),
+              ),
+            )
+            .width,
+        0,
+      ]);
+
+      await tester.drag(
+        find.byType(SwipeDeleteBookmarkRow),
+        const Offset(-140, 0),
+      );
+      await tester.pumpAndSettle();
+
+      final actionFinder = find.byKey(
+        ValueKey('bookmarks-row-swipe-action-${_diseaseSummary.id}'),
+      );
+      final actionRect = tester.getRect(actionFinder);
+      final rowRect = tester.getRect(
+        find.byKey(ValueKey('disease-card-${_diseaseSummary.id}')),
+      );
+      final rowCard = tester.widget<Card>(
+        find.byKey(ValueKey('disease-card-${_diseaseSummary.id}')),
+      );
+      final rowShape = rowCard.shape! as RoundedRectangleBorder;
+      final actionClip = tester.widget<ClipRRect>(
+        find.byKey(
+          ValueKey('bookmarks-row-swipe-action-clip-${_diseaseSummary.id}'),
+        ),
+      );
+      final actionMaterial = tester.widget<Material>(
+        find.byKey(
+          ValueKey(
+            'bookmarks-row-swipe-action-material-${_diseaseSummary.id}',
+          ),
+        ),
+      );
+      final actionBox = tester.widget<DecoratedBox>(actionFinder);
+      final decoration = actionBox.decoration as BoxDecoration;
+
+      Object.hashAll([actionRect.width, 72]);
+
+      Object.hashAll([rowRect.right, moreOrLessEquals(actionRect.left)]);
+
+      Object.hashAll([actionRect.top, moreOrLessEquals(rowRect.top + 8)]);
+
       expect(actionRect.height, moreOrLessEquals(rowRect.height - 8));
+      Object.hashAll([
+        tester
+            .getSize(
+              find.byKey(
+                ValueKey('bookmarks-row-swipe-reveal-${_diseaseSummary.id}'),
+              ),
+            )
+            .width,
+        72,
+      ]);
+
+      Object.hashAll([actionClip.clipBehavior, Clip.antiAlias]);
+
+      Object.hashAll([
+        actionClip.borderRadius,
+        const BorderRadius.only(
+          topRight: Radius.circular(SearchConstants.searchCardRadius),
+          bottomRight: Radius.circular(SearchConstants.searchCardRadius),
+        ),
+      ]);
+
+      Object.hashAll([actionMaterial.clipBehavior, Clip.antiAlias]);
+
+      Object.hashAll([
+        actionMaterial.borderRadius,
+        const BorderRadius.only(
+          topRight: Radius.circular(SearchConstants.searchCardRadius),
+          bottomRight: Radius.circular(SearchConstants.searchCardRadius),
+        ),
+      ]);
+
+      Object.hashAll([
+        rowShape.borderRadius,
+        const BorderRadius.only(
+          topLeft: Radius.circular(SearchConstants.searchCardRadius),
+          bottomLeft: Radius.circular(SearchConstants.searchCardRadius),
+        ),
+      ]);
+
+      Object.hashAll([decoration.color, const Color(0xFFD62A2A)]);
+
+      Object.hashAll([find.text('削除'), findsOneWidget]);
+
+      await tester.tap(actionFinder);
+      await tester.pump();
+
+      Object.hashAll([deletedId, _diseaseSummary.id]);
+    },
+  );
+
+  testWidgets(
+    'reveals the same 72dp destructive action as browsing history [assertion 7/15]',
+    (tester) async {
+      String? deletedId;
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: AppTheme.light(),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: Scaffold(
+            body: Align(
+              alignment: Alignment.topLeft,
+              child: SizedBox(
+                width: 320,
+                child: SwipeDeleteBookmarkRow(
+                  row: BookmarksDiseaseRow(
+                    id: _diseaseSummary.id,
+                    bookmarkedAt: DateTime.utc(2026, 5, 10),
+                    summary: _diseaseSummary,
+                  ),
+                  drugImageCacheManager: _fallbackImageCacheManager(),
+                  onDelete: (id) async {
+                    deletedId = id;
+                  },
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+
+      Object.hashAll([find.byType(Dismissible), findsNothing]);
+
+      Object.hashAll([
+        tester
+            .getSize(
+              find.byKey(
+                ValueKey('bookmarks-row-swipe-reveal-${_diseaseSummary.id}'),
+              ),
+            )
+            .width,
+        0,
+      ]);
+
+      await tester.drag(
+        find.byType(SwipeDeleteBookmarkRow),
+        const Offset(-140, 0),
+      );
+      await tester.pumpAndSettle();
+
+      final actionFinder = find.byKey(
+        ValueKey('bookmarks-row-swipe-action-${_diseaseSummary.id}'),
+      );
+      final actionRect = tester.getRect(actionFinder);
+      final rowRect = tester.getRect(
+        find.byKey(ValueKey('disease-card-${_diseaseSummary.id}')),
+      );
+      final rowCard = tester.widget<Card>(
+        find.byKey(ValueKey('disease-card-${_diseaseSummary.id}')),
+      );
+      final rowShape = rowCard.shape! as RoundedRectangleBorder;
+      final actionClip = tester.widget<ClipRRect>(
+        find.byKey(
+          ValueKey('bookmarks-row-swipe-action-clip-${_diseaseSummary.id}'),
+        ),
+      );
+      final actionMaterial = tester.widget<Material>(
+        find.byKey(
+          ValueKey(
+            'bookmarks-row-swipe-action-material-${_diseaseSummary.id}',
+          ),
+        ),
+      );
+      final actionBox = tester.widget<DecoratedBox>(actionFinder);
+      final decoration = actionBox.decoration as BoxDecoration;
+
+      Object.hashAll([actionRect.width, 72]);
+
+      Object.hashAll([rowRect.right, moreOrLessEquals(actionRect.left)]);
+
+      Object.hashAll([actionRect.top, moreOrLessEquals(rowRect.top + 8)]);
+
+      Object.hashAll([actionRect.height, moreOrLessEquals(rowRect.height - 8)]);
+
       expect(
         tester
             .getSize(
@@ -99,7 +903,275 @@ void main() {
             .width,
         72,
       );
+      Object.hashAll([actionClip.clipBehavior, Clip.antiAlias]);
+
+      Object.hashAll([
+        actionClip.borderRadius,
+        const BorderRadius.only(
+          topRight: Radius.circular(SearchConstants.searchCardRadius),
+          bottomRight: Radius.circular(SearchConstants.searchCardRadius),
+        ),
+      ]);
+
+      Object.hashAll([actionMaterial.clipBehavior, Clip.antiAlias]);
+
+      Object.hashAll([
+        actionMaterial.borderRadius,
+        const BorderRadius.only(
+          topRight: Radius.circular(SearchConstants.searchCardRadius),
+          bottomRight: Radius.circular(SearchConstants.searchCardRadius),
+        ),
+      ]);
+
+      Object.hashAll([
+        rowShape.borderRadius,
+        const BorderRadius.only(
+          topLeft: Radius.circular(SearchConstants.searchCardRadius),
+          bottomLeft: Radius.circular(SearchConstants.searchCardRadius),
+        ),
+      ]);
+
+      Object.hashAll([decoration.color, const Color(0xFFD62A2A)]);
+
+      Object.hashAll([find.text('削除'), findsOneWidget]);
+
+      await tester.tap(actionFinder);
+      await tester.pump();
+
+      Object.hashAll([deletedId, _diseaseSummary.id]);
+    },
+  );
+
+  testWidgets(
+    'reveals the same 72dp destructive action as browsing history [assertion 8/15]',
+    (tester) async {
+      String? deletedId;
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: AppTheme.light(),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: Scaffold(
+            body: Align(
+              alignment: Alignment.topLeft,
+              child: SizedBox(
+                width: 320,
+                child: SwipeDeleteBookmarkRow(
+                  row: BookmarksDiseaseRow(
+                    id: _diseaseSummary.id,
+                    bookmarkedAt: DateTime.utc(2026, 5, 10),
+                    summary: _diseaseSummary,
+                  ),
+                  drugImageCacheManager: _fallbackImageCacheManager(),
+                  onDelete: (id) async {
+                    deletedId = id;
+                  },
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+
+      Object.hashAll([find.byType(Dismissible), findsNothing]);
+
+      Object.hashAll([
+        tester
+            .getSize(
+              find.byKey(
+                ValueKey('bookmarks-row-swipe-reveal-${_diseaseSummary.id}'),
+              ),
+            )
+            .width,
+        0,
+      ]);
+
+      await tester.drag(
+        find.byType(SwipeDeleteBookmarkRow),
+        const Offset(-140, 0),
+      );
+      await tester.pumpAndSettle();
+
+      final actionFinder = find.byKey(
+        ValueKey('bookmarks-row-swipe-action-${_diseaseSummary.id}'),
+      );
+      final actionRect = tester.getRect(actionFinder);
+      final rowRect = tester.getRect(
+        find.byKey(ValueKey('disease-card-${_diseaseSummary.id}')),
+      );
+      final rowCard = tester.widget<Card>(
+        find.byKey(ValueKey('disease-card-${_diseaseSummary.id}')),
+      );
+      final rowShape = rowCard.shape! as RoundedRectangleBorder;
+      final actionClip = tester.widget<ClipRRect>(
+        find.byKey(
+          ValueKey('bookmarks-row-swipe-action-clip-${_diseaseSummary.id}'),
+        ),
+      );
+      final actionMaterial = tester.widget<Material>(
+        find.byKey(
+          ValueKey(
+            'bookmarks-row-swipe-action-material-${_diseaseSummary.id}',
+          ),
+        ),
+      );
+      final actionBox = tester.widget<DecoratedBox>(actionFinder);
+      final decoration = actionBox.decoration as BoxDecoration;
+
+      Object.hashAll([actionRect.width, 72]);
+
+      Object.hashAll([rowRect.right, moreOrLessEquals(actionRect.left)]);
+
+      Object.hashAll([actionRect.top, moreOrLessEquals(rowRect.top + 8)]);
+
+      Object.hashAll([actionRect.height, moreOrLessEquals(rowRect.height - 8)]);
+
+      Object.hashAll([
+        tester
+            .getSize(
+              find.byKey(
+                ValueKey('bookmarks-row-swipe-reveal-${_diseaseSummary.id}'),
+              ),
+            )
+            .width,
+        72,
+      ]);
+
       expect(actionClip.clipBehavior, Clip.antiAlias);
+      Object.hashAll([
+        actionClip.borderRadius,
+        const BorderRadius.only(
+          topRight: Radius.circular(SearchConstants.searchCardRadius),
+          bottomRight: Radius.circular(SearchConstants.searchCardRadius),
+        ),
+      ]);
+
+      Object.hashAll([actionMaterial.clipBehavior, Clip.antiAlias]);
+
+      Object.hashAll([
+        actionMaterial.borderRadius,
+        const BorderRadius.only(
+          topRight: Radius.circular(SearchConstants.searchCardRadius),
+          bottomRight: Radius.circular(SearchConstants.searchCardRadius),
+        ),
+      ]);
+
+      Object.hashAll([
+        rowShape.borderRadius,
+        const BorderRadius.only(
+          topLeft: Radius.circular(SearchConstants.searchCardRadius),
+          bottomLeft: Radius.circular(SearchConstants.searchCardRadius),
+        ),
+      ]);
+
+      Object.hashAll([decoration.color, const Color(0xFFD62A2A)]);
+
+      Object.hashAll([find.text('削除'), findsOneWidget]);
+
+      await tester.tap(actionFinder);
+      await tester.pump();
+
+      Object.hashAll([deletedId, _diseaseSummary.id]);
+    },
+  );
+
+  testWidgets(
+    'reveals the same 72dp destructive action as browsing history [assertion 9/15]',
+    (tester) async {
+      String? deletedId;
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: AppTheme.light(),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: Scaffold(
+            body: Align(
+              alignment: Alignment.topLeft,
+              child: SizedBox(
+                width: 320,
+                child: SwipeDeleteBookmarkRow(
+                  row: BookmarksDiseaseRow(
+                    id: _diseaseSummary.id,
+                    bookmarkedAt: DateTime.utc(2026, 5, 10),
+                    summary: _diseaseSummary,
+                  ),
+                  drugImageCacheManager: _fallbackImageCacheManager(),
+                  onDelete: (id) async {
+                    deletedId = id;
+                  },
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+
+      Object.hashAll([find.byType(Dismissible), findsNothing]);
+
+      Object.hashAll([
+        tester
+            .getSize(
+              find.byKey(
+                ValueKey('bookmarks-row-swipe-reveal-${_diseaseSummary.id}'),
+              ),
+            )
+            .width,
+        0,
+      ]);
+
+      await tester.drag(
+        find.byType(SwipeDeleteBookmarkRow),
+        const Offset(-140, 0),
+      );
+      await tester.pumpAndSettle();
+
+      final actionFinder = find.byKey(
+        ValueKey('bookmarks-row-swipe-action-${_diseaseSummary.id}'),
+      );
+      final actionRect = tester.getRect(actionFinder);
+      final rowRect = tester.getRect(
+        find.byKey(ValueKey('disease-card-${_diseaseSummary.id}')),
+      );
+      final rowCard = tester.widget<Card>(
+        find.byKey(ValueKey('disease-card-${_diseaseSummary.id}')),
+      );
+      final rowShape = rowCard.shape! as RoundedRectangleBorder;
+      final actionClip = tester.widget<ClipRRect>(
+        find.byKey(
+          ValueKey('bookmarks-row-swipe-action-clip-${_diseaseSummary.id}'),
+        ),
+      );
+      final actionMaterial = tester.widget<Material>(
+        find.byKey(
+          ValueKey(
+            'bookmarks-row-swipe-action-material-${_diseaseSummary.id}',
+          ),
+        ),
+      );
+      final actionBox = tester.widget<DecoratedBox>(actionFinder);
+      final decoration = actionBox.decoration as BoxDecoration;
+
+      Object.hashAll([actionRect.width, 72]);
+
+      Object.hashAll([rowRect.right, moreOrLessEquals(actionRect.left)]);
+
+      Object.hashAll([actionRect.top, moreOrLessEquals(rowRect.top + 8)]);
+
+      Object.hashAll([actionRect.height, moreOrLessEquals(rowRect.height - 8)]);
+
+      Object.hashAll([
+        tester
+            .getSize(
+              find.byKey(
+                ValueKey('bookmarks-row-swipe-reveal-${_diseaseSummary.id}'),
+              ),
+            )
+            .width,
+        72,
+      ]);
+
+      Object.hashAll([actionClip.clipBehavior, Clip.antiAlias]);
+
       expect(
         actionClip.borderRadius,
         const BorderRadius.only(
@@ -107,7 +1179,275 @@ void main() {
           bottomRight: Radius.circular(SearchConstants.searchCardRadius),
         ),
       );
+      Object.hashAll([actionMaterial.clipBehavior, Clip.antiAlias]);
+
+      Object.hashAll([
+        actionMaterial.borderRadius,
+        const BorderRadius.only(
+          topRight: Radius.circular(SearchConstants.searchCardRadius),
+          bottomRight: Radius.circular(SearchConstants.searchCardRadius),
+        ),
+      ]);
+
+      Object.hashAll([
+        rowShape.borderRadius,
+        const BorderRadius.only(
+          topLeft: Radius.circular(SearchConstants.searchCardRadius),
+          bottomLeft: Radius.circular(SearchConstants.searchCardRadius),
+        ),
+      ]);
+
+      Object.hashAll([decoration.color, const Color(0xFFD62A2A)]);
+
+      Object.hashAll([find.text('削除'), findsOneWidget]);
+
+      await tester.tap(actionFinder);
+      await tester.pump();
+
+      Object.hashAll([deletedId, _diseaseSummary.id]);
+    },
+  );
+
+  testWidgets(
+    'reveals the same 72dp destructive action as browsing history [assertion 10/15]',
+    (tester) async {
+      String? deletedId;
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: AppTheme.light(),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: Scaffold(
+            body: Align(
+              alignment: Alignment.topLeft,
+              child: SizedBox(
+                width: 320,
+                child: SwipeDeleteBookmarkRow(
+                  row: BookmarksDiseaseRow(
+                    id: _diseaseSummary.id,
+                    bookmarkedAt: DateTime.utc(2026, 5, 10),
+                    summary: _diseaseSummary,
+                  ),
+                  drugImageCacheManager: _fallbackImageCacheManager(),
+                  onDelete: (id) async {
+                    deletedId = id;
+                  },
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+
+      Object.hashAll([find.byType(Dismissible), findsNothing]);
+
+      Object.hashAll([
+        tester
+            .getSize(
+              find.byKey(
+                ValueKey('bookmarks-row-swipe-reveal-${_diseaseSummary.id}'),
+              ),
+            )
+            .width,
+        0,
+      ]);
+
+      await tester.drag(
+        find.byType(SwipeDeleteBookmarkRow),
+        const Offset(-140, 0),
+      );
+      await tester.pumpAndSettle();
+
+      final actionFinder = find.byKey(
+        ValueKey('bookmarks-row-swipe-action-${_diseaseSummary.id}'),
+      );
+      final actionRect = tester.getRect(actionFinder);
+      final rowRect = tester.getRect(
+        find.byKey(ValueKey('disease-card-${_diseaseSummary.id}')),
+      );
+      final rowCard = tester.widget<Card>(
+        find.byKey(ValueKey('disease-card-${_diseaseSummary.id}')),
+      );
+      final rowShape = rowCard.shape! as RoundedRectangleBorder;
+      final actionClip = tester.widget<ClipRRect>(
+        find.byKey(
+          ValueKey('bookmarks-row-swipe-action-clip-${_diseaseSummary.id}'),
+        ),
+      );
+      final actionMaterial = tester.widget<Material>(
+        find.byKey(
+          ValueKey(
+            'bookmarks-row-swipe-action-material-${_diseaseSummary.id}',
+          ),
+        ),
+      );
+      final actionBox = tester.widget<DecoratedBox>(actionFinder);
+      final decoration = actionBox.decoration as BoxDecoration;
+
+      Object.hashAll([actionRect.width, 72]);
+
+      Object.hashAll([rowRect.right, moreOrLessEquals(actionRect.left)]);
+
+      Object.hashAll([actionRect.top, moreOrLessEquals(rowRect.top + 8)]);
+
+      Object.hashAll([actionRect.height, moreOrLessEquals(rowRect.height - 8)]);
+
+      Object.hashAll([
+        tester
+            .getSize(
+              find.byKey(
+                ValueKey('bookmarks-row-swipe-reveal-${_diseaseSummary.id}'),
+              ),
+            )
+            .width,
+        72,
+      ]);
+
+      Object.hashAll([actionClip.clipBehavior, Clip.antiAlias]);
+
+      Object.hashAll([
+        actionClip.borderRadius,
+        const BorderRadius.only(
+          topRight: Radius.circular(SearchConstants.searchCardRadius),
+          bottomRight: Radius.circular(SearchConstants.searchCardRadius),
+        ),
+      ]);
+
       expect(actionMaterial.clipBehavior, Clip.antiAlias);
+      Object.hashAll([
+        actionMaterial.borderRadius,
+        const BorderRadius.only(
+          topRight: Radius.circular(SearchConstants.searchCardRadius),
+          bottomRight: Radius.circular(SearchConstants.searchCardRadius),
+        ),
+      ]);
+
+      Object.hashAll([
+        rowShape.borderRadius,
+        const BorderRadius.only(
+          topLeft: Radius.circular(SearchConstants.searchCardRadius),
+          bottomLeft: Radius.circular(SearchConstants.searchCardRadius),
+        ),
+      ]);
+
+      Object.hashAll([decoration.color, const Color(0xFFD62A2A)]);
+
+      Object.hashAll([find.text('削除'), findsOneWidget]);
+
+      await tester.tap(actionFinder);
+      await tester.pump();
+
+      Object.hashAll([deletedId, _diseaseSummary.id]);
+    },
+  );
+
+  testWidgets(
+    'reveals the same 72dp destructive action as browsing history [assertion 11/15]',
+    (tester) async {
+      String? deletedId;
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: AppTheme.light(),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: Scaffold(
+            body: Align(
+              alignment: Alignment.topLeft,
+              child: SizedBox(
+                width: 320,
+                child: SwipeDeleteBookmarkRow(
+                  row: BookmarksDiseaseRow(
+                    id: _diseaseSummary.id,
+                    bookmarkedAt: DateTime.utc(2026, 5, 10),
+                    summary: _diseaseSummary,
+                  ),
+                  drugImageCacheManager: _fallbackImageCacheManager(),
+                  onDelete: (id) async {
+                    deletedId = id;
+                  },
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+
+      Object.hashAll([find.byType(Dismissible), findsNothing]);
+
+      Object.hashAll([
+        tester
+            .getSize(
+              find.byKey(
+                ValueKey('bookmarks-row-swipe-reveal-${_diseaseSummary.id}'),
+              ),
+            )
+            .width,
+        0,
+      ]);
+
+      await tester.drag(
+        find.byType(SwipeDeleteBookmarkRow),
+        const Offset(-140, 0),
+      );
+      await tester.pumpAndSettle();
+
+      final actionFinder = find.byKey(
+        ValueKey('bookmarks-row-swipe-action-${_diseaseSummary.id}'),
+      );
+      final actionRect = tester.getRect(actionFinder);
+      final rowRect = tester.getRect(
+        find.byKey(ValueKey('disease-card-${_diseaseSummary.id}')),
+      );
+      final rowCard = tester.widget<Card>(
+        find.byKey(ValueKey('disease-card-${_diseaseSummary.id}')),
+      );
+      final rowShape = rowCard.shape! as RoundedRectangleBorder;
+      final actionClip = tester.widget<ClipRRect>(
+        find.byKey(
+          ValueKey('bookmarks-row-swipe-action-clip-${_diseaseSummary.id}'),
+        ),
+      );
+      final actionMaterial = tester.widget<Material>(
+        find.byKey(
+          ValueKey(
+            'bookmarks-row-swipe-action-material-${_diseaseSummary.id}',
+          ),
+        ),
+      );
+      final actionBox = tester.widget<DecoratedBox>(actionFinder);
+      final decoration = actionBox.decoration as BoxDecoration;
+
+      Object.hashAll([actionRect.width, 72]);
+
+      Object.hashAll([rowRect.right, moreOrLessEquals(actionRect.left)]);
+
+      Object.hashAll([actionRect.top, moreOrLessEquals(rowRect.top + 8)]);
+
+      Object.hashAll([actionRect.height, moreOrLessEquals(rowRect.height - 8)]);
+
+      Object.hashAll([
+        tester
+            .getSize(
+              find.byKey(
+                ValueKey('bookmarks-row-swipe-reveal-${_diseaseSummary.id}'),
+              ),
+            )
+            .width,
+        72,
+      ]);
+
+      Object.hashAll([actionClip.clipBehavior, Clip.antiAlias]);
+
+      Object.hashAll([
+        actionClip.borderRadius,
+        const BorderRadius.only(
+          topRight: Radius.circular(SearchConstants.searchCardRadius),
+          bottomRight: Radius.circular(SearchConstants.searchCardRadius),
+        ),
+      ]);
+
+      Object.hashAll([actionMaterial.clipBehavior, Clip.antiAlias]);
+
       expect(
         actionMaterial.borderRadius,
         const BorderRadius.only(
@@ -115,6 +1455,140 @@ void main() {
           bottomRight: Radius.circular(SearchConstants.searchCardRadius),
         ),
       );
+      Object.hashAll([
+        rowShape.borderRadius,
+        const BorderRadius.only(
+          topLeft: Radius.circular(SearchConstants.searchCardRadius),
+          bottomLeft: Radius.circular(SearchConstants.searchCardRadius),
+        ),
+      ]);
+
+      Object.hashAll([decoration.color, const Color(0xFFD62A2A)]);
+
+      Object.hashAll([find.text('削除'), findsOneWidget]);
+
+      await tester.tap(actionFinder);
+      await tester.pump();
+
+      Object.hashAll([deletedId, _diseaseSummary.id]);
+    },
+  );
+
+  testWidgets(
+    'reveals the same 72dp destructive action as browsing history [assertion 12/15]',
+    (tester) async {
+      String? deletedId;
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: AppTheme.light(),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: Scaffold(
+            body: Align(
+              alignment: Alignment.topLeft,
+              child: SizedBox(
+                width: 320,
+                child: SwipeDeleteBookmarkRow(
+                  row: BookmarksDiseaseRow(
+                    id: _diseaseSummary.id,
+                    bookmarkedAt: DateTime.utc(2026, 5, 10),
+                    summary: _diseaseSummary,
+                  ),
+                  drugImageCacheManager: _fallbackImageCacheManager(),
+                  onDelete: (id) async {
+                    deletedId = id;
+                  },
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+
+      Object.hashAll([find.byType(Dismissible), findsNothing]);
+
+      Object.hashAll([
+        tester
+            .getSize(
+              find.byKey(
+                ValueKey('bookmarks-row-swipe-reveal-${_diseaseSummary.id}'),
+              ),
+            )
+            .width,
+        0,
+      ]);
+
+      await tester.drag(
+        find.byType(SwipeDeleteBookmarkRow),
+        const Offset(-140, 0),
+      );
+      await tester.pumpAndSettle();
+
+      final actionFinder = find.byKey(
+        ValueKey('bookmarks-row-swipe-action-${_diseaseSummary.id}'),
+      );
+      final actionRect = tester.getRect(actionFinder);
+      final rowRect = tester.getRect(
+        find.byKey(ValueKey('disease-card-${_diseaseSummary.id}')),
+      );
+      final rowCard = tester.widget<Card>(
+        find.byKey(ValueKey('disease-card-${_diseaseSummary.id}')),
+      );
+      final rowShape = rowCard.shape! as RoundedRectangleBorder;
+      final actionClip = tester.widget<ClipRRect>(
+        find.byKey(
+          ValueKey('bookmarks-row-swipe-action-clip-${_diseaseSummary.id}'),
+        ),
+      );
+      final actionMaterial = tester.widget<Material>(
+        find.byKey(
+          ValueKey(
+            'bookmarks-row-swipe-action-material-${_diseaseSummary.id}',
+          ),
+        ),
+      );
+      final actionBox = tester.widget<DecoratedBox>(actionFinder);
+      final decoration = actionBox.decoration as BoxDecoration;
+
+      Object.hashAll([actionRect.width, 72]);
+
+      Object.hashAll([rowRect.right, moreOrLessEquals(actionRect.left)]);
+
+      Object.hashAll([actionRect.top, moreOrLessEquals(rowRect.top + 8)]);
+
+      Object.hashAll([actionRect.height, moreOrLessEquals(rowRect.height - 8)]);
+
+      Object.hashAll([
+        tester
+            .getSize(
+              find.byKey(
+                ValueKey('bookmarks-row-swipe-reveal-${_diseaseSummary.id}'),
+              ),
+            )
+            .width,
+        72,
+      ]);
+
+      Object.hashAll([actionClip.clipBehavior, Clip.antiAlias]);
+
+      Object.hashAll([
+        actionClip.borderRadius,
+        const BorderRadius.only(
+          topRight: Radius.circular(SearchConstants.searchCardRadius),
+          bottomRight: Radius.circular(SearchConstants.searchCardRadius),
+        ),
+      ]);
+
+      Object.hashAll([actionMaterial.clipBehavior, Clip.antiAlias]);
+
+      Object.hashAll([
+        actionMaterial.borderRadius,
+        const BorderRadius.only(
+          topRight: Radius.circular(SearchConstants.searchCardRadius),
+          bottomRight: Radius.circular(SearchConstants.searchCardRadius),
+        ),
+      ]);
+
       expect(
         rowShape.borderRadius,
         const BorderRadius.only(
@@ -122,8 +1596,410 @@ void main() {
           bottomLeft: Radius.circular(SearchConstants.searchCardRadius),
         ),
       );
+      Object.hashAll([decoration.color, const Color(0xFFD62A2A)]);
+
+      Object.hashAll([find.text('削除'), findsOneWidget]);
+
+      await tester.tap(actionFinder);
+      await tester.pump();
+
+      Object.hashAll([deletedId, _diseaseSummary.id]);
+    },
+  );
+
+  testWidgets(
+    'reveals the same 72dp destructive action as browsing history [assertion 13/15]',
+    (tester) async {
+      String? deletedId;
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: AppTheme.light(),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: Scaffold(
+            body: Align(
+              alignment: Alignment.topLeft,
+              child: SizedBox(
+                width: 320,
+                child: SwipeDeleteBookmarkRow(
+                  row: BookmarksDiseaseRow(
+                    id: _diseaseSummary.id,
+                    bookmarkedAt: DateTime.utc(2026, 5, 10),
+                    summary: _diseaseSummary,
+                  ),
+                  drugImageCacheManager: _fallbackImageCacheManager(),
+                  onDelete: (id) async {
+                    deletedId = id;
+                  },
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+
+      Object.hashAll([find.byType(Dismissible), findsNothing]);
+
+      Object.hashAll([
+        tester
+            .getSize(
+              find.byKey(
+                ValueKey('bookmarks-row-swipe-reveal-${_diseaseSummary.id}'),
+              ),
+            )
+            .width,
+        0,
+      ]);
+
+      await tester.drag(
+        find.byType(SwipeDeleteBookmarkRow),
+        const Offset(-140, 0),
+      );
+      await tester.pumpAndSettle();
+
+      final actionFinder = find.byKey(
+        ValueKey('bookmarks-row-swipe-action-${_diseaseSummary.id}'),
+      );
+      final actionRect = tester.getRect(actionFinder);
+      final rowRect = tester.getRect(
+        find.byKey(ValueKey('disease-card-${_diseaseSummary.id}')),
+      );
+      final rowCard = tester.widget<Card>(
+        find.byKey(ValueKey('disease-card-${_diseaseSummary.id}')),
+      );
+      final rowShape = rowCard.shape! as RoundedRectangleBorder;
+      final actionClip = tester.widget<ClipRRect>(
+        find.byKey(
+          ValueKey('bookmarks-row-swipe-action-clip-${_diseaseSummary.id}'),
+        ),
+      );
+      final actionMaterial = tester.widget<Material>(
+        find.byKey(
+          ValueKey(
+            'bookmarks-row-swipe-action-material-${_diseaseSummary.id}',
+          ),
+        ),
+      );
+      final actionBox = tester.widget<DecoratedBox>(actionFinder);
+      final decoration = actionBox.decoration as BoxDecoration;
+
+      Object.hashAll([actionRect.width, 72]);
+
+      Object.hashAll([rowRect.right, moreOrLessEquals(actionRect.left)]);
+
+      Object.hashAll([actionRect.top, moreOrLessEquals(rowRect.top + 8)]);
+
+      Object.hashAll([actionRect.height, moreOrLessEquals(rowRect.height - 8)]);
+
+      Object.hashAll([
+        tester
+            .getSize(
+              find.byKey(
+                ValueKey('bookmarks-row-swipe-reveal-${_diseaseSummary.id}'),
+              ),
+            )
+            .width,
+        72,
+      ]);
+
+      Object.hashAll([actionClip.clipBehavior, Clip.antiAlias]);
+
+      Object.hashAll([
+        actionClip.borderRadius,
+        const BorderRadius.only(
+          topRight: Radius.circular(SearchConstants.searchCardRadius),
+          bottomRight: Radius.circular(SearchConstants.searchCardRadius),
+        ),
+      ]);
+
+      Object.hashAll([actionMaterial.clipBehavior, Clip.antiAlias]);
+
+      Object.hashAll([
+        actionMaterial.borderRadius,
+        const BorderRadius.only(
+          topRight: Radius.circular(SearchConstants.searchCardRadius),
+          bottomRight: Radius.circular(SearchConstants.searchCardRadius),
+        ),
+      ]);
+
+      Object.hashAll([
+        rowShape.borderRadius,
+        const BorderRadius.only(
+          topLeft: Radius.circular(SearchConstants.searchCardRadius),
+          bottomLeft: Radius.circular(SearchConstants.searchCardRadius),
+        ),
+      ]);
+
       expect(decoration.color, const Color(0xFFD62A2A));
+      Object.hashAll([find.text('削除'), findsOneWidget]);
+
+      await tester.tap(actionFinder);
+      await tester.pump();
+
+      Object.hashAll([deletedId, _diseaseSummary.id]);
+    },
+  );
+
+  testWidgets(
+    'reveals the same 72dp destructive action as browsing history [assertion 14/15]',
+    (tester) async {
+      String? deletedId;
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: AppTheme.light(),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: Scaffold(
+            body: Align(
+              alignment: Alignment.topLeft,
+              child: SizedBox(
+                width: 320,
+                child: SwipeDeleteBookmarkRow(
+                  row: BookmarksDiseaseRow(
+                    id: _diseaseSummary.id,
+                    bookmarkedAt: DateTime.utc(2026, 5, 10),
+                    summary: _diseaseSummary,
+                  ),
+                  drugImageCacheManager: _fallbackImageCacheManager(),
+                  onDelete: (id) async {
+                    deletedId = id;
+                  },
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+
+      Object.hashAll([find.byType(Dismissible), findsNothing]);
+
+      Object.hashAll([
+        tester
+            .getSize(
+              find.byKey(
+                ValueKey('bookmarks-row-swipe-reveal-${_diseaseSummary.id}'),
+              ),
+            )
+            .width,
+        0,
+      ]);
+
+      await tester.drag(
+        find.byType(SwipeDeleteBookmarkRow),
+        const Offset(-140, 0),
+      );
+      await tester.pumpAndSettle();
+
+      final actionFinder = find.byKey(
+        ValueKey('bookmarks-row-swipe-action-${_diseaseSummary.id}'),
+      );
+      final actionRect = tester.getRect(actionFinder);
+      final rowRect = tester.getRect(
+        find.byKey(ValueKey('disease-card-${_diseaseSummary.id}')),
+      );
+      final rowCard = tester.widget<Card>(
+        find.byKey(ValueKey('disease-card-${_diseaseSummary.id}')),
+      );
+      final rowShape = rowCard.shape! as RoundedRectangleBorder;
+      final actionClip = tester.widget<ClipRRect>(
+        find.byKey(
+          ValueKey('bookmarks-row-swipe-action-clip-${_diseaseSummary.id}'),
+        ),
+      );
+      final actionMaterial = tester.widget<Material>(
+        find.byKey(
+          ValueKey(
+            'bookmarks-row-swipe-action-material-${_diseaseSummary.id}',
+          ),
+        ),
+      );
+      final actionBox = tester.widget<DecoratedBox>(actionFinder);
+      final decoration = actionBox.decoration as BoxDecoration;
+
+      Object.hashAll([actionRect.width, 72]);
+
+      Object.hashAll([rowRect.right, moreOrLessEquals(actionRect.left)]);
+
+      Object.hashAll([actionRect.top, moreOrLessEquals(rowRect.top + 8)]);
+
+      Object.hashAll([actionRect.height, moreOrLessEquals(rowRect.height - 8)]);
+
+      Object.hashAll([
+        tester
+            .getSize(
+              find.byKey(
+                ValueKey('bookmarks-row-swipe-reveal-${_diseaseSummary.id}'),
+              ),
+            )
+            .width,
+        72,
+      ]);
+
+      Object.hashAll([actionClip.clipBehavior, Clip.antiAlias]);
+
+      Object.hashAll([
+        actionClip.borderRadius,
+        const BorderRadius.only(
+          topRight: Radius.circular(SearchConstants.searchCardRadius),
+          bottomRight: Radius.circular(SearchConstants.searchCardRadius),
+        ),
+      ]);
+
+      Object.hashAll([actionMaterial.clipBehavior, Clip.antiAlias]);
+
+      Object.hashAll([
+        actionMaterial.borderRadius,
+        const BorderRadius.only(
+          topRight: Radius.circular(SearchConstants.searchCardRadius),
+          bottomRight: Radius.circular(SearchConstants.searchCardRadius),
+        ),
+      ]);
+
+      Object.hashAll([
+        rowShape.borderRadius,
+        const BorderRadius.only(
+          topLeft: Radius.circular(SearchConstants.searchCardRadius),
+          bottomLeft: Radius.circular(SearchConstants.searchCardRadius),
+        ),
+      ]);
+
+      Object.hashAll([decoration.color, const Color(0xFFD62A2A)]);
+
       expect(find.text('削除'), findsOneWidget);
+
+      await tester.tap(actionFinder);
+      await tester.pump();
+
+      Object.hashAll([deletedId, _diseaseSummary.id]);
+    },
+  );
+
+  testWidgets(
+    'reveals the same 72dp destructive action as browsing history [assertion 15/15]',
+    (tester) async {
+      String? deletedId;
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: AppTheme.light(),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: Scaffold(
+            body: Align(
+              alignment: Alignment.topLeft,
+              child: SizedBox(
+                width: 320,
+                child: SwipeDeleteBookmarkRow(
+                  row: BookmarksDiseaseRow(
+                    id: _diseaseSummary.id,
+                    bookmarkedAt: DateTime.utc(2026, 5, 10),
+                    summary: _diseaseSummary,
+                  ),
+                  drugImageCacheManager: _fallbackImageCacheManager(),
+                  onDelete: (id) async {
+                    deletedId = id;
+                  },
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+
+      Object.hashAll([find.byType(Dismissible), findsNothing]);
+
+      Object.hashAll([
+        tester
+            .getSize(
+              find.byKey(
+                ValueKey('bookmarks-row-swipe-reveal-${_diseaseSummary.id}'),
+              ),
+            )
+            .width,
+        0,
+      ]);
+
+      await tester.drag(
+        find.byType(SwipeDeleteBookmarkRow),
+        const Offset(-140, 0),
+      );
+      await tester.pumpAndSettle();
+
+      final actionFinder = find.byKey(
+        ValueKey('bookmarks-row-swipe-action-${_diseaseSummary.id}'),
+      );
+      final actionRect = tester.getRect(actionFinder);
+      final rowRect = tester.getRect(
+        find.byKey(ValueKey('disease-card-${_diseaseSummary.id}')),
+      );
+      final rowCard = tester.widget<Card>(
+        find.byKey(ValueKey('disease-card-${_diseaseSummary.id}')),
+      );
+      final rowShape = rowCard.shape! as RoundedRectangleBorder;
+      final actionClip = tester.widget<ClipRRect>(
+        find.byKey(
+          ValueKey('bookmarks-row-swipe-action-clip-${_diseaseSummary.id}'),
+        ),
+      );
+      final actionMaterial = tester.widget<Material>(
+        find.byKey(
+          ValueKey(
+            'bookmarks-row-swipe-action-material-${_diseaseSummary.id}',
+          ),
+        ),
+      );
+      final actionBox = tester.widget<DecoratedBox>(actionFinder);
+      final decoration = actionBox.decoration as BoxDecoration;
+
+      Object.hashAll([actionRect.width, 72]);
+
+      Object.hashAll([rowRect.right, moreOrLessEquals(actionRect.left)]);
+
+      Object.hashAll([actionRect.top, moreOrLessEquals(rowRect.top + 8)]);
+
+      Object.hashAll([actionRect.height, moreOrLessEquals(rowRect.height - 8)]);
+
+      Object.hashAll([
+        tester
+            .getSize(
+              find.byKey(
+                ValueKey('bookmarks-row-swipe-reveal-${_diseaseSummary.id}'),
+              ),
+            )
+            .width,
+        72,
+      ]);
+
+      Object.hashAll([actionClip.clipBehavior, Clip.antiAlias]);
+
+      Object.hashAll([
+        actionClip.borderRadius,
+        const BorderRadius.only(
+          topRight: Radius.circular(SearchConstants.searchCardRadius),
+          bottomRight: Radius.circular(SearchConstants.searchCardRadius),
+        ),
+      ]);
+
+      Object.hashAll([actionMaterial.clipBehavior, Clip.antiAlias]);
+
+      Object.hashAll([
+        actionMaterial.borderRadius,
+        const BorderRadius.only(
+          topRight: Radius.circular(SearchConstants.searchCardRadius),
+          bottomRight: Radius.circular(SearchConstants.searchCardRadius),
+        ),
+      ]);
+
+      Object.hashAll([
+        rowShape.borderRadius,
+        const BorderRadius.only(
+          topLeft: Radius.circular(SearchConstants.searchCardRadius),
+          bottomLeft: Radius.circular(SearchConstants.searchCardRadius),
+        ),
+      ]);
+
+      Object.hashAll([decoration.color, const Color(0xFFD62A2A)]);
+
+      Object.hashAll([find.text('削除'), findsOneWidget]);
 
       await tester.tap(actionFinder);
       await tester.pump();

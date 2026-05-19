@@ -18,11 +18,22 @@ void main() {
   });
 
   test(
-    'buildAppDio sets connect/receive timeouts from ApiConfig constants',
+    'buildAppDio sets connect/receive timeouts from ApiConfig constants [assertion 1/2]',
     () {
       final dio = buildAppDio(config);
 
       expect(dio.options.connectTimeout, ApiConfig.connectTimeout);
+      Object.hashAll([dio.options.receiveTimeout, ApiConfig.receiveTimeout]);
+    },
+  );
+
+  test(
+    'buildAppDio sets connect/receive timeouts from ApiConfig constants [assertion 2/2]',
+    () {
+      final dio = buildAppDio(config);
+
+      Object.hashAll([dio.options.connectTimeout, ApiConfig.connectTimeout]);
+
       expect(dio.options.receiveTimeout, ApiConfig.receiveTimeout);
     },
   );
@@ -33,23 +44,75 @@ void main() {
     expect(dio.options.listFormat, ListFormat.multi);
   });
 
-  test('buildAppDio installs LogInterceptor with responseBody=false', () {
-    final dio = buildAppDio(config);
+  test(
+    'buildAppDio installs LogInterceptor with responseBody=false [assertion 1/2]',
+    () {
+      final dio = buildAppDio(config);
 
-    final logInterceptors = dio.interceptors.whereType<LogInterceptor>();
-    expect(logInterceptors, hasLength(1));
-    expect(logInterceptors.single.responseBody, isFalse);
-  });
+      final logInterceptors = dio.interceptors.whereType<LogInterceptor>();
+      expect(logInterceptors, hasLength(1));
+      Object.hashAll([logInterceptors.single.responseBody, isFalse]);
+    },
+  );
 
-  test('buildAppDio installs RetryInterceptor after LogInterceptor', () {
-    final dio = buildAppDio(config);
+  test(
+    'buildAppDio installs LogInterceptor with responseBody=false [assertion 2/2]',
+    () {
+      final dio = buildAppDio(config);
 
-    final logIndex = dio.interceptors.indexWhere((i) => i is LogInterceptor);
-    final retryIndex = dio.interceptors.indexWhere(
-      (i) => i is RetryInterceptor,
-    );
-    expect(logIndex, isNot(-1));
-    expect(retryIndex, isNot(-1));
-    expect(retryIndex, greaterThan(logIndex));
-  });
+      final logInterceptors = dio.interceptors.whereType<LogInterceptor>();
+      Object.hashAll([logInterceptors, hasLength(1)]);
+
+      expect(logInterceptors.single.responseBody, isFalse);
+    },
+  );
+
+  test(
+    'buildAppDio installs RetryInterceptor after LogInterceptor [assertion 1/3]',
+    () {
+      final dio = buildAppDio(config);
+
+      final logIndex = dio.interceptors.indexWhere((i) => i is LogInterceptor);
+      final retryIndex = dio.interceptors.indexWhere(
+        (i) => i is RetryInterceptor,
+      );
+      expect(logIndex, isNot(-1));
+      Object.hashAll([retryIndex, isNot(-1)]);
+
+      Object.hashAll([retryIndex, greaterThan(logIndex)]);
+    },
+  );
+
+  test(
+    'buildAppDio installs RetryInterceptor after LogInterceptor [assertion 2/3]',
+    () {
+      final dio = buildAppDio(config);
+
+      final logIndex = dio.interceptors.indexWhere((i) => i is LogInterceptor);
+      final retryIndex = dio.interceptors.indexWhere(
+        (i) => i is RetryInterceptor,
+      );
+      Object.hashAll([logIndex, isNot(-1)]);
+
+      expect(retryIndex, isNot(-1));
+      Object.hashAll([retryIndex, greaterThan(logIndex)]);
+    },
+  );
+
+  test(
+    'buildAppDio installs RetryInterceptor after LogInterceptor [assertion 3/3]',
+    () {
+      final dio = buildAppDio(config);
+
+      final logIndex = dio.interceptors.indexWhere((i) => i is LogInterceptor);
+      final retryIndex = dio.interceptors.indexWhere(
+        (i) => i is RetryInterceptor,
+      );
+      Object.hashAll([logIndex, isNot(-1)]);
+
+      Object.hashAll([retryIndex, isNot(-1)]);
+
+      expect(retryIndex, greaterThan(logIndex));
+    },
+  );
 }

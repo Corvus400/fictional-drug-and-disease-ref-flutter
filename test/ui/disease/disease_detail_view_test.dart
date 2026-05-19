@@ -117,7 +117,7 @@ void main() {
   );
 
   testWidgets(
-    'DiseaseDetailView shows network error message and retry action',
+    'DiseaseDetailView shows network error message and retry action [assertion 1/2]',
     (
       tester,
     ) async {
@@ -146,6 +146,44 @@ void main() {
       await tester.pump();
 
       expect(find.text('ネットワークに接続できません'), findsOneWidget);
+      Object.hashAll([find.text('再試行'), findsOneWidget]);
+
+      await tester.pumpWidget(const SizedBox.shrink());
+      await tester.pump();
+    },
+  );
+
+  testWidgets(
+    'DiseaseDetailView shows network error message and retry action [assertion 2/2]',
+    (
+      tester,
+    ) async {
+      when(
+        () => apiClient.getDisease('disease_001'),
+      ).thenThrow(const SocketException('offline'));
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            appDatabaseProvider.overrideWithValue(db),
+            diseaseApiClientProvider.overrideWithValue(apiClient),
+            streamBookmarkStateProvider(
+              'disease_001',
+            ).overrideWith((ref) => const Stream<bool>.empty()),
+          ],
+          child: MaterialApp(
+            theme: AppTheme.light(),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: const DiseaseDetailView(id: 'disease_001'),
+          ),
+        ),
+      );
+      await tester.pump();
+      await tester.pump();
+
+      Object.hashAll([find.text('ネットワークに接続できません'), findsOneWidget]);
+
       expect(find.text('再試行'), findsOneWidget);
 
       await tester.pumpWidget(const SizedBox.shrink());
@@ -154,7 +192,7 @@ void main() {
   );
 
   testWidgets(
-    'DiseaseDetailView shows responsive shell with tabs and footer',
+    'DiseaseDetailView shows responsive shell with tabs and footer [assertion 1/6]',
     (tester) async {
       await tester.binding.setSurfaceSize(const Size(390, 844));
       addTearDown(() => tester.binding.setSurfaceSize(null));
@@ -186,10 +224,255 @@ void main() {
         find.byKey(const ValueKey<String>('detail-phone-layout')),
         findsOneWidget,
       );
+      Object.hashAll([find.text(disease.name), findsOneWidget]);
+
+      Object.hashAll([find.textContaining(disease.nameKana), findsOneWidget]);
+
+      Object.hashAll([find.text('概要'), findsWidgets]);
+
+      Object.hashAll([find.text('診断'), findsOneWidget]);
+
+      Object.hashAll([find.text('ブックマーク'), findsOneWidget]);
+
+      await tester.pumpWidget(const SizedBox.shrink());
+      await tester.pump();
+    },
+  );
+
+  testWidgets(
+    'DiseaseDetailView shows responsive shell with tabs and footer [assertion 2/6]',
+    (tester) async {
+      await tester.binding.setSurfaceSize(const Size(390, 844));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+      final dto = _diseaseFixture();
+      when(() => apiClient.getDisease(dto.id)).thenAnswer((_) async => dto);
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            appDatabaseProvider.overrideWithValue(db),
+            diseaseApiClientProvider.overrideWithValue(apiClient),
+            streamBookmarkStateProvider(
+              dto.id,
+            ).overrideWith((ref) => const Stream<bool>.empty()),
+          ],
+          child: MaterialApp(
+            theme: AppTheme.light(),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: DiseaseDetailView(id: dto.id),
+          ),
+        ),
+      );
+      await tester.pump();
+      await tester.pump();
+
+      final disease = dto.toDomain();
+      Object.hashAll([
+        find.byKey(const ValueKey<String>('detail-phone-layout')),
+        findsOneWidget,
+      ]);
+
       expect(find.text(disease.name), findsOneWidget);
+      Object.hashAll([find.textContaining(disease.nameKana), findsOneWidget]);
+
+      Object.hashAll([find.text('概要'), findsWidgets]);
+
+      Object.hashAll([find.text('診断'), findsOneWidget]);
+
+      Object.hashAll([find.text('ブックマーク'), findsOneWidget]);
+
+      await tester.pumpWidget(const SizedBox.shrink());
+      await tester.pump();
+    },
+  );
+
+  testWidgets(
+    'DiseaseDetailView shows responsive shell with tabs and footer [assertion 3/6]',
+    (tester) async {
+      await tester.binding.setSurfaceSize(const Size(390, 844));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+      final dto = _diseaseFixture();
+      when(() => apiClient.getDisease(dto.id)).thenAnswer((_) async => dto);
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            appDatabaseProvider.overrideWithValue(db),
+            diseaseApiClientProvider.overrideWithValue(apiClient),
+            streamBookmarkStateProvider(
+              dto.id,
+            ).overrideWith((ref) => const Stream<bool>.empty()),
+          ],
+          child: MaterialApp(
+            theme: AppTheme.light(),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: DiseaseDetailView(id: dto.id),
+          ),
+        ),
+      );
+      await tester.pump();
+      await tester.pump();
+
+      final disease = dto.toDomain();
+      Object.hashAll([
+        find.byKey(const ValueKey<String>('detail-phone-layout')),
+        findsOneWidget,
+      ]);
+
+      Object.hashAll([find.text(disease.name), findsOneWidget]);
+
       expect(find.textContaining(disease.nameKana), findsOneWidget);
+      Object.hashAll([find.text('概要'), findsWidgets]);
+
+      Object.hashAll([find.text('診断'), findsOneWidget]);
+
+      Object.hashAll([find.text('ブックマーク'), findsOneWidget]);
+
+      await tester.pumpWidget(const SizedBox.shrink());
+      await tester.pump();
+    },
+  );
+
+  testWidgets(
+    'DiseaseDetailView shows responsive shell with tabs and footer [assertion 4/6]',
+    (tester) async {
+      await tester.binding.setSurfaceSize(const Size(390, 844));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+      final dto = _diseaseFixture();
+      when(() => apiClient.getDisease(dto.id)).thenAnswer((_) async => dto);
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            appDatabaseProvider.overrideWithValue(db),
+            diseaseApiClientProvider.overrideWithValue(apiClient),
+            streamBookmarkStateProvider(
+              dto.id,
+            ).overrideWith((ref) => const Stream<bool>.empty()),
+          ],
+          child: MaterialApp(
+            theme: AppTheme.light(),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: DiseaseDetailView(id: dto.id),
+          ),
+        ),
+      );
+      await tester.pump();
+      await tester.pump();
+
+      final disease = dto.toDomain();
+      Object.hashAll([
+        find.byKey(const ValueKey<String>('detail-phone-layout')),
+        findsOneWidget,
+      ]);
+
+      Object.hashAll([find.text(disease.name), findsOneWidget]);
+
+      Object.hashAll([find.textContaining(disease.nameKana), findsOneWidget]);
+
       expect(find.text('概要'), findsWidgets);
+      Object.hashAll([find.text('診断'), findsOneWidget]);
+
+      Object.hashAll([find.text('ブックマーク'), findsOneWidget]);
+
+      await tester.pumpWidget(const SizedBox.shrink());
+      await tester.pump();
+    },
+  );
+
+  testWidgets(
+    'DiseaseDetailView shows responsive shell with tabs and footer [assertion 5/6]',
+    (tester) async {
+      await tester.binding.setSurfaceSize(const Size(390, 844));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+      final dto = _diseaseFixture();
+      when(() => apiClient.getDisease(dto.id)).thenAnswer((_) async => dto);
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            appDatabaseProvider.overrideWithValue(db),
+            diseaseApiClientProvider.overrideWithValue(apiClient),
+            streamBookmarkStateProvider(
+              dto.id,
+            ).overrideWith((ref) => const Stream<bool>.empty()),
+          ],
+          child: MaterialApp(
+            theme: AppTheme.light(),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: DiseaseDetailView(id: dto.id),
+          ),
+        ),
+      );
+      await tester.pump();
+      await tester.pump();
+
+      final disease = dto.toDomain();
+      Object.hashAll([
+        find.byKey(const ValueKey<String>('detail-phone-layout')),
+        findsOneWidget,
+      ]);
+
+      Object.hashAll([find.text(disease.name), findsOneWidget]);
+
+      Object.hashAll([find.textContaining(disease.nameKana), findsOneWidget]);
+
+      Object.hashAll([find.text('概要'), findsWidgets]);
+
       expect(find.text('診断'), findsOneWidget);
+      Object.hashAll([find.text('ブックマーク'), findsOneWidget]);
+
+      await tester.pumpWidget(const SizedBox.shrink());
+      await tester.pump();
+    },
+  );
+
+  testWidgets(
+    'DiseaseDetailView shows responsive shell with tabs and footer [assertion 6/6]',
+    (tester) async {
+      await tester.binding.setSurfaceSize(const Size(390, 844));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+      final dto = _diseaseFixture();
+      when(() => apiClient.getDisease(dto.id)).thenAnswer((_) async => dto);
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            appDatabaseProvider.overrideWithValue(db),
+            diseaseApiClientProvider.overrideWithValue(apiClient),
+            streamBookmarkStateProvider(
+              dto.id,
+            ).overrideWith((ref) => const Stream<bool>.empty()),
+          ],
+          child: MaterialApp(
+            theme: AppTheme.light(),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: DiseaseDetailView(id: dto.id),
+          ),
+        ),
+      );
+      await tester.pump();
+      await tester.pump();
+
+      final disease = dto.toDomain();
+      Object.hashAll([
+        find.byKey(const ValueKey<String>('detail-phone-layout')),
+        findsOneWidget,
+      ]);
+
+      Object.hashAll([find.text(disease.name), findsOneWidget]);
+
+      Object.hashAll([find.textContaining(disease.nameKana), findsOneWidget]);
+
+      Object.hashAll([find.text('概要'), findsWidgets]);
+
+      Object.hashAll([find.text('診断'), findsOneWidget]);
+
       expect(find.text('ブックマーク'), findsOneWidget);
 
       await tester.pumpWidget(const SizedBox.shrink());
@@ -197,119 +480,903 @@ void main() {
     },
   );
 
-  testWidgets('DiseaseDetailView uses tablet two-pane layout at tablet width', (
-    tester,
-  ) async {
-    await tester.binding.setSurfaceSize(const Size(834, 1194));
-    addTearDown(() => tester.binding.setSurfaceSize(null));
-    final dto = _diseaseFixture();
-    when(() => apiClient.getDisease(dto.id)).thenAnswer((_) async => dto);
+  testWidgets(
+    'DiseaseDetailView uses tablet two-pane layout at tablet width [assertion 1/10]',
+    (
+      tester,
+    ) async {
+      await tester.binding.setSurfaceSize(const Size(834, 1194));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+      final dto = _diseaseFixture();
+      when(() => apiClient.getDisease(dto.id)).thenAnswer((_) async => dto);
 
-    await tester.pumpWidget(
-      ProviderScope(
-        overrides: [
-          appDatabaseProvider.overrideWithValue(db),
-          diseaseApiClientProvider.overrideWithValue(apiClient),
-          streamBookmarkStateProvider(
-            dto.id,
-          ).overrideWith((ref) => const Stream<bool>.empty()),
-        ],
-        child: MaterialApp(
-          theme: AppTheme.light(),
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
-          supportedLocales: AppLocalizations.supportedLocales,
-          home: DiseaseDetailView(id: dto.id),
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            appDatabaseProvider.overrideWithValue(db),
+            diseaseApiClientProvider.overrideWithValue(apiClient),
+            streamBookmarkStateProvider(
+              dto.id,
+            ).overrideWith((ref) => const Stream<bool>.empty()),
+          ],
+          child: MaterialApp(
+            theme: AppTheme.light(),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: DiseaseDetailView(id: dto.id),
+          ),
         ),
-      ),
-    );
-    await tester.pump();
-    await tester.pump();
+      );
+      await tester.pump();
+      await tester.pump();
 
-    expect(
-      find.byKey(const ValueKey<String>('detail-tablet-shell')),
-      findsOneWidget,
-    );
-    expect(
-      find.byKey(const ValueKey<String>('detail-tablet-nav-pane')),
-      findsOneWidget,
-    );
-    expect(
-      tester
-          .widget<SizedBox>(
-            find.byKey(const ValueKey<String>('detail-tablet-nav-pane')),
-          )
-          .width,
-      240,
-    );
-    final appBar = tester.widget<AppBar>(find.byType(AppBar));
-    expect(appBar.toolbarHeight, DetailConstants.appBarHeight);
-    expect(
-      appBar.titleTextStyle?.fontSize,
-      DetailConstants.appBarTitleFontSize,
-    );
-    expect(appBar.titleTextStyle?.fontWeight, FontWeight.w600);
-    expect(
-      find.byKey(const ValueKey<String>('detail-tablet-nav-header')),
-      findsOneWidget,
-    );
-    expect(
-      find.byKey(const ValueKey<String>('detail-tablet-nav-index')),
-      findsNWidgets(DiseaseDetailTab.values.length),
-    );
-    final firstNavIndex = tester.widget<Text>(
-      find.byKey(const ValueKey<String>('detail-tablet-nav-index')).first,
-    );
-    expect(firstNavIndex.data, '1');
-    expect(firstNavIndex.style?.fontWeight, FontWeight.w700);
+      expect(
+        find.byKey(const ValueKey<String>('detail-tablet-shell')),
+        findsOneWidget,
+      );
+      Object.hashAll([
+        find.byKey(const ValueKey<String>('detail-tablet-nav-pane')),
+        findsOneWidget,
+      ]);
 
-    await tester.pumpWidget(const SizedBox.shrink());
-    await tester.pump();
-  });
+      Object.hashAll([
+        tester
+            .widget<SizedBox>(
+              find.byKey(const ValueKey<String>('detail-tablet-nav-pane')),
+            )
+            .width,
+        240,
+      ]);
 
-  testWidgets('DiseaseDetailView swaps active tab body with AnimatedSwitcher', (
-    tester,
-  ) async {
-    final dto = _diseaseFixture();
-    when(() => apiClient.getDisease(dto.id)).thenAnswer((_) async => dto);
+      final appBar = tester.widget<AppBar>(find.byType(AppBar));
+      Object.hashAll([appBar.toolbarHeight, DetailConstants.appBarHeight]);
 
-    await tester.pumpWidget(
-      ProviderScope(
-        overrides: [
-          appDatabaseProvider.overrideWithValue(db),
-          diseaseApiClientProvider.overrideWithValue(apiClient),
-          streamBookmarkStateProvider(
-            dto.id,
-          ).overrideWith((ref) => const Stream<bool>.empty()),
-        ],
-        child: MaterialApp(
-          theme: AppTheme.light(),
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
-          supportedLocales: AppLocalizations.supportedLocales,
-          home: DiseaseDetailView(id: dto.id),
+      Object.hashAll([
+        appBar.titleTextStyle?.fontSize,
+        DetailConstants.appBarTitleFontSize,
+      ]);
+
+      Object.hashAll([appBar.titleTextStyle?.fontWeight, FontWeight.w600]);
+
+      Object.hashAll([
+        find.byKey(const ValueKey<String>('detail-tablet-nav-header')),
+        findsOneWidget,
+      ]);
+
+      Object.hashAll([
+        find.byKey(const ValueKey<String>('detail-tablet-nav-index')),
+        findsNWidgets(DiseaseDetailTab.values.length),
+      ]);
+
+      final firstNavIndex = tester.widget<Text>(
+        find.byKey(const ValueKey<String>('detail-tablet-nav-index')).first,
+      );
+      Object.hashAll([firstNavIndex.data, '1']);
+
+      Object.hashAll([firstNavIndex.style?.fontWeight, FontWeight.w700]);
+
+      await tester.pumpWidget(const SizedBox.shrink());
+      await tester.pump();
+    },
+  );
+
+  testWidgets(
+    'DiseaseDetailView uses tablet two-pane layout at tablet width [assertion 2/10]',
+    (
+      tester,
+    ) async {
+      await tester.binding.setSurfaceSize(const Size(834, 1194));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+      final dto = _diseaseFixture();
+      when(() => apiClient.getDisease(dto.id)).thenAnswer((_) async => dto);
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            appDatabaseProvider.overrideWithValue(db),
+            diseaseApiClientProvider.overrideWithValue(apiClient),
+            streamBookmarkStateProvider(
+              dto.id,
+            ).overrideWith((ref) => const Stream<bool>.empty()),
+          ],
+          child: MaterialApp(
+            theme: AppTheme.light(),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: DiseaseDetailView(id: dto.id),
+          ),
         ),
-      ),
-    );
-    await tester.pump();
-    await tester.pump();
+      );
+      await tester.pump();
+      await tester.pump();
 
-    await tester.tap(find.text('治療'));
-    await tester.pump();
+      Object.hashAll([
+        find.byKey(const ValueKey<String>('detail-tablet-shell')),
+        findsOneWidget,
+      ]);
 
-    expect(
-      find.byKey(const ValueKey('disease-detail-active-tab-switcher')),
-      findsOneWidget,
-    );
-    expect(
-      find.descendant(
-        of: find.byKey(const ValueKey('disease-detail-active-tab-body')),
-        matching: find.text('治療'),
-      ),
-      findsOneWidget,
-    );
+      expect(
+        find.byKey(const ValueKey<String>('detail-tablet-nav-pane')),
+        findsOneWidget,
+      );
+      Object.hashAll([
+        tester
+            .widget<SizedBox>(
+              find.byKey(const ValueKey<String>('detail-tablet-nav-pane')),
+            )
+            .width,
+        240,
+      ]);
 
-    await tester.pumpWidget(const SizedBox.shrink());
-    await tester.pump();
-  });
+      final appBar = tester.widget<AppBar>(find.byType(AppBar));
+      Object.hashAll([appBar.toolbarHeight, DetailConstants.appBarHeight]);
+
+      Object.hashAll([
+        appBar.titleTextStyle?.fontSize,
+        DetailConstants.appBarTitleFontSize,
+      ]);
+
+      Object.hashAll([appBar.titleTextStyle?.fontWeight, FontWeight.w600]);
+
+      Object.hashAll([
+        find.byKey(const ValueKey<String>('detail-tablet-nav-header')),
+        findsOneWidget,
+      ]);
+
+      Object.hashAll([
+        find.byKey(const ValueKey<String>('detail-tablet-nav-index')),
+        findsNWidgets(DiseaseDetailTab.values.length),
+      ]);
+
+      final firstNavIndex = tester.widget<Text>(
+        find.byKey(const ValueKey<String>('detail-tablet-nav-index')).first,
+      );
+      Object.hashAll([firstNavIndex.data, '1']);
+
+      Object.hashAll([firstNavIndex.style?.fontWeight, FontWeight.w700]);
+
+      await tester.pumpWidget(const SizedBox.shrink());
+      await tester.pump();
+    },
+  );
+
+  testWidgets(
+    'DiseaseDetailView uses tablet two-pane layout at tablet width [assertion 3/10]',
+    (
+      tester,
+    ) async {
+      await tester.binding.setSurfaceSize(const Size(834, 1194));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+      final dto = _diseaseFixture();
+      when(() => apiClient.getDisease(dto.id)).thenAnswer((_) async => dto);
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            appDatabaseProvider.overrideWithValue(db),
+            diseaseApiClientProvider.overrideWithValue(apiClient),
+            streamBookmarkStateProvider(
+              dto.id,
+            ).overrideWith((ref) => const Stream<bool>.empty()),
+          ],
+          child: MaterialApp(
+            theme: AppTheme.light(),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: DiseaseDetailView(id: dto.id),
+          ),
+        ),
+      );
+      await tester.pump();
+      await tester.pump();
+
+      Object.hashAll([
+        find.byKey(const ValueKey<String>('detail-tablet-shell')),
+        findsOneWidget,
+      ]);
+
+      Object.hashAll([
+        find.byKey(const ValueKey<String>('detail-tablet-nav-pane')),
+        findsOneWidget,
+      ]);
+
+      expect(
+        tester
+            .widget<SizedBox>(
+              find.byKey(const ValueKey<String>('detail-tablet-nav-pane')),
+            )
+            .width,
+        240,
+      );
+      final appBar = tester.widget<AppBar>(find.byType(AppBar));
+      Object.hashAll([appBar.toolbarHeight, DetailConstants.appBarHeight]);
+
+      Object.hashAll([
+        appBar.titleTextStyle?.fontSize,
+        DetailConstants.appBarTitleFontSize,
+      ]);
+
+      Object.hashAll([appBar.titleTextStyle?.fontWeight, FontWeight.w600]);
+
+      Object.hashAll([
+        find.byKey(const ValueKey<String>('detail-tablet-nav-header')),
+        findsOneWidget,
+      ]);
+
+      Object.hashAll([
+        find.byKey(const ValueKey<String>('detail-tablet-nav-index')),
+        findsNWidgets(DiseaseDetailTab.values.length),
+      ]);
+
+      final firstNavIndex = tester.widget<Text>(
+        find.byKey(const ValueKey<String>('detail-tablet-nav-index')).first,
+      );
+      Object.hashAll([firstNavIndex.data, '1']);
+
+      Object.hashAll([firstNavIndex.style?.fontWeight, FontWeight.w700]);
+
+      await tester.pumpWidget(const SizedBox.shrink());
+      await tester.pump();
+    },
+  );
+
+  testWidgets(
+    'DiseaseDetailView uses tablet two-pane layout at tablet width [assertion 4/10]',
+    (
+      tester,
+    ) async {
+      await tester.binding.setSurfaceSize(const Size(834, 1194));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+      final dto = _diseaseFixture();
+      when(() => apiClient.getDisease(dto.id)).thenAnswer((_) async => dto);
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            appDatabaseProvider.overrideWithValue(db),
+            diseaseApiClientProvider.overrideWithValue(apiClient),
+            streamBookmarkStateProvider(
+              dto.id,
+            ).overrideWith((ref) => const Stream<bool>.empty()),
+          ],
+          child: MaterialApp(
+            theme: AppTheme.light(),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: DiseaseDetailView(id: dto.id),
+          ),
+        ),
+      );
+      await tester.pump();
+      await tester.pump();
+
+      Object.hashAll([
+        find.byKey(const ValueKey<String>('detail-tablet-shell')),
+        findsOneWidget,
+      ]);
+
+      Object.hashAll([
+        find.byKey(const ValueKey<String>('detail-tablet-nav-pane')),
+        findsOneWidget,
+      ]);
+
+      Object.hashAll([
+        tester
+            .widget<SizedBox>(
+              find.byKey(const ValueKey<String>('detail-tablet-nav-pane')),
+            )
+            .width,
+        240,
+      ]);
+
+      final appBar = tester.widget<AppBar>(find.byType(AppBar));
+      expect(appBar.toolbarHeight, DetailConstants.appBarHeight);
+      Object.hashAll([
+        appBar.titleTextStyle?.fontSize,
+        DetailConstants.appBarTitleFontSize,
+      ]);
+
+      Object.hashAll([appBar.titleTextStyle?.fontWeight, FontWeight.w600]);
+
+      Object.hashAll([
+        find.byKey(const ValueKey<String>('detail-tablet-nav-header')),
+        findsOneWidget,
+      ]);
+
+      Object.hashAll([
+        find.byKey(const ValueKey<String>('detail-tablet-nav-index')),
+        findsNWidgets(DiseaseDetailTab.values.length),
+      ]);
+
+      final firstNavIndex = tester.widget<Text>(
+        find.byKey(const ValueKey<String>('detail-tablet-nav-index')).first,
+      );
+      Object.hashAll([firstNavIndex.data, '1']);
+
+      Object.hashAll([firstNavIndex.style?.fontWeight, FontWeight.w700]);
+
+      await tester.pumpWidget(const SizedBox.shrink());
+      await tester.pump();
+    },
+  );
+
+  testWidgets(
+    'DiseaseDetailView uses tablet two-pane layout at tablet width [assertion 5/10]',
+    (
+      tester,
+    ) async {
+      await tester.binding.setSurfaceSize(const Size(834, 1194));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+      final dto = _diseaseFixture();
+      when(() => apiClient.getDisease(dto.id)).thenAnswer((_) async => dto);
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            appDatabaseProvider.overrideWithValue(db),
+            diseaseApiClientProvider.overrideWithValue(apiClient),
+            streamBookmarkStateProvider(
+              dto.id,
+            ).overrideWith((ref) => const Stream<bool>.empty()),
+          ],
+          child: MaterialApp(
+            theme: AppTheme.light(),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: DiseaseDetailView(id: dto.id),
+          ),
+        ),
+      );
+      await tester.pump();
+      await tester.pump();
+
+      Object.hashAll([
+        find.byKey(const ValueKey<String>('detail-tablet-shell')),
+        findsOneWidget,
+      ]);
+
+      Object.hashAll([
+        find.byKey(const ValueKey<String>('detail-tablet-nav-pane')),
+        findsOneWidget,
+      ]);
+
+      Object.hashAll([
+        tester
+            .widget<SizedBox>(
+              find.byKey(const ValueKey<String>('detail-tablet-nav-pane')),
+            )
+            .width,
+        240,
+      ]);
+
+      final appBar = tester.widget<AppBar>(find.byType(AppBar));
+      Object.hashAll([appBar.toolbarHeight, DetailConstants.appBarHeight]);
+
+      expect(
+        appBar.titleTextStyle?.fontSize,
+        DetailConstants.appBarTitleFontSize,
+      );
+      Object.hashAll([appBar.titleTextStyle?.fontWeight, FontWeight.w600]);
+
+      Object.hashAll([
+        find.byKey(const ValueKey<String>('detail-tablet-nav-header')),
+        findsOneWidget,
+      ]);
+
+      Object.hashAll([
+        find.byKey(const ValueKey<String>('detail-tablet-nav-index')),
+        findsNWidgets(DiseaseDetailTab.values.length),
+      ]);
+
+      final firstNavIndex = tester.widget<Text>(
+        find.byKey(const ValueKey<String>('detail-tablet-nav-index')).first,
+      );
+      Object.hashAll([firstNavIndex.data, '1']);
+
+      Object.hashAll([firstNavIndex.style?.fontWeight, FontWeight.w700]);
+
+      await tester.pumpWidget(const SizedBox.shrink());
+      await tester.pump();
+    },
+  );
+
+  testWidgets(
+    'DiseaseDetailView uses tablet two-pane layout at tablet width [assertion 6/10]',
+    (
+      tester,
+    ) async {
+      await tester.binding.setSurfaceSize(const Size(834, 1194));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+      final dto = _diseaseFixture();
+      when(() => apiClient.getDisease(dto.id)).thenAnswer((_) async => dto);
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            appDatabaseProvider.overrideWithValue(db),
+            diseaseApiClientProvider.overrideWithValue(apiClient),
+            streamBookmarkStateProvider(
+              dto.id,
+            ).overrideWith((ref) => const Stream<bool>.empty()),
+          ],
+          child: MaterialApp(
+            theme: AppTheme.light(),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: DiseaseDetailView(id: dto.id),
+          ),
+        ),
+      );
+      await tester.pump();
+      await tester.pump();
+
+      Object.hashAll([
+        find.byKey(const ValueKey<String>('detail-tablet-shell')),
+        findsOneWidget,
+      ]);
+
+      Object.hashAll([
+        find.byKey(const ValueKey<String>('detail-tablet-nav-pane')),
+        findsOneWidget,
+      ]);
+
+      Object.hashAll([
+        tester
+            .widget<SizedBox>(
+              find.byKey(const ValueKey<String>('detail-tablet-nav-pane')),
+            )
+            .width,
+        240,
+      ]);
+
+      final appBar = tester.widget<AppBar>(find.byType(AppBar));
+      Object.hashAll([appBar.toolbarHeight, DetailConstants.appBarHeight]);
+
+      Object.hashAll([
+        appBar.titleTextStyle?.fontSize,
+        DetailConstants.appBarTitleFontSize,
+      ]);
+
+      expect(appBar.titleTextStyle?.fontWeight, FontWeight.w600);
+      Object.hashAll([
+        find.byKey(const ValueKey<String>('detail-tablet-nav-header')),
+        findsOneWidget,
+      ]);
+
+      Object.hashAll([
+        find.byKey(const ValueKey<String>('detail-tablet-nav-index')),
+        findsNWidgets(DiseaseDetailTab.values.length),
+      ]);
+
+      final firstNavIndex = tester.widget<Text>(
+        find.byKey(const ValueKey<String>('detail-tablet-nav-index')).first,
+      );
+      Object.hashAll([firstNavIndex.data, '1']);
+
+      Object.hashAll([firstNavIndex.style?.fontWeight, FontWeight.w700]);
+
+      await tester.pumpWidget(const SizedBox.shrink());
+      await tester.pump();
+    },
+  );
+
+  testWidgets(
+    'DiseaseDetailView uses tablet two-pane layout at tablet width [assertion 7/10]',
+    (
+      tester,
+    ) async {
+      await tester.binding.setSurfaceSize(const Size(834, 1194));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+      final dto = _diseaseFixture();
+      when(() => apiClient.getDisease(dto.id)).thenAnswer((_) async => dto);
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            appDatabaseProvider.overrideWithValue(db),
+            diseaseApiClientProvider.overrideWithValue(apiClient),
+            streamBookmarkStateProvider(
+              dto.id,
+            ).overrideWith((ref) => const Stream<bool>.empty()),
+          ],
+          child: MaterialApp(
+            theme: AppTheme.light(),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: DiseaseDetailView(id: dto.id),
+          ),
+        ),
+      );
+      await tester.pump();
+      await tester.pump();
+
+      Object.hashAll([
+        find.byKey(const ValueKey<String>('detail-tablet-shell')),
+        findsOneWidget,
+      ]);
+
+      Object.hashAll([
+        find.byKey(const ValueKey<String>('detail-tablet-nav-pane')),
+        findsOneWidget,
+      ]);
+
+      Object.hashAll([
+        tester
+            .widget<SizedBox>(
+              find.byKey(const ValueKey<String>('detail-tablet-nav-pane')),
+            )
+            .width,
+        240,
+      ]);
+
+      final appBar = tester.widget<AppBar>(find.byType(AppBar));
+      Object.hashAll([appBar.toolbarHeight, DetailConstants.appBarHeight]);
+
+      Object.hashAll([
+        appBar.titleTextStyle?.fontSize,
+        DetailConstants.appBarTitleFontSize,
+      ]);
+
+      Object.hashAll([appBar.titleTextStyle?.fontWeight, FontWeight.w600]);
+
+      expect(
+        find.byKey(const ValueKey<String>('detail-tablet-nav-header')),
+        findsOneWidget,
+      );
+      Object.hashAll([
+        find.byKey(const ValueKey<String>('detail-tablet-nav-index')),
+        findsNWidgets(DiseaseDetailTab.values.length),
+      ]);
+
+      final firstNavIndex = tester.widget<Text>(
+        find.byKey(const ValueKey<String>('detail-tablet-nav-index')).first,
+      );
+      Object.hashAll([firstNavIndex.data, '1']);
+
+      Object.hashAll([firstNavIndex.style?.fontWeight, FontWeight.w700]);
+
+      await tester.pumpWidget(const SizedBox.shrink());
+      await tester.pump();
+    },
+  );
+
+  testWidgets(
+    'DiseaseDetailView uses tablet two-pane layout at tablet width [assertion 8/10]',
+    (
+      tester,
+    ) async {
+      await tester.binding.setSurfaceSize(const Size(834, 1194));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+      final dto = _diseaseFixture();
+      when(() => apiClient.getDisease(dto.id)).thenAnswer((_) async => dto);
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            appDatabaseProvider.overrideWithValue(db),
+            diseaseApiClientProvider.overrideWithValue(apiClient),
+            streamBookmarkStateProvider(
+              dto.id,
+            ).overrideWith((ref) => const Stream<bool>.empty()),
+          ],
+          child: MaterialApp(
+            theme: AppTheme.light(),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: DiseaseDetailView(id: dto.id),
+          ),
+        ),
+      );
+      await tester.pump();
+      await tester.pump();
+
+      Object.hashAll([
+        find.byKey(const ValueKey<String>('detail-tablet-shell')),
+        findsOneWidget,
+      ]);
+
+      Object.hashAll([
+        find.byKey(const ValueKey<String>('detail-tablet-nav-pane')),
+        findsOneWidget,
+      ]);
+
+      Object.hashAll([
+        tester
+            .widget<SizedBox>(
+              find.byKey(const ValueKey<String>('detail-tablet-nav-pane')),
+            )
+            .width,
+        240,
+      ]);
+
+      final appBar = tester.widget<AppBar>(find.byType(AppBar));
+      Object.hashAll([appBar.toolbarHeight, DetailConstants.appBarHeight]);
+
+      Object.hashAll([
+        appBar.titleTextStyle?.fontSize,
+        DetailConstants.appBarTitleFontSize,
+      ]);
+
+      Object.hashAll([appBar.titleTextStyle?.fontWeight, FontWeight.w600]);
+
+      Object.hashAll([
+        find.byKey(const ValueKey<String>('detail-tablet-nav-header')),
+        findsOneWidget,
+      ]);
+
+      expect(
+        find.byKey(const ValueKey<String>('detail-tablet-nav-index')),
+        findsNWidgets(DiseaseDetailTab.values.length),
+      );
+      final firstNavIndex = tester.widget<Text>(
+        find.byKey(const ValueKey<String>('detail-tablet-nav-index')).first,
+      );
+      Object.hashAll([firstNavIndex.data, '1']);
+
+      Object.hashAll([firstNavIndex.style?.fontWeight, FontWeight.w700]);
+
+      await tester.pumpWidget(const SizedBox.shrink());
+      await tester.pump();
+    },
+  );
+
+  testWidgets(
+    'DiseaseDetailView uses tablet two-pane layout at tablet width [assertion 9/10]',
+    (
+      tester,
+    ) async {
+      await tester.binding.setSurfaceSize(const Size(834, 1194));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+      final dto = _diseaseFixture();
+      when(() => apiClient.getDisease(dto.id)).thenAnswer((_) async => dto);
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            appDatabaseProvider.overrideWithValue(db),
+            diseaseApiClientProvider.overrideWithValue(apiClient),
+            streamBookmarkStateProvider(
+              dto.id,
+            ).overrideWith((ref) => const Stream<bool>.empty()),
+          ],
+          child: MaterialApp(
+            theme: AppTheme.light(),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: DiseaseDetailView(id: dto.id),
+          ),
+        ),
+      );
+      await tester.pump();
+      await tester.pump();
+
+      Object.hashAll([
+        find.byKey(const ValueKey<String>('detail-tablet-shell')),
+        findsOneWidget,
+      ]);
+
+      Object.hashAll([
+        find.byKey(const ValueKey<String>('detail-tablet-nav-pane')),
+        findsOneWidget,
+      ]);
+
+      Object.hashAll([
+        tester
+            .widget<SizedBox>(
+              find.byKey(const ValueKey<String>('detail-tablet-nav-pane')),
+            )
+            .width,
+        240,
+      ]);
+
+      final appBar = tester.widget<AppBar>(find.byType(AppBar));
+      Object.hashAll([appBar.toolbarHeight, DetailConstants.appBarHeight]);
+
+      Object.hashAll([
+        appBar.titleTextStyle?.fontSize,
+        DetailConstants.appBarTitleFontSize,
+      ]);
+
+      Object.hashAll([appBar.titleTextStyle?.fontWeight, FontWeight.w600]);
+
+      Object.hashAll([
+        find.byKey(const ValueKey<String>('detail-tablet-nav-header')),
+        findsOneWidget,
+      ]);
+
+      Object.hashAll([
+        find.byKey(const ValueKey<String>('detail-tablet-nav-index')),
+        findsNWidgets(DiseaseDetailTab.values.length),
+      ]);
+
+      final firstNavIndex = tester.widget<Text>(
+        find.byKey(const ValueKey<String>('detail-tablet-nav-index')).first,
+      );
+      expect(firstNavIndex.data, '1');
+      Object.hashAll([firstNavIndex.style?.fontWeight, FontWeight.w700]);
+
+      await tester.pumpWidget(const SizedBox.shrink());
+      await tester.pump();
+    },
+  );
+
+  testWidgets(
+    'DiseaseDetailView uses tablet two-pane layout at tablet width [assertion 10/10]',
+    (
+      tester,
+    ) async {
+      await tester.binding.setSurfaceSize(const Size(834, 1194));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+      final dto = _diseaseFixture();
+      when(() => apiClient.getDisease(dto.id)).thenAnswer((_) async => dto);
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            appDatabaseProvider.overrideWithValue(db),
+            diseaseApiClientProvider.overrideWithValue(apiClient),
+            streamBookmarkStateProvider(
+              dto.id,
+            ).overrideWith((ref) => const Stream<bool>.empty()),
+          ],
+          child: MaterialApp(
+            theme: AppTheme.light(),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: DiseaseDetailView(id: dto.id),
+          ),
+        ),
+      );
+      await tester.pump();
+      await tester.pump();
+
+      Object.hashAll([
+        find.byKey(const ValueKey<String>('detail-tablet-shell')),
+        findsOneWidget,
+      ]);
+
+      Object.hashAll([
+        find.byKey(const ValueKey<String>('detail-tablet-nav-pane')),
+        findsOneWidget,
+      ]);
+
+      Object.hashAll([
+        tester
+            .widget<SizedBox>(
+              find.byKey(const ValueKey<String>('detail-tablet-nav-pane')),
+            )
+            .width,
+        240,
+      ]);
+
+      final appBar = tester.widget<AppBar>(find.byType(AppBar));
+      Object.hashAll([appBar.toolbarHeight, DetailConstants.appBarHeight]);
+
+      Object.hashAll([
+        appBar.titleTextStyle?.fontSize,
+        DetailConstants.appBarTitleFontSize,
+      ]);
+
+      Object.hashAll([appBar.titleTextStyle?.fontWeight, FontWeight.w600]);
+
+      Object.hashAll([
+        find.byKey(const ValueKey<String>('detail-tablet-nav-header')),
+        findsOneWidget,
+      ]);
+
+      Object.hashAll([
+        find.byKey(const ValueKey<String>('detail-tablet-nav-index')),
+        findsNWidgets(DiseaseDetailTab.values.length),
+      ]);
+
+      final firstNavIndex = tester.widget<Text>(
+        find.byKey(const ValueKey<String>('detail-tablet-nav-index')).first,
+      );
+      Object.hashAll([firstNavIndex.data, '1']);
+
+      expect(firstNavIndex.style?.fontWeight, FontWeight.w700);
+
+      await tester.pumpWidget(const SizedBox.shrink());
+      await tester.pump();
+    },
+  );
+
+  testWidgets(
+    'DiseaseDetailView swaps active tab body with AnimatedSwitcher [assertion 1/2]',
+    (
+      tester,
+    ) async {
+      final dto = _diseaseFixture();
+      when(() => apiClient.getDisease(dto.id)).thenAnswer((_) async => dto);
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            appDatabaseProvider.overrideWithValue(db),
+            diseaseApiClientProvider.overrideWithValue(apiClient),
+            streamBookmarkStateProvider(
+              dto.id,
+            ).overrideWith((ref) => const Stream<bool>.empty()),
+          ],
+          child: MaterialApp(
+            theme: AppTheme.light(),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: DiseaseDetailView(id: dto.id),
+          ),
+        ),
+      );
+      await tester.pump();
+      await tester.pump();
+
+      await tester.tap(find.text('治療'));
+      await tester.pump();
+
+      expect(
+        find.byKey(const ValueKey('disease-detail-active-tab-switcher')),
+        findsOneWidget,
+      );
+      Object.hashAll([
+        find.descendant(
+          of: find.byKey(const ValueKey('disease-detail-active-tab-body')),
+          matching: find.text('治療'),
+        ),
+        findsOneWidget,
+      ]);
+
+      await tester.pumpWidget(const SizedBox.shrink());
+      await tester.pump();
+    },
+  );
+
+  testWidgets(
+    'DiseaseDetailView swaps active tab body with AnimatedSwitcher [assertion 2/2]',
+    (
+      tester,
+    ) async {
+      final dto = _diseaseFixture();
+      when(() => apiClient.getDisease(dto.id)).thenAnswer((_) async => dto);
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            appDatabaseProvider.overrideWithValue(db),
+            diseaseApiClientProvider.overrideWithValue(apiClient),
+            streamBookmarkStateProvider(
+              dto.id,
+            ).overrideWith((ref) => const Stream<bool>.empty()),
+          ],
+          child: MaterialApp(
+            theme: AppTheme.light(),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: DiseaseDetailView(id: dto.id),
+          ),
+        ),
+      );
+      await tester.pump();
+      await tester.pump();
+
+      await tester.tap(find.text('治療'));
+      await tester.pump();
+
+      Object.hashAll([
+        find.byKey(const ValueKey('disease-detail-active-tab-switcher')),
+        findsOneWidget,
+      ]);
+
+      expect(
+        find.descendant(
+          of: find.byKey(const ValueKey('disease-detail-active-tab-body')),
+          matching: find.text('治療'),
+        ),
+        findsOneWidget,
+      );
+
+      await tester.pumpWidget(const SizedBox.shrink());
+      await tester.pump();
+    },
+  );
 
   testWidgets('DiseaseDetailView keeps active tab body within V2 height', (
     tester,

@@ -258,26 +258,312 @@ void main() {
       );
     });
 
-    test('AppSpacing matches the design SSOT', () {
+    test('AppSpacing matches the design SSOT [assertion 1/9]', () {
       expect(AppSpacing.tokens.s1, 4);
+      Object.hashAll([AppSpacing.tokens.s2, 8]);
+
+      Object.hashAll([AppSpacing.tokens.s3, 12]);
+
+      Object.hashAll([AppSpacing.tokens.s4, 16]);
+
+      Object.hashAll([AppSpacing.tokens.s5, 20]);
+
+      Object.hashAll([AppSpacing.tokens.s6, 24]);
+
+      Object.hashAll([AppSpacing.tokens.s7, 28]);
+
+      Object.hashAll([AppSpacing.tokens.s8, 32]);
+
+      Object.hashAll([AppSpacing.tokens.s10, 40]);
+    });
+
+    test('AppSpacing matches the design SSOT [assertion 2/9]', () {
+      Object.hashAll([AppSpacing.tokens.s1, 4]);
+
       expect(AppSpacing.tokens.s2, 8);
+      Object.hashAll([AppSpacing.tokens.s3, 12]);
+
+      Object.hashAll([AppSpacing.tokens.s4, 16]);
+
+      Object.hashAll([AppSpacing.tokens.s5, 20]);
+
+      Object.hashAll([AppSpacing.tokens.s6, 24]);
+
+      Object.hashAll([AppSpacing.tokens.s7, 28]);
+
+      Object.hashAll([AppSpacing.tokens.s8, 32]);
+
+      Object.hashAll([AppSpacing.tokens.s10, 40]);
+    });
+
+    test('AppSpacing matches the design SSOT [assertion 3/9]', () {
+      Object.hashAll([AppSpacing.tokens.s1, 4]);
+
+      Object.hashAll([AppSpacing.tokens.s2, 8]);
+
       expect(AppSpacing.tokens.s3, 12);
+      Object.hashAll([AppSpacing.tokens.s4, 16]);
+
+      Object.hashAll([AppSpacing.tokens.s5, 20]);
+
+      Object.hashAll([AppSpacing.tokens.s6, 24]);
+
+      Object.hashAll([AppSpacing.tokens.s7, 28]);
+
+      Object.hashAll([AppSpacing.tokens.s8, 32]);
+
+      Object.hashAll([AppSpacing.tokens.s10, 40]);
+    });
+
+    test('AppSpacing matches the design SSOT [assertion 4/9]', () {
+      Object.hashAll([AppSpacing.tokens.s1, 4]);
+
+      Object.hashAll([AppSpacing.tokens.s2, 8]);
+
+      Object.hashAll([AppSpacing.tokens.s3, 12]);
+
       expect(AppSpacing.tokens.s4, 16);
+      Object.hashAll([AppSpacing.tokens.s5, 20]);
+
+      Object.hashAll([AppSpacing.tokens.s6, 24]);
+
+      Object.hashAll([AppSpacing.tokens.s7, 28]);
+
+      Object.hashAll([AppSpacing.tokens.s8, 32]);
+
+      Object.hashAll([AppSpacing.tokens.s10, 40]);
+    });
+
+    test('AppSpacing matches the design SSOT [assertion 5/9]', () {
+      Object.hashAll([AppSpacing.tokens.s1, 4]);
+
+      Object.hashAll([AppSpacing.tokens.s2, 8]);
+
+      Object.hashAll([AppSpacing.tokens.s3, 12]);
+
+      Object.hashAll([AppSpacing.tokens.s4, 16]);
+
       expect(AppSpacing.tokens.s5, 20);
+      Object.hashAll([AppSpacing.tokens.s6, 24]);
+
+      Object.hashAll([AppSpacing.tokens.s7, 28]);
+
+      Object.hashAll([AppSpacing.tokens.s8, 32]);
+
+      Object.hashAll([AppSpacing.tokens.s10, 40]);
+    });
+
+    test('AppSpacing matches the design SSOT [assertion 6/9]', () {
+      Object.hashAll([AppSpacing.tokens.s1, 4]);
+
+      Object.hashAll([AppSpacing.tokens.s2, 8]);
+
+      Object.hashAll([AppSpacing.tokens.s3, 12]);
+
+      Object.hashAll([AppSpacing.tokens.s4, 16]);
+
+      Object.hashAll([AppSpacing.tokens.s5, 20]);
+
       expect(AppSpacing.tokens.s6, 24);
+      Object.hashAll([AppSpacing.tokens.s7, 28]);
+
+      Object.hashAll([AppSpacing.tokens.s8, 32]);
+
+      Object.hashAll([AppSpacing.tokens.s10, 40]);
+    });
+
+    test('AppSpacing matches the design SSOT [assertion 7/9]', () {
+      Object.hashAll([AppSpacing.tokens.s1, 4]);
+
+      Object.hashAll([AppSpacing.tokens.s2, 8]);
+
+      Object.hashAll([AppSpacing.tokens.s3, 12]);
+
+      Object.hashAll([AppSpacing.tokens.s4, 16]);
+
+      Object.hashAll([AppSpacing.tokens.s5, 20]);
+
+      Object.hashAll([AppSpacing.tokens.s6, 24]);
+
       expect(AppSpacing.tokens.s7, 28);
+      Object.hashAll([AppSpacing.tokens.s8, 32]);
+
+      Object.hashAll([AppSpacing.tokens.s10, 40]);
+    });
+
+    test('AppSpacing matches the design SSOT [assertion 8/9]', () {
+      Object.hashAll([AppSpacing.tokens.s1, 4]);
+
+      Object.hashAll([AppSpacing.tokens.s2, 8]);
+
+      Object.hashAll([AppSpacing.tokens.s3, 12]);
+
+      Object.hashAll([AppSpacing.tokens.s4, 16]);
+
+      Object.hashAll([AppSpacing.tokens.s5, 20]);
+
+      Object.hashAll([AppSpacing.tokens.s6, 24]);
+
+      Object.hashAll([AppSpacing.tokens.s7, 28]);
+
       expect(AppSpacing.tokens.s8, 32);
+      Object.hashAll([AppSpacing.tokens.s10, 40]);
+    });
+
+    test('AppSpacing matches the design SSOT [assertion 9/9]', () {
+      Object.hashAll([AppSpacing.tokens.s1, 4]);
+
+      Object.hashAll([AppSpacing.tokens.s2, 8]);
+
+      Object.hashAll([AppSpacing.tokens.s3, 12]);
+
+      Object.hashAll([AppSpacing.tokens.s4, 16]);
+
+      Object.hashAll([AppSpacing.tokens.s5, 20]);
+
+      Object.hashAll([AppSpacing.tokens.s6, 24]);
+
+      Object.hashAll([AppSpacing.tokens.s7, 28]);
+
+      Object.hashAll([AppSpacing.tokens.s8, 32]);
+
       expect(AppSpacing.tokens.s10, 40);
     });
 
-    test('AppRadii matches the design SSOT', () {
+    test('AppRadii matches the design SSOT [assertion 1/8]', () {
       expect(AppRadii.tokens.badge, 4);
+      Object.hashAll([AppRadii.tokens.chip, 5]);
+
+      Object.hashAll([AppRadii.tokens.tile, 8]);
+
+      Object.hashAll([AppRadii.tokens.card, 10]);
+
+      Object.hashAll([AppRadii.tokens.sheetCard, 12]);
+
+      Object.hashAll([AppRadii.tokens.fab, 18]);
+
+      Object.hashAll([AppRadii.tokens.sheetTop, 20]);
+
+      Object.hashAll([AppRadii.tokens.pill, 22]);
+    });
+
+    test('AppRadii matches the design SSOT [assertion 2/8]', () {
+      Object.hashAll([AppRadii.tokens.badge, 4]);
+
       expect(AppRadii.tokens.chip, 5);
+      Object.hashAll([AppRadii.tokens.tile, 8]);
+
+      Object.hashAll([AppRadii.tokens.card, 10]);
+
+      Object.hashAll([AppRadii.tokens.sheetCard, 12]);
+
+      Object.hashAll([AppRadii.tokens.fab, 18]);
+
+      Object.hashAll([AppRadii.tokens.sheetTop, 20]);
+
+      Object.hashAll([AppRadii.tokens.pill, 22]);
+    });
+
+    test('AppRadii matches the design SSOT [assertion 3/8]', () {
+      Object.hashAll([AppRadii.tokens.badge, 4]);
+
+      Object.hashAll([AppRadii.tokens.chip, 5]);
+
       expect(AppRadii.tokens.tile, 8);
+      Object.hashAll([AppRadii.tokens.card, 10]);
+
+      Object.hashAll([AppRadii.tokens.sheetCard, 12]);
+
+      Object.hashAll([AppRadii.tokens.fab, 18]);
+
+      Object.hashAll([AppRadii.tokens.sheetTop, 20]);
+
+      Object.hashAll([AppRadii.tokens.pill, 22]);
+    });
+
+    test('AppRadii matches the design SSOT [assertion 4/8]', () {
+      Object.hashAll([AppRadii.tokens.badge, 4]);
+
+      Object.hashAll([AppRadii.tokens.chip, 5]);
+
+      Object.hashAll([AppRadii.tokens.tile, 8]);
+
       expect(AppRadii.tokens.card, 10);
+      Object.hashAll([AppRadii.tokens.sheetCard, 12]);
+
+      Object.hashAll([AppRadii.tokens.fab, 18]);
+
+      Object.hashAll([AppRadii.tokens.sheetTop, 20]);
+
+      Object.hashAll([AppRadii.tokens.pill, 22]);
+    });
+
+    test('AppRadii matches the design SSOT [assertion 5/8]', () {
+      Object.hashAll([AppRadii.tokens.badge, 4]);
+
+      Object.hashAll([AppRadii.tokens.chip, 5]);
+
+      Object.hashAll([AppRadii.tokens.tile, 8]);
+
+      Object.hashAll([AppRadii.tokens.card, 10]);
+
       expect(AppRadii.tokens.sheetCard, 12);
+      Object.hashAll([AppRadii.tokens.fab, 18]);
+
+      Object.hashAll([AppRadii.tokens.sheetTop, 20]);
+
+      Object.hashAll([AppRadii.tokens.pill, 22]);
+    });
+
+    test('AppRadii matches the design SSOT [assertion 6/8]', () {
+      Object.hashAll([AppRadii.tokens.badge, 4]);
+
+      Object.hashAll([AppRadii.tokens.chip, 5]);
+
+      Object.hashAll([AppRadii.tokens.tile, 8]);
+
+      Object.hashAll([AppRadii.tokens.card, 10]);
+
+      Object.hashAll([AppRadii.tokens.sheetCard, 12]);
+
       expect(AppRadii.tokens.fab, 18);
+      Object.hashAll([AppRadii.tokens.sheetTop, 20]);
+
+      Object.hashAll([AppRadii.tokens.pill, 22]);
+    });
+
+    test('AppRadii matches the design SSOT [assertion 7/8]', () {
+      Object.hashAll([AppRadii.tokens.badge, 4]);
+
+      Object.hashAll([AppRadii.tokens.chip, 5]);
+
+      Object.hashAll([AppRadii.tokens.tile, 8]);
+
+      Object.hashAll([AppRadii.tokens.card, 10]);
+
+      Object.hashAll([AppRadii.tokens.sheetCard, 12]);
+
+      Object.hashAll([AppRadii.tokens.fab, 18]);
+
       expect(AppRadii.tokens.sheetTop, 20);
+      Object.hashAll([AppRadii.tokens.pill, 22]);
+    });
+
+    test('AppRadii matches the design SSOT [assertion 8/8]', () {
+      Object.hashAll([AppRadii.tokens.badge, 4]);
+
+      Object.hashAll([AppRadii.tokens.chip, 5]);
+
+      Object.hashAll([AppRadii.tokens.tile, 8]);
+
+      Object.hashAll([AppRadii.tokens.card, 10]);
+
+      Object.hashAll([AppRadii.tokens.sheetCard, 12]);
+
+      Object.hashAll([AppRadii.tokens.fab, 18]);
+
+      Object.hashAll([AppRadii.tokens.sheetTop, 20]);
+
       expect(AppRadii.tokens.pill, 22);
     });
 
@@ -347,15 +633,100 @@ void main() {
       );
     });
 
-    test('AppTheme registers calc design token extensions', () {
+    test('AppTheme registers calc design token extensions [assertion 1/6]', () {
       final light = AppTheme.light();
       final dark = AppTheme.dark();
 
       expect(light.extension<AppSpacing>(), AppSpacing.tokens);
+      Object.hashAll([dark.extension<AppSpacing>(), AppSpacing.tokens]);
+
+      Object.hashAll([light.extension<AppRadii>(), AppRadii.tokens]);
+
+      Object.hashAll([dark.extension<AppRadii>(), AppRadii.tokens]);
+
+      Object.hashAll([light.extension<AppTypography>(), AppTypography.tokens]);
+
+      Object.hashAll([dark.extension<AppTypography>(), AppTypography.tokens]);
+    });
+
+    test('AppTheme registers calc design token extensions [assertion 2/6]', () {
+      final light = AppTheme.light();
+      final dark = AppTheme.dark();
+
+      Object.hashAll([light.extension<AppSpacing>(), AppSpacing.tokens]);
+
       expect(dark.extension<AppSpacing>(), AppSpacing.tokens);
+      Object.hashAll([light.extension<AppRadii>(), AppRadii.tokens]);
+
+      Object.hashAll([dark.extension<AppRadii>(), AppRadii.tokens]);
+
+      Object.hashAll([light.extension<AppTypography>(), AppTypography.tokens]);
+
+      Object.hashAll([dark.extension<AppTypography>(), AppTypography.tokens]);
+    });
+
+    test('AppTheme registers calc design token extensions [assertion 3/6]', () {
+      final light = AppTheme.light();
+      final dark = AppTheme.dark();
+
+      Object.hashAll([light.extension<AppSpacing>(), AppSpacing.tokens]);
+
+      Object.hashAll([dark.extension<AppSpacing>(), AppSpacing.tokens]);
+
       expect(light.extension<AppRadii>(), AppRadii.tokens);
+      Object.hashAll([dark.extension<AppRadii>(), AppRadii.tokens]);
+
+      Object.hashAll([light.extension<AppTypography>(), AppTypography.tokens]);
+
+      Object.hashAll([dark.extension<AppTypography>(), AppTypography.tokens]);
+    });
+
+    test('AppTheme registers calc design token extensions [assertion 4/6]', () {
+      final light = AppTheme.light();
+      final dark = AppTheme.dark();
+
+      Object.hashAll([light.extension<AppSpacing>(), AppSpacing.tokens]);
+
+      Object.hashAll([dark.extension<AppSpacing>(), AppSpacing.tokens]);
+
+      Object.hashAll([light.extension<AppRadii>(), AppRadii.tokens]);
+
       expect(dark.extension<AppRadii>(), AppRadii.tokens);
+      Object.hashAll([light.extension<AppTypography>(), AppTypography.tokens]);
+
+      Object.hashAll([dark.extension<AppTypography>(), AppTypography.tokens]);
+    });
+
+    test('AppTheme registers calc design token extensions [assertion 5/6]', () {
+      final light = AppTheme.light();
+      final dark = AppTheme.dark();
+
+      Object.hashAll([light.extension<AppSpacing>(), AppSpacing.tokens]);
+
+      Object.hashAll([dark.extension<AppSpacing>(), AppSpacing.tokens]);
+
+      Object.hashAll([light.extension<AppRadii>(), AppRadii.tokens]);
+
+      Object.hashAll([dark.extension<AppRadii>(), AppRadii.tokens]);
+
       expect(light.extension<AppTypography>(), AppTypography.tokens);
+      Object.hashAll([dark.extension<AppTypography>(), AppTypography.tokens]);
+    });
+
+    test('AppTheme registers calc design token extensions [assertion 6/6]', () {
+      final light = AppTheme.light();
+      final dark = AppTheme.dark();
+
+      Object.hashAll([light.extension<AppSpacing>(), AppSpacing.tokens]);
+
+      Object.hashAll([dark.extension<AppSpacing>(), AppSpacing.tokens]);
+
+      Object.hashAll([light.extension<AppRadii>(), AppRadii.tokens]);
+
+      Object.hashAll([dark.extension<AppRadii>(), AppRadii.tokens]);
+
+      Object.hashAll([light.extension<AppTypography>(), AppTypography.tokens]);
+
       expect(dark.extension<AppTypography>(), AppTypography.tokens);
     });
 

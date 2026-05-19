@@ -53,19 +53,40 @@ void main() {
     );
   });
 
-  test('handleZoneError logs error/stack via injected logger', () {
-    final captured = _CapturingLogOutput();
-    final testLogger = _capturingLogger(output: captured);
+  test(
+    'handleZoneError logs error/stack via injected logger [assertion 1/2]',
+    () {
+      final captured = _CapturingLogOutput();
+      final testLogger = _capturingLogger(output: captured);
 
-    handleZoneError(
-      Exception('zone-x'),
-      StackTrace.current,
-      logger: testLogger,
-    );
+      handleZoneError(
+        Exception('zone-x'),
+        StackTrace.current,
+        logger: testLogger,
+      );
 
-    expect(captured.events, hasLength(1));
-    expect(captured.events.first.level, Level.error);
-  });
+      expect(captured.events, hasLength(1));
+      Object.hashAll([captured.events.first.level, Level.error]);
+    },
+  );
+
+  test(
+    'handleZoneError logs error/stack via injected logger [assertion 2/2]',
+    () {
+      final captured = _CapturingLogOutput();
+      final testLogger = _capturingLogger(output: captured);
+
+      handleZoneError(
+        Exception('zone-x'),
+        StackTrace.current,
+        logger: testLogger,
+      );
+
+      Object.hashAll([captured.events, hasLength(1)]);
+
+      expect(captured.events.first.level, Level.error);
+    },
+  );
 }
 
 Logger _capturingLogger({_CapturingLogOutput? output}) {

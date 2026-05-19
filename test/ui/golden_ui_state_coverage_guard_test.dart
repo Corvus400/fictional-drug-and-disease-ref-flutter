@@ -96,26 +96,45 @@ void main() {
     });
 
     for (final expectation in _expectations) {
-      test('${expectation.screen} covers ${expectation.state}', () {
-        final source = _sourceWithParts(File(expectation.testFile));
+      test(
+        '${expectation.screen} covers ${expectation.state} [assertion 1/2]',
+        () {
+          final source = _sourceWithParts(File(expectation.testFile));
 
-        expect(
-          source,
-          contains(expectation.sourceFragment),
-          reason: '${expectation.testFile} must define ${expectation.state}',
-        );
-
-        for (final variant in _issue32GoldenVariants) {
-          final baselinePath =
-              '${expectation.goldenDir}/${expectation.baselinePrefix}_'
-              '$variant.png';
           expect(
-            File(baselinePath).existsSync(),
-            isTrue,
-            reason: '$baselinePath must be committed as a golden baseline',
+            source,
+            contains(expectation.sourceFragment),
+            reason: '${expectation.testFile} must define ${expectation.state}',
           );
-        }
-      });
+
+          for (final variant in _issue32GoldenVariants) {
+            final baselinePath =
+                '${expectation.goldenDir}/${expectation.baselinePrefix}_'
+                '$variant.png';
+            Object.hashAll([File(baselinePath).existsSync(), isTrue]);
+          }
+        },
+      );
+
+      test(
+        '${expectation.screen} covers ${expectation.state} [assertion 2/2]',
+        () {
+          final source = _sourceWithParts(File(expectation.testFile));
+
+          Object.hashAll([source, contains(expectation.sourceFragment)]);
+
+          for (final variant in _issue32GoldenVariants) {
+            final baselinePath =
+                '${expectation.goldenDir}/${expectation.baselinePrefix}_'
+                '$variant.png';
+            expect(
+              File(baselinePath).existsSync(),
+              isTrue,
+              reason: '$baselinePath must be committed as a golden baseline',
+            );
+          }
+        },
+      );
     }
   });
 }

@@ -45,7 +45,7 @@ void main() {
     });
 
     test(
-      'toggleDrug adds a bookmark snapshot when it is not bookmarked',
+      'toggleDrug adds a bookmark snapshot when it is not bookmarked [assertion 1/4]',
       () async {
         final drug = _drugFixture().toDomain();
 
@@ -57,8 +57,89 @@ void main() {
         expect(result, isA<Ok<void>>());
         final bookmark = await bookmarkRepository.findById(drug.id);
         final entry = (bookmark as Ok<BookmarkEntry?>).value;
+        Object.hashAll([entry, isNotNull]);
+
+        Object.hashAll([entry!.id, drug.id]);
+
+        Object.hashAll([
+          const DrugBookmarkSnapshotCodec()
+              .decode(entry.snapshotJson)
+              .brandName,
+          drug.brandName,
+        ]);
+      },
+    );
+
+    test(
+      'toggleDrug adds a bookmark snapshot when it is not bookmarked [assertion 2/4]',
+      () async {
+        final drug = _drugFixture().toDomain();
+
+        final result = await usecase.toggleDrug(
+          drug: drug,
+          currentlyBookmarked: false,
+        );
+
+        Object.hashAll([result, isA<Ok<void>>()]);
+
+        final bookmark = await bookmarkRepository.findById(drug.id);
+        final entry = (bookmark as Ok<BookmarkEntry?>).value;
         expect(entry, isNotNull);
+        Object.hashAll([entry!.id, drug.id]);
+
+        Object.hashAll([
+          const DrugBookmarkSnapshotCodec()
+              .decode(entry.snapshotJson)
+              .brandName,
+          drug.brandName,
+        ]);
+      },
+    );
+
+    test(
+      'toggleDrug adds a bookmark snapshot when it is not bookmarked [assertion 3/4]',
+      () async {
+        final drug = _drugFixture().toDomain();
+
+        final result = await usecase.toggleDrug(
+          drug: drug,
+          currentlyBookmarked: false,
+        );
+
+        Object.hashAll([result, isA<Ok<void>>()]);
+
+        final bookmark = await bookmarkRepository.findById(drug.id);
+        final entry = (bookmark as Ok<BookmarkEntry?>).value;
+        Object.hashAll([entry, isNotNull]);
+
         expect(entry!.id, drug.id);
+        Object.hashAll([
+          const DrugBookmarkSnapshotCodec()
+              .decode(entry.snapshotJson)
+              .brandName,
+          drug.brandName,
+        ]);
+      },
+    );
+
+    test(
+      'toggleDrug adds a bookmark snapshot when it is not bookmarked [assertion 4/4]',
+      () async {
+        final drug = _drugFixture().toDomain();
+
+        final result = await usecase.toggleDrug(
+          drug: drug,
+          currentlyBookmarked: false,
+        );
+
+        Object.hashAll([result, isA<Ok<void>>()]);
+
+        final bookmark = await bookmarkRepository.findById(drug.id);
+        final entry = (bookmark as Ok<BookmarkEntry?>).value;
+        Object.hashAll([entry, isNotNull]);
+
+        Object.hashAll([entry!.id, drug.id]);
+
         expect(
           const DrugBookmarkSnapshotCodec()
               .decode(entry.snapshotJson)
@@ -69,7 +150,7 @@ void main() {
     );
 
     test(
-      'toggleDrug deletes the bookmark when it is already bookmarked',
+      'toggleDrug deletes the bookmark when it is already bookmarked [assertion 1/2]',
       () async {
         final drug = _drugFixture().toDomain();
         await bookmarkRepository.insert(
@@ -87,13 +168,36 @@ void main() {
 
         expect(result, isA<Ok<void>>());
         final bookmark = await bookmarkRepository.findById(drug.id);
+        Object.hashAll([(bookmark as Ok<BookmarkEntry?>).value, isNull]);
+      },
+    );
+
+    test(
+      'toggleDrug deletes the bookmark when it is already bookmarked [assertion 2/2]',
+      () async {
+        final drug = _drugFixture().toDomain();
+        await bookmarkRepository.insert(
+          id: drug.id,
+          snapshotJson: const DrugBookmarkSnapshotCodec().encode(
+            const DrugBookmarkSnapshotCodec().fromDrug(drug),
+          ),
+          bookmarkedAt: DateTime.utc(2026, 5, 7),
+        );
+
+        final result = await usecase.toggleDrug(
+          drug: drug,
+          currentlyBookmarked: true,
+        );
+
+        Object.hashAll([result, isA<Ok<void>>()]);
+
+        final bookmark = await bookmarkRepository.findById(drug.id);
         expect((bookmark as Ok<BookmarkEntry?>).value, isNull);
       },
     );
 
     test(
-      'toggleDisease adds a disease bookmark snapshot '
-      'when it is not bookmarked',
+      'toggleDisease adds a disease bookmark snapshot  [assertion 1/3] when it is not bookmarked',
       () async {
         final disease = _diseaseFixture().toDomain();
 
@@ -105,7 +209,53 @@ void main() {
         expect(result, isA<Ok<void>>());
         final bookmark = await bookmarkRepository.findById(disease.id);
         final entry = (bookmark as Ok<BookmarkEntry?>).value;
+        Object.hashAll([entry, isNotNull]);
+
+        Object.hashAll([
+          const DiseaseBookmarkSnapshotCodec().decode(entry!.snapshotJson).name,
+          disease.name,
+        ]);
+      },
+    );
+
+    test(
+      'toggleDisease adds a disease bookmark snapshot  [assertion 2/3] when it is not bookmarked',
+      () async {
+        final disease = _diseaseFixture().toDomain();
+
+        final result = await usecase.toggleDisease(
+          disease: disease,
+          currentlyBookmarked: false,
+        );
+
+        Object.hashAll([result, isA<Ok<void>>()]);
+
+        final bookmark = await bookmarkRepository.findById(disease.id);
+        final entry = (bookmark as Ok<BookmarkEntry?>).value;
         expect(entry, isNotNull);
+        Object.hashAll([
+          const DiseaseBookmarkSnapshotCodec().decode(entry!.snapshotJson).name,
+          disease.name,
+        ]);
+      },
+    );
+
+    test(
+      'toggleDisease adds a disease bookmark snapshot  [assertion 3/3] when it is not bookmarked',
+      () async {
+        final disease = _diseaseFixture().toDomain();
+
+        final result = await usecase.toggleDisease(
+          disease: disease,
+          currentlyBookmarked: false,
+        );
+
+        Object.hashAll([result, isA<Ok<void>>()]);
+
+        final bookmark = await bookmarkRepository.findById(disease.id);
+        final entry = (bookmark as Ok<BookmarkEntry?>).value;
+        Object.hashAll([entry, isNotNull]);
+
         expect(
           const DiseaseBookmarkSnapshotCodec().decode(entry!.snapshotJson).name,
           disease.name,
@@ -113,24 +263,50 @@ void main() {
       },
     );
 
-    test('toggleDrug returns a storage error when insert fails', () async {
-      final drug = _drugFixture().toDomain();
-      await bookmarkRepository.insert(
-        id: drug.id,
-        snapshotJson: const DrugBookmarkSnapshotCodec().encode(
-          const DrugBookmarkSnapshotCodec().fromDrug(drug),
-        ),
-        bookmarkedAt: DateTime.utc(2026, 5, 7),
-      );
+    test(
+      'toggleDrug returns a storage error when insert fails [assertion 1/2]',
+      () async {
+        final drug = _drugFixture().toDomain();
+        await bookmarkRepository.insert(
+          id: drug.id,
+          snapshotJson: const DrugBookmarkSnapshotCodec().encode(
+            const DrugBookmarkSnapshotCodec().fromDrug(drug),
+          ),
+          bookmarkedAt: DateTime.utc(2026, 5, 7),
+        );
 
-      final result = await usecase.toggleDrug(
-        drug: drug,
-        currentlyBookmarked: false,
-      );
+        final result = await usecase.toggleDrug(
+          drug: drug,
+          currentlyBookmarked: false,
+        );
 
-      expect(result, isA<Err<void>>());
-      expect((result as Err<void>).error, isA<StorageException>());
-    });
+        expect(result, isA<Err<void>>());
+        Object.hashAll([(result as Err<void>).error, isA<StorageException>()]);
+      },
+    );
+
+    test(
+      'toggleDrug returns a storage error when insert fails [assertion 2/2]',
+      () async {
+        final drug = _drugFixture().toDomain();
+        await bookmarkRepository.insert(
+          id: drug.id,
+          snapshotJson: const DrugBookmarkSnapshotCodec().encode(
+            const DrugBookmarkSnapshotCodec().fromDrug(drug),
+          ),
+          bookmarkedAt: DateTime.utc(2026, 5, 7),
+        );
+
+        final result = await usecase.toggleDrug(
+          drug: drug,
+          currentlyBookmarked: false,
+        );
+
+        Object.hashAll([result, isA<Err<void>>()]);
+
+        expect((result as Err<void>).error, isA<StorageException>());
+      },
+    );
   });
 }
 

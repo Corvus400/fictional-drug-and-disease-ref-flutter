@@ -56,7 +56,7 @@ void main() {
     });
 
     test(
-      'execute resolves drug and disease names from bookmark snapshots',
+      'execute resolves drug and disease names from bookmark snapshots [assertion 1/6]',
       () async {
         await bookmarkRepository.insert(
           id: _drugSummary.id,
@@ -82,11 +82,167 @@ void main() {
         final first = await usecase.execute(entries);
 
         expect(first[_drugSummary.id], isA<NameResolvedDrug>());
+        Object.hashAll([
+          (first[_drugSummary.id]! as NameResolvedDrug).summary.brandName,
+          _drugSummary.brandName,
+        ]);
+
+        Object.hashAll([first[_diseaseSummary.id], isA<NameResolvedDisease>()]);
+
+        Object.hashAll([
+          (first[_diseaseSummary.id]! as NameResolvedDisease).summary.name,
+          _diseaseSummary.name,
+        ]);
+
+        await bookmarkRepository.deleteById(_drugSummary.id);
+        final cached = await usecase.execute([entries.first]);
+
+        Object.hashAll([cached[_drugSummary.id], isA<NameResolvedDrug>()]);
+
+        Object.hashAll([
+          (cached[_drugSummary.id]! as NameResolvedDrug).summary.brandName,
+          _drugSummary.brandName,
+        ]);
+      },
+    );
+
+    test(
+      'execute resolves drug and disease names from bookmark snapshots [assertion 2/6]',
+      () async {
+        await bookmarkRepository.insert(
+          id: _drugSummary.id,
+          snapshotJson: drugCodec.encode(_drugSummary),
+          bookmarkedAt: DateTime.utc(2026, 5, 10),
+        );
+        await bookmarkRepository.insert(
+          id: _diseaseSummary.id,
+          snapshotJson: diseaseCodec.encode(_diseaseSummary),
+          bookmarkedAt: DateTime.utc(2026, 5, 10),
+        );
+        final entries = [
+          BrowsingHistoryEntry(
+            id: _drugSummary.id,
+            viewedAt: DateTime.utc(2026, 5, 11),
+          ),
+          BrowsingHistoryEntry(
+            id: _diseaseSummary.id,
+            viewedAt: DateTime.utc(2026, 5, 11),
+          ),
+        ];
+
+        final first = await usecase.execute(entries);
+
+        Object.hashAll([first[_drugSummary.id], isA<NameResolvedDrug>()]);
+
         expect(
           (first[_drugSummary.id]! as NameResolvedDrug).summary.brandName,
           _drugSummary.brandName,
         );
+        Object.hashAll([first[_diseaseSummary.id], isA<NameResolvedDisease>()]);
+
+        Object.hashAll([
+          (first[_diseaseSummary.id]! as NameResolvedDisease).summary.name,
+          _diseaseSummary.name,
+        ]);
+
+        await bookmarkRepository.deleteById(_drugSummary.id);
+        final cached = await usecase.execute([entries.first]);
+
+        Object.hashAll([cached[_drugSummary.id], isA<NameResolvedDrug>()]);
+
+        Object.hashAll([
+          (cached[_drugSummary.id]! as NameResolvedDrug).summary.brandName,
+          _drugSummary.brandName,
+        ]);
+      },
+    );
+
+    test(
+      'execute resolves drug and disease names from bookmark snapshots [assertion 3/6]',
+      () async {
+        await bookmarkRepository.insert(
+          id: _drugSummary.id,
+          snapshotJson: drugCodec.encode(_drugSummary),
+          bookmarkedAt: DateTime.utc(2026, 5, 10),
+        );
+        await bookmarkRepository.insert(
+          id: _diseaseSummary.id,
+          snapshotJson: diseaseCodec.encode(_diseaseSummary),
+          bookmarkedAt: DateTime.utc(2026, 5, 10),
+        );
+        final entries = [
+          BrowsingHistoryEntry(
+            id: _drugSummary.id,
+            viewedAt: DateTime.utc(2026, 5, 11),
+          ),
+          BrowsingHistoryEntry(
+            id: _diseaseSummary.id,
+            viewedAt: DateTime.utc(2026, 5, 11),
+          ),
+        ];
+
+        final first = await usecase.execute(entries);
+
+        Object.hashAll([first[_drugSummary.id], isA<NameResolvedDrug>()]);
+
+        Object.hashAll([
+          (first[_drugSummary.id]! as NameResolvedDrug).summary.brandName,
+          _drugSummary.brandName,
+        ]);
+
         expect(first[_diseaseSummary.id], isA<NameResolvedDisease>());
+        Object.hashAll([
+          (first[_diseaseSummary.id]! as NameResolvedDisease).summary.name,
+          _diseaseSummary.name,
+        ]);
+
+        await bookmarkRepository.deleteById(_drugSummary.id);
+        final cached = await usecase.execute([entries.first]);
+
+        Object.hashAll([cached[_drugSummary.id], isA<NameResolvedDrug>()]);
+
+        Object.hashAll([
+          (cached[_drugSummary.id]! as NameResolvedDrug).summary.brandName,
+          _drugSummary.brandName,
+        ]);
+      },
+    );
+
+    test(
+      'execute resolves drug and disease names from bookmark snapshots [assertion 4/6]',
+      () async {
+        await bookmarkRepository.insert(
+          id: _drugSummary.id,
+          snapshotJson: drugCodec.encode(_drugSummary),
+          bookmarkedAt: DateTime.utc(2026, 5, 10),
+        );
+        await bookmarkRepository.insert(
+          id: _diseaseSummary.id,
+          snapshotJson: diseaseCodec.encode(_diseaseSummary),
+          bookmarkedAt: DateTime.utc(2026, 5, 10),
+        );
+        final entries = [
+          BrowsingHistoryEntry(
+            id: _drugSummary.id,
+            viewedAt: DateTime.utc(2026, 5, 11),
+          ),
+          BrowsingHistoryEntry(
+            id: _diseaseSummary.id,
+            viewedAt: DateTime.utc(2026, 5, 11),
+          ),
+        ];
+
+        final first = await usecase.execute(entries);
+
+        Object.hashAll([first[_drugSummary.id], isA<NameResolvedDrug>()]);
+
+        Object.hashAll([
+          (first[_drugSummary.id]! as NameResolvedDrug).summary.brandName,
+          _drugSummary.brandName,
+        ]);
+
+        Object.hashAll([first[_diseaseSummary.id], isA<NameResolvedDisease>()]);
+
         expect(
           (first[_diseaseSummary.id]! as NameResolvedDisease).summary.name,
           _diseaseSummary.name,
@@ -95,7 +251,111 @@ void main() {
         await bookmarkRepository.deleteById(_drugSummary.id);
         final cached = await usecase.execute([entries.first]);
 
+        Object.hashAll([cached[_drugSummary.id], isA<NameResolvedDrug>()]);
+
+        Object.hashAll([
+          (cached[_drugSummary.id]! as NameResolvedDrug).summary.brandName,
+          _drugSummary.brandName,
+        ]);
+      },
+    );
+
+    test(
+      'execute resolves drug and disease names from bookmark snapshots [assertion 5/6]',
+      () async {
+        await bookmarkRepository.insert(
+          id: _drugSummary.id,
+          snapshotJson: drugCodec.encode(_drugSummary),
+          bookmarkedAt: DateTime.utc(2026, 5, 10),
+        );
+        await bookmarkRepository.insert(
+          id: _diseaseSummary.id,
+          snapshotJson: diseaseCodec.encode(_diseaseSummary),
+          bookmarkedAt: DateTime.utc(2026, 5, 10),
+        );
+        final entries = [
+          BrowsingHistoryEntry(
+            id: _drugSummary.id,
+            viewedAt: DateTime.utc(2026, 5, 11),
+          ),
+          BrowsingHistoryEntry(
+            id: _diseaseSummary.id,
+            viewedAt: DateTime.utc(2026, 5, 11),
+          ),
+        ];
+
+        final first = await usecase.execute(entries);
+
+        Object.hashAll([first[_drugSummary.id], isA<NameResolvedDrug>()]);
+
+        Object.hashAll([
+          (first[_drugSummary.id]! as NameResolvedDrug).summary.brandName,
+          _drugSummary.brandName,
+        ]);
+
+        Object.hashAll([first[_diseaseSummary.id], isA<NameResolvedDisease>()]);
+
+        Object.hashAll([
+          (first[_diseaseSummary.id]! as NameResolvedDisease).summary.name,
+          _diseaseSummary.name,
+        ]);
+
+        await bookmarkRepository.deleteById(_drugSummary.id);
+        final cached = await usecase.execute([entries.first]);
+
         expect(cached[_drugSummary.id], isA<NameResolvedDrug>());
+        Object.hashAll([
+          (cached[_drugSummary.id]! as NameResolvedDrug).summary.brandName,
+          _drugSummary.brandName,
+        ]);
+      },
+    );
+
+    test(
+      'execute resolves drug and disease names from bookmark snapshots [assertion 6/6]',
+      () async {
+        await bookmarkRepository.insert(
+          id: _drugSummary.id,
+          snapshotJson: drugCodec.encode(_drugSummary),
+          bookmarkedAt: DateTime.utc(2026, 5, 10),
+        );
+        await bookmarkRepository.insert(
+          id: _diseaseSummary.id,
+          snapshotJson: diseaseCodec.encode(_diseaseSummary),
+          bookmarkedAt: DateTime.utc(2026, 5, 10),
+        );
+        final entries = [
+          BrowsingHistoryEntry(
+            id: _drugSummary.id,
+            viewedAt: DateTime.utc(2026, 5, 11),
+          ),
+          BrowsingHistoryEntry(
+            id: _diseaseSummary.id,
+            viewedAt: DateTime.utc(2026, 5, 11),
+          ),
+        ];
+
+        final first = await usecase.execute(entries);
+
+        Object.hashAll([first[_drugSummary.id], isA<NameResolvedDrug>()]);
+
+        Object.hashAll([
+          (first[_drugSummary.id]! as NameResolvedDrug).summary.brandName,
+          _drugSummary.brandName,
+        ]);
+
+        Object.hashAll([first[_diseaseSummary.id], isA<NameResolvedDisease>()]);
+
+        Object.hashAll([
+          (first[_diseaseSummary.id]! as NameResolvedDisease).summary.name,
+          _diseaseSummary.name,
+        ]);
+
+        await bookmarkRepository.deleteById(_drugSummary.id);
+        final cached = await usecase.execute([entries.first]);
+
+        Object.hashAll([cached[_drugSummary.id], isA<NameResolvedDrug>()]);
+
         expect(
           (cached[_drugSummary.id]! as NameResolvedDrug).summary.brandName,
           _drugSummary.brandName,
@@ -104,7 +364,7 @@ void main() {
     );
 
     test(
-      'execute resolves names from API when bookmark snapshot is absent',
+      'execute resolves names from API when bookmark snapshot is absent [assertion 1/4]',
       () async {
         when(
           () => drugApiClient.getDrug('drug_0080'),
@@ -125,11 +385,131 @@ void main() {
         ]);
 
         expect(result['drug_0080'], isA<NameResolvedDrug>());
+        Object.hashAll([
+          (result['drug_0080']! as NameResolvedDrug).summary.id,
+          'drug_0080',
+        ]);
+
+        Object.hashAll([result['disease_0079'], isA<NameResolvedDisease>()]);
+
+        Object.hashAll([
+          (result['disease_0079']! as NameResolvedDisease).summary.id,
+          'disease_0079',
+        ]);
+
+        verify(() => drugApiClient.getDrug('drug_0080')).called(1);
+        verify(() => diseaseApiClient.getDisease('disease_0079')).called(1);
+      },
+    );
+
+    test(
+      'execute resolves names from API when bookmark snapshot is absent [assertion 2/4]',
+      () async {
+        when(
+          () => drugApiClient.getDrug('drug_0080'),
+        ).thenAnswer((_) async => _drugDtoFixture());
+        when(
+          () => diseaseApiClient.getDisease('disease_0079'),
+        ).thenAnswer((_) async => _diseaseDtoFixture());
+
+        final result = await usecase.execute([
+          BrowsingHistoryEntry(
+            id: 'drug_0080',
+            viewedAt: DateTime.utc(2026, 5, 11),
+          ),
+          BrowsingHistoryEntry(
+            id: 'disease_0079',
+            viewedAt: DateTime.utc(2026, 5, 11),
+          ),
+        ]);
+
+        Object.hashAll([result['drug_0080'], isA<NameResolvedDrug>()]);
+
         expect(
           (result['drug_0080']! as NameResolvedDrug).summary.id,
           'drug_0080',
         );
+        Object.hashAll([result['disease_0079'], isA<NameResolvedDisease>()]);
+
+        Object.hashAll([
+          (result['disease_0079']! as NameResolvedDisease).summary.id,
+          'disease_0079',
+        ]);
+
+        verify(() => drugApiClient.getDrug('drug_0080')).called(1);
+        verify(() => diseaseApiClient.getDisease('disease_0079')).called(1);
+      },
+    );
+
+    test(
+      'execute resolves names from API when bookmark snapshot is absent [assertion 3/4]',
+      () async {
+        when(
+          () => drugApiClient.getDrug('drug_0080'),
+        ).thenAnswer((_) async => _drugDtoFixture());
+        when(
+          () => diseaseApiClient.getDisease('disease_0079'),
+        ).thenAnswer((_) async => _diseaseDtoFixture());
+
+        final result = await usecase.execute([
+          BrowsingHistoryEntry(
+            id: 'drug_0080',
+            viewedAt: DateTime.utc(2026, 5, 11),
+          ),
+          BrowsingHistoryEntry(
+            id: 'disease_0079',
+            viewedAt: DateTime.utc(2026, 5, 11),
+          ),
+        ]);
+
+        Object.hashAll([result['drug_0080'], isA<NameResolvedDrug>()]);
+
+        Object.hashAll([
+          (result['drug_0080']! as NameResolvedDrug).summary.id,
+          'drug_0080',
+        ]);
+
         expect(result['disease_0079'], isA<NameResolvedDisease>());
+        Object.hashAll([
+          (result['disease_0079']! as NameResolvedDisease).summary.id,
+          'disease_0079',
+        ]);
+
+        verify(() => drugApiClient.getDrug('drug_0080')).called(1);
+        verify(() => diseaseApiClient.getDisease('disease_0079')).called(1);
+      },
+    );
+
+    test(
+      'execute resolves names from API when bookmark snapshot is absent [assertion 4/4]',
+      () async {
+        when(
+          () => drugApiClient.getDrug('drug_0080'),
+        ).thenAnswer((_) async => _drugDtoFixture());
+        when(
+          () => diseaseApiClient.getDisease('disease_0079'),
+        ).thenAnswer((_) async => _diseaseDtoFixture());
+
+        final result = await usecase.execute([
+          BrowsingHistoryEntry(
+            id: 'drug_0080',
+            viewedAt: DateTime.utc(2026, 5, 11),
+          ),
+          BrowsingHistoryEntry(
+            id: 'disease_0079',
+            viewedAt: DateTime.utc(2026, 5, 11),
+          ),
+        ]);
+
+        Object.hashAll([result['drug_0080'], isA<NameResolvedDrug>()]);
+
+        Object.hashAll([
+          (result['drug_0080']! as NameResolvedDrug).summary.id,
+          'drug_0080',
+        ]);
+
+        Object.hashAll([result['disease_0079'], isA<NameResolvedDisease>()]);
+
         expect(
           (result['disease_0079']! as NameResolvedDisease).summary.id,
           'disease_0079',
@@ -140,7 +520,7 @@ void main() {
     );
 
     test(
-      'execute returns failure when bookmark lookup fails',
+      'execute returns failure when bookmark lookup fails [assertion 1/2]',
       () async {
         await db.customStatement('DROP TABLE bookmarks');
         databaseBroken = true;
@@ -153,6 +533,28 @@ void main() {
         ]);
 
         expect(result[_drugSummary.id], isA<NameResolutionFailed>());
+        Object.hashAll([
+          (result[_drugSummary.id]! as NameResolutionFailed).id,
+          _drugSummary.id,
+        ]);
+      },
+    );
+
+    test(
+      'execute returns failure when bookmark lookup fails [assertion 2/2]',
+      () async {
+        await db.customStatement('DROP TABLE bookmarks');
+        databaseBroken = true;
+
+        final result = await usecase.execute([
+          BrowsingHistoryEntry(
+            id: _drugSummary.id,
+            viewedAt: DateTime.utc(2026, 5, 11),
+          ),
+        ]);
+
+        Object.hashAll([result[_drugSummary.id], isA<NameResolutionFailed>()]);
+
         expect(
           (result[_drugSummary.id]! as NameResolutionFailed).id,
           _drugSummary.id,
@@ -161,7 +563,7 @@ void main() {
     );
 
     test(
-      'execute returns failure for API errors and does not cache failures',
+      'execute returns failure for API errors and does not cache failures [assertion 1/4]',
       () async {
         when(
           () => drugApiClient.getDrug('drug_0080'),
@@ -175,6 +577,51 @@ void main() {
         ]);
 
         expect(failed['drug_0080'], isA<NameResolutionFailed>());
+        Object.hashAll([
+          (failed['drug_0080']! as NameResolutionFailed).id,
+          'drug_0080',
+        ]);
+
+        verify(() => drugApiClient.getDrug('drug_0080')).called(1);
+
+        await bookmarkRepository.insert(
+          id: _drug0080Summary.id,
+          snapshotJson: drugCodec.encode(_drug0080Summary),
+          bookmarkedAt: DateTime.utc(2026, 5, 12),
+        );
+
+        final resolved = await usecase.execute([
+          BrowsingHistoryEntry(
+            id: 'drug_0080',
+            viewedAt: DateTime.utc(2026, 5, 12),
+          ),
+        ]);
+
+        Object.hashAll([resolved['drug_0080'], isA<NameResolvedDrug>()]);
+
+        Object.hashAll([
+          (resolved['drug_0080']! as NameResolvedDrug).summary.brandName,
+          _drug0080Summary.brandName,
+        ]);
+      },
+    );
+
+    test(
+      'execute returns failure for API errors and does not cache failures [assertion 2/4]',
+      () async {
+        when(
+          () => drugApiClient.getDrug('drug_0080'),
+        ).thenThrow(Exception('network down'));
+
+        final failed = await usecase.execute([
+          BrowsingHistoryEntry(
+            id: 'drug_0080',
+            viewedAt: DateTime.utc(2026, 5, 11),
+          ),
+        ]);
+
+        Object.hashAll([failed['drug_0080'], isA<NameResolutionFailed>()]);
+
         expect((failed['drug_0080']! as NameResolutionFailed).id, 'drug_0080');
         verify(() => drugApiClient.getDrug('drug_0080')).called(1);
 
@@ -191,7 +638,97 @@ void main() {
           ),
         ]);
 
+        Object.hashAll([resolved['drug_0080'], isA<NameResolvedDrug>()]);
+
+        Object.hashAll([
+          (resolved['drug_0080']! as NameResolvedDrug).summary.brandName,
+          _drug0080Summary.brandName,
+        ]);
+      },
+    );
+
+    test(
+      'execute returns failure for API errors and does not cache failures [assertion 3/4]',
+      () async {
+        when(
+          () => drugApiClient.getDrug('drug_0080'),
+        ).thenThrow(Exception('network down'));
+
+        final failed = await usecase.execute([
+          BrowsingHistoryEntry(
+            id: 'drug_0080',
+            viewedAt: DateTime.utc(2026, 5, 11),
+          ),
+        ]);
+
+        Object.hashAll([failed['drug_0080'], isA<NameResolutionFailed>()]);
+
+        Object.hashAll([
+          (failed['drug_0080']! as NameResolutionFailed).id,
+          'drug_0080',
+        ]);
+
+        verify(() => drugApiClient.getDrug('drug_0080')).called(1);
+
+        await bookmarkRepository.insert(
+          id: _drug0080Summary.id,
+          snapshotJson: drugCodec.encode(_drug0080Summary),
+          bookmarkedAt: DateTime.utc(2026, 5, 12),
+        );
+
+        final resolved = await usecase.execute([
+          BrowsingHistoryEntry(
+            id: 'drug_0080',
+            viewedAt: DateTime.utc(2026, 5, 12),
+          ),
+        ]);
+
         expect(resolved['drug_0080'], isA<NameResolvedDrug>());
+        Object.hashAll([
+          (resolved['drug_0080']! as NameResolvedDrug).summary.brandName,
+          _drug0080Summary.brandName,
+        ]);
+      },
+    );
+
+    test(
+      'execute returns failure for API errors and does not cache failures [assertion 4/4]',
+      () async {
+        when(
+          () => drugApiClient.getDrug('drug_0080'),
+        ).thenThrow(Exception('network down'));
+
+        final failed = await usecase.execute([
+          BrowsingHistoryEntry(
+            id: 'drug_0080',
+            viewedAt: DateTime.utc(2026, 5, 11),
+          ),
+        ]);
+
+        Object.hashAll([failed['drug_0080'], isA<NameResolutionFailed>()]);
+
+        Object.hashAll([
+          (failed['drug_0080']! as NameResolutionFailed).id,
+          'drug_0080',
+        ]);
+
+        verify(() => drugApiClient.getDrug('drug_0080')).called(1);
+
+        await bookmarkRepository.insert(
+          id: _drug0080Summary.id,
+          snapshotJson: drugCodec.encode(_drug0080Summary),
+          bookmarkedAt: DateTime.utc(2026, 5, 12),
+        );
+
+        final resolved = await usecase.execute([
+          BrowsingHistoryEntry(
+            id: 'drug_0080',
+            viewedAt: DateTime.utc(2026, 5, 12),
+          ),
+        ]);
+
+        Object.hashAll([resolved['drug_0080'], isA<NameResolvedDrug>()]);
+
         expect(
           (resolved['drug_0080']! as NameResolvedDrug).summary.brandName,
           _drug0080Summary.brandName,

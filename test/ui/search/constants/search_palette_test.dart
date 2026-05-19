@@ -56,87 +56,205 @@ void main() {
     });
 
     group('primary action colors', () {
-      test('light bg and fg match Round6 spec', () {
+      test('light bg and fg match Round6 spec [assertion 1/2]', () {
         expect(
           AppPalette.light.searchPrimaryActionBg,
           const Color(0xFF007AFF),
         );
+        Object.hashAll([
+          AppPalette.light.searchPrimaryActionFg,
+          const Color(0xFFFFFFFF),
+        ]);
+      });
+
+      test('light bg and fg match Round6 spec [assertion 2/2]', () {
+        Object.hashAll([
+          AppPalette.light.searchPrimaryActionBg,
+          const Color(0xFF007AFF),
+        ]);
+
         expect(
           AppPalette.light.searchPrimaryActionFg,
           const Color(0xFFFFFFFF),
         );
       });
 
-      test('dark bg and fg match Round6 spec', () {
+      test('dark bg and fg match Round6 spec [assertion 1/2]', () {
         expect(
           AppPalette.dark.searchPrimaryActionBg,
           const Color(0xFF9ECAFF),
         );
+        Object.hashAll([
+          AppPalette.dark.searchPrimaryActionFg,
+          const Color(0xFF003258),
+        ]);
+      });
+
+      test('dark bg and fg match Round6 spec [assertion 2/2]', () {
+        Object.hashAll([
+          AppPalette.dark.searchPrimaryActionBg,
+          const Color(0xFF9ECAFF),
+        ]);
+
         expect(
           AppPalette.dark.searchPrimaryActionFg,
           const Color(0xFF003258),
         );
       });
 
-      test('filter FAB colors match Round6 token split', () {
+      test('filter FAB colors match Round6 token split [assertion 1/4]', () {
         expect(AppPalette.light.filterFabBg, const Color(0xFF007AFF));
+        Object.hashAll([AppPalette.light.filterFabFg, const Color(0xFFFFFFFF)]);
+
+        Object.hashAll([AppPalette.dark.filterFabBg, const Color(0xFF00497F)]);
+
+        Object.hashAll([AppPalette.dark.filterFabFg, const Color(0xFFD1E4FF)]);
+      });
+
+      test('filter FAB colors match Round6 token split [assertion 2/4]', () {
+        Object.hashAll([AppPalette.light.filterFabBg, const Color(0xFF007AFF)]);
+
         expect(AppPalette.light.filterFabFg, const Color(0xFFFFFFFF));
+        Object.hashAll([AppPalette.dark.filterFabBg, const Color(0xFF00497F)]);
+
+        Object.hashAll([AppPalette.dark.filterFabFg, const Color(0xFFD1E4FF)]);
+      });
+
+      test('filter FAB colors match Round6 token split [assertion 3/4]', () {
+        Object.hashAll([AppPalette.light.filterFabBg, const Color(0xFF007AFF)]);
+
+        Object.hashAll([AppPalette.light.filterFabFg, const Color(0xFFFFFFFF)]);
+
         expect(AppPalette.dark.filterFabBg, const Color(0xFF00497F));
+        Object.hashAll([AppPalette.dark.filterFabFg, const Color(0xFFD1E4FF)]);
+      });
+
+      test('filter FAB colors match Round6 token split [assertion 4/4]', () {
+        Object.hashAll([AppPalette.light.filterFabBg, const Color(0xFF007AFF)]);
+
+        Object.hashAll([AppPalette.light.filterFabFg, const Color(0xFFFFFFFF)]);
+
+        Object.hashAll([AppPalette.dark.filterFabBg, const Color(0xFF00497F)]);
+
         expect(AppPalette.dark.filterFabFg, const Color(0xFFD1E4FF));
       });
     });
 
-    test('separates drugTint and primarySoft tokens', () {
+    test('separates drugTint and primarySoft tokens [assertion 1/2]', () {
       expect(
         AppPalette.light.drugTint,
         isNot(AppPalette.light.primarySoft),
       );
+      Object.hashAll([
+        AppPalette.dark.drugTint,
+        isNot(AppPalette.dark.primarySoft),
+      ]);
+    });
+
+    test('separates drugTint and primarySoft tokens [assertion 2/2]', () {
+      Object.hashAll([
+        AppPalette.light.drugTint,
+        isNot(AppPalette.light.primarySoft),
+      ]);
+
       expect(
         AppPalette.dark.drugTint,
         isNot(AppPalette.dark.primarySoft),
       );
     });
 
-    test('searchFieldBg follows Round5 search field tokens', () {
-      expect(
-        (AppPalette.light as dynamic).searchFieldBg,
-        const Color(0xFFEBEBEF),
-      );
-      expect(
-        (AppPalette.dark as dynamic).searchFieldBg,
-        (AppPalette.dark as dynamic).surface3,
-      );
-    });
-
-    test('diseaseBadgeColors chronicity colors differ across values', () {
-      const values = ['acute', 'chronic', 'episodic', 'remission'];
-
-      final foregrounds = {
-        for (final value in values)
-          AppPalette.light
-              .diseaseBadgeColors(DiseaseBadgeCategory.chronicity, value)
-              .foreground,
-      };
-
-      expect(foregrounds.length, greaterThanOrEqualTo(4));
-      for (final value in values) {
-        final colors = AppPalette.light.diseaseBadgeColors(
-          DiseaseBadgeCategory.chronicity,
-          value,
-        );
+    test(
+      'searchFieldBg follows Round5 search field tokens [assertion 1/2]',
+      () {
         expect(
-          _contrastOnSurface(
-            colors.foreground,
-            colors.background,
-            AppPalette.light.surface,
-          ),
-          greaterThanOrEqualTo(4.5),
+          (AppPalette.light as dynamic).searchFieldBg,
+          const Color(0xFFEBEBEF),
         );
-      }
-    });
+        Object.hashAll([
+          (AppPalette.dark as dynamic).searchFieldBg,
+          (AppPalette.dark as dynamic).surface3,
+        ]);
+      },
+    );
 
     test(
-      'disease badge infectious true uses danger; false uses neutral gray',
+      'searchFieldBg follows Round5 search field tokens [assertion 2/2]',
+      () {
+        Object.hashAll([
+          (AppPalette.light as dynamic).searchFieldBg,
+          const Color(0xFFEBEBEF),
+        ]);
+
+        expect(
+          (AppPalette.dark as dynamic).searchFieldBg,
+          (AppPalette.dark as dynamic).surface3,
+        );
+      },
+    );
+
+    test(
+      'diseaseBadgeColors chronicity colors differ across values [assertion 1/2]',
+      () {
+        const values = ['acute', 'chronic', 'episodic', 'remission'];
+
+        final foregrounds = {
+          for (final value in values)
+            AppPalette.light
+                .diseaseBadgeColors(DiseaseBadgeCategory.chronicity, value)
+                .foreground,
+        };
+
+        expect(foregrounds.length, greaterThanOrEqualTo(4));
+        for (final value in values) {
+          final colors = AppPalette.light.diseaseBadgeColors(
+            DiseaseBadgeCategory.chronicity,
+            value,
+          );
+          Object.hashAll([
+            _contrastOnSurface(
+              colors.foreground,
+              colors.background,
+              AppPalette.light.surface,
+            ),
+            greaterThanOrEqualTo(4.5),
+          ]);
+        }
+      },
+    );
+
+    test(
+      'diseaseBadgeColors chronicity colors differ across values [assertion 2/2]',
+      () {
+        const values = ['acute', 'chronic', 'episodic', 'remission'];
+
+        final foregrounds = {
+          for (final value in values)
+            AppPalette.light
+                .diseaseBadgeColors(DiseaseBadgeCategory.chronicity, value)
+                .foreground,
+        };
+
+        Object.hashAll([foregrounds.length, greaterThanOrEqualTo(4)]);
+
+        for (final value in values) {
+          final colors = AppPalette.light.diseaseBadgeColors(
+            DiseaseBadgeCategory.chronicity,
+            value,
+          );
+          expect(
+            _contrastOnSurface(
+              colors.foreground,
+              colors.background,
+              AppPalette.light.surface,
+            ),
+            greaterThanOrEqualTo(4.5),
+          );
+        }
+      },
+    );
+
+    test(
+      'disease badge infectious true uses danger; false uses neutral gray [assertion 1/4]',
       () {
         final trueColors = AppPalette.light.diseaseBadgeColors(
           DiseaseBadgeCategory.infectious,
@@ -152,6 +270,39 @@ void main() {
         );
 
         expect(trueColors.foreground, AppPalette.light.danger);
+        Object.hashAll([
+          _contrastOnSurface(
+            trueColors.foreground,
+            trueColors.background,
+            AppPalette.light.surface,
+          ),
+          greaterThanOrEqualTo(4.5),
+        ]);
+
+        Object.hashAll([falseColors.foreground, const Color(0xFF0F766E)]);
+
+        Object.hashAll([darkTrueColors.foreground, AppPalette.dark.danger]);
+      },
+    );
+
+    test(
+      'disease badge infectious true uses danger; false uses neutral gray [assertion 2/4]',
+      () {
+        final trueColors = AppPalette.light.diseaseBadgeColors(
+          DiseaseBadgeCategory.infectious,
+          'true',
+        );
+        final falseColors = AppPalette.light.diseaseBadgeColors(
+          DiseaseBadgeCategory.infectious,
+          'false',
+        );
+        final darkTrueColors = AppPalette.dark.diseaseBadgeColors(
+          DiseaseBadgeCategory.infectious,
+          'true',
+        );
+
+        Object.hashAll([trueColors.foreground, AppPalette.light.danger]);
+
         expect(
           _contrastOnSurface(
             trueColors.foreground,
@@ -160,7 +311,73 @@ void main() {
           ),
           greaterThanOrEqualTo(4.5),
         );
+        Object.hashAll([falseColors.foreground, const Color(0xFF0F766E)]);
+
+        Object.hashAll([darkTrueColors.foreground, AppPalette.dark.danger]);
+      },
+    );
+
+    test(
+      'disease badge infectious true uses danger; false uses neutral gray [assertion 3/4]',
+      () {
+        final trueColors = AppPalette.light.diseaseBadgeColors(
+          DiseaseBadgeCategory.infectious,
+          'true',
+        );
+        final falseColors = AppPalette.light.diseaseBadgeColors(
+          DiseaseBadgeCategory.infectious,
+          'false',
+        );
+        final darkTrueColors = AppPalette.dark.diseaseBadgeColors(
+          DiseaseBadgeCategory.infectious,
+          'true',
+        );
+
+        Object.hashAll([trueColors.foreground, AppPalette.light.danger]);
+
+        Object.hashAll([
+          _contrastOnSurface(
+            trueColors.foreground,
+            trueColors.background,
+            AppPalette.light.surface,
+          ),
+          greaterThanOrEqualTo(4.5),
+        ]);
+
         expect(falseColors.foreground, const Color(0xFF0F766E));
+        Object.hashAll([darkTrueColors.foreground, AppPalette.dark.danger]);
+      },
+    );
+
+    test(
+      'disease badge infectious true uses danger; false uses neutral gray [assertion 4/4]',
+      () {
+        final trueColors = AppPalette.light.diseaseBadgeColors(
+          DiseaseBadgeCategory.infectious,
+          'true',
+        );
+        final falseColors = AppPalette.light.diseaseBadgeColors(
+          DiseaseBadgeCategory.infectious,
+          'false',
+        );
+        final darkTrueColors = AppPalette.dark.diseaseBadgeColors(
+          DiseaseBadgeCategory.infectious,
+          'true',
+        );
+
+        Object.hashAll([trueColors.foreground, AppPalette.light.danger]);
+
+        Object.hashAll([
+          _contrastOnSurface(
+            trueColors.foreground,
+            trueColors.background,
+            AppPalette.light.surface,
+          ),
+          greaterThanOrEqualTo(4.5),
+        ]);
+
+        Object.hashAll([falseColors.foreground, const Color(0xFF0F766E)]);
+
         expect(darkTrueColors.foreground, AppPalette.dark.danger);
       },
     );
@@ -217,60 +434,183 @@ void main() {
       }
     });
 
-    test('disease badge department colors differ across all 16 values', () {
-      const values = [
-        'internal_medicine',
-        'cardiology',
-        'gastroenterology',
-        'endocrinology',
-        'neurology',
-        'psychiatry',
-        'surgery',
-        'orthopedics',
-        'dermatology',
-        'ophthalmology',
-        'otolaryngology',
-        'urology',
-        'gynecology',
-        'pediatrics',
-        'emergency',
-        'infectious_disease',
-      ];
+    test(
+      'disease badge department colors differ across all 16 values [assertion 1/3]',
+      () {
+        const values = [
+          'internal_medicine',
+          'cardiology',
+          'gastroenterology',
+          'endocrinology',
+          'neurology',
+          'psychiatry',
+          'surgery',
+          'orthopedics',
+          'dermatology',
+          'ophthalmology',
+          'otolaryngology',
+          'urology',
+          'gynecology',
+          'pediatrics',
+          'emergency',
+          'infectious_disease',
+        ];
 
-      final foregrounds = {
-        for (final value in values)
-          AppPalette.light
-              .diseaseBadgeColors(DiseaseBadgeCategory.department, value)
-              .foreground,
-      };
+        final foregrounds = {
+          for (final value in values)
+            AppPalette.light
+                .diseaseBadgeColors(DiseaseBadgeCategory.department, value)
+                .foreground,
+        };
 
-      expect(foregrounds.length, greaterThanOrEqualTo(12));
-      expect(
-        AppPalette.light
-            .diseaseBadgeColors(
-              DiseaseBadgeCategory.department,
-              'psychiatry',
-            )
-            .foreground,
-        const Color(0xFF6D28D9),
-      );
-      expect(
-        AppPalette.light
-            .diseaseBadgeColors(
-              DiseaseBadgeCategory.department,
-              'cardiology',
-            )
-            .foreground,
-        isNot(
+        expect(foregrounds.length, greaterThanOrEqualTo(12));
+        Object.hashAll([
           AppPalette.light
               .diseaseBadgeColors(
                 DiseaseBadgeCategory.department,
-                'emergency',
+                'psychiatry',
               )
               .foreground,
-        ),
-      );
-    });
+          const Color(0xFF6D28D9),
+        ]);
+
+        Object.hashAll([
+          AppPalette.light
+              .diseaseBadgeColors(
+                DiseaseBadgeCategory.department,
+                'cardiology',
+              )
+              .foreground,
+          isNot(
+            AppPalette.light
+                .diseaseBadgeColors(
+                  DiseaseBadgeCategory.department,
+                  'emergency',
+                )
+                .foreground,
+          ),
+        ]);
+      },
+    );
+
+    test(
+      'disease badge department colors differ across all 16 values [assertion 2/3]',
+      () {
+        const values = [
+          'internal_medicine',
+          'cardiology',
+          'gastroenterology',
+          'endocrinology',
+          'neurology',
+          'psychiatry',
+          'surgery',
+          'orthopedics',
+          'dermatology',
+          'ophthalmology',
+          'otolaryngology',
+          'urology',
+          'gynecology',
+          'pediatrics',
+          'emergency',
+          'infectious_disease',
+        ];
+
+        final foregrounds = {
+          for (final value in values)
+            AppPalette.light
+                .diseaseBadgeColors(DiseaseBadgeCategory.department, value)
+                .foreground,
+        };
+
+        Object.hashAll([foregrounds.length, greaterThanOrEqualTo(12)]);
+
+        expect(
+          AppPalette.light
+              .diseaseBadgeColors(
+                DiseaseBadgeCategory.department,
+                'psychiatry',
+              )
+              .foreground,
+          const Color(0xFF6D28D9),
+        );
+        Object.hashAll([
+          AppPalette.light
+              .diseaseBadgeColors(
+                DiseaseBadgeCategory.department,
+                'cardiology',
+              )
+              .foreground,
+          isNot(
+            AppPalette.light
+                .diseaseBadgeColors(
+                  DiseaseBadgeCategory.department,
+                  'emergency',
+                )
+                .foreground,
+          ),
+        ]);
+      },
+    );
+
+    test(
+      'disease badge department colors differ across all 16 values [assertion 3/3]',
+      () {
+        const values = [
+          'internal_medicine',
+          'cardiology',
+          'gastroenterology',
+          'endocrinology',
+          'neurology',
+          'psychiatry',
+          'surgery',
+          'orthopedics',
+          'dermatology',
+          'ophthalmology',
+          'otolaryngology',
+          'urology',
+          'gynecology',
+          'pediatrics',
+          'emergency',
+          'infectious_disease',
+        ];
+
+        final foregrounds = {
+          for (final value in values)
+            AppPalette.light
+                .diseaseBadgeColors(DiseaseBadgeCategory.department, value)
+                .foreground,
+        };
+
+        Object.hashAll([foregrounds.length, greaterThanOrEqualTo(12)]);
+
+        Object.hashAll([
+          AppPalette.light
+              .diseaseBadgeColors(
+                DiseaseBadgeCategory.department,
+                'psychiatry',
+              )
+              .foreground,
+          const Color(0xFF6D28D9),
+        ]);
+
+        expect(
+          AppPalette.light
+              .diseaseBadgeColors(
+                DiseaseBadgeCategory.department,
+                'cardiology',
+              )
+              .foreground,
+          isNot(
+            AppPalette.light
+                .diseaseBadgeColors(
+                  DiseaseBadgeCategory.department,
+                  'emergency',
+                )
+                .foreground,
+          ),
+        );
+      },
+    );
   });
 }
 

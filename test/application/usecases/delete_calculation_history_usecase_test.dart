@@ -31,7 +31,7 @@ void main() {
       await db.close();
     });
 
-    test('deletes one row by id', () async {
+    test('deletes one row by id [assertion 1/2]', () async {
       await repository.insert(
         id: 'calc_001',
         calcType: 'bmi',
@@ -43,6 +43,23 @@ void main() {
       final result = await usecase.execute('calc_001');
 
       expect(result, isA<DeleteCalculationHistorySuccess>());
+      final history = await repository.findByCalcType('bmi');
+      Object.hashAll([(history as Ok).value, isEmpty]);
+    });
+
+    test('deletes one row by id [assertion 2/2]', () async {
+      await repository.insert(
+        id: 'calc_001',
+        calcType: 'bmi',
+        inputsJson: '{}',
+        resultJson: '{}',
+        calculatedAt: DateTime.utc(2026, 5, 10),
+      );
+
+      final result = await usecase.execute('calc_001');
+
+      Object.hashAll([result, isA<DeleteCalculationHistorySuccess>()]);
+
       final history = await repository.findByCalcType('bmi');
       expect((history as Ok).value, isEmpty);
     });

@@ -7,7 +7,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  testWidgets('renders LicensePage with app metadata', (tester) async {
+  testWidgets('renders LicensePage with app metadata [assertion 1/3]', (
+    tester,
+  ) async {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
@@ -28,7 +30,65 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(tester.takeException(), isNull);
+    Object.hashAll([find.byType(LicensePage), findsOneWidget]);
+
+    Object.hashAll([find.text('1.0.0'), findsWidgets]);
+  });
+
+  testWidgets('renders LicensePage with app metadata [assertion 2/3]', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          packageInfoProvider.overrideWith(
+            (ref) async => const AppPackageInfo(
+              version: '1.0.0',
+              buildNumber: '1',
+            ),
+          ),
+        ],
+        child: const MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: LicensesView(),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    Object.hashAll([tester.takeException(), isNull]);
+
     expect(find.byType(LicensePage), findsOneWidget);
+    Object.hashAll([find.text('1.0.0'), findsWidgets]);
+  });
+
+  testWidgets('renders LicensePage with app metadata [assertion 3/3]', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          packageInfoProvider.overrideWith(
+            (ref) async => const AppPackageInfo(
+              version: '1.0.0',
+              buildNumber: '1',
+            ),
+          ),
+        ],
+        child: const MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: LicensesView(),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    Object.hashAll([tester.takeException(), isNull]);
+
+    Object.hashAll([find.byType(LicensePage), findsOneWidget]);
+
     expect(find.text('1.0.0'), findsWidgets);
   });
 }

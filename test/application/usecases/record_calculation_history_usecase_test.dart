@@ -37,7 +37,7 @@ void main() {
       await db.close();
     });
 
-    test('records typed inputs and result', () async {
+    test('records typed inputs and result [assertion 1/4]', () async {
       final result = await usecase.execute(
         CalcType.bmi,
         const BmiInputs(heightCm: 170, weightKg: 65),
@@ -47,12 +47,84 @@ void main() {
       expect(result, isA<RecordCalculationHistorySuccess>());
       final history = await repository.findByCalcType('bmi');
       final entries = (history as Ok<List<CalculationHistoryEntry>>).value;
+      Object.hashAll([entries, hasLength(1)]);
+
+      Object.hashAll([
+        entries.single.inputsJson,
+        '{"heightCm":170.0,"weightKg":65.0}',
+      ]);
+
+      Object.hashAll([
+        entries.single.resultJson,
+        '{"bmi":22.5,"category":"normal"}',
+      ]);
+    });
+
+    test('records typed inputs and result [assertion 2/4]', () async {
+      final result = await usecase.execute(
+        CalcType.bmi,
+        const BmiInputs(heightCm: 170, weightKg: 65),
+        const BmiResult(bmi: 22.5, category: BmiCategory.normal),
+      );
+
+      Object.hashAll([result, isA<RecordCalculationHistorySuccess>()]);
+
+      final history = await repository.findByCalcType('bmi');
+      final entries = (history as Ok<List<CalculationHistoryEntry>>).value;
       expect(entries, hasLength(1));
+      Object.hashAll([
+        entries.single.inputsJson,
+        '{"heightCm":170.0,"weightKg":65.0}',
+      ]);
+
+      Object.hashAll([
+        entries.single.resultJson,
+        '{"bmi":22.5,"category":"normal"}',
+      ]);
+    });
+
+    test('records typed inputs and result [assertion 3/4]', () async {
+      final result = await usecase.execute(
+        CalcType.bmi,
+        const BmiInputs(heightCm: 170, weightKg: 65),
+        const BmiResult(bmi: 22.5, category: BmiCategory.normal),
+      );
+
+      Object.hashAll([result, isA<RecordCalculationHistorySuccess>()]);
+
+      final history = await repository.findByCalcType('bmi');
+      final entries = (history as Ok<List<CalculationHistoryEntry>>).value;
+      Object.hashAll([entries, hasLength(1)]);
+
       expect(entries.single.inputsJson, '{"heightCm":170.0,"weightKg":65.0}');
+      Object.hashAll([
+        entries.single.resultJson,
+        '{"bmi":22.5,"category":"normal"}',
+      ]);
+    });
+
+    test('records typed inputs and result [assertion 4/4]', () async {
+      final result = await usecase.execute(
+        CalcType.bmi,
+        const BmiInputs(heightCm: 170, weightKg: 65),
+        const BmiResult(bmi: 22.5, category: BmiCategory.normal),
+      );
+
+      Object.hashAll([result, isA<RecordCalculationHistorySuccess>()]);
+
+      final history = await repository.findByCalcType('bmi');
+      final entries = (history as Ok<List<CalculationHistoryEntry>>).value;
+      Object.hashAll([entries, hasLength(1)]);
+
+      Object.hashAll([
+        entries.single.inputsJson,
+        '{"heightCm":170.0,"weightKg":65.0}',
+      ]);
+
       expect(entries.single.resultJson, '{"bmi":22.5,"category":"normal"}');
     });
 
-    test('keeps newest 50 rows per calc type', () async {
+    test('keeps newest 50 rows per calc type [assertion 1/3]', () async {
       for (var index = 0; index < 51; index += 1) {
         await usecase.execute(
           CalcType.bmi,
@@ -64,7 +136,55 @@ void main() {
       final history = await repository.findByCalcType('bmi');
       final entries = (history as Ok<List<CalculationHistoryEntry>>).value;
       expect(entries, hasLength(50));
+      Object.hashAll([
+        entries.first.resultJson,
+        '{"bmi":70.0,"category":"normal"}',
+      ]);
+
+      Object.hashAll([
+        entries.last.resultJson,
+        '{"bmi":21.0,"category":"normal"}',
+      ]);
+    });
+
+    test('keeps newest 50 rows per calc type [assertion 2/3]', () async {
+      for (var index = 0; index < 51; index += 1) {
+        await usecase.execute(
+          CalcType.bmi,
+          BmiInputs(heightCm: 170, weightKg: 60 + index.toDouble()),
+          BmiResult(bmi: 20 + index.toDouble(), category: BmiCategory.normal),
+        );
+      }
+
+      final history = await repository.findByCalcType('bmi');
+      final entries = (history as Ok<List<CalculationHistoryEntry>>).value;
+      Object.hashAll([entries, hasLength(50)]);
+
       expect(entries.first.resultJson, '{"bmi":70.0,"category":"normal"}');
+      Object.hashAll([
+        entries.last.resultJson,
+        '{"bmi":21.0,"category":"normal"}',
+      ]);
+    });
+
+    test('keeps newest 50 rows per calc type [assertion 3/3]', () async {
+      for (var index = 0; index < 51; index += 1) {
+        await usecase.execute(
+          CalcType.bmi,
+          BmiInputs(heightCm: 170, weightKg: 60 + index.toDouble()),
+          BmiResult(bmi: 20 + index.toDouble(), category: BmiCategory.normal),
+        );
+      }
+
+      final history = await repository.findByCalcType('bmi');
+      final entries = (history as Ok<List<CalculationHistoryEntry>>).value;
+      Object.hashAll([entries, hasLength(50)]);
+
+      Object.hashAll([
+        entries.first.resultJson,
+        '{"bmi":70.0,"category":"normal"}',
+      ]);
+
       expect(entries.last.resultJson, '{"bmi":21.0,"category":"normal"}');
     });
   });

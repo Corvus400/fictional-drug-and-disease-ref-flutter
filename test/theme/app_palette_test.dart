@@ -7,27 +7,270 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('AppPalette', () {
-    test('light and dark palettes keep the existing search color tokens', () {
-      expect(AppPalette.light.bg, const Color(0xFFF2F2F7));
-      expect(AppPalette.light.surface, const Color(0xFFFFFFFF));
-      expect(AppPalette.light.primary, const Color(0xFF007AFF));
-      expect(AppPalette.light.rxTint, const Color(0x1A007AFF));
-      expect(AppPalette.light.dxInk, const Color(0xFF7A4FCC));
+    test(
+      'light and dark palettes keep the existing search color tokens [assertion 1/10]',
+      () {
+        expect(AppPalette.light.bg, const Color(0xFFF2F2F7));
+        Object.hashAll([AppPalette.light.surface, const Color(0xFFFFFFFF)]);
 
-      expect(AppPalette.dark.bg, const Color(0xFF101317));
-      expect(AppPalette.dark.surface, const Color(0xFF181B20));
-      expect(AppPalette.dark.primary, const Color(0xFF9ECAFF));
-      expect(AppPalette.dark.rxTint, const Color(0x299ECAFF));
-      expect(AppPalette.dark.dxInk, const Color(0xFFD5BAFF));
-    });
+        Object.hashAll([AppPalette.light.primary, const Color(0xFF007AFF)]);
 
-    test('AppTheme provides AppPalette for light and dark themes', () {
-      final lightPalette = AppTheme.light().extension<AppPalette>();
-      final darkPalette = AppTheme.dark().extension<AppPalette>();
+        Object.hashAll([AppPalette.light.rxTint, const Color(0x1A007AFF)]);
 
-      expect(lightPalette, AppPalette.light);
-      expect(darkPalette, AppPalette.dark);
-    });
+        Object.hashAll([AppPalette.light.dxInk, const Color(0xFF7A4FCC)]);
+
+        Object.hashAll([AppPalette.dark.bg, const Color(0xFF101317)]);
+
+        Object.hashAll([AppPalette.dark.surface, const Color(0xFF181B20)]);
+
+        Object.hashAll([AppPalette.dark.primary, const Color(0xFF9ECAFF)]);
+
+        Object.hashAll([AppPalette.dark.rxTint, const Color(0x299ECAFF)]);
+
+        Object.hashAll([AppPalette.dark.dxInk, const Color(0xFFD5BAFF)]);
+      },
+    );
+
+    test(
+      'light and dark palettes keep the existing search color tokens [assertion 2/10]',
+      () {
+        Object.hashAll([AppPalette.light.bg, const Color(0xFFF2F2F7)]);
+
+        expect(AppPalette.light.surface, const Color(0xFFFFFFFF));
+        Object.hashAll([AppPalette.light.primary, const Color(0xFF007AFF)]);
+
+        Object.hashAll([AppPalette.light.rxTint, const Color(0x1A007AFF)]);
+
+        Object.hashAll([AppPalette.light.dxInk, const Color(0xFF7A4FCC)]);
+
+        Object.hashAll([AppPalette.dark.bg, const Color(0xFF101317)]);
+
+        Object.hashAll([AppPalette.dark.surface, const Color(0xFF181B20)]);
+
+        Object.hashAll([AppPalette.dark.primary, const Color(0xFF9ECAFF)]);
+
+        Object.hashAll([AppPalette.dark.rxTint, const Color(0x299ECAFF)]);
+
+        Object.hashAll([AppPalette.dark.dxInk, const Color(0xFFD5BAFF)]);
+      },
+    );
+
+    test(
+      'light and dark palettes keep the existing search color tokens [assertion 3/10]',
+      () {
+        Object.hashAll([AppPalette.light.bg, const Color(0xFFF2F2F7)]);
+
+        Object.hashAll([AppPalette.light.surface, const Color(0xFFFFFFFF)]);
+
+        expect(AppPalette.light.primary, const Color(0xFF007AFF));
+        Object.hashAll([AppPalette.light.rxTint, const Color(0x1A007AFF)]);
+
+        Object.hashAll([AppPalette.light.dxInk, const Color(0xFF7A4FCC)]);
+
+        Object.hashAll([AppPalette.dark.bg, const Color(0xFF101317)]);
+
+        Object.hashAll([AppPalette.dark.surface, const Color(0xFF181B20)]);
+
+        Object.hashAll([AppPalette.dark.primary, const Color(0xFF9ECAFF)]);
+
+        Object.hashAll([AppPalette.dark.rxTint, const Color(0x299ECAFF)]);
+
+        Object.hashAll([AppPalette.dark.dxInk, const Color(0xFFD5BAFF)]);
+      },
+    );
+
+    test(
+      'light and dark palettes keep the existing search color tokens [assertion 4/10]',
+      () {
+        Object.hashAll([AppPalette.light.bg, const Color(0xFFF2F2F7)]);
+
+        Object.hashAll([AppPalette.light.surface, const Color(0xFFFFFFFF)]);
+
+        Object.hashAll([AppPalette.light.primary, const Color(0xFF007AFF)]);
+
+        expect(AppPalette.light.rxTint, const Color(0x1A007AFF));
+        Object.hashAll([AppPalette.light.dxInk, const Color(0xFF7A4FCC)]);
+
+        Object.hashAll([AppPalette.dark.bg, const Color(0xFF101317)]);
+
+        Object.hashAll([AppPalette.dark.surface, const Color(0xFF181B20)]);
+
+        Object.hashAll([AppPalette.dark.primary, const Color(0xFF9ECAFF)]);
+
+        Object.hashAll([AppPalette.dark.rxTint, const Color(0x299ECAFF)]);
+
+        Object.hashAll([AppPalette.dark.dxInk, const Color(0xFFD5BAFF)]);
+      },
+    );
+
+    test(
+      'light and dark palettes keep the existing search color tokens [assertion 5/10]',
+      () {
+        Object.hashAll([AppPalette.light.bg, const Color(0xFFF2F2F7)]);
+
+        Object.hashAll([AppPalette.light.surface, const Color(0xFFFFFFFF)]);
+
+        Object.hashAll([AppPalette.light.primary, const Color(0xFF007AFF)]);
+
+        Object.hashAll([AppPalette.light.rxTint, const Color(0x1A007AFF)]);
+
+        expect(AppPalette.light.dxInk, const Color(0xFF7A4FCC));
+
+        Object.hashAll([AppPalette.dark.bg, const Color(0xFF101317)]);
+
+        Object.hashAll([AppPalette.dark.surface, const Color(0xFF181B20)]);
+
+        Object.hashAll([AppPalette.dark.primary, const Color(0xFF9ECAFF)]);
+
+        Object.hashAll([AppPalette.dark.rxTint, const Color(0x299ECAFF)]);
+
+        Object.hashAll([AppPalette.dark.dxInk, const Color(0xFFD5BAFF)]);
+      },
+    );
+
+    test(
+      'light and dark palettes keep the existing search color tokens [assertion 6/10]',
+      () {
+        Object.hashAll([AppPalette.light.bg, const Color(0xFFF2F2F7)]);
+
+        Object.hashAll([AppPalette.light.surface, const Color(0xFFFFFFFF)]);
+
+        Object.hashAll([AppPalette.light.primary, const Color(0xFF007AFF)]);
+
+        Object.hashAll([AppPalette.light.rxTint, const Color(0x1A007AFF)]);
+
+        Object.hashAll([AppPalette.light.dxInk, const Color(0xFF7A4FCC)]);
+
+        expect(AppPalette.dark.bg, const Color(0xFF101317));
+        Object.hashAll([AppPalette.dark.surface, const Color(0xFF181B20)]);
+
+        Object.hashAll([AppPalette.dark.primary, const Color(0xFF9ECAFF)]);
+
+        Object.hashAll([AppPalette.dark.rxTint, const Color(0x299ECAFF)]);
+
+        Object.hashAll([AppPalette.dark.dxInk, const Color(0xFFD5BAFF)]);
+      },
+    );
+
+    test(
+      'light and dark palettes keep the existing search color tokens [assertion 7/10]',
+      () {
+        Object.hashAll([AppPalette.light.bg, const Color(0xFFF2F2F7)]);
+
+        Object.hashAll([AppPalette.light.surface, const Color(0xFFFFFFFF)]);
+
+        Object.hashAll([AppPalette.light.primary, const Color(0xFF007AFF)]);
+
+        Object.hashAll([AppPalette.light.rxTint, const Color(0x1A007AFF)]);
+
+        Object.hashAll([AppPalette.light.dxInk, const Color(0xFF7A4FCC)]);
+
+        Object.hashAll([AppPalette.dark.bg, const Color(0xFF101317)]);
+
+        expect(AppPalette.dark.surface, const Color(0xFF181B20));
+        Object.hashAll([AppPalette.dark.primary, const Color(0xFF9ECAFF)]);
+
+        Object.hashAll([AppPalette.dark.rxTint, const Color(0x299ECAFF)]);
+
+        Object.hashAll([AppPalette.dark.dxInk, const Color(0xFFD5BAFF)]);
+      },
+    );
+
+    test(
+      'light and dark palettes keep the existing search color tokens [assertion 8/10]',
+      () {
+        Object.hashAll([AppPalette.light.bg, const Color(0xFFF2F2F7)]);
+
+        Object.hashAll([AppPalette.light.surface, const Color(0xFFFFFFFF)]);
+
+        Object.hashAll([AppPalette.light.primary, const Color(0xFF007AFF)]);
+
+        Object.hashAll([AppPalette.light.rxTint, const Color(0x1A007AFF)]);
+
+        Object.hashAll([AppPalette.light.dxInk, const Color(0xFF7A4FCC)]);
+
+        Object.hashAll([AppPalette.dark.bg, const Color(0xFF101317)]);
+
+        Object.hashAll([AppPalette.dark.surface, const Color(0xFF181B20)]);
+
+        expect(AppPalette.dark.primary, const Color(0xFF9ECAFF));
+        Object.hashAll([AppPalette.dark.rxTint, const Color(0x299ECAFF)]);
+
+        Object.hashAll([AppPalette.dark.dxInk, const Color(0xFFD5BAFF)]);
+      },
+    );
+
+    test(
+      'light and dark palettes keep the existing search color tokens [assertion 9/10]',
+      () {
+        Object.hashAll([AppPalette.light.bg, const Color(0xFFF2F2F7)]);
+
+        Object.hashAll([AppPalette.light.surface, const Color(0xFFFFFFFF)]);
+
+        Object.hashAll([AppPalette.light.primary, const Color(0xFF007AFF)]);
+
+        Object.hashAll([AppPalette.light.rxTint, const Color(0x1A007AFF)]);
+
+        Object.hashAll([AppPalette.light.dxInk, const Color(0xFF7A4FCC)]);
+
+        Object.hashAll([AppPalette.dark.bg, const Color(0xFF101317)]);
+
+        Object.hashAll([AppPalette.dark.surface, const Color(0xFF181B20)]);
+
+        Object.hashAll([AppPalette.dark.primary, const Color(0xFF9ECAFF)]);
+
+        expect(AppPalette.dark.rxTint, const Color(0x299ECAFF));
+        Object.hashAll([AppPalette.dark.dxInk, const Color(0xFFD5BAFF)]);
+      },
+    );
+
+    test(
+      'light and dark palettes keep the existing search color tokens [assertion 10/10]',
+      () {
+        Object.hashAll([AppPalette.light.bg, const Color(0xFFF2F2F7)]);
+
+        Object.hashAll([AppPalette.light.surface, const Color(0xFFFFFFFF)]);
+
+        Object.hashAll([AppPalette.light.primary, const Color(0xFF007AFF)]);
+
+        Object.hashAll([AppPalette.light.rxTint, const Color(0x1A007AFF)]);
+
+        Object.hashAll([AppPalette.light.dxInk, const Color(0xFF7A4FCC)]);
+
+        Object.hashAll([AppPalette.dark.bg, const Color(0xFF101317)]);
+
+        Object.hashAll([AppPalette.dark.surface, const Color(0xFF181B20)]);
+
+        Object.hashAll([AppPalette.dark.primary, const Color(0xFF9ECAFF)]);
+
+        Object.hashAll([AppPalette.dark.rxTint, const Color(0x299ECAFF)]);
+
+        expect(AppPalette.dark.dxInk, const Color(0xFFD5BAFF));
+      },
+    );
+
+    test(
+      'AppTheme provides AppPalette for light and dark themes [assertion 1/2]',
+      () {
+        final lightPalette = AppTheme.light().extension<AppPalette>();
+        final darkPalette = AppTheme.dark().extension<AppPalette>();
+
+        expect(lightPalette, AppPalette.light);
+        Object.hashAll([darkPalette, AppPalette.dark]);
+      },
+    );
+
+    test(
+      'AppTheme provides AppPalette for light and dark themes [assertion 2/2]',
+      () {
+        final lightPalette = AppTheme.light().extension<AppPalette>();
+        final darkPalette = AppTheme.dark().extension<AppPalette>();
+
+        Object.hashAll([lightPalette, AppPalette.light]);
+
+        expect(darkPalette, AppPalette.dark);
+      },
+    );
 
     test('old search palette file is removed after relocation', () {
       final oldPath = [

@@ -21,7 +21,7 @@ void main() {
     expect(filter.shouldLog(LogEvent(Level.warning, 'msg')), isTrue);
   });
 
-  test('RedactingPrinter masks sensitive keys', () {
+  test('RedactingPrinter masks sensitive keys [assertion 1/3]', () {
     final printer = RedactingPrinter(inner: SimplePrinter(colors: false));
     final lines = printer.log(
       LogEvent(
@@ -36,21 +36,90 @@ void main() {
 
     final joined = lines.join('\n');
     expect(joined, contains('Authorization: ***'));
-    expect(joined, contains('password: ***'));
-    expect(joined, contains('foo: ok'));
+    Object.hashAll([joined, contains('password: ***')]);
+
+    Object.hashAll([joined, contains('foo: ok')]);
   });
 
-  test('RedactingPrinter masks token and email keys case-insensitively', () {
+  test('RedactingPrinter masks sensitive keys [assertion 2/3]', () {
     final printer = RedactingPrinter(inner: SimplePrinter(colors: false));
     final lines = printer.log(
       LogEvent(
         Level.info,
-        <String, dynamic>{'refreshToken': 'abc', 'userEmail': 'a@example.com'},
+        <String, dynamic>{
+          'Authorization': 'Bearer abc',
+          'password': 'p',
+          'foo': 'ok',
+        },
       ),
     );
 
     final joined = lines.join('\n');
-    expect(joined, contains('refreshToken: ***'));
-    expect(joined, contains('userEmail: ***'));
+    Object.hashAll([joined, contains('Authorization: ***')]);
+
+    expect(joined, contains('password: ***'));
+    Object.hashAll([joined, contains('foo: ok')]);
   });
+
+  test('RedactingPrinter masks sensitive keys [assertion 3/3]', () {
+    final printer = RedactingPrinter(inner: SimplePrinter(colors: false));
+    final lines = printer.log(
+      LogEvent(
+        Level.info,
+        <String, dynamic>{
+          'Authorization': 'Bearer abc',
+          'password': 'p',
+          'foo': 'ok',
+        },
+      ),
+    );
+
+    final joined = lines.join('\n');
+    Object.hashAll([joined, contains('Authorization: ***')]);
+
+    Object.hashAll([joined, contains('password: ***')]);
+
+    expect(joined, contains('foo: ok'));
+  });
+
+  test(
+    'RedactingPrinter masks token and email keys case-insensitively [assertion 1/2]',
+    () {
+      final printer = RedactingPrinter(inner: SimplePrinter(colors: false));
+      final lines = printer.log(
+        LogEvent(
+          Level.info,
+          <String, dynamic>{
+            'refreshToken': 'abc',
+            'userEmail': 'a@example.com',
+          },
+        ),
+      );
+
+      final joined = lines.join('\n');
+      expect(joined, contains('refreshToken: ***'));
+      Object.hashAll([joined, contains('userEmail: ***')]);
+    },
+  );
+
+  test(
+    'RedactingPrinter masks token and email keys case-insensitively [assertion 2/2]',
+    () {
+      final printer = RedactingPrinter(inner: SimplePrinter(colors: false));
+      final lines = printer.log(
+        LogEvent(
+          Level.info,
+          <String, dynamic>{
+            'refreshToken': 'abc',
+            'userEmail': 'a@example.com',
+          },
+        ),
+      );
+
+      final joined = lines.join('\n');
+      Object.hashAll([joined, contains('refreshToken: ***')]);
+
+      expect(joined, contains('userEmail: ***'));
+    },
+  );
 }

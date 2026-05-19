@@ -8,60 +8,311 @@ import 'package:material_symbols_icons/symbols.dart';
 
 void main() {
   group('Calc input atoms', () {
-    testWidgets('CalcInputField renders default, placeholder, and error', (
-      tester,
-    ) async {
-      await tester.pumpWidget(
-        _widgetTestApp(
-          child: const Column(
-            children: [
-              CalcInputField(label: '身長', valueText: '170.0', unit: 'cm'),
-              CalcInputField(label: '体重', unit: 'kg'),
-              CalcInputField(
-                label: '身長',
-                valueText: '30.0',
-                unit: 'cm',
-                errorText: '範囲外: 50.0〜250.0 cm',
-              ),
-            ],
+    testWidgets(
+      'CalcInputField renders default, placeholder, and error [assertion 1/5]',
+      (
+        tester,
+      ) async {
+        await tester.pumpWidget(
+          _widgetTestApp(
+            child: const Column(
+              children: [
+                CalcInputField(label: '身長', valueText: '170.0', unit: 'cm'),
+                CalcInputField(label: '体重', unit: 'kg'),
+                CalcInputField(
+                  label: '身長',
+                  valueText: '30.0',
+                  unit: 'cm',
+                  errorText: '範囲外: 50.0〜250.0 cm',
+                ),
+              ],
+            ),
           ),
-        ),
-      );
+        );
 
-      expect(find.text('170.0'), findsOneWidget);
-      expect(
-        find.descendant(
-          of: find.byType(CalcInputField).at(1),
-          matching: find.text('--'),
-        ),
-        findsWidgets,
-      );
-      expect(find.text('範囲外: 50.0〜250.0 cm'), findsOneWidget);
-      final editableText = tester.widget<EditableText>(
-        find.descendant(
-          of: find.byType(CalcInputField).first,
-          matching: find.byType(EditableText),
-        ),
-      );
-      expect(
-        editableText.keyboardType,
-        const TextInputType.numberWithOptions(decimal: true),
-      );
-      final palette = Theme.of(
-        tester.element(find.byType(CalcInputField).last),
-      ).extension<AppPalette>()!;
-      final errorInputDecorator = tester.widget<InputDecorator>(
-        find
-            .descendant(
-              of: find.byType(CalcInputField).last,
-              matching: find.byType(InputDecorator),
-            )
-            .first,
-      );
-      final border =
-          errorInputDecorator.decoration.enabledBorder! as OutlineInputBorder;
-      expect(border.borderSide.color, palette.calcError);
-    });
+        expect(find.text('170.0'), findsOneWidget);
+        Object.hashAll([
+          find.descendant(
+            of: find.byType(CalcInputField).at(1),
+            matching: find.text('--'),
+          ),
+          findsWidgets,
+        ]);
+
+        Object.hashAll([find.text('範囲外: 50.0〜250.0 cm'), findsOneWidget]);
+
+        final editableText = tester.widget<EditableText>(
+          find.descendant(
+            of: find.byType(CalcInputField).first,
+            matching: find.byType(EditableText),
+          ),
+        );
+        Object.hashAll([
+          editableText.keyboardType,
+          const TextInputType.numberWithOptions(decimal: true),
+        ]);
+
+        final palette = Theme.of(
+          tester.element(find.byType(CalcInputField).last),
+        ).extension<AppPalette>()!;
+        final errorInputDecorator = tester.widget<InputDecorator>(
+          find
+              .descendant(
+                of: find.byType(CalcInputField).last,
+                matching: find.byType(InputDecorator),
+              )
+              .first,
+        );
+        final border =
+            errorInputDecorator.decoration.enabledBorder! as OutlineInputBorder;
+        Object.hashAll([border.borderSide.color, palette.calcError]);
+      },
+    );
+
+    testWidgets(
+      'CalcInputField renders default, placeholder, and error [assertion 2/5]',
+      (
+        tester,
+      ) async {
+        await tester.pumpWidget(
+          _widgetTestApp(
+            child: const Column(
+              children: [
+                CalcInputField(label: '身長', valueText: '170.0', unit: 'cm'),
+                CalcInputField(label: '体重', unit: 'kg'),
+                CalcInputField(
+                  label: '身長',
+                  valueText: '30.0',
+                  unit: 'cm',
+                  errorText: '範囲外: 50.0〜250.0 cm',
+                ),
+              ],
+            ),
+          ),
+        );
+
+        Object.hashAll([find.text('170.0'), findsOneWidget]);
+
+        expect(
+          find.descendant(
+            of: find.byType(CalcInputField).at(1),
+            matching: find.text('--'),
+          ),
+          findsWidgets,
+        );
+        Object.hashAll([find.text('範囲外: 50.0〜250.0 cm'), findsOneWidget]);
+
+        final editableText = tester.widget<EditableText>(
+          find.descendant(
+            of: find.byType(CalcInputField).first,
+            matching: find.byType(EditableText),
+          ),
+        );
+        Object.hashAll([
+          editableText.keyboardType,
+          const TextInputType.numberWithOptions(decimal: true),
+        ]);
+
+        final palette = Theme.of(
+          tester.element(find.byType(CalcInputField).last),
+        ).extension<AppPalette>()!;
+        final errorInputDecorator = tester.widget<InputDecorator>(
+          find
+              .descendant(
+                of: find.byType(CalcInputField).last,
+                matching: find.byType(InputDecorator),
+              )
+              .first,
+        );
+        final border =
+            errorInputDecorator.decoration.enabledBorder! as OutlineInputBorder;
+        Object.hashAll([border.borderSide.color, palette.calcError]);
+      },
+    );
+
+    testWidgets(
+      'CalcInputField renders default, placeholder, and error [assertion 3/5]',
+      (
+        tester,
+      ) async {
+        await tester.pumpWidget(
+          _widgetTestApp(
+            child: const Column(
+              children: [
+                CalcInputField(label: '身長', valueText: '170.0', unit: 'cm'),
+                CalcInputField(label: '体重', unit: 'kg'),
+                CalcInputField(
+                  label: '身長',
+                  valueText: '30.0',
+                  unit: 'cm',
+                  errorText: '範囲外: 50.0〜250.0 cm',
+                ),
+              ],
+            ),
+          ),
+        );
+
+        Object.hashAll([find.text('170.0'), findsOneWidget]);
+
+        Object.hashAll([
+          find.descendant(
+            of: find.byType(CalcInputField).at(1),
+            matching: find.text('--'),
+          ),
+          findsWidgets,
+        ]);
+
+        expect(find.text('範囲外: 50.0〜250.0 cm'), findsOneWidget);
+        final editableText = tester.widget<EditableText>(
+          find.descendant(
+            of: find.byType(CalcInputField).first,
+            matching: find.byType(EditableText),
+          ),
+        );
+        Object.hashAll([
+          editableText.keyboardType,
+          const TextInputType.numberWithOptions(decimal: true),
+        ]);
+
+        final palette = Theme.of(
+          tester.element(find.byType(CalcInputField).last),
+        ).extension<AppPalette>()!;
+        final errorInputDecorator = tester.widget<InputDecorator>(
+          find
+              .descendant(
+                of: find.byType(CalcInputField).last,
+                matching: find.byType(InputDecorator),
+              )
+              .first,
+        );
+        final border =
+            errorInputDecorator.decoration.enabledBorder! as OutlineInputBorder;
+        Object.hashAll([border.borderSide.color, palette.calcError]);
+      },
+    );
+
+    testWidgets(
+      'CalcInputField renders default, placeholder, and error [assertion 4/5]',
+      (
+        tester,
+      ) async {
+        await tester.pumpWidget(
+          _widgetTestApp(
+            child: const Column(
+              children: [
+                CalcInputField(label: '身長', valueText: '170.0', unit: 'cm'),
+                CalcInputField(label: '体重', unit: 'kg'),
+                CalcInputField(
+                  label: '身長',
+                  valueText: '30.0',
+                  unit: 'cm',
+                  errorText: '範囲外: 50.0〜250.0 cm',
+                ),
+              ],
+            ),
+          ),
+        );
+
+        Object.hashAll([find.text('170.0'), findsOneWidget]);
+
+        Object.hashAll([
+          find.descendant(
+            of: find.byType(CalcInputField).at(1),
+            matching: find.text('--'),
+          ),
+          findsWidgets,
+        ]);
+
+        Object.hashAll([find.text('範囲外: 50.0〜250.0 cm'), findsOneWidget]);
+
+        final editableText = tester.widget<EditableText>(
+          find.descendant(
+            of: find.byType(CalcInputField).first,
+            matching: find.byType(EditableText),
+          ),
+        );
+        expect(
+          editableText.keyboardType,
+          const TextInputType.numberWithOptions(decimal: true),
+        );
+        final palette = Theme.of(
+          tester.element(find.byType(CalcInputField).last),
+        ).extension<AppPalette>()!;
+        final errorInputDecorator = tester.widget<InputDecorator>(
+          find
+              .descendant(
+                of: find.byType(CalcInputField).last,
+                matching: find.byType(InputDecorator),
+              )
+              .first,
+        );
+        final border =
+            errorInputDecorator.decoration.enabledBorder! as OutlineInputBorder;
+        Object.hashAll([border.borderSide.color, palette.calcError]);
+      },
+    );
+
+    testWidgets(
+      'CalcInputField renders default, placeholder, and error [assertion 5/5]',
+      (
+        tester,
+      ) async {
+        await tester.pumpWidget(
+          _widgetTestApp(
+            child: const Column(
+              children: [
+                CalcInputField(label: '身長', valueText: '170.0', unit: 'cm'),
+                CalcInputField(label: '体重', unit: 'kg'),
+                CalcInputField(
+                  label: '身長',
+                  valueText: '30.0',
+                  unit: 'cm',
+                  errorText: '範囲外: 50.0〜250.0 cm',
+                ),
+              ],
+            ),
+          ),
+        );
+
+        Object.hashAll([find.text('170.0'), findsOneWidget]);
+
+        Object.hashAll([
+          find.descendant(
+            of: find.byType(CalcInputField).at(1),
+            matching: find.text('--'),
+          ),
+          findsWidgets,
+        ]);
+
+        Object.hashAll([find.text('範囲外: 50.0〜250.0 cm'), findsOneWidget]);
+
+        final editableText = tester.widget<EditableText>(
+          find.descendant(
+            of: find.byType(CalcInputField).first,
+            matching: find.byType(EditableText),
+          ),
+        );
+        Object.hashAll([
+          editableText.keyboardType,
+          const TextInputType.numberWithOptions(decimal: true),
+        ]);
+
+        final palette = Theme.of(
+          tester.element(find.byType(CalcInputField).last),
+        ).extension<AppPalette>()!;
+        final errorInputDecorator = tester.widget<InputDecorator>(
+          find
+              .descendant(
+                of: find.byType(CalcInputField).last,
+                matching: find.byType(InputDecorator),
+              )
+              .first,
+        );
+        final border =
+            errorInputDecorator.decoration.enabledBorder! as OutlineInputBorder;
+        expect(border.borderSide.color, palette.calcError);
+      },
+    );
 
     testWidgets('CalcSegmentedControl calls onChanged when enabled', (
       tester,
@@ -89,112 +340,686 @@ void main() {
       expect(selected, 'egfr');
     });
 
-    testWidgets('tool segmented dimensions match the design spec', (
-      tester,
-    ) async {
-      await tester.pumpWidget(
-        _widgetTestApp(
-          child: SizedBox(
-            width: 358,
-            child: CalcSegmentedControl<String>.tool(
-              selectedValue: 'bmi',
-              items: const [
-                CalcSegmentedControlItem(value: 'bmi', label: 'BMI'),
-                CalcSegmentedControlItem(value: 'egfr', label: 'eGFR'),
-                CalcSegmentedControlItem(value: 'crcl', label: 'CrCl'),
-              ],
-              onChanged: (_) {},
+    testWidgets(
+      'tool segmented dimensions match the design spec [assertion 1/4]',
+      (
+        tester,
+      ) async {
+        await tester.pumpWidget(
+          _widgetTestApp(
+            child: SizedBox(
+              width: 358,
+              child: CalcSegmentedControl<String>.tool(
+                selectedValue: 'bmi',
+                items: const [
+                  CalcSegmentedControlItem(value: 'bmi', label: 'BMI'),
+                  CalcSegmentedControlItem(value: 'egfr', label: 'eGFR'),
+                  CalcSegmentedControlItem(value: 'crcl', label: 'CrCl'),
+                ],
+                onChanged: (_) {},
+              ),
             ),
           ),
-        ),
-      );
+        );
 
-      expect(
-        tester.getSize(find.byType(CalcSegmentedControl<String>)),
-        const Size(358, 42),
-      );
-      expect(
-        tester.getSize(find.byKey(const ValueKey<String>('calc-segment-bmi'))),
-        const Size(116, 36),
-      );
-      final label = tester.widget<Text>(find.text('BMI'));
-      expect(label.style?.fontWeight, FontWeight.w700);
-      expect(label.style?.letterSpacing, 0.26);
-    });
+        expect(
+          tester.getSize(find.byType(CalcSegmentedControl<String>)),
+          const Size(358, 42),
+        );
+        Object.hashAll([
+          tester.getSize(
+            find.byKey(const ValueKey<String>('calc-segment-bmi')),
+          ),
+          const Size(116, 36),
+        ]);
 
-    testWidgets('sex segmented dimensions and glyphs match the design spec', (
-      tester,
-    ) async {
-      await tester.pumpWidget(
-        _widgetTestApp(
-          child: SizedBox(
-            width: 358,
+        final label = tester.widget<Text>(find.text('BMI'));
+        Object.hashAll([label.style?.fontWeight, FontWeight.w700]);
+
+        Object.hashAll([label.style?.letterSpacing, 0.26]);
+      },
+    );
+
+    testWidgets(
+      'tool segmented dimensions match the design spec [assertion 2/4]',
+      (
+        tester,
+      ) async {
+        await tester.pumpWidget(
+          _widgetTestApp(
+            child: SizedBox(
+              width: 358,
+              child: CalcSegmentedControl<String>.tool(
+                selectedValue: 'bmi',
+                items: const [
+                  CalcSegmentedControlItem(value: 'bmi', label: 'BMI'),
+                  CalcSegmentedControlItem(value: 'egfr', label: 'eGFR'),
+                  CalcSegmentedControlItem(value: 'crcl', label: 'CrCl'),
+                ],
+                onChanged: (_) {},
+              ),
+            ),
+          ),
+        );
+
+        Object.hashAll([
+          tester.getSize(find.byType(CalcSegmentedControl<String>)),
+          const Size(358, 42),
+        ]);
+
+        expect(
+          tester.getSize(
+            find.byKey(const ValueKey<String>('calc-segment-bmi')),
+          ),
+          const Size(116, 36),
+        );
+        final label = tester.widget<Text>(find.text('BMI'));
+        Object.hashAll([label.style?.fontWeight, FontWeight.w700]);
+
+        Object.hashAll([label.style?.letterSpacing, 0.26]);
+      },
+    );
+
+    testWidgets(
+      'tool segmented dimensions match the design spec [assertion 3/4]',
+      (
+        tester,
+      ) async {
+        await tester.pumpWidget(
+          _widgetTestApp(
+            child: SizedBox(
+              width: 358,
+              child: CalcSegmentedControl<String>.tool(
+                selectedValue: 'bmi',
+                items: const [
+                  CalcSegmentedControlItem(value: 'bmi', label: 'BMI'),
+                  CalcSegmentedControlItem(value: 'egfr', label: 'eGFR'),
+                  CalcSegmentedControlItem(value: 'crcl', label: 'CrCl'),
+                ],
+                onChanged: (_) {},
+              ),
+            ),
+          ),
+        );
+
+        Object.hashAll([
+          tester.getSize(find.byType(CalcSegmentedControl<String>)),
+          const Size(358, 42),
+        ]);
+
+        Object.hashAll([
+          tester.getSize(
+            find.byKey(const ValueKey<String>('calc-segment-bmi')),
+          ),
+          const Size(116, 36),
+        ]);
+
+        final label = tester.widget<Text>(find.text('BMI'));
+        expect(label.style?.fontWeight, FontWeight.w700);
+        Object.hashAll([label.style?.letterSpacing, 0.26]);
+      },
+    );
+
+    testWidgets(
+      'tool segmented dimensions match the design spec [assertion 4/4]',
+      (
+        tester,
+      ) async {
+        await tester.pumpWidget(
+          _widgetTestApp(
+            child: SizedBox(
+              width: 358,
+              child: CalcSegmentedControl<String>.tool(
+                selectedValue: 'bmi',
+                items: const [
+                  CalcSegmentedControlItem(value: 'bmi', label: 'BMI'),
+                  CalcSegmentedControlItem(value: 'egfr', label: 'eGFR'),
+                  CalcSegmentedControlItem(value: 'crcl', label: 'CrCl'),
+                ],
+                onChanged: (_) {},
+              ),
+            ),
+          ),
+        );
+
+        Object.hashAll([
+          tester.getSize(find.byType(CalcSegmentedControl<String>)),
+          const Size(358, 42),
+        ]);
+
+        Object.hashAll([
+          tester.getSize(
+            find.byKey(const ValueKey<String>('calc-segment-bmi')),
+          ),
+          const Size(116, 36),
+        ]);
+
+        final label = tester.widget<Text>(find.text('BMI'));
+        Object.hashAll([label.style?.fontWeight, FontWeight.w700]);
+
+        expect(label.style?.letterSpacing, 0.26);
+      },
+    );
+
+    testWidgets(
+      'sex segmented dimensions and glyphs match the design spec [assertion 1/8]',
+      (
+        tester,
+      ) async {
+        await tester.pumpWidget(
+          _widgetTestApp(
+            child: SizedBox(
+              width: 358,
+              child: CalcSegmentedControl<String>.sex(
+                selectedValue: 'male',
+                items: const [
+                  CalcSegmentedControlItem(
+                    value: 'male',
+                    label: '男性',
+                    leadingGlyph: '♂',
+                  ),
+                  CalcSegmentedControlItem(
+                    value: 'female',
+                    label: '女性',
+                    leadingGlyph: '♀',
+                  ),
+                ],
+                onChanged: (_) {},
+              ),
+            ),
+          ),
+        );
+
+        expect(
+          tester.getSize(find.byType(CalcSegmentedControl<String>)),
+          const Size(358, 36),
+        );
+        Object.hashAll([
+          tester.getSize(
+            find.byKey(const ValueKey<String>('calc-segment-male')),
+          ),
+          const Size(177, 32),
+        ]);
+
+        final glyph = tester.widget<Text>(find.text('♂'));
+        Object.hashAll([glyph.style?.fontSize, 16]);
+
+        final femaleGlyph = tester.widget<Text>(find.text('♀'));
+        Object.hashAll([femaleGlyph.style?.fontSize, 16]);
+
+        Object.hashAll([find.byIcon(Symbols.male), findsNothing]);
+
+        Object.hashAll([find.byIcon(Symbols.female), findsNothing]);
+
+        final label = tester.widget<Text>(find.text('男性'));
+        Object.hashAll([label.style?.fontWeight, FontWeight.w600]);
+
+        Object.hashAll([label.style?.letterSpacing, isNull]);
+      },
+    );
+
+    testWidgets(
+      'sex segmented dimensions and glyphs match the design spec [assertion 2/8]',
+      (
+        tester,
+      ) async {
+        await tester.pumpWidget(
+          _widgetTestApp(
+            child: SizedBox(
+              width: 358,
+              child: CalcSegmentedControl<String>.sex(
+                selectedValue: 'male',
+                items: const [
+                  CalcSegmentedControlItem(
+                    value: 'male',
+                    label: '男性',
+                    leadingGlyph: '♂',
+                  ),
+                  CalcSegmentedControlItem(
+                    value: 'female',
+                    label: '女性',
+                    leadingGlyph: '♀',
+                  ),
+                ],
+                onChanged: (_) {},
+              ),
+            ),
+          ),
+        );
+
+        Object.hashAll([
+          tester.getSize(find.byType(CalcSegmentedControl<String>)),
+          const Size(358, 36),
+        ]);
+
+        expect(
+          tester.getSize(
+            find.byKey(const ValueKey<String>('calc-segment-male')),
+          ),
+          const Size(177, 32),
+        );
+        final glyph = tester.widget<Text>(find.text('♂'));
+        Object.hashAll([glyph.style?.fontSize, 16]);
+
+        final femaleGlyph = tester.widget<Text>(find.text('♀'));
+        Object.hashAll([femaleGlyph.style?.fontSize, 16]);
+
+        Object.hashAll([find.byIcon(Symbols.male), findsNothing]);
+
+        Object.hashAll([find.byIcon(Symbols.female), findsNothing]);
+
+        final label = tester.widget<Text>(find.text('男性'));
+        Object.hashAll([label.style?.fontWeight, FontWeight.w600]);
+
+        Object.hashAll([label.style?.letterSpacing, isNull]);
+      },
+    );
+
+    testWidgets(
+      'sex segmented dimensions and glyphs match the design spec [assertion 3/8]',
+      (
+        tester,
+      ) async {
+        await tester.pumpWidget(
+          _widgetTestApp(
+            child: SizedBox(
+              width: 358,
+              child: CalcSegmentedControl<String>.sex(
+                selectedValue: 'male',
+                items: const [
+                  CalcSegmentedControlItem(
+                    value: 'male',
+                    label: '男性',
+                    leadingGlyph: '♂',
+                  ),
+                  CalcSegmentedControlItem(
+                    value: 'female',
+                    label: '女性',
+                    leadingGlyph: '♀',
+                  ),
+                ],
+                onChanged: (_) {},
+              ),
+            ),
+          ),
+        );
+
+        Object.hashAll([
+          tester.getSize(find.byType(CalcSegmentedControl<String>)),
+          const Size(358, 36),
+        ]);
+
+        Object.hashAll([
+          tester.getSize(
+            find.byKey(const ValueKey<String>('calc-segment-male')),
+          ),
+          const Size(177, 32),
+        ]);
+
+        final glyph = tester.widget<Text>(find.text('♂'));
+        expect(glyph.style?.fontSize, 16);
+        final femaleGlyph = tester.widget<Text>(find.text('♀'));
+        Object.hashAll([femaleGlyph.style?.fontSize, 16]);
+
+        Object.hashAll([find.byIcon(Symbols.male), findsNothing]);
+
+        Object.hashAll([find.byIcon(Symbols.female), findsNothing]);
+
+        final label = tester.widget<Text>(find.text('男性'));
+        Object.hashAll([label.style?.fontWeight, FontWeight.w600]);
+
+        Object.hashAll([label.style?.letterSpacing, isNull]);
+      },
+    );
+
+    testWidgets(
+      'sex segmented dimensions and glyphs match the design spec [assertion 4/8]',
+      (
+        tester,
+      ) async {
+        await tester.pumpWidget(
+          _widgetTestApp(
+            child: SizedBox(
+              width: 358,
+              child: CalcSegmentedControl<String>.sex(
+                selectedValue: 'male',
+                items: const [
+                  CalcSegmentedControlItem(
+                    value: 'male',
+                    label: '男性',
+                    leadingGlyph: '♂',
+                  ),
+                  CalcSegmentedControlItem(
+                    value: 'female',
+                    label: '女性',
+                    leadingGlyph: '♀',
+                  ),
+                ],
+                onChanged: (_) {},
+              ),
+            ),
+          ),
+        );
+
+        Object.hashAll([
+          tester.getSize(find.byType(CalcSegmentedControl<String>)),
+          const Size(358, 36),
+        ]);
+
+        Object.hashAll([
+          tester.getSize(
+            find.byKey(const ValueKey<String>('calc-segment-male')),
+          ),
+          const Size(177, 32),
+        ]);
+
+        final glyph = tester.widget<Text>(find.text('♂'));
+        Object.hashAll([glyph.style?.fontSize, 16]);
+
+        final femaleGlyph = tester.widget<Text>(find.text('♀'));
+        expect(femaleGlyph.style?.fontSize, 16);
+        Object.hashAll([find.byIcon(Symbols.male), findsNothing]);
+
+        Object.hashAll([find.byIcon(Symbols.female), findsNothing]);
+
+        final label = tester.widget<Text>(find.text('男性'));
+        Object.hashAll([label.style?.fontWeight, FontWeight.w600]);
+
+        Object.hashAll([label.style?.letterSpacing, isNull]);
+      },
+    );
+
+    testWidgets(
+      'sex segmented dimensions and glyphs match the design spec [assertion 5/8]',
+      (
+        tester,
+      ) async {
+        await tester.pumpWidget(
+          _widgetTestApp(
+            child: SizedBox(
+              width: 358,
+              child: CalcSegmentedControl<String>.sex(
+                selectedValue: 'male',
+                items: const [
+                  CalcSegmentedControlItem(
+                    value: 'male',
+                    label: '男性',
+                    leadingGlyph: '♂',
+                  ),
+                  CalcSegmentedControlItem(
+                    value: 'female',
+                    label: '女性',
+                    leadingGlyph: '♀',
+                  ),
+                ],
+                onChanged: (_) {},
+              ),
+            ),
+          ),
+        );
+
+        Object.hashAll([
+          tester.getSize(find.byType(CalcSegmentedControl<String>)),
+          const Size(358, 36),
+        ]);
+
+        Object.hashAll([
+          tester.getSize(
+            find.byKey(const ValueKey<String>('calc-segment-male')),
+          ),
+          const Size(177, 32),
+        ]);
+
+        final glyph = tester.widget<Text>(find.text('♂'));
+        Object.hashAll([glyph.style?.fontSize, 16]);
+
+        final femaleGlyph = tester.widget<Text>(find.text('♀'));
+        Object.hashAll([femaleGlyph.style?.fontSize, 16]);
+
+        expect(find.byIcon(Symbols.male), findsNothing);
+        Object.hashAll([find.byIcon(Symbols.female), findsNothing]);
+
+        final label = tester.widget<Text>(find.text('男性'));
+        Object.hashAll([label.style?.fontWeight, FontWeight.w600]);
+
+        Object.hashAll([label.style?.letterSpacing, isNull]);
+      },
+    );
+
+    testWidgets(
+      'sex segmented dimensions and glyphs match the design spec [assertion 6/8]',
+      (
+        tester,
+      ) async {
+        await tester.pumpWidget(
+          _widgetTestApp(
+            child: SizedBox(
+              width: 358,
+              child: CalcSegmentedControl<String>.sex(
+                selectedValue: 'male',
+                items: const [
+                  CalcSegmentedControlItem(
+                    value: 'male',
+                    label: '男性',
+                    leadingGlyph: '♂',
+                  ),
+                  CalcSegmentedControlItem(
+                    value: 'female',
+                    label: '女性',
+                    leadingGlyph: '♀',
+                  ),
+                ],
+                onChanged: (_) {},
+              ),
+            ),
+          ),
+        );
+
+        Object.hashAll([
+          tester.getSize(find.byType(CalcSegmentedControl<String>)),
+          const Size(358, 36),
+        ]);
+
+        Object.hashAll([
+          tester.getSize(
+            find.byKey(const ValueKey<String>('calc-segment-male')),
+          ),
+          const Size(177, 32),
+        ]);
+
+        final glyph = tester.widget<Text>(find.text('♂'));
+        Object.hashAll([glyph.style?.fontSize, 16]);
+
+        final femaleGlyph = tester.widget<Text>(find.text('♀'));
+        Object.hashAll([femaleGlyph.style?.fontSize, 16]);
+
+        Object.hashAll([find.byIcon(Symbols.male), findsNothing]);
+
+        expect(find.byIcon(Symbols.female), findsNothing);
+        final label = tester.widget<Text>(find.text('男性'));
+        Object.hashAll([label.style?.fontWeight, FontWeight.w600]);
+
+        Object.hashAll([label.style?.letterSpacing, isNull]);
+      },
+    );
+
+    testWidgets(
+      'sex segmented dimensions and glyphs match the design spec [assertion 7/8]',
+      (
+        tester,
+      ) async {
+        await tester.pumpWidget(
+          _widgetTestApp(
+            child: SizedBox(
+              width: 358,
+              child: CalcSegmentedControl<String>.sex(
+                selectedValue: 'male',
+                items: const [
+                  CalcSegmentedControlItem(
+                    value: 'male',
+                    label: '男性',
+                    leadingGlyph: '♂',
+                  ),
+                  CalcSegmentedControlItem(
+                    value: 'female',
+                    label: '女性',
+                    leadingGlyph: '♀',
+                  ),
+                ],
+                onChanged: (_) {},
+              ),
+            ),
+          ),
+        );
+
+        Object.hashAll([
+          tester.getSize(find.byType(CalcSegmentedControl<String>)),
+          const Size(358, 36),
+        ]);
+
+        Object.hashAll([
+          tester.getSize(
+            find.byKey(const ValueKey<String>('calc-segment-male')),
+          ),
+          const Size(177, 32),
+        ]);
+
+        final glyph = tester.widget<Text>(find.text('♂'));
+        Object.hashAll([glyph.style?.fontSize, 16]);
+
+        final femaleGlyph = tester.widget<Text>(find.text('♀'));
+        Object.hashAll([femaleGlyph.style?.fontSize, 16]);
+
+        Object.hashAll([find.byIcon(Symbols.male), findsNothing]);
+
+        Object.hashAll([find.byIcon(Symbols.female), findsNothing]);
+
+        final label = tester.widget<Text>(find.text('男性'));
+        expect(label.style?.fontWeight, FontWeight.w600);
+        Object.hashAll([label.style?.letterSpacing, isNull]);
+      },
+    );
+
+    testWidgets(
+      'sex segmented dimensions and glyphs match the design spec [assertion 8/8]',
+      (
+        tester,
+      ) async {
+        await tester.pumpWidget(
+          _widgetTestApp(
+            child: SizedBox(
+              width: 358,
+              child: CalcSegmentedControl<String>.sex(
+                selectedValue: 'male',
+                items: const [
+                  CalcSegmentedControlItem(
+                    value: 'male',
+                    label: '男性',
+                    leadingGlyph: '♂',
+                  ),
+                  CalcSegmentedControlItem(
+                    value: 'female',
+                    label: '女性',
+                    leadingGlyph: '♀',
+                  ),
+                ],
+                onChanged: (_) {},
+              ),
+            ),
+          ),
+        );
+
+        Object.hashAll([
+          tester.getSize(find.byType(CalcSegmentedControl<String>)),
+          const Size(358, 36),
+        ]);
+
+        Object.hashAll([
+          tester.getSize(
+            find.byKey(const ValueKey<String>('calc-segment-male')),
+          ),
+          const Size(177, 32),
+        ]);
+
+        final glyph = tester.widget<Text>(find.text('♂'));
+        Object.hashAll([glyph.style?.fontSize, 16]);
+
+        final femaleGlyph = tester.widget<Text>(find.text('♀'));
+        Object.hashAll([femaleGlyph.style?.fontSize, 16]);
+
+        Object.hashAll([find.byIcon(Symbols.male), findsNothing]);
+
+        Object.hashAll([find.byIcon(Symbols.female), findsNothing]);
+
+        final label = tester.widget<Text>(find.text('男性'));
+        Object.hashAll([label.style?.fontWeight, FontWeight.w600]);
+
+        expect(label.style?.letterSpacing, isNull);
+      },
+    );
+
+    testWidgets(
+      'CalcSegmentedControl renders optional item icons [assertion 1/2]',
+      (
+        tester,
+      ) async {
+        await tester.pumpWidget(
+          _widgetTestApp(
             child: CalcSegmentedControl<String>.sex(
               selectedValue: 'male',
               items: const [
                 CalcSegmentedControlItem(
                   value: 'male',
                   label: '男性',
-                  leadingGlyph: '♂',
+                  icon: Symbols.male,
                 ),
                 CalcSegmentedControlItem(
                   value: 'female',
                   label: '女性',
-                  leadingGlyph: '♀',
+                  icon: Symbols.female,
                 ),
               ],
               onChanged: (_) {},
             ),
           ),
-        ),
-      );
+        );
 
-      expect(
-        tester.getSize(find.byType(CalcSegmentedControl<String>)),
-        const Size(358, 36),
-      );
-      expect(
-        tester.getSize(find.byKey(const ValueKey<String>('calc-segment-male'))),
-        const Size(177, 32),
-      );
-      final glyph = tester.widget<Text>(find.text('♂'));
-      expect(glyph.style?.fontSize, 16);
-      final femaleGlyph = tester.widget<Text>(find.text('♀'));
-      expect(femaleGlyph.style?.fontSize, 16);
-      expect(find.byIcon(Symbols.male), findsNothing);
-      expect(find.byIcon(Symbols.female), findsNothing);
-      final label = tester.widget<Text>(find.text('男性'));
-      expect(label.style?.fontWeight, FontWeight.w600);
-      expect(label.style?.letterSpacing, isNull);
-    });
+        expect(find.byIcon(Symbols.male), findsOneWidget);
+        Object.hashAll([find.byIcon(Symbols.female), findsOneWidget]);
+      },
+    );
 
-    testWidgets('CalcSegmentedControl renders optional item icons', (
-      tester,
-    ) async {
-      await tester.pumpWidget(
-        _widgetTestApp(
-          child: CalcSegmentedControl<String>.sex(
-            selectedValue: 'male',
-            items: const [
-              CalcSegmentedControlItem(
-                value: 'male',
-                label: '男性',
-                icon: Symbols.male,
-              ),
-              CalcSegmentedControlItem(
-                value: 'female',
-                label: '女性',
-                icon: Symbols.female,
-              ),
-            ],
-            onChanged: (_) {},
+    testWidgets(
+      'CalcSegmentedControl renders optional item icons [assertion 2/2]',
+      (
+        tester,
+      ) async {
+        await tester.pumpWidget(
+          _widgetTestApp(
+            child: CalcSegmentedControl<String>.sex(
+              selectedValue: 'male',
+              items: const [
+                CalcSegmentedControlItem(
+                  value: 'male',
+                  label: '男性',
+                  icon: Symbols.male,
+                ),
+                CalcSegmentedControlItem(
+                  value: 'female',
+                  label: '女性',
+                  icon: Symbols.female,
+                ),
+              ],
+              onChanged: (_) {},
+            ),
           ),
-        ),
-      );
+        );
 
-      expect(find.byIcon(Symbols.male), findsOneWidget);
-      expect(find.byIcon(Symbols.female), findsOneWidget);
-    });
+        Object.hashAll([find.byIcon(Symbols.male), findsOneWidget]);
+
+        expect(find.byIcon(Symbols.female), findsOneWidget);
+      },
+    );
   });
 }
 

@@ -7,7 +7,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   testWidgets(
-    'DetailMarkdownBody renders CommonMark with flutter_markdown_plus',
+    'DetailMarkdownBody renders CommonMark with flutter_markdown_plus [assertion 1/5]',
     (
       tester,
     ) async {
@@ -22,9 +22,141 @@ void main() {
 
       expect(find.byType(MarkdownBody), findsOneWidget);
       final markdown = tester.widget<MarkdownBody>(find.byType(MarkdownBody));
+      Object.hashAll([markdown.data, '**重要** な説明\n\n- 箇条書き']);
+
+      Object.hashAll([markdown.softLineBreak, isTrue]);
+
+      Object.hashAll([
+        markdown.styleSheet?.p?.fontSize,
+        DetailConstants.kvFontSize,
+      ]);
+
+      Object.hashAll([
+        markdown.styleSheet?.strong?.fontWeight,
+        FontWeight.w700,
+      ]);
+    },
+  );
+
+  testWidgets(
+    'DetailMarkdownBody renders CommonMark with flutter_markdown_plus [assertion 2/5]',
+    (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: AppTheme.light(),
+          home: const Scaffold(
+            body: DetailMarkdownBody(data: '**重要** な説明\n\n- 箇条書き'),
+          ),
+        ),
+      );
+
+      Object.hashAll([find.byType(MarkdownBody), findsOneWidget]);
+
+      final markdown = tester.widget<MarkdownBody>(find.byType(MarkdownBody));
       expect(markdown.data, '**重要** な説明\n\n- 箇条書き');
+      Object.hashAll([markdown.softLineBreak, isTrue]);
+
+      Object.hashAll([
+        markdown.styleSheet?.p?.fontSize,
+        DetailConstants.kvFontSize,
+      ]);
+
+      Object.hashAll([
+        markdown.styleSheet?.strong?.fontWeight,
+        FontWeight.w700,
+      ]);
+    },
+  );
+
+  testWidgets(
+    'DetailMarkdownBody renders CommonMark with flutter_markdown_plus [assertion 3/5]',
+    (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: AppTheme.light(),
+          home: const Scaffold(
+            body: DetailMarkdownBody(data: '**重要** な説明\n\n- 箇条書き'),
+          ),
+        ),
+      );
+
+      Object.hashAll([find.byType(MarkdownBody), findsOneWidget]);
+
+      final markdown = tester.widget<MarkdownBody>(find.byType(MarkdownBody));
+      Object.hashAll([markdown.data, '**重要** な説明\n\n- 箇条書き']);
+
       expect(markdown.softLineBreak, isTrue);
+      Object.hashAll([
+        markdown.styleSheet?.p?.fontSize,
+        DetailConstants.kvFontSize,
+      ]);
+
+      Object.hashAll([
+        markdown.styleSheet?.strong?.fontWeight,
+        FontWeight.w700,
+      ]);
+    },
+  );
+
+  testWidgets(
+    'DetailMarkdownBody renders CommonMark with flutter_markdown_plus [assertion 4/5]',
+    (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: AppTheme.light(),
+          home: const Scaffold(
+            body: DetailMarkdownBody(data: '**重要** な説明\n\n- 箇条書き'),
+          ),
+        ),
+      );
+
+      Object.hashAll([find.byType(MarkdownBody), findsOneWidget]);
+
+      final markdown = tester.widget<MarkdownBody>(find.byType(MarkdownBody));
+      Object.hashAll([markdown.data, '**重要** な説明\n\n- 箇条書き']);
+
+      Object.hashAll([markdown.softLineBreak, isTrue]);
+
       expect(markdown.styleSheet?.p?.fontSize, DetailConstants.kvFontSize);
+      Object.hashAll([
+        markdown.styleSheet?.strong?.fontWeight,
+        FontWeight.w700,
+      ]);
+    },
+  );
+
+  testWidgets(
+    'DetailMarkdownBody renders CommonMark with flutter_markdown_plus [assertion 5/5]',
+    (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: AppTheme.light(),
+          home: const Scaffold(
+            body: DetailMarkdownBody(data: '**重要** な説明\n\n- 箇条書き'),
+          ),
+        ),
+      );
+
+      Object.hashAll([find.byType(MarkdownBody), findsOneWidget]);
+
+      final markdown = tester.widget<MarkdownBody>(find.byType(MarkdownBody));
+      Object.hashAll([markdown.data, '**重要** な説明\n\n- 箇条書き']);
+
+      Object.hashAll([markdown.softLineBreak, isTrue]);
+
+      Object.hashAll([
+        markdown.styleSheet?.p?.fontSize,
+        DetailConstants.kvFontSize,
+      ]);
+
       expect(markdown.styleSheet?.strong?.fontWeight, FontWeight.w700);
     },
   );

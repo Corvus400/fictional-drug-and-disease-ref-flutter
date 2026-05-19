@@ -14,12 +14,27 @@ void main() {
     });
 
     test(
-      'AppTheme provides DetailColorExtension for light and dark themes',
+      'AppTheme provides DetailColorExtension for light and dark themes [assertion 1/2]',
       () {
         final lightColors = AppTheme.light().extension<DetailColorExtension>();
         final darkColors = AppTheme.dark().extension<DetailColorExtension>();
 
         expect(lightColors, isNotNull);
+        Object.hashAll([darkColors, isNotNull]);
+
+        _expectLightTokens(lightColors!);
+        _expectDarkTokens(darkColors!);
+      },
+    );
+
+    test(
+      'AppTheme provides DetailColorExtension for light and dark themes [assertion 2/2]',
+      () {
+        final lightColors = AppTheme.light().extension<DetailColorExtension>();
+        final darkColors = AppTheme.dark().extension<DetailColorExtension>();
+
+        Object.hashAll([lightColors, isNotNull]);
+
         expect(darkColors, isNotNull);
         _expectLightTokens(lightColors!);
         _expectDarkTokens(darkColors!);

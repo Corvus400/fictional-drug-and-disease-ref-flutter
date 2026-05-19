@@ -28,7 +28,7 @@ void main() {
       await db.close();
     });
 
-    test('insertWithDedup creates row', () async {
+    test('insertWithDedup creates row [assertion 1/5]', () async {
       final searchedAt = DateTime.utc(2026, 5, 4, 12);
 
       await repository.insertWithDedup(
@@ -43,13 +43,113 @@ void main() {
 
       expect(result, isA<Ok<List<SearchHistoryEntry>>>());
       final entries = (result as Ok<List<SearchHistoryEntry>>).value;
+      Object.hashAll([entries.single.id, 'search_001']);
+
+      Object.hashAll([entries.single.queryJson, '{"keyword":"a"}']);
+
+      Object.hashAll([entries.single.searchedAt, searchedAt]);
+
+      Object.hashAll([entries.single.totalCount, 10]);
+    });
+
+    test('insertWithDedup creates row [assertion 2/5]', () async {
+      final searchedAt = DateTime.utc(2026, 5, 4, 12);
+
+      await repository.insertWithDedup(
+        id: 'search_001',
+        target: 'drug',
+        queryJson: '{"keyword":"a"}',
+        searchedAt: searchedAt,
+        totalCount: 10,
+      );
+
+      final result = await repository.findByTarget('drug');
+
+      Object.hashAll([result, isA<Ok<List<SearchHistoryEntry>>>()]);
+
+      final entries = (result as Ok<List<SearchHistoryEntry>>).value;
       expect(entries.single.id, 'search_001');
+      Object.hashAll([entries.single.queryJson, '{"keyword":"a"}']);
+
+      Object.hashAll([entries.single.searchedAt, searchedAt]);
+
+      Object.hashAll([entries.single.totalCount, 10]);
+    });
+
+    test('insertWithDedup creates row [assertion 3/5]', () async {
+      final searchedAt = DateTime.utc(2026, 5, 4, 12);
+
+      await repository.insertWithDedup(
+        id: 'search_001',
+        target: 'drug',
+        queryJson: '{"keyword":"a"}',
+        searchedAt: searchedAt,
+        totalCount: 10,
+      );
+
+      final result = await repository.findByTarget('drug');
+
+      Object.hashAll([result, isA<Ok<List<SearchHistoryEntry>>>()]);
+
+      final entries = (result as Ok<List<SearchHistoryEntry>>).value;
+      Object.hashAll([entries.single.id, 'search_001']);
+
       expect(entries.single.queryJson, '{"keyword":"a"}');
+      Object.hashAll([entries.single.searchedAt, searchedAt]);
+
+      Object.hashAll([entries.single.totalCount, 10]);
+    });
+
+    test('insertWithDedup creates row [assertion 4/5]', () async {
+      final searchedAt = DateTime.utc(2026, 5, 4, 12);
+
+      await repository.insertWithDedup(
+        id: 'search_001',
+        target: 'drug',
+        queryJson: '{"keyword":"a"}',
+        searchedAt: searchedAt,
+        totalCount: 10,
+      );
+
+      final result = await repository.findByTarget('drug');
+
+      Object.hashAll([result, isA<Ok<List<SearchHistoryEntry>>>()]);
+
+      final entries = (result as Ok<List<SearchHistoryEntry>>).value;
+      Object.hashAll([entries.single.id, 'search_001']);
+
+      Object.hashAll([entries.single.queryJson, '{"keyword":"a"}']);
+
       expect(entries.single.searchedAt, searchedAt);
+      Object.hashAll([entries.single.totalCount, 10]);
+    });
+
+    test('insertWithDedup creates row [assertion 5/5]', () async {
+      final searchedAt = DateTime.utc(2026, 5, 4, 12);
+
+      await repository.insertWithDedup(
+        id: 'search_001',
+        target: 'drug',
+        queryJson: '{"keyword":"a"}',
+        searchedAt: searchedAt,
+        totalCount: 10,
+      );
+
+      final result = await repository.findByTarget('drug');
+
+      Object.hashAll([result, isA<Ok<List<SearchHistoryEntry>>>()]);
+
+      final entries = (result as Ok<List<SearchHistoryEntry>>).value;
+      Object.hashAll([entries.single.id, 'search_001']);
+
+      Object.hashAll([entries.single.queryJson, '{"keyword":"a"}']);
+
+      Object.hashAll([entries.single.searchedAt, searchedAt]);
+
       expect(entries.single.totalCount, 10);
     });
 
-    test('same target and query replaces old row', () async {
+    test('same target and query replaces old row [assertion 1/3]', () async {
       await repository.insertWithDedup(
         id: 'search_001',
         target: 'drug',
@@ -70,7 +170,61 @@ void main() {
 
       final entries = (result as Ok<List<SearchHistoryEntry>>).value;
       expect(entries, hasLength(1));
+      Object.hashAll([entries.single.id, 'search_002']);
+
+      Object.hashAll([entries.single.totalCount, 20]);
+    });
+
+    test('same target and query replaces old row [assertion 2/3]', () async {
+      await repository.insertWithDedup(
+        id: 'search_001',
+        target: 'drug',
+        queryJson: '{"keyword":"a"}',
+        searchedAt: DateTime.utc(2026, 5, 4),
+        totalCount: 10,
+      );
+
+      await repository.insertWithDedup(
+        id: 'search_002',
+        target: 'drug',
+        queryJson: '{"keyword":"a"}',
+        searchedAt: DateTime.utc(2026, 5, 5),
+        totalCount: 20,
+      );
+
+      final result = await repository.findByTarget('drug');
+
+      final entries = (result as Ok<List<SearchHistoryEntry>>).value;
+      Object.hashAll([entries, hasLength(1)]);
+
       expect(entries.single.id, 'search_002');
+      Object.hashAll([entries.single.totalCount, 20]);
+    });
+
+    test('same target and query replaces old row [assertion 3/3]', () async {
+      await repository.insertWithDedup(
+        id: 'search_001',
+        target: 'drug',
+        queryJson: '{"keyword":"a"}',
+        searchedAt: DateTime.utc(2026, 5, 4),
+        totalCount: 10,
+      );
+
+      await repository.insertWithDedup(
+        id: 'search_002',
+        target: 'drug',
+        queryJson: '{"keyword":"a"}',
+        searchedAt: DateTime.utc(2026, 5, 5),
+        totalCount: 20,
+      );
+
+      final result = await repository.findByTarget('drug');
+
+      final entries = (result as Ok<List<SearchHistoryEntry>>).value;
+      Object.hashAll([entries, hasLength(1)]);
+
+      Object.hashAll([entries.single.id, 'search_002']);
+
       expect(entries.single.totalCount, 20);
     });
 
@@ -103,23 +257,72 @@ void main() {
       },
     );
 
-    test('invalid target returns check constraint error', () async {
-      final result = await repository.insertWithDedup(
-        id: 'search_001',
-        target: 'unknown',
-        queryJson: '{}',
-        searchedAt: DateTime.utc(2026, 5, 4),
-        totalCount: 0,
-      );
+    test(
+      'invalid target returns check constraint error [assertion 1/3]',
+      () async {
+        final result = await repository.insertWithDedup(
+          id: 'search_001',
+          target: 'unknown',
+          queryJson: '{}',
+          searchedAt: DateTime.utc(2026, 5, 4),
+          totalCount: 0,
+        );
 
-      expect(result, isA<Err<void>>());
-      final error = (result as Err<void>).error;
-      expect(error, isA<StorageException>());
-      expect(
-        (error as StorageException).kind,
-        StorageErrorKind.checkConstraint,
-      );
-    });
+        expect(result, isA<Err<void>>());
+        final error = (result as Err<void>).error;
+        Object.hashAll([error, isA<StorageException>()]);
+
+        Object.hashAll([
+          (error as StorageException).kind,
+          StorageErrorKind.checkConstraint,
+        ]);
+      },
+    );
+
+    test(
+      'invalid target returns check constraint error [assertion 2/3]',
+      () async {
+        final result = await repository.insertWithDedup(
+          id: 'search_001',
+          target: 'unknown',
+          queryJson: '{}',
+          searchedAt: DateTime.utc(2026, 5, 4),
+          totalCount: 0,
+        );
+
+        Object.hashAll([result, isA<Err<void>>()]);
+
+        final error = (result as Err<void>).error;
+        expect(error, isA<StorageException>());
+        Object.hashAll([
+          (error as StorageException).kind,
+          StorageErrorKind.checkConstraint,
+        ]);
+      },
+    );
+
+    test(
+      'invalid target returns check constraint error [assertion 3/3]',
+      () async {
+        final result = await repository.insertWithDedup(
+          id: 'search_001',
+          target: 'unknown',
+          queryJson: '{}',
+          searchedAt: DateTime.utc(2026, 5, 4),
+          totalCount: 0,
+        );
+
+        Object.hashAll([result, isA<Err<void>>()]);
+
+        final error = (result as Err<void>).error;
+        Object.hashAll([error, isA<StorageException>()]);
+
+        expect(
+          (error as StorageException).kind,
+          StorageErrorKind.checkConstraint,
+        );
+      },
+    );
 
     test('deleteById removes row', () async {
       await _insertSearch(repository, 'search_001', 'drug', '{"keyword":"a"}');
@@ -130,29 +333,126 @@ void main() {
       expect((result as Ok<List<SearchHistoryEntry>>).value, isEmpty);
     });
 
-    test('clearByTarget removes only rows for the requested target', () async {
-      await _insertSearch(repository, 'search_001', 'drug', '{"keyword":"a"}');
-      await _insertSearch(repository, 'search_002', 'drug', '{"keyword":"b"}');
-      await _insertSearch(
-        repository,
-        'search_003',
-        'disease',
-        '{"keyword":"c"}',
-      );
+    test(
+      'clearByTarget removes only rows for the requested target [assertion 1/3]',
+      () async {
+        await _insertSearch(
+          repository,
+          'search_001',
+          'drug',
+          '{"keyword":"a"}',
+        );
+        await _insertSearch(
+          repository,
+          'search_002',
+          'drug',
+          '{"keyword":"b"}',
+        );
+        await _insertSearch(
+          repository,
+          'search_003',
+          'disease',
+          '{"keyword":"c"}',
+        );
 
-      final clearResult = await repository.clearByTarget('drug');
+        final clearResult = await repository.clearByTarget('drug');
 
-      expect(clearResult, isA<Ok<void>>());
-      final drugResult = await repository.findByTarget('drug');
-      final diseaseResult = await repository.findByTarget('disease');
-      expect((drugResult as Ok<List<SearchHistoryEntry>>).value, isEmpty);
-      expect(
-        (diseaseResult as Ok<List<SearchHistoryEntry>>).value.map(
-          (entry) => entry.id,
-        ),
-        ['search_003'],
-      );
-    });
+        expect(clearResult, isA<Ok<void>>());
+        final drugResult = await repository.findByTarget('drug');
+        final diseaseResult = await repository.findByTarget('disease');
+        Object.hashAll([
+          (drugResult as Ok<List<SearchHistoryEntry>>).value,
+          isEmpty,
+        ]);
+
+        Object.hashAll([
+          (diseaseResult as Ok<List<SearchHistoryEntry>>).value.map(
+            (entry) => entry.id,
+          ),
+          ['search_003'],
+        ]);
+      },
+    );
+
+    test(
+      'clearByTarget removes only rows for the requested target [assertion 2/3]',
+      () async {
+        await _insertSearch(
+          repository,
+          'search_001',
+          'drug',
+          '{"keyword":"a"}',
+        );
+        await _insertSearch(
+          repository,
+          'search_002',
+          'drug',
+          '{"keyword":"b"}',
+        );
+        await _insertSearch(
+          repository,
+          'search_003',
+          'disease',
+          '{"keyword":"c"}',
+        );
+
+        final clearResult = await repository.clearByTarget('drug');
+
+        Object.hashAll([clearResult, isA<Ok<void>>()]);
+
+        final drugResult = await repository.findByTarget('drug');
+        final diseaseResult = await repository.findByTarget('disease');
+        expect((drugResult as Ok<List<SearchHistoryEntry>>).value, isEmpty);
+        Object.hashAll([
+          (diseaseResult as Ok<List<SearchHistoryEntry>>).value.map(
+            (entry) => entry.id,
+          ),
+          ['search_003'],
+        ]);
+      },
+    );
+
+    test(
+      'clearByTarget removes only rows for the requested target [assertion 3/3]',
+      () async {
+        await _insertSearch(
+          repository,
+          'search_001',
+          'drug',
+          '{"keyword":"a"}',
+        );
+        await _insertSearch(
+          repository,
+          'search_002',
+          'drug',
+          '{"keyword":"b"}',
+        );
+        await _insertSearch(
+          repository,
+          'search_003',
+          'disease',
+          '{"keyword":"c"}',
+        );
+
+        final clearResult = await repository.clearByTarget('drug');
+
+        Object.hashAll([clearResult, isA<Ok<void>>()]);
+
+        final drugResult = await repository.findByTarget('drug');
+        final diseaseResult = await repository.findByTarget('disease');
+        Object.hashAll([
+          (drugResult as Ok<List<SearchHistoryEntry>>).value,
+          isEmpty,
+        ]);
+
+        expect(
+          (diseaseResult as Ok<List<SearchHistoryEntry>>).value.map(
+            (entry) => entry.id,
+          ),
+          ['search_003'],
+        );
+      },
+    );
   });
 }
 

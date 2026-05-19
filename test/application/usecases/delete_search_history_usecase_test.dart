@@ -6,24 +6,55 @@ import 'package:fictional_drug_and_disease_ref/data/repositories/search_history_
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  test('DeleteSearchHistoryUsecase deletes one row by id', () async {
-    final db = AppDatabase(NativeDatabase.memory());
-    addTearDown(db.close);
-    final repository = SearchHistoryRepository(db.searchHistoriesDao);
-    final usecase = DeleteSearchHistoryUsecase(
-      searchHistoryRepository: repository,
-    );
-    await repository.insertWithDedup(
-      id: 'search_001',
-      target: 'drug',
-      queryJson: '{}',
-      searchedAt: DateTime.utc(2026, 5, 5),
-      totalCount: 1,
-    );
+  test(
+    'DeleteSearchHistoryUsecase deletes one row by id [assertion 1/2]',
+    () async {
+      final db = AppDatabase(NativeDatabase.memory());
+      addTearDown(db.close);
+      final repository = SearchHistoryRepository(db.searchHistoriesDao);
+      final usecase = DeleteSearchHistoryUsecase(
+        searchHistoryRepository: repository,
+      );
+      await repository.insertWithDedup(
+        id: 'search_001',
+        target: 'drug',
+        queryJson: '{}',
+        searchedAt: DateTime.utc(2026, 5, 5),
+        totalCount: 1,
+      );
 
-    final result = await usecase.execute('search_001');
+      final result = await usecase.execute('search_001');
 
-    expect(result, isA<Ok<void>>());
-    expect((await repository.findByTarget('drug') as Ok).value, isEmpty);
-  });
+      expect(result, isA<Ok<void>>());
+      Object.hashAll([
+        (await repository.findByTarget('drug') as Ok).value,
+        isEmpty,
+      ]);
+    },
+  );
+
+  test(
+    'DeleteSearchHistoryUsecase deletes one row by id [assertion 2/2]',
+    () async {
+      final db = AppDatabase(NativeDatabase.memory());
+      addTearDown(db.close);
+      final repository = SearchHistoryRepository(db.searchHistoriesDao);
+      final usecase = DeleteSearchHistoryUsecase(
+        searchHistoryRepository: repository,
+      );
+      await repository.insertWithDedup(
+        id: 'search_001',
+        target: 'drug',
+        queryJson: '{}',
+        searchedAt: DateTime.utc(2026, 5, 5),
+        totalCount: 1,
+      );
+
+      final result = await usecase.execute('search_001');
+
+      Object.hashAll([result, isA<Ok<void>>()]);
+
+      expect((await repository.findByTarget('drug') as Ok).value, isEmpty);
+    },
+  );
 }

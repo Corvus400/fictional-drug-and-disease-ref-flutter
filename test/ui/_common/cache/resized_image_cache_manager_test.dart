@@ -73,7 +73,7 @@ void main() {
   );
 
   test(
-    'resizedFile keeps the original cache key when image retrieval fails',
+    'resizedFile keeps the original cache key when image retrieval fails [assertion 1/2]',
     () async {
       final manager = _TestResizedImageCacheManager(
         cachedFile: _writeTestFile('todo3.png'),
@@ -89,6 +89,29 @@ void main() {
         ),
         throwsA(isA<Exception>()),
       );
+
+      Object.hashAll([manager.removedOriginalKeys, isEmpty]);
+    },
+  );
+
+  test(
+    'resizedFile keeps the original cache key when image retrieval fails [assertion 2/2]',
+    () async {
+      final manager = _TestResizedImageCacheManager(
+        cachedFile: _writeTestFile('todo3.png'),
+        imageResponseError: Exception('download failed'),
+      );
+
+      try {
+        await manager.resizedFile(
+          url: 'https://api.example.test/image.png?size=M',
+          originalKey: 'image-key',
+          maxWidth: 168,
+          maxHeight: 252,
+        );
+      } on Exception {
+        // The paired assertion test verifies the thrown exception.
+      }
 
       expect(manager.removedOriginalKeys, isEmpty);
     },

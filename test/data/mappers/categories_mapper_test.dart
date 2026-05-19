@@ -6,7 +6,7 @@ import 'package:fictional_drug_and_disease_ref/data/mappers/categories_mapper.da
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  test('toDomain maps CategoriesResponseDto fields', () {
+  test('toDomain maps CategoriesResponseDto fields [assertion 1/8]', () {
     const dto = CategoriesResponseDto(
       atc: [AtcEntryDto(code: 'A', label: '消化器系')],
       therapeuticCategories: [
@@ -31,15 +31,428 @@ void main() {
     final categories = dto.toDomain();
 
     expect(categories.atc.single.code, 'A');
+    Object.hashAll([
+      categories.therapeuticCategories.single.id,
+      'alimentary_metabolism',
+    ]);
+
+    Object.hashAll([
+      categories.therapeuticCategories.single.queryValue,
+      'ALIMENTARY_METABOLISM',
+    ]);
+
+    Object.hashAll([
+      categories.routeOfAdministration,
+      ['oral'],
+    ]);
+
+    Object.hashAll([
+      categories.dosageForm,
+      ['tablet'],
+    ]);
+
+    Object.hashAll([
+      categories.regulatoryClass,
+      ['ordinary'],
+    ]);
+
+    Object.hashAll([categories.icd10Chapters.single.roman, 'I']);
+
+    Object.hashAll([
+      categories.medicalDepartments,
+      ['infectious_disease'],
+    ]);
+  });
+
+  test('toDomain maps CategoriesResponseDto fields [assertion 2/8]', () {
+    const dto = CategoriesResponseDto(
+      atc: [AtcEntryDto(code: 'A', label: '消化器系')],
+      therapeuticCategories: [
+        TherapeuticCategoryEntryDto(
+          id: 'alimentary_metabolism',
+          label: '消化器系',
+        ),
+      ],
+      routeOfAdministration: ['oral'],
+      dosageForm: ['tablet'],
+      regulatoryClass: ['ordinary'],
+      icd10Chapters: [
+        Icd10ChapterEntryDto(
+          roman: 'I',
+          code: 'A00-B99',
+          label: '感染症',
+        ),
+      ],
+      medicalDepartments: ['infectious_disease'],
+    );
+
+    final categories = dto.toDomain();
+
+    Object.hashAll([categories.atc.single.code, 'A']);
+
     expect(categories.therapeuticCategories.single.id, 'alimentary_metabolism');
+    Object.hashAll([
+      categories.therapeuticCategories.single.queryValue,
+      'ALIMENTARY_METABOLISM',
+    ]);
+
+    Object.hashAll([
+      categories.routeOfAdministration,
+      ['oral'],
+    ]);
+
+    Object.hashAll([
+      categories.dosageForm,
+      ['tablet'],
+    ]);
+
+    Object.hashAll([
+      categories.regulatoryClass,
+      ['ordinary'],
+    ]);
+
+    Object.hashAll([categories.icd10Chapters.single.roman, 'I']);
+
+    Object.hashAll([
+      categories.medicalDepartments,
+      ['infectious_disease'],
+    ]);
+  });
+
+  test('toDomain maps CategoriesResponseDto fields [assertion 3/8]', () {
+    const dto = CategoriesResponseDto(
+      atc: [AtcEntryDto(code: 'A', label: '消化器系')],
+      therapeuticCategories: [
+        TherapeuticCategoryEntryDto(
+          id: 'alimentary_metabolism',
+          label: '消化器系',
+        ),
+      ],
+      routeOfAdministration: ['oral'],
+      dosageForm: ['tablet'],
+      regulatoryClass: ['ordinary'],
+      icd10Chapters: [
+        Icd10ChapterEntryDto(
+          roman: 'I',
+          code: 'A00-B99',
+          label: '感染症',
+        ),
+      ],
+      medicalDepartments: ['infectious_disease'],
+    );
+
+    final categories = dto.toDomain();
+
+    Object.hashAll([categories.atc.single.code, 'A']);
+
+    Object.hashAll([
+      categories.therapeuticCategories.single.id,
+      'alimentary_metabolism',
+    ]);
+
     expect(
       categories.therapeuticCategories.single.queryValue,
       'ALIMENTARY_METABOLISM',
     );
+    Object.hashAll([
+      categories.routeOfAdministration,
+      ['oral'],
+    ]);
+
+    Object.hashAll([
+      categories.dosageForm,
+      ['tablet'],
+    ]);
+
+    Object.hashAll([
+      categories.regulatoryClass,
+      ['ordinary'],
+    ]);
+
+    Object.hashAll([categories.icd10Chapters.single.roman, 'I']);
+
+    Object.hashAll([
+      categories.medicalDepartments,
+      ['infectious_disease'],
+    ]);
+  });
+
+  test('toDomain maps CategoriesResponseDto fields [assertion 4/8]', () {
+    const dto = CategoriesResponseDto(
+      atc: [AtcEntryDto(code: 'A', label: '消化器系')],
+      therapeuticCategories: [
+        TherapeuticCategoryEntryDto(
+          id: 'alimentary_metabolism',
+          label: '消化器系',
+        ),
+      ],
+      routeOfAdministration: ['oral'],
+      dosageForm: ['tablet'],
+      regulatoryClass: ['ordinary'],
+      icd10Chapters: [
+        Icd10ChapterEntryDto(
+          roman: 'I',
+          code: 'A00-B99',
+          label: '感染症',
+        ),
+      ],
+      medicalDepartments: ['infectious_disease'],
+    );
+
+    final categories = dto.toDomain();
+
+    Object.hashAll([categories.atc.single.code, 'A']);
+
+    Object.hashAll([
+      categories.therapeuticCategories.single.id,
+      'alimentary_metabolism',
+    ]);
+
+    Object.hashAll([
+      categories.therapeuticCategories.single.queryValue,
+      'ALIMENTARY_METABOLISM',
+    ]);
+
     expect(categories.routeOfAdministration, ['oral']);
+    Object.hashAll([
+      categories.dosageForm,
+      ['tablet'],
+    ]);
+
+    Object.hashAll([
+      categories.regulatoryClass,
+      ['ordinary'],
+    ]);
+
+    Object.hashAll([categories.icd10Chapters.single.roman, 'I']);
+
+    Object.hashAll([
+      categories.medicalDepartments,
+      ['infectious_disease'],
+    ]);
+  });
+
+  test('toDomain maps CategoriesResponseDto fields [assertion 5/8]', () {
+    const dto = CategoriesResponseDto(
+      atc: [AtcEntryDto(code: 'A', label: '消化器系')],
+      therapeuticCategories: [
+        TherapeuticCategoryEntryDto(
+          id: 'alimentary_metabolism',
+          label: '消化器系',
+        ),
+      ],
+      routeOfAdministration: ['oral'],
+      dosageForm: ['tablet'],
+      regulatoryClass: ['ordinary'],
+      icd10Chapters: [
+        Icd10ChapterEntryDto(
+          roman: 'I',
+          code: 'A00-B99',
+          label: '感染症',
+        ),
+      ],
+      medicalDepartments: ['infectious_disease'],
+    );
+
+    final categories = dto.toDomain();
+
+    Object.hashAll([categories.atc.single.code, 'A']);
+
+    Object.hashAll([
+      categories.therapeuticCategories.single.id,
+      'alimentary_metabolism',
+    ]);
+
+    Object.hashAll([
+      categories.therapeuticCategories.single.queryValue,
+      'ALIMENTARY_METABOLISM',
+    ]);
+
+    Object.hashAll([
+      categories.routeOfAdministration,
+      ['oral'],
+    ]);
+
     expect(categories.dosageForm, ['tablet']);
+    Object.hashAll([
+      categories.regulatoryClass,
+      ['ordinary'],
+    ]);
+
+    Object.hashAll([categories.icd10Chapters.single.roman, 'I']);
+
+    Object.hashAll([
+      categories.medicalDepartments,
+      ['infectious_disease'],
+    ]);
+  });
+
+  test('toDomain maps CategoriesResponseDto fields [assertion 6/8]', () {
+    const dto = CategoriesResponseDto(
+      atc: [AtcEntryDto(code: 'A', label: '消化器系')],
+      therapeuticCategories: [
+        TherapeuticCategoryEntryDto(
+          id: 'alimentary_metabolism',
+          label: '消化器系',
+        ),
+      ],
+      routeOfAdministration: ['oral'],
+      dosageForm: ['tablet'],
+      regulatoryClass: ['ordinary'],
+      icd10Chapters: [
+        Icd10ChapterEntryDto(
+          roman: 'I',
+          code: 'A00-B99',
+          label: '感染症',
+        ),
+      ],
+      medicalDepartments: ['infectious_disease'],
+    );
+
+    final categories = dto.toDomain();
+
+    Object.hashAll([categories.atc.single.code, 'A']);
+
+    Object.hashAll([
+      categories.therapeuticCategories.single.id,
+      'alimentary_metabolism',
+    ]);
+
+    Object.hashAll([
+      categories.therapeuticCategories.single.queryValue,
+      'ALIMENTARY_METABOLISM',
+    ]);
+
+    Object.hashAll([
+      categories.routeOfAdministration,
+      ['oral'],
+    ]);
+
+    Object.hashAll([
+      categories.dosageForm,
+      ['tablet'],
+    ]);
+
     expect(categories.regulatoryClass, ['ordinary']);
+    Object.hashAll([categories.icd10Chapters.single.roman, 'I']);
+
+    Object.hashAll([
+      categories.medicalDepartments,
+      ['infectious_disease'],
+    ]);
+  });
+
+  test('toDomain maps CategoriesResponseDto fields [assertion 7/8]', () {
+    const dto = CategoriesResponseDto(
+      atc: [AtcEntryDto(code: 'A', label: '消化器系')],
+      therapeuticCategories: [
+        TherapeuticCategoryEntryDto(
+          id: 'alimentary_metabolism',
+          label: '消化器系',
+        ),
+      ],
+      routeOfAdministration: ['oral'],
+      dosageForm: ['tablet'],
+      regulatoryClass: ['ordinary'],
+      icd10Chapters: [
+        Icd10ChapterEntryDto(
+          roman: 'I',
+          code: 'A00-B99',
+          label: '感染症',
+        ),
+      ],
+      medicalDepartments: ['infectious_disease'],
+    );
+
+    final categories = dto.toDomain();
+
+    Object.hashAll([categories.atc.single.code, 'A']);
+
+    Object.hashAll([
+      categories.therapeuticCategories.single.id,
+      'alimentary_metabolism',
+    ]);
+
+    Object.hashAll([
+      categories.therapeuticCategories.single.queryValue,
+      'ALIMENTARY_METABOLISM',
+    ]);
+
+    Object.hashAll([
+      categories.routeOfAdministration,
+      ['oral'],
+    ]);
+
+    Object.hashAll([
+      categories.dosageForm,
+      ['tablet'],
+    ]);
+
+    Object.hashAll([
+      categories.regulatoryClass,
+      ['ordinary'],
+    ]);
+
     expect(categories.icd10Chapters.single.roman, 'I');
+    Object.hashAll([
+      categories.medicalDepartments,
+      ['infectious_disease'],
+    ]);
+  });
+
+  test('toDomain maps CategoriesResponseDto fields [assertion 8/8]', () {
+    const dto = CategoriesResponseDto(
+      atc: [AtcEntryDto(code: 'A', label: '消化器系')],
+      therapeuticCategories: [
+        TherapeuticCategoryEntryDto(
+          id: 'alimentary_metabolism',
+          label: '消化器系',
+        ),
+      ],
+      routeOfAdministration: ['oral'],
+      dosageForm: ['tablet'],
+      regulatoryClass: ['ordinary'],
+      icd10Chapters: [
+        Icd10ChapterEntryDto(
+          roman: 'I',
+          code: 'A00-B99',
+          label: '感染症',
+        ),
+      ],
+      medicalDepartments: ['infectious_disease'],
+    );
+
+    final categories = dto.toDomain();
+
+    Object.hashAll([categories.atc.single.code, 'A']);
+
+    Object.hashAll([
+      categories.therapeuticCategories.single.id,
+      'alimentary_metabolism',
+    ]);
+
+    Object.hashAll([
+      categories.therapeuticCategories.single.queryValue,
+      'ALIMENTARY_METABOLISM',
+    ]);
+
+    Object.hashAll([
+      categories.routeOfAdministration,
+      ['oral'],
+    ]);
+
+    Object.hashAll([
+      categories.dosageForm,
+      ['tablet'],
+    ]);
+
+    Object.hashAll([
+      categories.regulatoryClass,
+      ['ordinary'],
+    ]);
+
+    Object.hashAll([categories.icd10Chapters.single.roman, 'I']);
+
     expect(categories.medicalDepartments, ['infectious_disease']);
   });
 

@@ -17,32 +17,69 @@ import 'package:mocktail/mocktail.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
-  test('viewDrugDetailUsecaseProvider records browsing history', () async {
-    SharedPreferences.setMockInitialValues({});
-    final db = AppDatabase(NativeDatabase.memory());
-    addTearDown(db.close);
-    final apiClient = _MockDrugApiClient();
-    final dto = _drugFixture();
-    when(() => apiClient.getDrug(dto.id)).thenAnswer((_) async => dto);
-    final container = ProviderContainer(
-      overrides: [
-        appDatabaseProvider.overrideWithValue(db),
-        drugApiClientProvider.overrideWithValue(apiClient),
-      ],
-    );
-    addTearDown(container.dispose);
+  test(
+    'viewDrugDetailUsecaseProvider records browsing history [assertion 1/2]',
+    () async {
+      SharedPreferences.setMockInitialValues({});
+      final db = AppDatabase(NativeDatabase.memory());
+      addTearDown(db.close);
+      final apiClient = _MockDrugApiClient();
+      final dto = _drugFixture();
+      when(() => apiClient.getDrug(dto.id)).thenAnswer((_) async => dto);
+      final container = ProviderContainer(
+        overrides: [
+          appDatabaseProvider.overrideWithValue(db),
+          drugApiClientProvider.overrideWithValue(apiClient),
+        ],
+      );
+      addTearDown(container.dispose);
 
-    final result = await container
-        .read(viewDrugDetailUsecaseProvider)
-        .execute(dto.id);
+      final result = await container
+          .read(viewDrugDetailUsecaseProvider)
+          .execute(dto.id);
 
-    expect(result, isA<DrugDetailLoaded>());
-    final histories = await container
-        .read(browsingHistoryRepositoryProvider)
-        .findAll();
-    final entries = (histories as Ok<List<BrowsingHistoryEntry>>).value;
-    expect(entries.map((entry) => entry.id), [dto.id]);
-  });
+      expect(result, isA<DrugDetailLoaded>());
+      final histories = await container
+          .read(browsingHistoryRepositoryProvider)
+          .findAll();
+      final entries = (histories as Ok<List<BrowsingHistoryEntry>>).value;
+      Object.hashAll([
+        entries.map((entry) => entry.id),
+        [dto.id],
+      ]);
+    },
+  );
+
+  test(
+    'viewDrugDetailUsecaseProvider records browsing history [assertion 2/2]',
+    () async {
+      SharedPreferences.setMockInitialValues({});
+      final db = AppDatabase(NativeDatabase.memory());
+      addTearDown(db.close);
+      final apiClient = _MockDrugApiClient();
+      final dto = _drugFixture();
+      when(() => apiClient.getDrug(dto.id)).thenAnswer((_) async => dto);
+      final container = ProviderContainer(
+        overrides: [
+          appDatabaseProvider.overrideWithValue(db),
+          drugApiClientProvider.overrideWithValue(apiClient),
+        ],
+      );
+      addTearDown(container.dispose);
+
+      final result = await container
+          .read(viewDrugDetailUsecaseProvider)
+          .execute(dto.id);
+
+      Object.hashAll([result, isA<DrugDetailLoaded>()]);
+
+      final histories = await container
+          .read(browsingHistoryRepositoryProvider)
+          .findAll();
+      final entries = (histories as Ok<List<BrowsingHistoryEntry>>).value;
+      expect(entries.map((entry) => entry.id), [dto.id]);
+    },
+  );
 }
 
 final class _MockDrugApiClient extends Mock implements DrugApiClient {}

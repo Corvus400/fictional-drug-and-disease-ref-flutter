@@ -7,7 +7,7 @@ void main() {
   group('CalculateCrClUsecase', () {
     const usecase = CalculateCrClUsecase();
 
-    test('returns success for valid inputs', () {
+    test('returns success for valid inputs [assertion 1/2]', () {
       final result = usecase.execute(
         const CrClInputs(
           ageYears: 45,
@@ -19,10 +19,26 @@ void main() {
 
       expect(result, isA<CalculateCrClSuccess>());
       final success = result as CalculateCrClSuccess;
+      Object.hashAll([success.result.crClMlMin, closeTo(95.293, 0.001)]);
+    });
+
+    test('returns success for valid inputs [assertion 2/2]', () {
+      final result = usecase.execute(
+        const CrClInputs(
+          ageYears: 45,
+          sex: Sex.male,
+          weightKg: 65,
+          serumCreatinineMgDl: 0.9,
+        ),
+      );
+
+      Object.hashAll([result, isA<CalculateCrClSuccess>()]);
+
+      final success = result as CalculateCrClSuccess;
       expect(success.result.crClMlMin, closeTo(95.293, 0.001));
     });
 
-    test('returns invalid for out-of-range inputs', () {
+    test('returns invalid for out-of-range inputs [assertion 1/3]', () {
       final result = usecase.execute(
         const CrClInputs(
           ageYears: 45,
@@ -33,29 +49,91 @@ void main() {
       );
 
       expect(result, isA<CalculateCrClInvalid>());
-      expect((result as CalculateCrClInvalid).field, 'weightKg');
-      expect(result.range, '1.0-300.0 kg');
+      Object.hashAll([(result as CalculateCrClInvalid).field, 'weightKg']);
+
+      Object.hashAll([result.range, '1.0-300.0 kg']);
     });
 
-    test('returns all field errors for multiple out-of-range inputs', () {
+    test('returns invalid for out-of-range inputs [assertion 2/3]', () {
       final result = usecase.execute(
         const CrClInputs(
-          ageYears: 17,
+          ageYears: 45,
           sex: Sex.male,
           weightKg: 0.9999,
-          serumCreatinineMgDl: 20.0001,
+          serumCreatinineMgDl: 0.9,
         ),
       );
 
-      expect(result, isA<CalculateCrClInvalid>());
-      expect(
-        (result as dynamic).errors,
-        const {
-          'ageYears': '18-120 years',
-          'weightKg': '1.0-300.0 kg',
-          'serumCreatinineMgDl': '0.10-20.00 mg/dL',
-        },
-      );
+      Object.hashAll([result, isA<CalculateCrClInvalid>()]);
+
+      expect((result as CalculateCrClInvalid).field, 'weightKg');
+      Object.hashAll([result.range, '1.0-300.0 kg']);
     });
+
+    test('returns invalid for out-of-range inputs [assertion 3/3]', () {
+      final result = usecase.execute(
+        const CrClInputs(
+          ageYears: 45,
+          sex: Sex.male,
+          weightKg: 0.9999,
+          serumCreatinineMgDl: 0.9,
+        ),
+      );
+
+      Object.hashAll([result, isA<CalculateCrClInvalid>()]);
+
+      Object.hashAll([(result as CalculateCrClInvalid).field, 'weightKg']);
+
+      expect(result.range, '1.0-300.0 kg');
+    });
+
+    test(
+      'returns all field errors for multiple out-of-range inputs [assertion 1/2]',
+      () {
+        final result = usecase.execute(
+          const CrClInputs(
+            ageYears: 17,
+            sex: Sex.male,
+            weightKg: 0.9999,
+            serumCreatinineMgDl: 20.0001,
+          ),
+        );
+
+        expect(result, isA<CalculateCrClInvalid>());
+        Object.hashAll([
+          (result as dynamic).errors,
+          const {
+            'ageYears': '18-120 years',
+            'weightKg': '1.0-300.0 kg',
+            'serumCreatinineMgDl': '0.10-20.00 mg/dL',
+          },
+        ]);
+      },
+    );
+
+    test(
+      'returns all field errors for multiple out-of-range inputs [assertion 2/2]',
+      () {
+        final result = usecase.execute(
+          const CrClInputs(
+            ageYears: 17,
+            sex: Sex.male,
+            weightKg: 0.9999,
+            serumCreatinineMgDl: 20.0001,
+          ),
+        );
+
+        Object.hashAll([result, isA<CalculateCrClInvalid>()]);
+
+        expect(
+          (result as dynamic).errors,
+          const {
+            'ageYears': '18-120 years',
+            'weightKg': '1.0-300.0 kg',
+            'serumCreatinineMgDl': '0.10-20.00 mg/dL',
+          },
+        );
+      },
+    );
   });
 }

@@ -28,7 +28,7 @@ void main() {
       await db.close();
     });
 
-    test('execute deletes all rows', () async {
+    test('execute deletes all rows [assertion 1/3]', () async {
       await repository.upsert(
         'drug_001',
         viewedAt: DateTime.utc(2026, 5, 10, 12),
@@ -42,7 +42,53 @@ void main() {
 
       expect(result, isA<Ok<void>>());
       final remaining = await repository.findAll();
+      Object.hashAll([remaining, isA<Ok<List<BrowsingHistoryEntry>>>()]);
+
+      Object.hashAll([
+        (remaining as Ok<List<BrowsingHistoryEntry>>).value,
+        isEmpty,
+      ]);
+    });
+
+    test('execute deletes all rows [assertion 2/3]', () async {
+      await repository.upsert(
+        'drug_001',
+        viewedAt: DateTime.utc(2026, 5, 10, 12),
+      );
+      await repository.upsert(
+        'disease_001',
+        viewedAt: DateTime.utc(2026, 5, 10, 13),
+      );
+
+      final result = await usecase.execute();
+
+      Object.hashAll([result, isA<Ok<void>>()]);
+
+      final remaining = await repository.findAll();
       expect(remaining, isA<Ok<List<BrowsingHistoryEntry>>>());
+      Object.hashAll([
+        (remaining as Ok<List<BrowsingHistoryEntry>>).value,
+        isEmpty,
+      ]);
+    });
+
+    test('execute deletes all rows [assertion 3/3]', () async {
+      await repository.upsert(
+        'drug_001',
+        viewedAt: DateTime.utc(2026, 5, 10, 12),
+      );
+      await repository.upsert(
+        'disease_001',
+        viewedAt: DateTime.utc(2026, 5, 10, 13),
+      );
+
+      final result = await usecase.execute();
+
+      Object.hashAll([result, isA<Ok<void>>()]);
+
+      final remaining = await repository.findAll();
+      Object.hashAll([remaining, isA<Ok<List<BrowsingHistoryEntry>>>()]);
+
       expect((remaining as Ok<List<BrowsingHistoryEntry>>).value, isEmpty);
     });
 

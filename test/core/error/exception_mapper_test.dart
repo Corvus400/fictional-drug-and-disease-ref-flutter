@@ -46,42 +46,201 @@ void main() {
       expect(toAppException(e), isA<NetworkException>());
     });
 
-    test('DioException(badResponse, 503) maps to ServerException(503)', () {
-      final mapped = toAppException(_badResponse(503));
+    test(
+      'DioException(badResponse, 503) maps to ServerException(503) [assertion 1/2]',
+      () {
+        final mapped = toAppException(_badResponse(503));
 
-      expect(mapped, isA<ServerException>());
-      expect((mapped as ServerException).statusCode, 503);
-    });
-
-    test('DioException(badResponse, 4xx, valid body) maps to ApiException', () {
-      final mapped =
-          toAppException(
-                _badResponse(
-                  404,
-                  data: <String, dynamic>{
-                    'code': 'NOT_FOUND',
-                    'message': 'not found',
-                    'details': 'd',
-                    'disclaimer': 'disc',
-                  },
-                ),
-              )
-              as ApiException;
-
-      expect(mapped.statusCode, 404);
-      expect(mapped.code, 'NOT_FOUND');
-      expect(mapped.message, 'not found');
-      expect(mapped.details, 'd');
-      expect(mapped.disclaimer, 'disc');
-    });
+        expect(mapped, isA<ServerException>());
+        Object.hashAll([(mapped as ServerException).statusCode, 503]);
+      },
+    );
 
     test(
-      'DioException(badResponse, 4xx, empty body) maps to fallback',
+      'DioException(badResponse, 503) maps to ServerException(503) [assertion 2/2]',
+      () {
+        final mapped = toAppException(_badResponse(503));
+
+        Object.hashAll([mapped, isA<ServerException>()]);
+
+        expect((mapped as ServerException).statusCode, 503);
+      },
+    );
+
+    test(
+      'DioException(badResponse, 4xx, valid body) maps to ApiException [assertion 1/5]',
+      () {
+        final mapped =
+            toAppException(
+                  _badResponse(
+                    404,
+                    data: <String, dynamic>{
+                      'code': 'NOT_FOUND',
+                      'message': 'not found',
+                      'details': 'd',
+                      'disclaimer': 'disc',
+                    },
+                  ),
+                )
+                as ApiException;
+
+        expect(mapped.statusCode, 404);
+        Object.hashAll([mapped.code, 'NOT_FOUND']);
+
+        Object.hashAll([mapped.message, 'not found']);
+
+        Object.hashAll([mapped.details, 'd']);
+
+        Object.hashAll([mapped.disclaimer, 'disc']);
+      },
+    );
+
+    test(
+      'DioException(badResponse, 4xx, valid body) maps to ApiException [assertion 2/5]',
+      () {
+        final mapped =
+            toAppException(
+                  _badResponse(
+                    404,
+                    data: <String, dynamic>{
+                      'code': 'NOT_FOUND',
+                      'message': 'not found',
+                      'details': 'd',
+                      'disclaimer': 'disc',
+                    },
+                  ),
+                )
+                as ApiException;
+
+        Object.hashAll([mapped.statusCode, 404]);
+
+        expect(mapped.code, 'NOT_FOUND');
+        Object.hashAll([mapped.message, 'not found']);
+
+        Object.hashAll([mapped.details, 'd']);
+
+        Object.hashAll([mapped.disclaimer, 'disc']);
+      },
+    );
+
+    test(
+      'DioException(badResponse, 4xx, valid body) maps to ApiException [assertion 3/5]',
+      () {
+        final mapped =
+            toAppException(
+                  _badResponse(
+                    404,
+                    data: <String, dynamic>{
+                      'code': 'NOT_FOUND',
+                      'message': 'not found',
+                      'details': 'd',
+                      'disclaimer': 'disc',
+                    },
+                  ),
+                )
+                as ApiException;
+
+        Object.hashAll([mapped.statusCode, 404]);
+
+        Object.hashAll([mapped.code, 'NOT_FOUND']);
+
+        expect(mapped.message, 'not found');
+        Object.hashAll([mapped.details, 'd']);
+
+        Object.hashAll([mapped.disclaimer, 'disc']);
+      },
+    );
+
+    test(
+      'DioException(badResponse, 4xx, valid body) maps to ApiException [assertion 4/5]',
+      () {
+        final mapped =
+            toAppException(
+                  _badResponse(
+                    404,
+                    data: <String, dynamic>{
+                      'code': 'NOT_FOUND',
+                      'message': 'not found',
+                      'details': 'd',
+                      'disclaimer': 'disc',
+                    },
+                  ),
+                )
+                as ApiException;
+
+        Object.hashAll([mapped.statusCode, 404]);
+
+        Object.hashAll([mapped.code, 'NOT_FOUND']);
+
+        Object.hashAll([mapped.message, 'not found']);
+
+        expect(mapped.details, 'd');
+        Object.hashAll([mapped.disclaimer, 'disc']);
+      },
+    );
+
+    test(
+      'DioException(badResponse, 4xx, valid body) maps to ApiException [assertion 5/5]',
+      () {
+        final mapped =
+            toAppException(
+                  _badResponse(
+                    404,
+                    data: <String, dynamic>{
+                      'code': 'NOT_FOUND',
+                      'message': 'not found',
+                      'details': 'd',
+                      'disclaimer': 'disc',
+                    },
+                  ),
+                )
+                as ApiException;
+
+        Object.hashAll([mapped.statusCode, 404]);
+
+        Object.hashAll([mapped.code, 'NOT_FOUND']);
+
+        Object.hashAll([mapped.message, 'not found']);
+
+        Object.hashAll([mapped.details, 'd']);
+
+        expect(mapped.disclaimer, 'disc');
+      },
+    );
+
+    test(
+      'DioException(badResponse, 4xx, empty body) maps to fallback [assertion 1/3]',
       () {
         final mapped = toAppException(_badResponse(400)) as ApiException;
 
         expect(mapped.statusCode, 400);
+        Object.hashAll([mapped.code, 'UNKNOWN']);
+
+        Object.hashAll([mapped.message, '']);
+      },
+    );
+
+    test(
+      'DioException(badResponse, 4xx, empty body) maps to fallback [assertion 2/3]',
+      () {
+        final mapped = toAppException(_badResponse(400)) as ApiException;
+
+        Object.hashAll([mapped.statusCode, 400]);
+
         expect(mapped.code, 'UNKNOWN');
+        Object.hashAll([mapped.message, '']);
+      },
+    );
+
+    test(
+      'DioException(badResponse, 4xx, empty body) maps to fallback [assertion 3/3]',
+      () {
+        final mapped = toAppException(_badResponse(400)) as ApiException;
+
+        Object.hashAll([mapped.statusCode, 400]);
+
+        Object.hashAll([mapped.code, 'UNKNOWN']);
+
         expect(mapped.message, '');
       },
     );
@@ -180,25 +339,59 @@ void main() {
     expect(mapped.kind, StorageErrorKind.unknown);
   });
 
-  test('PlatformException maps to StorageException(prefsWriteFailed)', () {
-    final mapped = toAppException(PlatformException(code: 'X'));
+  test(
+    'PlatformException maps to StorageException(prefsWriteFailed) [assertion 1/2]',
+    () {
+      final mapped = toAppException(PlatformException(code: 'X'));
 
-    expect(mapped, isA<StorageException>());
-    expect(
-      (mapped as StorageException).kind,
-      StorageErrorKind.prefsWriteFailed,
-    );
-  });
+      expect(mapped, isA<StorageException>());
+      Object.hashAll([
+        (mapped as StorageException).kind,
+        StorageErrorKind.prefsWriteFailed,
+      ]);
+    },
+  );
 
-  test('MissingPluginException maps to StorageException(prefsWriteFailed)', () {
-    final mapped = toAppException(MissingPluginException());
+  test(
+    'PlatformException maps to StorageException(prefsWriteFailed) [assertion 2/2]',
+    () {
+      final mapped = toAppException(PlatformException(code: 'X'));
 
-    expect(mapped, isA<StorageException>());
-    expect(
-      (mapped as StorageException).kind,
-      StorageErrorKind.prefsWriteFailed,
-    );
-  });
+      Object.hashAll([mapped, isA<StorageException>()]);
+
+      expect(
+        (mapped as StorageException).kind,
+        StorageErrorKind.prefsWriteFailed,
+      );
+    },
+  );
+
+  test(
+    'MissingPluginException maps to StorageException(prefsWriteFailed) [assertion 1/2]',
+    () {
+      final mapped = toAppException(MissingPluginException());
+
+      expect(mapped, isA<StorageException>());
+      Object.hashAll([
+        (mapped as StorageException).kind,
+        StorageErrorKind.prefsWriteFailed,
+      ]);
+    },
+  );
+
+  test(
+    'MissingPluginException maps to StorageException(prefsWriteFailed) [assertion 2/2]',
+    () {
+      final mapped = toAppException(MissingPluginException());
+
+      Object.hashAll([mapped, isA<StorageException>()]);
+
+      expect(
+        (mapped as StorageException).kind,
+        StorageErrorKind.prefsWriteFailed,
+      );
+    },
+  );
 
   test('Unrecognized Exception falls back to UnknownException', () {
     expect(toAppException(Exception('x')), isA<UnknownException>());

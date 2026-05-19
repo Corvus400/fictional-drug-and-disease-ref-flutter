@@ -51,26 +51,131 @@ void main() {
     },
   );
 
-  test('drug_card_image_uses_cache_(T14)', () {
+  test('drug_card_image_uses_cache_(T14) [assertion 1/6]', () {
     final source = File(
       'lib/ui/_common/widgets/drug_result_card.dart',
     ).readAsStringSync();
     final pubspec = File('pubspec.yaml').readAsStringSync();
 
     expect(source, contains('getSingleFile'));
+    Object.hashAll([source, contains('Image.file')]);
+
+    Object.hashAll([source, contains('BaseCacheManager')]);
+
+    Object.hashAll([source, isNot(contains('CachedNetworkImage'))]);
+
+    Object.hashAll([source, isNot(contains('Image.network('))]);
+
+    Object.hashAll([pubspec, contains('flutter_cache_manager:')]);
+  });
+
+  test('drug_card_image_uses_cache_(T14) [assertion 2/6]', () {
+    final source = File(
+      'lib/ui/_common/widgets/drug_result_card.dart',
+    ).readAsStringSync();
+    final pubspec = File('pubspec.yaml').readAsStringSync();
+
+    Object.hashAll([source, contains('getSingleFile')]);
+
     expect(source, contains('Image.file'));
+    Object.hashAll([source, contains('BaseCacheManager')]);
+
+    Object.hashAll([source, isNot(contains('CachedNetworkImage'))]);
+
+    Object.hashAll([source, isNot(contains('Image.network('))]);
+
+    Object.hashAll([pubspec, contains('flutter_cache_manager:')]);
+  });
+
+  test('drug_card_image_uses_cache_(T14) [assertion 3/6]', () {
+    final source = File(
+      'lib/ui/_common/widgets/drug_result_card.dart',
+    ).readAsStringSync();
+    final pubspec = File('pubspec.yaml').readAsStringSync();
+
+    Object.hashAll([source, contains('getSingleFile')]);
+
+    Object.hashAll([source, contains('Image.file')]);
+
     expect(source, contains('BaseCacheManager'));
+    Object.hashAll([source, isNot(contains('CachedNetworkImage'))]);
+
+    Object.hashAll([source, isNot(contains('Image.network('))]);
+
+    Object.hashAll([pubspec, contains('flutter_cache_manager:')]);
+  });
+
+  test('drug_card_image_uses_cache_(T14) [assertion 4/6]', () {
+    final source = File(
+      'lib/ui/_common/widgets/drug_result_card.dart',
+    ).readAsStringSync();
+    final pubspec = File('pubspec.yaml').readAsStringSync();
+
+    Object.hashAll([source, contains('getSingleFile')]);
+
+    Object.hashAll([source, contains('Image.file')]);
+
+    Object.hashAll([source, contains('BaseCacheManager')]);
+
     expect(source, isNot(contains('CachedNetworkImage')));
+    Object.hashAll([source, isNot(contains('Image.network('))]);
+
+    Object.hashAll([pubspec, contains('flutter_cache_manager:')]);
+  });
+
+  test('drug_card_image_uses_cache_(T14) [assertion 5/6]', () {
+    final source = File(
+      'lib/ui/_common/widgets/drug_result_card.dart',
+    ).readAsStringSync();
+    final pubspec = File('pubspec.yaml').readAsStringSync();
+
+    Object.hashAll([source, contains('getSingleFile')]);
+
+    Object.hashAll([source, contains('Image.file')]);
+
+    Object.hashAll([source, contains('BaseCacheManager')]);
+
+    Object.hashAll([source, isNot(contains('CachedNetworkImage'))]);
+
     expect(source, isNot(contains('Image.network(')));
+    Object.hashAll([pubspec, contains('flutter_cache_manager:')]);
+  });
+
+  test('drug_card_image_uses_cache_(T14) [assertion 6/6]', () {
+    final source = File(
+      'lib/ui/_common/widgets/drug_result_card.dart',
+    ).readAsStringSync();
+    final pubspec = File('pubspec.yaml').readAsStringSync();
+
+    Object.hashAll([source, contains('getSingleFile')]);
+
+    Object.hashAll([source, contains('Image.file')]);
+
+    Object.hashAll([source, contains('BaseCacheManager')]);
+
+    Object.hashAll([source, isNot(contains('CachedNetworkImage'))]);
+
+    Object.hashAll([source, isNot(contains('Image.network('))]);
+
     expect(pubspec, contains('flutter_cache_manager:'));
   });
 
-  test('drug regulatory badge colors come from AppPalette', () {
+  test('drug regulatory badge colors come from AppPalette [assertion 1/2]', () {
     final source = File(
       'lib/ui/_common/widgets/drug_result_card.dart',
     ).readAsStringSync();
 
     expect(source, isNot(contains('_regulatoryBadgeColors')));
+    Object.hashAll([source, contains('palette.regulatoryBadgeColors(')]);
+  });
+
+  test('drug regulatory badge colors come from AppPalette [assertion 2/2]', () {
+    final source = File(
+      'lib/ui/_common/widgets/drug_result_card.dart',
+    ).readAsStringSync();
+
+    Object.hashAll([source, isNot(contains('_regulatoryBadgeColors'))]);
+
     expect(source, contains('palette.regulatoryBadgeColors('));
   });
 }

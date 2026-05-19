@@ -31,103 +31,1088 @@ void main() {
     );
   });
 
-  testWidgets('DrugDetailOverviewTab renders D1-D2 hero from domain data', (
-    tester,
-  ) async {
-    final drug = _drugFixture().toDomain();
+  testWidgets(
+    'DrugDetailOverviewTab renders D1-D2 hero from domain data [assertion 1/11]',
+    (
+      tester,
+    ) async {
+      final drug = _drugFixture().toDomain();
 
-    await tester.pumpWidget(_overviewTab(drug));
+      await tester.pumpWidget(_overviewTab(drug));
 
-    expect(find.byKey(const ValueKey<String>('drug-detail-hero')), findsOne);
-    expect(find.text(drug.genericName), findsWidgets);
-    expect(find.text(drug.brandName), findsWidgets);
-    expect(find.text(drug.brandNameKana), findsWidgets);
-    expect(find.textContaining(drug.revisedAt), findsOneWidget);
-    expect(find.textContaining(drug.manufacturer), findsOneWidget);
-    expect(find.text('毒薬'), findsOneWidget);
-    expect(find.text('処方箋医薬品'), findsOneWidget);
-    expect(find.text('内服'), findsOneWidget);
-    expect(find.text('液剤'), findsOneWidget);
-    expect(find.byType(DetailBadgeWrap), findsOneWidget);
-  });
+      expect(find.byKey(const ValueKey<String>('drug-detail-hero')), findsOne);
+      Object.hashAll([find.text(drug.genericName), findsWidgets]);
 
-  testWidgets('DrugDetailOverviewTab loads D1-D2 hero image as Original', (
-    tester,
-  ) async {
-    final drug = _drugFixture().toDomain();
-    final cacheManager = _MockBaseCacheManager();
-    final imageFile = _writeTestImageFile('drug-detail-hero-original.png');
-    when(
-      () => cacheManager.getSingleFile(
-        any(),
-        key: any(named: 'key'),
-        headers: any(named: 'headers'),
-      ),
-    ).thenAnswer((_) async => imageFile);
+      Object.hashAll([find.text(drug.brandName), findsWidgets]);
 
-    await tester.pumpWidget(_overviewTab(drug, cacheManager: cacheManager));
-    await tester.pumpAndSettle();
+      Object.hashAll([find.text(drug.brandNameKana), findsWidgets]);
 
-    expect(
-      find.byKey(ValueKey<String>('drug-detail-hero-image-${drug.id}')),
-      findsOneWidget,
-    );
-    expect(
-      find.byKey(
-        ValueKey<String>(
-          'drug-detail-hero-image-preview-trigger-${drug.id}',
+      Object.hashAll([find.textContaining(drug.revisedAt), findsOneWidget]);
+
+      Object.hashAll([find.textContaining(drug.manufacturer), findsOneWidget]);
+
+      Object.hashAll([find.text('毒薬'), findsOneWidget]);
+
+      Object.hashAll([find.text('処方箋医薬品'), findsOneWidget]);
+
+      Object.hashAll([find.text('内服'), findsOneWidget]);
+
+      Object.hashAll([find.text('液剤'), findsOneWidget]);
+
+      Object.hashAll([find.byType(DetailBadgeWrap), findsOneWidget]);
+    },
+  );
+
+  testWidgets(
+    'DrugDetailOverviewTab renders D1-D2 hero from domain data [assertion 2/11]',
+    (
+      tester,
+    ) async {
+      final drug = _drugFixture().toDomain();
+
+      await tester.pumpWidget(_overviewTab(drug));
+
+      Object.hashAll([
+        find.byKey(const ValueKey<String>('drug-detail-hero')),
+        findsOne,
+      ]);
+
+      expect(find.text(drug.genericName), findsWidgets);
+      Object.hashAll([find.text(drug.brandName), findsWidgets]);
+
+      Object.hashAll([find.text(drug.brandNameKana), findsWidgets]);
+
+      Object.hashAll([find.textContaining(drug.revisedAt), findsOneWidget]);
+
+      Object.hashAll([find.textContaining(drug.manufacturer), findsOneWidget]);
+
+      Object.hashAll([find.text('毒薬'), findsOneWidget]);
+
+      Object.hashAll([find.text('処方箋医薬品'), findsOneWidget]);
+
+      Object.hashAll([find.text('内服'), findsOneWidget]);
+
+      Object.hashAll([find.text('液剤'), findsOneWidget]);
+
+      Object.hashAll([find.byType(DetailBadgeWrap), findsOneWidget]);
+    },
+  );
+
+  testWidgets(
+    'DrugDetailOverviewTab renders D1-D2 hero from domain data [assertion 3/11]',
+    (
+      tester,
+    ) async {
+      final drug = _drugFixture().toDomain();
+
+      await tester.pumpWidget(_overviewTab(drug));
+
+      Object.hashAll([
+        find.byKey(const ValueKey<String>('drug-detail-hero')),
+        findsOne,
+      ]);
+
+      Object.hashAll([find.text(drug.genericName), findsWidgets]);
+
+      expect(find.text(drug.brandName), findsWidgets);
+      Object.hashAll([find.text(drug.brandNameKana), findsWidgets]);
+
+      Object.hashAll([find.textContaining(drug.revisedAt), findsOneWidget]);
+
+      Object.hashAll([find.textContaining(drug.manufacturer), findsOneWidget]);
+
+      Object.hashAll([find.text('毒薬'), findsOneWidget]);
+
+      Object.hashAll([find.text('処方箋医薬品'), findsOneWidget]);
+
+      Object.hashAll([find.text('内服'), findsOneWidget]);
+
+      Object.hashAll([find.text('液剤'), findsOneWidget]);
+
+      Object.hashAll([find.byType(DetailBadgeWrap), findsOneWidget]);
+    },
+  );
+
+  testWidgets(
+    'DrugDetailOverviewTab renders D1-D2 hero from domain data [assertion 4/11]',
+    (
+      tester,
+    ) async {
+      final drug = _drugFixture().toDomain();
+
+      await tester.pumpWidget(_overviewTab(drug));
+
+      Object.hashAll([
+        find.byKey(const ValueKey<String>('drug-detail-hero')),
+        findsOne,
+      ]);
+
+      Object.hashAll([find.text(drug.genericName), findsWidgets]);
+
+      Object.hashAll([find.text(drug.brandName), findsWidgets]);
+
+      expect(find.text(drug.brandNameKana), findsWidgets);
+      Object.hashAll([find.textContaining(drug.revisedAt), findsOneWidget]);
+
+      Object.hashAll([find.textContaining(drug.manufacturer), findsOneWidget]);
+
+      Object.hashAll([find.text('毒薬'), findsOneWidget]);
+
+      Object.hashAll([find.text('処方箋医薬品'), findsOneWidget]);
+
+      Object.hashAll([find.text('内服'), findsOneWidget]);
+
+      Object.hashAll([find.text('液剤'), findsOneWidget]);
+
+      Object.hashAll([find.byType(DetailBadgeWrap), findsOneWidget]);
+    },
+  );
+
+  testWidgets(
+    'DrugDetailOverviewTab renders D1-D2 hero from domain data [assertion 5/11]',
+    (
+      tester,
+    ) async {
+      final drug = _drugFixture().toDomain();
+
+      await tester.pumpWidget(_overviewTab(drug));
+
+      Object.hashAll([
+        find.byKey(const ValueKey<String>('drug-detail-hero')),
+        findsOne,
+      ]);
+
+      Object.hashAll([find.text(drug.genericName), findsWidgets]);
+
+      Object.hashAll([find.text(drug.brandName), findsWidgets]);
+
+      Object.hashAll([find.text(drug.brandNameKana), findsWidgets]);
+
+      expect(find.textContaining(drug.revisedAt), findsOneWidget);
+      Object.hashAll([find.textContaining(drug.manufacturer), findsOneWidget]);
+
+      Object.hashAll([find.text('毒薬'), findsOneWidget]);
+
+      Object.hashAll([find.text('処方箋医薬品'), findsOneWidget]);
+
+      Object.hashAll([find.text('内服'), findsOneWidget]);
+
+      Object.hashAll([find.text('液剤'), findsOneWidget]);
+
+      Object.hashAll([find.byType(DetailBadgeWrap), findsOneWidget]);
+    },
+  );
+
+  testWidgets(
+    'DrugDetailOverviewTab renders D1-D2 hero from domain data [assertion 6/11]',
+    (
+      tester,
+    ) async {
+      final drug = _drugFixture().toDomain();
+
+      await tester.pumpWidget(_overviewTab(drug));
+
+      Object.hashAll([
+        find.byKey(const ValueKey<String>('drug-detail-hero')),
+        findsOne,
+      ]);
+
+      Object.hashAll([find.text(drug.genericName), findsWidgets]);
+
+      Object.hashAll([find.text(drug.brandName), findsWidgets]);
+
+      Object.hashAll([find.text(drug.brandNameKana), findsWidgets]);
+
+      Object.hashAll([find.textContaining(drug.revisedAt), findsOneWidget]);
+
+      expect(find.textContaining(drug.manufacturer), findsOneWidget);
+      Object.hashAll([find.text('毒薬'), findsOneWidget]);
+
+      Object.hashAll([find.text('処方箋医薬品'), findsOneWidget]);
+
+      Object.hashAll([find.text('内服'), findsOneWidget]);
+
+      Object.hashAll([find.text('液剤'), findsOneWidget]);
+
+      Object.hashAll([find.byType(DetailBadgeWrap), findsOneWidget]);
+    },
+  );
+
+  testWidgets(
+    'DrugDetailOverviewTab renders D1-D2 hero from domain data [assertion 7/11]',
+    (
+      tester,
+    ) async {
+      final drug = _drugFixture().toDomain();
+
+      await tester.pumpWidget(_overviewTab(drug));
+
+      Object.hashAll([
+        find.byKey(const ValueKey<String>('drug-detail-hero')),
+        findsOne,
+      ]);
+
+      Object.hashAll([find.text(drug.genericName), findsWidgets]);
+
+      Object.hashAll([find.text(drug.brandName), findsWidgets]);
+
+      Object.hashAll([find.text(drug.brandNameKana), findsWidgets]);
+
+      Object.hashAll([find.textContaining(drug.revisedAt), findsOneWidget]);
+
+      Object.hashAll([find.textContaining(drug.manufacturer), findsOneWidget]);
+
+      expect(find.text('毒薬'), findsOneWidget);
+      Object.hashAll([find.text('処方箋医薬品'), findsOneWidget]);
+
+      Object.hashAll([find.text('内服'), findsOneWidget]);
+
+      Object.hashAll([find.text('液剤'), findsOneWidget]);
+
+      Object.hashAll([find.byType(DetailBadgeWrap), findsOneWidget]);
+    },
+  );
+
+  testWidgets(
+    'DrugDetailOverviewTab renders D1-D2 hero from domain data [assertion 8/11]',
+    (
+      tester,
+    ) async {
+      final drug = _drugFixture().toDomain();
+
+      await tester.pumpWidget(_overviewTab(drug));
+
+      Object.hashAll([
+        find.byKey(const ValueKey<String>('drug-detail-hero')),
+        findsOne,
+      ]);
+
+      Object.hashAll([find.text(drug.genericName), findsWidgets]);
+
+      Object.hashAll([find.text(drug.brandName), findsWidgets]);
+
+      Object.hashAll([find.text(drug.brandNameKana), findsWidgets]);
+
+      Object.hashAll([find.textContaining(drug.revisedAt), findsOneWidget]);
+
+      Object.hashAll([find.textContaining(drug.manufacturer), findsOneWidget]);
+
+      Object.hashAll([find.text('毒薬'), findsOneWidget]);
+
+      expect(find.text('処方箋医薬品'), findsOneWidget);
+      Object.hashAll([find.text('内服'), findsOneWidget]);
+
+      Object.hashAll([find.text('液剤'), findsOneWidget]);
+
+      Object.hashAll([find.byType(DetailBadgeWrap), findsOneWidget]);
+    },
+  );
+
+  testWidgets(
+    'DrugDetailOverviewTab renders D1-D2 hero from domain data [assertion 9/11]',
+    (
+      tester,
+    ) async {
+      final drug = _drugFixture().toDomain();
+
+      await tester.pumpWidget(_overviewTab(drug));
+
+      Object.hashAll([
+        find.byKey(const ValueKey<String>('drug-detail-hero')),
+        findsOne,
+      ]);
+
+      Object.hashAll([find.text(drug.genericName), findsWidgets]);
+
+      Object.hashAll([find.text(drug.brandName), findsWidgets]);
+
+      Object.hashAll([find.text(drug.brandNameKana), findsWidgets]);
+
+      Object.hashAll([find.textContaining(drug.revisedAt), findsOneWidget]);
+
+      Object.hashAll([find.textContaining(drug.manufacturer), findsOneWidget]);
+
+      Object.hashAll([find.text('毒薬'), findsOneWidget]);
+
+      Object.hashAll([find.text('処方箋医薬品'), findsOneWidget]);
+
+      expect(find.text('内服'), findsOneWidget);
+      Object.hashAll([find.text('液剤'), findsOneWidget]);
+
+      Object.hashAll([find.byType(DetailBadgeWrap), findsOneWidget]);
+    },
+  );
+
+  testWidgets(
+    'DrugDetailOverviewTab renders D1-D2 hero from domain data [assertion 10/11]',
+    (
+      tester,
+    ) async {
+      final drug = _drugFixture().toDomain();
+
+      await tester.pumpWidget(_overviewTab(drug));
+
+      Object.hashAll([
+        find.byKey(const ValueKey<String>('drug-detail-hero')),
+        findsOne,
+      ]);
+
+      Object.hashAll([find.text(drug.genericName), findsWidgets]);
+
+      Object.hashAll([find.text(drug.brandName), findsWidgets]);
+
+      Object.hashAll([find.text(drug.brandNameKana), findsWidgets]);
+
+      Object.hashAll([find.textContaining(drug.revisedAt), findsOneWidget]);
+
+      Object.hashAll([find.textContaining(drug.manufacturer), findsOneWidget]);
+
+      Object.hashAll([find.text('毒薬'), findsOneWidget]);
+
+      Object.hashAll([find.text('処方箋医薬品'), findsOneWidget]);
+
+      Object.hashAll([find.text('内服'), findsOneWidget]);
+
+      expect(find.text('液剤'), findsOneWidget);
+      Object.hashAll([find.byType(DetailBadgeWrap), findsOneWidget]);
+    },
+  );
+
+  testWidgets(
+    'DrugDetailOverviewTab renders D1-D2 hero from domain data [assertion 11/11]',
+    (
+      tester,
+    ) async {
+      final drug = _drugFixture().toDomain();
+
+      await tester.pumpWidget(_overviewTab(drug));
+
+      Object.hashAll([
+        find.byKey(const ValueKey<String>('drug-detail-hero')),
+        findsOne,
+      ]);
+
+      Object.hashAll([find.text(drug.genericName), findsWidgets]);
+
+      Object.hashAll([find.text(drug.brandName), findsWidgets]);
+
+      Object.hashAll([find.text(drug.brandNameKana), findsWidgets]);
+
+      Object.hashAll([find.textContaining(drug.revisedAt), findsOneWidget]);
+
+      Object.hashAll([find.textContaining(drug.manufacturer), findsOneWidget]);
+
+      Object.hashAll([find.text('毒薬'), findsOneWidget]);
+
+      Object.hashAll([find.text('処方箋医薬品'), findsOneWidget]);
+
+      Object.hashAll([find.text('内服'), findsOneWidget]);
+
+      Object.hashAll([find.text('液剤'), findsOneWidget]);
+
+      expect(find.byType(DetailBadgeWrap), findsOneWidget);
+    },
+  );
+
+  testWidgets(
+    'DrugDetailOverviewTab loads D1-D2 hero image as Original [assertion 1/8]',
+    (
+      tester,
+    ) async {
+      final drug = _drugFixture().toDomain();
+      final cacheManager = _MockBaseCacheManager();
+      final imageFile = _writeTestImageFile('drug-detail-hero-original.png');
+      when(
+        () => cacheManager.getSingleFile(
+          any(),
+          key: any(named: 'key'),
+          headers: any(named: 'headers'),
         ),
-      ),
-      findsOneWidget,
-    );
-    final hero = tester.widget<Hero>(
-      find.byKey(ValueKey<String>('drug-detail-hero-image-hero-${drug.id}')),
-    );
-    expect(hero.tag, 'drug-detail-hero-image::${drug.id}');
+      ).thenAnswer((_) async => imageFile);
 
-    final image = tester.widget<Image>(
-      find.byKey(ValueKey<String>('drug-detail-hero-image-${drug.id}')),
-    );
-    expect(image.fit, BoxFit.contain);
+      await tester.pumpWidget(_overviewTab(drug, cacheManager: cacheManager));
+      await tester.pumpAndSettle();
 
-    final frameFinder = find.byKey(
-      ValueKey<String>('drug-detail-hero-image-frame-${drug.id}'),
-    );
-    final frameSize = tester.getSize(frameFinder);
-    expect(frameSize.width, DetailConstants.heroDrugImageWidth);
-    expect(
-      frameSize.height,
-      closeTo(
-        DetailConstants.heroDrugImageWidth /
-            DetailConstants.heroDrugImageAspectRatio,
-        0.01,
-      ),
-    );
+      expect(
+        find.byKey(ValueKey<String>('drug-detail-hero-image-${drug.id}')),
+        findsOneWidget,
+      );
+      Object.hashAll([
+        find.byKey(
+          ValueKey<String>(
+            'drug-detail-hero-image-preview-trigger-${drug.id}',
+          ),
+        ),
+        findsOneWidget,
+      ]);
 
-    final areaRect = tester.getRect(
-      find.byKey(ValueKey<String>('drug-detail-hero-image-area-${drug.id}')),
-    );
-    final frameRect = tester.getRect(frameFinder);
-    expect(
-      frameRect.right,
-      closeTo(areaRect.right - DetailConstants.heroDrugImageRightInset, 0.01),
-    );
-    expect(
-      frameRect.bottom,
-      closeTo(areaRect.bottom - DetailConstants.heroDrugImageBottomInset, 0.01),
-    );
+      final hero = tester.widget<Hero>(
+        find.byKey(ValueKey<String>('drug-detail-hero-image-hero-${drug.id}')),
+      );
+      Object.hashAll([hero.tag, 'drug-detail-hero-image::${drug.id}']);
 
-    verify(
-      () => cacheManager.getSingleFile(
-        'https://api.example.test/v1/images/drugs/${drug.id}?size=Original',
-        key:
-            'drug-detail-hero-image-v1::'
-            'https://api.example.test/v1/images/drugs/'
-            '${drug.id}?size=Original',
-        headers: any(named: 'headers'),
-      ),
-    ).called(1);
-  });
+      final image = tester.widget<Image>(
+        find.byKey(ValueKey<String>('drug-detail-hero-image-${drug.id}')),
+      );
+      Object.hashAll([image.fit, BoxFit.contain]);
+
+      final frameFinder = find.byKey(
+        ValueKey<String>('drug-detail-hero-image-frame-${drug.id}'),
+      );
+      final frameSize = tester.getSize(frameFinder);
+      Object.hashAll([frameSize.width, DetailConstants.heroDrugImageWidth]);
+
+      Object.hashAll([
+        frameSize.height,
+        closeTo(
+          DetailConstants.heroDrugImageWidth /
+              DetailConstants.heroDrugImageAspectRatio,
+          0.01,
+        ),
+      ]);
+
+      final areaRect = tester.getRect(
+        find.byKey(ValueKey<String>('drug-detail-hero-image-area-${drug.id}')),
+      );
+      final frameRect = tester.getRect(frameFinder);
+      Object.hashAll([
+        frameRect.right,
+        closeTo(areaRect.right - DetailConstants.heroDrugImageRightInset, 0.01),
+      ]);
+
+      Object.hashAll([
+        frameRect.bottom,
+        closeTo(
+          areaRect.bottom - DetailConstants.heroDrugImageBottomInset,
+          0.01,
+        ),
+      ]);
+
+      verify(
+        () => cacheManager.getSingleFile(
+          'https://api.example.test/v1/images/drugs/${drug.id}?size=Original',
+          key:
+              'drug-detail-hero-image-v1::'
+              'https://api.example.test/v1/images/drugs/'
+              '${drug.id}?size=Original',
+          headers: any(named: 'headers'),
+        ),
+      ).called(1);
+    },
+  );
+
+  testWidgets(
+    'DrugDetailOverviewTab loads D1-D2 hero image as Original [assertion 2/8]',
+    (
+      tester,
+    ) async {
+      final drug = _drugFixture().toDomain();
+      final cacheManager = _MockBaseCacheManager();
+      final imageFile = _writeTestImageFile('drug-detail-hero-original.png');
+      when(
+        () => cacheManager.getSingleFile(
+          any(),
+          key: any(named: 'key'),
+          headers: any(named: 'headers'),
+        ),
+      ).thenAnswer((_) async => imageFile);
+
+      await tester.pumpWidget(_overviewTab(drug, cacheManager: cacheManager));
+      await tester.pumpAndSettle();
+
+      Object.hashAll([
+        find.byKey(ValueKey<String>('drug-detail-hero-image-${drug.id}')),
+        findsOneWidget,
+      ]);
+
+      expect(
+        find.byKey(
+          ValueKey<String>(
+            'drug-detail-hero-image-preview-trigger-${drug.id}',
+          ),
+        ),
+        findsOneWidget,
+      );
+      final hero = tester.widget<Hero>(
+        find.byKey(ValueKey<String>('drug-detail-hero-image-hero-${drug.id}')),
+      );
+      Object.hashAll([hero.tag, 'drug-detail-hero-image::${drug.id}']);
+
+      final image = tester.widget<Image>(
+        find.byKey(ValueKey<String>('drug-detail-hero-image-${drug.id}')),
+      );
+      Object.hashAll([image.fit, BoxFit.contain]);
+
+      final frameFinder = find.byKey(
+        ValueKey<String>('drug-detail-hero-image-frame-${drug.id}'),
+      );
+      final frameSize = tester.getSize(frameFinder);
+      Object.hashAll([frameSize.width, DetailConstants.heroDrugImageWidth]);
+
+      Object.hashAll([
+        frameSize.height,
+        closeTo(
+          DetailConstants.heroDrugImageWidth /
+              DetailConstants.heroDrugImageAspectRatio,
+          0.01,
+        ),
+      ]);
+
+      final areaRect = tester.getRect(
+        find.byKey(ValueKey<String>('drug-detail-hero-image-area-${drug.id}')),
+      );
+      final frameRect = tester.getRect(frameFinder);
+      Object.hashAll([
+        frameRect.right,
+        closeTo(areaRect.right - DetailConstants.heroDrugImageRightInset, 0.01),
+      ]);
+
+      Object.hashAll([
+        frameRect.bottom,
+        closeTo(
+          areaRect.bottom - DetailConstants.heroDrugImageBottomInset,
+          0.01,
+        ),
+      ]);
+
+      verify(
+        () => cacheManager.getSingleFile(
+          'https://api.example.test/v1/images/drugs/${drug.id}?size=Original',
+          key:
+              'drug-detail-hero-image-v1::'
+              'https://api.example.test/v1/images/drugs/'
+              '${drug.id}?size=Original',
+          headers: any(named: 'headers'),
+        ),
+      ).called(1);
+    },
+  );
+
+  testWidgets(
+    'DrugDetailOverviewTab loads D1-D2 hero image as Original [assertion 3/8]',
+    (
+      tester,
+    ) async {
+      final drug = _drugFixture().toDomain();
+      final cacheManager = _MockBaseCacheManager();
+      final imageFile = _writeTestImageFile('drug-detail-hero-original.png');
+      when(
+        () => cacheManager.getSingleFile(
+          any(),
+          key: any(named: 'key'),
+          headers: any(named: 'headers'),
+        ),
+      ).thenAnswer((_) async => imageFile);
+
+      await tester.pumpWidget(_overviewTab(drug, cacheManager: cacheManager));
+      await tester.pumpAndSettle();
+
+      Object.hashAll([
+        find.byKey(ValueKey<String>('drug-detail-hero-image-${drug.id}')),
+        findsOneWidget,
+      ]);
+
+      Object.hashAll([
+        find.byKey(
+          ValueKey<String>(
+            'drug-detail-hero-image-preview-trigger-${drug.id}',
+          ),
+        ),
+        findsOneWidget,
+      ]);
+
+      final hero = tester.widget<Hero>(
+        find.byKey(ValueKey<String>('drug-detail-hero-image-hero-${drug.id}')),
+      );
+      expect(hero.tag, 'drug-detail-hero-image::${drug.id}');
+
+      final image = tester.widget<Image>(
+        find.byKey(ValueKey<String>('drug-detail-hero-image-${drug.id}')),
+      );
+      Object.hashAll([image.fit, BoxFit.contain]);
+
+      final frameFinder = find.byKey(
+        ValueKey<String>('drug-detail-hero-image-frame-${drug.id}'),
+      );
+      final frameSize = tester.getSize(frameFinder);
+      Object.hashAll([frameSize.width, DetailConstants.heroDrugImageWidth]);
+
+      Object.hashAll([
+        frameSize.height,
+        closeTo(
+          DetailConstants.heroDrugImageWidth /
+              DetailConstants.heroDrugImageAspectRatio,
+          0.01,
+        ),
+      ]);
+
+      final areaRect = tester.getRect(
+        find.byKey(ValueKey<String>('drug-detail-hero-image-area-${drug.id}')),
+      );
+      final frameRect = tester.getRect(frameFinder);
+      Object.hashAll([
+        frameRect.right,
+        closeTo(areaRect.right - DetailConstants.heroDrugImageRightInset, 0.01),
+      ]);
+
+      Object.hashAll([
+        frameRect.bottom,
+        closeTo(
+          areaRect.bottom - DetailConstants.heroDrugImageBottomInset,
+          0.01,
+        ),
+      ]);
+
+      verify(
+        () => cacheManager.getSingleFile(
+          'https://api.example.test/v1/images/drugs/${drug.id}?size=Original',
+          key:
+              'drug-detail-hero-image-v1::'
+              'https://api.example.test/v1/images/drugs/'
+              '${drug.id}?size=Original',
+          headers: any(named: 'headers'),
+        ),
+      ).called(1);
+    },
+  );
+
+  testWidgets(
+    'DrugDetailOverviewTab loads D1-D2 hero image as Original [assertion 4/8]',
+    (
+      tester,
+    ) async {
+      final drug = _drugFixture().toDomain();
+      final cacheManager = _MockBaseCacheManager();
+      final imageFile = _writeTestImageFile('drug-detail-hero-original.png');
+      when(
+        () => cacheManager.getSingleFile(
+          any(),
+          key: any(named: 'key'),
+          headers: any(named: 'headers'),
+        ),
+      ).thenAnswer((_) async => imageFile);
+
+      await tester.pumpWidget(_overviewTab(drug, cacheManager: cacheManager));
+      await tester.pumpAndSettle();
+
+      Object.hashAll([
+        find.byKey(ValueKey<String>('drug-detail-hero-image-${drug.id}')),
+        findsOneWidget,
+      ]);
+
+      Object.hashAll([
+        find.byKey(
+          ValueKey<String>(
+            'drug-detail-hero-image-preview-trigger-${drug.id}',
+          ),
+        ),
+        findsOneWidget,
+      ]);
+
+      final hero = tester.widget<Hero>(
+        find.byKey(ValueKey<String>('drug-detail-hero-image-hero-${drug.id}')),
+      );
+      Object.hashAll([hero.tag, 'drug-detail-hero-image::${drug.id}']);
+
+      final image = tester.widget<Image>(
+        find.byKey(ValueKey<String>('drug-detail-hero-image-${drug.id}')),
+      );
+      expect(image.fit, BoxFit.contain);
+
+      final frameFinder = find.byKey(
+        ValueKey<String>('drug-detail-hero-image-frame-${drug.id}'),
+      );
+      final frameSize = tester.getSize(frameFinder);
+      Object.hashAll([frameSize.width, DetailConstants.heroDrugImageWidth]);
+
+      Object.hashAll([
+        frameSize.height,
+        closeTo(
+          DetailConstants.heroDrugImageWidth /
+              DetailConstants.heroDrugImageAspectRatio,
+          0.01,
+        ),
+      ]);
+
+      final areaRect = tester.getRect(
+        find.byKey(ValueKey<String>('drug-detail-hero-image-area-${drug.id}')),
+      );
+      final frameRect = tester.getRect(frameFinder);
+      Object.hashAll([
+        frameRect.right,
+        closeTo(areaRect.right - DetailConstants.heroDrugImageRightInset, 0.01),
+      ]);
+
+      Object.hashAll([
+        frameRect.bottom,
+        closeTo(
+          areaRect.bottom - DetailConstants.heroDrugImageBottomInset,
+          0.01,
+        ),
+      ]);
+
+      verify(
+        () => cacheManager.getSingleFile(
+          'https://api.example.test/v1/images/drugs/${drug.id}?size=Original',
+          key:
+              'drug-detail-hero-image-v1::'
+              'https://api.example.test/v1/images/drugs/'
+              '${drug.id}?size=Original',
+          headers: any(named: 'headers'),
+        ),
+      ).called(1);
+    },
+  );
+
+  testWidgets(
+    'DrugDetailOverviewTab loads D1-D2 hero image as Original [assertion 5/8]',
+    (
+      tester,
+    ) async {
+      final drug = _drugFixture().toDomain();
+      final cacheManager = _MockBaseCacheManager();
+      final imageFile = _writeTestImageFile('drug-detail-hero-original.png');
+      when(
+        () => cacheManager.getSingleFile(
+          any(),
+          key: any(named: 'key'),
+          headers: any(named: 'headers'),
+        ),
+      ).thenAnswer((_) async => imageFile);
+
+      await tester.pumpWidget(_overviewTab(drug, cacheManager: cacheManager));
+      await tester.pumpAndSettle();
+
+      Object.hashAll([
+        find.byKey(ValueKey<String>('drug-detail-hero-image-${drug.id}')),
+        findsOneWidget,
+      ]);
+
+      Object.hashAll([
+        find.byKey(
+          ValueKey<String>(
+            'drug-detail-hero-image-preview-trigger-${drug.id}',
+          ),
+        ),
+        findsOneWidget,
+      ]);
+
+      final hero = tester.widget<Hero>(
+        find.byKey(ValueKey<String>('drug-detail-hero-image-hero-${drug.id}')),
+      );
+      Object.hashAll([hero.tag, 'drug-detail-hero-image::${drug.id}']);
+
+      final image = tester.widget<Image>(
+        find.byKey(ValueKey<String>('drug-detail-hero-image-${drug.id}')),
+      );
+      Object.hashAll([image.fit, BoxFit.contain]);
+
+      final frameFinder = find.byKey(
+        ValueKey<String>('drug-detail-hero-image-frame-${drug.id}'),
+      );
+      final frameSize = tester.getSize(frameFinder);
+      expect(frameSize.width, DetailConstants.heroDrugImageWidth);
+      Object.hashAll([
+        frameSize.height,
+        closeTo(
+          DetailConstants.heroDrugImageWidth /
+              DetailConstants.heroDrugImageAspectRatio,
+          0.01,
+        ),
+      ]);
+
+      final areaRect = tester.getRect(
+        find.byKey(ValueKey<String>('drug-detail-hero-image-area-${drug.id}')),
+      );
+      final frameRect = tester.getRect(frameFinder);
+      Object.hashAll([
+        frameRect.right,
+        closeTo(areaRect.right - DetailConstants.heroDrugImageRightInset, 0.01),
+      ]);
+
+      Object.hashAll([
+        frameRect.bottom,
+        closeTo(
+          areaRect.bottom - DetailConstants.heroDrugImageBottomInset,
+          0.01,
+        ),
+      ]);
+
+      verify(
+        () => cacheManager.getSingleFile(
+          'https://api.example.test/v1/images/drugs/${drug.id}?size=Original',
+          key:
+              'drug-detail-hero-image-v1::'
+              'https://api.example.test/v1/images/drugs/'
+              '${drug.id}?size=Original',
+          headers: any(named: 'headers'),
+        ),
+      ).called(1);
+    },
+  );
+
+  testWidgets(
+    'DrugDetailOverviewTab loads D1-D2 hero image as Original [assertion 6/8]',
+    (
+      tester,
+    ) async {
+      final drug = _drugFixture().toDomain();
+      final cacheManager = _MockBaseCacheManager();
+      final imageFile = _writeTestImageFile('drug-detail-hero-original.png');
+      when(
+        () => cacheManager.getSingleFile(
+          any(),
+          key: any(named: 'key'),
+          headers: any(named: 'headers'),
+        ),
+      ).thenAnswer((_) async => imageFile);
+
+      await tester.pumpWidget(_overviewTab(drug, cacheManager: cacheManager));
+      await tester.pumpAndSettle();
+
+      Object.hashAll([
+        find.byKey(ValueKey<String>('drug-detail-hero-image-${drug.id}')),
+        findsOneWidget,
+      ]);
+
+      Object.hashAll([
+        find.byKey(
+          ValueKey<String>(
+            'drug-detail-hero-image-preview-trigger-${drug.id}',
+          ),
+        ),
+        findsOneWidget,
+      ]);
+
+      final hero = tester.widget<Hero>(
+        find.byKey(ValueKey<String>('drug-detail-hero-image-hero-${drug.id}')),
+      );
+      Object.hashAll([hero.tag, 'drug-detail-hero-image::${drug.id}']);
+
+      final image = tester.widget<Image>(
+        find.byKey(ValueKey<String>('drug-detail-hero-image-${drug.id}')),
+      );
+      Object.hashAll([image.fit, BoxFit.contain]);
+
+      final frameFinder = find.byKey(
+        ValueKey<String>('drug-detail-hero-image-frame-${drug.id}'),
+      );
+      final frameSize = tester.getSize(frameFinder);
+      Object.hashAll([frameSize.width, DetailConstants.heroDrugImageWidth]);
+
+      expect(
+        frameSize.height,
+        closeTo(
+          DetailConstants.heroDrugImageWidth /
+              DetailConstants.heroDrugImageAspectRatio,
+          0.01,
+        ),
+      );
+
+      final areaRect = tester.getRect(
+        find.byKey(ValueKey<String>('drug-detail-hero-image-area-${drug.id}')),
+      );
+      final frameRect = tester.getRect(frameFinder);
+      Object.hashAll([
+        frameRect.right,
+        closeTo(areaRect.right - DetailConstants.heroDrugImageRightInset, 0.01),
+      ]);
+
+      Object.hashAll([
+        frameRect.bottom,
+        closeTo(
+          areaRect.bottom - DetailConstants.heroDrugImageBottomInset,
+          0.01,
+        ),
+      ]);
+
+      verify(
+        () => cacheManager.getSingleFile(
+          'https://api.example.test/v1/images/drugs/${drug.id}?size=Original',
+          key:
+              'drug-detail-hero-image-v1::'
+              'https://api.example.test/v1/images/drugs/'
+              '${drug.id}?size=Original',
+          headers: any(named: 'headers'),
+        ),
+      ).called(1);
+    },
+  );
+
+  testWidgets(
+    'DrugDetailOverviewTab loads D1-D2 hero image as Original [assertion 7/8]',
+    (
+      tester,
+    ) async {
+      final drug = _drugFixture().toDomain();
+      final cacheManager = _MockBaseCacheManager();
+      final imageFile = _writeTestImageFile('drug-detail-hero-original.png');
+      when(
+        () => cacheManager.getSingleFile(
+          any(),
+          key: any(named: 'key'),
+          headers: any(named: 'headers'),
+        ),
+      ).thenAnswer((_) async => imageFile);
+
+      await tester.pumpWidget(_overviewTab(drug, cacheManager: cacheManager));
+      await tester.pumpAndSettle();
+
+      Object.hashAll([
+        find.byKey(ValueKey<String>('drug-detail-hero-image-${drug.id}')),
+        findsOneWidget,
+      ]);
+
+      Object.hashAll([
+        find.byKey(
+          ValueKey<String>(
+            'drug-detail-hero-image-preview-trigger-${drug.id}',
+          ),
+        ),
+        findsOneWidget,
+      ]);
+
+      final hero = tester.widget<Hero>(
+        find.byKey(ValueKey<String>('drug-detail-hero-image-hero-${drug.id}')),
+      );
+      Object.hashAll([hero.tag, 'drug-detail-hero-image::${drug.id}']);
+
+      final image = tester.widget<Image>(
+        find.byKey(ValueKey<String>('drug-detail-hero-image-${drug.id}')),
+      );
+      Object.hashAll([image.fit, BoxFit.contain]);
+
+      final frameFinder = find.byKey(
+        ValueKey<String>('drug-detail-hero-image-frame-${drug.id}'),
+      );
+      final frameSize = tester.getSize(frameFinder);
+      Object.hashAll([frameSize.width, DetailConstants.heroDrugImageWidth]);
+
+      Object.hashAll([
+        frameSize.height,
+        closeTo(
+          DetailConstants.heroDrugImageWidth /
+              DetailConstants.heroDrugImageAspectRatio,
+          0.01,
+        ),
+      ]);
+
+      final areaRect = tester.getRect(
+        find.byKey(ValueKey<String>('drug-detail-hero-image-area-${drug.id}')),
+      );
+      final frameRect = tester.getRect(frameFinder);
+      expect(
+        frameRect.right,
+        closeTo(areaRect.right - DetailConstants.heroDrugImageRightInset, 0.01),
+      );
+      Object.hashAll([
+        frameRect.bottom,
+        closeTo(
+          areaRect.bottom - DetailConstants.heroDrugImageBottomInset,
+          0.01,
+        ),
+      ]);
+
+      verify(
+        () => cacheManager.getSingleFile(
+          'https://api.example.test/v1/images/drugs/${drug.id}?size=Original',
+          key:
+              'drug-detail-hero-image-v1::'
+              'https://api.example.test/v1/images/drugs/'
+              '${drug.id}?size=Original',
+          headers: any(named: 'headers'),
+        ),
+      ).called(1);
+    },
+  );
+
+  testWidgets(
+    'DrugDetailOverviewTab loads D1-D2 hero image as Original [assertion 8/8]',
+    (
+      tester,
+    ) async {
+      final drug = _drugFixture().toDomain();
+      final cacheManager = _MockBaseCacheManager();
+      final imageFile = _writeTestImageFile('drug-detail-hero-original.png');
+      when(
+        () => cacheManager.getSingleFile(
+          any(),
+          key: any(named: 'key'),
+          headers: any(named: 'headers'),
+        ),
+      ).thenAnswer((_) async => imageFile);
+
+      await tester.pumpWidget(_overviewTab(drug, cacheManager: cacheManager));
+      await tester.pumpAndSettle();
+
+      Object.hashAll([
+        find.byKey(ValueKey<String>('drug-detail-hero-image-${drug.id}')),
+        findsOneWidget,
+      ]);
+
+      Object.hashAll([
+        find.byKey(
+          ValueKey<String>(
+            'drug-detail-hero-image-preview-trigger-${drug.id}',
+          ),
+        ),
+        findsOneWidget,
+      ]);
+
+      final hero = tester.widget<Hero>(
+        find.byKey(ValueKey<String>('drug-detail-hero-image-hero-${drug.id}')),
+      );
+      Object.hashAll([hero.tag, 'drug-detail-hero-image::${drug.id}']);
+
+      final image = tester.widget<Image>(
+        find.byKey(ValueKey<String>('drug-detail-hero-image-${drug.id}')),
+      );
+      Object.hashAll([image.fit, BoxFit.contain]);
+
+      final frameFinder = find.byKey(
+        ValueKey<String>('drug-detail-hero-image-frame-${drug.id}'),
+      );
+      final frameSize = tester.getSize(frameFinder);
+      Object.hashAll([frameSize.width, DetailConstants.heroDrugImageWidth]);
+
+      Object.hashAll([
+        frameSize.height,
+        closeTo(
+          DetailConstants.heroDrugImageWidth /
+              DetailConstants.heroDrugImageAspectRatio,
+          0.01,
+        ),
+      ]);
+
+      final areaRect = tester.getRect(
+        find.byKey(ValueKey<String>('drug-detail-hero-image-area-${drug.id}')),
+      );
+      final frameRect = tester.getRect(frameFinder);
+      Object.hashAll([
+        frameRect.right,
+        closeTo(areaRect.right - DetailConstants.heroDrugImageRightInset, 0.01),
+      ]);
+
+      expect(
+        frameRect.bottom,
+        closeTo(
+          areaRect.bottom - DetailConstants.heroDrugImageBottomInset,
+          0.01,
+        ),
+      );
+
+      verify(
+        () => cacheManager.getSingleFile(
+          'https://api.example.test/v1/images/drugs/${drug.id}?size=Original',
+          key:
+              'drug-detail-hero-image-v1::'
+              'https://api.example.test/v1/images/drugs/'
+              '${drug.id}?size=Original',
+          headers: any(named: 'headers'),
+        ),
+      ).called(1);
+    },
+  );
 
   testWidgets(
     'DrugDetailOverviewTab keeps hero image full resolution for preview Hero',
@@ -149,70 +1134,433 @@ void main() {
     },
   );
 
-  testWidgets('DrugDetailOverviewTab opens zoomable Hero route preview', (
-    tester,
-  ) async {
-    final drug = _drugFixture().toDomain();
-    final cacheManager = _mockCacheManagerWithImage(
-      'drug-detail-hero-preview.png',
-    );
-    final navigatorObserver = _RecordingNavigatorObserver();
+  testWidgets(
+    'DrugDetailOverviewTab opens zoomable Hero route preview [assertion 1/6]',
+    (
+      tester,
+    ) async {
+      final drug = _drugFixture().toDomain();
+      final cacheManager = _mockCacheManagerWithImage(
+        'drug-detail-hero-preview.png',
+      );
+      final navigatorObserver = _RecordingNavigatorObserver();
 
-    await tester.pumpWidget(
-      _overviewTab(
-        drug,
-        cacheManager: cacheManager,
-        navigatorObservers: [navigatorObserver],
-      ),
-    );
-    await tester.pumpAndSettle();
-    navigatorObserver.pushedRoute = null;
-
-    await tester.tap(
-      find.byKey(
-        ValueKey<String>(
-          'drug-detail-hero-image-preview-trigger-${drug.id}',
+      await tester.pumpWidget(
+        _overviewTab(
+          drug,
+          cacheManager: cacheManager,
+          navigatorObservers: [navigatorObserver],
         ),
-      ),
-    );
-    await tester.pump();
-    expect(navigatorObserver.pushedRoute, isA<PageRoute<void>>());
-    await tester.pumpAndSettle();
+      );
+      await tester.pumpAndSettle();
+      navigatorObserver.pushedRoute = null;
 
-    expect(
-      find.byKey(
-        ValueKey<String>('drug-detail-hero-image-preview-${drug.id}'),
-      ),
-      findsOneWidget,
-    );
-    expect(
-      find.byKey(
-        ValueKey<String>('drug-detail-hero-image-preview-zoom-${drug.id}'),
-      ),
-      findsOneWidget,
-    );
-    expect(find.byType(InteractiveViewer), findsOneWidget);
-    final previewHero = tester.widget<Hero>(
-      find.byKey(
-        ValueKey<String>('drug-detail-hero-image-preview-hero-${drug.id}'),
-      ),
-    );
-    expect(previewHero.tag, 'drug-detail-hero-image::${drug.id}');
+      await tester.tap(
+        find.byKey(
+          ValueKey<String>(
+            'drug-detail-hero-image-preview-trigger-${drug.id}',
+          ),
+        ),
+      );
+      await tester.pump();
+      expect(navigatorObserver.pushedRoute, isA<PageRoute<void>>());
+      await tester.pumpAndSettle();
 
-    await tester.tap(
-      find.byKey(
-        ValueKey<String>('drug-detail-hero-image-preview-close-${drug.id}'),
-      ),
-    );
-    await tester.pumpAndSettle();
+      Object.hashAll([
+        find.byKey(
+          ValueKey<String>('drug-detail-hero-image-preview-${drug.id}'),
+        ),
+        findsOneWidget,
+      ]);
 
-    expect(
-      find.byKey(
-        ValueKey<String>('drug-detail-hero-image-preview-${drug.id}'),
-      ),
-      findsNothing,
-    );
-  });
+      Object.hashAll([
+        find.byKey(
+          ValueKey<String>('drug-detail-hero-image-preview-zoom-${drug.id}'),
+        ),
+        findsOneWidget,
+      ]);
+
+      Object.hashAll([find.byType(InteractiveViewer), findsOneWidget]);
+
+      final previewHero = tester.widget<Hero>(
+        find.byKey(
+          ValueKey<String>('drug-detail-hero-image-preview-hero-${drug.id}'),
+        ),
+      );
+      Object.hashAll([previewHero.tag, 'drug-detail-hero-image::${drug.id}']);
+
+      await tester.tap(
+        find.byKey(
+          ValueKey<String>('drug-detail-hero-image-preview-close-${drug.id}'),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      Object.hashAll([
+        find.byKey(
+          ValueKey<String>('drug-detail-hero-image-preview-${drug.id}'),
+        ),
+        findsNothing,
+      ]);
+    },
+  );
+
+  testWidgets(
+    'DrugDetailOverviewTab opens zoomable Hero route preview [assertion 2/6]',
+    (
+      tester,
+    ) async {
+      final drug = _drugFixture().toDomain();
+      final cacheManager = _mockCacheManagerWithImage(
+        'drug-detail-hero-preview.png',
+      );
+      final navigatorObserver = _RecordingNavigatorObserver();
+
+      await tester.pumpWidget(
+        _overviewTab(
+          drug,
+          cacheManager: cacheManager,
+          navigatorObservers: [navigatorObserver],
+        ),
+      );
+      await tester.pumpAndSettle();
+      navigatorObserver.pushedRoute = null;
+
+      await tester.tap(
+        find.byKey(
+          ValueKey<String>(
+            'drug-detail-hero-image-preview-trigger-${drug.id}',
+          ),
+        ),
+      );
+      await tester.pump();
+      Object.hashAll([navigatorObserver.pushedRoute, isA<PageRoute<void>>()]);
+
+      await tester.pumpAndSettle();
+
+      expect(
+        find.byKey(
+          ValueKey<String>('drug-detail-hero-image-preview-${drug.id}'),
+        ),
+        findsOneWidget,
+      );
+      Object.hashAll([
+        find.byKey(
+          ValueKey<String>('drug-detail-hero-image-preview-zoom-${drug.id}'),
+        ),
+        findsOneWidget,
+      ]);
+
+      Object.hashAll([find.byType(InteractiveViewer), findsOneWidget]);
+
+      final previewHero = tester.widget<Hero>(
+        find.byKey(
+          ValueKey<String>('drug-detail-hero-image-preview-hero-${drug.id}'),
+        ),
+      );
+      Object.hashAll([previewHero.tag, 'drug-detail-hero-image::${drug.id}']);
+
+      await tester.tap(
+        find.byKey(
+          ValueKey<String>('drug-detail-hero-image-preview-close-${drug.id}'),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      Object.hashAll([
+        find.byKey(
+          ValueKey<String>('drug-detail-hero-image-preview-${drug.id}'),
+        ),
+        findsNothing,
+      ]);
+    },
+  );
+
+  testWidgets(
+    'DrugDetailOverviewTab opens zoomable Hero route preview [assertion 3/6]',
+    (
+      tester,
+    ) async {
+      final drug = _drugFixture().toDomain();
+      final cacheManager = _mockCacheManagerWithImage(
+        'drug-detail-hero-preview.png',
+      );
+      final navigatorObserver = _RecordingNavigatorObserver();
+
+      await tester.pumpWidget(
+        _overviewTab(
+          drug,
+          cacheManager: cacheManager,
+          navigatorObservers: [navigatorObserver],
+        ),
+      );
+      await tester.pumpAndSettle();
+      navigatorObserver.pushedRoute = null;
+
+      await tester.tap(
+        find.byKey(
+          ValueKey<String>(
+            'drug-detail-hero-image-preview-trigger-${drug.id}',
+          ),
+        ),
+      );
+      await tester.pump();
+      Object.hashAll([navigatorObserver.pushedRoute, isA<PageRoute<void>>()]);
+
+      await tester.pumpAndSettle();
+
+      Object.hashAll([
+        find.byKey(
+          ValueKey<String>('drug-detail-hero-image-preview-${drug.id}'),
+        ),
+        findsOneWidget,
+      ]);
+
+      expect(
+        find.byKey(
+          ValueKey<String>('drug-detail-hero-image-preview-zoom-${drug.id}'),
+        ),
+        findsOneWidget,
+      );
+      Object.hashAll([find.byType(InteractiveViewer), findsOneWidget]);
+
+      final previewHero = tester.widget<Hero>(
+        find.byKey(
+          ValueKey<String>('drug-detail-hero-image-preview-hero-${drug.id}'),
+        ),
+      );
+      Object.hashAll([previewHero.tag, 'drug-detail-hero-image::${drug.id}']);
+
+      await tester.tap(
+        find.byKey(
+          ValueKey<String>('drug-detail-hero-image-preview-close-${drug.id}'),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      Object.hashAll([
+        find.byKey(
+          ValueKey<String>('drug-detail-hero-image-preview-${drug.id}'),
+        ),
+        findsNothing,
+      ]);
+    },
+  );
+
+  testWidgets(
+    'DrugDetailOverviewTab opens zoomable Hero route preview [assertion 4/6]',
+    (
+      tester,
+    ) async {
+      final drug = _drugFixture().toDomain();
+      final cacheManager = _mockCacheManagerWithImage(
+        'drug-detail-hero-preview.png',
+      );
+      final navigatorObserver = _RecordingNavigatorObserver();
+
+      await tester.pumpWidget(
+        _overviewTab(
+          drug,
+          cacheManager: cacheManager,
+          navigatorObservers: [navigatorObserver],
+        ),
+      );
+      await tester.pumpAndSettle();
+      navigatorObserver.pushedRoute = null;
+
+      await tester.tap(
+        find.byKey(
+          ValueKey<String>(
+            'drug-detail-hero-image-preview-trigger-${drug.id}',
+          ),
+        ),
+      );
+      await tester.pump();
+      Object.hashAll([navigatorObserver.pushedRoute, isA<PageRoute<void>>()]);
+
+      await tester.pumpAndSettle();
+
+      Object.hashAll([
+        find.byKey(
+          ValueKey<String>('drug-detail-hero-image-preview-${drug.id}'),
+        ),
+        findsOneWidget,
+      ]);
+
+      Object.hashAll([
+        find.byKey(
+          ValueKey<String>('drug-detail-hero-image-preview-zoom-${drug.id}'),
+        ),
+        findsOneWidget,
+      ]);
+
+      expect(find.byType(InteractiveViewer), findsOneWidget);
+      final previewHero = tester.widget<Hero>(
+        find.byKey(
+          ValueKey<String>('drug-detail-hero-image-preview-hero-${drug.id}'),
+        ),
+      );
+      Object.hashAll([previewHero.tag, 'drug-detail-hero-image::${drug.id}']);
+
+      await tester.tap(
+        find.byKey(
+          ValueKey<String>('drug-detail-hero-image-preview-close-${drug.id}'),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      Object.hashAll([
+        find.byKey(
+          ValueKey<String>('drug-detail-hero-image-preview-${drug.id}'),
+        ),
+        findsNothing,
+      ]);
+    },
+  );
+
+  testWidgets(
+    'DrugDetailOverviewTab opens zoomable Hero route preview [assertion 5/6]',
+    (
+      tester,
+    ) async {
+      final drug = _drugFixture().toDomain();
+      final cacheManager = _mockCacheManagerWithImage(
+        'drug-detail-hero-preview.png',
+      );
+      final navigatorObserver = _RecordingNavigatorObserver();
+
+      await tester.pumpWidget(
+        _overviewTab(
+          drug,
+          cacheManager: cacheManager,
+          navigatorObservers: [navigatorObserver],
+        ),
+      );
+      await tester.pumpAndSettle();
+      navigatorObserver.pushedRoute = null;
+
+      await tester.tap(
+        find.byKey(
+          ValueKey<String>(
+            'drug-detail-hero-image-preview-trigger-${drug.id}',
+          ),
+        ),
+      );
+      await tester.pump();
+      Object.hashAll([navigatorObserver.pushedRoute, isA<PageRoute<void>>()]);
+
+      await tester.pumpAndSettle();
+
+      Object.hashAll([
+        find.byKey(
+          ValueKey<String>('drug-detail-hero-image-preview-${drug.id}'),
+        ),
+        findsOneWidget,
+      ]);
+
+      Object.hashAll([
+        find.byKey(
+          ValueKey<String>('drug-detail-hero-image-preview-zoom-${drug.id}'),
+        ),
+        findsOneWidget,
+      ]);
+
+      Object.hashAll([find.byType(InteractiveViewer), findsOneWidget]);
+
+      final previewHero = tester.widget<Hero>(
+        find.byKey(
+          ValueKey<String>('drug-detail-hero-image-preview-hero-${drug.id}'),
+        ),
+      );
+      expect(previewHero.tag, 'drug-detail-hero-image::${drug.id}');
+
+      await tester.tap(
+        find.byKey(
+          ValueKey<String>('drug-detail-hero-image-preview-close-${drug.id}'),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      Object.hashAll([
+        find.byKey(
+          ValueKey<String>('drug-detail-hero-image-preview-${drug.id}'),
+        ),
+        findsNothing,
+      ]);
+    },
+  );
+
+  testWidgets(
+    'DrugDetailOverviewTab opens zoomable Hero route preview [assertion 6/6]',
+    (
+      tester,
+    ) async {
+      final drug = _drugFixture().toDomain();
+      final cacheManager = _mockCacheManagerWithImage(
+        'drug-detail-hero-preview.png',
+      );
+      final navigatorObserver = _RecordingNavigatorObserver();
+
+      await tester.pumpWidget(
+        _overviewTab(
+          drug,
+          cacheManager: cacheManager,
+          navigatorObservers: [navigatorObserver],
+        ),
+      );
+      await tester.pumpAndSettle();
+      navigatorObserver.pushedRoute = null;
+
+      await tester.tap(
+        find.byKey(
+          ValueKey<String>(
+            'drug-detail-hero-image-preview-trigger-${drug.id}',
+          ),
+        ),
+      );
+      await tester.pump();
+      Object.hashAll([navigatorObserver.pushedRoute, isA<PageRoute<void>>()]);
+
+      await tester.pumpAndSettle();
+
+      Object.hashAll([
+        find.byKey(
+          ValueKey<String>('drug-detail-hero-image-preview-${drug.id}'),
+        ),
+        findsOneWidget,
+      ]);
+
+      Object.hashAll([
+        find.byKey(
+          ValueKey<String>('drug-detail-hero-image-preview-zoom-${drug.id}'),
+        ),
+        findsOneWidget,
+      ]);
+
+      Object.hashAll([find.byType(InteractiveViewer), findsOneWidget]);
+
+      final previewHero = tester.widget<Hero>(
+        find.byKey(
+          ValueKey<String>('drug-detail-hero-image-preview-hero-${drug.id}'),
+        ),
+      );
+      Object.hashAll([previewHero.tag, 'drug-detail-hero-image::${drug.id}']);
+
+      await tester.tap(
+        find.byKey(
+          ValueKey<String>('drug-detail-hero-image-preview-close-${drug.id}'),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(
+        find.byKey(
+          ValueKey<String>('drug-detail-hero-image-preview-${drug.id}'),
+        ),
+        findsNothing,
+      );
+    },
+  );
 
   testWidgets(
     'DrugDetailOverviewTab preview keeps Original resolution '
@@ -245,51 +1593,507 @@ void main() {
     },
   );
 
-  testWidgets('DrugDetailOverviewTab renders warning section from D3', (
-    tester,
-  ) async {
-    final drug = _drugFixture().toDomain();
+  testWidgets(
+    'DrugDetailOverviewTab renders warning section from D3 [assertion 1/4]',
+    (
+      tester,
+    ) async {
+      final drug = _drugFixture().toDomain();
 
-    await tester.pumpWidget(_overviewTab(drug));
+      await tester.pumpWidget(_overviewTab(drug));
 
-    expect(find.text('警告'), findsOneWidget);
-    expect(find.textContaining(drug.warning.first.content), findsOneWidget);
-    expect(find.byType(DetailWarnBanner), findsOneWidget);
-    expect(find.byType(DetailPanel), findsWidgets);
-  });
+      expect(find.text('警告'), findsOneWidget);
+      Object.hashAll([
+        find.textContaining(drug.warning.first.content),
+        findsOneWidget,
+      ]);
 
-  testWidgets('DrugDetailOverviewTab renders therapeutic category from D4', (
-    tester,
-  ) async {
-    final drug = _drugFixture().toDomain();
+      Object.hashAll([find.byType(DetailWarnBanner), findsOneWidget]);
 
-    await tester.pumpWidget(_overviewTab(drug));
+      Object.hashAll([find.byType(DetailPanel), findsWidgets]);
+    },
+  );
 
-    expect(find.text('薬効分類'), findsOneWidget);
-    expect(find.text(drug.atcCode), findsOneWidget);
-    expect(find.text(drug.therapeuticCategoryName), findsOneWidget);
-    expect(find.text(drug.yjCode!), findsOneWidget);
-    expect(find.text('ATC コード'), findsOneWidget);
-    expect(find.text('YJ コード'), findsOneWidget);
-    expect(find.byType(DetailKvRow), findsWidgets);
-  });
+  testWidgets(
+    'DrugDetailOverviewTab renders warning section from D3 [assertion 2/4]',
+    (
+      tester,
+    ) async {
+      final drug = _drugFixture().toDomain();
 
-  testWidgets('DrugDetailOverviewTab renders composition from D5', (
-    tester,
-  ) async {
-    final drug = _drugFixture().toDomain();
+      await tester.pumpWidget(_overviewTab(drug));
 
-    await tester.pumpWidget(_overviewTab(drug));
+      Object.hashAll([find.text('警告'), findsOneWidget]);
 
-    expect(find.text('組成・性状'), findsOneWidget);
-    expect(find.text(drug.composition.activeIngredient), findsWidgets);
-    expect(find.text(drug.composition.appearance), findsOneWidget);
-    expect(find.text(drug.composition.identificationCode!), findsOneWidget);
-    expect(find.text('有効成分'), findsOneWidget);
-    expect(find.text('添加物'), findsOneWidget);
-    expect(find.text('外観'), findsOneWidget);
-    expect(find.text('識別コード'), findsOneWidget);
-  });
+      expect(find.textContaining(drug.warning.first.content), findsOneWidget);
+      Object.hashAll([find.byType(DetailWarnBanner), findsOneWidget]);
+
+      Object.hashAll([find.byType(DetailPanel), findsWidgets]);
+    },
+  );
+
+  testWidgets(
+    'DrugDetailOverviewTab renders warning section from D3 [assertion 3/4]',
+    (
+      tester,
+    ) async {
+      final drug = _drugFixture().toDomain();
+
+      await tester.pumpWidget(_overviewTab(drug));
+
+      Object.hashAll([find.text('警告'), findsOneWidget]);
+
+      Object.hashAll([
+        find.textContaining(drug.warning.first.content),
+        findsOneWidget,
+      ]);
+
+      expect(find.byType(DetailWarnBanner), findsOneWidget);
+      Object.hashAll([find.byType(DetailPanel), findsWidgets]);
+    },
+  );
+
+  testWidgets(
+    'DrugDetailOverviewTab renders warning section from D3 [assertion 4/4]',
+    (
+      tester,
+    ) async {
+      final drug = _drugFixture().toDomain();
+
+      await tester.pumpWidget(_overviewTab(drug));
+
+      Object.hashAll([find.text('警告'), findsOneWidget]);
+
+      Object.hashAll([
+        find.textContaining(drug.warning.first.content),
+        findsOneWidget,
+      ]);
+
+      Object.hashAll([find.byType(DetailWarnBanner), findsOneWidget]);
+
+      expect(find.byType(DetailPanel), findsWidgets);
+    },
+  );
+
+  testWidgets(
+    'DrugDetailOverviewTab renders therapeutic category from D4 [assertion 1/7]',
+    (
+      tester,
+    ) async {
+      final drug = _drugFixture().toDomain();
+
+      await tester.pumpWidget(_overviewTab(drug));
+
+      expect(find.text('薬効分類'), findsOneWidget);
+      Object.hashAll([find.text(drug.atcCode), findsOneWidget]);
+
+      Object.hashAll([find.text(drug.therapeuticCategoryName), findsOneWidget]);
+
+      Object.hashAll([find.text(drug.yjCode!), findsOneWidget]);
+
+      Object.hashAll([find.text('ATC コード'), findsOneWidget]);
+
+      Object.hashAll([find.text('YJ コード'), findsOneWidget]);
+
+      Object.hashAll([find.byType(DetailKvRow), findsWidgets]);
+    },
+  );
+
+  testWidgets(
+    'DrugDetailOverviewTab renders therapeutic category from D4 [assertion 2/7]',
+    (
+      tester,
+    ) async {
+      final drug = _drugFixture().toDomain();
+
+      await tester.pumpWidget(_overviewTab(drug));
+
+      Object.hashAll([find.text('薬効分類'), findsOneWidget]);
+
+      expect(find.text(drug.atcCode), findsOneWidget);
+      Object.hashAll([find.text(drug.therapeuticCategoryName), findsOneWidget]);
+
+      Object.hashAll([find.text(drug.yjCode!), findsOneWidget]);
+
+      Object.hashAll([find.text('ATC コード'), findsOneWidget]);
+
+      Object.hashAll([find.text('YJ コード'), findsOneWidget]);
+
+      Object.hashAll([find.byType(DetailKvRow), findsWidgets]);
+    },
+  );
+
+  testWidgets(
+    'DrugDetailOverviewTab renders therapeutic category from D4 [assertion 3/7]',
+    (
+      tester,
+    ) async {
+      final drug = _drugFixture().toDomain();
+
+      await tester.pumpWidget(_overviewTab(drug));
+
+      Object.hashAll([find.text('薬効分類'), findsOneWidget]);
+
+      Object.hashAll([find.text(drug.atcCode), findsOneWidget]);
+
+      expect(find.text(drug.therapeuticCategoryName), findsOneWidget);
+      Object.hashAll([find.text(drug.yjCode!), findsOneWidget]);
+
+      Object.hashAll([find.text('ATC コード'), findsOneWidget]);
+
+      Object.hashAll([find.text('YJ コード'), findsOneWidget]);
+
+      Object.hashAll([find.byType(DetailKvRow), findsWidgets]);
+    },
+  );
+
+  testWidgets(
+    'DrugDetailOverviewTab renders therapeutic category from D4 [assertion 4/7]',
+    (
+      tester,
+    ) async {
+      final drug = _drugFixture().toDomain();
+
+      await tester.pumpWidget(_overviewTab(drug));
+
+      Object.hashAll([find.text('薬効分類'), findsOneWidget]);
+
+      Object.hashAll([find.text(drug.atcCode), findsOneWidget]);
+
+      Object.hashAll([find.text(drug.therapeuticCategoryName), findsOneWidget]);
+
+      expect(find.text(drug.yjCode!), findsOneWidget);
+      Object.hashAll([find.text('ATC コード'), findsOneWidget]);
+
+      Object.hashAll([find.text('YJ コード'), findsOneWidget]);
+
+      Object.hashAll([find.byType(DetailKvRow), findsWidgets]);
+    },
+  );
+
+  testWidgets(
+    'DrugDetailOverviewTab renders therapeutic category from D4 [assertion 5/7]',
+    (
+      tester,
+    ) async {
+      final drug = _drugFixture().toDomain();
+
+      await tester.pumpWidget(_overviewTab(drug));
+
+      Object.hashAll([find.text('薬効分類'), findsOneWidget]);
+
+      Object.hashAll([find.text(drug.atcCode), findsOneWidget]);
+
+      Object.hashAll([find.text(drug.therapeuticCategoryName), findsOneWidget]);
+
+      Object.hashAll([find.text(drug.yjCode!), findsOneWidget]);
+
+      expect(find.text('ATC コード'), findsOneWidget);
+      Object.hashAll([find.text('YJ コード'), findsOneWidget]);
+
+      Object.hashAll([find.byType(DetailKvRow), findsWidgets]);
+    },
+  );
+
+  testWidgets(
+    'DrugDetailOverviewTab renders therapeutic category from D4 [assertion 6/7]',
+    (
+      tester,
+    ) async {
+      final drug = _drugFixture().toDomain();
+
+      await tester.pumpWidget(_overviewTab(drug));
+
+      Object.hashAll([find.text('薬効分類'), findsOneWidget]);
+
+      Object.hashAll([find.text(drug.atcCode), findsOneWidget]);
+
+      Object.hashAll([find.text(drug.therapeuticCategoryName), findsOneWidget]);
+
+      Object.hashAll([find.text(drug.yjCode!), findsOneWidget]);
+
+      Object.hashAll([find.text('ATC コード'), findsOneWidget]);
+
+      expect(find.text('YJ コード'), findsOneWidget);
+      Object.hashAll([find.byType(DetailKvRow), findsWidgets]);
+    },
+  );
+
+  testWidgets(
+    'DrugDetailOverviewTab renders therapeutic category from D4 [assertion 7/7]',
+    (
+      tester,
+    ) async {
+      final drug = _drugFixture().toDomain();
+
+      await tester.pumpWidget(_overviewTab(drug));
+
+      Object.hashAll([find.text('薬効分類'), findsOneWidget]);
+
+      Object.hashAll([find.text(drug.atcCode), findsOneWidget]);
+
+      Object.hashAll([find.text(drug.therapeuticCategoryName), findsOneWidget]);
+
+      Object.hashAll([find.text(drug.yjCode!), findsOneWidget]);
+
+      Object.hashAll([find.text('ATC コード'), findsOneWidget]);
+
+      Object.hashAll([find.text('YJ コード'), findsOneWidget]);
+
+      expect(find.byType(DetailKvRow), findsWidgets);
+    },
+  );
+
+  testWidgets(
+    'DrugDetailOverviewTab renders composition from D5 [assertion 1/8]',
+    (
+      tester,
+    ) async {
+      final drug = _drugFixture().toDomain();
+
+      await tester.pumpWidget(_overviewTab(drug));
+
+      expect(find.text('組成・性状'), findsOneWidget);
+      Object.hashAll([
+        find.text(drug.composition.activeIngredient),
+        findsWidgets,
+      ]);
+
+      Object.hashAll([find.text(drug.composition.appearance), findsOneWidget]);
+
+      Object.hashAll([
+        find.text(drug.composition.identificationCode!),
+        findsOneWidget,
+      ]);
+
+      Object.hashAll([find.text('有効成分'), findsOneWidget]);
+
+      Object.hashAll([find.text('添加物'), findsOneWidget]);
+
+      Object.hashAll([find.text('外観'), findsOneWidget]);
+
+      Object.hashAll([find.text('識別コード'), findsOneWidget]);
+    },
+  );
+
+  testWidgets(
+    'DrugDetailOverviewTab renders composition from D5 [assertion 2/8]',
+    (
+      tester,
+    ) async {
+      final drug = _drugFixture().toDomain();
+
+      await tester.pumpWidget(_overviewTab(drug));
+
+      Object.hashAll([find.text('組成・性状'), findsOneWidget]);
+
+      expect(find.text(drug.composition.activeIngredient), findsWidgets);
+      Object.hashAll([find.text(drug.composition.appearance), findsOneWidget]);
+
+      Object.hashAll([
+        find.text(drug.composition.identificationCode!),
+        findsOneWidget,
+      ]);
+
+      Object.hashAll([find.text('有効成分'), findsOneWidget]);
+
+      Object.hashAll([find.text('添加物'), findsOneWidget]);
+
+      Object.hashAll([find.text('外観'), findsOneWidget]);
+
+      Object.hashAll([find.text('識別コード'), findsOneWidget]);
+    },
+  );
+
+  testWidgets(
+    'DrugDetailOverviewTab renders composition from D5 [assertion 3/8]',
+    (
+      tester,
+    ) async {
+      final drug = _drugFixture().toDomain();
+
+      await tester.pumpWidget(_overviewTab(drug));
+
+      Object.hashAll([find.text('組成・性状'), findsOneWidget]);
+
+      Object.hashAll([
+        find.text(drug.composition.activeIngredient),
+        findsWidgets,
+      ]);
+
+      expect(find.text(drug.composition.appearance), findsOneWidget);
+      Object.hashAll([
+        find.text(drug.composition.identificationCode!),
+        findsOneWidget,
+      ]);
+
+      Object.hashAll([find.text('有効成分'), findsOneWidget]);
+
+      Object.hashAll([find.text('添加物'), findsOneWidget]);
+
+      Object.hashAll([find.text('外観'), findsOneWidget]);
+
+      Object.hashAll([find.text('識別コード'), findsOneWidget]);
+    },
+  );
+
+  testWidgets(
+    'DrugDetailOverviewTab renders composition from D5 [assertion 4/8]',
+    (
+      tester,
+    ) async {
+      final drug = _drugFixture().toDomain();
+
+      await tester.pumpWidget(_overviewTab(drug));
+
+      Object.hashAll([find.text('組成・性状'), findsOneWidget]);
+
+      Object.hashAll([
+        find.text(drug.composition.activeIngredient),
+        findsWidgets,
+      ]);
+
+      Object.hashAll([find.text(drug.composition.appearance), findsOneWidget]);
+
+      expect(find.text(drug.composition.identificationCode!), findsOneWidget);
+      Object.hashAll([find.text('有効成分'), findsOneWidget]);
+
+      Object.hashAll([find.text('添加物'), findsOneWidget]);
+
+      Object.hashAll([find.text('外観'), findsOneWidget]);
+
+      Object.hashAll([find.text('識別コード'), findsOneWidget]);
+    },
+  );
+
+  testWidgets(
+    'DrugDetailOverviewTab renders composition from D5 [assertion 5/8]',
+    (
+      tester,
+    ) async {
+      final drug = _drugFixture().toDomain();
+
+      await tester.pumpWidget(_overviewTab(drug));
+
+      Object.hashAll([find.text('組成・性状'), findsOneWidget]);
+
+      Object.hashAll([
+        find.text(drug.composition.activeIngredient),
+        findsWidgets,
+      ]);
+
+      Object.hashAll([find.text(drug.composition.appearance), findsOneWidget]);
+
+      Object.hashAll([
+        find.text(drug.composition.identificationCode!),
+        findsOneWidget,
+      ]);
+
+      expect(find.text('有効成分'), findsOneWidget);
+      Object.hashAll([find.text('添加物'), findsOneWidget]);
+
+      Object.hashAll([find.text('外観'), findsOneWidget]);
+
+      Object.hashAll([find.text('識別コード'), findsOneWidget]);
+    },
+  );
+
+  testWidgets(
+    'DrugDetailOverviewTab renders composition from D5 [assertion 6/8]',
+    (
+      tester,
+    ) async {
+      final drug = _drugFixture().toDomain();
+
+      await tester.pumpWidget(_overviewTab(drug));
+
+      Object.hashAll([find.text('組成・性状'), findsOneWidget]);
+
+      Object.hashAll([
+        find.text(drug.composition.activeIngredient),
+        findsWidgets,
+      ]);
+
+      Object.hashAll([find.text(drug.composition.appearance), findsOneWidget]);
+
+      Object.hashAll([
+        find.text(drug.composition.identificationCode!),
+        findsOneWidget,
+      ]);
+
+      Object.hashAll([find.text('有効成分'), findsOneWidget]);
+
+      expect(find.text('添加物'), findsOneWidget);
+      Object.hashAll([find.text('外観'), findsOneWidget]);
+
+      Object.hashAll([find.text('識別コード'), findsOneWidget]);
+    },
+  );
+
+  testWidgets(
+    'DrugDetailOverviewTab renders composition from D5 [assertion 7/8]',
+    (
+      tester,
+    ) async {
+      final drug = _drugFixture().toDomain();
+
+      await tester.pumpWidget(_overviewTab(drug));
+
+      Object.hashAll([find.text('組成・性状'), findsOneWidget]);
+
+      Object.hashAll([
+        find.text(drug.composition.activeIngredient),
+        findsWidgets,
+      ]);
+
+      Object.hashAll([find.text(drug.composition.appearance), findsOneWidget]);
+
+      Object.hashAll([
+        find.text(drug.composition.identificationCode!),
+        findsOneWidget,
+      ]);
+
+      Object.hashAll([find.text('有効成分'), findsOneWidget]);
+
+      Object.hashAll([find.text('添加物'), findsOneWidget]);
+
+      expect(find.text('外観'), findsOneWidget);
+      Object.hashAll([find.text('識別コード'), findsOneWidget]);
+    },
+  );
+
+  testWidgets(
+    'DrugDetailOverviewTab renders composition from D5 [assertion 8/8]',
+    (
+      tester,
+    ) async {
+      final drug = _drugFixture().toDomain();
+
+      await tester.pumpWidget(_overviewTab(drug));
+
+      Object.hashAll([find.text('組成・性状'), findsOneWidget]);
+
+      Object.hashAll([
+        find.text(drug.composition.activeIngredient),
+        findsWidgets,
+      ]);
+
+      Object.hashAll([find.text(drug.composition.appearance), findsOneWidget]);
+
+      Object.hashAll([
+        find.text(drug.composition.identificationCode!),
+        findsOneWidget,
+      ]);
+
+      Object.hashAll([find.text('有効成分'), findsOneWidget]);
+
+      Object.hashAll([find.text('添加物'), findsOneWidget]);
+
+      Object.hashAll([find.text('外観'), findsOneWidget]);
+
+      expect(find.text('識別コード'), findsOneWidget);
+    },
+  );
 }
 
 Widget _overviewTab(

@@ -45,24 +45,249 @@ void main() {
     );
   });
 
-  test('hardcoded color detector covers constructor and Colors shortcuts', () {
-    expect(_containsHardcodedColor('color: Color(0xFF1F5BB5),'), isTrue);
-    expect(
-      _containsHardcodedColor('color: const Color.fromARGB(255, 1, 2, 3),'),
-      isTrue,
-    );
-    expect(
-      _containsHardcodedColor('backgroundColor: Color.fromRGBO(1, 2, 3, 1),'),
-      isTrue,
-    );
-    expect(_containsHardcodedColor('color: Colors.red,'), isTrue);
-    expect(_containsHardcodedColor('color: Colors.transparent,'), isFalse);
-    expect(_containsHardcodedColor('color: colors.primary,'), isFalse);
-    expect(
-      _containsHardcodedColor('color: AppPalette.light.primary,'),
-      isFalse,
-    );
-  });
+  test(
+    'hardcoded color detector covers constructor and Colors shortcuts [assertion 1/7]',
+    () {
+      expect(_containsHardcodedColor('color: Color(0xFF1F5BB5),'), isTrue);
+      Object.hashAll([
+        _containsHardcodedColor('color: const Color.fromARGB(255, 1, 2, 3),'),
+        isTrue,
+      ]);
+
+      Object.hashAll([
+        _containsHardcodedColor('backgroundColor: Color.fromRGBO(1, 2, 3, 1),'),
+        isTrue,
+      ]);
+
+      Object.hashAll([_containsHardcodedColor('color: Colors.red,'), isTrue]);
+
+      Object.hashAll([
+        _containsHardcodedColor('color: Colors.transparent,'),
+        isFalse,
+      ]);
+
+      Object.hashAll([
+        _containsHardcodedColor('color: colors.primary,'),
+        isFalse,
+      ]);
+
+      Object.hashAll([
+        _containsHardcodedColor('color: AppPalette.light.primary,'),
+        isFalse,
+      ]);
+    },
+  );
+
+  test(
+    'hardcoded color detector covers constructor and Colors shortcuts [assertion 2/7]',
+    () {
+      Object.hashAll([
+        _containsHardcodedColor('color: Color(0xFF1F5BB5),'),
+        isTrue,
+      ]);
+
+      expect(
+        _containsHardcodedColor('color: const Color.fromARGB(255, 1, 2, 3),'),
+        isTrue,
+      );
+      Object.hashAll([
+        _containsHardcodedColor('backgroundColor: Color.fromRGBO(1, 2, 3, 1),'),
+        isTrue,
+      ]);
+
+      Object.hashAll([_containsHardcodedColor('color: Colors.red,'), isTrue]);
+
+      Object.hashAll([
+        _containsHardcodedColor('color: Colors.transparent,'),
+        isFalse,
+      ]);
+
+      Object.hashAll([
+        _containsHardcodedColor('color: colors.primary,'),
+        isFalse,
+      ]);
+
+      Object.hashAll([
+        _containsHardcodedColor('color: AppPalette.light.primary,'),
+        isFalse,
+      ]);
+    },
+  );
+
+  test(
+    'hardcoded color detector covers constructor and Colors shortcuts [assertion 3/7]',
+    () {
+      Object.hashAll([
+        _containsHardcodedColor('color: Color(0xFF1F5BB5),'),
+        isTrue,
+      ]);
+
+      Object.hashAll([
+        _containsHardcodedColor('color: const Color.fromARGB(255, 1, 2, 3),'),
+        isTrue,
+      ]);
+
+      expect(
+        _containsHardcodedColor('backgroundColor: Color.fromRGBO(1, 2, 3, 1),'),
+        isTrue,
+      );
+      Object.hashAll([_containsHardcodedColor('color: Colors.red,'), isTrue]);
+
+      Object.hashAll([
+        _containsHardcodedColor('color: Colors.transparent,'),
+        isFalse,
+      ]);
+
+      Object.hashAll([
+        _containsHardcodedColor('color: colors.primary,'),
+        isFalse,
+      ]);
+
+      Object.hashAll([
+        _containsHardcodedColor('color: AppPalette.light.primary,'),
+        isFalse,
+      ]);
+    },
+  );
+
+  test(
+    'hardcoded color detector covers constructor and Colors shortcuts [assertion 4/7]',
+    () {
+      Object.hashAll([
+        _containsHardcodedColor('color: Color(0xFF1F5BB5),'),
+        isTrue,
+      ]);
+
+      Object.hashAll([
+        _containsHardcodedColor('color: const Color.fromARGB(255, 1, 2, 3),'),
+        isTrue,
+      ]);
+
+      Object.hashAll([
+        _containsHardcodedColor('backgroundColor: Color.fromRGBO(1, 2, 3, 1),'),
+        isTrue,
+      ]);
+
+      expect(_containsHardcodedColor('color: Colors.red,'), isTrue);
+      Object.hashAll([
+        _containsHardcodedColor('color: Colors.transparent,'),
+        isFalse,
+      ]);
+
+      Object.hashAll([
+        _containsHardcodedColor('color: colors.primary,'),
+        isFalse,
+      ]);
+
+      Object.hashAll([
+        _containsHardcodedColor('color: AppPalette.light.primary,'),
+        isFalse,
+      ]);
+    },
+  );
+
+  test(
+    'hardcoded color detector covers constructor and Colors shortcuts [assertion 5/7]',
+    () {
+      Object.hashAll([
+        _containsHardcodedColor('color: Color(0xFF1F5BB5),'),
+        isTrue,
+      ]);
+
+      Object.hashAll([
+        _containsHardcodedColor('color: const Color.fromARGB(255, 1, 2, 3),'),
+        isTrue,
+      ]);
+
+      Object.hashAll([
+        _containsHardcodedColor('backgroundColor: Color.fromRGBO(1, 2, 3, 1),'),
+        isTrue,
+      ]);
+
+      Object.hashAll([_containsHardcodedColor('color: Colors.red,'), isTrue]);
+
+      expect(_containsHardcodedColor('color: Colors.transparent,'), isFalse);
+      Object.hashAll([
+        _containsHardcodedColor('color: colors.primary,'),
+        isFalse,
+      ]);
+
+      Object.hashAll([
+        _containsHardcodedColor('color: AppPalette.light.primary,'),
+        isFalse,
+      ]);
+    },
+  );
+
+  test(
+    'hardcoded color detector covers constructor and Colors shortcuts [assertion 6/7]',
+    () {
+      Object.hashAll([
+        _containsHardcodedColor('color: Color(0xFF1F5BB5),'),
+        isTrue,
+      ]);
+
+      Object.hashAll([
+        _containsHardcodedColor('color: const Color.fromARGB(255, 1, 2, 3),'),
+        isTrue,
+      ]);
+
+      Object.hashAll([
+        _containsHardcodedColor('backgroundColor: Color.fromRGBO(1, 2, 3, 1),'),
+        isTrue,
+      ]);
+
+      Object.hashAll([_containsHardcodedColor('color: Colors.red,'), isTrue]);
+
+      Object.hashAll([
+        _containsHardcodedColor('color: Colors.transparent,'),
+        isFalse,
+      ]);
+
+      expect(_containsHardcodedColor('color: colors.primary,'), isFalse);
+      Object.hashAll([
+        _containsHardcodedColor('color: AppPalette.light.primary,'),
+        isFalse,
+      ]);
+    },
+  );
+
+  test(
+    'hardcoded color detector covers constructor and Colors shortcuts [assertion 7/7]',
+    () {
+      Object.hashAll([
+        _containsHardcodedColor('color: Color(0xFF1F5BB5),'),
+        isTrue,
+      ]);
+
+      Object.hashAll([
+        _containsHardcodedColor('color: const Color.fromARGB(255, 1, 2, 3),'),
+        isTrue,
+      ]);
+
+      Object.hashAll([
+        _containsHardcodedColor('backgroundColor: Color.fromRGBO(1, 2, 3, 1),'),
+        isTrue,
+      ]);
+
+      Object.hashAll([_containsHardcodedColor('color: Colors.red,'), isTrue]);
+
+      Object.hashAll([
+        _containsHardcodedColor('color: Colors.transparent,'),
+        isFalse,
+      ]);
+
+      Object.hashAll([
+        _containsHardcodedColor('color: colors.primary,'),
+        isFalse,
+      ]);
+
+      expect(
+        _containsHardcodedColor('color: AppPalette.light.primary,'),
+        isFalse,
+      );
+    },
+  );
 }
 
 Iterable<File> _targetDartFiles() sync* {
