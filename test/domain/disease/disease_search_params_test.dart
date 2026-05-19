@@ -25,4 +25,16 @@ void main() {
     expect(params.keywordTarget?.serialName, 'name_english');
     expect(params.sort?.serialName, 'name_kana');
   });
+
+  test('diseaseOnsetPatternQueryValue normalizes serial names', () {
+    expect(diseaseOnsetPatternQueryValue('acute'), 'ACUTE');
+    expect(diseaseOnsetPatternQueryValue('INTERMITTENT'), 'INTERMITTENT');
+    expect(diseaseOnsetPatternQueryValue('unknown'), 'unknown');
+  });
+
+  test('diseaseExamCategoryQueryValue normalizes serial names', () {
+    expect(diseaseExamCategoryQueryValue('blood_test'), 'BLOOD_TEST');
+    expect(diseaseExamCategoryQueryValue('IMAGING'), 'IMAGING');
+    expect(diseaseExamCategoryQueryValue('unknown'), 'unknown');
+  });
 }

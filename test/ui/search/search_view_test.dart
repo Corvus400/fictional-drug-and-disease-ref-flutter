@@ -2507,6 +2507,14 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('循環器内科'), findsOneWidget);
     await _tapVisible(tester, find.text('循環器内科'));
+    await _tapVisible(tester, find.text('発症パターン'));
+    await tester.pumpAndSettle();
+    expect(find.text('間欠性'), findsOneWidget);
+    await _tapVisible(tester, find.text('間欠性'));
+    await _tapVisible(tester, find.text('検査区分'));
+    await tester.pumpAndSettle();
+    expect(find.text('血液検査'), findsOneWidget);
+    await _tapVisible(tester, find.text('血液検査'));
     await _tapVisible(tester, find.textContaining('結果を見る'));
 
     verify(
@@ -2519,6 +2527,8 @@ void main() {
         keyword: any(named: 'keyword'),
         keywordTarget: any(named: 'keywordTarget'),
         symptomKeyword: any(named: 'symptomKeyword'),
+        onsetPattern: ['INTERMITTENT'],
+        examCategory: ['BLOOD_TEST'],
         hasPharmacologicalTreatment: any(
           named: 'hasPharmacologicalTreatment',
         ),

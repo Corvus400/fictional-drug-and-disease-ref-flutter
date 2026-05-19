@@ -69,8 +69,12 @@ final class SearchQueryCodec {
         _string(json['keyword_target']),
       ),
       symptomKeyword: _string(json['symptom_keyword']),
-      onsetPattern: _stringList(json['onset_pattern']),
-      examCategory: _stringList(json['exam_category']),
+      onsetPattern: _stringList(
+        json['onset_pattern'],
+      )?.map(diseaseOnsetPatternQueryValue).toList(growable: false),
+      examCategory: _stringList(
+        json['exam_category'],
+      )?.map(diseaseExamCategoryQueryValue).toList(growable: false),
       hasPharmacologicalTreatment: _bool(
         json['has_pharmacological_treatment'],
       ),
@@ -127,8 +131,12 @@ final class SearchQueryCodec {
     'keyword_match': params.keywordMatch?.serialName,
     'keyword_target': params.keywordTarget?.serialName,
     'symptom_keyword': params.symptomKeyword,
-    'onset_pattern': params.onsetPattern,
-    'exam_category': params.examCategory,
+    'onset_pattern': params.onsetPattern
+        ?.map(diseaseOnsetPatternQueryValue)
+        .toList(growable: false),
+    'exam_category': params.examCategory
+        ?.map(diseaseExamCategoryQueryValue)
+        .toList(growable: false),
     'has_pharmacological_treatment': params.hasPharmacologicalTreatment,
     'has_severity_grading': params.hasSeverityGrading,
     'sort': params.sort?.serialName,

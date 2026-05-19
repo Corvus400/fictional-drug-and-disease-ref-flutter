@@ -29,8 +29,12 @@ final class DiseaseRepository {
         keywordMatch: params.keywordMatch?.serialName,
         keywordTarget: params.keywordTarget?.serialName,
         symptomKeyword: params.symptomKeyword,
-        onsetPattern: params.onsetPattern,
-        examCategory: params.examCategory,
+        onsetPattern: params.onsetPattern
+            ?.map(diseaseOnsetPatternQueryValue)
+            .toList(growable: false),
+        examCategory: params.examCategory
+            ?.map(diseaseExamCategoryQueryValue)
+            .toList(growable: false),
         hasPharmacologicalTreatment: params.hasPharmacologicalTreatment,
         hasSeverityGrading: params.hasSeverityGrading,
         sort: params.sort?.serialName,

@@ -68,6 +68,27 @@ void main() {
       expect(decoded.sort, DiseaseSort.icd10Chapter);
     });
 
+    test('encodes and decodes disease enum filters as API enum constants', () {
+      const params = DiseaseSearchParams(
+        onsetPattern: ['intermittent'],
+        examCategory: ['blood_test'],
+      );
+
+      final jsonText = codec.encode(params);
+      final json = jsonDecode(jsonText) as Map<String, dynamic>;
+      final decoded = codec.decodeDisease(jsonText);
+      final legacyDecoded = codec.decodeDisease(
+        '{"onset_pattern":["relapsing"],"exam_category":["imaging"]}',
+      );
+
+      expect(json['onset_pattern'], ['INTERMITTENT']);
+      expect(json['exam_category'], ['BLOOD_TEST']);
+      expect(decoded.onsetPattern, ['INTERMITTENT']);
+      expect(decoded.examCategory, ['BLOOD_TEST']);
+      expect(legacyDecoded.onsetPattern, ['RELAPSING']);
+      expect(legacyDecoded.examCategory, ['IMAGING']);
+    });
+
     test('filterCountFor ignores keyword sort page and pageSize', () {
       const params = DrugSearchParams(
         page: 3,

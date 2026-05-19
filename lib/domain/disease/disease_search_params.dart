@@ -39,6 +39,48 @@ enum DiseaseSort {
   final String serialName;
 }
 
+/// Query values accepted by `/v1/diseases?onset_pattern=...`.
+const diseaseOnsetPatternQueryValues = [
+  'ACUTE',
+  'SUBACUTE',
+  'CHRONIC',
+  'INTERMITTENT',
+  'RELAPSING',
+];
+
+/// Query values accepted by `/v1/diseases?exam_category=...`.
+const diseaseExamCategoryQueryValues = [
+  'BLOOD_TEST',
+  'IMAGING',
+  'PHYSIOLOGICAL',
+  'PATHOLOGY',
+  'INTERVIEW',
+];
+
+/// Normalizes old JSON serial names to `OnsetPattern` enum constant names.
+String diseaseOnsetPatternQueryValue(String value) {
+  return switch (value) {
+    'acute' || 'ACUTE' => 'ACUTE',
+    'subacute' || 'SUBACUTE' => 'SUBACUTE',
+    'chronic' || 'CHRONIC' => 'CHRONIC',
+    'intermittent' || 'INTERMITTENT' => 'INTERMITTENT',
+    'relapsing' || 'RELAPSING' => 'RELAPSING',
+    _ => value,
+  };
+}
+
+/// Normalizes old JSON serial names to `ExamCategory` enum constant names.
+String diseaseExamCategoryQueryValue(String value) {
+  return switch (value) {
+    'blood_test' || 'BLOOD_TEST' => 'BLOOD_TEST',
+    'imaging' || 'IMAGING' => 'IMAGING',
+    'physiological' || 'PHYSIOLOGICAL' => 'PHYSIOLOGICAL',
+    'pathology' || 'PATHOLOGY' => 'PATHOLOGY',
+    'interview' || 'INTERVIEW' => 'INTERVIEW',
+    _ => value,
+  };
+}
+
 /// Search parameters for `/v1/diseases`.
 final class DiseaseSearchParams {
   /// Creates disease search parameters.
