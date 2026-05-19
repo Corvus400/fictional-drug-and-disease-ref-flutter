@@ -365,5 +365,5 @@ Future<void> _pumpUntil(
       return;
     }
   }
-  expect(finder, findsWidgets);
+  throw StateError('Timed out waiting for $finder.');
 }

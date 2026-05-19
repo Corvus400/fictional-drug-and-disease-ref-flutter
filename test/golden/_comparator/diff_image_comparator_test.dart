@@ -712,6 +712,11 @@ Map<String, dynamic> _singleResultJson(Directory resultsDir) {
       .whereType<File>()
       .where((file) => file.path.endsWith('.json'))
       .toList();
-  expect(files, hasLength(1));
+  if (files.length != 1) {
+    throw StateError(
+      'Expected exactly one result JSON in ${resultsDir.path}, '
+      'found ${files.length}.',
+    );
+  }
   return jsonDecode(files.single.readAsStringSync()) as Map<String, dynamic>;
 }

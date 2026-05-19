@@ -6,26 +6,23 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   group('AppTheme NavigationBarThemeData', () {
     test('uses design NavigationBar tokens in light theme', () {
-      _expectNavigationBarTokens(AppTheme.light(), AppPalette.light);
+      expect(
+        _navigationBarTokens(AppTheme.light()),
+        _expectedNavigationBarTokens(AppPalette.light),
+      );
     });
 
     test('uses design NavigationBar tokens in dark theme', () {
-      _expectNavigationBarTokens(AppTheme.dark(), AppPalette.dark);
+      expect(
+        _navigationBarTokens(AppTheme.dark()),
+        _expectedNavigationBarTokens(AppPalette.dark),
+      );
     });
   });
 }
 
-void _expectNavigationBarTokens(ThemeData theme, AppPalette palette) {
+Map<String, Object?> _navigationBarTokens(ThemeData theme) {
   final navigationTheme = theme.navigationBarTheme;
-
-  expect(navigationTheme.height, 64);
-  expect(navigationTheme.backgroundColor, palette.surface);
-  expect(navigationTheme.indicatorColor, palette.primarySoft);
-  expect(
-    navigationTheme.labelBehavior,
-    NavigationDestinationLabelBehavior.alwaysShow,
-  );
-
   final selectedStates = <WidgetState>{WidgetState.selected};
   final unselectedStates = <WidgetState>{};
   final selectedIcon = navigationTheme.iconTheme!.resolve(selectedStates)!;
@@ -37,16 +34,43 @@ void _expectNavigationBarTokens(ThemeData theme, AppPalette palette) {
     unselectedStates,
   )!;
 
-  expect(selectedIcon.color, palette.primary);
-  expect(unselectedIcon.color, palette.muted);
-  expect(selectedIcon.size, 24);
-  expect(unselectedIcon.size, 24);
-  expect(selectedLabel.color, palette.primary);
-  expect(unselectedLabel.color, palette.muted);
-  expect(selectedLabel.fontSize, 10);
-  expect(unselectedLabel.fontSize, 10);
-  expect(selectedLabel.fontWeight, FontWeight.w600);
-  expect(unselectedLabel.fontWeight, FontWeight.w600);
-  expect(selectedLabel.height, 1.2);
-  expect(unselectedLabel.height, 1.2);
+  return {
+    'height': navigationTheme.height,
+    'backgroundColor': navigationTheme.backgroundColor,
+    'indicatorColor': navigationTheme.indicatorColor,
+    'labelBehavior': navigationTheme.labelBehavior,
+    'selectedIconColor': selectedIcon.color,
+    'unselectedIconColor': unselectedIcon.color,
+    'selectedIconSize': selectedIcon.size,
+    'unselectedIconSize': unselectedIcon.size,
+    'selectedLabelColor': selectedLabel.color,
+    'unselectedLabelColor': unselectedLabel.color,
+    'selectedLabelFontSize': selectedLabel.fontSize,
+    'unselectedLabelFontSize': unselectedLabel.fontSize,
+    'selectedLabelFontWeight': selectedLabel.fontWeight,
+    'unselectedLabelFontWeight': unselectedLabel.fontWeight,
+    'selectedLabelHeight': selectedLabel.height,
+    'unselectedLabelHeight': unselectedLabel.height,
+  };
+}
+
+Map<String, Object?> _expectedNavigationBarTokens(AppPalette palette) {
+  return {
+    'height': 64,
+    'backgroundColor': palette.surface,
+    'indicatorColor': palette.primarySoft,
+    'labelBehavior': NavigationDestinationLabelBehavior.alwaysShow,
+    'selectedIconColor': palette.primary,
+    'unselectedIconColor': palette.muted,
+    'selectedIconSize': 24,
+    'unselectedIconSize': 24,
+    'selectedLabelColor': palette.primary,
+    'unselectedLabelColor': palette.muted,
+    'selectedLabelFontSize': 10,
+    'unselectedLabelFontSize': 10,
+    'selectedLabelFontWeight': FontWeight.w600,
+    'unselectedLabelFontWeight': FontWeight.w600,
+    'selectedLabelHeight': 1.2,
+    'unselectedLabelHeight': 1.2,
+  };
 }

@@ -305,7 +305,9 @@ void main() {
 String _axisBlock(String source, String axisId) {
   final idPattern = "id: '$axisId',";
   final idStart = source.indexOf(idPattern);
-  expect(idStart, isNot(-1), reason: 'Axis $axisId must exist.');
+  if (idStart == -1) {
+    throw StateError('Axis $axisId must exist.');
+  }
 
   final nextAxisStart = source.indexOf(
     "_FilterAxis(\n              id: '",

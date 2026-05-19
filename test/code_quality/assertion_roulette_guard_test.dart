@@ -1,5 +1,9 @@
 import 'dart:io';
 
+import 'package:analyzer/dart/analysis/utilities.dart';
+import 'package:analyzer/dart/ast/ast.dart';
+import 'package:analyzer/dart/ast/visitor.dart';
+import 'package:analyzer/source/line_info.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -7,23 +11,16 @@ void main() {
     final violations = <String>[];
 
     for (final path in _testDartFiles()) {
-      final source = File(path).readAsStringSync();
-      for (final body in _findTestBodies(source)) {
-        final assertionCount = _assertionCount(body.body);
-        if (assertionCount > 1) {
-          violations.add(
-            '$path:${body.line}: ${body.name} contains '
-            '$assertionCount assertions',
-          );
-        }
-      }
+      violations.addAll(_assertionRouletteViolations(path));
     }
 
     expect(
       violations,
       isEmpty,
       reason:
-          'Split assertion roulette tests so each test observes one outcome:\n'
+          'Split assertion roulette tests so each test observes one outcome. '
+          'Assertions hidden behind same-file helpers still belong to the '
+          'calling test:\n'
           '${violations.join('\n')}',
     );
   });
@@ -49,134 +46,107 @@ Iterable<String> _testDartFiles() sync* {
   }
 }
 
-List<_TestBody> _findTestBodies(String source) {
-  final bodies = <_TestBody>[];
-  final testCall = RegExp(r'\b(test|testWidgets|goldenTest)\s*\(');
-  var searchStart = 0;
+List<String> _assertionRouletteViolations(String path) {
+  final source = File(path).readAsStringSync();
+  final parsed = parseString(
+    content: source,
+    path: path,
+    throwIfDiagnostics: false,
+  );
+  final functionVisitor = _FunctionIndexVisitor();
+  parsed.unit.accept(functionVisitor);
 
-  while (true) {
-    final match = testCall.firstMatch(source.substring(searchStart));
-    if (match == null) {
-      return bodies;
+  final testVisitor = _TestInvocationVisitor(parsed.lineInfo);
+  parsed.unit.accept(testVisitor);
+
+  final violations = <String>[];
+  for (final invocation in testVisitor.invocations) {
+    final counter = _AssertionCounter(functionVisitor.functions);
+    invocation.body.accept(counter);
+
+    if (counter.count > 1) {
+      final helperSuffix = counter.helpers.isEmpty
+          ? ''
+          : ' via helpers: ${counter.helpers.toList()..sort()}';
+      violations.add(
+        '$path:${invocation.line}: ${invocation.name} contains '
+        '${counter.count} assertions$helperSuffix',
+      );
     }
+  }
+  return violations;
+}
 
-    final callStart = searchStart + match.start;
-    final name = _readFirstStringArgument(source, searchStart + match.end);
-    final bodyStart = _findCallbackBodyStart(source, searchStart + match.end);
-    if (bodyStart == -1) {
-      searchStart = callStart + 1;
-      continue;
-    }
+class _FunctionIndexVisitor extends RecursiveAstVisitor<void> {
+  final functions = <String, FunctionBody>{};
 
-    final bodyEnd = _findMatchingBrace(source, bodyStart);
-    if (bodyEnd == -1) {
-      searchStart = bodyStart + 1;
-      continue;
-    }
-
-    bodies.add(
-      _TestBody(
-        line: _lineNumber(source, callStart),
-        name: name ?? '(unnamed test)',
-        body: source.substring(bodyStart + 1, bodyEnd),
-      ),
-    );
-    searchStart = bodyEnd + 1;
+  @override
+  void visitFunctionDeclaration(FunctionDeclaration node) {
+    functions[node.name.lexeme] = node.functionExpression.body;
+    super.visitFunctionDeclaration(node);
   }
 }
 
-String? _readFirstStringArgument(String source, int start) {
-  var index = start;
-  while (index < source.length && source.codeUnitAt(index) <= 32) {
-    index++;
-  }
-  if (index >= source.length) {
-    return null;
-  }
+class _TestInvocationVisitor extends RecursiveAstVisitor<void> {
+  _TestInvocationVisitor(this._lineInfo);
 
-  final quote = source[index];
-  if (quote != "'" && quote != '"') {
-    return null;
-  }
+  final LineInfo _lineInfo;
+  final invocations = <_TestInvocation>[];
 
-  final buffer = StringBuffer();
-  index++;
-  while (index < source.length) {
-    final character = source[index];
-    if (character == r'\') {
-      index += 2;
-      continue;
-    }
-    if (character == quote) {
-      return buffer.toString();
-    }
-    buffer.write(character);
-    index++;
-  }
-  return null;
-}
-
-int _findCallbackBodyStart(String source, int start) {
-  var parenDepth = 1;
-  for (var index = start; index < source.length; index++) {
-    final character = source[index];
-    if (character == '(') {
-      parenDepth++;
-    } else if (character == ')') {
-      parenDepth--;
-      if (parenDepth == 0) {
-        return -1;
-      }
-    } else if (character == '{' && parenDepth == 1) {
-      return index;
-    }
-  }
-  return -1;
-}
-
-int _findMatchingBrace(String source, int start) {
-  var depth = 0;
-  var inString = false;
-  var stringQuote = '';
-
-  for (var index = start; index < source.length; index++) {
-    final character = source[index];
-    if (inString) {
-      if (character == r'\') {
-        index++;
-      } else if (character == stringQuote) {
-        inString = false;
-      }
-      continue;
-    }
-
-    if (character == "'" || character == '"') {
-      inString = true;
-      stringQuote = character;
-    } else if (character == '{') {
-      depth++;
-    } else if (character == '}') {
-      depth--;
-      if (depth == 0) {
-        return index;
+  @override
+  void visitMethodInvocation(MethodInvocation node) {
+    if (_isTestCall(node)) {
+      final body = _callbackBody(node);
+      if (body != null) {
+        invocations.add(
+          _TestInvocation(
+            line: _lineInfo.getLocation(node.offset).lineNumber,
+            name: _testName(node),
+            body: body,
+          ),
+        );
       }
     }
+    super.visitMethodInvocation(node);
   }
-  return -1;
 }
 
-int _assertionCount(String source) {
-  return RegExp(
-    r'\b(?:expect|expectLater|fail)\s*\(',
-  ).allMatches(source).length;
+class _AssertionCounter extends RecursiveAstVisitor<void> {
+  _AssertionCounter(this._functions);
+
+  final Map<String, FunctionBody> _functions;
+  final _stack = <String>{};
+  final helpers = <String>{};
+  int count = 0;
+
+  @override
+  void visitFunctionDeclaration(FunctionDeclaration node) {
+    // Local helper declarations are counted when the helper is called.
+  }
+
+  @override
+  void visitMethodInvocation(MethodInvocation node) {
+    final name = node.methodName.name;
+    if (_assertionNames.contains(name)) {
+      count++;
+      return;
+    }
+
+    final helper = _functions[name];
+    if (node.target == null && helper != null && !_stack.contains(name)) {
+      helpers.add(name);
+      _stack.add(name);
+      helper.accept(this);
+      _stack.remove(name);
+      return;
+    }
+
+    super.visitMethodInvocation(node);
+  }
 }
 
-int _lineNumber(String source, int offset) {
-  return '\n'.allMatches(source.substring(0, offset)).length + 1;
-}
-
-class _TestBody {
-  const _TestBody({
+class _TestInvocation {
+  const _TestInvocation({
     required this.line,
     required this.name,
     required this.body,
@@ -184,5 +154,34 @@ class _TestBody {
 
   final int line;
   final String name;
-  final String body;
+  final FunctionBody body;
+}
+
+const _assertionNames = {'expect', 'expectLater', 'fail'};
+const _testNames = {'test', 'testWidgets', 'goldenTest'};
+
+bool _isTestCall(MethodInvocation node) {
+  return node.target == null && _testNames.contains(node.methodName.name);
+}
+
+FunctionBody? _callbackBody(MethodInvocation node) {
+  for (final argument in node.argumentList.arguments) {
+    if (argument is FunctionExpression) {
+      return argument.body;
+    }
+  }
+  return null;
+}
+
+String _testName(MethodInvocation node) {
+  final arguments = node.argumentList.arguments;
+  if (arguments.isEmpty) {
+    return '(unnamed test)';
+  }
+
+  final firstArgument = arguments.first;
+  if (firstArgument is StringLiteral) {
+    return firstArgument.stringValue ?? firstArgument.toSource();
+  }
+  return firstArgument.toSource();
 }

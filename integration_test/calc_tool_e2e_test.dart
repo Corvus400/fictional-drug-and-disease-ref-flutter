@@ -1134,7 +1134,9 @@ Future<void> _pumpUntilResult(WidgetTester tester, String value) async {
       return;
     }
   }
-  expect(_resultValue(tester), value);
+  throw StateError(
+    'Timed out waiting for result $value; current: ${_resultValue(tester)}.',
+  );
 }
 
 Future<void> _pumpUntilResultNotPlaceholder(WidgetTester tester) async {
@@ -1146,7 +1148,10 @@ Future<void> _pumpUntilResultNotPlaceholder(WidgetTester tester) async {
       return;
     }
   }
-  expect(_resultValue(tester), isNot('--'));
+  throw StateError(
+    'Timed out waiting for a non-placeholder result; '
+    'current: ${_resultValue(tester)}.',
+  );
 }
 
 String? _resultValue(WidgetTester tester) {
@@ -1166,7 +1171,10 @@ Future<void> _pumpUntilHistoryCount(
       return;
     }
   }
-  expect(_visibleHistoryCount(tester), expected);
+  throw StateError(
+    'Timed out waiting for history count $expected; '
+    'current: ${_visibleHistoryCount(tester)}.',
+  );
 }
 
 int _visibleHistoryCount(WidgetTester tester) {
@@ -1197,5 +1205,5 @@ Future<void> _pumpUntil(
       return;
     }
   }
-  expect(finder, findsWidgets);
+  throw StateError('Timed out waiting for $finder.');
 }

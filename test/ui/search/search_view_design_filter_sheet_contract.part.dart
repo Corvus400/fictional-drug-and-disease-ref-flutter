@@ -6880,31 +6880,36 @@ void _searchViewDesignFilterSheetContractTests() {
         await tester.pumpAndSettle();
       }
 
-      Future<void> verifyCta(Brightness brightness) async {
-        final palette = brightness == Brightness.dark
-            ? AppPalette.dark
-            : AppPalette.light;
+      Color? ctaBackground() {
         final cta = tester.widget<FilledButton>(
           find.byKey(const ValueKey('filterApplyCta')),
         );
-        expect(
-          cta.style?.backgroundColor?.resolve(<WidgetState>{}),
-          palette.primary,
-        );
-        Object.hashAll([
-          cta.style?.foregroundColor?.resolve(<WidgetState>{}),
-          palette.onPrimary,
-        ]);
+        return cta.style?.backgroundColor?.resolve(<WidgetState>{});
+      }
+
+      Color expectedBackground(Brightness brightness) {
+        final palette = brightness == Brightness.dark
+            ? AppPalette.dark
+            : AppPalette.light;
+        return palette.primary;
       }
 
       await pumpFilter(Brightness.light);
-      await verifyCta(Brightness.light);
+      final lightBackground = ctaBackground();
 
       await tester.pumpWidget(const SizedBox.shrink());
       await clearTestAppDatabase(db);
 
       await pumpFilter(Brightness.dark);
-      await verifyCta(Brightness.dark);
+      final darkBackground = ctaBackground();
+
+      expect(
+        [lightBackground, darkBackground],
+        [
+          expectedBackground(Brightness.light),
+          expectedBackground(Brightness.dark),
+        ],
+      );
     },
   );
 
@@ -6951,32 +6956,36 @@ void _searchViewDesignFilterSheetContractTests() {
         await tester.pumpAndSettle();
       }
 
-      Future<void> verifyCta(Brightness brightness) async {
-        final palette = brightness == Brightness.dark
-            ? AppPalette.dark
-            : AppPalette.light;
+      Color? ctaForeground() {
         final cta = tester.widget<FilledButton>(
           find.byKey(const ValueKey('filterApplyCta')),
         );
-        Object.hashAll([
-          cta.style?.backgroundColor?.resolve(<WidgetState>{}),
-          palette.primary,
-        ]);
+        return cta.style?.foregroundColor?.resolve(<WidgetState>{});
+      }
 
-        expect(
-          cta.style?.foregroundColor?.resolve(<WidgetState>{}),
-          palette.onPrimary,
-        );
+      Color expectedForeground(Brightness brightness) {
+        final palette = brightness == Brightness.dark
+            ? AppPalette.dark
+            : AppPalette.light;
+        return palette.onPrimary;
       }
 
       await pumpFilter(Brightness.light);
-      await verifyCta(Brightness.light);
+      final lightForeground = ctaForeground();
 
       await tester.pumpWidget(const SizedBox.shrink());
       await clearTestAppDatabase(db);
 
       await pumpFilter(Brightness.dark);
-      await verifyCta(Brightness.dark);
+      final darkForeground = ctaForeground();
+
+      expect(
+        [lightForeground, darkForeground],
+        [
+          expectedForeground(Brightness.light),
+          expectedForeground(Brightness.dark),
+        ],
+      );
     },
   );
 
