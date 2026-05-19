@@ -7,10 +7,10 @@ import '../../golden/golden_test_helpers.dart';
 
 void main() {
   for (final tab in AppShellTab.values) {
-    runHistoryGoldenMatrix(
+    runGoldenMatrix(
       fileNamePrefix: 'app_tab_header_${tab.name}',
       description: 'AppTabHeader ${tab.name}',
-      builder: (theme, size, deviceName, textScaler, textScalerName) {
+      builder: (theme, size, scaler) {
         final toolbarHeight = size.shortestSide >= 600 ? 64.0 : 56.0;
         return MaterialApp(
           debugShowCheckedModeBanner: false,

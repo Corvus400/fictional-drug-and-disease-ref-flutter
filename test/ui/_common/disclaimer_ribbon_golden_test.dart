@@ -65,8 +65,6 @@ void _ribbonGolden(String sizeName) {
   runGoldenMatrix(
     fileNamePrefix: 'disclaimer_ribbon_$sizeName',
     description: 'DisclaimerRibbon $sizeName',
-    sizes: [sizeName],
-    textScalers: const ['normal'],
     builder: (theme, size, scaler) => MaterialApp(
       theme: theme,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -88,8 +86,6 @@ void _screenChromeGolden(
   runGoldenMatrix(
     fileNamePrefix: 'disclaimer_shell_$name',
     description: 'Disclaimer shell $name',
-    sizes: const ['phone', 'tablet'],
-    textScalers: const ['normal'],
     builder: (theme, size, scaler) => _withProviders(
       name,
       MaterialApp(

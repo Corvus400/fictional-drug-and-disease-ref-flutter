@@ -17,7 +17,6 @@ void main() {
           .where((file) {
             final source = file.readAsStringSync();
             return source.contains('runGoldenMatrix(') ||
-                source.contains('runHistoryGoldenMatrix(') ||
                 source.contains('runNavigationBarGolden(') ||
                 source.contains('runNavigationBarStateMatrixGolden(') ||
                 source.contains('matchesGoldenFile(') ||
@@ -75,6 +74,27 @@ void main() {
       }
     });
 
+    test('all committed UI golden baselines use issue 32 VRT variants', () {
+      final baselineFiles =
+          Directory('test/ui')
+              .listSync(recursive: true)
+              .whereType<File>()
+              .where((file) => file.path.contains('/goldens/macos/'))
+              .where((file) => file.path.endsWith('.png'))
+              .toList()
+            ..sort((a, b) => a.path.compareTo(b.path));
+
+      for (final baselineFile in baselineFiles) {
+        expect(
+          _issue32GoldenVariantPattern.hasMatch(_fileStem(baselineFile.path)),
+          isTrue,
+          reason:
+              '${baselineFile.path} must be split by device/orientation and '
+              'theme for Issue #32',
+        );
+      }
+    });
+
     for (final expectation in _expectations) {
       test('${expectation.screen} covers ${expectation.state}', () {
         final source = _sourceWithParts(File(expectation.testFile));
@@ -85,9 +105,10 @@ void main() {
           reason: '${expectation.testFile} must define ${expectation.state}',
         );
 
-        for (final theme in const ['light', 'dark']) {
+        for (final variant in _issue32GoldenVariants) {
           final baselinePath =
-              '${expectation.goldenDir}/${expectation.baselinePrefix}_$theme.png';
+              '${expectation.goldenDir}/${expectation.baselinePrefix}_'
+              '$variant.png';
           expect(
             File(baselinePath).existsSync(),
             isTrue,
@@ -98,6 +119,22 @@ void main() {
     }
   });
 }
+
+final _issue32GoldenVariantPattern = RegExp(
+  '_(ipad_portrait|ipad_landscape|iphone_portrait|iphone_landscape)_'
+  r'(light|dark)$',
+);
+
+const _issue32GoldenVariants = [
+  'ipad_portrait_light',
+  'ipad_portrait_dark',
+  'ipad_landscape_light',
+  'ipad_landscape_dark',
+  'iphone_portrait_light',
+  'iphone_portrait_dark',
+  'iphone_landscape_light',
+  'iphone_landscape_dark',
+];
 
 const _expectations = <_GoldenCoverageExpectation>[
   _GoldenCoverageExpectation(
@@ -682,6 +719,10 @@ String _fileStem(String path) {
 }
 
 String _themeStrippedPrefix(String stem) {
+  final issue32Variant = _issue32GoldenVariantPattern.firstMatch(stem);
+  if (issue32Variant != null) {
+    return stem.substring(0, issue32Variant.start);
+  }
   if (stem.endsWith('_light')) {
     return stem.substring(0, stem.length - '_light'.length);
   }
@@ -747,6 +788,9 @@ bool _isDynamicallySourceBacked(
   }
   if (prefix.startsWith('calc_history_boundary_')) {
     return sourceContains(r"'calc_history_boundary_${mode.key}_$count'");
+  }
+  if (prefix.startsWith('calc_history_restoring_')) {
+    return sourceContains(r"'calc_history_restoring_${tool.key}'");
   }
   if (prefix.startsWith('calc_bmi_') ||
       prefix.startsWith('calc_egfr_') ||

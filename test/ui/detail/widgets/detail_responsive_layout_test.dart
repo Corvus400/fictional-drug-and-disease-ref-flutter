@@ -146,8 +146,6 @@ void main() {
   runGoldenMatrix(
     fileNamePrefix: 'detail_responsive_layout',
     description: 'DetailResponsiveLayout follows Detail Spec tablet base',
-    sizes: const ['tablet'],
-    textScalers: const ['normal'],
     builder: (theme, size, textScaler) {
       return MaterialApp(
         theme: theme,

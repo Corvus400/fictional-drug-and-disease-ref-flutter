@@ -125,8 +125,6 @@ void main() {
   runGoldenMatrix(
     fileNamePrefix: 'detail_bookmark_footer',
     description: 'DetailBookmarkFooter follows Detail Spec footer CSS',
-    sizes: const ['phone'],
-    textScalers: const ['normal'],
     builder: (theme, size, textScaler) {
       return MaterialApp(
         theme: theme,

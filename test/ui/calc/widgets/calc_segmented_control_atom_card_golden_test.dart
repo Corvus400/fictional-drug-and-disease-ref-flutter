@@ -1,43 +1,27 @@
-import 'package:fictional_drug_and_disease_ref/theme/app_theme.dart';
 import 'package:fictional_drug_and_disease_ref/ui/calc/widgets/calc_segmented_control.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_test/flutter_test.dart';
+
+import '../../../golden/golden_test_helpers.dart';
 
 void main() {
-  testWidgets(
-    'Calc segmented control atom card matches spec reference',
-    (
-      tester,
-    ) async {
-      await tester.binding.setSurfaceSize(const Size(270, 524));
-      addTearDown(() => tester.binding.setSurfaceSize(null));
-
-      await tester.pumpWidget(
-        MaterialApp(
-          theme: AppTheme.light(),
-          home: const Material(
-            child: RepaintBoundary(
-              key: ValueKey<String>('segmented-control-reference-boundary'),
-              child: SizedBox(
-                width: 270,
-                height: 524,
-                child: _SegmentedControlAtomCard(),
-              ),
+  runGoldenMatrix(
+    fileNamePrefix: 'calc_segmented_control_atom_card',
+    description: 'Calc segmented control atom card matches spec reference',
+    builder: (theme, size, scaler) {
+      return MaterialApp(
+        theme: theme,
+        home: const Material(
+          child: RepaintBoundary(
+            key: ValueKey<String>('segmented-control-reference-boundary'),
+            child: SizedBox(
+              width: 270,
+              height: 524,
+              child: _SegmentedControlAtomCard(),
             ),
           ),
         ),
       );
-
-      await expectLater(
-        find.byKey(
-          const ValueKey<String>('segmented-control-reference-boundary'),
-        ),
-        matchesGoldenFile(
-          'goldens/macos/calc_segmented_control_atom_card_light.png',
-        ),
-      );
     },
-    tags: const ['golden'],
   );
 }
 

@@ -70,8 +70,6 @@ void main() {
   runGoldenMatrix(
     fileNamePrefix: 'detail_exam_table',
     description: 'DetailExamTable follows Detail Spec exam CSS',
-    sizes: const ['phone'],
-    textScalers: const ['normal'],
     builder: (theme, size, textScaler) {
       return MaterialApp(
         theme: theme,

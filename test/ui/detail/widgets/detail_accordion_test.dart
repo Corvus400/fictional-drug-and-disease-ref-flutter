@@ -108,8 +108,6 @@ void main() {
   runGoldenMatrix(
     fileNamePrefix: 'detail_accordion',
     description: 'DetailAccordion follows Detail Spec acc CSS',
-    sizes: const ['phone'],
-    textScalers: const ['normal'],
     builder: (theme, size, textScaler) {
       return MaterialApp(
         theme: theme,

@@ -10,8 +10,6 @@ void main() {
   runGoldenMatrix(
     fileNamePrefix: 'calc_input_atoms',
     description: 'Calc input atoms',
-    sizes: const ['phone'],
-    textScalers: const ['normal'],
     builder: (theme, size, scaler) => MaterialApp(
       theme: theme,
       home: Scaffold(

@@ -68,8 +68,6 @@ void main() {
   runGoldenMatrix(
     fileNamePrefix: 'detail_pk_table',
     description: 'DetailPkTable follows Detail Spec exam table CSS',
-    sizes: const ['phone'],
-    textScalers: const ['normal'],
     builder: (theme, size, textScaler) {
       return MaterialApp(
         theme: theme,
