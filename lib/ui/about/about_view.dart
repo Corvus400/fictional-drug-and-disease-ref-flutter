@@ -37,6 +37,7 @@ class AboutView extends ConsumerWidget {
               ),
             ),
             ListTile(
+              key: const ValueKey<String>('about-licenses-tile'),
               title: Text(
                 l10n.aboutLicensesTitle,
                 style: typography.bodyM.copyWith(color: palette.ink),

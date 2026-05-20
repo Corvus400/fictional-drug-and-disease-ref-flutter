@@ -47,13 +47,19 @@ dev_dependencies:
     sdk: flutter
   freezed: ^3.2.5
   image: ^4.3.0
-  integration_test:
-    sdk: flutter
   json_serializable: ^6.13.2
   meta: ^1.17.0
   mocktail: ^1.0.4
+  patrol: 4.5.0
   retrofit_generator: ^10.2.5
   very_good_analysis: ^10.2.0
+
+patrol:
+  app_name: FDDR
+  android:
+    package_name: com.corvus400.fictional_drug_and_disease_ref.dev
+  ios:
+    bundle_id: com.corvus400.fictionalDrugAndDiseaseRef
 
 flutter_launcher_icons:
   android: true

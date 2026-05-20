@@ -166,6 +166,7 @@ class _SearchViewState extends ConsumerState<SearchView> with RouteAware {
                   bottom: SearchConstants.searchFilterFabBottomOffset - 16,
                 ),
                 child: FloatingActionButton(
+                  key: const ValueKey('search-filter-fab'),
                   backgroundColor: palette.filterFabBg,
                   foregroundColor: palette.filterFabFg,
                   shape: RoundedRectangleBorder(

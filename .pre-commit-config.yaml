@@ -2,7 +2,7 @@
 # stages 分離:
 #   pre-commit = build_runner (annotation 変更時のみ) → dart format → dart analyze (差分のみ)
 #   pre-push   = build_runner 全件 → dart format 全件 → flutter analyze → plan completion guard
-# integration_test は emulator/simulator 必須のため push フック対象外。手動実行で運用。
+# Patrol E2E は emulator/simulator と mock-server 必須のため push フック対象外。手動実行で運用。
 repos:
   - repo: local
     hooks:

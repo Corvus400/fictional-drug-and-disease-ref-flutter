@@ -63,6 +63,21 @@ mock-server の詳細は [mock-server README](https://github.com/Corvus400/ficti
 
 ---
 
+## E2E テスト
+
+E2E は Patrol で `patrol_test/` 配下に実装しています。mock-server と emulator/simulator が必要なため CI や pre-push には含めず、手動で実行します。
+
+```bash
+flutter pub global activate patrol_cli 4.3.1
+scripts/run-patrol-e2e-matrix.sh
+```
+
+`scripts/run-patrol-e2e-matrix.sh` は `http://localhost:8080/health` を確認し、mock-server が未起動の場合のみ隣接する mock-server リポジトリの `scripts/start.sh` を起動します。既定では Android emulator、iPhone Simulator、iPad Simulator それぞれで portrait / landscape を実行します。
+
+Patrol の app/test server は既定ポート衝突を避けるため `18082` / `18081` を使います。必要に応じて `FDDR_E2E_PATROL_APP_SERVER_PORT` と `FDDR_E2E_PATROL_TEST_SERVER_PORT` で上書きできます。
+
+---
+
 ## アーキテクチャ
 
 `lib/` を UI / application / domain / data の 4 層で分離しています。HTTP クライアント (Dio + Retrofit) と永続化 (drift / SharedPreferences) は `data` 層、UseCase と Riverpod Provider は `application` 層、不変な Domain Model は `domain` 層、Widget / Page は `ui` 層に集約しています。

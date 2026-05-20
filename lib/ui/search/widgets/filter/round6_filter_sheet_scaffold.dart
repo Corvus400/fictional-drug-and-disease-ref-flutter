@@ -124,6 +124,7 @@ class _Round6FilterSheetScaffold extends StatelessWidget {
                               ),
                             ),
                             TextButton(
+                              key: const ValueKey('filter-sheet-reset-button'),
                               onPressed: onReset,
                               child: Text(
                                 l10n.searchFilterReset,

@@ -142,6 +142,7 @@ class _DiseaseLoadedView extends StatelessWidget {
       tabs: [
         for (final (index, tab) in DiseaseDetailTab.values.indexed)
           DetailTabButton(
+            controlKey: ValueKey<String>('disease-detail-tab-${tab.name}'),
             label: _diseaseTabLabel(l10n, tab),
             selected: state.activeTab == tab,
             sectionNumber: index + 1,

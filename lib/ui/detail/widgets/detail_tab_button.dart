@@ -9,6 +9,7 @@ class DetailTabButton extends StatelessWidget {
     required this.label,
     required this.selected,
     required this.onPressed,
+    this.controlKey,
     this.sectionNumber,
     super.key,
   });
@@ -21,6 +22,9 @@ class DetailTabButton extends StatelessWidget {
 
   /// Selects this tab.
   final VoidCallback onPressed;
+
+  /// Stable key for E2E and widget tests.
+  final Key? controlKey;
 
   /// Tablet navigation section number.
   final int? sectionNumber;
@@ -38,6 +42,7 @@ class DetailTabButton extends StatelessWidget {
   Widget _buildPhone(BuildContext context) {
     final colors = _detailColors(context);
     return InkWell(
+      key: controlKey,
       onTap: onPressed,
       child: DecoratedBox(
         decoration: BoxDecoration(
@@ -73,6 +78,7 @@ class DetailTabButton extends StatelessWidget {
     return Material(
       color: selected ? colors.primaryContainer : colors.surfaceContainerLow,
       child: InkWell(
+        key: controlKey,
         onTap: onPressed,
         child: DecoratedBox(
           decoration: BoxDecoration(

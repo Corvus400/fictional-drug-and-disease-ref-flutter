@@ -27,7 +27,7 @@ void main() {
 }
 
 Iterable<String> _testDartFiles() sync* {
-  for (final root in ['test', 'integration_test']) {
+  for (final root in ['test', 'patrol_test']) {
     final directory = Directory(root);
     if (!directory.existsSync()) {
       continue;
@@ -158,7 +158,7 @@ class _TestInvocation {
 }
 
 const _assertionNames = {'expect', 'expectLater', 'fail'};
-const _testNames = {'test', 'testWidgets', 'goldenTest'};
+const _testNames = {'test', 'testWidgets', 'goldenTest', 'patrolTest'};
 
 bool _isTestCall(MethodInvocation node) {
   return node.target == null && _testNames.contains(node.methodName.name);

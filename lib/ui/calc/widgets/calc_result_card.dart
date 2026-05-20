@@ -52,6 +52,8 @@ class CalcResultCard extends StatelessWidget {
   /// Optional deterministic progress value for static visual tests.
   final double? restoringProgressValue;
 
+  static const double _compactHeaderWidth = 300;
+
   @override
   Widget build(BuildContext context) {
     final palette = Theme.of(context).extension<AppPalette>()!;
@@ -96,33 +98,50 @@ class CalcResultCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.baseline,
-                      textBaseline: TextBaseline.alphabetic,
-                      children: [
-                        Expanded(
-                          child: Text(
-                            title,
-                            style: titleStyle,
-                          ),
-                        ),
-                        Text(
+                    LayoutBuilder(
+                      builder: (context, constraints) {
+                        final compact =
+                            constraints.maxWidth < _compactHeaderWidth;
+                        final formulaText = Text(
                           formula,
+                          maxLines: compact ? 1 : null,
+                          overflow: compact ? TextOverflow.ellipsis : null,
                           textAlign: TextAlign.end,
                           style: typography.monoS
                               .copyWith(color: palette.calcMuted, fontSize: 10)
                               .withVariableWeight(FontWeight.w500),
-                        ),
-                      ],
+                        );
+
+                        return Row(
+                          crossAxisAlignment: CrossAxisAlignment.baseline,
+                          textBaseline: TextBaseline.alphabetic,
+                          children: [
+                            Expanded(
+                              child: Text(
+                                title,
+                                maxLines: compact ? 1 : null,
+                                overflow: compact
+                                    ? TextOverflow.ellipsis
+                                    : null,
+                                style: titleStyle,
+                              ),
+                            ),
+                            if (compact) ...[
+                              SizedBox(width: spacing.s2),
+                              Flexible(flex: 2, child: formulaText),
+                            ] else
+                              formulaText,
+                          ],
+                        );
+                      },
                     ),
                     SizedBox(height: spacing.s2),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.baseline,
-                      textBaseline: TextBaseline.alphabetic,
-                      children: [
-                        Text(
+                    LayoutBuilder(
+                      builder: (context, constraints) {
+                        final value = Text(
                           key: const ValueKey<String>('calc-result-value'),
                           valueText,
+                          maxLines: 1,
                           style: TextStyle(
                             fontFamily: 'JetBrainsMono',
                             fontSize: valueFontSize,
@@ -132,22 +151,40 @@ class CalcResultCard extends StatelessWidget {
                             ],
                             height: 1,
                           ).copyWith(color: valueColor),
-                        ),
-                        SizedBox(width: spacing.s1 + 2),
-                        Flexible(
-                          child: Text(
-                            unit,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
-                              fontFamily: 'JetBrainsMono',
-                              fontSize: 13,
-                              fontWeight: FontWeight.w500,
-                              fontVariations: [FontVariation('wght', 500)],
-                            ).copyWith(color: palette.calcMuted),
-                          ),
-                        ),
-                      ],
+                        );
+                        final unitText = Text(
+                          unit,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            fontFamily: 'JetBrainsMono',
+                            fontSize: 13,
+                            fontWeight: FontWeight.w500,
+                            fontVariations: [FontVariation('wght', 500)],
+                          ).copyWith(color: palette.calcMuted),
+                        );
+                        final shouldScaleValue =
+                            constraints.maxWidth < _compactHeaderWidth;
+
+                        return Row(
+                          crossAxisAlignment: CrossAxisAlignment.baseline,
+                          textBaseline: TextBaseline.alphabetic,
+                          children: [
+                            if (shouldScaleValue)
+                              Flexible(
+                                child: FittedBox(
+                                  fit: BoxFit.scaleDown,
+                                  alignment: Alignment.centerLeft,
+                                  child: value,
+                                ),
+                              )
+                            else
+                              value,
+                            SizedBox(width: spacing.s1 + 2),
+                            Flexible(child: unitText),
+                          ],
+                        );
+                      },
                     ),
                     if (hintText != null) ...[
                       SizedBox(height: spacing.s2),

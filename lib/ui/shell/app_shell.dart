@@ -135,7 +135,12 @@ class AppShellAdaptiveNavigation extends StatelessWidget {
                           NavigationRailDestination(
                             icon: Tooltip(
                               message: tab.label(context),
-                              child: Icon(tab.icon),
+                              child: Icon(
+                                tab.icon,
+                                key: ValueKey<String>(
+                                  'app-shell-tab-${tab.name}',
+                                ),
+                              ),
                             ),
                             label: Text(tab.label(context)),
                           ),
@@ -179,6 +184,7 @@ class _CompactAppShellRail extends StatelessWidget {
                       : Colors.transparent,
                   shape: const StadiumBorder(),
                   child: InkWell(
+                    key: ValueKey<String>('app-shell-tab-${tab.name}'),
                     customBorder: const StadiumBorder(),
                     onTap: () => onDestinationSelected(index),
                     child: Icon(
@@ -225,7 +231,10 @@ class AppShellBottomNavigation extends StatelessWidget {
           destinations: [
             for (final tab in AppShellTab.values)
               NavigationDestination(
-                icon: Icon(tab.icon),
+                icon: Icon(
+                  tab.icon,
+                  key: ValueKey<String>('app-shell-tab-${tab.name}'),
+                ),
                 label: tab.label(context),
               ),
           ],

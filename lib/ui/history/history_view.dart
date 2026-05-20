@@ -343,6 +343,7 @@ class _HistoryTabButton extends StatelessWidget {
       child: Material(
         color: Colors.transparent,
         child: InkWell(
+          key: ValueKey<String>('history-tab-${tab.name}'),
           onTap: () => onSelect(tab),
           child: Container(
             alignment: Alignment.center,
