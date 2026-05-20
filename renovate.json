@@ -26,14 +26,14 @@
       "groupName": "Dart and Flutter packages"
     },
     {
-      "description": "freezed ^3.2.5 が analyzer <11 もしくは ^12 のみ対応のため、analyzer の major bump を保留する。freezed が analyzer ^13 対応版をリリースしたら本ルールを削除する",
+      "description": "Flutter 3.41.5 の flutter_test が meta 1.17.0 を固定しており analyzer >=10.0.2 は meta ^1.18.0 を要求して解決不能のため保留する。Flutter SDK 更新などで解決したら本ルールを削除する",
       "matchManagers": [
         "pub"
       ],
       "matchPackageNames": [
         "analyzer"
       ],
-      "allowedVersions": "<13.0.0"
+      "allowedVersions": "<10.0.2"
     },
     {
       "description": "Ignore Flutter SDK gradle plugin (bundled with Flutter SDK, not published to Maven)",
