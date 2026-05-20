@@ -71,6 +71,7 @@ class AppTabHeader extends StatelessWidget implements PreferredSizeWidget {
       actions: [
         ...?actions,
         IconButton(
+          key: const ValueKey<String>('app-tab-header-about-button'),
           icon: Icon(Icons.info_outline, color: palette.ink),
           tooltip: l10n.aboutTitle,
           onPressed: () => context.push(AppRoutes.about),

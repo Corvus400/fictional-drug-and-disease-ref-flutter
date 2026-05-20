@@ -40,7 +40,7 @@
 `.pre-commit-config.yaml` で以下を強制:
 - pre-commit: `build_runner` (annotation 変更時のみ) + `dart format` + `dart analyze` (差分ファイルのみ)
 - pre-push: `build_runner` 全件 + `dart format` 全件 + `flutter analyze` + plan completion guard
-- CI: 非 golden の `flutter test --exclude-tags golden` + macOS golden VRT shard を `CI` workflow で実行。`integration_test/` は CI 対象外
+- CI: 非 golden の `flutter test --exclude-tags golden` + macOS golden VRT shard を `CI` workflow で実行。Patrol E2E は手動実行のみで CI 対象外
 
 CI 未投入期間中はこのフックがサイレントフォールバック検出の主装置。clone 直後に必ず以下を実行:
 ```
@@ -103,8 +103,12 @@ final value = container.read(myProvider);
 - `flutter_lints` は採用しない (very_good_analysis のスーパーセット)
 - 生成コード除外: `*.g.dart` / `*.freezed.dart` / `lib/l10n/app_localizations*.dart`
 
-## integration_test
+## Patrol E2E
 
-- emulator/simulator と mock-server 疎通が必要なため pre-push フックおよび CI 対象外
-- 手動実行コマンド: `flutter test integration_test/`
-- E2E 経路 (起動 → 検索 → 詳細遷移) のみカバー、ロジック検証は unit/widget で担保
+- 採用: `patrol` 4.5.0 / `patrol_cli` 4.3.1。テスト本体は `patrol_test/` 配下に置く
+- mock-server、Android emulator、iOS Simulator が必要なため pre-push フックおよび CI 対象外
+- 手動実行コマンド: `scripts/run-patrol-e2e-matrix.sh`
+- 上記スクリプトは `http://localhost:8080/health` を確認し、mock-server が未起動の場合のみ `../fictional-drug-and-disease-ref-mock-server/scripts/start.sh` を起動する。既存サーバは停止しない
+- 既定マトリクスは Android emulator / iPhone Simulator / iPad Simulator の portrait / landscape。端末名は `FDDR_E2E_ANDROID_AVD`、`FDDR_E2E_IPHONE_DEVICE`、`FDDR_E2E_IPAD_DEVICE` で上書きできる
+- Patrol の app/test server は既定ポート衝突を避けるため `18082` / `18081` を使う。必要に応じて `FDDR_E2E_PATROL_APP_SERVER_PORT` と `FDDR_E2E_PATROL_TEST_SERVER_PORT` で上書きできる
+- E2E はユーザー到達可能な主要ルート、検索、詳細、ブックマーク、閲覧履歴、計算ツール、about/licenses、主要 UI 状態を Patrol で操作確認する。ロジック詳細は unit/widget、ピクセル差分は golden/VRT で担保する

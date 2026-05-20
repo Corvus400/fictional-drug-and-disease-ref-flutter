@@ -35,6 +35,7 @@ migrate_working_dir/
 .pub/
 /build/
 /coverage/
+patrol_test/test_bundle.dart
 
 # alchemist / Flutter golden test per-test failures dir
 **/failures/

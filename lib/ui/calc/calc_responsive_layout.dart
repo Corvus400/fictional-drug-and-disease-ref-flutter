@@ -638,6 +638,7 @@ class _CalcToolList extends StatelessWidget {
               for (final item in items)
                 _CalcToolListItem(
                   active: item.type == state.activeTool,
+                  controlKey: ValueKey<String>('calc-segment-${item.type}'),
                   label: item.label,
                   formula: item.formula,
                   icon: item.icon,
@@ -674,6 +675,7 @@ class _RestoringDim extends StatelessWidget {
 class _CalcToolListItem extends StatelessWidget {
   const _CalcToolListItem({
     required this.active,
+    required this.controlKey,
     required this.label,
     required this.formula,
     required this.icon,
@@ -681,6 +683,7 @@ class _CalcToolListItem extends StatelessWidget {
   });
 
   final bool active;
+  final Key controlKey;
   final String label;
   final String formula;
   final IconData icon;
@@ -698,6 +701,7 @@ class _CalcToolListItem extends StatelessWidget {
     final muted = active ? palette.calcOnPrimaryContainer : palette.calcMuted;
 
     return Material(
+      key: controlKey,
       color: active ? palette.calcPrimaryContainer : Colors.transparent,
       borderRadius: BorderRadius.circular(radii.tile),
       child: InkWell(

@@ -73,6 +73,32 @@ void main() {
     );
 
     testWidgets(
+      'CalcResultCard fits long formula and unit in narrow landscape pane',
+      (
+        tester,
+      ) async {
+        await tester.pumpWidget(
+          _widgetTestApp(
+            child: const Align(
+              alignment: Alignment.topLeft,
+              child: SizedBox(
+                width: 220,
+                child: CalcResultCard(
+                  title: '結果',
+                  formula: 'eGFR = 194 × Cr^-1.094 × Age^-0.287',
+                  valueText: '121.7',
+                  unit: 'mL/min/1.73m²',
+                ),
+              ),
+            ),
+          ),
+        );
+
+        expect(tester.takeException(), isNull);
+      },
+    );
+
+    testWidgets(
       'CalcResultCard renders empty, valid, and hint states [assertion 2/7]',
       (
         tester,

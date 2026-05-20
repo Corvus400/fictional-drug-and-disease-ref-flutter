@@ -182,6 +182,7 @@ class _SearchResultToolbarState extends State<_SearchResultToolbar> {
                   child: Align(
                     alignment: Alignment.centerRight,
                     child: TextButton(
+                      key: const ValueKey('search-sort-toolbar-button'),
                       style: TextButton.styleFrom(
                         padding: EdgeInsets.zero,
                         minimumSize: Size.zero,
