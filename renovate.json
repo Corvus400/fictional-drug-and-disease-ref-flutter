@@ -26,6 +26,16 @@
       "groupName": "Dart and Flutter packages"
     },
     {
+      "description": "freezed ^3.2.5 が analyzer <11 もしくは ^12 のみ対応のため、analyzer の major bump を保留する。freezed が analyzer ^13 対応版をリリースしたら本ルールを削除する",
+      "matchManagers": [
+        "pub"
+      ],
+      "matchPackageNames": [
+        "analyzer"
+      ],
+      "allowedVersions": "<13.0.0"
+    },
+    {
       "description": "Ignore Flutter SDK gradle plugin (bundled with Flutter SDK, not published to Maven)",
       "matchManagers": [
         "gradle"
