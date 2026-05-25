@@ -50,13 +50,5 @@ class ImageApiService {
 }
 
 AppException _toImageException(DioException error) {
-  if (error.response?.statusCode == 404) {
-    return ApiException(
-      statusCode: 404,
-      code: 'NOT_FOUND',
-      message: 'Image not found',
-      cause: error,
-    );
-  }
   return toAppException(error);
 }

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
@@ -8,240 +9,113 @@ import 'package:fictional_drug_and_disease_ref/core/error/exception_mapper.dart'
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+const _validationType =
+    'https://github.com/Corvus400/fictional-drug-and-disease-ref/problems/validation';
+const _notFoundType =
+    'https://github.com/Corvus400/fictional-drug-and-disease-ref/problems/not-found';
+
 void main() {
   group('DioException', () {
-    test('DioException(connectionTimeout) maps to NetworkException', () {
-      final e = _dioException(DioExceptionType.connectionTimeout);
-
-      expect(toAppException(e), isA<NetworkException>());
+    test('network DioException types map to NetworkException', () {
+      for (final type in <DioExceptionType>{
+        DioExceptionType.connectionTimeout,
+        DioExceptionType.sendTimeout,
+        DioExceptionType.receiveTimeout,
+        DioExceptionType.connectionError,
+        DioExceptionType.badCertificate,
+        DioExceptionType.cancel,
+      }) {
+        expect(toAppException(_dioException(type)), isA<NetworkException>());
+      }
     });
 
-    test('DioException(sendTimeout) maps to NetworkException', () {
-      final e = _dioException(DioExceptionType.sendTimeout);
-
-      expect(toAppException(e), isA<NetworkException>());
-    });
-
-    test('DioException(receiveTimeout) maps to NetworkException', () {
-      final e = _dioException(DioExceptionType.receiveTimeout);
-
-      expect(toAppException(e), isA<NetworkException>());
-    });
-
-    test('DioException(connectionError) maps to NetworkException', () {
-      final e = _dioException(DioExceptionType.connectionError);
-
-      expect(toAppException(e), isA<NetworkException>());
-    });
-
-    test('DioException(badCertificate) maps to NetworkException', () {
-      final e = _dioException(DioExceptionType.badCertificate);
-
-      expect(toAppException(e), isA<NetworkException>());
-    });
-
-    test('DioException(cancel) maps to NetworkException', () {
-      final e = _dioException(DioExceptionType.cancel);
-
-      expect(toAppException(e), isA<NetworkException>());
+    test('DioException(badResponse, 503) maps to ServerException(503)', () {
+      expect(
+        toAppException(_badResponse(503)),
+        isA<ServerException>().having((e) => e.statusCode, 'statusCode', 503),
+      );
     });
 
     test(
-      'DioException(badResponse, 503) maps to ServerException(503) [assertion 1/2]',
+      'DioException(badResponse, RFC 9457 body) maps to ApiException fields',
       () {
-        final mapped = toAppException(_badResponse(503));
-
-        expect(mapped, isA<ServerException>());
-        Object.hashAll([(mapped as ServerException).statusCode, 503]);
+        expect(
+          toAppException(
+            _badResponse(
+              422,
+              data: <String, dynamic>{
+                'type': _validationType,
+                'title': 'Validation failed',
+                'status': 422,
+                'detail': 'Invalid query parameter',
+                'instance': '/v1/drugs?therapeutic_category=BOGUS',
+                'errors': <Map<String, dynamic>>[
+                  <String, dynamic>{
+                    'field': 'therapeutic_category',
+                    'reason': 'Unknown therapeutic_category: BOGUS',
+                  },
+                ],
+              },
+            ),
+          ),
+          isA<ApiException>()
+              .having((e) => e.statusCode, 'statusCode', 422)
+              .having((e) => e.type, 'type', _validationType)
+              .having((e) => e.title, 'title', 'Validation failed')
+              .having((e) => e.detail, 'detail', 'Invalid query parameter')
+              .having(
+                (e) => e.instance,
+                'instance',
+                '/v1/drugs?therapeutic_category=BOGUS',
+              )
+              .having((e) => e.errors, 'errors', hasLength(1))
+              .having(
+                (e) => e.errors.single.field,
+                'error field',
+                'therapeutic_category',
+              )
+              .having(
+                (e) => e.errors.single.reason,
+                'error reason',
+                'Unknown therapeutic_category: BOGUS',
+              ),
+        );
       },
     );
 
     test(
-      'DioException(badResponse, 503) maps to ServerException(503) [assertion 2/2]',
+      'DioException(badResponse, RFC 9457 bytes body) maps to ApiException',
       () {
-        final mapped = toAppException(_badResponse(503));
-
-        Object.hashAll([mapped, isA<ServerException>()]);
-
-        expect((mapped as ServerException).statusCode, 503);
+        final body = utf8.encode(
+          jsonEncode(<String, dynamic>{
+            'type': _notFoundType,
+            'title': 'Resource not found',
+            'status': 404,
+            'detail': 'drug-image nonexistent',
+          }),
+        );
+        expect(
+          toAppException(_badResponse(404, data: Uint8List.fromList(body))),
+          isA<ApiException>()
+              .having((e) => e.statusCode, 'statusCode', 404)
+              .having((e) => e.type, 'type', _notFoundType)
+              .having((e) => e.title, 'title', 'Resource not found')
+              .having((e) => e.detail, 'detail', 'drug-image nonexistent'),
+        );
       },
     );
 
     test(
-      'DioException(badResponse, 4xx, valid body) maps to ApiException [assertion 1/5]',
+      'DioException(badResponse, empty 4xx body) maps to fallback problem',
       () {
-        final mapped =
-            toAppException(
-                  _badResponse(
-                    404,
-                    data: <String, dynamic>{
-                      'code': 'NOT_FOUND',
-                      'message': 'not found',
-                      'details': 'd',
-                      'disclaimer': 'disc',
-                    },
-                  ),
-                )
-                as ApiException;
-
-        expect(mapped.statusCode, 404);
-        Object.hashAll([mapped.code, 'NOT_FOUND']);
-
-        Object.hashAll([mapped.message, 'not found']);
-
-        Object.hashAll([mapped.details, 'd']);
-
-        Object.hashAll([mapped.disclaimer, 'disc']);
-      },
-    );
-
-    test(
-      'DioException(badResponse, 4xx, valid body) maps to ApiException [assertion 2/5]',
-      () {
-        final mapped =
-            toAppException(
-                  _badResponse(
-                    404,
-                    data: <String, dynamic>{
-                      'code': 'NOT_FOUND',
-                      'message': 'not found',
-                      'details': 'd',
-                      'disclaimer': 'disc',
-                    },
-                  ),
-                )
-                as ApiException;
-
-        Object.hashAll([mapped.statusCode, 404]);
-
-        expect(mapped.code, 'NOT_FOUND');
-        Object.hashAll([mapped.message, 'not found']);
-
-        Object.hashAll([mapped.details, 'd']);
-
-        Object.hashAll([mapped.disclaimer, 'disc']);
-      },
-    );
-
-    test(
-      'DioException(badResponse, 4xx, valid body) maps to ApiException [assertion 3/5]',
-      () {
-        final mapped =
-            toAppException(
-                  _badResponse(
-                    404,
-                    data: <String, dynamic>{
-                      'code': 'NOT_FOUND',
-                      'message': 'not found',
-                      'details': 'd',
-                      'disclaimer': 'disc',
-                    },
-                  ),
-                )
-                as ApiException;
-
-        Object.hashAll([mapped.statusCode, 404]);
-
-        Object.hashAll([mapped.code, 'NOT_FOUND']);
-
-        expect(mapped.message, 'not found');
-        Object.hashAll([mapped.details, 'd']);
-
-        Object.hashAll([mapped.disclaimer, 'disc']);
-      },
-    );
-
-    test(
-      'DioException(badResponse, 4xx, valid body) maps to ApiException [assertion 4/5]',
-      () {
-        final mapped =
-            toAppException(
-                  _badResponse(
-                    404,
-                    data: <String, dynamic>{
-                      'code': 'NOT_FOUND',
-                      'message': 'not found',
-                      'details': 'd',
-                      'disclaimer': 'disc',
-                    },
-                  ),
-                )
-                as ApiException;
-
-        Object.hashAll([mapped.statusCode, 404]);
-
-        Object.hashAll([mapped.code, 'NOT_FOUND']);
-
-        Object.hashAll([mapped.message, 'not found']);
-
-        expect(mapped.details, 'd');
-        Object.hashAll([mapped.disclaimer, 'disc']);
-      },
-    );
-
-    test(
-      'DioException(badResponse, 4xx, valid body) maps to ApiException [assertion 5/5]',
-      () {
-        final mapped =
-            toAppException(
-                  _badResponse(
-                    404,
-                    data: <String, dynamic>{
-                      'code': 'NOT_FOUND',
-                      'message': 'not found',
-                      'details': 'd',
-                      'disclaimer': 'disc',
-                    },
-                  ),
-                )
-                as ApiException;
-
-        Object.hashAll([mapped.statusCode, 404]);
-
-        Object.hashAll([mapped.code, 'NOT_FOUND']);
-
-        Object.hashAll([mapped.message, 'not found']);
-
-        Object.hashAll([mapped.details, 'd']);
-
-        expect(mapped.disclaimer, 'disc');
-      },
-    );
-
-    test(
-      'DioException(badResponse, 4xx, empty body) maps to fallback [assertion 1/3]',
-      () {
-        final mapped = toAppException(_badResponse(400)) as ApiException;
-
-        expect(mapped.statusCode, 400);
-        Object.hashAll([mapped.code, 'UNKNOWN']);
-
-        Object.hashAll([mapped.message, '']);
-      },
-    );
-
-    test(
-      'DioException(badResponse, 4xx, empty body) maps to fallback [assertion 2/3]',
-      () {
-        final mapped = toAppException(_badResponse(400)) as ApiException;
-
-        Object.hashAll([mapped.statusCode, 400]);
-
-        expect(mapped.code, 'UNKNOWN');
-        Object.hashAll([mapped.message, '']);
-      },
-    );
-
-    test(
-      'DioException(badResponse, 4xx, empty body) maps to fallback [assertion 3/3]',
-      () {
-        final mapped = toAppException(_badResponse(400)) as ApiException;
-
-        Object.hashAll([mapped.statusCode, 400]);
-
-        Object.hashAll([mapped.code, 'UNKNOWN']);
-
-        expect(mapped.message, '');
+        expect(
+          toAppException(_badResponse(400)),
+          isA<ApiException>()
+              .having((e) => e.statusCode, 'statusCode', 400)
+              .having((e) => e.type, 'type', 'about:blank')
+              .having((e) => e.title, 'title', '')
+              .having((e) => e.errors, 'errors', isEmpty),
+        );
       },
     );
 
@@ -303,23 +177,17 @@ void main() {
     );
   });
 
-  test(
-    'SqliteException(2067) maps to StorageException(uniqueConstraint)',
-    () {
-      final mapped = toAppException(_sqliteException(2067)) as StorageException;
+  test('SqliteException(2067) maps to StorageException(uniqueConstraint)', () {
+    final mapped = toAppException(_sqliteException(2067)) as StorageException;
 
-      expect(mapped.kind, StorageErrorKind.uniqueConstraint);
-    },
-  );
+    expect(mapped.kind, StorageErrorKind.uniqueConstraint);
+  });
 
-  test(
-    'SqliteException(1555) maps to StorageException(uniqueConstraint)',
-    () {
-      final mapped = toAppException(_sqliteException(1555)) as StorageException;
+  test('SqliteException(1555) maps to StorageException(uniqueConstraint)', () {
+    final mapped = toAppException(_sqliteException(1555)) as StorageException;
 
-      expect(mapped.kind, StorageErrorKind.uniqueConstraint);
-    },
-  );
+    expect(mapped.kind, StorageErrorKind.uniqueConstraint);
+  });
 
   test('SqliteException(275) maps to StorageException(checkConstraint)', () {
     final mapped = toAppException(_sqliteException(275)) as StorageException;
@@ -339,59 +207,27 @@ void main() {
     expect(mapped.kind, StorageErrorKind.unknown);
   });
 
-  test(
-    'PlatformException maps to StorageException(prefsWriteFailed) [assertion 1/2]',
-    () {
-      final mapped = toAppException(PlatformException(code: 'X'));
-
-      expect(mapped, isA<StorageException>());
-      Object.hashAll([
-        (mapped as StorageException).kind,
+  test('PlatformException maps to StorageException(prefsWriteFailed)', () {
+    expect(
+      toAppException(PlatformException(code: 'X')),
+      isA<StorageException>().having(
+        (e) => e.kind,
+        'kind',
         StorageErrorKind.prefsWriteFailed,
-      ]);
-    },
-  );
+      ),
+    );
+  });
 
-  test(
-    'PlatformException maps to StorageException(prefsWriteFailed) [assertion 2/2]',
-    () {
-      final mapped = toAppException(PlatformException(code: 'X'));
-
-      Object.hashAll([mapped, isA<StorageException>()]);
-
-      expect(
-        (mapped as StorageException).kind,
+  test('MissingPluginException maps to StorageException(prefsWriteFailed)', () {
+    expect(
+      toAppException(MissingPluginException()),
+      isA<StorageException>().having(
+        (e) => e.kind,
+        'kind',
         StorageErrorKind.prefsWriteFailed,
-      );
-    },
-  );
-
-  test(
-    'MissingPluginException maps to StorageException(prefsWriteFailed) [assertion 1/2]',
-    () {
-      final mapped = toAppException(MissingPluginException());
-
-      expect(mapped, isA<StorageException>());
-      Object.hashAll([
-        (mapped as StorageException).kind,
-        StorageErrorKind.prefsWriteFailed,
-      ]);
-    },
-  );
-
-  test(
-    'MissingPluginException maps to StorageException(prefsWriteFailed) [assertion 2/2]',
-    () {
-      final mapped = toAppException(MissingPluginException());
-
-      Object.hashAll([mapped, isA<StorageException>()]);
-
-      expect(
-        (mapped as StorageException).kind,
-        StorageErrorKind.prefsWriteFailed,
-      );
-    },
-  );
+      ),
+    );
+  });
 
   test('Unrecognized Exception falls back to UnknownException', () {
     expect(toAppException(Exception('x')), isA<UnknownException>());

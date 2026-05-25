@@ -11,65 +11,101 @@ void main() {
     expect(errorKeyFor(const ServerException(statusCode: 503)), 'errServer');
   });
 
-  test('ApiException NOT_FOUND maps to errApiNotFound', () {
+  test('ApiException not-found type maps to errApiNotFound', () {
     expect(
       errorKeyFor(
         const ApiException(
           statusCode: 404,
-          code: 'NOT_FOUND',
-          message: '',
+          type:
+              'https://github.com/Corvus400/fictional-drug-and-disease-ref/problems/not-found',
+          title: 'Resource not found',
         ),
       ),
       'errApiNotFound',
     );
   });
 
-  test('ApiException BAD_REQUEST maps to errApiBadRequest', () {
+  test('ApiException validation type maps to errApiValidation', () {
+    expect(
+      errorKeyFor(
+        const ApiException(
+          statusCode: 422,
+          type:
+              'https://github.com/Corvus400/fictional-drug-and-disease-ref/problems/validation',
+          title: 'Validation failed',
+          errors: <FieldViolation>[
+            FieldViolation(field: 'therapeutic_category', reason: 'Unknown'),
+          ],
+        ),
+      ),
+      'errApiValidation',
+    );
+  });
+
+  test('ApiException conflict type maps to errApiConflict', () {
+    expect(
+      errorKeyFor(
+        const ApiException(
+          statusCode: 409,
+          type:
+              'https://github.com/Corvus400/fictional-drug-and-disease-ref/problems/conflict',
+          title: 'Conflict',
+        ),
+      ),
+      'errApiConflict',
+    );
+  });
+
+  test('ApiException unauthorized type maps to errApiUnauthorized', () {
+    expect(
+      errorKeyFor(
+        const ApiException(
+          statusCode: 401,
+          type:
+              'https://github.com/Corvus400/fictional-drug-and-disease-ref/problems/unauthorized',
+          title: 'Unauthorized',
+        ),
+      ),
+      'errApiUnauthorized',
+    );
+  });
+
+  test('ApiException forbidden type maps to errApiForbidden', () {
+    expect(
+      errorKeyFor(
+        const ApiException(
+          statusCode: 403,
+          type:
+              'https://github.com/Corvus400/fictional-drug-and-disease-ref/problems/forbidden',
+          title: 'Forbidden',
+        ),
+      ),
+      'errApiForbidden',
+    );
+  });
+
+  test('ApiException rate-limited type maps to errApiRateLimited', () {
+    expect(
+      errorKeyFor(
+        const ApiException(
+          statusCode: 429,
+          type:
+              'https://github.com/Corvus400/fictional-drug-and-disease-ref/problems/rate-limited',
+          title: 'Too Many Requests',
+        ),
+      ),
+      'errApiRateLimited',
+    );
+  });
+
+  test('ApiException other type maps to errApi4xx', () {
     expect(
       errorKeyFor(
         const ApiException(
           statusCode: 400,
-          code: 'BAD_REQUEST',
-          message: '',
+          type: 'about:blank',
+          title: '',
         ),
-      ),
-      'errApiBadRequest',
-    );
-  });
-
-  test('ApiException INVALID_* maps to errApiInvalidCategory', () {
-    expect(
-      errorKeyFor(
-        const ApiException(
-          statusCode: 400,
-          code: 'INVALID_THERAPEUTIC_CATEGORY',
-          message: '',
-        ),
-      ),
-      'errApiInvalidCategory',
-    );
-  });
-
-  test(
-    'ApiException INVALID_ONSET_PATTERN maps to business error key (T05)',
-    () {
-      expect(
-        errorKeyFor(
-          const ApiException(
-            statusCode: 400,
-            code: 'INVALID_ONSET_PATTERN',
-            message: '',
-          ),
-        ),
-        'errApiInvalidCategory',
-      );
-    },
-  );
-
-  test('ApiException other code maps to errApi4xx', () {
-    expect(
-      errorKeyFor(
-        const ApiException(statusCode: 400, code: 'UNKNOWN', message: ''),
       ),
       'errApi4xx',
     );

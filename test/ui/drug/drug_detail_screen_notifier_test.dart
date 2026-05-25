@@ -1576,8 +1576,11 @@ DioException _badResponse(int statusCode) {
       requestOptions: requestOptions,
       statusCode: statusCode,
       data: {
-        'code': 'NOT_FOUND',
-        'message': 'missing',
+        'type':
+            'https://github.com/Corvus400/fictional-drug-and-disease-ref/problems/not-found',
+        'title': 'Resource not found',
+        'status': 404,
+        'detail': 'missing',
       },
     ),
     type: DioExceptionType.badResponse,

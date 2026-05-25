@@ -258,22 +258,29 @@
       }
     }
   },
-  "searchErrorDiagnosticsCode": "Code: {code}",
-  "@searchErrorDiagnosticsCode": {
+  "searchErrorDiagnosticsProblemType": "Problem type: {type}",
+  "@searchErrorDiagnosticsProblemType": {
     "placeholders": {
-      "code": {}
+      "type": {}
     }
   },
-  "searchErrorDiagnosticsMessage": "Message: {message}",
-  "@searchErrorDiagnosticsMessage": {
+  "searchErrorDiagnosticsTitle": "Title: {title}",
+  "@searchErrorDiagnosticsTitle": {
     "placeholders": {
-      "message": {}
+      "title": {}
     }
   },
-  "searchErrorDiagnosticsDetails": "Details: {details}",
-  "@searchErrorDiagnosticsDetails": {
+  "searchErrorDiagnosticsDetail": "Detail: {detail}",
+  "@searchErrorDiagnosticsDetail": {
     "placeholders": {
-      "details": {}
+      "detail": {}
+    }
+  },
+  "searchErrorDiagnosticsField": "Field: {field} - {reason}",
+  "@searchErrorDiagnosticsField": {
+    "placeholders": {
+      "field": {},
+      "reason": {}
     }
   },
   "searchErrorDiagnosticsStorageKind": "Storage kind: {kind}",
@@ -547,8 +554,11 @@
     }
   },
   "errApiNotFound": "お探しの情報が見つかりませんでした",
-  "errApiBadRequest": "リクエストに不備があります",
-  "errApiInvalidCategory": "指定されたカテゴリが正しくありません",
+  "errApiValidation": "入力内容を確認してください",
+  "errApiConflict": "現在の状態では処理できません",
+  "errApiUnauthorized": "認証が必要です",
+  "errApiForbidden": "この操作は許可されていません",
+  "errApiRateLimited": "しばらく待ってから再試行してください",
   "errParse": "データを読み込めません",
   "errStorageUnique": "既に登録されています",
   "errStorageCheck": "値が許容範囲外です",

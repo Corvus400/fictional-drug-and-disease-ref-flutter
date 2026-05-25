@@ -36,7 +36,5 @@ final class ImageRepository {
 }
 
 bool _isNotFound(AppException error) {
-  return error is ApiException &&
-      error.statusCode == 404 &&
-      error.code == 'NOT_FOUND';
+  return error is ApiException && error.statusCode == 404;
 }

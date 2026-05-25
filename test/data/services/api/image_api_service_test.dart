@@ -95,11 +95,11 @@ void main() {
   });
 
   test(
-    'getDrugImage returns Err(ApiException NOT_FOUND) on 404 [assertion 1/3]',
+    'getDrugImage returns Err(ApiException not-found) on 404 [assertion 1/3]',
     () async {
       final adapter = _BytesAdapter(
         ResponseBody.fromString(
-          '{"code":"NOT_FOUND","message":"not found","disclaimer":"d"}',
+          '{"type":"https://github.com/Corvus400/fictional-drug-and-disease-ref/problems/not-found","title":"Resource not found","status":404,"detail":"Image not found"}',
           404,
           headers: {
             Headers.contentTypeHeader: [Headers.jsonContentType],
@@ -114,16 +114,19 @@ void main() {
       final error = (result as Err<Uint8List>).error;
       Object.hashAll([error, isA<ApiException>()]);
 
-      Object.hashAll([(error as ApiException).code, 'NOT_FOUND']);
+      Object.hashAll([
+        (error as ApiException).type,
+        'https://github.com/Corvus400/fictional-drug-and-disease-ref/problems/not-found',
+      ]);
     },
   );
 
   test(
-    'getDrugImage returns Err(ApiException NOT_FOUND) on 404 [assertion 2/3]',
+    'getDrugImage returns Err(ApiException not-found) on 404 [assertion 2/3]',
     () async {
       final adapter = _BytesAdapter(
         ResponseBody.fromString(
-          '{"code":"NOT_FOUND","message":"not found","disclaimer":"d"}',
+          '{"type":"https://github.com/Corvus400/fictional-drug-and-disease-ref/problems/not-found","title":"Resource not found","status":404,"detail":"Image not found"}',
           404,
           headers: {
             Headers.contentTypeHeader: [Headers.jsonContentType],
@@ -138,16 +141,19 @@ void main() {
 
       final error = (result as Err<Uint8List>).error;
       expect(error, isA<ApiException>());
-      Object.hashAll([(error as ApiException).code, 'NOT_FOUND']);
+      Object.hashAll([
+        (error as ApiException).type,
+        'https://github.com/Corvus400/fictional-drug-and-disease-ref/problems/not-found',
+      ]);
     },
   );
 
   test(
-    'getDrugImage returns Err(ApiException NOT_FOUND) on 404 [assertion 3/3]',
+    'getDrugImage returns Err(ApiException not-found) on 404 [assertion 3/3]',
     () async {
       final adapter = _BytesAdapter(
         ResponseBody.fromString(
-          '{"code":"NOT_FOUND","message":"not found","disclaimer":"d"}',
+          '{"type":"https://github.com/Corvus400/fictional-drug-and-disease-ref/problems/not-found","title":"Resource not found","status":404,"detail":"Image not found"}',
           404,
           headers: {
             Headers.contentTypeHeader: [Headers.jsonContentType],
@@ -163,7 +169,10 @@ void main() {
       final error = (result as Err<Uint8List>).error;
       Object.hashAll([error, isA<ApiException>()]);
 
-      expect((error as ApiException).code, 'NOT_FOUND');
+      expect(
+        (error as ApiException).type,
+        'https://github.com/Corvus400/fictional-drug-and-disease-ref/problems/not-found',
+      );
     },
   );
 

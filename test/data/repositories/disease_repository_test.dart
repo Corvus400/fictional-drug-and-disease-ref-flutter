@@ -15,6 +15,9 @@ import 'package:fictional_drug_and_disease_ref/domain/drug/drug_search_params.da
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
+const _notFoundType =
+    'https://github.com/Corvus400/fictional-drug-and-disease-ref/problems/not-found';
+
 void main() {
   group('DiseaseRepository', () {
     late _MockDiseaseApiClient apiClient;
@@ -270,8 +273,10 @@ void main() {
           _badResponse(
             404,
             data: {
-              'code': 'NOT_FOUND',
-              'message': 'Disease not found',
+              'type': _notFoundType,
+              'title': 'Resource not found',
+              'status': 404,
+              'detail': 'Disease not found',
             },
           ),
         );
@@ -282,7 +287,7 @@ void main() {
         final error = (result as Err<Disease>).error;
         Object.hashAll([error, isA<ApiException>()]);
 
-        Object.hashAll([(error as ApiException).code, 'NOT_FOUND']);
+        Object.hashAll([(error as ApiException).type, _notFoundType]);
 
         Object.hashAll([error.statusCode, 404]);
       },
@@ -295,8 +300,10 @@ void main() {
           _badResponse(
             404,
             data: {
-              'code': 'NOT_FOUND',
-              'message': 'Disease not found',
+              'type': _notFoundType,
+              'title': 'Resource not found',
+              'status': 404,
+              'detail': 'Disease not found',
             },
           ),
         );
@@ -307,7 +314,7 @@ void main() {
 
         final error = (result as Err<Disease>).error;
         expect(error, isA<ApiException>());
-        Object.hashAll([(error as ApiException).code, 'NOT_FOUND']);
+        Object.hashAll([(error as ApiException).type, _notFoundType]);
 
         Object.hashAll([error.statusCode, 404]);
       },
@@ -320,8 +327,10 @@ void main() {
           _badResponse(
             404,
             data: {
-              'code': 'NOT_FOUND',
-              'message': 'Disease not found',
+              'type': _notFoundType,
+              'title': 'Resource not found',
+              'status': 404,
+              'detail': 'Disease not found',
             },
           ),
         );
@@ -333,7 +342,7 @@ void main() {
         final error = (result as Err<Disease>).error;
         Object.hashAll([error, isA<ApiException>()]);
 
-        expect((error as ApiException).code, 'NOT_FOUND');
+        expect((error as ApiException).type, _notFoundType);
         Object.hashAll([error.statusCode, 404]);
       },
     );
@@ -345,8 +354,10 @@ void main() {
           _badResponse(
             404,
             data: {
-              'code': 'NOT_FOUND',
-              'message': 'Disease not found',
+              'type': _notFoundType,
+              'title': 'Resource not found',
+              'status': 404,
+              'detail': 'Disease not found',
             },
           ),
         );
@@ -358,7 +369,7 @@ void main() {
         final error = (result as Err<Disease>).error;
         Object.hashAll([error, isA<ApiException>()]);
 
-        Object.hashAll([(error as ApiException).code, 'NOT_FOUND']);
+        Object.hashAll([(error as ApiException).type, _notFoundType]);
 
         expect(error.statusCode, 404);
       },
