@@ -12,13 +12,31 @@ abstract class ErrorResponseDto with _$ErrorResponseDto {
   // ignore: invalid_annotation_target
   @JsonSerializable(checked: true)
   const factory ErrorResponseDto({
-    required String code,
-    required String message,
-    String? details,
-    String? disclaimer,
+    required String title,
+    required int status,
+    String? type,
+    String? detail,
+    String? instance,
+    List<FieldViolationDto>? errors,
   }) = _ErrorResponseDto;
 
   /// Creates an API error response payload from JSON.
   factory ErrorResponseDto.fromJson(Map<String, dynamic> json) =>
       _$ErrorResponseDtoFromJson(json);
+}
+
+/// RFC 9457 validation error extension payload.
+@freezed
+abstract class FieldViolationDto with _$FieldViolationDto {
+  /// Creates a field violation payload.
+  // ignore: invalid_annotation_target
+  @JsonSerializable(checked: true)
+  const factory FieldViolationDto({
+    required String field,
+    required String reason,
+  }) = _FieldViolationDto;
+
+  /// Creates a field violation payload from JSON.
+  factory FieldViolationDto.fromJson(Map<String, dynamic> json) =>
+      _$FieldViolationDtoFromJson(json);
 }

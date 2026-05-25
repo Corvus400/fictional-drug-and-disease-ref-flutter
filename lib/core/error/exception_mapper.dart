@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
@@ -73,15 +74,26 @@ ApiException _toApiException(
   Object? data, {
   required DioException cause,
 }) {
-  if (data is Map<String, dynamic>) {
+  final problem = _problemJsonFrom(data);
+  if (problem != null) {
     try {
-      final dto = ErrorResponseDto.fromJson(data);
+      final dto = ErrorResponseDto.fromJson(problem);
       return ApiException(
         statusCode: statusCode,
-        code: dto.code,
-        message: dto.message,
-        details: dto.details,
-        disclaimer: dto.disclaimer,
+        type: dto.type ?? 'about:blank',
+        title: dto.title,
+        detail: dto.detail,
+        instance: dto.instance,
+        errors:
+            dto.errors
+                ?.map(
+                  (error) => FieldViolation(
+                    field: error.field,
+                    reason: error.reason,
+                  ),
+                )
+                .toList(growable: false) ??
+            const <FieldViolation>[],
         cause: cause,
       );
     } on CheckedFromJsonException catch (_) {
@@ -93,10 +105,45 @@ ApiException _toApiException(
 
   return ApiException(
     statusCode: statusCode,
-    code: 'UNKNOWN',
-    message: '',
+    type: 'about:blank',
+    title: '',
     cause: cause,
   );
+}
+
+Map<String, dynamic>? _problemJsonFrom(Object? data) {
+  if (data is Map<String, dynamic>) {
+    return data;
+  }
+  if (data is Map) {
+    return data.map((key, value) => MapEntry(key.toString(), value));
+  }
+  if (data is Uint8List) {
+    return _decodeProblemJson(utf8.decode(data));
+  }
+  if (data is List<int>) {
+    return _decodeProblemJson(utf8.decode(data));
+  }
+  if (data is String) {
+    return _decodeProblemJson(data);
+  }
+  return null;
+}
+
+Map<String, dynamic>? _decodeProblemJson(String data) {
+  final Object? decoded;
+  try {
+    decoded = jsonDecode(data);
+  } on FormatException {
+    return null;
+  }
+  if (decoded is Map<String, dynamic>) {
+    return decoded;
+  }
+  if (decoded is Map) {
+    return decoded.map((key, value) => MapEntry(key.toString(), value));
+  }
+  return null;
 }
 
 StorageErrorKind _storageKindFor(SqliteException error) {

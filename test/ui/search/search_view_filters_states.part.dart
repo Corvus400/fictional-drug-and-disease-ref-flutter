@@ -1685,9 +1685,14 @@ void _searchViewFiltersStatesTests() {
             requestOptions: RequestOptions(path: '/v1/drugs'),
             statusCode: 422,
             data: const {
-              'code': 'INVALID',
-              'message': 'invalid keyword',
-              'details': 'keyword must be shorter',
+              'type':
+                  'https://github.com/Corvus400/fictional-drug-and-disease-ref/problems/validation',
+              'title': 'Validation failed',
+              'status': 422,
+              'detail': 'keyword must be shorter',
+              'errors': [
+                {'field': 'keyword', 'reason': 'invalid keyword'},
+              ],
             },
           ),
           type: DioExceptionType.badResponse,
@@ -1716,18 +1721,23 @@ void _searchViewFiltersStatesTests() {
       await tester.pumpAndSettle();
 
       expect(find.byIcon(Icons.warning_amber_rounded), findsOneWidget);
-      Object.hashAll([find.text('予期しないエラー'), findsOneWidget]);
+      Object.hashAll([find.text('条件に問題があります'), findsOneWidget]);
 
       Object.hashAll([find.text('Type: ApiException'), findsOneWidget]);
 
       Object.hashAll([find.text('Status: 422'), findsOneWidget]);
 
-      Object.hashAll([find.text('Code: INVALID'), findsOneWidget]);
+      Object.hashAll([
+        find.text(
+          'Problem type: https://github.com/Corvus400/fictional-drug-and-disease-ref/problems/validation',
+        ),
+        findsOneWidget,
+      ]);
 
-      Object.hashAll([find.text('Message: invalid keyword'), findsOneWidget]);
+      Object.hashAll([find.text('Title: Validation failed'), findsOneWidget]);
 
       Object.hashAll([
-        find.text('Details: keyword must be shorter'),
+        find.text('Detail: keyword must be shorter'),
         findsOneWidget,
       ]);
     },
@@ -1751,9 +1761,14 @@ void _searchViewFiltersStatesTests() {
             requestOptions: RequestOptions(path: '/v1/drugs'),
             statusCode: 422,
             data: const {
-              'code': 'INVALID',
-              'message': 'invalid keyword',
-              'details': 'keyword must be shorter',
+              'type':
+                  'https://github.com/Corvus400/fictional-drug-and-disease-ref/problems/validation',
+              'title': 'Validation failed',
+              'status': 422,
+              'detail': 'keyword must be shorter',
+              'errors': [
+                {'field': 'keyword', 'reason': 'invalid keyword'},
+              ],
             },
           ),
           type: DioExceptionType.badResponse,
@@ -1786,17 +1801,22 @@ void _searchViewFiltersStatesTests() {
         findsOneWidget,
       ]);
 
-      expect(find.text('予期しないエラー'), findsOneWidget);
+      expect(find.text('条件に問題があります'), findsOneWidget);
       Object.hashAll([find.text('Type: ApiException'), findsOneWidget]);
 
       Object.hashAll([find.text('Status: 422'), findsOneWidget]);
 
-      Object.hashAll([find.text('Code: INVALID'), findsOneWidget]);
+      Object.hashAll([
+        find.text(
+          'Problem type: https://github.com/Corvus400/fictional-drug-and-disease-ref/problems/validation',
+        ),
+        findsOneWidget,
+      ]);
 
-      Object.hashAll([find.text('Message: invalid keyword'), findsOneWidget]);
+      Object.hashAll([find.text('Title: Validation failed'), findsOneWidget]);
 
       Object.hashAll([
-        find.text('Details: keyword must be shorter'),
+        find.text('Detail: keyword must be shorter'),
         findsOneWidget,
       ]);
     },
@@ -1820,9 +1840,14 @@ void _searchViewFiltersStatesTests() {
             requestOptions: RequestOptions(path: '/v1/drugs'),
             statusCode: 422,
             data: const {
-              'code': 'INVALID',
-              'message': 'invalid keyword',
-              'details': 'keyword must be shorter',
+              'type':
+                  'https://github.com/Corvus400/fictional-drug-and-disease-ref/problems/validation',
+              'title': 'Validation failed',
+              'status': 422,
+              'detail': 'keyword must be shorter',
+              'errors': [
+                {'field': 'keyword', 'reason': 'invalid keyword'},
+              ],
             },
           ),
           type: DioExceptionType.badResponse,
@@ -1855,17 +1880,22 @@ void _searchViewFiltersStatesTests() {
         findsOneWidget,
       ]);
 
-      Object.hashAll([find.text('予期しないエラー'), findsOneWidget]);
+      Object.hashAll([find.text('条件に問題があります'), findsOneWidget]);
 
       expect(find.text('Type: ApiException'), findsOneWidget);
       Object.hashAll([find.text('Status: 422'), findsOneWidget]);
 
-      Object.hashAll([find.text('Code: INVALID'), findsOneWidget]);
+      Object.hashAll([
+        find.text(
+          'Problem type: https://github.com/Corvus400/fictional-drug-and-disease-ref/problems/validation',
+        ),
+        findsOneWidget,
+      ]);
 
-      Object.hashAll([find.text('Message: invalid keyword'), findsOneWidget]);
+      Object.hashAll([find.text('Title: Validation failed'), findsOneWidget]);
 
       Object.hashAll([
-        find.text('Details: keyword must be shorter'),
+        find.text('Detail: keyword must be shorter'),
         findsOneWidget,
       ]);
     },
@@ -1889,9 +1919,14 @@ void _searchViewFiltersStatesTests() {
             requestOptions: RequestOptions(path: '/v1/drugs'),
             statusCode: 422,
             data: const {
-              'code': 'INVALID',
-              'message': 'invalid keyword',
-              'details': 'keyword must be shorter',
+              'type':
+                  'https://github.com/Corvus400/fictional-drug-and-disease-ref/problems/validation',
+              'title': 'Validation failed',
+              'status': 422,
+              'detail': 'keyword must be shorter',
+              'errors': [
+                {'field': 'keyword', 'reason': 'invalid keyword'},
+              ],
             },
           ),
           type: DioExceptionType.badResponse,
@@ -1924,17 +1959,22 @@ void _searchViewFiltersStatesTests() {
         findsOneWidget,
       ]);
 
-      Object.hashAll([find.text('予期しないエラー'), findsOneWidget]);
+      Object.hashAll([find.text('条件に問題があります'), findsOneWidget]);
 
       Object.hashAll([find.text('Type: ApiException'), findsOneWidget]);
 
       expect(find.text('Status: 422'), findsOneWidget);
-      Object.hashAll([find.text('Code: INVALID'), findsOneWidget]);
+      Object.hashAll([
+        find.text(
+          'Problem type: https://github.com/Corvus400/fictional-drug-and-disease-ref/problems/validation',
+        ),
+        findsOneWidget,
+      ]);
 
-      Object.hashAll([find.text('Message: invalid keyword'), findsOneWidget]);
+      Object.hashAll([find.text('Title: Validation failed'), findsOneWidget]);
 
       Object.hashAll([
-        find.text('Details: keyword must be shorter'),
+        find.text('Detail: keyword must be shorter'),
         findsOneWidget,
       ]);
     },
@@ -1958,9 +1998,14 @@ void _searchViewFiltersStatesTests() {
             requestOptions: RequestOptions(path: '/v1/drugs'),
             statusCode: 422,
             data: const {
-              'code': 'INVALID',
-              'message': 'invalid keyword',
-              'details': 'keyword must be shorter',
+              'type':
+                  'https://github.com/Corvus400/fictional-drug-and-disease-ref/problems/validation',
+              'title': 'Validation failed',
+              'status': 422,
+              'detail': 'keyword must be shorter',
+              'errors': [
+                {'field': 'keyword', 'reason': 'invalid keyword'},
+              ],
             },
           ),
           type: DioExceptionType.badResponse,
@@ -1993,17 +2038,22 @@ void _searchViewFiltersStatesTests() {
         findsOneWidget,
       ]);
 
-      Object.hashAll([find.text('予期しないエラー'), findsOneWidget]);
+      Object.hashAll([find.text('条件に問題があります'), findsOneWidget]);
 
       Object.hashAll([find.text('Type: ApiException'), findsOneWidget]);
 
       Object.hashAll([find.text('Status: 422'), findsOneWidget]);
 
-      expect(find.text('Code: INVALID'), findsOneWidget);
-      Object.hashAll([find.text('Message: invalid keyword'), findsOneWidget]);
+      expect(
+        find.text(
+          'Problem type: https://github.com/Corvus400/fictional-drug-and-disease-ref/problems/validation',
+        ),
+        findsOneWidget,
+      );
+      Object.hashAll([find.text('Title: Validation failed'), findsOneWidget]);
 
       Object.hashAll([
-        find.text('Details: keyword must be shorter'),
+        find.text('Detail: keyword must be shorter'),
         findsOneWidget,
       ]);
     },
@@ -2027,9 +2077,14 @@ void _searchViewFiltersStatesTests() {
             requestOptions: RequestOptions(path: '/v1/drugs'),
             statusCode: 422,
             data: const {
-              'code': 'INVALID',
-              'message': 'invalid keyword',
-              'details': 'keyword must be shorter',
+              'type':
+                  'https://github.com/Corvus400/fictional-drug-and-disease-ref/problems/validation',
+              'title': 'Validation failed',
+              'status': 422,
+              'detail': 'keyword must be shorter',
+              'errors': [
+                {'field': 'keyword', 'reason': 'invalid keyword'},
+              ],
             },
           ),
           type: DioExceptionType.badResponse,
@@ -2062,17 +2117,22 @@ void _searchViewFiltersStatesTests() {
         findsOneWidget,
       ]);
 
-      Object.hashAll([find.text('予期しないエラー'), findsOneWidget]);
+      Object.hashAll([find.text('条件に問題があります'), findsOneWidget]);
 
       Object.hashAll([find.text('Type: ApiException'), findsOneWidget]);
 
       Object.hashAll([find.text('Status: 422'), findsOneWidget]);
 
-      Object.hashAll([find.text('Code: INVALID'), findsOneWidget]);
-
-      expect(find.text('Message: invalid keyword'), findsOneWidget);
       Object.hashAll([
-        find.text('Details: keyword must be shorter'),
+        find.text(
+          'Problem type: https://github.com/Corvus400/fictional-drug-and-disease-ref/problems/validation',
+        ),
+        findsOneWidget,
+      ]);
+
+      expect(find.text('Title: Validation failed'), findsOneWidget);
+      Object.hashAll([
+        find.text('Detail: keyword must be shorter'),
         findsOneWidget,
       ]);
     },
@@ -2096,9 +2156,14 @@ void _searchViewFiltersStatesTests() {
             requestOptions: RequestOptions(path: '/v1/drugs'),
             statusCode: 422,
             data: const {
-              'code': 'INVALID',
-              'message': 'invalid keyword',
-              'details': 'keyword must be shorter',
+              'type':
+                  'https://github.com/Corvus400/fictional-drug-and-disease-ref/problems/validation',
+              'title': 'Validation failed',
+              'status': 422,
+              'detail': 'keyword must be shorter',
+              'errors': [
+                {'field': 'keyword', 'reason': 'invalid keyword'},
+              ],
             },
           ),
           type: DioExceptionType.badResponse,
@@ -2131,17 +2196,22 @@ void _searchViewFiltersStatesTests() {
         findsOneWidget,
       ]);
 
-      Object.hashAll([find.text('予期しないエラー'), findsOneWidget]);
+      Object.hashAll([find.text('条件に問題があります'), findsOneWidget]);
 
       Object.hashAll([find.text('Type: ApiException'), findsOneWidget]);
 
       Object.hashAll([find.text('Status: 422'), findsOneWidget]);
 
-      Object.hashAll([find.text('Code: INVALID'), findsOneWidget]);
+      Object.hashAll([
+        find.text(
+          'Problem type: https://github.com/Corvus400/fictional-drug-and-disease-ref/problems/validation',
+        ),
+        findsOneWidget,
+      ]);
 
-      Object.hashAll([find.text('Message: invalid keyword'), findsOneWidget]);
+      Object.hashAll([find.text('Title: Validation failed'), findsOneWidget]);
 
-      expect(find.text('Details: keyword must be shorter'), findsOneWidget);
+      expect(find.text('Detail: keyword must be shorter'), findsOneWidget);
     },
   );
 
@@ -2161,10 +2231,16 @@ void _searchViewFiltersStatesTests() {
         requestOptions: RequestOptions(path: '/v1/drugs'),
         response: Response<Map<String, dynamic>>(
           requestOptions: RequestOptions(path: '/v1/drugs'),
-          statusCode: 400,
+          statusCode: 422,
           data: const {
-            'code': 'INVALID_ONSET_PATTERN',
-            'message': 'invalid onset pattern',
+            'type':
+                'https://github.com/Corvus400/fictional-drug-and-disease-ref/problems/validation',
+            'title': 'Validation failed',
+            'status': 422,
+            'detail': 'invalid onset pattern',
+            'errors': [
+              {'field': 'onset_pattern', 'reason': 'invalid onset pattern'},
+            ],
           },
         ),
         type: DioExceptionType.badResponse,
@@ -2199,7 +2275,12 @@ void _searchViewFiltersStatesTests() {
 
     Object.hashAll([find.text('Type: ApiException'), findsOneWidget]);
 
-    Object.hashAll([find.text('Code: INVALID_ONSET_PATTERN'), findsOneWidget]);
+    Object.hashAll([
+      find.text(
+        'Problem type: https://github.com/Corvus400/fictional-drug-and-disease-ref/problems/validation',
+      ),
+      findsOneWidget,
+    ]);
   });
 
   testWidgets('business_error_shows_business_text_(T05) [assertion 2/5]', (
@@ -2218,10 +2299,16 @@ void _searchViewFiltersStatesTests() {
         requestOptions: RequestOptions(path: '/v1/drugs'),
         response: Response<Map<String, dynamic>>(
           requestOptions: RequestOptions(path: '/v1/drugs'),
-          statusCode: 400,
+          statusCode: 422,
           data: const {
-            'code': 'INVALID_ONSET_PATTERN',
-            'message': 'invalid onset pattern',
+            'type':
+                'https://github.com/Corvus400/fictional-drug-and-disease-ref/problems/validation',
+            'title': 'Validation failed',
+            'status': 422,
+            'detail': 'invalid onset pattern',
+            'errors': [
+              {'field': 'onset_pattern', 'reason': 'invalid onset pattern'},
+            ],
           },
         ),
         type: DioExceptionType.badResponse,
@@ -2256,7 +2343,12 @@ void _searchViewFiltersStatesTests() {
 
     Object.hashAll([find.text('Type: ApiException'), findsOneWidget]);
 
-    Object.hashAll([find.text('Code: INVALID_ONSET_PATTERN'), findsOneWidget]);
+    Object.hashAll([
+      find.text(
+        'Problem type: https://github.com/Corvus400/fictional-drug-and-disease-ref/problems/validation',
+      ),
+      findsOneWidget,
+    ]);
   });
 
   testWidgets('business_error_shows_business_text_(T05) [assertion 3/5]', (
@@ -2275,10 +2367,16 @@ void _searchViewFiltersStatesTests() {
         requestOptions: RequestOptions(path: '/v1/drugs'),
         response: Response<Map<String, dynamic>>(
           requestOptions: RequestOptions(path: '/v1/drugs'),
-          statusCode: 400,
+          statusCode: 422,
           data: const {
-            'code': 'INVALID_ONSET_PATTERN',
-            'message': 'invalid onset pattern',
+            'type':
+                'https://github.com/Corvus400/fictional-drug-and-disease-ref/problems/validation',
+            'title': 'Validation failed',
+            'status': 422,
+            'detail': 'invalid onset pattern',
+            'errors': [
+              {'field': 'onset_pattern', 'reason': 'invalid onset pattern'},
+            ],
           },
         ),
         type: DioExceptionType.badResponse,
@@ -2313,7 +2411,12 @@ void _searchViewFiltersStatesTests() {
     expect(find.text('指定された条件をご確認ください。'), findsOneWidget);
     Object.hashAll([find.text('Type: ApiException'), findsOneWidget]);
 
-    Object.hashAll([find.text('Code: INVALID_ONSET_PATTERN'), findsOneWidget]);
+    Object.hashAll([
+      find.text(
+        'Problem type: https://github.com/Corvus400/fictional-drug-and-disease-ref/problems/validation',
+      ),
+      findsOneWidget,
+    ]);
   });
 
   testWidgets('business_error_shows_business_text_(T05) [assertion 4/5]', (
@@ -2332,10 +2435,16 @@ void _searchViewFiltersStatesTests() {
         requestOptions: RequestOptions(path: '/v1/drugs'),
         response: Response<Map<String, dynamic>>(
           requestOptions: RequestOptions(path: '/v1/drugs'),
-          statusCode: 400,
+          statusCode: 422,
           data: const {
-            'code': 'INVALID_ONSET_PATTERN',
-            'message': 'invalid onset pattern',
+            'type':
+                'https://github.com/Corvus400/fictional-drug-and-disease-ref/problems/validation',
+            'title': 'Validation failed',
+            'status': 422,
+            'detail': 'invalid onset pattern',
+            'errors': [
+              {'field': 'onset_pattern', 'reason': 'invalid onset pattern'},
+            ],
           },
         ),
         type: DioExceptionType.badResponse,
@@ -2370,7 +2479,12 @@ void _searchViewFiltersStatesTests() {
     Object.hashAll([find.text('指定された条件をご確認ください。'), findsOneWidget]);
 
     expect(find.text('Type: ApiException'), findsOneWidget);
-    Object.hashAll([find.text('Code: INVALID_ONSET_PATTERN'), findsOneWidget]);
+    Object.hashAll([
+      find.text(
+        'Problem type: https://github.com/Corvus400/fictional-drug-and-disease-ref/problems/validation',
+      ),
+      findsOneWidget,
+    ]);
   });
 
   testWidgets('business_error_shows_business_text_(T05) [assertion 5/5]', (
@@ -2389,10 +2503,16 @@ void _searchViewFiltersStatesTests() {
         requestOptions: RequestOptions(path: '/v1/drugs'),
         response: Response<Map<String, dynamic>>(
           requestOptions: RequestOptions(path: '/v1/drugs'),
-          statusCode: 400,
+          statusCode: 422,
           data: const {
-            'code': 'INVALID_ONSET_PATTERN',
-            'message': 'invalid onset pattern',
+            'type':
+                'https://github.com/Corvus400/fictional-drug-and-disease-ref/problems/validation',
+            'title': 'Validation failed',
+            'status': 422,
+            'detail': 'invalid onset pattern',
+            'errors': [
+              {'field': 'onset_pattern', 'reason': 'invalid onset pattern'},
+            ],
           },
         ),
         type: DioExceptionType.badResponse,
@@ -2428,7 +2548,12 @@ void _searchViewFiltersStatesTests() {
 
     Object.hashAll([find.text('Type: ApiException'), findsOneWidget]);
 
-    expect(find.text('Code: INVALID_ONSET_PATTERN'), findsOneWidget);
+    expect(
+      find.text(
+        'Problem type: https://github.com/Corvus400/fictional-drug-and-disease-ref/problems/validation',
+      ),
+      findsOneWidget,
+    );
   });
 
   testWidgets(

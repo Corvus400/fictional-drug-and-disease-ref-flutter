@@ -724,23 +724,29 @@ abstract class AppLocalizations {
   /// **'Status: {statusCode}'**
   String searchErrorDiagnosticsStatus(int statusCode);
 
-  /// No description provided for @searchErrorDiagnosticsCode.
+  /// No description provided for @searchErrorDiagnosticsProblemType.
   ///
   /// In ja, this message translates to:
-  /// **'Code: {code}'**
-  String searchErrorDiagnosticsCode(Object code);
+  /// **'Problem type: {type}'**
+  String searchErrorDiagnosticsProblemType(Object type);
 
-  /// No description provided for @searchErrorDiagnosticsMessage.
+  /// No description provided for @searchErrorDiagnosticsTitle.
   ///
   /// In ja, this message translates to:
-  /// **'Message: {message}'**
-  String searchErrorDiagnosticsMessage(Object message);
+  /// **'Title: {title}'**
+  String searchErrorDiagnosticsTitle(Object title);
 
-  /// No description provided for @searchErrorDiagnosticsDetails.
+  /// No description provided for @searchErrorDiagnosticsDetail.
   ///
   /// In ja, this message translates to:
-  /// **'Details: {details}'**
-  String searchErrorDiagnosticsDetails(Object details);
+  /// **'Detail: {detail}'**
+  String searchErrorDiagnosticsDetail(Object detail);
+
+  /// No description provided for @searchErrorDiagnosticsField.
+  ///
+  /// In ja, this message translates to:
+  /// **'Field: {field} - {reason}'**
+  String searchErrorDiagnosticsField(Object field, Object reason);
 
   /// No description provided for @searchErrorDiagnosticsStorageKind.
   ///
@@ -1708,17 +1714,35 @@ abstract class AppLocalizations {
   /// **'お探しの情報が見つかりませんでした'**
   String get errApiNotFound;
 
-  /// No description provided for @errApiBadRequest.
+  /// No description provided for @errApiValidation.
   ///
   /// In ja, this message translates to:
-  /// **'リクエストに不備があります'**
-  String get errApiBadRequest;
+  /// **'入力内容を確認してください'**
+  String get errApiValidation;
 
-  /// No description provided for @errApiInvalidCategory.
+  /// No description provided for @errApiConflict.
   ///
   /// In ja, this message translates to:
-  /// **'指定されたカテゴリが正しくありません'**
-  String get errApiInvalidCategory;
+  /// **'現在の状態では処理できません'**
+  String get errApiConflict;
+
+  /// No description provided for @errApiUnauthorized.
+  ///
+  /// In ja, this message translates to:
+  /// **'認証が必要です'**
+  String get errApiUnauthorized;
+
+  /// No description provided for @errApiForbidden.
+  ///
+  /// In ja, this message translates to:
+  /// **'この操作は許可されていません'**
+  String get errApiForbidden;
+
+  /// No description provided for @errApiRateLimited.
+  ///
+  /// In ja, this message translates to:
+  /// **'しばらく待ってから再試行してください'**
+  String get errApiRateLimited;
 
   /// No description provided for @errParse.
   ///

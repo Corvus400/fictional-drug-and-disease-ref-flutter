@@ -211,13 +211,18 @@ String _detailErrorMessage(AppLocalizations l10n, AppException error) {
     'errNetwork' => l10n.errNetwork,
     'errServer' => l10n.errServer,
     'errApiNotFound' => l10n.errApiNotFound,
-    'errApiBadRequest' => l10n.errApiBadRequest,
-    'errApiInvalidCategory' => l10n.errApiInvalidCategory,
+    'errApiValidation' => l10n.errApiValidation,
+    'errApiConflict' => l10n.errApiConflict,
+    'errApiUnauthorized' => l10n.errApiUnauthorized,
+    'errApiForbidden' => l10n.errApiForbidden,
+    'errApiRateLimited' => l10n.errApiRateLimited,
     'errParse' => l10n.errParse,
     'errStorageUnique' => l10n.errStorageUnique,
     'errStorageCheck' => l10n.errStorageCheck,
     'errStorageGeneric' => l10n.errStorageGeneric,
-    'errApi4xx' => l10n.errApi4xx(error is ApiException ? error.message : ''),
+    'errApi4xx' => l10n.errApi4xx(
+      error is ApiException ? error.detail ?? error.title : '',
+    ),
     _ => l10n.errUnknown,
   };
 }

@@ -368,18 +368,23 @@ class AppLocalizationsJa extends AppLocalizations {
   }
 
   @override
-  String searchErrorDiagnosticsCode(Object code) {
-    return 'Code: $code';
+  String searchErrorDiagnosticsProblemType(Object type) {
+    return 'Problem type: $type';
   }
 
   @override
-  String searchErrorDiagnosticsMessage(Object message) {
-    return 'Message: $message';
+  String searchErrorDiagnosticsTitle(Object title) {
+    return 'Title: $title';
   }
 
   @override
-  String searchErrorDiagnosticsDetails(Object details) {
-    return 'Details: $details';
+  String searchErrorDiagnosticsDetail(Object detail) {
+    return 'Detail: $detail';
+  }
+
+  @override
+  String searchErrorDiagnosticsField(Object field, Object reason) {
+    return 'Field: $field - $reason';
   }
 
   @override
@@ -900,10 +905,19 @@ class AppLocalizationsJa extends AppLocalizations {
   String get errApiNotFound => 'お探しの情報が見つかりませんでした';
 
   @override
-  String get errApiBadRequest => 'リクエストに不備があります';
+  String get errApiValidation => '入力内容を確認してください';
 
   @override
-  String get errApiInvalidCategory => '指定されたカテゴリが正しくありません';
+  String get errApiConflict => '現在の状態では処理できません';
+
+  @override
+  String get errApiUnauthorized => '認証が必要です';
+
+  @override
+  String get errApiForbidden => 'この操作は許可されていません';
+
+  @override
+  String get errApiRateLimited => 'しばらく待ってから再試行してください';
 
   @override
   String get errParse => 'データを読み込めません';

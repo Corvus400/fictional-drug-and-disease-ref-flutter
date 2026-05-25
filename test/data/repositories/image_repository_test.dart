@@ -7,6 +7,9 @@ import 'package:fictional_drug_and_disease_ref/data/services/api/image_api_servi
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
+const _notFoundType =
+    'https://github.com/Corvus400/fictional-drug-and-disease-ref/problems/not-found';
+
 void main() {
   group('ImageRepository', () {
     late _MockImageApiService service;
@@ -77,8 +80,8 @@ void main() {
           (_) async => const Result.error(
             ApiException(
               statusCode: 404,
-              code: 'NOT_FOUND',
-              message: 'missing',
+              type: _notFoundType,
+              title: 'Resource not found',
             ),
           ),
         );
@@ -111,8 +114,8 @@ void main() {
           (_) async => const Result.error(
             ApiException(
               statusCode: 404,
-              code: 'NOT_FOUND',
-              message: 'missing',
+              type: _notFoundType,
+              title: 'Resource not found',
             ),
           ),
         );
@@ -140,8 +143,8 @@ void main() {
       () async {
         const notFound = ApiException(
           statusCode: 404,
-          code: 'NOT_FOUND',
-          message: 'missing',
+          type: _notFoundType,
+          title: 'Resource not found',
         );
         when(
           () => service.getDrugImage('drug_001', size: any(named: 'size')),
@@ -159,7 +162,7 @@ void main() {
         final error = (result as Err<Uint8List>).error;
         Object.hashAll([error, isA<ApiException>()]);
 
-        Object.hashAll([(error as ApiException).code, 'NOT_FOUND']);
+        Object.hashAll([(error as ApiException).type, _notFoundType]);
 
         verify(
           () => service.getDosageFormImage('tablet', size: any(named: 'size')),
@@ -172,8 +175,8 @@ void main() {
       () async {
         const notFound = ApiException(
           statusCode: 404,
-          code: 'NOT_FOUND',
-          message: 'missing',
+          type: _notFoundType,
+          title: 'Resource not found',
         );
         when(
           () => service.getDrugImage('drug_001', size: any(named: 'size')),
@@ -191,7 +194,7 @@ void main() {
 
         final error = (result as Err<Uint8List>).error;
         expect(error, isA<ApiException>());
-        Object.hashAll([(error as ApiException).code, 'NOT_FOUND']);
+        Object.hashAll([(error as ApiException).type, _notFoundType]);
 
         verify(
           () => service.getDosageFormImage('tablet', size: any(named: 'size')),
@@ -204,8 +207,8 @@ void main() {
       () async {
         const notFound = ApiException(
           statusCode: 404,
-          code: 'NOT_FOUND',
-          message: 'missing',
+          type: _notFoundType,
+          title: 'Resource not found',
         );
         when(
           () => service.getDrugImage('drug_001', size: any(named: 'size')),
@@ -224,7 +227,7 @@ void main() {
         final error = (result as Err<Uint8List>).error;
         Object.hashAll([error, isA<ApiException>()]);
 
-        expect((error as ApiException).code, 'NOT_FOUND');
+        expect((error as ApiException).type, _notFoundType);
         verify(
           () => service.getDosageFormImage('tablet', size: any(named: 'size')),
         ).called(1);

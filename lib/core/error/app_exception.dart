@@ -34,10 +34,11 @@ final class ApiException extends AppException {
   /// Creates an API exception.
   const ApiException({
     required this.statusCode,
-    required this.code,
-    required this.message,
-    this.details,
-    this.disclaimer,
+    required this.type,
+    required this.title,
+    this.detail,
+    this.instance,
+    this.errors = const <FieldViolation>[],
     super.cause,
     super.stackTrace,
   });
@@ -45,17 +46,32 @@ final class ApiException extends AppException {
   /// HTTP status code.
   final int statusCode;
 
-  /// API error code.
-  final String code;
+  /// RFC 9457 problem type URI.
+  final String type;
 
-  /// API error message.
-  final String message;
+  /// RFC 9457 problem title.
+  final String title;
 
-  /// Optional error detail.
-  final String? details;
+  /// Optional RFC 9457 problem detail.
+  final String? detail;
 
-  /// Optional API disclaimer.
-  final String? disclaimer;
+  /// Optional RFC 9457 problem instance URI.
+  final String? instance;
+
+  /// Optional validation errors extension.
+  final List<FieldViolation> errors;
+}
+
+/// RFC 9457 validation error extension payload.
+final class FieldViolation {
+  /// Creates a field violation.
+  const FieldViolation({required this.field, required this.reason});
+
+  /// Field that failed validation.
+  final String field;
+
+  /// Validation failure reason.
+  final String reason;
 }
 
 /// Response parsing failure.

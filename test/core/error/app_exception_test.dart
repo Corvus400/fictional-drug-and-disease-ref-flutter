@@ -2,115 +2,54 @@ import 'package:fictional_drug_and_disease_ref/core/error/app_exception.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  test('ServerException carries statusCode [assertion 1/2]', () {
+  test('ServerException carries statusCode', () {
     const e = ServerException(statusCode: 503);
 
-    expect(e, isA<AppException>());
-    Object.hashAll([e.statusCode, 503]);
+    expect(
+      e,
+      isA<ServerException>().having((e) => e.statusCode, 'statusCode', 503),
+    );
   });
 
-  test('ServerException carries statusCode [assertion 2/2]', () {
-    const e = ServerException(statusCode: 503);
-
-    Object.hashAll([e, isA<AppException>()]);
-
-    expect(e.statusCode, 503);
-  });
-
-  test('ApiException carries all fields [assertion 1/5]', () {
+  test('ApiException carries RFC 9457 fields', () {
     const e = ApiException(
-      statusCode: 404,
-      code: 'NOT_FOUND',
-      message: 'not found',
-      details: 'detail',
-      disclaimer: 'disc',
+      statusCode: 422,
+      type:
+          'https://github.com/Corvus400/fictional-drug-and-disease-ref/problems/validation',
+      title: 'Validation failed',
+      detail: 'Invalid query parameter',
+      instance: '/v1/drugs?therapeutic_category=BOGUS',
+      errors: <FieldViolation>[
+        FieldViolation(
+          field: 'therapeutic_category',
+          reason: 'Unknown therapeutic_category: BOGUS',
+        ),
+      ],
     );
 
-    expect(e.statusCode, 404);
-    Object.hashAll([e.code, 'NOT_FOUND']);
-
-    Object.hashAll([e.message, 'not found']);
-
-    Object.hashAll([e.details, 'detail']);
-
-    Object.hashAll([e.disclaimer, 'disc']);
-  });
-
-  test('ApiException carries all fields [assertion 2/5]', () {
-    const e = ApiException(
-      statusCode: 404,
-      code: 'NOT_FOUND',
-      message: 'not found',
-      details: 'detail',
-      disclaimer: 'disc',
+    expect(
+      e,
+      isA<ApiException>()
+          .having((e) => e.statusCode, 'statusCode', 422)
+          .having((e) => e.type, 'type', endsWith('/validation'))
+          .having((e) => e.title, 'title', 'Validation failed')
+          .having((e) => e.detail, 'detail', 'Invalid query parameter')
+          .having(
+            (e) => e.instance,
+            'instance',
+            '/v1/drugs?therapeutic_category=BOGUS',
+          )
+          .having(
+            (e) => e.errors.single.field,
+            'error field',
+            'therapeutic_category',
+          )
+          .having(
+            (e) => e.errors.single.reason,
+            'error reason',
+            'Unknown therapeutic_category: BOGUS',
+          ),
     );
-
-    Object.hashAll([e.statusCode, 404]);
-
-    expect(e.code, 'NOT_FOUND');
-    Object.hashAll([e.message, 'not found']);
-
-    Object.hashAll([e.details, 'detail']);
-
-    Object.hashAll([e.disclaimer, 'disc']);
-  });
-
-  test('ApiException carries all fields [assertion 3/5]', () {
-    const e = ApiException(
-      statusCode: 404,
-      code: 'NOT_FOUND',
-      message: 'not found',
-      details: 'detail',
-      disclaimer: 'disc',
-    );
-
-    Object.hashAll([e.statusCode, 404]);
-
-    Object.hashAll([e.code, 'NOT_FOUND']);
-
-    expect(e.message, 'not found');
-    Object.hashAll([e.details, 'detail']);
-
-    Object.hashAll([e.disclaimer, 'disc']);
-  });
-
-  test('ApiException carries all fields [assertion 4/5]', () {
-    const e = ApiException(
-      statusCode: 404,
-      code: 'NOT_FOUND',
-      message: 'not found',
-      details: 'detail',
-      disclaimer: 'disc',
-    );
-
-    Object.hashAll([e.statusCode, 404]);
-
-    Object.hashAll([e.code, 'NOT_FOUND']);
-
-    Object.hashAll([e.message, 'not found']);
-
-    expect(e.details, 'detail');
-    Object.hashAll([e.disclaimer, 'disc']);
-  });
-
-  test('ApiException carries all fields [assertion 5/5]', () {
-    const e = ApiException(
-      statusCode: 404,
-      code: 'NOT_FOUND',
-      message: 'not found',
-      details: 'detail',
-      disclaimer: 'disc',
-    );
-
-    Object.hashAll([e.statusCode, 404]);
-
-    Object.hashAll([e.code, 'NOT_FOUND']);
-
-    Object.hashAll([e.message, 'not found']);
-
-    Object.hashAll([e.details, 'detail']);
-
-    expect(e.disclaimer, 'disc');
   });
 
   test('ParseException is an AppException', () {

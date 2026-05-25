@@ -481,8 +481,8 @@ _SearchErrorCategory _searchErrorCategory(AppException error) {
     'errNetwork' => _SearchErrorCategory.network,
     'errServer' => _SearchErrorCategory.server,
     'errApiNotFound' ||
-    'errApiBadRequest' ||
-    'errApiInvalidCategory' => _SearchErrorCategory.business,
+    'errApiValidation' ||
+    'errApiConflict' => _SearchErrorCategory.business,
     'errParse' => _SearchErrorCategory.parse,
     'errStorageUnique' ||
     'errStorageCheck' ||
@@ -493,7 +493,8 @@ _SearchErrorCategory _searchErrorCategory(AppException error) {
 
 String _errorMessage(AppException error) {
   return switch (error) {
-    ApiException(:final message) when message.isNotEmpty => message,
+    ApiException(:final detail?) when detail.isNotEmpty => detail,
+    ApiException(:final title) when title.isNotEmpty => title,
     ServerException(:final statusCode) => 'HTTP $statusCode',
     StorageException(:final kind) => kind.name,
     _ => error.toString(),
@@ -521,16 +522,19 @@ List<String> _diagnosticLines(AppLocalizations l10n, AppException error) {
     ],
     ApiException(
       :final statusCode,
-      :final code,
-      :final message,
-      :final details,
+      :final type,
+      :final title,
+      :final detail,
+      :final errors,
     ) =>
       [
         l10n.searchErrorDiagnosticsType('ApiException'),
         l10n.searchErrorDiagnosticsStatus(statusCode),
-        l10n.searchErrorDiagnosticsCode(code),
-        l10n.searchErrorDiagnosticsMessage(message),
-        if (details != null) l10n.searchErrorDiagnosticsDetails(details),
+        l10n.searchErrorDiagnosticsProblemType(type),
+        l10n.searchErrorDiagnosticsTitle(title),
+        if (detail != null) l10n.searchErrorDiagnosticsDetail(detail),
+        for (final error in errors)
+          l10n.searchErrorDiagnosticsField(error.field, error.reason),
       ],
     ParseException() => [
       l10n.searchErrorDiagnosticsType('ParseException'),

@@ -5,20 +5,33 @@ String errorKeyFor(AppException exception) {
   return switch (exception) {
     NetworkException() => 'errNetwork',
     ServerException() => 'errServer',
-    ApiException(:final code) => _apiErrorKeyFor(code),
+    ApiException(:final type, :final errors) => _apiErrorKeyFor(type, errors),
     ParseException() => 'errParse',
     StorageException(:final kind) => _storageErrorKeyFor(kind),
     UnknownException() => 'errUnknown',
   };
 }
 
-String _apiErrorKeyFor(String code) {
-  return switch (code) {
-    'NOT_FOUND' => 'errApiNotFound',
-    'BAD_REQUEST' => 'errApiBadRequest',
-    _ when code.startsWith('INVALID_') => 'errApiInvalidCategory',
+String _apiErrorKeyFor(String type, List<FieldViolation> errors) {
+  return switch (_problemCategory(type)) {
+    'not-found' => 'errApiNotFound',
+    'validation' when errors.isNotEmpty => 'errApiValidation',
+    'validation' => 'errApiValidation',
+    'conflict' => 'errApiConflict',
+    'unauthorized' => 'errApiUnauthorized',
+    'forbidden' => 'errApiForbidden',
+    'rate-limited' => 'errApiRateLimited',
+    'internal' => 'errServer',
     _ => 'errApi4xx',
   };
+}
+
+String _problemCategory(String type) {
+  final uri = Uri.tryParse(type);
+  if (uri == null || uri.pathSegments.isEmpty) {
+    return type;
+  }
+  return uri.pathSegments.last;
 }
 
 String _storageErrorKeyFor(StorageErrorKind kind) {
