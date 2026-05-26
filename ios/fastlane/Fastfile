@@ -1,0 +1,24 @@
+require "base64"
+
+default_platform(:ios)
+
+platform :ios do
+  desc "Upload the prod IPA to TestFlight"
+  lane :beta do
+    api_key = app_store_connect_api_key(
+      key_id: ENV.fetch("APP_STORE_CONNECT_API_KEY_ID"),
+      issuer_id: ENV.fetch("APP_STORE_CONNECT_API_ISSUER_ID"),
+      key_content: Base64.decode64(ENV.fetch("APP_STORE_CONNECT_API_KEY_P8")),
+      is_key_content_base64: false
+    )
+
+    ipa_path = Dir[File.expand_path("../../build/ios/ipa/*.ipa", __dir__)].first
+    UI.user_error!("IPA not found at build/ios/ipa/*.ipa") if ipa_path.nil?
+
+    upload_to_testflight(
+      api_key: api_key,
+      ipa: ipa_path,
+      skip_waiting_for_build_processing: true
+    )
+  end
+end

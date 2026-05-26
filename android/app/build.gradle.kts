@@ -1,3 +1,5 @@
+import java.util.Properties
+
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
@@ -11,6 +13,12 @@ android {
     namespace = "com.corvus400.fictional_drug_and_disease_ref"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
+
+    val keyPropertiesFile = rootProject.file("key.properties")
+    val keyProperties = Properties()
+    if (keyPropertiesFile.exists()) {
+        keyPropertiesFile.inputStream().use(keyProperties::load)
+    }
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
@@ -39,11 +47,24 @@ android {
         }
     }
 
+    signingConfigs {
+        create("release") {
+            if (keyPropertiesFile.exists()) {
+                storeFile = rootProject.file(keyProperties.getProperty("storeFile"))
+                storePassword = keyProperties.getProperty("storePassword")
+                keyAlias = keyProperties.getProperty("keyAlias")
+                keyPassword = keyProperties.getProperty("keyPassword")
+            }
+        }
+    }
+
     buildTypes {
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig = signingConfigs.getByName("debug")
+            signingConfig = if (keyPropertiesFile.exists()) {
+                signingConfigs.getByName("release")
+            } else {
+                signingConfigs.getByName("debug")
+            }
         }
     }
 

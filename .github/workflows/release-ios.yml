@@ -1,0 +1,210 @@
+name: Release iOS
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Release tag to associate with this TestFlight upload"
+        required: false
+        type: string
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref_name || inputs.tag || github.run_id }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  release-ios:
+    runs-on: macos-26
+    timeout-minutes: 60
+
+    env:
+      IOS_BUNDLE_ID: com.corvus400.fictionalDrugAndDiseaseRef
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - uses: ./.github/actions/setup-flutter
+
+      - name: Validate iOS signing secrets
+        shell: bash
+        env:
+          APP_STORE_CONNECT_API_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
+          APP_STORE_CONNECT_API_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_API_ISSUER_ID }}
+          APP_STORE_CONNECT_API_KEY_P8: ${{ secrets.APP_STORE_CONNECT_API_KEY_P8 }}
+          IOS_DIST_CERTIFICATE_P12: ${{ secrets.IOS_DIST_CERTIFICATE_P12 }}
+          IOS_DIST_CERTIFICATE_PASSWORD: ${{ secrets.IOS_DIST_CERTIFICATE_PASSWORD }}
+          IOS_PROVISIONING_PROFILE: ${{ secrets.IOS_PROVISIONING_PROFILE }}
+          IOS_TEAM_ID: ${{ secrets.IOS_TEAM_ID }}
+        run: |
+          set -euo pipefail
+
+          missing=()
+          for name in \
+            APP_STORE_CONNECT_API_KEY_ID \
+            APP_STORE_CONNECT_API_ISSUER_ID \
+            APP_STORE_CONNECT_API_KEY_P8 \
+            IOS_DIST_CERTIFICATE_P12 \
+            IOS_DIST_CERTIFICATE_PASSWORD \
+            IOS_PROVISIONING_PROFILE \
+            IOS_TEAM_ID
+          do
+            if [ -z "${!name:-}" ]; then
+              missing+=("$name")
+            fi
+          done
+
+          if [ "${#missing[@]}" -gt 0 ]; then
+            printf 'Missing required iOS signing secrets: %s\n' "${missing[*]}" >&2
+            exit 1
+          fi
+
+      - name: Import distribution certificate
+        uses: apple-actions/import-codesign-certs@63fff01cd422d4b7b855d40ca1e9d34d2de9427d # v3
+        with:
+          p12-file-base64: ${{ secrets.IOS_DIST_CERTIFICATE_P12 }}
+          p12-password: ${{ secrets.IOS_DIST_CERTIFICATE_PASSWORD }}
+
+      - name: Install provisioning profile
+        id: provisioning-profile
+        shell: bash
+        env:
+          IOS_PROVISIONING_PROFILE: ${{ secrets.IOS_PROVISIONING_PROFILE }}
+        run: |
+          set -euo pipefail
+
+          profile="$RUNNER_TEMP/app-store.mobileprovision"
+          plist="$RUNNER_TEMP/app-store-profile.plist"
+          printf '%s' "$IOS_PROVISIONING_PROFILE" | base64 --decode > "$profile"
+          security cms -D -i "$profile" > "$plist"
+
+          uuid="$(plutil -extract UUID raw -o - "$plist")"
+          name="$(plutil -extract Name raw -o - "$plist")"
+
+          mkdir -p "$HOME/Library/MobileDevice/Provisioning Profiles"
+          cp "$profile" "$HOME/Library/MobileDevice/Provisioning Profiles/$uuid.mobileprovision"
+
+          echo "name=$name" >> "$GITHUB_OUTPUT"
+
+      - name: Install fastlane
+        run: gem install fastlane --no-document
+
+      - name: Build prod IPA
+        shell: bash
+        env:
+          IOS_TEAM_ID: ${{ secrets.IOS_TEAM_ID }}
+          IOS_PROFILE_NAME: ${{ steps.provisioning-profile.outputs.name }}
+        run: |
+          set -euo pipefail
+
+          pbxproj="ios/Runner.xcodeproj/project.pbxproj"
+          backup="$RUNNER_TEMP/project.pbxproj"
+          cp "$pbxproj" "$backup"
+          restore_project() {
+            cp "$backup" "$pbxproj"
+          }
+          trap restore_project EXIT
+
+          python3 - "$pbxproj" "$IOS_BUNDLE_ID" "$IOS_TEAM_ID" "$IOS_PROFILE_NAME" <<'PY'
+          from pathlib import Path
+          import sys
+
+          path = Path(sys.argv[1])
+          bundle_id = sys.argv[2]
+          team_id = sys.argv[3]
+          profile_name = sys.argv[4]
+          profile_name = profile_name.replace('"', '\\"')
+          text = path.read_text()
+
+          blocks = text.split("\n")
+          output = []
+          in_build_settings = False
+          in_runner_bundle = False
+          block = []
+
+          def flush_build_settings(lines, should_patch):
+              if not should_patch:
+                  return lines
+
+              filtered = [
+                  line for line in lines
+                  if "CODE_SIGN_STYLE =" not in line
+                  and "DEVELOPMENT_TEAM =" not in line
+                  and "PROVISIONING_PROFILE_SPECIFIER =" not in line
+              ]
+              insert_at = len(filtered)
+              for index, line in enumerate(filtered):
+                  if "PRODUCT_BUNDLE_IDENTIFIER =" in line:
+                      insert_at = index + 1
+                      break
+
+              additions = [
+                  "\t\t\t\tCODE_SIGN_STYLE = Manual;",
+                  f"\t\t\t\tDEVELOPMENT_TEAM = {team_id};",
+                  f"\t\t\t\tPROVISIONING_PROFILE_SPECIFIER = \"{profile_name}\";",
+              ]
+              return filtered[:insert_at] + additions + filtered[insert_at:]
+
+          for line in blocks:
+              if line.strip() == "buildSettings = {":
+                  in_build_settings = True
+                  in_runner_bundle = False
+                  block = [line]
+                  continue
+
+              if in_build_settings:
+                  block.append(line)
+                  if f"PRODUCT_BUNDLE_IDENTIFIER = {bundle_id};" in line:
+                      in_runner_bundle = True
+                  if line.strip() == "};":
+                      output.extend(flush_build_settings(block, in_runner_bundle))
+                      in_build_settings = False
+                      block = []
+                  continue
+
+              output.append(line)
+
+          path.write_text("\n".join(output))
+          PY
+
+          cat > ios/ExportOptions.plist <<EOF
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+            <key>method</key>
+            <string>app-store-connect</string>
+            <key>signingStyle</key>
+            <string>manual</string>
+            <key>teamID</key>
+            <string>$IOS_TEAM_ID</string>
+            <key>provisioningProfiles</key>
+            <dict>
+              <key>$IOS_BUNDLE_ID</key>
+              <string>$IOS_PROFILE_NAME</string>
+            </dict>
+          </dict>
+          </plist>
+          EOF
+
+          flutter build ipa \
+            --flavor prod \
+            -t lib/main_prod.dart \
+            --dart-define-from-file=dart_defines/prod.json \
+            --release \
+            --build-number=${{ github.run_number }} \
+            --export-options-plist=ios/ExportOptions.plist
+
+      - name: Upload to TestFlight
+        working-directory: ios
+        env:
+          APP_STORE_CONNECT_API_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
+          APP_STORE_CONNECT_API_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_API_ISSUER_ID }}
+          APP_STORE_CONNECT_API_KEY_P8: ${{ secrets.APP_STORE_CONNECT_API_KEY_P8 }}
+        run: fastlane beta
