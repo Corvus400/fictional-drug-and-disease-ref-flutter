@@ -66,10 +66,39 @@ jobs:
           fi
 
       - name: Import distribution certificate
-        uses: apple-actions/import-codesign-certs@63fff01cd422d4b7b855d40ca1e9d34d2de9427d # v3
-        with:
-          p12-file-base64: ${{ secrets.IOS_DIST_CERTIFICATE_P12 }}
-          p12-password: ${{ secrets.IOS_DIST_CERTIFICATE_PASSWORD }}
+        shell: bash
+        env:
+          IOS_DIST_CERTIFICATE_P12: ${{ secrets.IOS_DIST_CERTIFICATE_P12 }}
+          IOS_DIST_CERTIFICATE_PASSWORD: ${{ secrets.IOS_DIST_CERTIFICATE_PASSWORD }}
+          KEYCHAIN_PASSWORD: ${{ github.run_id }}-${{ github.run_attempt }}
+        run: |
+          set -euo pipefail
+
+          p12_path="$RUNNER_TEMP/distribution.p12"
+          keychain_path="$RUNNER_TEMP/app-signing.keychain-db"
+
+          printf '%s' "$IOS_DIST_CERTIFICATE_P12" | base64 --decode > "$p12_path"
+
+          security create-keychain -p "$KEYCHAIN_PASSWORD" "$keychain_path"
+          security set-keychain-settings -lut 21600 "$keychain_path"
+          security unlock-keychain -p "$KEYCHAIN_PASSWORD" "$keychain_path"
+          security import "$p12_path" \
+            -k "$keychain_path" \
+            -P "$IOS_DIST_CERTIFICATE_PASSWORD" \
+            -T /usr/bin/codesign \
+            -T /usr/bin/security
+
+          existing_keychains=()
+          while IFS= read -r keychain; do
+            existing_keychains+=("${keychain//\"/}")
+          done < <(security list-keychains -d user)
+          security list-keychains -d user -s "$keychain_path" "${existing_keychains[@]}"
+          security default-keychain -d user -s "$keychain_path"
+          security set-key-partition-list \
+            -S apple-tool:,apple:,codesign: \
+            -s \
+            -k "$KEYCHAIN_PASSWORD" \
+            "$keychain_path"
 
       - name: Install provisioning profile
         id: provisioning-profile
