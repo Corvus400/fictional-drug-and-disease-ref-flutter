@@ -4,7 +4,7 @@ repository: https://github.com/Corvus400/fictional-drug-and-disease-ref-flutter
 issue_tracker: https://github.com/Corvus400/fictional-drug-and-disease-ref-flutter/issues
 publish_to: 'none'
 
-version: 1.0.0+1
+version: 1.0.1+2
 
 environment:
   sdk: ^3.11.3
