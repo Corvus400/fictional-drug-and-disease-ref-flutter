@@ -72,24 +72,12 @@ mock-server の詳細は [mock-server README](https://github.com/Corvus400/ficti
 
 <p>
   <a href="https://github.com/Corvus400/fictional-drug-and-disease-ref-flutter/releases/latest/download/app-prod-release.apk"><img alt="Android APK をダウンロード" src="https://img.shields.io/badge/Android-APK%20download-3DDC84?logo=android&logoColor=white"></a>
-  <a href="https://apps.apple.com/app/testflight/id899247664"><img alt="TestFlight アプリを開く" src="https://img.shields.io/badge/iOS-TestFlight-0A84FF?logo=apple&logoColor=white"></a>
   <a href="./PRIVACY.md"><img alt="Privacy Policy" src="https://img.shields.io/badge/Privacy-Policy-6E7781"></a>
 </p>
 
 Android では上の **Android APK download** から最新リリースの `app-prod-release.apk` をダウンロードし、端末で提供元不明アプリのインストールを許可してから APK を開きます。配布 APK は release 署名で作成されるため、次回以降は同じアプリとして上書き更新できます。
 
-iOS では TestFlight の public link からインストールします。利用には Apple の TestFlight アプリが必要です。CI は App Store Connect への IPA upload まで実行し、Apple 側の build processing 完了後に TestFlight で配信可能になります。public link を有効化したら、このセクションの iOS badge のリンク先を `https://testflight.apple.com/join/...` に置き換えます。TestFlight の Privacy Policy URL には `https://github.com/Corvus400/fictional-drug-and-disease-ref-flutter/blob/main/PRIVACY.md` を使用します。
-
-リリースはタグ push で起動します。
-
-```bash
-git tag vX.Y.Z
-git push origin vX.Y.Z
-```
-
-GitHub Actions の `Release Android` / `Release iOS` workflow から手動実行することもできます。Android workflow は GitHub Release に APK を添付し、iOS workflow は App Store Connect の TestFlight に IPA をアップロードします。手動実行時は入力した tag 名を配布先の識別に使い、build number は GitHub Actions の run number で自動採番します。アプリの表示バージョンは `pubspec.yaml` の `version` を使います。
-
-iOS 配布ビルドは Xcode 26 toolchain の `macos-26` runner で作成します。Launch Screen には `ios/Runner/Assets.xcassets/LaunchImage.imageset` のブランド画像を同梱し、Flutter 初期テンプレートの placeholder launch image は使いません。
+iOS 版の一般配布リンクは現在準備中です。公開後、このセクションにインストール用リンクを追加します。
 
 ---
 
