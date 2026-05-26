@@ -164,6 +164,7 @@ jobs:
               filtered = [
                   line for line in lines
                   if "CODE_SIGN_STYLE =" not in line
+                  and "CODE_SIGN_IDENTITY" not in line
                   and "DEVELOPMENT_TEAM =" not in line
                   and "PROVISIONING_PROFILE_SPECIFIER =" not in line
               ]
@@ -174,6 +175,7 @@ jobs:
                       break
 
               additions = [
+                  '\t\t\t\t"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Apple Distribution";',
                   "\t\t\t\tCODE_SIGN_STYLE = Manual;",
                   f"\t\t\t\tDEVELOPMENT_TEAM = {team_id};",
                   f"\t\t\t\tPROVISIONING_PROFILE_SPECIFIER = \"{profile_name}\";",
