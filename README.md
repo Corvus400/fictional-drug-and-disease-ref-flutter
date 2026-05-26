@@ -66,6 +66,25 @@ mock-server の詳細は [mock-server README](https://github.com/Corvus400/ficti
 
 ---
 
+## 配布 / インストール
+
+配布版は `prod` flavor でビルドし、Cloudflare ドメイン経由の BE (`https://fictional-drugref.win`) に接続します。
+
+Android では GitHub Releases の対象リリースから `app-prod-release.apk` をダウンロードし、端末で提供元不明アプリのインストールを許可してから APK を開きます。配布 APK は release 署名で作成されるため、次回以降は同じアプリとして上書き更新できます。
+
+iOS では TestFlight の public link からインストールします。利用には Apple の TestFlight アプリが必要です。TestFlight link は Apple Developer Program、App Store Connect、配布証明書、provisioning profile、GitHub Secrets の準備が完了した後に有効化します。
+
+リリースはタグ push で起動します。
+
+```bash
+git tag vX.Y.Z
+git push origin vX.Y.Z
+```
+
+GitHub Actions の `Release Android` / `Release iOS` workflow から手動実行することもできます。Android workflow は GitHub Release に APK を添付し、iOS workflow は App Store Connect の TestFlight に IPA をアップロードします。
+
+---
+
 ## E2E テスト
 
 E2E は Patrol で `patrol_test/` 配下に実装しています。mock-server と emulator/simulator が必要なため CI や pre-push には含めず、手動で実行します。
