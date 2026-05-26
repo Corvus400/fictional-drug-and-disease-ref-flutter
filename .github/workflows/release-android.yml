@@ -97,6 +97,14 @@ jobs:
           --release
           --build-number=${{ github.run_number }}
 
+      - name: Verify prod APK network permission
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          aapt dump permissions build/app/outputs/flutter-apk/app-prod-release.apk |
+            grep -F "uses-permission: name='android.permission.INTERNET'"
+
       - name: Create GitHub Release
         env:
           GH_TOKEN: ${{ github.token }}
