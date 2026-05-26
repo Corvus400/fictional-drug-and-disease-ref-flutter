@@ -55,8 +55,11 @@ cd fictional-drug-and-disease-ref-mock-server && ./scripts/setup.sh && ./scripts
 # 2. 本リポジトリで依存解決
 flutter pub get
 
-# 3. dev エントリで起動
-flutter run -t lib/main_dev.dart
+# 3. mock-server に接続する dev flavor で起動
+flutter run --flavor dev -t lib/main_dev.dart
+
+# Cloudflare ドメイン経由で BE に接続する場合
+flutter run --flavor prod -t lib/main_prod.dart --dart-define-from-file=dart_defines/prod.json
 ```
 
 mock-server の詳細は [mock-server README](https://github.com/Corvus400/fictional-drug-and-disease-ref-mock-server/blob/main/README.md) を参照してください。
