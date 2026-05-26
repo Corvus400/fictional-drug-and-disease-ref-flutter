@@ -102,7 +102,13 @@ jobs:
         run: |
           set -euo pipefail
 
-          aapt dump permissions build/app/outputs/flutter-apk/app-prod-release.apk |
+          aapt_bin="$(find "$ANDROID_HOME/build-tools" -maxdepth 2 -name aapt -type f | sort -V | tail -n 1)"
+          if [ -z "$aapt_bin" ]; then
+            echo "aapt not found under ANDROID_HOME/build-tools" >&2
+            exit 1
+          fi
+
+          "$aapt_bin" dump permissions build/app/outputs/flutter-apk/app-prod-release.apk |
             grep -F "uses-permission: name='android.permission.INTERNET'"
 
       - name: Create GitHub Release
