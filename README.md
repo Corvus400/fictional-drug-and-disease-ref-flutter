@@ -72,12 +72,13 @@ mock-server の詳細は [mock-server README](https://github.com/Corvus400/ficti
 
 <p>
   <a href="https://github.com/Corvus400/fictional-drug-and-disease-ref-flutter/releases/latest/download/app-prod-release.apk"><img alt="Android APK をダウンロード" src="https://img.shields.io/badge/Android-APK%20download-3DDC84?logo=android&logoColor=white"></a>
+  <a href="https://testflight.apple.com/join/C9uFz4Xa"><img alt="iOS TestFlight でインストール" src="https://img.shields.io/badge/iOS-TestFlight-0A84FF?logo=apple&logoColor=white"></a>
   <a href="./PRIVACY.md"><img alt="Privacy Policy" src="https://img.shields.io/badge/Privacy-Policy-6E7781"></a>
 </p>
 
 Android では上の **Android APK download** から最新リリースの `app-prod-release.apk` をダウンロードし、端末で提供元不明アプリのインストールを許可してから APK を開きます。配布 APK は release 署名で作成されるため、次回以降は同じアプリとして上書き更新できます。
 
-iOS 版の一般配布リンクは現在準備中です。公開後、このセクションにインストール用リンクを追加します。
+iOS では上の **iOS TestFlight** から TestFlight の外部テスターに参加し、TestFlight アプリ経由でインストールします。配布中の最新ビルドは TestFlight 側で案内されます。
 
 ---
 
