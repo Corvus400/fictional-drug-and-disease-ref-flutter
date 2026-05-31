@@ -105,7 +105,7 @@ final value = container.read(myProvider);
 
 ## Patrol E2E
 
-- 採用: `patrol` 4.5.0 / `patrol_cli` 4.3.1。テスト本体は `patrol_test/` 配下に置く
+- 採用: `patrol` 4.6.1 / `patrol_cli` 4.3.1。テスト本体は `patrol_test/` 配下に置く
 - mock-server、Android emulator、iOS Simulator が必要なため pre-push フックおよび CI 対象外
 - 手動実行コマンド: `scripts/run-patrol-e2e-matrix.sh`
 - 上記スクリプトは `http://localhost:8080/health` を確認し、mock-server が未起動の場合のみ `../fictional-drug-and-disease-ref-mock-server/scripts/start.sh` を起動する。既存サーバは停止しない
