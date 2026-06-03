@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:fictional_drug_and_disease_ref/core/result.dart';
 import 'package:fictional_drug_and_disease_ref/data/providers/local_providers.dart';
 import 'package:fictional_drug_and_disease_ref/data/services/local/onboarding_service.dart';
@@ -9,7 +11,6 @@ import 'package:fictional_drug_and_disease_ref/ui/onboarding/onboarding_carousel
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:mocktail/mocktail.dart';
 
 const _secondIntroBody = '検索・詳細・計算ツール・ブックマーク・閲覧履歴を1つに集約しています。';
@@ -39,6 +40,14 @@ void main() {
       when(
         () => service.read(),
       ).thenAnswer((_) async => const Result.ok(false));
+    });
+
+    test('intro icons do not depend on Material Symbols package fonts', () {
+      final source = File(
+        'lib/ui/onboarding/onboarding_carousel_view.dart',
+      ).readAsStringSync();
+
+      expect(source, isNot(contains('material_symbols_icons')));
     });
 
     testWidgets('shows first intro page', (
@@ -378,7 +387,7 @@ void main() {
       final iconRect = tester.getRect(
         find.descendant(
           of: pageFinder,
-          matching: find.byIcon(Symbols.medical_services),
+          matching: find.byIcon(Icons.medical_services_outlined),
         ),
       );
       final titleRect = tester.getRect(find.text('メディマスタへようこそ'));
@@ -400,7 +409,7 @@ void main() {
       final iconRect = tester.getRect(
         find.descendant(
           of: pageFinder,
-          matching: find.byIcon(Symbols.medical_services),
+          matching: find.byIcon(Icons.medical_services_outlined),
         ),
       );
       final titleRect = tester.getRect(find.text('メディマスタへようこそ'));
@@ -653,7 +662,7 @@ void main() {
       final iconRect = tester.getRect(
         find.descendant(
           of: pageFinder,
-          matching: find.byIcon(Symbols.menu_book),
+          matching: find.byIcon(Icons.menu_book_outlined),
         ),
       );
       final titleRect = tester.getRect(find.text('主要機能'));
@@ -679,13 +688,13 @@ void main() {
       final iconRect = tester.getRect(
         find.descendant(
           of: pageFinder,
-          matching: find.byIcon(Symbols.menu_book),
+          matching: find.byIcon(Icons.menu_book_outlined),
         ),
       );
       final featureIconRect = tester.getRect(
         find.descendant(
           of: pageFinder,
-          matching: find.byIcon(Symbols.search),
+          matching: find.byIcon(Icons.search),
         ),
       );
 
@@ -710,7 +719,7 @@ void main() {
       final iconRect = tester.getRect(
         find.descendant(
           of: pageFinder,
-          matching: find.byIcon(Symbols.menu_book),
+          matching: find.byIcon(Icons.menu_book_outlined),
         ),
       );
       final titleRect = tester.getRect(find.text('主要機能'));
@@ -733,7 +742,7 @@ void main() {
       final iconRect = tester.getRect(
         find.descendant(
           of: pageFinder,
-          matching: find.byIcon(Symbols.menu_book),
+          matching: find.byIcon(Icons.menu_book_outlined),
         ),
       );
       final titleRect = tester.getRect(find.text('主要機能'));
@@ -760,7 +769,7 @@ void main() {
       final featureIconRect = tester.getRect(
         find.descendant(
           of: pageFinder,
-          matching: find.byIcon(Symbols.search),
+          matching: find.byIcon(Icons.search),
         ),
       );
 

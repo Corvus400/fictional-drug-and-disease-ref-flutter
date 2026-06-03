@@ -7,7 +7,6 @@ import 'package:fictional_drug_and_disease_ref/theme/app_typography.dart';
 import 'package:fictional_drug_and_disease_ref/ui/onboarding/onboarding_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:material_symbols_icons/symbols.dart';
 
 const _pageCount = 3;
 // Design SSOT: Onboarding Spec.html `.ob-skip { padding: 0 10px; }`.
@@ -187,42 +186,42 @@ final class _OnboardingCarouselViewState
     return [
       OnboardingPage(
         pageNumber: 1,
-        icon: Symbols.medical_services,
+        icon: Icons.medical_services_outlined,
         title: l10n.onboardingIntroP1Title,
         body: l10n.onboardingIntroP1Body,
         showDisclaimer: true,
       ),
       OnboardingPage(
         pageNumber: 2,
-        icon: Symbols.menu_book,
+        icon: Icons.menu_book_outlined,
         title: l10n.onboardingIntroP2Title,
         body: l10n.onboardingIntroP2Body,
         features: [
           OnboardingFeature(
-            icon: Symbols.search,
+            icon: Icons.search,
             label: l10n.onboardingFeatureSearch,
           ),
           OnboardingFeature(
-            icon: Symbols.medication,
+            icon: Icons.medication_outlined,
             label: l10n.onboardingFeatureDetail,
           ),
           OnboardingFeature(
-            icon: Symbols.calculate,
+            icon: Icons.calculate_outlined,
             label: l10n.onboardingFeatureCalc,
           ),
           OnboardingFeature(
-            icon: Symbols.bookmark,
+            icon: Icons.bookmark_outline,
             label: l10n.onboardingFeatureBookmark,
           ),
           OnboardingFeature(
-            icon: Symbols.history,
+            icon: Icons.history,
             label: l10n.onboardingFeatureHistory,
           ),
         ],
       ),
       OnboardingPage(
         pageNumber: 3,
-        icon: Symbols.touch_app,
+        icon: Icons.touch_app_outlined,
         title: l10n.onboardingIntroP3Title,
         body: l10n.onboardingIntroP3Body,
       ),
