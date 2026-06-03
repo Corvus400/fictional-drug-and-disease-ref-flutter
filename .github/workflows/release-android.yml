@@ -29,28 +29,47 @@ jobs:
 
       - uses: ./.github/actions/setup-flutter
 
-      - name: Resolve release tag
-        id: release-tag
+      - name: Resolve release version
+        id: release-version
         shell: bash
         env:
           EVENT_NAME: ${{ github.event_name }}
           REF_NAME: ${{ github.ref_name }}
           INPUT_TAG: ${{ inputs.tag }}
-          RUN_NUMBER: ${{ github.run_number }}
         run: |
           set -euo pipefail
 
+          app_version="$(python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          match = re.search(r"^version:\s*(\S+)\s*$", Path("pubspec.yaml").read_text(), re.MULTILINE)
+          if match is None:
+              raise SystemExit("pubspec.yaml version not found")
+          print(match.group(1))
+          PY
+          )"
+          build_name="${app_version%%+*}"
+          build_number="${app_version#*+}"
+          if [ "$build_name" = "$app_version" ] || [ -z "$build_name" ] || [ -z "$build_number" ]; then
+            echo "pubspec.yaml version must be formatted as <build-name>+<build-number>." >&2
+            exit 1
+          fi
+
+          expected_tag="v$build_name"
           if [ "$EVENT_NAME" = "workflow_dispatch" ]; then
-            tag="${INPUT_TAG:-v0.0.0-${RUN_NUMBER}}"
+            tag="${INPUT_TAG:-$expected_tag}"
           else
             tag="$REF_NAME"
           fi
 
-          if [[ ! "$tag" =~ ^v[0-9A-Za-z._-]+$ ]]; then
-            echo "Release tag must start with v and contain only letters, numbers, dot, underscore, or hyphen." >&2
+          if [ "$tag" != "$expected_tag" ]; then
+            echo "Release tag must match pubspec build name: expected $expected_tag, got $tag." >&2
             exit 1
           fi
 
+          echo "build_name=$build_name" >> "$GITHUB_OUTPUT"
+          echo "build_number=$build_number" >> "$GITHUB_OUTPUT"
           echo "tag=$tag" >> "$GITHUB_OUTPUT"
 
       - name: Configure Android signing
@@ -95,7 +114,8 @@ jobs:
           -t lib/main_prod.dart
           --dart-define-from-file=dart_defines/prod.json
           --release
-          --build-number=${{ github.run_number }}
+          --build-name=${{ steps.release-version.outputs.build_name }}
+          --build-number=${{ steps.release-version.outputs.build_number }}
 
       - name: Verify prod APK network permission
         shell: bash
@@ -114,7 +134,7 @@ jobs:
       - name: Create GitHub Release
         env:
           GH_TOKEN: ${{ github.token }}
-          TAG: ${{ steps.release-tag.outputs.tag }}
+          TAG: ${{ steps.release-version.outputs.tag }}
         run: |
           set -euo pipefail
 
