@@ -39,6 +39,10 @@ final class _OnboardingSpotlightState
   TutorialCoachMark? _tutorial;
   bool _startQueued = false;
   bool _disposing = false;
+  bool _reflowing = false;
+  bool _reflowQueued = false;
+  int _currentStep = 0;
+  Orientation? _shownOrientation;
 
   @override
   void dispose() {
@@ -49,13 +53,26 @@ final class _OnboardingSpotlightState
 
   @override
   Widget build(BuildContext context) {
+    final orientation = MediaQuery.orientationOf(context);
     final onboarding = ref.watch(onboardingControllerProvider).value;
     if (onboarding?.phase == OnboardingPhase.spotlight && !_startQueued) {
       _startQueued = true;
       WidgetsBinding.instance.addPostFrameCallback((_) => _showIfReady());
     }
+    if (onboarding?.phase == OnboardingPhase.spotlight &&
+        _tutorial?.isShowing == true &&
+        _shownOrientation != null &&
+        _shownOrientation != orientation &&
+        !_reflowQueued) {
+      _reflowQueued = true;
+      WidgetsBinding.instance.addPostFrameCallback(
+        (_) => _reflowIfReady(orientation),
+      );
+    }
     if (onboarding?.phase != OnboardingPhase.spotlight) {
       _startQueued = false;
+      _currentStep = 0;
+      _shownOrientation = null;
     }
     return widget.child;
   }
@@ -81,14 +98,36 @@ final class _OnboardingSpotlightState
     }
 
     final l10n = AppLocalizations.of(context)!;
+    _showTutorial(l10n: l10n, initialFocus: _currentStep);
+  }
+
+  void _showTutorial({
+    required AppLocalizations l10n,
+    required int initialFocus,
+  }) {
+    final overlayTarget = _targetOverlay();
+    if (overlayTarget == null) {
+      return;
+    }
+    _shownOrientation = MediaQuery.orientationOf(context);
     _tutorial =
         TutorialCoachMark(
           targets: _targets(context, l10n),
+          initialFocus: initialFocus,
           pulseEnable: false,
           focusAnimationDuration: Duration.zero,
           unFocusAnimationDuration: Duration.zero,
           hideSkip: true,
+          onClickTarget: (target) {
+            final index = _targetIndex(target.identify);
+            if (index != null) {
+              _currentStep = (index + 1).clamp(0, 2);
+            }
+          },
           onSkip: () {
+            if (_reflowing) {
+              return true;
+            }
             if (_disposing || !mounted) {
               return true;
             }
@@ -96,6 +135,9 @@ final class _OnboardingSpotlightState
             return true;
           },
           onFinish: () {
+            if (_reflowing) {
+              return;
+            }
             if (_disposing || !mounted) {
               return;
             }
@@ -107,6 +149,42 @@ final class _OnboardingSpotlightState
           overlay: overlayTarget.overlay,
           rootOverlay: overlayTarget.rootOverlay,
         );
+  }
+
+  void _reflowIfReady(Orientation orientation) {
+    if (!mounted) {
+      _reflowQueued = false;
+      return;
+    }
+    final onboarding = ref.read(onboardingControllerProvider).value;
+    if (onboarding?.phase != OnboardingPhase.spotlight) {
+      _reflowQueued = false;
+      return;
+    }
+    if (!_targetsAreMounted() || _targetOverlay() == null) {
+      WidgetsBinding.instance.addPostFrameCallback(
+        (_) => _reflowIfReady(orientation),
+      );
+      return;
+    }
+
+    _reflowing = true;
+    _tutorial?.skip();
+    _reflowing = false;
+
+    final l10n = AppLocalizations.of(context)!;
+    _showTutorial(l10n: l10n, initialFocus: _currentStep);
+    _shownOrientation = orientation;
+    _reflowQueued = false;
+  }
+
+  int? _targetIndex(Object? identify) {
+    return switch (identify) {
+      'search-field' => 0,
+      'navigation-tabs' => 1,
+      'about-button' => 2,
+      _ => null,
+    };
   }
 
   bool _targetsAreMounted() {
@@ -161,7 +239,10 @@ final class _OnboardingSpotlightState
           'onboarding-spotlight-action-search-field',
         ),
         onSkip: () => _tutorial?.skip(),
-        onAction: () => _tutorial?.next(),
+        onAction: () {
+          _currentStep = 1;
+          _tutorial?.next();
+        },
       ),
       _target(
         identify: 'navigation-tabs',
@@ -185,7 +266,10 @@ final class _OnboardingSpotlightState
           'onboarding-spotlight-action-navigation-tabs',
         ),
         onSkip: () => _tutorial?.skip(),
-        onAction: () => _tutorial?.next(),
+        onAction: () {
+          _currentStep = 2;
+          _tutorial?.next();
+        },
       ),
       _target(
         identify: 'about-button',
@@ -202,7 +286,10 @@ final class _OnboardingSpotlightState
           'onboarding-spotlight-action-about-button',
         ),
         onSkip: () => _tutorial?.skip(),
-        onAction: () => _tutorial?.finish(),
+        onAction: () {
+          _currentStep = 2;
+          _tutorial?.finish();
+        },
       ),
     ];
   }
