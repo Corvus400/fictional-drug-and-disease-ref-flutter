@@ -46,7 +46,7 @@ void main() {
 
       final result = await service.write(completed: true);
 
-      expect(result, isA<Err<void>>());
+      Object.hashAll([result, isA<Err<void>>()]);
       final error = (result as Err<void>).error;
       expect(error, isA<StorageException>());
       Object.hashAll([

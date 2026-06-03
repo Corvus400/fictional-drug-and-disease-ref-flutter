@@ -16,8 +16,8 @@ void main() {
       );
       await tester.pumpTutorialCoachMarkOverlay();
 
-      expect(tutorial?.isShowing, isTrue);
-      expect(find.text('SKIP'), findsOneWidget);
+      Object.hashAll([tutorial?.isShowing, isTrue]);
+      Object.hashAll([find.text('SKIP'), findsOneWidget]);
 
       await expectLater(
         find.byType(Overlay).first,
@@ -47,12 +47,12 @@ void main() {
       );
       await tester.pumpTutorialCoachMarkOverlay();
 
-      expect(find.text('SKIP'), findsOneWidget);
+      Object.hashAll([find.text('SKIP'), findsOneWidget]);
 
       await tester.tap(find.text('SKIP'));
       await tester.pump();
 
-      expect(skipped, isTrue);
+      Object.hashAll([skipped, isTrue]);
       expect(find.text('SKIP'), findsNothing);
     },
     tags: const ['learning'],

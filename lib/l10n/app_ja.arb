@@ -16,6 +16,14 @@
   "@aboutLicensesSubtitle": {
     "description": "ライセンス一覧 ListTile のサブタイトル"
   },
+  "aboutTutorialTitle": "チュートリアルを再表示",
+  "@aboutTutorialTitle": {
+    "description": "オンボーディングチュートリアルを再表示する ListTile のタイトル"
+  },
+  "aboutTutorialSubtitle": "初回ガイドをもう一度表示します",
+  "@aboutTutorialSubtitle": {
+    "description": "オンボーディングチュートリアル再表示 ListTile のサブタイトル"
+  },
   "aboutAppVersionLabel": "バージョン {version}",
   "@aboutAppVersionLabel": {
     "description": "バージョン情報タイルのラベル",

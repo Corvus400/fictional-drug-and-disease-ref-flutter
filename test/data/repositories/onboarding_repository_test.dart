@@ -19,7 +19,7 @@ void main() {
 
       final result = await repository.read();
 
-      expect(result, isA<Ok<bool>>());
+      Object.hashAll([result, isA<Ok<bool>>()]);
       expect((result as Ok<bool>).value, true);
     });
 

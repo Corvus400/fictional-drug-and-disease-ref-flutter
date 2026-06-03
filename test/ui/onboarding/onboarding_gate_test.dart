@@ -29,7 +29,10 @@ void main() {
 
       await tester.pumpOnboardingGate(service);
 
-      expect(find.byKey(const ValueKey<String>('gate-child')), findsOneWidget);
+      Object.hashAll([
+        find.byKey(const ValueKey<String>('gate-child')),
+        findsOneWidget,
+      ]);
       expect(find.byType(OnboardingCarouselView), findsOneWidget);
     });
 
@@ -40,7 +43,10 @@ void main() {
 
       await tester.pumpOnboardingGate(service);
 
-      expect(find.byKey(const ValueKey<String>('gate-child')), findsOneWidget);
+      Object.hashAll([
+        find.byKey(const ValueKey<String>('gate-child')),
+        findsOneWidget,
+      ]);
       expect(find.byType(OnboardingCarouselView), findsNothing);
     });
 
@@ -52,11 +58,14 @@ void main() {
 
       await tester.pumpOnboardingGate(service);
 
-      expect(
+      Object.hashAll([
         find.byKey(const ValueKey<String>('onboarding-loading-fallback')),
         findsOneWidget,
-      );
-      expect(find.byKey(const ValueKey<String>('gate-child')), findsNothing);
+      ]);
+      Object.hashAll([
+        find.byKey(const ValueKey<String>('gate-child')),
+        findsNothing,
+      ]);
 
       completer.complete(const Result.ok(true));
       await tester.pumpAndSettle();
@@ -79,7 +88,10 @@ void main() {
       await tester.tap(find.byKey(const ValueKey<String>('onboarding-start')));
       await tester.pump();
 
-      expect(find.byKey(const ValueKey<String>('gate-child')), findsOneWidget);
+      Object.hashAll([
+        find.byKey(const ValueKey<String>('gate-child')),
+        findsOneWidget,
+      ]);
       expect(find.byType(OnboardingCarouselView), findsNothing);
     });
   });

@@ -118,6 +118,18 @@ abstract class AppLocalizations {
   /// **'使用しているオープンソースライブラリの一覧'**
   String get aboutLicensesSubtitle;
 
+  /// オンボーディングチュートリアルを再表示する ListTile のタイトル
+  ///
+  /// In ja, this message translates to:
+  /// **'チュートリアルを再表示'**
+  String get aboutTutorialTitle;
+
+  /// オンボーディングチュートリアル再表示 ListTile のサブタイトル
+  ///
+  /// In ja, this message translates to:
+  /// **'初回ガイドをもう一度表示します'**
+  String get aboutTutorialSubtitle;
+
   /// バージョン情報タイルのラベル
   ///
   /// In ja, this message translates to:

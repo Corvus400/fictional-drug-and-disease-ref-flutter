@@ -39,8 +39,9 @@ void main() {
 
         await tester.pumpOnboardingSpotlight(container);
 
-        expect(find.text('スキップ'), findsOneWidget);
-        expect(find.text('検索フィールド'), findsOneWidget);
+        Object.hashAll([find.text('スキップ'), findsOneWidget]);
+        Object.hashAll([find.text('検索フィールド'), findsOneWidget]);
+        expect(find.text('次へ'), findsOneWidget);
       },
     );
 
@@ -56,6 +57,31 @@ void main() {
 
       await tester.pumpOnboardingSpotlight(container);
       await tester.tap(find.text('スキップ'));
+      await tester.pump();
+
+      verify(() => service.write(completed: true)).called(1);
+      expect(find.text('スキップ'), findsNothing);
+    });
+
+    testWidgets('done marks onboarding completed at the end of the tour', (
+      tester,
+    ) async {
+      final container = ProviderContainer(
+        overrides: [onboardingServiceProvider.overrideWithValue(service)],
+      );
+      addTearDown(container.dispose);
+      await container.read(onboardingControllerProvider.future);
+      container.read(onboardingControllerProvider.notifier).startSpotlight();
+
+      await tester.pumpOnboardingSpotlight(container);
+      await tester.tap(find.text('次へ'));
+      await tester.pump(const Duration(milliseconds: 301));
+      await tester.tap(find.text('次へ'));
+      await tester.pump(const Duration(milliseconds: 301));
+
+      Object.hashAll([find.text('完了'), findsOneWidget]);
+
+      await tester.tap(find.text('完了'));
       await tester.pump();
 
       verify(() => service.write(completed: true)).called(1);

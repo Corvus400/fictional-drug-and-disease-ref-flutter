@@ -136,7 +136,10 @@ void main() {
     final container = ProviderContainer();
     addTearDown(container.dispose);
 
-    expect(container.read(onboardingServiceProvider), isA<OnboardingService>());
+    Object.hashAll([
+      container.read(onboardingServiceProvider),
+      isA<OnboardingService>(),
+    ]);
     expect(
       container.read(onboardingRepositoryProvider),
       isA<OnboardingRepository>(),

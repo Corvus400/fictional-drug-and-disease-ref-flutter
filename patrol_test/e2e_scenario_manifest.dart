@@ -31,6 +31,10 @@ enum PatrolE2EWorkflow {
   disclaimer,
   about,
   licenses,
+  onboardingIntro,
+  onboardingSkip,
+  onboardingSpotlight,
+  onboardingReshow,
 }
 
 enum PatrolE2EDeviceClass {
@@ -129,6 +133,16 @@ const patrolE2EScenarios = <PatrolE2EScenario>[
       PatrolE2EWorkflow.disclaimer,
       PatrolE2EWorkflow.about,
       PatrolE2EWorkflow.licenses,
+    },
+  ),
+  PatrolE2EScenario(
+    id: 'onboarding',
+    routes: {'/search', '/about'},
+    workflows: {
+      PatrolE2EWorkflow.onboardingIntro,
+      PatrolE2EWorkflow.onboardingSkip,
+      PatrolE2EWorkflow.onboardingSpotlight,
+      PatrolE2EWorkflow.onboardingReshow,
     },
   ),
 ];

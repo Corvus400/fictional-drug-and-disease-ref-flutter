@@ -104,18 +104,27 @@ final class _OnboardingSpotlightState
         key: OnboardingTargetKeys.searchField,
         title: l10n.onboardingSpotlightSearchTitle,
         body: l10n.onboardingSpotlightSearchBody,
+        align: ContentAlign.bottom,
+        actionLabel: l10n.onboardingNext,
+        onAction: () => _tutorial?.next(),
       ),
       _target(
         identify: 'navigation-tabs',
         key: OnboardingTargetKeys.navigationTabs,
         title: l10n.onboardingSpotlightNavTitle,
         body: l10n.onboardingSpotlightNavBody,
+        align: ContentAlign.top,
+        actionLabel: l10n.onboardingNext,
+        onAction: () => _tutorial?.next(),
       ),
       _target(
         identify: 'about-button',
         key: OnboardingTargetKeys.aboutButton,
         title: l10n.onboardingSpotlightAboutTitle,
         body: l10n.onboardingSpotlightAboutBody,
+        align: ContentAlign.bottom,
+        actionLabel: l10n.onboardingDone,
+        onAction: () => _tutorial?.finish(),
       ),
     ];
   }
@@ -125,6 +134,9 @@ final class _OnboardingSpotlightState
     required GlobalKey key,
     required String title,
     required String body,
+    required ContentAlign align,
+    required String actionLabel,
+    required VoidCallback onAction,
   }) {
     return TargetFocus(
       identify: identify,
@@ -132,7 +144,13 @@ final class _OnboardingSpotlightState
       shape: ShapeLightFocus.RRect,
       contents: [
         TargetContent(
-          child: _SpotlightCard(title: title, body: body),
+          align: align,
+          child: _SpotlightCard(
+            title: title,
+            body: body,
+            actionLabel: actionLabel,
+            onAction: onAction,
+          ),
         ),
       ],
     );
@@ -140,10 +158,17 @@ final class _OnboardingSpotlightState
 }
 
 final class _SpotlightCard extends StatelessWidget {
-  const _SpotlightCard({required this.title, required this.body});
+  const _SpotlightCard({
+    required this.title,
+    required this.body,
+    required this.actionLabel,
+    required this.onAction,
+  });
 
   final String title;
   final String body;
+  final String actionLabel;
+  final VoidCallback onAction;
 
   @override
   Widget build(BuildContext context) {
@@ -174,6 +199,14 @@ final class _SpotlightCard extends StatelessWidget {
             Text(
               body,
               style: typography.bodyS.copyWith(color: palette.muted),
+            ),
+            SizedBox(height: spacing.s3),
+            Align(
+              alignment: Alignment.centerRight,
+              child: FilledButton(
+                onPressed: onAction,
+                child: Text(actionLabel),
+              ),
             ),
           ],
         ),

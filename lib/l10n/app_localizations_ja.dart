@@ -21,6 +21,12 @@ class AppLocalizationsJa extends AppLocalizations {
   String get aboutLicensesSubtitle => '使用しているオープンソースライブラリの一覧';
 
   @override
+  String get aboutTutorialTitle => 'チュートリアルを再表示';
+
+  @override
+  String get aboutTutorialSubtitle => '初回ガイドをもう一度表示します';
+
+  @override
   String aboutAppVersionLabel(String version) {
     return 'バージョン $version';
   }

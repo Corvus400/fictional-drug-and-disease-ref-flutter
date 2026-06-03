@@ -4,13 +4,17 @@ import 'package:drift/native.dart';
 import 'package:fictional_drug_and_disease_ref/app.dart';
 import 'package:fictional_drug_and_disease_ref/config/api_config.dart';
 import 'package:fictional_drug_and_disease_ref/config/flavor.dart';
+import 'package:fictional_drug_and_disease_ref/core/result.dart';
 import 'package:fictional_drug_and_disease_ref/data/local/app_database.dart';
 import 'package:fictional_drug_and_disease_ref/data/providers/local_providers.dart';
+import 'package:fictional_drug_and_disease_ref/data/repositories/onboarding_repository.dart';
+import 'package:fictional_drug_and_disease_ref/data/services/local/onboarding_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:patrol/patrol.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 /// Stable mock-server fixture ID used by E2E.
 const e2eDrugId = 'drug_0080';
@@ -47,6 +51,20 @@ const e2eTimeout = Timeout(Duration(minutes: 3));
 
 /// Starts the app with a fresh in-memory database.
 Future<AppDatabase> pumpE2EApp(PatrolIntegrationTester $) async {
+  return _pumpE2EApp($, onboardingCompleted: true);
+}
+
+/// Starts the app with onboarding marked as incomplete.
+Future<AppDatabase> pumpE2EAppFreshOnboarding(
+  PatrolIntegrationTester $,
+) async {
+  return _pumpE2EApp($, onboardingCompleted: false);
+}
+
+Future<AppDatabase> _pumpE2EApp(
+  PatrolIntegrationTester $, {
+  required bool onboardingCompleted,
+}) async {
   await _configurePreferredOrientations();
   ApiConfig.initialize(
     const FlavorConfig(flavor: Flavor.dev, apiBaseUrl: e2eApiBaseUrl),
@@ -55,7 +73,14 @@ Future<AppDatabase> pumpE2EApp(PatrolIntegrationTester $) async {
   addTearDown(db.close);
   await $.pumpWidgetAndSettle(
     ProviderScope(
-      overrides: [appDatabaseProvider.overrideWithValue(db)],
+      overrides: [
+        appDatabaseProvider.overrideWithValue(db),
+        onboardingRepositoryProvider.overrideWith(
+          (ref) => OnboardingRepository(
+            _E2EOnboardingService(completed: onboardingCompleted),
+          ),
+        ),
+      ],
       child: App(),
     ),
   );
@@ -206,3 +231,20 @@ Future<void> _configurePreferredOrientations() async {
 
 /// Returns whether the current target is iOS.
 bool get isIOSPatrolRun => Platform.isIOS;
+
+final class _E2EOnboardingService extends OnboardingService {
+  _E2EOnboardingService({required bool completed})
+    : _completed = completed,
+      super(SharedPreferences.getInstance());
+
+  bool _completed;
+
+  @override
+  Future<Result<bool>> read() async => Result.ok(_completed);
+
+  @override
+  Future<Result<void>> write({required bool completed}) async {
+    _completed = completed;
+    return const Result.ok(null);
+  }
+}

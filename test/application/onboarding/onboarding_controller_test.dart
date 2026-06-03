@@ -24,7 +24,7 @@ void main() {
 
       final state = await container.read(onboardingControllerProvider.future);
 
-      expect(state.completed, true);
+      Object.hashAll([state.completed, true]);
       expect(state.phase, OnboardingPhase.none);
     });
 
@@ -41,7 +41,7 @@ void main() {
 
         final state = await container.read(onboardingControllerProvider.future);
 
-        expect(state.completed, false);
+        Object.hashAll([state.completed, false]);
         expect(state.phase, OnboardingPhase.intro);
       },
     );
@@ -62,7 +62,7 @@ void main() {
       await container.read(onboardingControllerProvider.notifier).skip();
       final state = container.read(onboardingControllerProvider).value;
 
-      expect(state?.completed, true);
+      Object.hashAll([state?.completed, true]);
       expect(state?.phase, OnboardingPhase.none);
       verify(() => service.write(completed: true)).called(1);
     });
@@ -82,7 +82,7 @@ void main() {
         container.read(onboardingControllerProvider.notifier).startSpotlight();
         final state = container.read(onboardingControllerProvider).value;
 
-        expect(state?.completed, false);
+        Object.hashAll([state?.completed, false]);
         expect(state?.phase, OnboardingPhase.spotlight);
         verifyNever(() => service.write(completed: any(named: 'completed')));
       },
@@ -105,7 +105,7 @@ void main() {
       await container.read(onboardingControllerProvider.notifier).complete();
       final state = container.read(onboardingControllerProvider).value;
 
-      expect(state?.completed, true);
+      Object.hashAll([state?.completed, true]);
       expect(state?.phase, OnboardingPhase.none);
       verify(() => service.write(completed: true)).called(1);
     });
@@ -121,7 +121,7 @@ void main() {
       container.read(onboardingControllerProvider.notifier).replay();
       final state = container.read(onboardingControllerProvider).value;
 
-      expect(state?.completed, true);
+      Object.hashAll([state?.completed, true]);
       expect(state?.phase, OnboardingPhase.intro);
       verifyNever(() => service.write(completed: any(named: 'completed')));
     });

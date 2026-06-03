@@ -25,26 +25,26 @@ void main() {
     ) async {
       await tester.pumpOnboardingCarousel(service);
 
-      expect(
+      Object.hashAll([
         find.byKey(const ValueKey<String>('onboarding-page-1')),
         findsOneWidget,
-      );
-      expect(
+      ]);
+      Object.hashAll([
         find.byKey(const ValueKey<String>('onboarding-skip')),
         findsOneWidget,
-      );
-      expect(
+      ]);
+      Object.hashAll([
         find.byKey(const ValueKey<String>('onboarding-next')),
         findsOneWidget,
-      );
-      expect(
+      ]);
+      Object.hashAll([
         find.byKey(const ValueKey<String>('onboarding-dot-1')),
         findsOneWidget,
-      );
-      expect(
+      ]);
+      Object.hashAll([
         find.byKey(const ValueKey<String>('onboarding-dot-2')),
         findsOneWidget,
-      );
+      ]);
       expect(
         find.byKey(const ValueKey<String>('onboarding-dot-3')),
         findsOneWidget,
@@ -59,18 +59,18 @@ void main() {
       await tester.tap(find.byKey(const ValueKey<String>('onboarding-next')));
       await tester.pumpAndSettle();
 
-      expect(
+      Object.hashAll([
         find.byKey(const ValueKey<String>('onboarding-page-2')),
         findsOneWidget,
-      );
+      ]);
 
       await tester.tap(find.byKey(const ValueKey<String>('onboarding-next')));
       await tester.pumpAndSettle();
 
-      expect(
+      Object.hashAll([
         find.byKey(const ValueKey<String>('onboarding-page-3')),
         findsOneWidget,
-      );
+      ]);
       expect(
         find.byKey(const ValueKey<String>('onboarding-start')),
         findsOneWidget,

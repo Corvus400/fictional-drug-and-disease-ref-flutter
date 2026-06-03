@@ -16,9 +16,7 @@ void main() {
       description: 'Onboarding intro ${page.name}',
       builder: (theme, size, textScaler) {
         final service = _MockOnboardingService();
-        when(
-          () => service.read(),
-        ).thenAnswer((_) async => const Result.ok(false));
+        when(service.read).thenAnswer((_) async => const Result.ok(false));
 
         return ProviderScope(
           overrides: [onboardingServiceProvider.overrideWithValue(service)],
