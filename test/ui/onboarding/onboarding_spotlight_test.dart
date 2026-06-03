@@ -414,7 +414,119 @@ void main() {
         verifyNever(() => service.write(completed: true));
       },
     );
+
+    for (final scenario in _RailSpotlightScenario.landscapeScenarios) {
+      testWidgets(
+        'targets the full rail without using the package invalid origin '
+        'on ${scenario.name}',
+        (tester) async {
+          tester.view
+            ..physicalSize = scenario.size
+            ..devicePixelRatio = 1;
+          addTearDown(tester.view.resetPhysicalSize);
+          addTearDown(tester.view.resetDevicePixelRatio);
+
+          final container = ProviderContainer(
+            overrides: [onboardingServiceProvider.overrideWithValue(service)],
+          );
+          addTearDown(container.dispose);
+          await container.read(onboardingControllerProvider.future);
+          container
+              .read(onboardingControllerProvider.notifier)
+              .startSpotlight();
+
+          await tester.pumpWidget(
+            UncontrolledProviderScope(
+              container: container,
+              child: MaterialApp(
+                debugShowCheckedModeBanner: false,
+                theme: AppTheme.light(),
+                localizationsDelegates: AppLocalizations.localizationsDelegates,
+                supportedLocales: AppLocalizations.supportedLocales,
+                home: OnboardingSpotlight(
+                  child: _AppShellSpotlightTargetsFixture(),
+                ),
+              ),
+            ),
+          );
+          await tester.pump();
+          await tester.pump(const Duration(milliseconds: 1));
+          await tester.pump(const Duration(milliseconds: 1));
+          await tester.pump(const Duration(milliseconds: 1));
+          await tester.tap(
+            find.byKey(
+              const ValueKey<String>(
+                'onboarding-spotlight-action-search-field',
+              ),
+            ),
+          );
+          await tester.pump(const Duration(milliseconds: 301));
+
+          final position = resolveNavigationRailSpotlightTargetPosition(
+            targetContext: tester.element(
+              find.byKey(OnboardingTargetKeys.navigationTabs),
+            ),
+            spotlightContext: tester.element(find.byType(OnboardingSpotlight)),
+            rootOverlay: true,
+          );
+          final cardRect = tester.getRect(
+            find.byKey(const ValueKey<String>('onboarding-spotlight-card')),
+          );
+
+          final actual = (
+            origin:
+                (position?.offset.dx ?? 0) > 0 && (position?.offset.dy ?? 0) > 0
+                ? 'package-renderable'
+                : 'invalid-origin',
+            width: position?.size.width,
+            height:
+                ((position?.size.height ?? 0) - scenario.size.height).abs() <
+                    0.01
+                ? 'full-screen'
+                : 'short',
+            cardLeft: cardRect.left,
+            cardTop: cardRect.top,
+          );
+
+          expect(
+            actual,
+            (
+              origin: 'package-renderable',
+              width: scenario.railWidth,
+              height: 'full-screen',
+              cardLeft: 96.0,
+              cardTop: 90.0,
+            ),
+          );
+        },
+      );
+    }
   });
+}
+
+final class _RailSpotlightScenario {
+  const _RailSpotlightScenario({
+    required this.name,
+    required this.size,
+    required this.railWidth,
+  });
+
+  final String name;
+  final Size size;
+  final double railWidth;
+
+  static const landscapeScenarios = [
+    _RailSpotlightScenario(
+      name: 'iPad landscape',
+      size: Size(1194, 834),
+      railWidth: appShellRegularRailWidth,
+    ),
+    _RailSpotlightScenario(
+      name: 'phone landscape',
+      size: Size(844, 390),
+      railWidth: appShellCompactRailWidth,
+    ),
+  ];
 }
 
 extension on WidgetTester {
@@ -509,6 +621,53 @@ final class _SpotlightMainTargets extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
       child: Column(
+        children: [
+          KeyedSubtree(
+            key: OnboardingTargetKeys.searchField,
+            child: const TextField(),
+          ),
+          const Spacer(),
+        ],
+      ),
+    );
+  }
+}
+
+final class _AppShellSpotlightTargetsFixture extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Row(
+        children: [
+          AppShellAdaptiveNavigation(
+            selectedIndex: 0,
+            onDestinationSelected: (_) {},
+          ),
+          const Expanded(child: _AppShellSpotlightContentFixture()),
+        ],
+      ),
+    );
+  }
+}
+
+final class _AppShellSpotlightContentFixture extends StatelessWidget {
+  const _AppShellSpotlightContentFixture();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        actions: [
+          KeyedSubtree(
+            key: OnboardingTargetKeys.aboutButton,
+            child: const IconButton(
+              onPressed: null,
+              icon: Icon(Icons.info_outline),
+            ),
+          ),
+        ],
+      ),
+      body: Column(
         children: [
           KeyedSubtree(
             key: OnboardingTargetKeys.searchField,

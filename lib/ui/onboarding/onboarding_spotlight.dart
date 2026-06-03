@@ -20,6 +20,11 @@ const _coachCardPaddingVertical = 14.0;
 const _coachCardBorderWidth = 0.5;
 const _coachCardShadowBlur = 32.0;
 const _coachCardShadowOffsetY = 12.0;
+const _railSpotlightOriginEpsilon = 0.001;
+const _navigationBarTargetPadding = 6.0;
+const _navigationBarTargetRadius = 14.0;
+const _landscapeNavigationCoachTop = 90.0;
+const _landscapeNavigationCoachLeft = 96.0;
 
 /// Starts the spotlight onboarding tour when the controller enters spotlight.
 final class OnboardingSpotlight extends ConsumerStatefulWidget {
@@ -112,7 +117,11 @@ final class _OnboardingSpotlightState
     _shownOrientation = MediaQuery.orientationOf(context);
     _tutorial =
         TutorialCoachMark(
-          targets: _targets(context, l10n),
+          targets: _targets(
+            context,
+            l10n,
+            rootOverlay: overlayTarget.rootOverlay,
+          ),
           initialFocus: initialFocus,
           pulseEnable: false,
           focusAnimationDuration: Duration.zero,
@@ -215,14 +224,18 @@ final class _OnboardingSpotlightState
     return null;
   }
 
-  List<TargetFocus> _targets(BuildContext context, AppLocalizations l10n) {
+  List<TargetFocus> _targets(
+    BuildContext context,
+    AppLocalizations l10n, {
+    required bool rootOverlay,
+  }) {
     final theme = Theme.of(context);
     final spacing = theme.extension<AppSpacing>()!;
     final size = MediaQuery.sizeOf(context);
     final navUsesRail = size.width > size.height;
-    final railWidth = size.height >= 600
-        ? appShellRegularRailWidth
-        : appShellCompactRailWidth;
+    final navigationTargetPosition = _navigationTargetPosition(
+      rootOverlay: rootOverlay,
+    );
     return [
       _target(
         identify: 'search-field',
@@ -246,15 +259,18 @@ final class _OnboardingSpotlightState
       ),
       _target(
         identify: 'navigation-tabs',
-        key: OnboardingTargetKeys.navigationTabs,
+        key: navigationTargetPosition == null
+            ? OnboardingTargetKeys.navigationTabs
+            : null,
+        targetPosition: navigationTargetPosition,
         theme: theme,
         title: l10n.onboardingSpotlightNavTitle,
         body: l10n.onboardingSpotlightNavBody,
         align: navUsesRail ? ContentAlign.custom : ContentAlign.top,
         customPosition: navUsesRail
             ? CustomTargetContentPosition(
-                top: spacing.s4,
-                left: railWidth + spacing.s4,
+                top: _landscapeNavigationCoachTop,
+                left: _landscapeNavigationCoachLeft,
                 right: spacing.s4,
               )
             : null,
@@ -270,6 +286,10 @@ final class _OnboardingSpotlightState
           _currentStep = 2;
           _tutorial?.next();
         },
+        contentPadding: EdgeInsets.zero,
+        alignCardToStart: true,
+        paddingFocus: _navigationBarTargetPadding,
+        radius: _navigationBarTargetRadius,
       ),
       _target(
         identify: 'about-button',
@@ -296,7 +316,7 @@ final class _OnboardingSpotlightState
 
   TargetFocus _target({
     required String identify,
-    required GlobalKey key,
+    required GlobalKey? key,
     required ThemeData theme,
     required String title,
     required String body,
@@ -309,15 +329,24 @@ final class _OnboardingSpotlightState
     required VoidCallback onSkip,
     required VoidCallback onAction,
     CustomTargetContentPosition? customPosition,
+    TargetPosition? targetPosition,
+    EdgeInsets contentPadding = const EdgeInsets.all(20),
+    bool alignCardToStart = false,
+    double? paddingFocus,
+    double? radius,
   }) {
     return TargetFocus(
       identify: identify,
       keyTarget: key,
+      targetPosition: targetPosition,
       shape: ShapeLightFocus.RRect,
+      paddingFocus: paddingFocus,
+      radius: radius,
       contents: [
         TargetContent(
           align: align,
           customPosition: customPosition,
+          padding: contentPadding,
           child: Theme(
             data: theme,
             child: _SpotlightCard(
@@ -330,12 +359,67 @@ final class _OnboardingSpotlightState
               actionKey: actionKey,
               onSkip: onSkip,
               onAction: onAction,
+              alignToStart: alignCardToStart,
             ),
           ),
         ),
       ],
     );
   }
+
+  TargetPosition? _navigationTargetPosition({required bool rootOverlay}) {
+    final targetContext = OnboardingTargetKeys.navigationTabs.currentContext;
+    if (targetContext == null) {
+      return null;
+    }
+    return resolveNavigationRailSpotlightTargetPosition(
+      targetContext: targetContext,
+      spotlightContext: context,
+      rootOverlay: rootOverlay,
+    );
+  }
+}
+
+/// Resolves the full rail spotlight rectangle for landscape onboarding.
+@visibleForTesting
+TargetPosition? resolveNavigationRailSpotlightTargetPosition({
+  required BuildContext targetContext,
+  required BuildContext spotlightContext,
+  required bool rootOverlay,
+}) {
+  final screenSize = MediaQuery.sizeOf(spotlightContext);
+  if (screenSize.width <= screenSize.height) {
+    return null;
+  }
+
+  final renderObject = targetContext.findRenderObject();
+  if (renderObject is! RenderBox || !renderObject.hasSize) {
+    return null;
+  }
+
+  final overlayContext = rootOverlay
+      ? targetContext.findRootAncestorStateOfType<OverlayState>()?.context
+      : targetContext.findAncestorStateOfType<NavigatorState>()?.context;
+  final ancestor = overlayContext?.findRenderObject();
+  final offset = ancestor == null
+      ? renderObject.localToGlobal(Offset.zero)
+      : renderObject.localToGlobal(Offset.zero, ancestor: ancestor);
+  // tutorial_coach_mark treats exact Offset.zero as "no rectangle" for RRect
+  // painting. Landscape NavigationRail is legitimately anchored at the
+  // top-left, so keep the visual target at the rail while avoiding that
+  // package sentinel.
+  final resolvedOffset = offset == Offset.zero
+      ? const Offset(_railSpotlightOriginEpsilon, _railSpotlightOriginEpsilon)
+      : offset;
+  final height = screenSize.height - resolvedOffset.dy;
+  if (height <= 0) {
+    return null;
+  }
+
+  final railWidth = screenSize.height >= 600
+      ? appShellRegularRailWidth
+      : appShellCompactRailWidth;
+  return TargetPosition(Size(railWidth, height), resolvedOffset);
 }
 
 final class _SpotlightCard extends StatelessWidget {
@@ -349,6 +433,7 @@ final class _SpotlightCard extends StatelessWidget {
     required this.actionKey,
     required this.onSkip,
     required this.onAction,
+    this.alignToStart = false,
   });
 
   final String stepLabel;
@@ -360,6 +445,7 @@ final class _SpotlightCard extends StatelessWidget {
   final Key actionKey;
   final VoidCallback onSkip;
   final VoidCallback onAction;
+  final bool alignToStart;
 
   @override
   Widget build(BuildContext context) {
@@ -377,6 +463,7 @@ final class _SpotlightCard extends StatelessWidget {
 
     return UnconstrainedBox(
       constrainedAxis: Axis.vertical,
+      alignment: alignToStart ? Alignment.centerLeft : Alignment.center,
       child: SizedBox(
         key: const ValueKey<String>('onboarding-spotlight-card'),
         width: width,
