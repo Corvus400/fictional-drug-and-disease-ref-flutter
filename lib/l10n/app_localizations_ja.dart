@@ -1521,7 +1521,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get onboardingIntroP2Title => '主要機能';
 
   @override
-  String get onboardingIntroP2Body => '検索・詳細・計算ツール・ブックマーク・閲覧履歴を\n1 つに集約しています。';
+  String get onboardingIntroP2Body => '検索・詳細・計算ツール・ブックマーク・閲覧履歴を1つに集約しています。';
 
   @override
   String get onboardingFeatureSearch => '検索 — 医薬品・疾患をキーワードで検索できます';

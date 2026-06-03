@@ -15,6 +15,7 @@ class AppTabHeader extends StatelessWidget implements PreferredSizeWidget {
     this.toolbarHeight = 56,
     this.bottom,
     this.actions,
+    this.includeOnboardingTargetKey = false,
     super.key,
   });
 
@@ -29,6 +30,9 @@ class AppTabHeader extends StatelessWidget implements PreferredSizeWidget {
 
   /// Optional tab-specific actions rendered before the about entry point.
   final List<Widget>? actions;
+
+  /// Whether this header's about button is the onboarding spotlight target.
+  final bool includeOnboardingTargetKey;
 
   @override
   Size get preferredSize {
@@ -47,6 +51,12 @@ class AppTabHeader extends StatelessWidget implements PreferredSizeWidget {
     final typography = theme.extension<AppTypography>() ?? AppTypography.tokens;
     final effectiveBottom = bottom ?? _AppTabHeaderHairline(palette: palette);
     final l10n = AppLocalizations.of(context)!;
+    final aboutButton = IconButton(
+      key: const ValueKey<String>('app-tab-header-about-button'),
+      icon: Icon(Icons.info_outline, color: palette.ink),
+      tooltip: l10n.aboutTitle,
+      onPressed: () => context.push(AppRoutes.about),
+    );
 
     return AppBar(
       key: const ValueKey<String>('app-tab-header'),
@@ -71,15 +81,13 @@ class AppTabHeader extends StatelessWidget implements PreferredSizeWidget {
       bottom: effectiveBottom,
       actions: [
         ...?actions,
-        KeyedSubtree(
-          key: OnboardingTargetKeys.aboutButton,
-          child: IconButton(
-            key: const ValueKey<String>('app-tab-header-about-button'),
-            icon: Icon(Icons.info_outline, color: palette.ink),
-            tooltip: l10n.aboutTitle,
-            onPressed: () => context.push(AppRoutes.about),
-          ),
-        ),
+        if (includeOnboardingTargetKey)
+          KeyedSubtree(
+            key: OnboardingTargetKeys.aboutButton,
+            child: aboutButton,
+          )
+        else
+          aboutButton,
       ],
     );
   }

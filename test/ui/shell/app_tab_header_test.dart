@@ -838,6 +838,7 @@ void main() {
         home: const Scaffold(
           appBar: AppTabHeader(
             tab: AppShellTab.search,
+            includeOnboardingTargetKey: true,
             actions: [
               IconButton(
                 key: ValueKey<String>('custom-action'),

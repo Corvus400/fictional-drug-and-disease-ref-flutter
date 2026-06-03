@@ -147,6 +147,7 @@ class _SearchViewState extends ConsumerState<SearchView> with RouteAware {
       appBar: AppTabHeader(
         tab: AppShellTab.search,
         toolbarHeight: MediaQuery.sizeOf(context).shortestSide >= 600 ? 64 : 56,
+        includeOnboardingTargetKey: true,
       ),
       floatingActionButton: LayoutBuilder(
         builder: (context, constraints) {

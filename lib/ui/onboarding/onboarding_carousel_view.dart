@@ -10,6 +10,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
 const _pageCount = 3;
+// Design SSOT: Onboarding Spec.html `.ob-skip { padding: 0 10px; }`.
+const _onboardingSkipHorizontalPadding = 10.0;
+const _onboardingSkipGlyphSize = 16.0;
 
 /// Full-screen intro carousel for onboarding.
 class OnboardingCarouselView extends ConsumerStatefulWidget {
@@ -51,6 +54,14 @@ final class _OnboardingCarouselViewState
     final typography = theme.extension<AppTypography>()!;
     final isTablet = MediaQuery.sizeOf(context).shortestSide >= 600;
     final isLast = _pageIndex == _pageCount - 1;
+    final skipTextStyle = typography.labelM
+        .copyWith(
+          color: palette.muted,
+          fontSize: _onboardingSkipGlyphSize,
+          height: 1,
+          decoration: TextDecoration.none,
+        )
+        .withVariableWeight(FontWeight.w600);
 
     return Material(
       color: palette.bg,
@@ -66,18 +77,38 @@ final class _OnboardingCarouselViewState
                 height: 44,
                 child: Align(
                   alignment: Alignment.centerRight,
-                  child: TextButton.icon(
-                    key: const ValueKey<String>('onboarding-skip'),
-                    onPressed: () =>
-                        ref.read(onboardingControllerProvider.notifier).skip(),
-                    icon: const Icon(Icons.close, size: 16),
-                    iconAlignment: IconAlignment.end,
-                    label: Text(
-                      l10n.onboardingSkip,
-                      style: typography.labelM.copyWith(
-                        color: palette.muted,
-                        fontWeight: FontWeight.w600,
-                        decoration: TextDecoration.none,
+                  child: Semantics(
+                    button: true,
+                    label: l10n.onboardingSkip,
+                    child: GestureDetector(
+                      key: const ValueKey<String>('onboarding-skip'),
+                      behavior: HitTestBehavior.opaque,
+                      onTap: () => ref
+                          .read(onboardingControllerProvider.notifier)
+                          .skip(),
+                      child: ConstrainedBox(
+                        constraints: const BoxConstraints(minHeight: 44),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: _onboardingSkipHorizontalPadding,
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                l10n.onboardingSkip,
+                                style: skipTextStyle,
+                              ),
+                              SizedBox(width: spacing.s1),
+                              ExcludeSemantics(
+                                child: Text(
+                                  '×',
+                                  style: skipTextStyle,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
                     ),
                   ),
