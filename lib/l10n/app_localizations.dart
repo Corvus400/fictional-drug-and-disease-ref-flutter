@@ -2929,7 +2929,7 @@ abstract class AppLocalizations {
   /// No description provided for @onboardingIntroP1Body.
   ///
   /// In ja, this message translates to:
-  /// **'架空データの医薬品・疾患リファレンスです。主要機能の場所を最初に案内します。'**
+  /// **'架空データの医薬品・疾患リファレンスです。\n主要機能の場所を最初に案内します。'**
   String get onboardingIntroP1Body;
 
   /// No description provided for @onboardingIntroP2Title.
@@ -2941,7 +2941,7 @@ abstract class AppLocalizations {
   /// No description provided for @onboardingIntroP2Body.
   ///
   /// In ja, this message translates to:
-  /// **'検索・詳細・計算ツール・ブックマーク・閲覧履歴を 1 つに集約しています。'**
+  /// **'検索・詳細・計算ツール・ブックマーク・閲覧履歴を\n1 つに集約しています。'**
   String get onboardingIntroP2Body;
 
   /// No description provided for @onboardingFeatureSearch.

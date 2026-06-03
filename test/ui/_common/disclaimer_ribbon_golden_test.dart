@@ -98,6 +98,7 @@ void _screenChromeGolden(
           bottomNavigationBar: AppShellBottomNavigation(
             selectedIndex: 0,
             onDestinationSelected: (_) {},
+            includeOnboardingTargetKey: false,
           ),
         ),
       ),

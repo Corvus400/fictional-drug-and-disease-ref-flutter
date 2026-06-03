@@ -1514,13 +1514,14 @@ class AppLocalizationsJa extends AppLocalizations {
   String get onboardingIntroP1Title => 'メディマスタへようこそ';
 
   @override
-  String get onboardingIntroP1Body => '架空データの医薬品・疾患リファレンスです。主要機能の場所を最初に案内します。';
+  String get onboardingIntroP1Body =>
+      '架空データの医薬品・疾患リファレンスです。\n主要機能の場所を最初に案内します。';
 
   @override
   String get onboardingIntroP2Title => '主要機能';
 
   @override
-  String get onboardingIntroP2Body => '検索・詳細・計算ツール・ブックマーク・閲覧履歴を 1 つに集約しています。';
+  String get onboardingIntroP2Body => '検索・詳細・計算ツール・ブックマーク・閲覧履歴を\n1 つに集約しています。';
 
   @override
   String get onboardingFeatureSearch => '検索 — 医薬品・疾患をキーワードで検索できます';

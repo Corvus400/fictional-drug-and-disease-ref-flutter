@@ -24,8 +24,12 @@ void main() {
 
       final state = await container.read(onboardingControllerProvider.future);
 
-      Object.hashAll([state.completed, true]);
-      expect(state.phase, OnboardingPhase.none);
+      expect(
+        state,
+        isA<OnboardingState>()
+            .having((state) => state.completed, 'completed', isTrue)
+            .having((state) => state.phase, 'phase', OnboardingPhase.none),
+      );
     });
 
     test(
@@ -41,8 +45,12 @@ void main() {
 
         final state = await container.read(onboardingControllerProvider.future);
 
-        Object.hashAll([state.completed, false]);
-        expect(state.phase, OnboardingPhase.intro);
+        expect(
+          state,
+          isA<OnboardingState>()
+              .having((state) => state.completed, 'completed', isFalse)
+              .having((state) => state.phase, 'phase', OnboardingPhase.intro),
+        );
       },
     );
 
@@ -62,8 +70,12 @@ void main() {
       await container.read(onboardingControllerProvider.notifier).skip();
       final state = container.read(onboardingControllerProvider).value;
 
-      Object.hashAll([state?.completed, true]);
-      expect(state?.phase, OnboardingPhase.none);
+      expect(
+        state,
+        isA<OnboardingState>()
+            .having((state) => state.completed, 'completed', isTrue)
+            .having((state) => state.phase, 'phase', OnboardingPhase.none),
+      );
       verify(() => service.write(completed: true)).called(1);
     });
 
@@ -82,8 +94,16 @@ void main() {
         container.read(onboardingControllerProvider.notifier).startSpotlight();
         final state = container.read(onboardingControllerProvider).value;
 
-        Object.hashAll([state?.completed, false]);
-        expect(state?.phase, OnboardingPhase.spotlight);
+        expect(
+          state,
+          isA<OnboardingState>()
+              .having((state) => state.completed, 'completed', isFalse)
+              .having(
+                (state) => state.phase,
+                'phase',
+                OnboardingPhase.spotlight,
+              ),
+        );
         verifyNever(() => service.write(completed: any(named: 'completed')));
       },
     );
@@ -105,8 +125,12 @@ void main() {
       await container.read(onboardingControllerProvider.notifier).complete();
       final state = container.read(onboardingControllerProvider).value;
 
-      Object.hashAll([state?.completed, true]);
-      expect(state?.phase, OnboardingPhase.none);
+      expect(
+        state,
+        isA<OnboardingState>()
+            .having((state) => state.completed, 'completed', isTrue)
+            .having((state) => state.phase, 'phase', OnboardingPhase.none),
+      );
       verify(() => service.write(completed: true)).called(1);
     });
 
@@ -121,8 +145,12 @@ void main() {
       container.read(onboardingControllerProvider.notifier).replay();
       final state = container.read(onboardingControllerProvider).value;
 
-      Object.hashAll([state?.completed, true]);
-      expect(state?.phase, OnboardingPhase.intro);
+      expect(
+        state,
+        isA<OnboardingState>()
+            .having((state) => state.completed, 'completed', isTrue)
+            .having((state) => state.phase, 'phase', OnboardingPhase.intro),
+      );
       verifyNever(() => service.write(completed: any(named: 'completed')));
     });
   });

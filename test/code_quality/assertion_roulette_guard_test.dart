@@ -7,11 +7,13 @@ import 'package:analyzer/source/line_info.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  test('test bodies contain at most one assertion', () {
+  test('test bodies contain at most one real assertion', () {
     final violations = <String>[];
 
     for (final path in _testDartFiles()) {
-      violations.addAll(_assertionRouletteViolations(path));
+      violations
+        ..addAll(_assertionRouletteViolations(path))
+        ..addAll(_pseudoAssertionViolations(path));
     }
 
     expect(
@@ -20,7 +22,7 @@ void main() {
       reason:
           'Split assertion roulette tests so each test observes one outcome. '
           'Assertions hidden behind same-file helpers still belong to the '
-          'calling test:\n'
+          'calling test. Object.hashAll is not an assertion:\n'
           '${violations.join('\n')}',
     );
   });
@@ -75,6 +77,36 @@ List<String> _assertionRouletteViolations(String path) {
     }
   }
   return violations;
+}
+
+List<String> _pseudoAssertionViolations(String path) {
+  if (!_rejectPseudoAssertions(path)) {
+    return const [];
+  }
+
+  final source = File(path).readAsStringSync();
+  final parsed = parseString(
+    content: source,
+    path: path,
+    throwIfDiagnostics: false,
+  );
+  final visitor = _PseudoAssertionVisitor(parsed.lineInfo);
+  parsed.unit.accept(visitor);
+  return [
+    for (final line in visitor.lines)
+      _pseudoAssertionMessage(path: path, line: line),
+  ];
+}
+
+String _pseudoAssertionMessage({required String path, required int line}) {
+  return '$path:$line: Object.hashAll is not an assertion; use expect or split '
+      'the test';
+}
+
+bool _rejectPseudoAssertions(String path) {
+  return path.startsWith('test/application/onboarding/') ||
+      path.startsWith('test/ui/onboarding/') ||
+      path == 'patrol_test/onboarding_e2e_test.dart';
 }
 
 class _FunctionIndexVisitor extends RecursiveAstVisitor<void> {
@@ -141,6 +173,23 @@ class _AssertionCounter extends RecursiveAstVisitor<void> {
       return;
     }
 
+    super.visitMethodInvocation(node);
+  }
+}
+
+class _PseudoAssertionVisitor extends RecursiveAstVisitor<void> {
+  _PseudoAssertionVisitor(this._lineInfo);
+
+  final LineInfo _lineInfo;
+  final lines = <int>[];
+
+  @override
+  void visitMethodInvocation(MethodInvocation node) {
+    if (node.target is SimpleIdentifier &&
+        (node.target! as SimpleIdentifier).name == 'Object' &&
+        node.methodName.name == 'hashAll') {
+      lines.add(_lineInfo.getLocation(node.offset).lineNumber);
+    }
     super.visitMethodInvocation(node);
   }
 }

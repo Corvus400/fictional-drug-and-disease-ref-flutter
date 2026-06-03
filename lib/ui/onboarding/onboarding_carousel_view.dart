@@ -7,6 +7,7 @@ import 'package:fictional_drug_and_disease_ref/theme/app_typography.dart';
 import 'package:fictional_drug_and_disease_ref/ui/onboarding/onboarding_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:material_symbols_icons/symbols.dart';
 
 const _pageCount = 3;
 
@@ -48,65 +49,104 @@ final class _OnboardingCarouselViewState
     final spacing = theme.extension<AppSpacing>()!;
     final radii = theme.extension<AppRadii>()!;
     final typography = theme.extension<AppTypography>()!;
-    final pages = _pages(l10n);
+    final isTablet = MediaQuery.sizeOf(context).shortestSide >= 600;
     final isLast = _pageIndex == _pageCount - 1;
 
-    return ColoredBox(
+    return Material(
       color: palette.bg,
       child: SafeArea(
-        child: Stack(
-          children: [
-            PageView(
-              controller: _pageController,
-              onPageChanged: (index) => setState(() => _pageIndex = index),
-              children: pages,
-            ),
-            Positioned(
-              top: spacing.s3,
-              right: spacing.s4,
-              child: TextButton(
-                key: const ValueKey<String>('onboarding-skip'),
-                onPressed: () =>
-                    ref.read(onboardingControllerProvider.notifier).skip(),
-                child: Text(l10n.onboardingSkip),
+        child: Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: isTablet ? spacing.s10 : spacing.s4,
+            vertical: isTablet ? spacing.s8 : spacing.s4,
+          ),
+          child: Column(
+            children: [
+              SizedBox(
+                height: 44,
+                child: Align(
+                  alignment: Alignment.centerRight,
+                  child: TextButton.icon(
+                    key: const ValueKey<String>('onboarding-skip'),
+                    onPressed: () =>
+                        ref.read(onboardingControllerProvider.notifier).skip(),
+                    icon: const Icon(Icons.close, size: 16),
+                    iconAlignment: IconAlignment.end,
+                    label: Text(
+                      l10n.onboardingSkip,
+                      style: typography.labelM.copyWith(
+                        color: palette.muted,
+                        fontWeight: FontWeight.w600,
+                        decoration: TextDecoration.none,
+                      ),
+                    ),
+                  ),
+                ),
               ),
-            ),
-            Positioned(
-              left: spacing.s4,
-              right: spacing.s4,
-              bottom: spacing.s4,
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Row(
+              Expanded(
+                child: PageView(
+                  controller: _pageController,
+                  onPageChanged: (index) => setState(() => _pageIndex = index),
+                  children: _pages(l10n),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: spacing.s4),
+                child: Column(
+                  children: [
+                    Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: List.generate(_pageCount, (index) {
                         return _Dot(
-                          key: ValueKey<String>('onboarding-dot-${index + 1}'),
+                          key: ValueKey<String>(
+                            'onboarding-dot-${index + 1}',
+                          ),
                           active: index == _pageIndex,
                         );
                       }),
                     ),
-                  ),
-                  FilledButton(
-                    key: ValueKey<String>(
-                      isLast ? 'onboarding-start' : 'onboarding-next',
-                    ),
-                    style: FilledButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(radii.pill),
+                    SizedBox(height: spacing.s4),
+                    SizedBox(
+                      width: double.infinity,
+                      height: 50,
+                      child: FilledButton(
+                        key: ValueKey<String>(
+                          isLast ? 'onboarding-start' : 'onboarding-next',
+                        ),
+                        style: FilledButton.styleFrom(
+                          backgroundColor: palette.primary,
+                          foregroundColor: palette.onPrimary,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(radii.pill),
+                          ),
+                        ),
+                        onPressed: isLast ? _startSpotlight : _goNext,
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              isLast
+                                  ? l10n.onboardingStart
+                                  : l10n.onboardingNext,
+                              style: typography.titleM.copyWith(
+                                color: palette.onPrimary,
+                                fontWeight: FontWeight.w700,
+                                decoration: TextDecoration.none,
+                              ),
+                            ),
+                            if (!isLast) ...[
+                              SizedBox(width: spacing.s1),
+                              const Icon(Icons.chevron_right, size: 18),
+                            ],
+                          ],
+                        ),
                       ),
                     ),
-                    onPressed: isLast ? _startSpotlight : _goNext,
-                    child: Text(
-                      isLast ? l10n.onboardingStart : l10n.onboardingNext,
-                      style: typography.labelM,
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -116,42 +156,42 @@ final class _OnboardingCarouselViewState
     return [
       OnboardingPage(
         pageNumber: 1,
-        icon: Icons.medical_services_outlined,
+        icon: Symbols.medical_services,
         title: l10n.onboardingIntroP1Title,
         body: l10n.onboardingIntroP1Body,
         showDisclaimer: true,
       ),
       OnboardingPage(
         pageNumber: 2,
-        icon: Icons.menu_book_outlined,
+        icon: Symbols.menu_book,
         title: l10n.onboardingIntroP2Title,
         body: l10n.onboardingIntroP2Body,
         features: [
           OnboardingFeature(
-            icon: Icons.search,
+            icon: Symbols.search,
             label: l10n.onboardingFeatureSearch,
           ),
           OnboardingFeature(
-            icon: Icons.medication_outlined,
+            icon: Symbols.medication,
             label: l10n.onboardingFeatureDetail,
           ),
           OnboardingFeature(
-            icon: Icons.calculate_outlined,
+            icon: Symbols.calculate,
             label: l10n.onboardingFeatureCalc,
           ),
           OnboardingFeature(
-            icon: Icons.bookmark_outline,
+            icon: Symbols.bookmark,
             label: l10n.onboardingFeatureBookmark,
           ),
           OnboardingFeature(
-            icon: Icons.history,
+            icon: Symbols.history,
             label: l10n.onboardingFeatureHistory,
           ),
         ],
       ),
       OnboardingPage(
         pageNumber: 3,
-        icon: Icons.touch_app_outlined,
+        icon: Symbols.touch_app,
         title: l10n.onboardingIntroP3Title,
         body: l10n.onboardingIntroP3Body,
       ),
@@ -180,12 +220,12 @@ final class _Dot extends StatelessWidget {
     final palette = Theme.of(context).extension<AppPalette>()!;
     final spacing = Theme.of(context).extension<AppSpacing>()!;
     return Container(
-      width: active ? spacing.s5 : spacing.s2,
+      width: active ? 22 : spacing.s2,
       height: spacing.s2,
       margin: EdgeInsets.symmetric(horizontal: spacing.s1),
       decoration: BoxDecoration(
         color: active ? palette.primary : palette.surface4,
-        borderRadius: BorderRadius.circular(spacing.s2),
+        borderRadius: BorderRadius.circular(active ? 5 : spacing.s2),
       ),
     );
   }

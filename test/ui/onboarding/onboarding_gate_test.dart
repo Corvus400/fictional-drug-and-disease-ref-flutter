@@ -20,6 +20,21 @@ void main() {
       service = _MockOnboardingService();
     });
 
+    testWidgets('keeps the routed child when onboarding is not completed', (
+      tester,
+    ) async {
+      when(
+        () => service.read(),
+      ).thenAnswer((_) async => const Result.ok(false));
+
+      await tester.pumpOnboardingGate(service);
+
+      expect(
+        find.byKey(const ValueKey<String>('gate-child')),
+        findsOneWidget,
+      );
+    });
+
     testWidgets('shows carousel overlay when onboarding is not completed', (
       tester,
     ) async {
@@ -29,11 +44,20 @@ void main() {
 
       await tester.pumpOnboardingGate(service);
 
-      Object.hashAll([
+      expect(find.byType(OnboardingCarouselView), findsOneWidget);
+    });
+
+    testWidgets('keeps the routed child when onboarding is completed', (
+      tester,
+    ) async {
+      when(() => service.read()).thenAnswer((_) async => const Result.ok(true));
+
+      await tester.pumpOnboardingGate(service);
+
+      expect(
         find.byKey(const ValueKey<String>('gate-child')),
         findsOneWidget,
-      ]);
-      expect(find.byType(OnboardingCarouselView), findsOneWidget);
+      );
     });
 
     testWidgets('does not show carousel when onboarding is completed', (
@@ -43,10 +67,6 @@ void main() {
 
       await tester.pumpOnboardingGate(service);
 
-      Object.hashAll([
-        find.byKey(const ValueKey<String>('gate-child')),
-        findsOneWidget,
-      ]);
       expect(find.byType(OnboardingCarouselView), findsNothing);
     });
 
@@ -58,14 +78,33 @@ void main() {
 
       await tester.pumpOnboardingGate(service);
 
-      Object.hashAll([
+      expect(
         find.byKey(const ValueKey<String>('onboarding-loading-fallback')),
         findsOneWidget,
-      ]);
-      Object.hashAll([
+      );
+    });
+
+    testWidgets('hides the routed child while onboarding state loads', (
+      tester,
+    ) async {
+      final completer = Completer<Result<bool>>();
+      when(() => service.read()).thenAnswer((_) => completer.future);
+
+      await tester.pumpOnboardingGate(service);
+
+      expect(
         find.byKey(const ValueKey<String>('gate-child')),
         findsNothing,
-      ]);
+      );
+    });
+
+    testWidgets('restores the routed child after onboarding state loads', (
+      tester,
+    ) async {
+      final completer = Completer<Result<bool>>();
+      when(() => service.read()).thenAnswer((_) => completer.future);
+
+      await tester.pumpOnboardingGate(service);
 
       completer.complete(const Result.ok(true));
       await tester.pumpAndSettle();
@@ -88,10 +127,27 @@ void main() {
       await tester.tap(find.byKey(const ValueKey<String>('onboarding-start')));
       await tester.pump();
 
-      Object.hashAll([
+      expect(
         find.byKey(const ValueKey<String>('gate-child')),
         findsOneWidget,
-      ]);
+      );
+    });
+
+    testWidgets('removes intro overlay after the carousel starts spotlight', (
+      tester,
+    ) async {
+      when(
+        () => service.read(),
+      ).thenAnswer((_) async => const Result.ok(false));
+
+      await tester.pumpOnboardingGate(service);
+      await tester.tap(find.byKey(const ValueKey<String>('onboarding-next')));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const ValueKey<String>('onboarding-next')));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const ValueKey<String>('onboarding-start')));
+      await tester.pump();
+
       expect(find.byType(OnboardingCarouselView), findsNothing);
     });
   });

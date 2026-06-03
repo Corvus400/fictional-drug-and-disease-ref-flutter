@@ -73,6 +73,7 @@ Future<AppDatabase> _pumpE2EApp(
   addTearDown(db.close);
   await $.pumpWidgetAndSettle(
     ProviderScope(
+      key: UniqueKey(),
       overrides: [
         appDatabaseProvider.overrideWithValue(db),
         onboardingRepositoryProvider.overrideWith(

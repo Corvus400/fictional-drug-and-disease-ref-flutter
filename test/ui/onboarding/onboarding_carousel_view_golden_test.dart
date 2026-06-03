@@ -25,9 +25,7 @@ void main() {
             theme: theme,
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
-            home: Scaffold(
-              body: OnboardingCarouselView(initialPage: page.index),
-            ),
+            home: OnboardingCarouselView(initialPage: page.index),
           ),
         );
       },

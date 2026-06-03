@@ -89,6 +89,7 @@ class _NavigationStateMatrixBody extends StatelessWidget {
             AppShellBottomNavigation(
               selectedIndex: selectedIndex,
               onDestinationSelected: (_) {},
+              includeOnboardingTargetKey: false,
             ),
         ],
       ),

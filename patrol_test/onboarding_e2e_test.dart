@@ -16,11 +16,11 @@ void main() {
       await $('実画面ガイド').waitUntilVisible();
       await keyed($, 'onboarding-start').tap();
       await $('検索フィールド').waitUntilVisible();
-      await $('次へ').tap();
+      await keyed($, 'onboarding-spotlight-action-search-field').tap();
       await $('主ナビゲーション').waitUntilVisible();
-      await $('次へ').tap();
+      await keyed($, 'onboarding-spotlight-action-navigation-tabs').tap();
       await $('アプリについて').waitUntilVisible();
-      await $('完了').tap();
+      await keyed($, 'onboarding-spotlight-action-about-button').tap();
       await keyed($, 'search-field').waitUntilVisible();
 
       await pumpE2EAppFreshOnboarding($);

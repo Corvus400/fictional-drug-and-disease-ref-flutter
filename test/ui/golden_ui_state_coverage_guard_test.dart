@@ -393,8 +393,27 @@ const _expectations = <_GoldenCoverageExpectation>[
     state: 'spotlight search target',
     testFile: 'test/ui/onboarding/onboarding_spotlight_golden_test.dart',
     goldenDir: 'test/ui/onboarding/goldens/macos',
-    sourceFragment: "fileNamePrefix: 'onboarding_spotlight_search'",
+    sourceFragment:
+        r"fileNamePrefix: 'onboarding_spotlight_${target.fileName}'",
     goldenPrefix: 'onboarding_spotlight_search',
+  ),
+  _GoldenCoverageExpectation(
+    screen: 'onboarding',
+    state: 'spotlight navigation target',
+    testFile: 'test/ui/onboarding/onboarding_spotlight_golden_test.dart',
+    goldenDir: 'test/ui/onboarding/goldens/macos',
+    sourceFragment:
+        r"fileNamePrefix: 'onboarding_spotlight_${target.fileName}'",
+    goldenPrefix: 'onboarding_spotlight_navigation',
+  ),
+  _GoldenCoverageExpectation(
+    screen: 'onboarding',
+    state: 'spotlight about target',
+    testFile: 'test/ui/onboarding/onboarding_spotlight_golden_test.dart',
+    goldenDir: 'test/ui/onboarding/goldens/macos',
+    sourceFragment:
+        r"fileNamePrefix: 'onboarding_spotlight_${target.fileName}'",
+    goldenPrefix: 'onboarding_spotlight_about',
   ),
   _GoldenCoverageExpectation(
     screen: 'bookmarks',

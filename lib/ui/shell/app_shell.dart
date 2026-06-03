@@ -5,6 +5,12 @@ import 'package:fictional_drug_and_disease_ref/ui/shell/app_shell_tab.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+/// Width of the regular navigation rail used by [AppShellAdaptiveNavigation].
+const appShellRegularRailWidth = 72.0;
+
+/// Width of the compact navigation rail used by [AppShellAdaptiveNavigation].
+const appShellCompactRailWidth = 52.0;
+
 /// Root shell with persistent bottom navigation.
 class AppShell extends StatelessWidget {
   /// Creates an app shell.
@@ -85,6 +91,7 @@ class AppShellAdaptiveNavigation extends StatelessWidget {
   const AppShellAdaptiveNavigation({
     required this.selectedIndex,
     required this.onDestinationSelected,
+    this.includeOnboardingTargetKey = true,
     super.key,
   });
 
@@ -93,6 +100,9 @@ class AppShellAdaptiveNavigation extends StatelessWidget {
 
   /// Destination selection callback.
   final ValueChanged<int> onDestinationSelected;
+
+  /// Whether this navigation is the active onboarding spotlight target.
+  final bool includeOnboardingTargetKey;
 
   @override
   Widget build(BuildContext context) {
@@ -105,53 +115,58 @@ class AppShellAdaptiveNavigation extends StatelessWidget {
           );
         }
 
-        final railWidth = constraints.maxHeight >= 600 ? 72.0 : 52.0;
+        final railWidth = constraints.maxHeight >= 600
+            ? appShellRegularRailWidth
+            : appShellCompactRailWidth;
+        final navigationRail = DecoratedBox(
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.surface,
+            border: Border(
+              right: BorderSide(color: Theme.of(context).dividerColor),
+            ),
+          ),
+          child: SafeArea(
+            left: false,
+            right: false,
+            bottom: false,
+            child: railWidth < 56
+                ? _CompactAppShellRail(
+                    selectedIndex: selectedIndex,
+                    onDestinationSelected: onDestinationSelected,
+                  )
+                : NavigationRail(
+                    key: const ValueKey('app-shell-navigation-rail'),
+                    selectedIndex: selectedIndex,
+                    minWidth: railWidth,
+                    labelType: NavigationRailLabelType.none,
+                    onDestinationSelected: onDestinationSelected,
+                    destinations: [
+                      for (final tab in AppShellTab.values)
+                        NavigationRailDestination(
+                          icon: Tooltip(
+                            message: tab.label(context),
+                            child: Icon(
+                              tab.icon,
+                              key: ValueKey<String>(
+                                'app-shell-tab-${tab.name}',
+                              ),
+                            ),
+                          ),
+                          label: Text(tab.label(context)),
+                        ),
+                    ],
+                  ),
+          ),
+        );
         return SizedBox(
           key: const ValueKey('app-shell-navigation-rail-box'),
           width: railWidth,
-          child: KeyedSubtree(
-            key: OnboardingTargetKeys.navigationTabs,
-            child: DecoratedBox(
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.surface,
-                border: Border(
-                  right: BorderSide(color: Theme.of(context).dividerColor),
-                ),
-              ),
-              child: SafeArea(
-                left: false,
-                right: false,
-                bottom: false,
-                child: railWidth < 56
-                    ? _CompactAppShellRail(
-                        selectedIndex: selectedIndex,
-                        onDestinationSelected: onDestinationSelected,
-                      )
-                    : NavigationRail(
-                        key: const ValueKey('app-shell-navigation-rail'),
-                        selectedIndex: selectedIndex,
-                        minWidth: railWidth,
-                        labelType: NavigationRailLabelType.none,
-                        onDestinationSelected: onDestinationSelected,
-                        destinations: [
-                          for (final tab in AppShellTab.values)
-                            NavigationRailDestination(
-                              icon: Tooltip(
-                                message: tab.label(context),
-                                child: Icon(
-                                  tab.icon,
-                                  key: ValueKey<String>(
-                                    'app-shell-tab-${tab.name}',
-                                  ),
-                                ),
-                              ),
-                              label: Text(tab.label(context)),
-                            ),
-                        ],
-                      ),
-              ),
-            ),
-          ),
+          child: includeOnboardingTargetKey
+              ? KeyedSubtree(
+                  key: OnboardingTargetKeys.navigationTabs,
+                  child: navigationRail,
+                )
+              : navigationRail,
         );
       },
     );
@@ -214,6 +229,7 @@ class AppShellBottomNavigation extends StatelessWidget {
   const AppShellBottomNavigation({
     required this.selectedIndex,
     required this.onDestinationSelected,
+    this.includeOnboardingTargetKey = true,
     super.key,
   });
 
@@ -223,29 +239,36 @@ class AppShellBottomNavigation extends StatelessWidget {
   /// Destination selection callback.
   final ValueChanged<int> onDestinationSelected;
 
+  /// Whether this navigation is the active onboarding spotlight target.
+  final bool includeOnboardingTargetKey;
+
   @override
   Widget build(BuildContext context) {
+    final navigationBar = NavigationBar(
+      selectedIndex: selectedIndex,
+      onDestinationSelected: onDestinationSelected,
+      destinations: [
+        for (final tab in AppShellTab.values)
+          NavigationDestination(
+            icon: Icon(
+              tab.icon,
+              key: ValueKey<String>('app-shell-tab-${tab.name}'),
+            ),
+            label: tab.label(context),
+          ),
+      ],
+    );
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
         const DisclaimerRibbon(),
-        KeyedSubtree(
-          key: OnboardingTargetKeys.navigationTabs,
-          child: NavigationBar(
-            selectedIndex: selectedIndex,
-            onDestinationSelected: onDestinationSelected,
-            destinations: [
-              for (final tab in AppShellTab.values)
-                NavigationDestination(
-                  icon: Icon(
-                    tab.icon,
-                    key: ValueKey<String>('app-shell-tab-${tab.name}'),
-                  ),
-                  label: tab.label(context),
-                ),
-            ],
-          ),
-        ),
+        if (includeOnboardingTargetKey)
+          KeyedSubtree(
+            key: OnboardingTargetKeys.navigationTabs,
+            child: navigationBar,
+          )
+        else
+          navigationBar,
       ],
     );
   }

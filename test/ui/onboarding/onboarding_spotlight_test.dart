@@ -26,7 +26,7 @@ void main() {
     });
 
     testWidgets(
-      'starts coachmark for shell chrome targets in spotlight phase',
+      'starts coachmark with skip action in spotlight phase',
       (
         tester,
       ) async {
@@ -39,9 +39,81 @@ void main() {
 
         await tester.pumpOnboardingSpotlight(container);
 
-        Object.hashAll([find.text('スキップ'), findsOneWidget]);
-        Object.hashAll([find.text('検索フィールド'), findsOneWidget]);
+        expect(
+          find.byKey(const ValueKey<String>('onboarding-spotlight-skip')),
+          findsOneWidget,
+        );
+      },
+    );
+
+    testWidgets(
+      'starts coachmark with search target title in spotlight phase',
+      (
+        tester,
+      ) async {
+        final container = ProviderContainer(
+          overrides: [onboardingServiceProvider.overrideWithValue(service)],
+        );
+        addTearDown(container.dispose);
+        await container.read(onboardingControllerProvider.future);
+        container.read(onboardingControllerProvider.notifier).startSpotlight();
+
+        await tester.pumpOnboardingSpotlight(container);
+
+        expect(find.text('検索フィールド'), findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      'starts coachmark with next action in spotlight phase',
+      (
+        tester,
+      ) async {
+        final container = ProviderContainer(
+          overrides: [onboardingServiceProvider.overrideWithValue(service)],
+        );
+        addTearDown(container.dispose);
+        await container.read(onboardingControllerProvider.future);
+        container.read(onboardingControllerProvider.notifier).startSpotlight();
+
+        await tester.pumpOnboardingSpotlight(container);
+
         expect(find.text('次へ'), findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      'starts from MaterialApp builder by using target overlay',
+      (tester) async {
+        final container = ProviderContainer(
+          overrides: [onboardingServiceProvider.overrideWithValue(service)],
+        );
+        addTearDown(container.dispose);
+        await container.read(onboardingControllerProvider.future);
+
+        await tester.pumpWidget(
+          UncontrolledProviderScope(
+            container: container,
+            child: MaterialApp(
+              debugShowCheckedModeBanner: false,
+              theme: AppTheme.light(),
+              localizationsDelegates: AppLocalizations.localizationsDelegates,
+              supportedLocales: AppLocalizations.supportedLocales,
+              builder: (context, child) => OnboardingSpotlight(child: child!),
+              home: _SpotlightTargetsFixture(),
+            ),
+          ),
+        );
+        container.read(onboardingControllerProvider.notifier).startSpotlight();
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 1));
+        await tester.pump(const Duration(milliseconds: 1));
+        await tester.pump(const Duration(milliseconds: 1));
+
+        expect(
+          find.byKey(const ValueKey<String>('onboarding-spotlight-skip')),
+          findsOneWidget,
+        );
       },
     );
 
@@ -56,11 +128,16 @@ void main() {
       container.read(onboardingControllerProvider.notifier).startSpotlight();
 
       await tester.pumpOnboardingSpotlight(container);
-      await tester.tap(find.text('スキップ'));
+      await tester.tap(
+        find.byKey(const ValueKey<String>('onboarding-spotlight-skip')),
+      );
       await tester.pump();
 
       verify(() => service.write(completed: true)).called(1);
-      expect(find.text('スキップ'), findsNothing);
+      expect(
+        find.byKey(const ValueKey<String>('onboarding-spotlight-skip')),
+        findsNothing,
+      );
     });
 
     testWidgets('done marks onboarding completed at the end of the tour', (
@@ -79,13 +156,109 @@ void main() {
       await tester.tap(find.text('次へ'));
       await tester.pump(const Duration(milliseconds: 301));
 
-      Object.hashAll([find.text('完了'), findsOneWidget]);
-
       await tester.tap(find.text('完了'));
       await tester.pump();
 
       verify(() => service.write(completed: true)).called(1);
-      expect(find.text('スキップ'), findsNothing);
+      expect(
+        find.byKey(const ValueKey<String>('onboarding-spotlight-skip')),
+        findsNothing,
+      );
+    });
+
+    testWidgets(
+      'keeps the navigation step action hit-testable on phone portrait',
+      (tester) async {
+        tester.view
+          ..physicalSize = const Size(393, 852)
+          ..devicePixelRatio = 1;
+        addTearDown(tester.view.resetPhysicalSize);
+        addTearDown(tester.view.resetDevicePixelRatio);
+
+        final container = ProviderContainer(
+          overrides: [onboardingServiceProvider.overrideWithValue(service)],
+        );
+        addTearDown(container.dispose);
+        await container.read(onboardingControllerProvider.future);
+        container.read(onboardingControllerProvider.notifier).startSpotlight();
+
+        await tester.pumpOnboardingSpotlight(container);
+        await tester.tap(
+          find.byKey(
+            const ValueKey<String>(
+              'onboarding-spotlight-action-search-field',
+            ),
+          ),
+        );
+        await tester.pump(const Duration(milliseconds: 301));
+
+        expect(
+          find
+              .byKey(
+                const ValueKey<String>(
+                  'onboarding-spotlight-action-navigation-tabs',
+                ),
+              )
+              .hitTestable(),
+          findsOneWidget,
+        );
+      },
+    );
+
+    testWidgets('uses design spec coach card width on phone', (tester) async {
+      tester.view
+        ..physicalSize = const Size(393, 852)
+        ..devicePixelRatio = 1;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+
+      final container = ProviderContainer(
+        overrides: [onboardingServiceProvider.overrideWithValue(service)],
+      );
+      addTearDown(container.dispose);
+      await container.read(onboardingControllerProvider.future);
+      container.read(onboardingControllerProvider.notifier).startSpotlight();
+
+      await tester.pumpOnboardingSpotlight(container);
+
+      expect(
+        tester
+            .getSize(
+              find.byKey(
+                const ValueKey<String>('onboarding-spotlight-card'),
+              ),
+            )
+            .width,
+        268,
+      );
+    });
+
+    testWidgets('uses design spec coach card width on tablet', (tester) async {
+      tester.view
+        ..physicalSize = const Size(834, 1194)
+        ..devicePixelRatio = 1;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+
+      final container = ProviderContainer(
+        overrides: [onboardingServiceProvider.overrideWithValue(service)],
+      );
+      addTearDown(container.dispose);
+      await container.read(onboardingControllerProvider.future);
+      container.read(onboardingControllerProvider.notifier).startSpotlight();
+
+      await tester.pumpOnboardingSpotlight(container);
+
+      expect(
+        tester
+            .getSize(
+              find.byKey(
+                const ValueKey<String>('onboarding-spotlight-card'),
+              ),
+            )
+            .width,
+        320,
+      );
     });
   });
 }
