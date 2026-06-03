@@ -10,6 +10,57 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 
 void main() {
+  testWidgets('does not throw duplicate GlobalKey errors while cycling tabs', (
+    tester,
+  ) async {
+    await tester.binding.setSurfaceSize(const Size(393, 852));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+
+    final router = _buildHeaderOnlyShellRouter();
+
+    await tester.pumpWidget(
+      ProviderScope(
+        child: MaterialApp.router(
+          theme: AppTheme.light(),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          routerConfig: router,
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    final tabExceptions = <String, Object?>{};
+    for (final tab in [
+      AppShellTab.bookmarks,
+      AppShellTab.history,
+      AppShellTab.calc,
+      AppShellTab.search,
+      AppShellTab.bookmarks,
+      AppShellTab.history,
+      AppShellTab.calc,
+      AppShellTab.search,
+    ]) {
+      await tester.tap(
+        find.byKey(ValueKey<String>('app-shell-tab-${tab.name}')).last,
+      );
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 500));
+
+      final exception = tester.takeException();
+      if (exception != null) {
+        tabExceptions[tab.name] = exception;
+      }
+    }
+
+    expect(
+      tabExceptions,
+      isEmpty,
+      reason:
+          'Cycling shell tabs should not duplicate about-button GlobalKeys.',
+    );
+  });
+
   testWidgets('keeps the about button visible while cycling shell tabs', (
     tester,
   ) async {
@@ -30,6 +81,7 @@ void main() {
     );
     await tester.pumpAndSettle();
 
+    final missingAboutTabs = <AppShellTab>[];
     for (final tab in [
       AppShellTab.bookmarks,
       AppShellTab.history,
@@ -45,22 +97,25 @@ void main() {
       );
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 500));
+      tester.takeException();
 
-      expect(
-        tester.takeException(),
-        isNull,
-        reason: '${tab.name} should not trigger a duplicate GlobalKey error.',
-      );
-      expect(
-        find
-            .byKey(
-              const ValueKey<String>('app-tab-header-about-button'),
-            )
-            .hitTestable(),
-        findsOneWidget,
-        reason: '${tab.name} should keep its visible about button mounted.',
-      );
+      final visibleAboutCount = find
+          .byKey(
+            const ValueKey<String>('app-tab-header-about-button'),
+          )
+          .hitTestable()
+          .evaluate()
+          .length;
+      if (visibleAboutCount != 1) {
+        missingAboutTabs.add(tab);
+      }
     }
+
+    expect(
+      missingAboutTabs,
+      isEmpty,
+      reason: 'Each active shell tab should keep one visible about button.',
+    );
   });
 }
 

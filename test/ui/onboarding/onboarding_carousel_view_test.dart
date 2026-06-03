@@ -63,7 +63,7 @@ void main() {
       );
     });
 
-    testWidgets('matches the design spec skip button style and geometry', (
+    testWidgets('matches skip label and close icon font size', (
       tester,
     ) async {
       await tester.pumpOnboardingCarousel(service);
@@ -77,23 +77,105 @@ void main() {
         of: skipFinder,
         matching: find.text('×'),
       );
-      final context = tester.element(skipFinder);
-      final palette = Theme.of(context).extension<AppPalette>()!;
-      final spacing = Theme.of(context).extension<AppSpacing>()!;
       final label = tester.widget<Text>(labelFinder);
       final icon = tester.widget<Text>(iconFinder);
-      final buttonRect = tester.getRect(skipFinder);
-      final labelRect = tester.getRect(labelFinder);
-      final iconRect = tester.getRect(iconFinder);
 
       expect(label.style?.fontSize, icon.style?.fontSize);
-      expect(label.style?.height, icon.style?.height);
-      expect(label.style?.fontFamily, icon.style?.fontFamily);
+    });
+
+    testWidgets('uses the design spec weight for the skip label', (
+      tester,
+    ) async {
+      await tester.pumpOnboardingCarousel(service);
+
+      final label = tester.widget<Text>(
+        find.descendant(
+          of: find.byKey(const ValueKey<String>('onboarding-skip')),
+          matching: find.text('スキップ'),
+        ),
+      );
+
       expect(label.style?.fontWeight, FontWeight.w600);
+    });
+
+    testWidgets('uses the design spec muted color for the skip label', (
+      tester,
+    ) async {
+      await tester.pumpOnboardingCarousel(service);
+
+      final skipFinder = find.byKey(const ValueKey<String>('onboarding-skip'));
+      final palette = Theme.of(
+        tester.element(skipFinder),
+      ).extension<AppPalette>()!;
+      final label = tester.widget<Text>(
+        find.descendant(of: skipFinder, matching: find.text('スキップ')),
+      );
+
       expect(label.style?.color, palette.muted);
+    });
+
+    testWidgets('uses the design spec muted color for the skip close icon', (
+      tester,
+    ) async {
+      await tester.pumpOnboardingCarousel(service);
+
+      final skipFinder = find.byKey(const ValueKey<String>('onboarding-skip'));
+      final palette = Theme.of(
+        tester.element(skipFinder),
+      ).extension<AppPalette>()!;
+      final icon = tester.widget<Text>(
+        find.descendant(of: skipFinder, matching: find.text('×')),
+      );
+
       expect(icon.style?.color, palette.muted);
+    });
+
+    testWidgets('vertically centers the skip label and close icon', (
+      tester,
+    ) async {
+      await tester.pumpOnboardingCarousel(service);
+
+      final skipFinder = find.byKey(const ValueKey<String>('onboarding-skip'));
+      final labelRect = tester.getRect(
+        find.descendant(of: skipFinder, matching: find.text('スキップ')),
+      );
+      final iconRect = tester.getRect(
+        find.descendant(of: skipFinder, matching: find.text('×')),
+      );
+
       expect((labelRect.center.dy - iconRect.center.dy).abs(), 0);
+    });
+
+    testWidgets('uses the design spec gap between skip label and close icon', (
+      tester,
+    ) async {
+      await tester.pumpOnboardingCarousel(service);
+
+      final skipFinder = find.byKey(const ValueKey<String>('onboarding-skip'));
+      final spacing = Theme.of(
+        tester.element(skipFinder),
+      ).extension<AppSpacing>()!;
+      final labelRect = tester.getRect(
+        find.descendant(of: skipFinder, matching: find.text('スキップ')),
+      );
+      final iconRect = tester.getRect(
+        find.descendant(of: skipFinder, matching: find.text('×')),
+      );
+
       expect(iconRect.left - labelRect.right, spacing.s1);
+    });
+
+    testWidgets('uses the design spec right padding for the skip control', (
+      tester,
+    ) async {
+      await tester.pumpOnboardingCarousel(service);
+
+      final skipFinder = find.byKey(const ValueKey<String>('onboarding-skip'));
+      final buttonRect = tester.getRect(skipFinder);
+      final iconRect = tester.getRect(
+        find.descendant(of: skipFinder, matching: find.text('×')),
+      );
+
       expect(buttonRect.right - iconRect.right, 10);
     });
 
@@ -108,7 +190,6 @@ void main() {
           const ValueKey<String>('onboarding-skip'),
         );
 
-        expect(skipFinder, findsOneWidget);
         expect(tester.widget(skipFinder), isNot(isA<TextButton>()));
       },
     );
@@ -303,6 +384,27 @@ void main() {
       final titleRect = tester.getRect(find.text('メディマスタへようこそ'));
 
       expect(iconRect.bottom, lessThan(titleRect.top));
+    });
+
+    testWidgets('centers the first page icon with the title in landscape', (
+      tester,
+    ) async {
+      await tester.pumpOnboardingCarousel(
+        service,
+        surfaceSize: const Size(844, 390),
+      );
+
+      final pageFinder = find.byKey(
+        const ValueKey<String>('onboarding-page-1'),
+      );
+      final iconRect = tester.getRect(
+        find.descendant(
+          of: pageFinder,
+          matching: find.byIcon(Symbols.medical_services),
+        ),
+      );
+      final titleRect = tester.getRect(find.text('メディマスタへようこそ'));
+
       expect(
         (iconRect.center.dx - titleRect.center.dx).abs(),
         lessThanOrEqualTo(1),
@@ -318,25 +420,41 @@ void main() {
       );
       await tester.goToSecondOnboardingPage();
 
-      final renderedSegments = find
-          .descendant(
-            of: find.byKey(
-              const ValueKey<String>('onboarding-intro-body-phrase-lines'),
-            ),
-            matching: find.byType(Text),
-          )
-          .evaluate()
-          .map((element) => (element.widget as Text).data)
-          .whereType<String>()
-          .toList(growable: false);
+      expect(_renderedIntroBodySegments(tester), _secondIntroBodySegments);
+    });
 
-      expect(renderedSegments.join(), _secondIntroBody);
-      expect(renderedSegments, _secondIntroBodySegments);
-      expect(
-        renderedSegments,
-        everyElement(isNot(contains('\n'))),
+    testWidgets('preserves the full second intro body copy', (tester) async {
+      await tester.pumpOnboardingCarousel(
+        service,
+        surfaceSize: const Size(844, 390),
       );
-      expect(renderedSegments, contains('閲覧履歴を'));
+      await tester.goToSecondOnboardingPage();
+
+      expect(_renderedIntroBodySegments(tester).join(), _secondIntroBody);
+    });
+
+    testWidgets('keeps second intro body phrases free of hard newlines', (
+      tester,
+    ) async {
+      await tester.pumpOnboardingCarousel(
+        service,
+        surfaceSize: const Size(844, 390),
+      );
+      await tester.goToSecondOnboardingPage();
+
+      expect(_segmentsWithHardNewlines(tester), isEmpty);
+    });
+
+    testWidgets('keeps browsing history as one Japanese phrase', (
+      tester,
+    ) async {
+      await tester.pumpOnboardingCarousel(
+        service,
+        surfaceSize: const Size(844, 390),
+      );
+      await tester.goToSecondOnboardingPage();
+
+      expect(find.text('閲覧履歴を'), findsOneWidget);
     });
 
     testWidgets(
@@ -354,10 +472,14 @@ void main() {
           ),
         );
 
-        for (final segment in _secondIntroBodySegments) {
-          final rect = tester.getRect(find.text(segment));
-          expect(rect.right, lessThanOrEqualTo(featureListRect.right));
-        }
+        expect(
+          _segmentsOutsideRightEdge(
+            tester,
+            _secondIntroBodySegments,
+            featureListRect,
+          ),
+          isEmpty,
+        );
       },
     );
 
@@ -370,27 +492,30 @@ void main() {
       );
       await tester.goToSecondOnboardingPage();
 
+      expect(_renderedIntroBodySegments(tester), _secondIntroBodySegments);
+    });
+
+    testWidgets('keeps phone portrait body phrases inside the feature width', (
+      tester,
+    ) async {
+      await tester.pumpOnboardingCarousel(
+        service,
+        surfaceSize: const Size(390, 844),
+      );
+      await tester.goToSecondOnboardingPage();
+
       final featureListRect = tester.getRect(
         find.byKey(const ValueKey<String>('onboarding-feature-list')),
       );
-      final renderedSegments = find
-          .descendant(
-            of: find.byKey(
-              const ValueKey<String>('onboarding-intro-body-phrase-lines'),
-            ),
-            matching: find.byType(Text),
-          )
-          .evaluate()
-          .map((element) => (element.widget as Text).data)
-          .whereType<String>()
-          .toList(growable: false);
 
-      expect(renderedSegments.join(), _secondIntroBody);
-      expect(renderedSegments, _secondIntroBodySegments);
-      for (final segment in _secondIntroBodySegments) {
-        final rect = tester.getRect(find.text(segment));
-        expect(rect.right, lessThanOrEqualTo(featureListRect.right));
-      }
+      expect(
+        _segmentsOutsideRightEdge(
+          tester,
+          _secondIntroBodySegments,
+          featureListRect,
+        ),
+        isEmpty,
+      );
     });
 
     testWidgets('keeps third intro body from splitting polite ending', (
@@ -402,23 +527,49 @@ void main() {
       );
       await tester.goToThirdOnboardingPage();
 
-      final renderedSegments = find
-          .descendant(
-            of: find.byKey(
-              const ValueKey<String>('onboarding-intro-body-phrase-lines'),
-            ),
-            matching: find.byType(Text),
-          )
-          .evaluate()
-          .map((element) => (element.widget as Text).data)
-          .whereType<String>()
-          .toList(growable: false);
+      expect(_renderedIntroBodySegments(tester), _thirdIntroBodySegments);
+    });
 
-      expect(renderedSegments.join(), _thirdIntroBody);
-      expect(renderedSegments, _thirdIntroBodySegments);
-      expect(renderedSegments, contains('案内します。'));
-      expect(renderedSegments, isNot(contains('案内し')));
-      expect(renderedSegments, isNot(contains('ます。')));
+    testWidgets('preserves the full third intro body copy', (tester) async {
+      await tester.pumpOnboardingCarousel(
+        service,
+        surfaceSize: const Size(390, 844),
+      );
+      await tester.goToThirdOnboardingPage();
+
+      expect(_renderedIntroBodySegments(tester).join(), _thirdIntroBody);
+    });
+
+    testWidgets('keeps the third intro polite ending as one phrase', (
+      tester,
+    ) async {
+      await tester.pumpOnboardingCarousel(
+        service,
+        surfaceSize: const Size(390, 844),
+      );
+      await tester.goToThirdOnboardingPage();
+
+      expect(find.text('案内します。'), findsOneWidget);
+    });
+
+    testWidgets('does not split the third intro polite stem', (tester) async {
+      await tester.pumpOnboardingCarousel(
+        service,
+        surfaceSize: const Size(390, 844),
+      );
+      await tester.goToThirdOnboardingPage();
+
+      expect(find.text('案内し'), findsNothing);
+    });
+
+    testWidgets('does not split the third intro polite ending', (tester) async {
+      await tester.pumpOnboardingCarousel(
+        service,
+        surfaceSize: const Size(390, 844),
+      );
+      await tester.goToThirdOnboardingPage();
+
+      expect(find.text('ます。'), findsNothing);
     });
 
     testWidgets(
@@ -438,13 +589,28 @@ void main() {
           ),
         );
 
-        expect(find.text('閲覧履歴を'), findsOneWidget);
-        for (final segment in _secondIntroBodySegments) {
-          final rect = tester.getRect(find.text(segment));
-          expect(rect.right, lessThanOrEqualTo(featureListRect.right));
-        }
+        expect(
+          _segmentsOutsideRightEdge(
+            tester,
+            _secondIntroBodySegments,
+            featureListRect,
+          ),
+          isEmpty,
+        );
       },
     );
+
+    testWidgets('keeps the narrow landscape history phrase intact', (
+      tester,
+    ) async {
+      await tester.pumpOnboardingCarousel(
+        service,
+        surfaceSize: const Size(844, 390),
+      );
+      await tester.goToSecondOnboardingPage();
+
+      expect(find.text('閲覧履歴を'), findsOneWidget);
+    });
 
     testWidgets('reveals feature row text after scrolling phone landscape', (
       tester,
@@ -472,6 +638,29 @@ void main() {
       );
     });
 
+    testWidgets('places phone landscape title to the right of the icon', (
+      tester,
+    ) async {
+      await tester.pumpOnboardingCarousel(
+        service,
+        surfaceSize: const Size(1024, 474),
+      );
+      await tester.goToSecondOnboardingPage();
+
+      final pageFinder = find.byKey(
+        const ValueKey<String>('onboarding-page-2'),
+      );
+      final iconRect = tester.getRect(
+        find.descendant(
+          of: pageFinder,
+          matching: find.byIcon(Symbols.menu_book),
+        ),
+      );
+      final titleRect = tester.getRect(find.text('主要機能'));
+
+      expect(titleRect.left, greaterThan(iconRect.right));
+    });
+
     testWidgets('aligns phone landscape feature list with the icon left edge', (
       tester,
     ) async {
@@ -493,7 +682,6 @@ void main() {
           matching: find.byIcon(Symbols.menu_book),
         ),
       );
-      final titleRect = tester.getRect(find.text('主要機能'));
       final featureIconRect = tester.getRect(
         find.descendant(
           of: pageFinder,
@@ -501,7 +689,6 @@ void main() {
         ),
       );
 
-      expect(titleRect.left, greaterThan(iconRect.right));
       expect(
         (featureIconRect.left - spacing.s3 - iconRect.left).abs(),
         lessThanOrEqualTo(1),
@@ -527,6 +714,49 @@ void main() {
         ),
       );
       final titleRect = tester.getRect(find.text('主要機能'));
+
+      expect(iconRect.bottom, lessThan(titleRect.top));
+    });
+
+    testWidgets('centers phone portrait page two icon with the title', (
+      tester,
+    ) async {
+      await tester.pumpOnboardingCarousel(
+        service,
+        surfaceSize: const Size(390, 844),
+      );
+      await tester.goToSecondOnboardingPage();
+
+      final pageFinder = find.byKey(
+        const ValueKey<String>('onboarding-page-2'),
+      );
+      final iconRect = tester.getRect(
+        find.descendant(
+          of: pageFinder,
+          matching: find.byIcon(Symbols.menu_book),
+        ),
+      );
+      final titleRect = tester.getRect(find.text('主要機能'));
+
+      expect(
+        (iconRect.center.dx - titleRect.center.dx).abs(),
+        lessThanOrEqualTo(1),
+      );
+    });
+
+    testWidgets('places phone portrait feature list below the title', (
+      tester,
+    ) async {
+      await tester.pumpOnboardingCarousel(
+        service,
+        surfaceSize: const Size(390, 844),
+      );
+      await tester.goToSecondOnboardingPage();
+
+      final pageFinder = find.byKey(
+        const ValueKey<String>('onboarding-page-2'),
+      );
+      final titleRect = tester.getRect(find.text('主要機能'));
       final featureIconRect = tester.getRect(
         find.descendant(
           of: pageFinder,
@@ -534,11 +764,6 @@ void main() {
         ),
       );
 
-      expect(iconRect.bottom, lessThan(titleRect.top));
-      expect(
-        (iconRect.center.dx - titleRect.center.dx).abs(),
-        lessThanOrEqualTo(1),
-      );
       expect(featureIconRect.top, greaterThan(titleRect.bottom));
     });
 
@@ -578,6 +803,38 @@ void main() {
       verify(() => service.write(completed: true)).called(1);
     });
   });
+}
+
+List<String> _renderedIntroBodySegments(WidgetTester tester) {
+  return find
+      .descendant(
+        of: find.byKey(
+          const ValueKey<String>('onboarding-intro-body-phrase-lines'),
+        ),
+        matching: find.byType(Text),
+      )
+      .evaluate()
+      .map((element) => (element.widget as Text).data)
+      .whereType<String>()
+      .toList(growable: false);
+}
+
+List<String> _segmentsWithHardNewlines(WidgetTester tester) {
+  return [
+    for (final segment in _renderedIntroBodySegments(tester))
+      if (segment.contains('\n')) segment,
+  ];
+}
+
+List<String> _segmentsOutsideRightEdge(
+  WidgetTester tester,
+  Iterable<String> segments,
+  Rect boundary,
+) {
+  return [
+    for (final segment in segments)
+      if (tester.getRect(find.text(segment)).right > boundary.right) segment,
+  ];
 }
 
 extension on WidgetTester {

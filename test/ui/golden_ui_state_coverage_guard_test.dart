@@ -140,7 +140,8 @@ void main() {
 }
 
 final _issue32GoldenVariantPattern = RegExp(
-  '_(ipad_portrait|ipad_landscape|iphone_portrait|iphone_landscape)_'
+  '_(ipad_portrait|ipad_landscape|iphone_portrait|iphone_landscape'
+  '|iphone_landscape_wide)_'
   r'(light|dark)$',
 );
 

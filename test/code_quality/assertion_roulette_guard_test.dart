@@ -13,7 +13,8 @@ void main() {
     for (final path in _testDartFiles()) {
       violations
         ..addAll(_assertionRouletteViolations(path))
-        ..addAll(_pseudoAssertionViolations(path));
+        ..addAll(_pseudoAssertionViolations(path))
+        ..addAll(_packedAssertionViolations(path));
     }
 
     expect(
@@ -25,6 +26,40 @@ void main() {
           'calling test. Object.hashAll is not an assertion:\n'
           '${violations.join('\n')}',
     );
+  });
+
+  test('rejects boolean condition list packs', () {
+    final violations = _packedAssertionViolationsForSource(
+      path: 'sample_test.dart',
+      source: '''
+import 'package:flutter_test/flutter_test.dart';
+
+void main() {
+  test('packed booleans', () {
+    expect([1 == 1, 2 == 2], everyElement(isTrue));
+  });
+}
+''',
+    );
+
+    expect(violations.single.reason, contains('Boolean condition lists'));
+  });
+
+  test('rejects boolean condition map packs', () {
+    final violations = _packedAssertionViolationsForSource(
+      path: 'sample_test.dart',
+      source: '''
+import 'package:flutter_test/flutter_test.dart';
+
+void main() {
+  test('packed booleans', () {
+    expect({'left': 1 == 1, 'right': true}, {'left': true, 'right': true});
+  });
+}
+''',
+    );
+
+    expect(violations.single.reason, contains('Boolean condition maps'));
   });
 }
 
@@ -96,6 +131,31 @@ List<String> _pseudoAssertionViolations(String path) {
     for (final line in visitor.lines)
       _pseudoAssertionMessage(path: path, line: line),
   ];
+}
+
+List<String> _packedAssertionViolations(String path) {
+  final source = File(path).readAsStringSync();
+  return [
+    for (final violation in _packedAssertionViolationsForSource(
+      path: path,
+      source: source,
+    ))
+      '$path:${violation.line}: ${violation.reason}',
+  ];
+}
+
+List<_PackedAssertionViolation> _packedAssertionViolationsForSource({
+  required String path,
+  required String source,
+}) {
+  final parsed = parseString(
+    content: source,
+    path: path,
+    throwIfDiagnostics: false,
+  );
+  final visitor = _PackedAssertionVisitor(parsed.lineInfo);
+  parsed.unit.accept(visitor);
+  return visitor.violations;
 }
 
 String _pseudoAssertionMessage({required String path, required int line}) {
@@ -194,6 +254,54 @@ class _PseudoAssertionVisitor extends RecursiveAstVisitor<void> {
   }
 }
 
+class _PackedAssertionVisitor extends RecursiveAstVisitor<void> {
+  _PackedAssertionVisitor(this._lineInfo);
+
+  final LineInfo _lineInfo;
+  final violations = <_PackedAssertionViolation>[];
+
+  @override
+  void visitMethodInvocation(MethodInvocation node) {
+    if (node.methodName.name == 'expect' && node.target == null) {
+      final arguments = node.argumentList.arguments;
+      if (arguments.length >= 2) {
+        final actual = arguments[0];
+        final matcher = arguments[1];
+        if (_isBooleanListPack(actual, matcher)) {
+          _addViolation(
+            node,
+            'Boolean condition lists hide assertion roulette; split the test '
+            'or assert one named aggregate failure value.',
+          );
+        } else if (_isBooleanMapPack(actual, matcher)) {
+          _addViolation(
+            node,
+            'Boolean condition maps hide assertion roulette; split the test '
+            'or assert one named aggregate failure value.',
+          );
+        }
+      }
+    }
+    super.visitMethodInvocation(node);
+  }
+
+  void _addViolation(MethodInvocation node, String reason) {
+    violations.add(
+      _PackedAssertionViolation(
+        line: _lineInfo.getLocation(node.offset).lineNumber,
+        reason: reason,
+      ),
+    );
+  }
+}
+
+class _PackedAssertionViolation {
+  const _PackedAssertionViolation({required this.line, required this.reason});
+
+  final int line;
+  final String reason;
+}
+
 class _TestInvocation {
   const _TestInvocation({
     required this.line,
@@ -234,3 +342,78 @@ String _testName(MethodInvocation node) {
   }
   return firstArgument.toSource();
 }
+
+bool _isBooleanListPack(Expression actual, Expression matcher) {
+  return actual is ListLiteral &&
+      actual.elements.any(_isBooleanLikeNode) &&
+      (_matcherSourceContains(matcher, 'everyElement(isTrue)') ||
+          _matcherSourceContains(matcher, 'everyElement(isFalse)') ||
+          matcher is ListLiteral);
+}
+
+bool _isBooleanMapPack(Expression actual, Expression matcher) {
+  if (actual is! SetOrMapLiteral || matcher is! SetOrMapLiteral) {
+    return false;
+  }
+
+  return actual.elements.any((element) {
+    return element is MapLiteralEntry && _isBooleanLikeNode(element.value);
+  });
+}
+
+bool _matcherSourceContains(Expression matcher, String pattern) {
+  return matcher.toSource().replaceAll(RegExp(r'\s+'), '').contains(pattern);
+}
+
+bool _isBooleanLikeNode(AstNode node) {
+  if (node is BooleanLiteral) {
+    return true;
+  }
+  if (node is BinaryExpression) {
+    return _booleanOperators.contains(node.operator.lexeme);
+  }
+  if (node is PrefixExpression) {
+    return node.operator.lexeme == '!';
+  }
+  if (node is MethodInvocation) {
+    return _booleanMethodNames.contains(node.methodName.name);
+  }
+  if (node is PropertyAccess) {
+    return _booleanPropertyNames.contains(node.propertyName.name);
+  }
+  if (node is PrefixedIdentifier) {
+    return _booleanPropertyNames.contains(node.identifier.name);
+  }
+  if (node is ListLiteral) {
+    return node.elements.any(_isBooleanLikeNode);
+  }
+  if (node is SetOrMapLiteral) {
+    return node.elements.any((element) {
+      return element is MapLiteralEntry && _isBooleanLikeNode(element.value);
+    });
+  }
+  return false;
+}
+
+const _booleanOperators = {
+  '==',
+  '!=',
+  '<',
+  '<=',
+  '>',
+  '>=',
+  '&&',
+  '||',
+};
+const _booleanMethodNames = {
+  'any',
+  'contains',
+  'endsWith',
+  'every',
+  'isAfter',
+  'isBefore',
+  'isEmpty',
+  'isNotEmpty',
+  'startsWith',
+};
+const _booleanPropertyNames = {'isEmpty', 'isNotEmpty', 'isFinite', 'isNaN'};

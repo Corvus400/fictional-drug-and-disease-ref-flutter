@@ -104,7 +104,10 @@ final class _SpotlightGoldenFixture extends StatelessWidget {
     final body = _SpotlightGoldenBody(l10n: l10n, palette: palette);
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      appBar: const AppTabHeader(tab: AppShellTab.search),
+      appBar: const AppTabHeader(
+        tab: AppShellTab.search,
+        includeOnboardingTargetKey: true,
+      ),
       body: usesRail
           ? Row(
               children: [

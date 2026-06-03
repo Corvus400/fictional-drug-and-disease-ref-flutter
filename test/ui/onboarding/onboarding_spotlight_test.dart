@@ -264,7 +264,7 @@ void main() {
     });
 
     testWidgets(
-      'reflows the navigation step card when rotating to rail layout',
+      'keeps the navigation spotlight step when rotating to rail layout',
       (tester) async {
         tester.view
           ..physicalSize = const Size(393, 852)
@@ -289,7 +289,41 @@ void main() {
         );
         await tester.pump(const Duration(milliseconds: 301));
 
+        tester.view.physicalSize = const Size(852, 393);
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 1));
+        await tester.pump(const Duration(milliseconds: 1));
+        await tester.pump(const Duration(milliseconds: 1));
+
         expect(find.text('主ナビゲーション'), findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      'places the reflowed navigation card after the rail gutter',
+      (tester) async {
+        tester.view
+          ..physicalSize = const Size(393, 852)
+          ..devicePixelRatio = 1;
+        addTearDown(tester.view.resetPhysicalSize);
+        addTearDown(tester.view.resetDevicePixelRatio);
+
+        final container = ProviderContainer(
+          overrides: [onboardingServiceProvider.overrideWithValue(service)],
+        );
+        addTearDown(container.dispose);
+        await container.read(onboardingControllerProvider.future);
+        container.read(onboardingControllerProvider.notifier).startSpotlight();
+
+        await tester.pumpOnboardingSpotlight(container);
+        await tester.tap(
+          find.byKey(
+            const ValueKey<String>(
+              'onboarding-spotlight-action-search-field',
+            ),
+          ),
+        );
+        await tester.pump(const Duration(milliseconds: 301));
 
         tester.view.physicalSize = const Size(852, 393);
         await tester.pump();
@@ -301,11 +335,82 @@ void main() {
           find.byKey(const ValueKey<String>('onboarding-spotlight-card')),
         );
 
-        expect(
-          cardRect.left,
-          greaterThan(appShellCompactRailWidth + 16),
+        expect(cardRect.left, greaterThan(appShellCompactRailWidth + 16));
+      },
+    );
+
+    testWidgets(
+      'keeps the reflowed navigation card inside the landscape width',
+      (tester) async {
+        tester.view
+          ..physicalSize = const Size(393, 852)
+          ..devicePixelRatio = 1;
+        addTearDown(tester.view.resetPhysicalSize);
+        addTearDown(tester.view.resetDevicePixelRatio);
+
+        final container = ProviderContainer(
+          overrides: [onboardingServiceProvider.overrideWithValue(service)],
         );
+        addTearDown(container.dispose);
+        await container.read(onboardingControllerProvider.future);
+        container.read(onboardingControllerProvider.notifier).startSpotlight();
+
+        await tester.pumpOnboardingSpotlight(container);
+        await tester.tap(
+          find.byKey(
+            const ValueKey<String>(
+              'onboarding-spotlight-action-search-field',
+            ),
+          ),
+        );
+        await tester.pump(const Duration(milliseconds: 301));
+
+        tester.view.physicalSize = const Size(852, 393);
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 1));
+        await tester.pump(const Duration(milliseconds: 1));
+        await tester.pump(const Duration(milliseconds: 1));
+
+        final cardRect = tester.getRect(
+          find.byKey(const ValueKey<String>('onboarding-spotlight-card')),
+        );
+
         expect(cardRect.right, lessThanOrEqualTo(852 - 16));
+      },
+    );
+
+    testWidgets(
+      'does not mark onboarding complete while reflowing after rotation',
+      (tester) async {
+        tester.view
+          ..physicalSize = const Size(393, 852)
+          ..devicePixelRatio = 1;
+        addTearDown(tester.view.resetPhysicalSize);
+        addTearDown(tester.view.resetDevicePixelRatio);
+
+        final container = ProviderContainer(
+          overrides: [onboardingServiceProvider.overrideWithValue(service)],
+        );
+        addTearDown(container.dispose);
+        await container.read(onboardingControllerProvider.future);
+        container.read(onboardingControllerProvider.notifier).startSpotlight();
+
+        await tester.pumpOnboardingSpotlight(container);
+        await tester.tap(
+          find.byKey(
+            const ValueKey<String>(
+              'onboarding-spotlight-action-search-field',
+            ),
+          ),
+        );
+        await tester.pump(const Duration(milliseconds: 301));
+
+        tester.view.physicalSize = const Size(852, 393);
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 1));
+        await tester.pump(const Duration(milliseconds: 1));
+        await tester.pump(const Duration(milliseconds: 1));
+
         verifyNever(() => service.write(completed: true));
       },
     );
