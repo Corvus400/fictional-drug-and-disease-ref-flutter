@@ -5,8 +5,10 @@ import 'package:fictional_drug_and_disease_ref/data/providers/local_providers.da
 import 'package:fictional_drug_and_disease_ref/data/repositories/bookmark_repository.dart';
 import 'package:fictional_drug_and_disease_ref/data/repositories/browsing_history_repository.dart';
 import 'package:fictional_drug_and_disease_ref/data/repositories/calculation_history_repository.dart';
+import 'package:fictional_drug_and_disease_ref/data/repositories/onboarding_repository.dart';
 import 'package:fictional_drug_and_disease_ref/data/repositories/search_history_repository.dart';
 import 'package:fictional_drug_and_disease_ref/data/repositories/theme_settings_repository.dart';
+import 'package:fictional_drug_and_disease_ref/data/services/local/onboarding_service.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -129,6 +131,20 @@ void main() {
       ]);
     },
   );
+
+  test('onboarding local providers return typed instances', () {
+    final container = ProviderContainer();
+    addTearDown(container.dispose);
+
+    Object.hashAll([
+      container.read(onboardingServiceProvider),
+      isA<OnboardingService>(),
+    ]);
+    expect(
+      container.read(onboardingRepositoryProvider),
+      isA<OnboardingRepository>(),
+    );
+  });
 
   test(
     'DAO and local repository providers return typed instances [assertion 2/9]',

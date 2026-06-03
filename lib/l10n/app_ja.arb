@@ -16,6 +16,14 @@
   "@aboutLicensesSubtitle": {
     "description": "ライセンス一覧 ListTile のサブタイトル"
   },
+  "aboutTutorialTitle": "チュートリアルを再表示",
+  "@aboutTutorialTitle": {
+    "description": "オンボーディングチュートリアルを再表示する ListTile のタイトル"
+  },
+  "aboutTutorialSubtitle": "初回ガイドをもう一度表示します",
+  "@aboutTutorialSubtitle": {
+    "description": "オンボーディングチュートリアル再表示 ListTile のサブタイトル"
+  },
   "aboutAppVersionLabel": "バージョン {version}",
   "@aboutAppVersionLabel": {
     "description": "バージョン情報タイルのラベル",
@@ -749,6 +757,28 @@
   "calcHistoryRestoring": "復元中…",
   "calcKeyboardNext": "次へ",
   "calcKeyboardDone": "完了",
+  "onboardingSkip": "スキップ",
+  "onboardingNext": "次へ",
+  "onboardingStart": "使ってみる",
+  "onboardingDone": "完了",
+  "onboardingIntroP1Title": "メディマスタへようこそ",
+  "onboardingIntroP1Body": "架空データの医薬品・疾患リファレンスです。\n主要機能の場所を最初に案内します。",
+  "onboardingIntroP2Title": "主要機能",
+  "onboardingIntroP2Body": "検索・詳細・計算ツール・ブックマーク・閲覧履歴を\n1 つに集約しています。",
+  "onboardingFeatureSearch": "検索 — 医薬品・疾患をキーワードで検索できます",
+  "onboardingFeatureDetail": "詳細 — 規制区分・用法用量・相互作用を確認できます",
+  "onboardingFeatureCalc": "計算ツール — 用量計算を補助します",
+  "onboardingFeatureBookmark": "ブックマーク — 参照項目を保存できます",
+  "onboardingFeatureHistory": "閲覧履歴 — 直近の参照を再表示できます",
+  "onboardingIntroP3Title": "実画面ガイド",
+  "onboardingIntroP3Body": "続いて、実画面上で主要な操作位置を順に案内します。",
+  "onboardingSpotlightSearchTitle": "検索フィールド",
+  "onboardingSpotlightSearchBody": "キーワードを入力すると、医薬品・疾患を検索できます。",
+  "onboardingSpotlightNavTitle": "主ナビゲーション",
+  "onboardingSpotlightNavBody": "ブックマーク・閲覧履歴・計算ツールはここにあります。常時表示され、どの画面からでも移動できます。",
+  "onboardingSpotlightAboutTitle": "アプリについて",
+  "onboardingSpotlightAboutBody": "アプリ情報の確認と、このガイドの再表示はここから行えます。",
+  "onboardingCoachLead": "ここを押すと",
   "disclaimerRibbonText": "FICTIONAL DATA - NOT FOR MEDICAL USE / 架空データ・医療判断には使用不可",
   "detailDisclaimer": "FICTIONAL DATA - NOT FOR MEDICAL USE / 架空データ・医療判断には使用不可"
 }

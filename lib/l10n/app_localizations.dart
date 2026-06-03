@@ -118,6 +118,18 @@ abstract class AppLocalizations {
   /// **'使用しているオープンソースライブラリの一覧'**
   String get aboutLicensesSubtitle;
 
+  /// オンボーディングチュートリアルを再表示する ListTile のタイトル
+  ///
+  /// In ja, this message translates to:
+  /// **'チュートリアルを再表示'**
+  String get aboutTutorialTitle;
+
+  /// オンボーディングチュートリアル再表示 ListTile のサブタイトル
+  ///
+  /// In ja, this message translates to:
+  /// **'初回ガイドをもう一度表示します'**
+  String get aboutTutorialSubtitle;
+
   /// バージョン情報タイルのラベル
   ///
   /// In ja, this message translates to:
@@ -2883,6 +2895,138 @@ abstract class AppLocalizations {
   /// In ja, this message translates to:
   /// **'完了'**
   String get calcKeyboardDone;
+
+  /// No description provided for @onboardingSkip.
+  ///
+  /// In ja, this message translates to:
+  /// **'スキップ'**
+  String get onboardingSkip;
+
+  /// No description provided for @onboardingNext.
+  ///
+  /// In ja, this message translates to:
+  /// **'次へ'**
+  String get onboardingNext;
+
+  /// No description provided for @onboardingStart.
+  ///
+  /// In ja, this message translates to:
+  /// **'使ってみる'**
+  String get onboardingStart;
+
+  /// No description provided for @onboardingDone.
+  ///
+  /// In ja, this message translates to:
+  /// **'完了'**
+  String get onboardingDone;
+
+  /// No description provided for @onboardingIntroP1Title.
+  ///
+  /// In ja, this message translates to:
+  /// **'メディマスタへようこそ'**
+  String get onboardingIntroP1Title;
+
+  /// No description provided for @onboardingIntroP1Body.
+  ///
+  /// In ja, this message translates to:
+  /// **'架空データの医薬品・疾患リファレンスです。\n主要機能の場所を最初に案内します。'**
+  String get onboardingIntroP1Body;
+
+  /// No description provided for @onboardingIntroP2Title.
+  ///
+  /// In ja, this message translates to:
+  /// **'主要機能'**
+  String get onboardingIntroP2Title;
+
+  /// No description provided for @onboardingIntroP2Body.
+  ///
+  /// In ja, this message translates to:
+  /// **'検索・詳細・計算ツール・ブックマーク・閲覧履歴を\n1 つに集約しています。'**
+  String get onboardingIntroP2Body;
+
+  /// No description provided for @onboardingFeatureSearch.
+  ///
+  /// In ja, this message translates to:
+  /// **'検索 — 医薬品・疾患をキーワードで検索できます'**
+  String get onboardingFeatureSearch;
+
+  /// No description provided for @onboardingFeatureDetail.
+  ///
+  /// In ja, this message translates to:
+  /// **'詳細 — 規制区分・用法用量・相互作用を確認できます'**
+  String get onboardingFeatureDetail;
+
+  /// No description provided for @onboardingFeatureCalc.
+  ///
+  /// In ja, this message translates to:
+  /// **'計算ツール — 用量計算を補助します'**
+  String get onboardingFeatureCalc;
+
+  /// No description provided for @onboardingFeatureBookmark.
+  ///
+  /// In ja, this message translates to:
+  /// **'ブックマーク — 参照項目を保存できます'**
+  String get onboardingFeatureBookmark;
+
+  /// No description provided for @onboardingFeatureHistory.
+  ///
+  /// In ja, this message translates to:
+  /// **'閲覧履歴 — 直近の参照を再表示できます'**
+  String get onboardingFeatureHistory;
+
+  /// No description provided for @onboardingIntroP3Title.
+  ///
+  /// In ja, this message translates to:
+  /// **'実画面ガイド'**
+  String get onboardingIntroP3Title;
+
+  /// No description provided for @onboardingIntroP3Body.
+  ///
+  /// In ja, this message translates to:
+  /// **'続いて、実画面上で主要な操作位置を順に案内します。'**
+  String get onboardingIntroP3Body;
+
+  /// No description provided for @onboardingSpotlightSearchTitle.
+  ///
+  /// In ja, this message translates to:
+  /// **'検索フィールド'**
+  String get onboardingSpotlightSearchTitle;
+
+  /// No description provided for @onboardingSpotlightSearchBody.
+  ///
+  /// In ja, this message translates to:
+  /// **'キーワードを入力すると、医薬品・疾患を検索できます。'**
+  String get onboardingSpotlightSearchBody;
+
+  /// No description provided for @onboardingSpotlightNavTitle.
+  ///
+  /// In ja, this message translates to:
+  /// **'主ナビゲーション'**
+  String get onboardingSpotlightNavTitle;
+
+  /// No description provided for @onboardingSpotlightNavBody.
+  ///
+  /// In ja, this message translates to:
+  /// **'ブックマーク・閲覧履歴・計算ツールはここにあります。常時表示され、どの画面からでも移動できます。'**
+  String get onboardingSpotlightNavBody;
+
+  /// No description provided for @onboardingSpotlightAboutTitle.
+  ///
+  /// In ja, this message translates to:
+  /// **'アプリについて'**
+  String get onboardingSpotlightAboutTitle;
+
+  /// No description provided for @onboardingSpotlightAboutBody.
+  ///
+  /// In ja, this message translates to:
+  /// **'アプリ情報の確認と、このガイドの再表示はここから行えます。'**
+  String get onboardingSpotlightAboutBody;
+
+  /// No description provided for @onboardingCoachLead.
+  ///
+  /// In ja, this message translates to:
+  /// **'ここを押すと'**
+  String get onboardingCoachLead;
 
   /// No description provided for @disclaimerRibbonText.
   ///

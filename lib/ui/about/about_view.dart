@@ -1,3 +1,4 @@
+import 'package:fictional_drug_and_disease_ref/application/providers/onboarding_providers.dart';
 import 'package:fictional_drug_and_disease_ref/data/providers/local_providers.dart';
 import 'package:fictional_drug_and_disease_ref/l10n/app_localizations.dart';
 import 'package:fictional_drug_and_disease_ref/router/app_router.dart';
@@ -48,6 +49,22 @@ class AboutView extends ConsumerWidget {
               ),
               trailing: Icon(Icons.chevron_right, color: palette.muted),
               onTap: () => context.push(AppRoutes.aboutLicenses),
+            ),
+            ListTile(
+              key: const ValueKey<String>('about-onboarding-tile'),
+              title: Text(
+                l10n.aboutTutorialTitle,
+                style: typography.bodyM.copyWith(color: palette.ink),
+              ),
+              subtitle: Text(
+                l10n.aboutTutorialSubtitle,
+                style: typography.bodyS.copyWith(color: palette.muted),
+              ),
+              trailing: Icon(Icons.replay, color: palette.muted),
+              onTap: () {
+                ref.read(onboardingControllerProvider.notifier).replay();
+                context.go(AppRoutes.search);
+              },
             ),
           ],
         ),

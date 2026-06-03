@@ -24,6 +24,7 @@
 - 検索画面の Round 系仕様では、Round6 だけで不足する状態がある場合、ユーザーが共有した検索画面デザイン資料を Round5 から遡って確認し、古い仕様と新しい仕様の衝突を明示する。
 - TDD 指定時は、production UI を変更する前に該当要件を Red として固定する。構造・操作は widget test、見た目は design contract / golden、端末依存操作は integration test または Computer Use で担保する。
 - 「機能テストが通った」だけで「デザイン通り」と報告してはならない。完了報告では、デザイン状態ごとに対応する test / golden / Computer Use / 未確認項目を列挙する。
+- UI / デザイン仕様を伴うプラン Phase では、production UI 変更または Phase 完了扱いの前に `Spec says / Implementation source / Rendered evidence / Status` の照合表を作る。照合表に missing / 未達がある場合、`flutter analyze` / `flutter test` / golden / E2E が green でも Phase 完了・コミット・PR 作成に進んではならない。
 - `flutter run` やインストール成功は「端末に入った」証跡であり、「操作できる」「デザイン通り」「全パターン確認済み」の証跡ではない。Android / iPhone / iPad の確認は端末別に、実施した操作と結果を分けて報告する。
 - production UI にユーザー表示文言・サンプル値・デザイン由来の固定ラベルを直書きしない。l10n、domain data、config、fixture など適切な SSOT に置く。例外的な非表示・テスト専用 literal は理由を明記する。
 - デザイン資料が仕様・ドメイン事実・ユーザー最新指示と矛盾する場合は、実装せずに矛盾を明示して解消する。古いデザインにある誤バッジや仮文字列を取り込まない。
@@ -105,7 +106,7 @@ final value = container.read(myProvider);
 
 ## Patrol E2E
 
-- 採用: `patrol` 4.6.1 / `patrol_cli` 4.3.1。テスト本体は `patrol_test/` 配下に置く
+- 採用: `patrol` 4.6.1 / `patrol_cli` 4.4.0。テスト本体は `patrol_test/` 配下に置く
 - mock-server、Android emulator、iOS Simulator が必要なため pre-push フックおよび CI 対象外
 - 手動実行コマンド: `scripts/run-patrol-e2e-matrix.sh`
 - 上記スクリプトは `http://localhost:8080/health` を確認し、mock-server が未起動の場合のみ `../fictional-drug-and-disease-ref-mock-server/scripts/start.sh` を起動する。既存サーバは停止しない

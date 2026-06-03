@@ -863,12 +863,13 @@ void main() {
     ]);
 
     expect(
-      appBar.actions!.last,
-      isA<IconButton>().having(
-        (button) => (button.icon as Icon).icon,
-        'icon',
-        Icons.info_outline,
+      find.descendant(
+        of: find.byWidget(appBar.actions!.last),
+        matching: find.byKey(
+          const ValueKey<String>('app-tab-header-about-button'),
+        ),
       ),
+      findsOneWidget,
     );
   });
 

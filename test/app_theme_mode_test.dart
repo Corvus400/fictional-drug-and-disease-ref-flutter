@@ -1,7 +1,10 @@
 import 'package:drift/native.dart';
 import 'package:fictional_drug_and_disease_ref/app.dart';
+import 'package:fictional_drug_and_disease_ref/core/result.dart';
 import 'package:fictional_drug_and_disease_ref/data/local/app_database.dart';
 import 'package:fictional_drug_and_disease_ref/data/providers/local_providers.dart';
+import 'package:fictional_drug_and_disease_ref/data/repositories/onboarding_repository.dart';
+import 'package:fictional_drug_and_disease_ref/data/services/local/onboarding_service.dart';
 import 'package:fictional_drug_and_disease_ref/ui/_common/disclaimer_ribbon.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -24,7 +27,14 @@ void main() {
     });
     await tester.pumpWidget(
       ProviderScope(
-        overrides: [appDatabaseProvider.overrideWithValue(db)],
+        overrides: [
+          appDatabaseProvider.overrideWithValue(db),
+          onboardingRepositoryProvider.overrideWith(
+            (ref) => OnboardingRepository(
+              _FakeOnboardingService(completed: true),
+            ),
+          ),
+        ],
         child: App(),
       ),
     );
@@ -253,4 +263,21 @@ void main() {
       );
     },
   );
+}
+
+final class _FakeOnboardingService extends OnboardingService {
+  _FakeOnboardingService({required bool completed})
+    : _completed = completed,
+      super(SharedPreferences.getInstance());
+
+  bool _completed;
+
+  @override
+  Future<Result<bool>> read() async => Result.ok(_completed);
+
+  @override
+  Future<Result<void>> write({required bool completed}) async {
+    _completed = completed;
+    return const Result.ok(null);
+  }
 }

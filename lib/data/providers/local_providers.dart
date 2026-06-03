@@ -3,9 +3,11 @@ import 'package:fictional_drug_and_disease_ref/data/local/app_database.dart';
 import 'package:fictional_drug_and_disease_ref/data/repositories/bookmark_repository.dart';
 import 'package:fictional_drug_and_disease_ref/data/repositories/browsing_history_repository.dart';
 import 'package:fictional_drug_and_disease_ref/data/repositories/calculation_history_repository.dart';
+import 'package:fictional_drug_and_disease_ref/data/repositories/onboarding_repository.dart';
 import 'package:fictional_drug_and_disease_ref/data/repositories/package_info_repository.dart';
 import 'package:fictional_drug_and_disease_ref/data/repositories/search_history_repository.dart';
 import 'package:fictional_drug_and_disease_ref/data/repositories/theme_settings_repository.dart';
+import 'package:fictional_drug_and_disease_ref/data/services/local/onboarding_service.dart';
 import 'package:fictional_drug_and_disease_ref/data/services/local/package_info_service.dart';
 import 'package:fictional_drug_and_disease_ref/data/services/local/theme_settings_service.dart';
 import 'package:fictional_drug_and_disease_ref/domain/about/app_package_info.dart';
@@ -45,6 +47,11 @@ final themeSettingsServiceProvider = Provider<ThemeSettingsService>(
   (ref) => ThemeSettingsService(SharedPreferences.getInstance()),
 );
 
+/// Onboarding service provider.
+final onboardingServiceProvider = Provider<OnboardingService>(
+  (ref) => OnboardingService(SharedPreferences.getInstance()),
+);
+
 /// Package info service provider.
 final packageInfoServiceProvider = Provider<PackageInfoService>(
   (ref) => const PackageInfoService(),
@@ -76,6 +83,11 @@ final calculationHistoryRepositoryProvider =
 /// Theme settings repository provider.
 final themeSettingsRepositoryProvider = Provider<ThemeSettingsRepository>(
   (ref) => ThemeSettingsRepository(ref.watch(themeSettingsServiceProvider)),
+);
+
+/// Onboarding repository provider.
+final onboardingRepositoryProvider = Provider<OnboardingRepository>(
+  (ref) => OnboardingRepository(ref.watch(onboardingServiceProvider)),
 );
 
 /// Package info repository provider.

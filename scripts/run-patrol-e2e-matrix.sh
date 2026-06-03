@@ -37,7 +37,7 @@ resolve_patrol_bin() {
   fi
 
   echo "Required command is missing: patrol" >&2
-  echo "Run: flutter pub global activate patrol_cli 4.3.1" >&2
+  echo "Run: flutter pub global activate patrol_cli 4.4.0" >&2
   exit 127
 }
 
