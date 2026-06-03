@@ -1493,6 +1493,73 @@ class AppLocalizationsJa extends AppLocalizations {
   String get calcKeyboardDone => '完了';
 
   @override
+  String get onboardingSkip => 'スキップ';
+
+  @override
+  String get onboardingNext => '次へ';
+
+  @override
+  String get onboardingStart => '使ってみる';
+
+  @override
+  String get onboardingDone => '完了';
+
+  @override
+  String get onboardingIntroP1Title => 'メディマスタへようこそ';
+
+  @override
+  String get onboardingIntroP1Body => '架空データの医薬品・疾患リファレンスです。主要機能の場所を最初に案内します。';
+
+  @override
+  String get onboardingIntroP2Title => '主要機能';
+
+  @override
+  String get onboardingIntroP2Body => '検索・詳細・計算ツール・ブックマーク・閲覧履歴を 1 つに集約しています。';
+
+  @override
+  String get onboardingFeatureSearch => '検索 — 医薬品・疾患をキーワードで検索できます';
+
+  @override
+  String get onboardingFeatureDetail => '詳細 — 規制区分・用法用量・相互作用を確認できます';
+
+  @override
+  String get onboardingFeatureCalc => '計算ツール — 用量計算を補助します';
+
+  @override
+  String get onboardingFeatureBookmark => 'ブックマーク — 参照項目を保存できます';
+
+  @override
+  String get onboardingFeatureHistory => '閲覧履歴 — 直近の参照を再表示できます';
+
+  @override
+  String get onboardingIntroP3Title => '実画面ガイド';
+
+  @override
+  String get onboardingIntroP3Body => '続いて、実画面上で主要な操作位置を順に案内します。';
+
+  @override
+  String get onboardingSpotlightSearchTitle => '検索フィールド';
+
+  @override
+  String get onboardingSpotlightSearchBody => 'キーワードを入力すると、医薬品・疾患を検索できます。';
+
+  @override
+  String get onboardingSpotlightNavTitle => '主ナビゲーション';
+
+  @override
+  String get onboardingSpotlightNavBody =>
+      'ブックマーク・閲覧履歴・計算ツールはここにあります。常時表示され、どの画面からでも移動できます。';
+
+  @override
+  String get onboardingSpotlightAboutTitle => 'アプリについて';
+
+  @override
+  String get onboardingSpotlightAboutBody => 'アプリ情報の確認と、このガイドの再表示はここから行えます。';
+
+  @override
+  String get onboardingCoachLead => 'ここを押すと';
+
+  @override
   String get disclaimerRibbonText =>
       'FICTIONAL DATA - NOT FOR MEDICAL USE / 架空データ・医療判断には使用不可';
 
