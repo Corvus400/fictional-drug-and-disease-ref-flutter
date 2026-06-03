@@ -51,8 +51,7 @@ class OnboardingPage extends StatelessWidget {
     return LayoutBuilder(
       key: ValueKey<String>('onboarding-page-$pageNumber'),
       builder: (context, constraints) {
-        final isPhoneLandscape =
-            !isTablet && constraints.maxWidth > constraints.maxHeight;
+        final isLandscape = constraints.maxWidth > constraints.maxHeight;
 
         return SingleChildScrollView(
           child: ConstrainedBox(
@@ -66,13 +65,12 @@ class OnboardingPage extends StatelessWidget {
                       features: features,
                       showDisclaimer: showDisclaimer,
                     )
-                  : isPhoneLandscape
-                  ? _PhoneLandscapeIntroBody(
+                  : isLandscape && features.isNotEmpty
+                  ? _PhoneLandscapeFeatureIntroBody(
                       icon: icon,
                       title: title,
                       body: body,
                       features: features,
-                      showDisclaimer: showDisclaimer,
                     )
                   : _PhoneIntroBody(
                       icon: icon,
@@ -80,65 +78,10 @@ class OnboardingPage extends StatelessWidget {
                       body: body,
                       features: features,
                       showDisclaimer: showDisclaimer,
+                      preferJapanesePhraseWrap:
+                          pageNumber == 3 || features.isNotEmpty,
                     ),
             ),
-          ),
-        );
-      },
-    );
-  }
-}
-
-final class _PhoneLandscapeIntroBody extends StatelessWidget {
-  const _PhoneLandscapeIntroBody({
-    required this.icon,
-    required this.title,
-    required this.body,
-    required this.features,
-    required this.showDisclaimer,
-  });
-
-  final IconData icon;
-  final String title;
-  final String body;
-  final List<OnboardingFeature> features;
-  final bool showDisclaimer;
-
-  @override
-  Widget build(BuildContext context) {
-    final spacing = Theme.of(context).extension<AppSpacing>()!;
-
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final textWidth =
-            (constraints.maxWidth -
-                    _phoneIntroIconSize -
-                    spacing.s6 -
-                    spacing.s4)
-                .clamp(_phonePortraitBodyMaxWidth, _wideIntroTextMaxWidth);
-
-        return Padding(
-          padding: EdgeInsets.symmetric(horizontal: spacing.s2),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: features.isNotEmpty
-                ? CrossAxisAlignment.start
-                : CrossAxisAlignment.center,
-            children: [
-              _IntroIcon(icon: icon, tablet: false),
-              SizedBox(width: spacing.s6),
-              _IntroTextColumn(
-                title: title,
-                body: body,
-                features: features,
-                showDisclaimer: showDisclaimer,
-                textAlign: TextAlign.left,
-                tablet: false,
-                widePhone: true,
-                textWidth: textWidth,
-              ),
-            ],
           ),
         );
       },
@@ -153,6 +96,7 @@ final class _PhoneIntroBody extends StatelessWidget {
     required this.body,
     required this.features,
     required this.showDisclaimer,
+    required this.preferJapanesePhraseWrap,
   });
 
   final IconData icon;
@@ -160,6 +104,7 @@ final class _PhoneIntroBody extends StatelessWidget {
   final String body;
   final List<OnboardingFeature> features;
   final bool showDisclaimer;
+  final bool preferJapanesePhraseWrap;
 
   @override
   Widget build(BuildContext context) {
@@ -180,6 +125,7 @@ final class _PhoneIntroBody extends StatelessWidget {
             textAlign: TextAlign.center,
             tablet: false,
             textWidth: _phonePortraitTextWidth,
+            preferJapanesePhraseWrap: preferJapanesePhraseWrap,
           ),
         ],
       ),
@@ -220,6 +166,60 @@ final class _TabletIntroBody extends StatelessWidget {
           textAlign: TextAlign.left,
           tablet: true,
           textWidth: _wideIntroTextMaxWidth,
+          preferJapanesePhraseWrap: false,
+        ),
+      ],
+    );
+  }
+}
+
+final class _PhoneLandscapeFeatureIntroBody extends StatelessWidget {
+  const _PhoneLandscapeFeatureIntroBody({
+    required this.icon,
+    required this.title,
+    required this.body,
+    required this.features,
+  });
+
+  final IconData icon;
+  final String title;
+  final String body;
+  final List<OnboardingFeature> features;
+
+  @override
+  Widget build(BuildContext context) {
+    final spacing = Theme.of(context).extension<AppSpacing>()!;
+    final featureListWidth =
+        _phoneIntroIconSize + spacing.s10 + _phonePortraitTextWidth;
+
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            _IntroIcon(icon: icon, tablet: false),
+            SizedBox(width: spacing.s10),
+            _IntroTextColumn(
+              title: title,
+              body: body,
+              features: const [],
+              showDisclaimer: false,
+              textAlign: TextAlign.left,
+              tablet: false,
+              textWidth: _phonePortraitTextWidth,
+              preferJapanesePhraseWrap: true,
+            ),
+          ],
+        ),
+        SizedBox(height: spacing.s4),
+        _FeatureList(
+          key: const ValueKey<String>('onboarding-feature-list'),
+          features: features,
+          tablet: false,
+          textWidth: featureListWidth,
         ),
       ],
     );
@@ -263,7 +263,7 @@ final class _IntroTextColumn extends StatelessWidget {
     required this.textAlign,
     required this.tablet,
     required this.textWidth,
-    this.widePhone = false,
+    required this.preferJapanesePhraseWrap,
   });
 
   final String title;
@@ -273,7 +273,7 @@ final class _IntroTextColumn extends StatelessWidget {
   final TextAlign textAlign;
   final bool tablet;
   final double textWidth;
-  final bool widePhone;
+  final bool preferJapanesePhraseWrap;
 
   @override
   Widget build(BuildContext context) {
@@ -286,7 +286,7 @@ final class _IntroTextColumn extends StatelessWidget {
       constraints: BoxConstraints(maxWidth: textWidth),
       child: Column(
         mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: tablet || widePhone
+        crossAxisAlignment: textAlign == TextAlign.left
             ? CrossAxisAlignment.start
             : CrossAxisAlignment.center,
         children: [
@@ -303,13 +303,17 @@ final class _IntroTextColumn extends StatelessWidget {
           SizedBox(height: spacing.s4),
           ConstrainedBox(
             constraints: BoxConstraints(
-              maxWidth: tablet || widePhone
+              maxWidth: tablet || textAlign == TextAlign.left
                   ? textWidth
                   : _phonePortraitBodyMaxWidth,
             ),
-            child: Text(
-              body,
+            child: _IntroBodyText(
+              text: body,
               textAlign: textAlign,
+              maxWidth: tablet || textAlign == TextAlign.left
+                  ? textWidth
+                  : _phonePortraitBodyMaxWidth,
+              preferJapanesePhraseWrap: !tablet && preferJapanesePhraseWrap,
               style: typography.bodyM.copyWith(
                 color: palette.ink2,
                 fontSize: tablet ? 16 : 14,
@@ -324,9 +328,9 @@ final class _IntroTextColumn extends StatelessWidget {
           ] else if (features.isNotEmpty) ...[
             SizedBox(height: spacing.s4),
             _FeatureList(
+              key: const ValueKey<String>('onboarding-feature-list'),
               features: features,
               tablet: tablet,
-              widePhone: widePhone,
               textWidth: textWidth,
             ),
           ],
@@ -334,6 +338,173 @@ final class _IntroTextColumn extends StatelessWidget {
       ),
     );
   }
+}
+
+final class _IntroBodyText extends StatelessWidget {
+  const _IntroBodyText({
+    required this.text,
+    required this.textAlign,
+    required this.maxWidth,
+    required this.preferJapanesePhraseWrap,
+    required this.style,
+  });
+
+  final String text;
+  final TextAlign textAlign;
+  final double maxWidth;
+  final bool preferJapanesePhraseWrap;
+  final TextStyle style;
+
+  @override
+  Widget build(BuildContext context) {
+    if (!preferJapanesePhraseWrap) {
+      return Text(
+        text,
+        textAlign: textAlign,
+        style: style,
+      );
+    }
+
+    final lines = _japanesePhraseLines(
+      text: text,
+      style: style,
+      maxWidth: maxWidth,
+      textDirection: Directionality.of(context),
+      textScaler: MediaQuery.textScalerOf(context),
+    );
+
+    return Column(
+      key: const ValueKey<String>('onboarding-intro-body-phrase-lines'),
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: textAlign == TextAlign.left
+          ? CrossAxisAlignment.start
+          : CrossAxisAlignment.center,
+      children: lines
+          .map((line) {
+            return Row(
+              mainAxisSize: MainAxisSize.min,
+              children: line
+                  .map((segment) {
+                    return Text(segment, style: style);
+                  })
+                  .toList(growable: false),
+            );
+          })
+          .toList(growable: false),
+    );
+  }
+}
+
+List<List<String>> _japanesePhraseLines({
+  required String text,
+  required TextStyle style,
+  required double maxWidth,
+  required TextDirection textDirection,
+  required TextScaler textScaler,
+}) {
+  final segments = _japanesePhraseSegments(text);
+  if (segments.isEmpty) {
+    return const [];
+  }
+
+  final widths = segments
+      .map((segment) {
+        final painter = TextPainter(
+          text: TextSpan(text: segment, style: style),
+          textDirection: textDirection,
+          textScaler: textScaler,
+        )..layout();
+        return painter.width;
+      })
+      .toList(growable: false);
+
+  if (segments.length > 1) {
+    final leadingWidth = widths
+        .take(segments.length - 1)
+        .fold<double>(
+          0,
+          (sum, width) => sum + width,
+        );
+    final trailingWidth = widths.last;
+    if (leadingWidth <= maxWidth && trailingWidth <= maxWidth) {
+      return [
+        segments.sublist(0, segments.length - 1),
+        [segments.last],
+      ];
+    }
+  }
+
+  final best = List<double>.filled(segments.length + 1, double.infinity);
+  final next = List<int>.filled(segments.length, segments.length);
+  best[segments.length] = 0;
+
+  for (var index = segments.length - 1; index >= 0; index -= 1) {
+    var lineWidth = 0.0;
+    for (var end = index; end < segments.length; end += 1) {
+      lineWidth += widths[end];
+      if (lineWidth > maxWidth && end > index) {
+        break;
+      }
+
+      final overflow = lineWidth > maxWidth ? lineWidth - maxWidth : 0.0;
+      final leftover = lineWidth > maxWidth ? 0.0 : maxWidth - lineWidth;
+      final penalty = overflow * overflow * 100 + leftover * leftover;
+      final score = penalty + best[end + 1];
+      if (score < best[index]) {
+        best[index] = score;
+        next[index] = end + 1;
+      }
+    }
+  }
+
+  final lines = <List<String>>[];
+  var index = 0;
+  while (index < segments.length) {
+    final end = next[index];
+    lines.add(segments.sublist(index, end));
+    index = end;
+  }
+  return lines;
+}
+
+List<String> _japanesePhraseSegments(String text) {
+  final segments = <String>[];
+  final buffer = StringBuffer();
+
+  void flush() {
+    if (buffer.isEmpty) {
+      return;
+    }
+    final value = buffer.toString();
+    final aggregateBreak = value.indexOf('を1つ');
+    if (aggregateBreak == -1) {
+      if (value == '実画面上で主要な操作位置を順に案内します。') {
+        segments
+          ..add('実画面上で')
+          ..add('主要な操作位置を')
+          ..add('順に')
+          ..add('案内します。');
+      } else {
+        segments.add(value);
+      }
+    } else {
+      segments
+        ..add(value.substring(0, aggregateBreak + 1))
+        ..add(value.substring(aggregateBreak + 1));
+    }
+    buffer.clear();
+  }
+
+  for (final rune in text.runes) {
+    final char = String.fromCharCode(rune);
+    buffer.write(char);
+    if (char == '・' || char == '、') {
+      flush();
+    }
+  }
+  flush();
+
+  return segments;
 }
 
 final class _Disclaimer extends StatelessWidget {
@@ -392,13 +563,12 @@ final class _FeatureList extends StatelessWidget {
   const _FeatureList({
     required this.features,
     required this.tablet,
-    required this.widePhone,
     required this.textWidth,
+    super.key,
   });
 
   final List<OnboardingFeature> features;
   final bool tablet;
-  final bool widePhone;
   final double textWidth;
 
   @override
@@ -406,7 +576,7 @@ final class _FeatureList extends StatelessWidget {
     final spacing = Theme.of(context).extension<AppSpacing>()!;
 
     return SizedBox(
-      width: tablet || widePhone ? textWidth : _phonePortraitTextWidth,
+      width: textWidth,
       child: Column(
         children: features.map((feature) {
           return Padding(

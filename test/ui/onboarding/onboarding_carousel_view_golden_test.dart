@@ -7,13 +7,25 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mocktail/mocktail.dart';
 
+import '../../golden/golden_test_config.dart';
 import '../../golden/golden_test_helpers.dart';
 
 void main() {
   for (final page in _OnboardingGoldenPage.values) {
+    final capturesWidePhoneLandscape = page == _OnboardingGoldenPage.page2;
+
     runGoldenMatrix(
       fileNamePrefix: 'onboarding_intro_${page.name}',
       description: 'Onboarding intro ${page.name}',
+      devices: capturesWidePhoneLandscape
+          ? [
+              ...GoldenMatrix.devices.keys,
+              'iphone_landscape_wide',
+            ]
+          : null,
+      customDevices: capturesWidePhoneLandscape
+          ? const {'iphone_landscape_wide': Size(1024, 474)}
+          : null,
       builder: (theme, size, textScaler) {
         final service = _MockOnboardingService();
         when(service.read).thenAnswer((_) async => const Result.ok(false));

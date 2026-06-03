@@ -2941,7 +2941,7 @@ abstract class AppLocalizations {
   /// No description provided for @onboardingIntroP2Body.
   ///
   /// In ja, this message translates to:
-  /// **'検索・詳細・計算ツール・ブックマーク・閲覧履歴を\n1 つに集約しています。'**
+  /// **'検索・詳細・計算ツール・ブックマーク・閲覧履歴を1つに集約しています。'**
   String get onboardingIntroP2Body;
 
   /// No description provided for @onboardingFeatureSearch.

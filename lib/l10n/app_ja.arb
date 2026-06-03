@@ -764,7 +764,7 @@
   "onboardingIntroP1Title": "メディマスタへようこそ",
   "onboardingIntroP1Body": "架空データの医薬品・疾患リファレンスです。\n主要機能の場所を最初に案内します。",
   "onboardingIntroP2Title": "主要機能",
-  "onboardingIntroP2Body": "検索・詳細・計算ツール・ブックマーク・閲覧履歴を\n1 つに集約しています。",
+  "onboardingIntroP2Body": "検索・詳細・計算ツール・ブックマーク・閲覧履歴を1つに集約しています。",
   "onboardingFeatureSearch": "検索 — 医薬品・疾患をキーワードで検索できます",
   "onboardingFeatureDetail": "詳細 — 規制区分・用法用量・相互作用を確認できます",
   "onboardingFeatureCalc": "計算ツール — 用量計算を補助します",
