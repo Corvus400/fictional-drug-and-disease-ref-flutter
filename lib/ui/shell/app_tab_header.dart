@@ -2,6 +2,7 @@ import 'package:fictional_drug_and_disease_ref/l10n/app_localizations.dart';
 import 'package:fictional_drug_and_disease_ref/router/app_router.dart';
 import 'package:fictional_drug_and_disease_ref/theme/app_palette.dart';
 import 'package:fictional_drug_and_disease_ref/theme/app_typography.dart';
+import 'package:fictional_drug_and_disease_ref/ui/onboarding/onboarding_target_keys.dart';
 import 'package:fictional_drug_and_disease_ref/ui/shell/app_shell_tab.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -70,11 +71,14 @@ class AppTabHeader extends StatelessWidget implements PreferredSizeWidget {
       bottom: effectiveBottom,
       actions: [
         ...?actions,
-        IconButton(
-          key: const ValueKey<String>('app-tab-header-about-button'),
-          icon: Icon(Icons.info_outline, color: palette.ink),
-          tooltip: l10n.aboutTitle,
-          onPressed: () => context.push(AppRoutes.about),
+        KeyedSubtree(
+          key: OnboardingTargetKeys.aboutButton,
+          child: IconButton(
+            key: const ValueKey<String>('app-tab-header-about-button'),
+            icon: Icon(Icons.info_outline, color: palette.ink),
+            tooltip: l10n.aboutTitle,
+            onPressed: () => context.push(AppRoutes.about),
+          ),
         ),
       ],
     );

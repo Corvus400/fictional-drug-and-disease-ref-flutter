@@ -369,7 +369,7 @@ const _expectations = <_GoldenCoverageExpectation>[
     state: 'intro page 1',
     testFile: 'test/ui/onboarding/onboarding_carousel_view_golden_test.dart',
     goldenDir: 'test/ui/onboarding/goldens/macos',
-    sourceFragment: "fileNamePrefix: 'onboarding_intro_\${page.name}'",
+    sourceFragment: r"fileNamePrefix: 'onboarding_intro_${page.name}'",
     goldenPrefix: 'onboarding_intro_page1',
   ),
   _GoldenCoverageExpectation(
@@ -377,7 +377,7 @@ const _expectations = <_GoldenCoverageExpectation>[
     state: 'intro page 2',
     testFile: 'test/ui/onboarding/onboarding_carousel_view_golden_test.dart',
     goldenDir: 'test/ui/onboarding/goldens/macos',
-    sourceFragment: "fileNamePrefix: 'onboarding_intro_\${page.name}'",
+    sourceFragment: r"fileNamePrefix: 'onboarding_intro_${page.name}'",
     goldenPrefix: 'onboarding_intro_page2',
   ),
   _GoldenCoverageExpectation(
@@ -385,8 +385,16 @@ const _expectations = <_GoldenCoverageExpectation>[
     state: 'intro page 3',
     testFile: 'test/ui/onboarding/onboarding_carousel_view_golden_test.dart',
     goldenDir: 'test/ui/onboarding/goldens/macos',
-    sourceFragment: "fileNamePrefix: 'onboarding_intro_\${page.name}'",
+    sourceFragment: r"fileNamePrefix: 'onboarding_intro_${page.name}'",
     goldenPrefix: 'onboarding_intro_page3',
+  ),
+  _GoldenCoverageExpectation(
+    screen: 'onboarding',
+    state: 'spotlight search target',
+    testFile: 'test/ui/onboarding/onboarding_spotlight_golden_test.dart',
+    goldenDir: 'test/ui/onboarding/goldens/macos',
+    sourceFragment: "fileNamePrefix: 'onboarding_spotlight_search'",
+    goldenPrefix: 'onboarding_spotlight_search',
   ),
   _GoldenCoverageExpectation(
     screen: 'bookmarks',
@@ -752,6 +760,7 @@ const _goldenTestFiles = <String>[
   'test/ui/history/history_navigation_bar_golden_test.dart',
   'test/ui/history/history_view_golden_test.dart',
   'test/ui/onboarding/onboarding_carousel_view_golden_test.dart',
+  'test/ui/onboarding/onboarding_spotlight_golden_test.dart',
   'test/ui/search/search_navigation_bar_golden_test.dart',
   'test/ui/search/search_view_golden_test.dart',
   'test/ui/shell/app_shell_navigation_bar_golden_test.dart',

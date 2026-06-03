@@ -2,6 +2,7 @@ import 'package:fictional_drug_and_disease_ref/application/providers/onboarding_
 import 'package:fictional_drug_and_disease_ref/domain/onboarding/onboarding_state.dart';
 import 'package:fictional_drug_and_disease_ref/theme/app_palette.dart';
 import 'package:fictional_drug_and_disease_ref/ui/onboarding/onboarding_carousel_view.dart';
+import 'package:fictional_drug_and_disease_ref/ui/onboarding/onboarding_spotlight.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -27,7 +28,7 @@ final class OnboardingGate extends ConsumerWidget {
             const Positioned.fill(child: OnboardingCarouselView()),
           ],
         ),
-      _ => child,
+      _ => OnboardingSpotlight(child: child),
     };
   }
 }

@@ -186,50 +186,53 @@ class _SearchFieldState extends State<_SearchField> {
           _reconnectKeyboard();
         }
       },
-      child: TextField(
-        key: const ValueKey('search-field'),
-        controller: _controller,
-        focusNode: _focusNode,
-        groupId: widget.tapRegionGroupId,
-        onTapAlwaysCalled: true,
-        onTap: () {
-          widget.onTap();
-        },
-        onTapOutside: (_) {
-          _keyboardReconnectTimer?.cancel();
-          FocusScope.of(context).unfocus();
-          widget.onCancel();
-        },
-        onChanged: widget.onChanged,
-        onSubmitted: (_) => unawaited(widget.onSubmit()),
-        textInputAction: TextInputAction.search,
-        decoration: InputDecoration(
-          hintText: widget.hintText,
-          prefixIcon: const Icon(Icons.search),
-          suffixIcon: widget.queryText.isEmpty
-              ? null
-              : IconButton(
-                  key: const ValueKey('search-query-clear-button'),
-                  onPressed: () {
-                    widget.onClear();
-                    _focusNode.requestFocus();
-                  },
-                  icon: const Icon(Icons.cancel),
-                ),
-          filled: true,
-          fillColor: widget.palette.searchFieldBg,
-          contentPadding: EdgeInsets.zero,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(
-              SearchConstants.searchFieldRadius,
+      child: KeyedSubtree(
+        key: OnboardingTargetKeys.searchField,
+        child: TextField(
+          key: const ValueKey('search-field'),
+          controller: _controller,
+          focusNode: _focusNode,
+          groupId: widget.tapRegionGroupId,
+          onTapAlwaysCalled: true,
+          onTap: () {
+            widget.onTap();
+          },
+          onTapOutside: (_) {
+            _keyboardReconnectTimer?.cancel();
+            FocusScope.of(context).unfocus();
+            widget.onCancel();
+          },
+          onChanged: widget.onChanged,
+          onSubmitted: (_) => unawaited(widget.onSubmit()),
+          textInputAction: TextInputAction.search,
+          decoration: InputDecoration(
+            hintText: widget.hintText,
+            prefixIcon: const Icon(Icons.search),
+            suffixIcon: widget.queryText.isEmpty
+                ? null
+                : IconButton(
+                    key: const ValueKey('search-query-clear-button'),
+                    onPressed: () {
+                      widget.onClear();
+                      _focusNode.requestFocus();
+                    },
+                    icon: const Icon(Icons.cancel),
+                  ),
+            filled: true,
+            fillColor: widget.palette.searchFieldBg,
+            contentPadding: EdgeInsets.zero,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(
+                SearchConstants.searchFieldRadius,
+              ),
+              borderSide: BorderSide.none,
             ),
-            borderSide: BorderSide.none,
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(
-              SearchConstants.searchFieldRadius,
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(
+                SearchConstants.searchFieldRadius,
+              ),
+              borderSide: BorderSide(color: widget.palette.primaryRing),
             ),
-            borderSide: BorderSide(color: widget.palette.primaryRing),
           ),
         ),
       ),

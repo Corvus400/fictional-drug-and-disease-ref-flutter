@@ -12,6 +12,7 @@ import 'package:fictional_drug_and_disease_ref/theme/app_palette.dart';
 import 'package:fictional_drug_and_disease_ref/ui/_common/widgets/disease_result_card.dart';
 import 'package:fictional_drug_and_disease_ref/ui/_common/widgets/drug_result_card.dart';
 import 'package:fictional_drug_and_disease_ref/ui/common/loading/shimmer_skeleton.dart';
+import 'package:fictional_drug_and_disease_ref/ui/onboarding/onboarding_target_keys.dart';
 import 'package:fictional_drug_and_disease_ref/ui/search/constants/search_constants.dart';
 import 'package:fictional_drug_and_disease_ref/ui/search/format/relative_time_formatter.dart';
 import 'package:fictional_drug_and_disease_ref/ui/search/providers/drug_card_image_cache_manager_provider.dart';

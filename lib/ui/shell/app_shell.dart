@@ -1,5 +1,6 @@
 import 'package:fictional_drug_and_disease_ref/bootstrap.dart';
 import 'package:fictional_drug_and_disease_ref/ui/_common/disclaimer_ribbon.dart';
+import 'package:fictional_drug_and_disease_ref/ui/onboarding/onboarding_target_keys.dart';
 import 'package:fictional_drug_and_disease_ref/ui/shell/app_shell_tab.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -108,44 +109,47 @@ class AppShellAdaptiveNavigation extends StatelessWidget {
         return SizedBox(
           key: const ValueKey('app-shell-navigation-rail-box'),
           width: railWidth,
-          child: DecoratedBox(
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.surface,
-              border: Border(
-                right: BorderSide(color: Theme.of(context).dividerColor),
+          child: KeyedSubtree(
+            key: OnboardingTargetKeys.navigationTabs,
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.surface,
+                border: Border(
+                  right: BorderSide(color: Theme.of(context).dividerColor),
+                ),
               ),
-            ),
-            child: SafeArea(
-              left: false,
-              right: false,
-              bottom: false,
-              child: railWidth < 56
-                  ? _CompactAppShellRail(
-                      selectedIndex: selectedIndex,
-                      onDestinationSelected: onDestinationSelected,
-                    )
-                  : NavigationRail(
-                      key: const ValueKey('app-shell-navigation-rail'),
-                      selectedIndex: selectedIndex,
-                      minWidth: railWidth,
-                      labelType: NavigationRailLabelType.none,
-                      onDestinationSelected: onDestinationSelected,
-                      destinations: [
-                        for (final tab in AppShellTab.values)
-                          NavigationRailDestination(
-                            icon: Tooltip(
-                              message: tab.label(context),
-                              child: Icon(
-                                tab.icon,
-                                key: ValueKey<String>(
-                                  'app-shell-tab-${tab.name}',
+              child: SafeArea(
+                left: false,
+                right: false,
+                bottom: false,
+                child: railWidth < 56
+                    ? _CompactAppShellRail(
+                        selectedIndex: selectedIndex,
+                        onDestinationSelected: onDestinationSelected,
+                      )
+                    : NavigationRail(
+                        key: const ValueKey('app-shell-navigation-rail'),
+                        selectedIndex: selectedIndex,
+                        minWidth: railWidth,
+                        labelType: NavigationRailLabelType.none,
+                        onDestinationSelected: onDestinationSelected,
+                        destinations: [
+                          for (final tab in AppShellTab.values)
+                            NavigationRailDestination(
+                              icon: Tooltip(
+                                message: tab.label(context),
+                                child: Icon(
+                                  tab.icon,
+                                  key: ValueKey<String>(
+                                    'app-shell-tab-${tab.name}',
+                                  ),
                                 ),
                               ),
+                              label: Text(tab.label(context)),
                             ),
-                            label: Text(tab.label(context)),
-                          ),
-                      ],
-                    ),
+                        ],
+                      ),
+              ),
             ),
           ),
         );
@@ -225,19 +229,22 @@ class AppShellBottomNavigation extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         const DisclaimerRibbon(),
-        NavigationBar(
-          selectedIndex: selectedIndex,
-          onDestinationSelected: onDestinationSelected,
-          destinations: [
-            for (final tab in AppShellTab.values)
-              NavigationDestination(
-                icon: Icon(
-                  tab.icon,
-                  key: ValueKey<String>('app-shell-tab-${tab.name}'),
+        KeyedSubtree(
+          key: OnboardingTargetKeys.navigationTabs,
+          child: NavigationBar(
+            selectedIndex: selectedIndex,
+            onDestinationSelected: onDestinationSelected,
+            destinations: [
+              for (final tab in AppShellTab.values)
+                NavigationDestination(
+                  icon: Icon(
+                    tab.icon,
+                    key: ValueKey<String>('app-shell-tab-${tab.name}'),
+                  ),
+                  label: tab.label(context),
                 ),
-                label: tab.label(context),
-              ),
-          ],
+            ],
+          ),
         ),
       ],
     );
